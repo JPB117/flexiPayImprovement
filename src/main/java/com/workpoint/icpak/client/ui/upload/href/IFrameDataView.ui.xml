@@ -1,0 +1,55 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:up='urn:import:com.workpoint.icpak.client.ui.upload.custom' xmlns:g='urn:import:com.google.gwt.user.client.ui' 
+	ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
+	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
+	ui:generateLocales='default'>
+
+	<!-- g:DialogBox modal="true"
+	    width="1000px" height="600px" ui:field="uploaderDialog" text="Request For Quotations- RFQ/7891/13"-->
+	
+	<g:PopupPanel ui:field="uploaderDialog" glassEnabled="false"
+	 styleName="modal-iframe modal-admin htmlEditorPopup" modal="true">
+	 
+		<g:HTMLPanel>
+			<g:HTMLPanel styleName="modal-header">
+				<h5><i class="icon-cogs"></i>
+				    <span ui:field="spnHeader"/>
+				<g:Anchor ui:field="aClose"><i class="icon-remove pull-right"/></g:Anchor></h5>
+			</g:HTMLPanel>
+			
+			<g:HTMLPanel styleName="modal-iframe-body" ui:field="panelBody">
+				<iframe src="http://localhost:8080" 
+				ui:field="iframe" width="100%" height="99%" frameborder="0">
+				</iframe>
+			</g:HTMLPanel>
+			
+			<!--
+			Google Iframe 
+			<iframe 
+			src="http://docs.google.com/gview?url=http://infolab.stanford.edu/pub/papers/google.pdf&embedded=true" 
+			style="width:600px; height:500px;"
+			frameborder="0"></iframe>
+			 -->
+			
+			<!-- g:HTMLPanel styleName="form-actions">
+			    <g:HTMLPanel ui:field="panelButtons" styleName="row-fluid">
+			    	<g:Button styleName="btn btn-primary pull-right" ui:field="btnDone"
+					text="DONE" />
+				<g:Button styleName="btn btn-default pull-left hidden" ui:field="btnCancel"
+					text="CANCEL" />
+			    </g:HTMLPanel>
+			</g:HTMLPanel-->
+			
+			<!-- g:HTMLPanel styleName="modal-footer">
+				<g:Button styleName="btn btn-primary pull-right" ui:field="btnDone"
+					text="DONE" />
+				<g:Button styleName="btn btn-default pull-left" ui:field="btnCancel"
+					text="CANCEL" />
+			</g:HTMLPanel -->
+			
+		</g:HTMLPanel>
+	</g:PopupPanel>
+	<!-- /g:DialogBox -->
+</ui:UiBinder>
