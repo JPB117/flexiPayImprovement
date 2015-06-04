@@ -6,87 +6,81 @@
 <!-- differences in layout.                        -->
 
 <html>
-	<head>
-		<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		
-		<!-- BootStrap start -->
-		<title>ICPAK Portal</title>
-		<!-- link rel="icon" type="image/png" href="img/briefcase_document.ico"-->
-		<link rel="icon" type="image/png" href="img/favicon.ico">
-		
-		<!-- Consider inlining CSS to reduce the number of requested files -->
-		<!--                                                               -->
-		<link type="text/css" rel="stylesheet" href="GWTHT.css"/>
-		<link type="text/css" rel="stylesheet" href="css/Autocomplete.css"/>
-		<link type="text/css" rel="stylesheet" href="css/ChatBox.css"/>
-		<link type="text/css" rel="stylesheet" href="css/CarouselPopup.css"/>
-		<link type="text/css" rel="stylesheet" href="css/profilePage.css"/>
-		<link type="text/css" rel="stylesheet" href="css/dashboard.css"/>
-		
-	    <!-- bootstrap -->
-	    <link href="css/bootstrap.css" rel="stylesheet">
-	    <link href="css/select2.css" rel="stylesheet">
-	    <link href="css/google/google-bootstrap.css" rel="stylesheet">
-	    
-	    <link href="css/bootstrap-responsive.css" rel="stylesheet">
-	
-	    <!-- libraries -->
-	    <link rel="stylesheet" type="text/css" href="css/elements.css">
-	    <link href="css/font-awesome/css/font-awesome.min.css" type="text/css" rel="stylesheet">
-	  
-	  	<!-- global styles -->
-	    <link rel="stylesheet" type="text/css" href="css/layout.css">
-	    <link rel="stylesheet" type="text/css" href="css/elements.css">
-	    <link rel="stylesheet" type="text/css" href="css/icons.css">
-	    <link rel="stylesheet" type="text/css" href="css/Upload.css">
-	    
-	    <!--Admin Fonts  -->
-	    <link rel="stylesheet" type="text/css" href="css/admin_css/admin_layout.css">
-	    <link rel="stylesheet" type="text/css" href="css/admin_css/stilearn-helper.css">
-	    	    
-	    <!-- Bootstrap end -->
-		
-	  <!-- this page specific styles -->
-    	<link rel="stylesheet" type="text/css" href="css/compiled/signin.css">
-    	<!-- <link rel="stylesheet" type="text/css" href="css/compiled/index.css"> -->
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="">
+<link rel="icon" href="http://solutech.co.ke/icpak/assets/img/favicon.png">
 
-		<!--                                           -->
-		<!-- This script loads your compiled module.   -->
-		<!-- If you add any GWT meta tags, they must   -->
-		<!-- be added before this line.                -->
-		<!--                                           -->
-		<script type="text/javascript" src="js/jquery/jquery-latest.js"></script>
-		<script type="text/javascript" src="js/jquery.flot.js"></script>
-		<!--[if lte IE 8]>
+<title>ICPAK Portal</title>
+
+<!-- Bootstrap core CSS -->
+<link href="http://solutech.co.ke/icpak/assets/css/dashboard.css" rel="stylesheet">
+<link href="http://solutech.co.ke/icpak/assets/css/pricing-table.css" rel="stylesheet">
+<link href="http://solutech.co.ke/icpak/assets/css/login.css" rel="stylesheet">
+<link href="http://solutech.co.ke/icpak/assets/css/bootstrap.min.css" rel="stylesheet">
+<link href="http://solutech.co.ke/icpak/assets/css/gsdk-base.css" rel="stylesheet">
+
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+<script src="http://solutech.co.ke/icpak/assets/js/jquery-1.10.2.js" type="text/javascript"></script>
+<script src="http://cdn.jsdelivr.net/jquery.validation/1.13.1/jquery.validate.min.js" type="text/javascript"></script>
+<script src="//cdn.datatables.net/1.10.5/js/jquery.dataTables.min.js"></script>
+<!-- text fonts -->
+<link rel="stylesheet" href="//cdn.datatables.net/1.10.5/css/jquery.dataTables.css">
+<!-- Custom styles for this template -->
+
+
+<!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+<!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+<script src="../../assets/js/ie-emulation-modes-warning.js"></script>
+
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+
+<!-- this page specific styles -->
+
+<!--                                           -->
+<!-- This script loads your compiled module.   -->
+<!-- If you add any GWT meta tags, they must   -->
+<!-- be added before this line.                -->
+<!--                                           -->
+<script type="text/javascript" src="js/jquery/jquery-latest.js"></script>
+<!--[if lte IE 8]>
 			<script language="javascript" type="text/javascript" src="../../excanvas.min.js"></script>
 		<![endif]-->
-		<script type="text/javascript" src="js/bootstrap.js"></script>
-		<script type="text/javascript" language="javascript" src="gwtht/gwtht.nocache.js"></script>		
-	</head>
 
-	<!--                                           -->
-	<!-- The body can have arbitrary html, or      -->
-	<!-- you can leave the body empty if you want  -->
-	<!-- to create a completely dynamic UI.        -->
-	<!--                                           -->
-	
-	<body>
-		<!-- OPTIONAL: include this if you want history support -->
-		<iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1' style="position: absolute; width: 0;height: 0; border: 0;"></iframe>
+<script type="text/javascript" language="javascript"
+	src="gwtht/gwtht.nocache.js"></script>
+</head>
 
-		<!-- RECOMMENDED if your web app will not function without JavaScript enabled -->
-		<noscript>
-			<div style="width: 22em; position: absolute; left: 50%; margin-left: -11em; color: red; background-color: white; border: 1px solid red; padding: 4px; font-family: sans-serif;">
-				Your web browser must have JavaScript enabled
-				in order for this application to display correctly.
-			</div>
-		</noscript>
-	</body>
-	
-	<script type="text/javascript">
-		var d2 = [[0, 3], [4, 8], [8, 5], [9, 13]];
-		$.plot("#placeholder",[d2]);
-		
-		</script>
+<!--                                           -->
+<!-- The body can have arbitrary html, or      -->
+<!-- you can leave the body empty if you want  -->
+<!-- to create a completely dynamic UI.        -->
+<!--                                           -->
+
+<body>
+	<!-- OPTIONAL: include this if you want history support -->
+	<iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1'
+		style="position: absolute; width: 0; height: 0; border: 0;"></iframe>
+
+	<!-- RECOMMENDED if your web app will not function without JavaScript enabled -->
+	<noscript>
+		<div
+			style="width: 22em; position: absolute; left: 50%; margin-left: -11em; color: red; background-color: white; border: 1px solid red; padding: 4px; font-family: sans-serif;">
+			Your web browser must have JavaScript enabled in order for this
+			application to display correctly.</div>
+	</noscript>
+</body>
+
+<script type="text/javascript">
+	var d2 = [ [ 0, 3 ], [ 4, 8 ], [ 8, 5 ], [ 9, 13 ] ];
+	$.plot("#placeholder", [ d2 ]);
+</script>
 </html>

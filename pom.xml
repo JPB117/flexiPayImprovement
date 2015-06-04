@@ -153,7 +153,7 @@
 				<configuration>
 					<!-- With multiple tests use GwtTestSuite.java for speed -->
 					<includes>**/*GwtTest.java</includes>
-					<extraJvmArgs>-Xss1024K -Xmx1024M -XX:MaxPermSize=256M</extraJvmArgs>
+					<extraJvmArgs>-Xss1024K -Xmx512M -XX:MaxPermSize=128M</extraJvmArgs>
 					<!--logLevel>INFO</logLevel -->
 					<copyWebapp>true</copyWebapp>
 					<hostedWebapp>${webappDirectory}</hostedWebapp>
