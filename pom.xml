@@ -51,6 +51,18 @@
 		<webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
 	</properties>
 
+<repositories>
+        <!-- Use GWTP snapshots for the latest and greatest -->
+        <repository>
+            <id>sonatype.snapshots</id>
+            <name>Sonatype snapshot repository</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
 	<build>
 		<outputDirectory>${webappDirectory}/WEB-INF/classes</outputDirectory>
 		<resources>
