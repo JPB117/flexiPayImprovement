@@ -3,7 +3,7 @@ package com.workpoint.icpak.client.ui.header;
 import java.util.Date;
 
 import com.workpoint.icpak.client.ui.util.DateUtils;
-import com.workpoint.icpak.shared.model.User;
+import com.workpoint.icpak.shared.model.UserDto;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.SpanElement;
@@ -202,7 +202,7 @@ public class HeaderView extends ViewImpl implements HeaderPresenter.IHeaderView 
 				+ ", <span title=\"Build Date\">" + versionDate + "</span>");
 	}
 
-	public void setImage(User user) {
+	public void setImage(UserDto user) {
 		String moduleUrl = GWT.getModuleBaseURL().replace("/gwtht", "");
 		if (moduleUrl.endsWith("/")) {
 			moduleUrl = moduleUrl.substring(0, moduleUrl.length() - 1);

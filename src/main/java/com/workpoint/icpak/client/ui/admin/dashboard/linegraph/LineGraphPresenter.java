@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtplatform.dispatch.rpc.shared.DispatchAsync;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.View;
 import com.workpoint.icpak.shared.model.dashboard.ChartType;
@@ -16,8 +15,7 @@ public class LineGraphPresenter extends
 	public interface ILineGraphView extends View {
 		void setData(List<Data> data);
 	}
-	
-	@Inject DispatchAsync requestHelper;
+
 	ChartType type;
 	boolean loaded=false;
 	

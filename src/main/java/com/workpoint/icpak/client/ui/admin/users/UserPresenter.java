@@ -2,9 +2,25 @@ package com.workpoint.icpak.client.ui.admin.users;
 
 import java.util.List;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import com.google.web.bindery.event.shared.EventBus;
+import com.gwtplatform.common.client.IndirectProvider;
+import com.gwtplatform.common.client.StandardProvider;
+import com.gwtplatform.mvp.client.Presenter;
+import com.gwtplatform.mvp.client.TabData;
+import com.gwtplatform.mvp.client.View;
+import com.gwtplatform.mvp.client.annotations.NameToken;
+import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
+import com.gwtplatform.mvp.client.annotations.TabInfo;
+import com.gwtplatform.mvp.client.annotations.UseGatekeeper;
+import com.gwtplatform.mvp.client.proxy.TabContentProxyPlace;
+import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.workpoint.icpak.client.place.NameTokens;
 import com.workpoint.icpak.client.service.ServiceCallback;
-import com.workpoint.icpak.client.service.TaskServiceCallback;
 import com.workpoint.icpak.client.ui.admin.AdminHomePresenter;
 import com.workpoint.icpak.client.ui.admin.TabDataExt;
 import com.workpoint.icpak.client.ui.admin.users.groups.GroupPresenter;
@@ -19,30 +35,9 @@ import com.workpoint.icpak.client.ui.events.LoadGroupsEvent;
 import com.workpoint.icpak.client.ui.events.LoadGroupsEvent.LoadGroupsHandler;
 import com.workpoint.icpak.client.ui.events.LoadUsersEvent;
 import com.workpoint.icpak.client.ui.events.LoadUsersEvent.LoadUsersHandler;
-import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
-import com.workpoint.icpak.client.ui.events.ProcessingEvent;
 import com.workpoint.icpak.client.ui.security.AdminGateKeeper;
-import com.workpoint.icpak.client.ui.security.LoginGateKeeper;
-import com.workpoint.icpak.shared.model.User;
+import com.workpoint.icpak.shared.model.UserDto;
 import com.workpoint.icpak.shared.model.UserGroup;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.web.bindery.event.shared.EventBus;
-import com.google.inject.Inject;
-import com.google.inject.Provider;
-import com.gwtplatform.common.client.IndirectProvider;
-import com.gwtplatform.common.client.StandardProvider;
-import com.gwtplatform.dispatch.rpc.shared.DispatchAsync;
-import com.gwtplatform.mvp.client.Presenter;
-import com.gwtplatform.mvp.client.TabData;
-import com.gwtplatform.mvp.client.View;
-import com.gwtplatform.mvp.client.annotations.NameToken;
-import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
-import com.gwtplatform.mvp.client.annotations.TabInfo;
-import com.gwtplatform.mvp.client.annotations.UseGatekeeper;
-import com.gwtplatform.mvp.client.proxy.TabContentProxyPlace;
-import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 
 public class UserPresenter extends Presenter<UserPresenter.MyView, UserPresenter.MyProxy> 
 implements EditUserHandler, LoadUsersHandler, LoadGroupsHandler, EditGroupHandler{
@@ -75,8 +70,6 @@ implements EditUserHandler, LoadUsersHandler, LoadGroupsHandler, EditGroupHandle
 
 	TYPE type = TYPE.USER;
 
-	@Inject DispatchAsync requestHelper;
-	
 	@Inject
 	public UserPresenter(final EventBus eventBus, final MyView view,MyProxy proxy,
 			Provider<UserSavePresenter> addUserProvider,
@@ -191,10 +184,10 @@ implements EditUserHandler, LoadUsersHandler, LoadGroupsHandler, EditGroupHandle
 //		});
 	}
 
-	protected void loadUsers(List<User> users) {
+	protected void loadUsers(List<UserDto> users) {
 		setInSlot(ITEMSLOT, null);
 		if(users!=null)
-			for(final User user: users){
+			for(final UserDto user: users){
 				userItemFactory.get(new ServiceCallback<UserItemPresenter>() {
 					@Override
 					public void processResult(UserItemPresenter result) {

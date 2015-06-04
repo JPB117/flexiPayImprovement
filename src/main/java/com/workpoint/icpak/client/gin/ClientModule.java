@@ -1,6 +1,9 @@
 package com.workpoint.icpak.client.gin;
 
+import com.gwtplatform.dispatch.rest.client.RestApplicationPath;
+import com.gwtplatform.dispatch.rest.client.gin.RestDispatchAsyncModule;
 import com.gwtplatform.dispatch.shared.SecurityCookie;
+import com.gwtplatform.mvp.client.annotations.ErrorPlace;
 import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
 import com.gwtplatform.mvp.client.gin.DefaultModule;
 import com.workpoint.icpak.client.place.ClientPlaceManager;
@@ -65,12 +68,18 @@ public class ClientModule extends AbstractPresenterModule {
 
 	@Override
 	protected void configure() {
-		
-		install(new DefaultModule(ClientPlaceManager.class));
+		RestDispatchAsyncModule.Builder dispatchBuilder =
+	            new RestDispatchAsyncModule.Builder();
+        install(dispatchBuilder.build());
+
+        //Bind RestApplicationPath To Server endpoint
+        bindConstant().annotatedWith(RestApplicationPath.class).to("/api");
+	        
+		install(new DefaultModule.Builder().placeManager(ClientPlaceManager.class).build());
 		
 		//bindConstant().annotatedWith(DefaultPlace.class).to(NameTokens.home);
 		bindConstant().annotatedWith(DefaultPlace.class).to(NameTokens.profile);
-		
+		bindConstant().annotatedWith(ErrorPlace.class).to(NameTokens.error);
 		bindConstant().annotatedWith(SecurityCookie.class).to(Definitions.AUTHENTICATIONCOOKIE);
 
 		bindPresenter(MainPagePresenter.class, MainPagePresenter.MyView.class,
@@ -82,7 +91,6 @@ public class ClientModule extends AbstractPresenterModule {
 
 		bindPresenterWidget(HeaderPresenter.class,
 				HeaderPresenter.IHeaderView.class, HeaderView.class);
-
 
 		bindPresenter(ErrorPagePresenter.class,
 				ErrorPagePresenter.MyView.class, ErrorPageView.class,

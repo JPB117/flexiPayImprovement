@@ -1,6 +1,6 @@
 package com.workpoint.icpak.client.ui.events;
 
-import com.workpoint.icpak.shared.model.User;
+import com.workpoint.icpak.shared.model.UserDto;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HasHandlers;
@@ -8,17 +8,17 @@ import com.google.gwt.event.shared.HasHandlers;
 public class EditUserEvent extends GwtEvent<EditUserEvent.EditUserHandler> {
 
 	public static Type<EditUserHandler> TYPE = new Type<EditUserHandler>();
-	private User user;
+	private UserDto user;
 
 	public interface EditUserHandler extends EventHandler {
 		void onEditUser(EditUserEvent event);
 	}
 
-	public EditUserEvent(User user) {
+	public EditUserEvent(UserDto user) {
 		this.user = user;
 	}
 
-	public User getUser() {
+	public UserDto getUser() {
 		return user;
 	}
 
@@ -36,7 +36,7 @@ public class EditUserEvent extends GwtEvent<EditUserEvent.EditUserHandler> {
 		return TYPE;
 	}
 
-	public static void fire(HasHandlers source, User user) {
+	public static void fire(HasHandlers source, UserDto user) {
 		source.fireEvent(new EditUserEvent(user));
 	}
 }

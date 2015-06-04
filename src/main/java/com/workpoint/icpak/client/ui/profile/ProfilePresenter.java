@@ -1,15 +1,5 @@
 package com.workpoint.icpak.client.ui.profile;
 
-import com.workpoint.icpak.client.place.NameTokens;
-import com.workpoint.icpak.client.service.TaskServiceCallback;
-import com.workpoint.icpak.client.ui.admin.TabDataExt;
-import com.workpoint.icpak.client.ui.events.ContextLoadedEvent;
-import com.workpoint.icpak.client.ui.events.ContextLoadedEvent.ContextLoadedHandler;
-import com.workpoint.icpak.client.ui.events.LoadAlertsEvent;
-import com.workpoint.icpak.client.ui.home.HomePresenter;
-import com.workpoint.icpak.client.ui.security.LoginGateKeeper;
-import com.workpoint.icpak.client.util.AppContext;
-import com.workpoint.icpak.shared.model.User;
 //import com.workpoint.icpak.shared.requests.CheckPasswordRequest;
 //import com.workpoint.icpak.shared.requests.GetUserRequest;
 //import com.workpoint.icpak.shared.requests.SaveUserRequest;
@@ -23,7 +13,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtplatform.dispatch.rpc.shared.DispatchAsync;
 import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.TabData;
 import com.gwtplatform.mvp.client.View;
@@ -32,6 +21,15 @@ import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.annotations.TabInfo;
 import com.gwtplatform.mvp.client.annotations.UseGatekeeper;
 import com.gwtplatform.mvp.client.proxy.TabContentProxyPlace;
+import com.workpoint.icpak.client.place.NameTokens;
+import com.workpoint.icpak.client.ui.admin.TabDataExt;
+import com.workpoint.icpak.client.ui.events.ContextLoadedEvent;
+import com.workpoint.icpak.client.ui.events.ContextLoadedEvent.ContextLoadedHandler;
+import com.workpoint.icpak.client.ui.events.LoadAlertsEvent;
+import com.workpoint.icpak.client.ui.home.HomePresenter;
+import com.workpoint.icpak.client.ui.security.LoginGateKeeper;
+import com.workpoint.icpak.client.util.AppContext;
+import com.workpoint.icpak.shared.model.UserDto;
 
 public class ProfilePresenter extends
 		Presenter<ProfilePresenter.IProfileView, ProfilePresenter.IProfileProxy> implements ContextLoadedHandler {
@@ -41,9 +39,9 @@ public class ProfilePresenter extends
 
 		public HasClickHandlers getSaveUser();
 
-		public User getUser();
+		public UserDto getUser();
 
-		public void setUser(User user);
+		public void setUser(UserDto user);
 
 		public HasClickHandlers getChangePassword();
 
@@ -70,9 +68,7 @@ public class ProfilePresenter extends
         return data;
     }
 
-	@Inject DispatchAsync requestHelper;
-
-	User user;
+	UserDto user;
 	
 	@Inject
 	public ProfilePresenter(final EventBus eventBus, final IProfileView view,final IProfileProxy proxy) {
@@ -88,7 +84,7 @@ public class ProfilePresenter extends
 			@Override
 			public void onClick(ClickEvent event) {
 				if(getView().isValid()){
-					User User = getView().getUser();
+					UserDto User = getView().getUser();
 					assert user!=null;
 					
 					user.setEmail(User.getEmail());

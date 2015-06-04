@@ -11,7 +11,7 @@ import com.workpoint.icpak.client.ui.component.PasswordField;
 import com.workpoint.icpak.client.ui.component.TextArea;
 import com.workpoint.icpak.client.ui.component.TextField;
 import com.workpoint.icpak.client.ui.upload.custom.Uploader;
-import com.workpoint.icpak.shared.model.User;
+import com.workpoint.icpak.shared.model.UserDto;
 import com.workpoint.icpak.shared.model.UserGroup;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.SpanElement;
@@ -141,27 +141,27 @@ public class UserSaveView extends PopupViewImpl implements
 		txtGroupname.setValue(group.getName());
 	}
 	
-	public User getUser(){
-		User user = new User();
+	public UserDto getUser(){
+		UserDto user = new UserDto();
 		user.setEmail(txtEmail.getValue());
 		user.setName(txtFirstname.getValue());
 		user.setPassword(txtPassword.getValue());
 		user.setSurname(txtLastname.getValue());
 		user.setUserId(txtUserName.getValue());
-		user.setGroups(lstGroups.getSelectedItems());
+		//user.setGroups(lstGroups.getSelectedItems());
 		
 		return user;
 	}
 	
-	User user;
-	public void setUser(User user){
+	UserDto user;
+	public void setUser(UserDto user){
 		txtEmail.setValue(user.getEmail());
 		txtFirstname.setValue(user.getName());
 		txtPassword.setValue(user.getPassword());
 		txtConfirmPassword.setValue(user.getPassword());
 		txtLastname.setValue(user.getSurname());
 		txtUserName.setValue(user.getUserId());
-		lstGroups.select(user.getGroups());
+		//lstGroups.select(user.getGroups());
 		setContext(user.getUserId());
 
 	}

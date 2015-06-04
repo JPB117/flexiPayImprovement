@@ -1,27 +1,34 @@
 package com.workpoint.icpak.shared.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
-public class User implements Listable,Serializable {
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
+public class UserDto implements Listable,Serializable {
 
 	private static final long serialVersionUID = -5249516544970187459L;
 	private Long id;
+	private String uri;
+	private String refId;
 	private String name;
 	private String userId;
 	private String email;
 	private String surname;
 	private String password;
-	private List<UserGroup> groups ;
+	private ArrayList<UserGroup> groups = new ArrayList<UserGroup>() ;
 	private int participated;
 	private int inbox;
 	
-	public User() {
+	public UserDto() {
 	}
 
-	public User(String id) {
+	public UserDto(String id) {
 		this.userId = id;
 	}
+	
 	
 	public void setName(String name) {
 		this.name = name;
@@ -78,7 +85,7 @@ public class User implements Listable,Serializable {
 	}
 
 	public void setGroups(List<UserGroup> groups) {
-		this.groups = groups;
+		this.groups.addAll(groups);
 	}
 	
 	public String getGroupsAsString(){
@@ -121,11 +128,11 @@ public class User implements Listable,Serializable {
 	
 	@Override
 	public boolean equals(Object obj) {
-		if(obj==null || !(obj instanceof User)){
+		if(obj==null || !(obj instanceof UserDto)){
 			return false;
 		}
 		
-		User other =  (User)obj;
+		UserDto other =  (UserDto)obj;
 		
 		if(name==null){
 			return false;
@@ -158,5 +165,21 @@ public class User implements Listable,Serializable {
 	@Override
 	public String getDisplayName() {
 		return getFullName();
+	}
+
+	public String getUri() {
+		return uri;
+	}
+
+	public void setUri(String uri) {
+		this.uri = uri;
+	}
+
+	public String getRefId() {
+		return refId;
+	}
+
+	public void setRefId(String refId) {
+		this.refId = refId;
 	}
 }

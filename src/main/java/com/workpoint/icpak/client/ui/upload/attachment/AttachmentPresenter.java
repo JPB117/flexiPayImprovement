@@ -1,17 +1,15 @@
 package com.workpoint.icpak.client.ui.upload.attachment;
 
-import com.workpoint.icpak.client.model.UploadContext;
-import com.workpoint.icpak.client.util.AppContext;
-import com.workpoint.icpak.shared.model.Attachment;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.user.client.Window;
-import com.google.web.bindery.event.shared.EventBus;
 import com.google.inject.Inject;
+import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.View;
+import com.workpoint.icpak.client.model.UploadContext;
+import com.workpoint.icpak.shared.model.Attachment;
 
 public class AttachmentPresenter extends PresenterWidget<AttachmentPresenter.IAttachmentView> {
 

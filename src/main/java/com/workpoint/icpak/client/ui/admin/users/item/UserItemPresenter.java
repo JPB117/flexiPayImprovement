@@ -1,19 +1,17 @@
 package com.workpoint.icpak.client.ui.admin.users.item;
 
-import com.workpoint.icpak.client.service.TaskServiceCallback;
-import com.workpoint.icpak.client.ui.AppManager;
-import com.workpoint.icpak.client.ui.OnOptionSelected;
-import com.workpoint.icpak.client.ui.events.EditUserEvent;
-import com.workpoint.icpak.shared.model.User;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.web.bindery.event.shared.EventBus;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.inject.Inject;
-import com.gwtplatform.dispatch.rpc.shared.DispatchAsync;
+import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.View;
+import com.workpoint.icpak.client.ui.AppManager;
+import com.workpoint.icpak.client.ui.OnOptionSelected;
+import com.workpoint.icpak.client.ui.events.EditUserEvent;
+import com.workpoint.icpak.shared.model.UserDto;
 
 public class UserItemPresenter extends PresenterWidget<UserItemPresenter.MyView> {
 
@@ -26,9 +24,7 @@ public class UserItemPresenter extends PresenterWidget<UserItemPresenter.MyView>
 		HasClickHandlers getDelete();
 	}
 
-	User user;
-	
-	@Inject DispatchAsync requestHelper;
+	UserDto user;
 	
 	@Inject
 	public UserItemPresenter(final EventBus eventBus, final MyView view) {
@@ -68,7 +64,7 @@ public class UserItemPresenter extends PresenterWidget<UserItemPresenter.MyView>
 		});
 	}
 
-	private void delete(User user) {
+	private void delete(UserDto user) {
 
 //		SaveUserRequest request = new SaveUserRequest(user);
 //		request.setDelete(true);
@@ -81,7 +77,7 @@ public class UserItemPresenter extends PresenterWidget<UserItemPresenter.MyView>
 	}
 	
 	
-	public void setUser(User user){
+	public void setUser(UserDto user){
 		this.user = user;
 		getView().setValues(user.getName(), user.getSurname(), user.getUserId(),
 				user.getEmail(), user.getGroupsAsString(), 

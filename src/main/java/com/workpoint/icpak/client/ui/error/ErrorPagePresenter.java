@@ -2,12 +2,8 @@ package com.workpoint.icpak.client.ui.error;
 
 import java.util.Date;
 
-import com.workpoint.icpak.client.place.NameTokens;
-import com.workpoint.icpak.client.service.TaskServiceCallback;
-import com.workpoint.icpak.client.ui.MainPagePresenter;
-import com.google.web.bindery.event.shared.EventBus;
 import com.google.inject.Inject;
-import com.gwtplatform.dispatch.rpc.shared.DispatchAsync;
+import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.NameToken;
@@ -15,6 +11,8 @@ import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
+import com.workpoint.icpak.client.place.NameTokens;
+import com.workpoint.icpak.client.ui.MainPagePresenter;
 
 public class ErrorPagePresenter extends
 		Presenter<ErrorPagePresenter.MyView, ErrorPagePresenter.MyProxy> {
@@ -29,7 +27,7 @@ public class ErrorPagePresenter extends
 	public interface MyProxy extends ProxyPlace<ErrorPagePresenter> {
 	}
 	
-	@Inject DispatchAsync dispatcher;
+//	@Inject DispatchAsync dispatcher;
 
 	@Inject
 	public ErrorPagePresenter(final EventBus eventBus, final MyView view,

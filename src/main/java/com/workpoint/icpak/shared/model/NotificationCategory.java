@@ -1,12 +1,17 @@
 package com.workpoint.icpak.shared.model;
 
-public enum NotificationCategory implements Listable{
+import java.io.Serializable;
+
+public enum NotificationCategory implements Listable,Serializable{
 	
 	EMAILNOTIFICATION("Email Nofication"),
 	ACTIVITYFEED("Activity Feed");
 	
 	
 	private String displayName;
+	
+	private NotificationCategory() {
+	}
 
 	private NotificationCategory(String displayName) {
 		this.displayName = displayName;

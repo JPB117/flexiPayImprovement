@@ -10,7 +10,7 @@ import com.workpoint.icpak.client.ui.component.IssuesPanel;
 import com.workpoint.icpak.client.ui.component.PasswordField;
 import com.workpoint.icpak.client.ui.component.TextField;
 import com.workpoint.icpak.client.ui.upload.custom.Uploader;
-import com.workpoint.icpak.shared.model.User;
+import com.workpoint.icpak.shared.model.UserDto;
 import com.workpoint.icpak.shared.model.UserGroup;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
@@ -164,9 +164,9 @@ public class ProfileView extends ViewImpl implements ProfilePresenter.IProfileVi
 		});
 	}
 
-	public User getUser(){
+	public UserDto getUser(){
 		
-		User user = new User();
+		UserDto user = new UserDto();
 		user.setEmail(txtEmail.getText());
 		user.setName(txtFirstname.getText());
 		user.setSurname(txtLastname.getText());
@@ -174,7 +174,7 @@ public class ProfileView extends ViewImpl implements ProfilePresenter.IProfileVi
 	}
 	
 
-	public void setUser(User user){
+	public void setUser(UserDto user){
 		issues.clear();
 		txtEmail.setValue(user.getEmail());
 		txtFirstname.setValue(user.getName());
@@ -187,15 +187,15 @@ public class ProfileView extends ViewImpl implements ProfilePresenter.IProfileVi
 		setContext(user.getUserId());
 		setImage(user);
 		
-		List<UserGroup> groups = user.getGroups();
-		if(groups!=null){
-			String html = "";
-			for(UserGroup group: groups){
-				html = html.concat("<span class=\"label\">"+group.getDisplayName()+"</span>");
-			}
-			
-			divGroups.setInnerHTML(html);
-		}
+		//List<UserGroup> groups = user.getGroups();
+//		if(groups!=null){
+//			String html = "";
+//			for(UserGroup group: groups){
+//				html = html.concat("<span class=\"label\">"+group.getDisplayName()+"</span>");
+//			}
+//			
+//			divGroups.setInnerHTML(html);
+//		}
 		
 		UIObject.setVisible(divSaveUser, false);
 		UIObject.setVisible(btnPassword.getElement(), true);
@@ -270,7 +270,7 @@ public class ProfileView extends ViewImpl implements ProfilePresenter.IProfileVi
 		return btnSave;
 	}
 	
-	public void setImage(User user) {
+	public void setImage(UserDto user) {
 		String moduleUrl = GWT.getModuleBaseURL().replace("/gwtht", "");
 		if (moduleUrl.endsWith("/")) {
 			moduleUrl = moduleUrl.substring(0, moduleUrl.length() - 1);

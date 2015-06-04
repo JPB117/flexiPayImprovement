@@ -2,7 +2,6 @@ package com.workpoint.icpak.client.ui.notifications;
 
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtplatform.dispatch.rpc.shared.DispatchAsync;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.View;
 import com.workpoint.icpak.client.ui.events.BeforeNotificationsLoadEvent;
@@ -14,10 +13,6 @@ public class NotificationsPresenter extends
 
 	public interface MyView extends View {
 	}
-
-	@Inject
-	DispatchAsync dispatcher;
-
 
 	public static final Object NOTE_SLOT = new Object();
 

@@ -6,7 +6,6 @@ import com.google.inject.Provider;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.common.client.IndirectProvider;
 import com.gwtplatform.common.client.StandardProvider;
-import com.gwtplatform.dispatch.rpc.shared.DispatchAsync;
 import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.TabData;
 import com.gwtplatform.mvp.client.View;
@@ -59,8 +58,6 @@ public class DashboardPresenter extends
 	public static final Type<RevealContentHandler<?>> LINEGRAPH_SLOT = new Type<RevealContentHandler<?>>();
 	@ContentSlot
 	public static final Type<RevealContentHandler<?>> LONGLASTINGTASKS_SLOT = new Type<RevealContentHandler<?>>();
-	
-	@Inject DispatchAsync requestHelper;
 	
 	@Inject
 	public DashboardPresenter(final EventBus eventBus, final IDashboardView view,MyProxy proxy,

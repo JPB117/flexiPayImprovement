@@ -7,10 +7,9 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtplatform.dispatch.rpc.shared.DispatchAsync;
 import com.gwtplatform.mvp.client.PopupView;
 import com.gwtplatform.mvp.client.PresenterWidget;
-import com.workpoint.icpak.shared.model.User;
+import com.workpoint.icpak.shared.model.UserDto;
 import com.workpoint.icpak.shared.model.UserGroup;
 
 public class UserSavePresenter extends PresenterWidget<UserSavePresenter.IUserSaveView> {
@@ -25,9 +24,9 @@ public class UserSavePresenter extends PresenterWidget<UserSavePresenter.IUserSa
 
 		boolean isValid();
 
-		User getUser();
+		UserDto getUser();
 
-		void setUser(User user);
+		void setUser(UserDto user);
 
 		UserGroup getGroup();
 
@@ -43,11 +42,9 @@ public class UserSavePresenter extends PresenterWidget<UserSavePresenter.IUserSa
 	
 	TYPE type;
 	
-	User user;
+	UserDto user;
 	
 	UserGroup group;
-	
-	@Inject DispatchAsync requestHelper;
 	
 	@Inject
 	public UserSavePresenter(final EventBus eventBus, final IUserSaveView view) {
@@ -63,7 +60,7 @@ public class UserSavePresenter extends PresenterWidget<UserSavePresenter.IUserSa
 			@Override
 			public void onClick(ClickEvent event) {
 				if(getView().isValid()){
-					User User = getView().getUser();
+					UserDto User = getView().getUser();
 //					if(user!=null){
 //						User.setId(user.getId());
 //					}
@@ -124,7 +121,7 @@ public class UserSavePresenter extends PresenterWidget<UserSavePresenter.IUserSa
 		getView().setType(type);
 		if(value!=null){
 			if(type==TYPE.USER){
-				user= (User)value;
+				user= (UserDto)value;
 				getView().setUser(user);
 			}else{
 				group= (UserGroup)value;

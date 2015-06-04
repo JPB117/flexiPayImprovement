@@ -2,7 +2,6 @@ package com.workpoint.icpak.client.ui.admin.dashboard.table;
 
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtplatform.dispatch.rpc.shared.DispatchAsync;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.View;
 import com.workpoint.icpak.shared.model.dashboard.ChartType;
@@ -13,7 +12,6 @@ public class TableDataPresenter extends
 	public interface ITableDataView extends View {
 	}
 	
-	@Inject DispatchAsync requestHelper;
 	ChartType type;
 	
 	boolean loaded = false;

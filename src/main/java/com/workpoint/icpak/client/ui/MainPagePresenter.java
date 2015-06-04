@@ -8,7 +8,6 @@ import com.google.inject.Provider;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.common.client.IndirectProvider;
 import com.gwtplatform.common.client.StandardProvider;
-import com.gwtplatform.dispatch.rpc.shared.DispatchAsync;
 import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.View;
@@ -62,7 +61,7 @@ ProcessingHandler, ShowAttachmentHandler, ClientDisconnectionHandler{
 		
 	IndirectProvider<ErrorPresenter> errorFactory;
 	
-	@Inject DispatchAsync dispatcher;
+	//@Inject DispatchAsync dispatcher;
 	
 	@Inject PlaceManager placeManager;
 

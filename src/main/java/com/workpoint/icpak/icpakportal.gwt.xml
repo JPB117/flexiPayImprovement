@@ -18,16 +18,21 @@
 	  <!-- Load dinamically predefined styles in the library when the application starts -->
 	  
 	 <!-- GXT extensions -->
-	 <!-- inherits name='com.sencha.gxt.ui.GXT'/ -->
+	 
      <!-- inherits name="com.sencha.gwt.uibinder.UiBinder" /-->
     
     <!-- GinUiBinder allows injecting widgets in UiBinder -->
-  	<inherits name="com.google.gwt.uibinder.GinUiBinder" />
-  	 
+  	<!-- inherits name="com.google.gwt.uibinder.GinUiBinder" /-->
+
+	<!-- Rest -->
+	<inherits name="com.gwtplatform.dispatch.rest.DispatchRest"/>
+	<inherits name="com.gwtplatform.dispatch.rest.delegates.ResourceDelegate"/>
+	<inherits name='com.gwtplatform.dispatch.Dispatch'/>
+	  	 
 	<!-- Other module inherits                                      -->
 	<inherits name='com.gwtplatform.mvp.MvpWithEntryPoint' />
-	<inherits name='com.gwtplatform.dispatch.Dispatch'/>
 	
+	<inherits name='com.sencha.gxt.ui.GXT'/>
 	<inherits name='com.sencha.gxt.chart.Chart' />
 	<replace-with class='com.sencha.gxt.chart.client.draw.engine.SVG'>
 	  <when-type-is class='com.sencha.gxt.chart.client.draw.Surface' />
@@ -36,7 +41,7 @@
 	<replace-with class='com.sencha.gxt.chart.client.draw.engine.VML'>
 	  <when-type-is class='com.sencha.gxt.chart.client.draw.Surface' />
 	  <any>
-	    <when-property-is name='user.agent' value='ie6' />
+	    <!-- when-property-is name='user.agent' value='ie6' /-->
 	    <when-property-is name='user.agent' value='ie8' />
 	  </any>
 	</replace-with>

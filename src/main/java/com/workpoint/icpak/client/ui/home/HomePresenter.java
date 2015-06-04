@@ -4,7 +4,6 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtplatform.dispatch.rpc.shared.DispatchAsync;
 import com.gwtplatform.mvp.client.ChangeTabHandler;
 import com.gwtplatform.mvp.client.RequestTabsHandler;
 import com.gwtplatform.mvp.client.Tab;
@@ -68,7 +67,6 @@ ProcessingHandler, ProcessingCompletedHandler{
 	@ContentSlot
 	public static final Type<RevealContentHandler<?>> DOCTREE_SLOT = new Type<RevealContentHandler<?>>();
 		
-	@Inject DispatchAsync requestHelper;
 	@Inject PlaceManager placeManager;
 	
 	@Inject

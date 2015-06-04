@@ -1,6 +1,6 @@
 package com.workpoint.icpak.client.ui.events;
 
-import com.workpoint.icpak.shared.model.User;
+import com.workpoint.icpak.shared.model.UserDto;
 import com.workpoint.icpak.shared.model.Version;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
@@ -10,7 +10,7 @@ public class ContextLoadedEvent extends
 		GwtEvent<ContextLoadedEvent.ContextLoadedHandler> {
 
 	public static Type<ContextLoadedHandler> TYPE = new Type<ContextLoadedHandler>();
-	private User currentUser;
+	private UserDto currentUser;
 	private Version version;
 	private String organizationName;
 
@@ -18,12 +18,12 @@ public class ContextLoadedEvent extends
 		void onContextLoaded(ContextLoadedEvent event);
 	}
 
-	public ContextLoadedEvent(User currentUser,Version version) {
+	public ContextLoadedEvent(UserDto currentUser,Version version) {
 		this.currentUser = currentUser;
 		this.version = version;
 	}
 
-	public User getCurrentUser() {
+	public UserDto getCurrentUser() {
 		return currentUser;
 	}
 	
@@ -45,7 +45,7 @@ public class ContextLoadedEvent extends
 		return TYPE;
 	}
 
-	public static void fire(HasHandlers source, User currentUser,Version version) {
+	public static void fire(HasHandlers source, UserDto currentUser,Version version) {
 		source.fireEvent(new ContextLoadedEvent(currentUser,version));
 	}
 

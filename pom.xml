@@ -12,8 +12,11 @@
 
 	<properties>
 		<!-- client -->
-		<gwt.version>2.5.1</gwt.version>
-		<gwtp.version>1.2.1</gwtp.version>
+		<!--gwt.version>2.5.1</gwt.version -->
+		<gwt.version>2.7.0</gwt.version>
+
+		<!--gwtp.version>1.4</gwtp.version -->
+		<gwtp.version>1.5-SNAPSHOT</gwtp.version>
 		<gin.version>2.1.2</gin.version>
 
 		<!-- server -->
@@ -23,8 +26,18 @@
 		<junit.version>4.11</junit.version>
 		<jukito.version>1.4</jukito.version>
 
+		<jersey.version>2.4.1</jersey.version>
+		<server.version>2.17</server.version>
+		<sunjersey.version>1.17</sunjersey.version>
+		<!-- hibernate.version>4.0.1.Final</hibernate.version -->
+		<hibernate.version>4.3.9.Final</hibernate.version>
+		<guice.version>3.0</guice.version>
+		<servlet.version>2.5</servlet.version>
+		<shiro.version>1.2.3</shiro.version>
+
 		<!-- maven -->
-		<gwt-maven-plugin.version>2.5.1</gwt-maven-plugin.version>
+		<!--gwt-maven-plugin.version>2.5.1</gwt-maven-plugin.version-->
+		<gwt-maven-plugin.version>2.7.0</gwt-maven-plugin.version>
 		<maven-surefire-plugin.version>2.6</maven-surefire-plugin.version>
 		<maven-compiler-plugin.version>2.3.2</maven-compiler-plugin.version>
 		<maven-resources-plugin.version>2.5</maven-resources-plugin.version>
@@ -43,15 +56,24 @@
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>
+				<includes>
+		          <include>**/*</include>
+		        </includes>
+		        <excludes>
+		        	<exclude>**/*.java</exclude>
+		        </excludes>
 			</resource>
 			<resource>
 				<directory>src/main/java</directory>
-				<excludes>
-					<exclude>**/*.java</exclude>
-				</excludes>
+				<includes>
+		          <include>**/*</include>
+		        </includes>
+		        <excludes>
+		        	<exclude>**/*.java</exclude>
+		        </excludes>
 			</resource>
 		</resources>
-		
+
 		<testResources>
 			<testResource>
 				<directory>sr/test/resources</directory>
@@ -60,13 +82,14 @@
 				</excludes>
 			</testResource>
 		</testResources>
+
+
 		<plugins>
 			<plugin>
 				<artifactId>maven-war-plugin</artifactId>
 				<version>2.4</version>
-				<!--configuration>
-					<packagingExcludes>WEB-INF/lib/javassist*.jar</packagingExcludes>
-				</configuration -->
+				<!--configuration> <packagingExcludes>WEB-INF/lib/javassist*.jar</packagingExcludes> 
+					</configuration -->
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -76,6 +99,17 @@
 					<source>${target.jdk}</source>
 					<target>${target.jdk}</target>
 					<encoding>${project.build.sourceEncoding}</encoding>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.tomcat.maven</groupId>
+				<artifactId>tomcat7-maven-plugin</artifactId>
+				<version>2.2</version>
+				<configuration>
+					<url>http://demo.wira.io:9090/manager/text</url>
+					<server>TomcatServer</server>
+					<path>/icpak</path>
 				</configuration>
 			</plugin>
 
@@ -108,7 +142,7 @@
 					<!-- With multiple tests use GwtTestSuite.java for speed -->
 					<includes>**/*GwtTest.java</includes>
 					<extraJvmArgs>-Xss1024K -Xmx1024M -XX:MaxPermSize=256M</extraJvmArgs>
-
+					<!--logLevel>INFO</logLevel -->
 					<copyWebapp>true</copyWebapp>
 					<hostedWebapp>${webappDirectory}</hostedWebapp>
 					<gwtSdkFirstInClasspath>true</gwtSdkFirstInClasspath>
@@ -158,6 +192,54 @@
 	</build>
 
 	<dependencies>
+		<!--Persistence With Hibernate -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.21</version>
+		</dependency>
+		
+		
+		<!-- Run the command below to add  sqljdbc4
+		mvn install:install-file -Dfile=sqljdbc4.jar -DgroupId=com.microsoft.sqlserver -DartifactId=sqljdbc4 -Dversion=4.0 -Dpackaging=jar
+		 -->
+		<!--dependency> 
+			<groupId>com.microsoft.sqlserver</groupId> 
+			<artifactId>sqljdbc4</artifactId> 
+			<version>4.0</version> 
+		</dependency--> 
+
+		<!-- Hibernate/ JPA -->
+		<dependency>
+			<groupId>org.hibernate.javax.persistence</groupId>
+			<artifactId>hibernate-jpa-2.1-api</artifactId>
+			<version>1.0.0.Final</version>
+		</dependency>
+
+		<!-- dependency> <groupId>org.hibernate.javax.persistence</groupId> <artifactId>hibernate-jpa-2.0-api</artifactId> 
+			<version>1.0.1.Final</version> </dependency -->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-entitymanager</artifactId>
+			<version>${hibernate.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-ehcache</artifactId>
+			<version>${hibernate.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>5.1.3.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-c3p0</artifactId>
+			<version>${hibernate.version}</version>
+		</dependency>
+		<!-- End of Persistence -->
+
 
 		<!-- dependency> <groupId>org.eclipse.tycho</groupId> <artifactId>org.eclipse.jdt.core</artifactId> 
 			<version>3.8.1.v20120531-0637</version> </dependency -->
@@ -165,15 +247,12 @@
 		<!-- dependency> <groupId>org.eclipse.jdt.core.compiler</groupId> <artifactId>ecj</artifactId> 
 			<version>3.5.1</version> </dependency -->
 
-		<!-- Google Web Toolkit -->
-		<dependency>
-			<groupId>com.google.gwt</groupId>
-			<artifactId>gwt-user</artifactId>
-			<version>${gwt.version}</version>
-			<!--scope>provided</scope -->
-		</dependency>
-
 		<!-- GWT-Platform -->
+		<dependency>
+			<groupId>com.gwtplatform</groupId>
+			<artifactId>gwtp-clients-common</artifactId>
+			<version>${gwtp.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>com.gwtplatform</groupId>
 			<artifactId>gwtp-mvp-client</artifactId>
@@ -194,8 +273,55 @@
 			<artifactId>gwtp-dispatch-rpc-shared</artifactId>
 			<version>${gwtp.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>com.gwtplatform</groupId>
+			<artifactId>gwtp-dispatch-rest</artifactId>
+			<version>${gwtp.version}</version>
+			<!-- scope>provided</scope -->
+		</dependency>
+		<dependency>
+			<groupId>com.gwtplatform</groupId>
+			<artifactId>gwtp-dispatch-rest-shared</artifactId>
+			<version>${gwtp.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+		    <groupId>com.gwtplatform.extensions</groupId>
+		    <artifactId>dispatch-rest-delegates</artifactId>
+		    <version>${gwtp.version}</version>
+		    <!-- scope>provided</scope-->
+		</dependency>
+		
+		<!-- Google Web Toolkit -->
+		<dependency>
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-user</artifactId>
+			<version>${gwt.version}</version>
+			<!--scope>provided</scope -->
+		</dependency>
+		<dependency>
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-servlet</artifactId>
+			<version>${gwt.version}</version>
+		</dependency>
 
-		<!-- DI -->
+		<dependency>
+			<groupId>com.sencha.gxt</groupId>
+			<artifactId>gxt</artifactId>
+			<version>3.1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sencha.gxt</groupId>
+			<artifactId>gxt-chart</artifactId>
+			<version>3.1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sencha.gxt</groupId>
+			<artifactId>gxt-legacy</artifactId>
+			<version>3.1.1</version>
+		</dependency>
+
+		<!-- Guice + DI -->
 		<dependency>
 			<groupId>com.google.inject</groupId>
 			<artifactId>guice</artifactId>
@@ -217,13 +343,13 @@
 			<version>${gin.version}</version>
 		</dependency>
 
+		<!-- Utils -->
 		<dependency>
 			<groupId>commons-collections</groupId>
 			<artifactId>commons-collections</artifactId>
 			<version>3.2.1</version>
 			<!--scope>provided</scope -->
 		</dependency>
-
 
 		<dependency>
 			<groupId>commons-fileupload</groupId>
@@ -232,25 +358,19 @@
 		</dependency>
 
 
-		<dependency>
+		<!--dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 			<version>2.2</version>
-		</dependency>
+		</dependency-->
 
-		<dependency>
+		<!--dependency>
 			<groupId>commons-lang</groupId>
 			<artifactId>commons-lang</artifactId>
 			<version>2.4</version>
-		</dependency>
+		</dependency-->
 
-		<dependency>
-			<groupId>commons-logging</groupId>
-			<artifactId>commons-logging</artifactId>
-			<version>1.1.1</version>
-		</dependency>
-		
-			<!-- GWT-GIN DEPENDENCIES -->
+		<!-- GWT-GIN DEPENDENCIES -->
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava-gwt</artifactId>
@@ -282,49 +402,200 @@
 			<version>1.0.1</version>
 		</dependency>
 
+		<!-- Jersey 1.18.1 -->
 		<dependency>
-			<groupId>com.google.gwt</groupId>
-			<artifactId>gwt-servlet</artifactId>
-			<version>2.5.1</version>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>${servlet.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>1.1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-servlet</artifactId>
+			<version>${sunjersey.version}</version>
+		</dependency>
+		<dependency>
+			<!-- groupId>com.sun.jersey</groupId -->
+			<groupId>org.glassfish.jersey.core</groupId>
+			<artifactId>jersey-server</artifactId>
+			<version>${server.version}</version>
+		</dependency>
+		<dependency>
+			<!-- groupId>com.sun.jersey</groupId -->
+			<groupId>org.glassfish.jersey.core</groupId>
+			<artifactId>jersey-client</artifactId>
+			<version>${server.version}</version>
 		</dependency>
 
 		<dependency>
-			<groupId>com.gwtplatform</groupId>
-			<artifactId>gwtp-all</artifactId>
-			<version>1.2.1</version>
+			<groupId>org.glassfish.jersey.media</groupId>
+			<artifactId>jersey-media-json-processing</artifactId>
+			<version>${server.version}</version>
 		</dependency>
 
 		<dependency>
-			<groupId>com.gwtplatform</groupId>
-			<artifactId>gwtp-clients-common</artifactId>
-			<version>1.2.1</version>
+			<groupId>org.glassfish.jersey.media</groupId>
+			<artifactId>jersey-media-json-jackson</artifactId>
+			<version>${server.version}</version>
 		</dependency>
 
 		<dependency>
-			<groupId>com.sencha.gxt</groupId>
-			<artifactId>gxt</artifactId>
-			<version>3.0.1</version>
+			<groupId>org.glassfish.jersey.media</groupId>
+			<artifactId>jersey-media-multipart</artifactId>
+			<version>${server.version}</version>
 		</dependency>
 
 		<dependency>
-			<groupId>com.sencha.gxt</groupId>
-			<artifactId>gxt-chart</artifactId>
-			<version>3.0.1</version>
+			<groupId>org.glassfish.jersey.bundles</groupId>
+			<artifactId>jaxrs-ri</artifactId>
+			<version>${server.version}</version>
 		</dependency>
 
 		<dependency>
-			<groupId>com.sencha.gxt</groupId>
-			<artifactId>gxt-legacy</artifactId>
-			<version>3.0.1</version>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.3</version>
 		</dependency>
 
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>${jersey.version}</version>
+		</dependency>
+
+		<!-- dependency> <groupId>com.sun.jersey</groupId> <artifactId>jersey-core</artifactId> 
+			<version>${jersey.version}</version> </dependency -->
+
+		<dependency>
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-json</artifactId>
+			<version>${sunjersey.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.jersey.contribs</groupId>
+			<artifactId>jersey-multipart</artifactId>
+			<version>${sunjersey.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.jersey.contribs</groupId>
+			<artifactId>jersey-guice</artifactId>
+			<version>${sunjersey.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-hibernate4</artifactId>
+			<version>${jersey.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+			<version>${jersey.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.3.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.inject.extensions</groupId>
+			<artifactId>guice-persist</artifactId>
+			<version>${guice.version}</version>
+		</dependency>
+		<!-- Gson: Java to Json conversion -->
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.2.4</version>
+			<scope>compile</scope>
+		</dependency>
+		<!-- Joda time -->
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+			<version>2.4</version>
+		</dependency>
+
+		<!-- Shiro Security Dependencies -->
+
+		<dependency>
+			<groupId>org.apache.shiro</groupId>
+			<artifactId>shiro-core</artifactId>
+			<version>${shiro.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.shiro</groupId>
+			<artifactId>shiro-web</artifactId>
+			<version>${shiro.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.shiro</groupId>
+			<artifactId>shiro-guice</artifactId>
+			<version>${shiro.version}</version>
+		</dependency>
 
 		
-		<!-- Test -->
+
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
+			<version>1.4.7</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.17</version>
+		</dependency>
+		
+		<!-- HTML To PDF convertor -->
+		<dependency>
+			<groupId>org.xhtmlrenderer</groupId>
+			<artifactId>flying-saucer-pdf-itext5</artifactId>
+			<version>9.0.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>net.glxn.qrgen</groupId>
+			<artifactId>javase</artifactId>
+			<version>2.0</version>
+		</dependency>
+		
+		
+
+		<!-- Swagger Jersey API documentation Framework -->
+		<dependency>
+			<groupId>com.wordnik</groupId>
+			<artifactId>swagger-jersey-jaxrs_2.10</artifactId>
+			<version>1.3.12</version>
+			<exclusions>
+				<exclusion>
+					<groupId>javax.ws.rs</groupId>
+					<artifactId>jsr311-api</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<!-- Unit Tests -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-grizzly2</artifactId>
+			<!-- version>1.9.1</version -->
+			<version>${sunjersey.version}</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -336,4 +607,5 @@
 		</dependency>
 
 	</dependencies>
+
 </project>

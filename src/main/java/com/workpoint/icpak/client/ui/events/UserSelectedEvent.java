@@ -1,6 +1,6 @@
 package com.workpoint.icpak.client.ui.events;
 
-import com.workpoint.icpak.shared.model.User;
+import com.workpoint.icpak.shared.model.UserDto;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HasHandlers;
@@ -9,17 +9,17 @@ public class UserSelectedEvent extends
 		GwtEvent<UserSelectedEvent.UserSelectedHandler> {
 
 	public static Type<UserSelectedHandler> TYPE = new Type<UserSelectedHandler>();
-	private User user;
+	private UserDto user;
 
 	public interface UserSelectedHandler extends EventHandler {
 		void onUserSelected(UserSelectedEvent event);
 	}
 
-	public UserSelectedEvent(User user) {
+	public UserSelectedEvent(UserDto user) {
 		this.user = user;
 	}
 
-	public User getUser() {
+	public UserDto getUser() {
 		return user;
 	}
 
@@ -37,7 +37,7 @@ public class UserSelectedEvent extends
 		return TYPE;
 	}
 
-	public static void fire(HasHandlers source, User user) {
+	public static void fire(HasHandlers source, UserDto user) {
 		source.fireEvent(new UserSelectedEvent(user));
 	}
 }

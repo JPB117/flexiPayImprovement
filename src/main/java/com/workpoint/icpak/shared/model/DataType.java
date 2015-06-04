@@ -1,5 +1,9 @@
 package com.workpoint.icpak.shared.model;
 
-public class DataType {
+import java.io.Serializable;
 
+public class DataType implements Serializable{
+
+	public DataType() {
+	}
 }

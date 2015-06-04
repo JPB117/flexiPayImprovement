@@ -1,19 +1,17 @@
 package com.workpoint.icpak.client.ui.admin.users.groups;
 
-import com.workpoint.icpak.client.service.TaskServiceCallback;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.inject.Inject;
+import com.google.web.bindery.event.shared.EventBus;
+import com.gwtplatform.mvp.client.PresenterWidget;
+import com.gwtplatform.mvp.client.View;
 import com.workpoint.icpak.client.ui.AppManager;
 import com.workpoint.icpak.client.ui.OnOptionSelected;
 import com.workpoint.icpak.client.ui.events.EditGroupEvent;
 import com.workpoint.icpak.shared.model.UserGroup;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.web.bindery.event.shared.EventBus;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.inject.Inject;
-import com.gwtplatform.dispatch.rpc.shared.DispatchAsync;
-import com.gwtplatform.mvp.client.PresenterWidget;
-import com.gwtplatform.mvp.client.View;
 
 public class GroupPresenter extends PresenterWidget<GroupPresenter.MyView>{
 
@@ -26,8 +24,6 @@ public class GroupPresenter extends PresenterWidget<GroupPresenter.MyView>{
 	}
 
 	UserGroup group;
-	
-	@Inject DispatchAsync requestHelper;
 	
 	@Inject
 	public GroupPresenter(final EventBus eventBus, final MyView view) {

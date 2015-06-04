@@ -1,10 +1,9 @@
 package com.workpoint.icpak.client.ui.popup;
 
-import com.google.web.bindery.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.inject.Inject;
-import com.gwtplatform.dispatch.rpc.shared.DispatchAsync;
+import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.PopupView;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
@@ -23,9 +22,6 @@ public class GenericPopupPresenter extends
 
 		void removeStyleName(String customPopupStyle);
 	}
-
-	@Inject
-	DispatchAsync dispatcher;
 
 	@ContentSlot
 	public static final Type<RevealContentHandler<?>> BODY_SLOT = new Type<RevealContentHandler<?>>();

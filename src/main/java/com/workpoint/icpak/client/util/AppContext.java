@@ -1,23 +1,18 @@
 package com.workpoint.icpak.client.util;
 
-import java.util.ArrayList;
 import java.util.Date;
 
-import com.workpoint.icpak.client.place.NameTokens;
-import com.workpoint.icpak.client.service.TaskServiceCallback;
-import com.workpoint.icpak.client.ui.events.ContextLoadedEvent;
-import com.workpoint.icpak.shared.model.User;
-import com.workpoint.icpak.shared.model.UserGroup;
-import com.workpoint.icpak.shared.model.Version;
 import com.google.gwt.core.client.GWT;
-import com.google.web.bindery.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Timer;
 import com.google.inject.Inject;
-import com.gwtplatform.dispatch.rpc.shared.DispatchAsync;
+import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
+import com.workpoint.icpak.client.place.NameTokens;
+import com.workpoint.icpak.shared.model.UserDto;
+import com.workpoint.icpak.shared.model.Version;
 
 
 /**
@@ -27,14 +22,14 @@ import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
  */
 public class AppContext {
 	
-	@Inject static DispatchAsync dispatcher;
+	
 	@Inject static EventBus eventBus;
 	@Inject static PlaceManager placeManager;
 	static Version version;
 
 	static String organizationName;
 	
-	private static final User user = new User();
+	private static final UserDto user = new UserDto();
 	
 	static Timer timer = new Timer() {
 		
@@ -44,7 +39,7 @@ public class AppContext {
 		}
 	};
 
-	public static void setSessionValues(User User, String authCookie){
+	public static void setSessionValues(UserDto User, String authCookie){
 		setUserValues(User);
 		CookieManager.setCookies(authCookie, new Date().getTime());
 		
@@ -121,27 +116,23 @@ public class AppContext {
 		}
 	}
 	
-	protected static void setUserValues(User User) {
+	protected static void setUserValues(UserDto User) {
 		user.setName(User.getName());
 		user.setUserId(User.getUserId());
-		user.setGroups(User.getGroups());
+		//user.setGroups(User.getGroups());
 		user.setEmail(User.getEmail());
 		user.setSurname(User.getSurname());
 		user.setId(User.getId());
 		CookieManager.setSessionValue(Definitions.ISADMINSESSION, User.isAdmin()? "Y":"N");
 	}
 
-
-	public static DispatchAsync getDispatcher(){
-		return dispatcher;
-	}
 	
 	public static PlaceManager getPlaceManager(){
 		return placeManager;
 	}
 
 	public static void destroy(){
-		setSessionValues(new User(), null);
+		setSessionValues(new UserDto(), null);
 		CookieManager.clear();		
 	}
 	
@@ -169,7 +160,7 @@ public class AppContext {
 		eventBus.fireEvent(event);
 	}
 	
-	public static User getContextUser(){
+	public static UserDto getContextUser(){
 		return user;
 	}
 
@@ -224,7 +215,7 @@ public class AppContext {
 	
 	public static void clear() {
 		user.setEmail(null);
-		user.setGroups(new ArrayList<UserGroup>());
+		//user.setGroups(new ArrayList<UserGroup>());
 		user.setId(null);
 		user.setSurname(null);
 		user.setPassword(null);

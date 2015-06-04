@@ -1,7 +1,7 @@
 package com.workpoint.icpak.client.ui.component;
 
 import com.workpoint.icpak.client.util.AppContext;
-import com.workpoint.icpak.shared.model.User;
+import com.workpoint.icpak.shared.model.UserDto;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style.Unit;
@@ -110,7 +110,7 @@ public class CommentBox extends Composite {
 		return spnArrow;
 	}
 	
-	private void setImage(User user) {
+	private void setImage(UserDto user) {
 		String moduleUrl = GWT.getModuleBaseURL().replace("/gwtht", "");
 		if(moduleUrl.endsWith("/")){
 			moduleUrl = moduleUrl.substring(0, moduleUrl.length()-1);

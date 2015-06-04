@@ -11,7 +11,6 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtplatform.dispatch.rpc.shared.DispatchAsync;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
@@ -26,7 +25,7 @@ import com.workpoint.icpak.client.ui.events.ContextLoadedEvent.ContextLoadedHand
 import com.workpoint.icpak.client.ui.events.LoadAlertsEvent;
 import com.workpoint.icpak.client.ui.events.LoadAlertsEvent.LoadAlertsHandler;
 import com.workpoint.icpak.client.ui.notifications.NotificationsPresenter;
-import com.workpoint.icpak.shared.model.User;
+import com.workpoint.icpak.shared.model.UserDto;
 import com.workpoint.icpak.shared.model.Version;
 
 public class HeaderPresenter extends PresenterWidget<HeaderPresenter.IHeaderView> 
@@ -44,10 +43,10 @@ implements AfterSaveHandler, AdminPageLoadHandler, ContextLoadedHandler, LoadAle
 		void changeFocus();
 		void showAdminLink(boolean admin);
 		void setVersionInfo(Date created, String date, String version);
-		void setImage(User currentUser);
+		void setImage(UserDto currentUser);
 	}
 
-	@Inject DispatchAsync dispatcher;
+	//@Inject DispatchAsync dispatcher;
 	
 	@Inject PlaceManager placeManager;
 	
@@ -188,7 +187,7 @@ implements AfterSaveHandler, AdminPageLoadHandler, ContextLoadedHandler, LoadAle
 
 	@Override
 	public void onContextLoaded(ContextLoadedEvent event) {
-		User currentUser = event.getCurrentUser();
+		UserDto currentUser = event.getCurrentUser();
 		getView().setImage(currentUser);
 		getView().showAdminLink(currentUser.isAdmin());
 		getView().setValues(currentUser.getSurname(), currentUser.getGroupsAsString(), event.getOrganizationName());

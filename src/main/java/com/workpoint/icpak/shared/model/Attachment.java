@@ -1,8 +1,11 @@
 package com.workpoint.icpak.shared.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Attachment {
+import com.workpoint.icpak.shared.model.UserDto;
+
+public class Attachment implements Serializable{
 
 	/**
 	 * 
@@ -18,14 +21,15 @@ public class Attachment {
 	private Long size;
 	private String sizeStr;
 	private String contentType;
-	private User createdBy;
+	private UserDto createdBy;
 	private Date created;
 	private String documentType;
 	private String subject;
 	private String path;
 	private boolean isDirectory;
 
-	private Attachment parent;
+	public Attachment() {
+	}
 	
 	public Long getId() {
 		return id;
@@ -103,18 +107,9 @@ public class Attachment {
 	public void setDocumentType(String documentType) {
 		this.documentType = documentType;
 	}
-	public void setParent(Attachment parent) {
-		this.parent = parent;
-	}
-
 	public void setDirectory(boolean isDirectory) {
 		this.isDirectory = isDirectory;
 	}
-	
-	public Attachment getParent() {
-		return parent;
-	}
-	
 	public boolean isDirectory() {
 		return isDirectory;
 	}
@@ -124,10 +119,10 @@ public class Attachment {
 	public void setPath(String path) {
 		this.path = path;
 	}
-	public User getCreatedBy() {
+	public UserDto getCreatedBy() {
 		return createdBy;
 	}
-	public void setCreatedBy(User createdBy) {
+	public void setCreatedBy(UserDto createdBy) {
 		this.createdBy = createdBy;
 	}
 
