@@ -30,6 +30,7 @@ import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.workpoint.icpak.client.place.NameTokens;
 import com.workpoint.icpak.client.service.AbstractAsyncCallback;
 import com.workpoint.icpak.client.ui.security.LoginGateKeeper;
+import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.api.UsersResource;
 import com.workpoint.icpak.shared.model.UserDto;
 
@@ -173,8 +174,8 @@ public class LoginPresenter extends
 			usersDelegate.withCallback(new AbstractAsyncCallback<UserDto>() {
 				@Override
 				public void onSuccess(UserDto result) {
-					Window.alert("SuccessfulLogin!!");
-					//History.newItem(NameTokens.profile);					
+					AppContext.setSessionValues(result,"XXXXX");
+					placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.profile).build());
 				}
 			}).login(getView().getUsername(),
 					getView().getPassword());
