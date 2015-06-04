@@ -9,6 +9,8 @@ import com.gwtplatform.mvp.client.gin.DefaultModule;
 import com.workpoint.icpak.client.place.ClientPlaceManager;
 import com.workpoint.icpak.client.place.DefaultPlace;
 import com.workpoint.icpak.client.place.NameTokens;
+import com.workpoint.icpak.client.registration.WebsiteClientPresenter;
+import com.workpoint.icpak.client.registration.WebsiteClientView;
 import com.workpoint.icpak.client.ui.AppManager;
 import com.workpoint.icpak.client.ui.MainPagePresenter;
 import com.workpoint.icpak.client.ui.MainPageView;
@@ -78,12 +80,17 @@ public class ClientModule extends AbstractPresenterModule {
 		install(new DefaultModule.Builder().placeManager(ClientPlaceManager.class).build());
 		
 		//bindConstant().annotatedWith(DefaultPlace.class).to(NameTokens.home);
-		bindConstant().annotatedWith(DefaultPlace.class).to(NameTokens.profile);
+		bindConstant().annotatedWith(DefaultPlace.class).to(NameTokens.registration);
 		bindConstant().annotatedWith(ErrorPlace.class).to(NameTokens.error);
 		bindConstant().annotatedWith(SecurityCookie.class).to(Definitions.AUTHENTICATIONCOOKIE);
 
 		bindPresenter(MainPagePresenter.class, MainPagePresenter.MyView.class,
 				MainPageView.class, MainPagePresenter.MyProxy.class);
+		
+
+		bindPresenter(WebsiteClientPresenter.class,
+				WebsiteClientPresenter.MyView.class, WebsiteClientView.class,
+				WebsiteClientPresenter.MyProxy.class);
 
 		bindPresenter(HomePresenter.class,
 				HomePresenter.IHomeView.class, HomeView.class,

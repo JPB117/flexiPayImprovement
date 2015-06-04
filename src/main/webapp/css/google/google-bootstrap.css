@@ -2141,7 +2141,6 @@ select:focus:required:invalid:focus {
   -moz-border-radius: 2px;
   border-radius: 2px;
 }
-/*
 .pagination ul {
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
@@ -2149,7 +2148,7 @@ select:focus:required:invalid:focus {
 }
 .pagination ul > li > a,
 .pagination ul > li > span {
-  /* background-color: #f3f3f3;
+  background-color: #f3f3f3;
   border: 1px solid #dcdcdc;
   border-left-width: 0;
   color: #333333;
@@ -2220,7 +2219,6 @@ select:focus:required:invalid:focus {
   -moz-border-radius: 0 2px 2px 0;
   border-radius: 0 2px 2px 0;
 }
-*/
 .pager li > a {
   padding: 4px 12px;
   border: 1px solid #dcdcdc;
