@@ -82,18 +82,6 @@ ProcessingHandler, ProcessingCompletedHandler{
 		addRegisteredHandler(ProcessingEvent.TYPE, this);
 		addRegisteredHandler(ProcessingCompletedEvent.TYPE, this);
 		
-//		getView().getAddButton().addClickHandler(new ClickHandler() {
-//			@Override
-//			public void onClick(ClickEvent event) {
-//				//showEditForm(MODE.CREATE);
-//				//showEditForm();
-//				
-//				getView().showDocsList();
-//			}
-//			
-//		});
-		
-		
 	}
 	
 	
@@ -105,11 +93,13 @@ ProcessingHandler, ProcessingCompletedHandler{
 	public void onProcessingCompleted(ProcessingCompletedEvent event) {
 		getView().showmask(false);
 	}
+	
 
 	@Override
 	public void onProcessing(ProcessingEvent event) {		
 		getView().showmask(true);
 	}
+	
 	
 	@ProxyEvent
 	public void onContextLoaded(ContextLoadedEvent event){

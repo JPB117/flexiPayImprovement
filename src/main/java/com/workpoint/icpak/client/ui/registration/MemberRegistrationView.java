@@ -158,6 +158,7 @@ public class MemberRegistrationView extends ViewImpl implements
 			@Override
 			public void onClick(ClickEvent event) {
 				counter = counter - 1;
+				showMyAccountLink(counter);
 				removeActive(liElements.get(counter), pageElements.get(counter));
 				setActive(liElements.get(counter), pageElements.get(counter));
 			}
@@ -167,15 +168,18 @@ public class MemberRegistrationView extends ViewImpl implements
 			@Override
 			public void onClick(ClickEvent event) {
 				counter = counter + 1;
-
-				if (counter == 2) {
-					aAccount.removeStyleName("hide");
-				}else{
-					aAccount.addStyleName("hide");
-				}
+				showMyAccountLink(counter);
 				setActive(liElements.get(counter), pageElements.get(counter));
 			}
 		});
+	}
+
+	protected void showMyAccountLink(int counter) {
+		if (counter == 2) {
+			aAccount.removeStyleName("hide");
+		} else {
+			aAccount.addStyleName("hide");
+		}
 	}
 
 	protected void removeActiveSelection(Anchor selected) {
