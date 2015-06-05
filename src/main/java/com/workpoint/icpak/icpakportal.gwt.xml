@@ -5,14 +5,6 @@
 	<!--  inherits name='com.google.gwt.inject.Inject'/ -->
 	<inherits name='com.google.gwt.resources.Resources'/>
 
-	<!-- Inherit the default GWT style sheet.  You can change       -->
-	<!-- the theme of your GWT application by uncommenting          -->
-	<!-- any one of the following lines.                            -->
-	<inherits name='com.google.gwt.user.theme.standard.Standard'/>
-	<!-- inherits name='com.github.gwtbootstrap.Bootstrap' /-->
-	<!-- <inherits name='com.google.gwt.user.theme.chrome.Chrome'/> -->
-	<!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/>     -->
-
 	<!-- Include GWTUpload library -->
 	  <inherits name="gwtupload.GWTUpload"/>
 	  <!-- Load dinamically predefined styles in the library when the application starts -->

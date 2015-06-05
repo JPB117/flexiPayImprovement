@@ -5,36 +5,59 @@
 	ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
-
-	<g:HTMLPanel styleName="login-bg">
-		<g:HTMLPanel styleName="row-fluid login-wrapper">
-			<img id="logo-image" class="logo-image" src="img/wiralogo.png"
-				alt="Logo"></img>
-			<span class="logo-title">Wira</span>
-			<a href="#">
-				<a class="brand hide" href="#">Wira
-					BPM |&nbsp;
-					<span ui:field="spnCompanyName">Your Organisation</span>
-				</a>
-			</a>
-			<g:HTMLPanel styleName="span4 box" ui:field="loadingbox">
-				<div class="content-wrap">
-					<h6>Log in</h6>
-					<span class="hide loadingtext" ui:field="loading">
-						<i class="icon-spinner icon-spin icon-large"></i>
-						Logging In...
-					</span>
-					<v:IssuesPanel ui:field="issues">
-					</v:IssuesPanel>
-					<g:TextBox ui:field="username" styleName="span12"></g:TextBox>
-					<g:PasswordTextBox ui:field="password" styleName="span12"></g:PasswordTextBox>
-					<a href="#" class="forgot hidden">Forgot password?</a>
-					<div class="remember">
-						<input id="remember-me" type="checkbox"></input>
-						<label for="remember-me">Keep me Signed In</label>
+	<g:HTMLPanel>
+		<div>
+			<nav class="navbar">
+				<div class="container">
+					<div class="navbar-header" style="width: 100%; text-align: center;">
+						<a class="brand">
+							<img src="http://solutech.co.ke/icpak//assets/img/logo.png"
+								width="150px" />
+						</a>
 					</div>
-					<g:Anchor ui:field="aLogin" styleName="btn-glow btn-block primary login">Log in</g:Anchor>
 				</div>
+			</nav>
+		</div>
+		<g:HTMLPanel styleName="image-container set-full-height">
+			<g:HTMLPanel styleName="login-bg">
+				<g:HTMLPanel styleName="row-fluid login-wrapper">
+					<g:HTMLPanel styleName="span4 box" ui:field="loadingbox">
+						<div class="content-wrap">
+							<h6>PORTAL Log in</h6>
+							<span class="hide loadingtext" ui:field="loading">
+								<i class="icon-spinner icon-spin icon-large"></i>
+								Logging In...
+							</span>
+							<v:IssuesPanel ui:field="issues" styleName="alert alert-danger"
+								role="alert">
+							</v:IssuesPanel>
+
+							<fieldset>
+								<div class="form-group">
+									<g:TextBox ui:field="username" styleName="form-control"></g:TextBox>
+								</div>
+
+								<div class="form-group">
+									<g:PasswordTextBox ui:field="password"
+										styleName="form-control"></g:PasswordTextBox>
+								</div>
+								<a href="#" class="forgot hide">Forgot password?</a>
+								<div class="remember">
+									<input id="remember-me" type="checkbox"></input>
+									<label for="remember-me">Keep me Signed In</label>
+								</div>
+								<g:Anchor ui:field="aLogin" styleName="btn btn-lg btn-success btn-block">Log in</g:Anchor>
+
+								<div class="row">
+									<br />
+									New Member ?
+									<a href="#signup">Register here</a>
+								</div>
+
+							</fieldset>
+						</div>
+					</g:HTMLPanel>
+				</g:HTMLPanel>
 			</g:HTMLPanel>
 		</g:HTMLPanel>
 	</g:HTMLPanel>
