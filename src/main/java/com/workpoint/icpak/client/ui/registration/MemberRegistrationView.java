@@ -7,6 +7,7 @@ import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Anchor;
@@ -46,13 +47,6 @@ public class MemberRegistrationView extends ViewImpl implements
 	@UiField
 	LIElement liTab3;
 
-	@UiField
-	TextField surname;
-	@UiField
-	TextField other_names;
-	@UiField
-	TextField email_address;
-
 	// @UiField
 	// DropDownList<> lstMemberCategory;
 
@@ -64,15 +58,6 @@ public class MemberRegistrationView extends ViewImpl implements
 	@UiField TextField txtCity;
 	@UiField TextField txtAddress;
 	@UiField TextField txtPostalCode;
-	
-	@UiField
-	TextField employer;
-	@UiField
-	TextField city;
-	@UiField
-	TextField address;
-	@UiField
-	TextField postal_code;
 
 	private List<LIElement> liElements = new ArrayList<LIElement>();
 	private List<PageElement> pageElements = new ArrayList<PageElement>();
@@ -188,6 +173,17 @@ public class MemberRegistrationView extends ViewImpl implements
 	@Override
 	public Widget asWidget() {
 		return widget;
+	}
+
+	@Override
+	public HasClickHandlers getANext() {
+
+		return aNext;
+	}
+
+	@Override
+	public HasClickHandlers getABack() {
+		return aBack;
 	}
 
 }

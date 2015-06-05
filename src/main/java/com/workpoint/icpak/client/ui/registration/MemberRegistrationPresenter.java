@@ -1,5 +1,8 @@
 package com.workpoint.icpak.client.ui.registration;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -22,6 +25,9 @@ public class MemberRegistrationPresenter
 
 	public interface MyView extends View {
 		ApplicationFormHeaderDto getApplicationForm();
+		HasClickHandlers getANext();
+		HasClickHandlers getABack();
+		
 	}
 
 	@ProxyCodeSplit
@@ -50,6 +56,22 @@ public class MemberRegistrationPresenter
 	protected void onBind() {
 		super.onBind();
 		
+		getView().getANext().addClickHandler(new ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent event) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		
+		getView().getABack().addClickHandler(new ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent event) {
+				
+			}
+		});
 		
 	}
 

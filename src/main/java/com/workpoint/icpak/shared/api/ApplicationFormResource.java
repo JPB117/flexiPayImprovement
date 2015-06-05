@@ -26,7 +26,7 @@ public interface ApplicationFormResource{
 	@GET
 	@Path("/{applicationId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public ApplicationFormHeaderDto getById(String applicationId);
+	public ApplicationFormHeaderDto getById(@PathParam("applicationId") String applicationId);
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
