@@ -144,24 +144,32 @@
 
 											<div class="panel panel-default">
 												<div class="panel-body">
-													Dear <span ui:field="spnNames">Kimani Muriranja</span>,
+													Dear
+													<span ui:field="spnNames">Kimani Muriranja</span>
+													,
 													Thank you for your interest in joining
 													ICPAK.
 
-													Please note that you will also be required to pay MEMBER
-													Registration Fee (non-refundable) of Ksh. 5000.0.
+													Please note
+													that you will also be required to pay MEMBER
+													Registration
+													Fee (non-refundable) of Ksh. 5000.0.
 
-													Your Proforma invoice is attached. Now you can pay online via
+													Your Proforma invoice
+													is attached. Now you can pay online via
 													(MPESA,VISA,MasterCard) by clicking on the Complete
 													Registration Link below.
 
-													Use below credentials to Login into your account:
+													Use below credentials to Login into
+													your account:
 
 													Email address: tomkim@wira.io
-													Temporary Password : UaOpZ2
+													Temporary
+													Password : UaOpZ2
 												</div>
 											</div>
 										</div>
+
 
 										<div class="tab-pane" ui:field="divPayment">
 											<div class="row">
@@ -196,11 +204,11 @@
 					</div>
 				</div>
 			</div>
+		</div>
 
-			<div class="footer">
-				<div class="container">
-					<footer>Copyright ICPAK 2015</footer>
-				</div>
+		<div class="footer">
+			<div class="container">
+				<footer>Copyright ICPAK 2015</footer>
 			</div>
 		</div>
 	</g:HTMLPanel>
