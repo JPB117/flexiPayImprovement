@@ -35,14 +35,14 @@
 
 								<ul class="nav nav-pills">
 									<li class="active" style="width: 33.3333333333333%;"
-										ui:field="liPackage">
+										ui:field="liTab1">
 										<a>1 - Personal Information</a>
 									</li>
-									<li style="width: 33.3333333333333%;" ui:field="liPayment">
-										<a>2 - Make Payment</a>
+									<li style="width: 33.3333333333333%;" ui:field="liTab2">
+										<a>2 - Proforma Invoice</a>
 									</li>
-									<li style="width: 33.3333333333333%;" ui:field="liComplete">
-										<a>3 - Complete</a>
+									<li style="width: 33.3333333333333%;" ui:field="liTab3">
+										<a>3 - Make Payment</a>
 									</li>
 								</ul>
 
@@ -132,60 +132,76 @@
 										</div>
 									</div>
 
-									<div class="tab-pane" ui:field="divPayment">
+									<div class="tab-pane" ui:field="divProforma">
 										<div class="row">
-											<div class="col-sm-12 hide">
-												<h4 class="info-text">Submit Payment:</h4>
-											</div>
-											<div class="col-md-12">
-												<g:Frame ui:field="framePayment" height="590px"
-													width="100%"></g:Frame>
-											</div>
-										</div>
-									</div>
-
-									<div class="tab-pane" ui:field="divComplete">
-										<div class="row">
-											<div class="col-sm-12">
-												<h4 class="info-text">Status:</h4>
-											</div>
-
 											<div class="alert alert-success" role="alert">
-												Your payment has
-												successfully been received!
+												Your application
+												has been submitted successfully!
 											</div>
 										</div>
-									</div>
-								</div>
-								<div class="wizard-footer">
-									<div class="pull-right">
-										<g:Anchor
-											styleName='btn btn-next btn-fill btn-success btn-wd
-										btn-sm'
-											ui:field="aNext">Proceed
-										</g:Anchor>
-									</div>
-									<div class="pull-left">
-										<g:Anchor
-											styleName='btn btn-previous btn-fill btn-default btn-wd btn-sm'
-											ui:field="aBack">Back
-										</g:Anchor>
-									</div>
 
-									<div class="clearfix"></div>
+										<div class="row">
+
+											<div class="panel panel-default">
+												<div class="panel-body">
+													Dear <span ui:field="spnNames">Kimani Muriranja</span>,
+													Thank you for your interest in joining
+													ICPAK.
+
+													Please note that you will also be required to pay MEMBER
+													Registration Fee (non-refundable) of Ksh. 5000.0.
+
+													Your Proforma invoice is attached. Now you can pay online via
+													(MPESA,VISA,MasterCard) by clicking on the Complete
+													Registration Link below.
+
+													Use below credentials to Login into your account:
+
+													Email address: tomkim@wira.io
+													Temporary Password : UaOpZ2
+												</div>
+											</div>
+										</div>
+
+										<div class="tab-pane" ui:field="divPayment">
+											<div class="row">
+												<div class="col-md-12">
+													<g:Frame ui:field="framePayment" height="590px"
+														width="100%"></g:Frame>
+												</div>
+											</div>
+										</div>
+
+									</div>
+									<div class="wizard-footer">
+										<div class="pull-right">
+											<g:Anchor
+												styleName='btn btn-next btn-fill btn-success btn-wd
+										btn-sm hide'
+												ui:field="aNext">Proceed
+											</g:Anchor>
+										</div>
+										<div class="pull-left">
+											<g:Anchor
+												styleName='btn btn-previous btn-fill btn-default btn-wd btn-sm hide'
+												ui:field="aBack">Back
+											</g:Anchor>
+										</div>
+
+										<div class="clearfix"></div>
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-		</div>
 
-		<div class="footer">
-			<div class="container">
-				<footer>Copyright ICPAK 2015</footer>
+			<div class="footer">
+				<div class="container">
+					<footer>Copyright ICPAK 2015</footer>
+				</div>
 			</div>
-		</div>
 	</g:HTMLPanel>
 
 </ui:UiBinder>

@@ -72,53 +72,51 @@ public class ClientModule extends AbstractPresenterModule {
 
 	@Override
 	protected void configure() {
-		RestDispatchAsyncModule.Builder dispatchBuilder =
-	            new RestDispatchAsyncModule.Builder();
-        install(dispatchBuilder.build());
+		RestDispatchAsyncModule.Builder dispatchBuilder = new RestDispatchAsyncModule.Builder();
+		install(dispatchBuilder.build());
 
-        //Bind RestApplicationPath To Server endpoint
-        bindConstant().annotatedWith(RestApplicationPath.class).to("/api");
-	        
-		install(new DefaultModule.Builder().placeManager(ClientPlaceManager.class).build());
-		
-		//bindConstant().annotatedWith(DefaultPlace.class).to(NameTokens.home);
-		bindConstant().annotatedWith(DefaultPlace.class).to(NameTokens.registration);
+		// Bind RestApplicationPath To Server endpoint
+		bindConstant().annotatedWith(RestApplicationPath.class).to("/api");
+
+		install(new DefaultModule.Builder().placeManager(
+				ClientPlaceManager.class).build());
+
+		// bindConstant().annotatedWith(DefaultPlace.class).to(NameTokens.home);
+		bindConstant().annotatedWith(DefaultPlace.class).to(NameTokens.signup);
 		bindConstant().annotatedWith(ErrorPlace.class).to(NameTokens.error);
-		bindConstant().annotatedWith(SecurityCookie.class).to(Definitions.AUTHENTICATIONCOOKIE);
+		bindConstant().annotatedWith(SecurityCookie.class).to(
+				Definitions.AUTHENTICATIONCOOKIE);
 
 		bindPresenter(MainPagePresenter.class, MainPagePresenter.MyView.class,
 				MainPageView.class, MainPagePresenter.MyProxy.class);
-		
 
 		bindPresenter(WebsiteClientPresenter.class,
 				WebsiteClientPresenter.MyView.class, WebsiteClientView.class,
 				WebsiteClientPresenter.MyProxy.class);
 
-		bindPresenter(HomePresenter.class,
-				HomePresenter.IHomeView.class, HomeView.class,
-				HomePresenter.MyProxy.class);
+		bindPresenter(HomePresenter.class, HomePresenter.IHomeView.class,
+				HomeView.class, HomePresenter.MyProxy.class);
 
 		bindPresenterWidget(HeaderPresenter.class,
 				HeaderPresenter.IHeaderView.class, HeaderView.class);
 
-		
 		bindPresenter(MemberRegistrationPresenter.class,
-				MemberRegistrationPresenter.MyView.class, MemberRegistrationView.class,
+				MemberRegistrationPresenter.MyView.class,
+				MemberRegistrationView.class,
 				MemberRegistrationPresenter.MyProxy.class);
-		
+
 		bindPresenter(ErrorPagePresenter.class,
 				ErrorPagePresenter.MyView.class, ErrorPageView.class,
 				ErrorPagePresenter.MyProxy.class);
-		
+
 		bindPresenterWidget(ErrorPresenter.class, ErrorPresenter.MyView.class,
 				ErrorView.class);
 
 		bindPresenter(LoginPresenter.class, LoginPresenter.ILoginView.class,
 				LoginView.class, LoginPresenter.MyProxy.class);
-		
+
 		requestStaticInjection(AppContext.class);
 		requestStaticInjection(AppManager.class);
-
 
 		bindPresenter(NotfoundPresenter.class, NotfoundPresenter.MyView.class,
 				NotfoundView.class, NotfoundPresenter.MyProxy.class);
@@ -126,9 +124,9 @@ public class ClientModule extends AbstractPresenterModule {
 		bindPresenterWidget(NotificationsPresenter.class,
 				NotificationsPresenter.MyView.class, NotificationsView.class);
 
-		bindPresenterWidget(AttachmentPresenter.class, 
+		bindPresenterWidget(AttachmentPresenter.class,
 				AttachmentPresenter.IAttachmentView.class, AttachmentView.class);
-		
+
 		bindPresenterWidget(UserSelectionPresenter.class,
 				UserSelectionPresenter.MyView.class, UserSelectionView.class);
 
@@ -139,10 +137,8 @@ public class ClientModule extends AbstractPresenterModule {
 				AdminHomePresenter.MyView.class, AdminHomeView.class,
 				AdminHomePresenter.MyProxy.class);
 
-
 		bindPresenter(UserPresenter.class, UserPresenter.MyView.class,
-				UserView.class,
-				UserPresenter.MyProxy.class);
+				UserView.class, UserPresenter.MyProxy.class);
 
 		bindPresenter(DashboardPresenter.class,
 				DashboardPresenter.IDashboardView.class, DashboardView.class,
@@ -150,37 +146,39 @@ public class ClientModule extends AbstractPresenterModule {
 
 		bindPresenterWidget(ReportsPresenter.class,
 				ReportsPresenter.MyView.class, ReportsView.class);
-		
+
 		bindPresenterWidget(UserSavePresenter.class,
 				UserSavePresenter.IUserSaveView.class, UserSaveView.class);
-		
-		bindPresenterWidget(UserItemPresenter.class, UserItemPresenter.MyView.class,
-				UserItemView.class);
-		
-		bindPresenterWidget(GroupPresenter.class, GroupPresenter.MyView.class, GroupView.class);
 
-		bindPresenterWidget(GenericPopupPresenter.class, GenericPopupPresenter.MyView.class,
-				GenericPopupView.class);
-		
+		bindPresenterWidget(UserItemPresenter.class,
+				UserItemPresenter.MyView.class, UserItemView.class);
+
+		bindPresenterWidget(GroupPresenter.class, GroupPresenter.MyView.class,
+				GroupView.class);
+
+		bindPresenterWidget(GenericPopupPresenter.class,
+				GenericPopupPresenter.MyView.class, GenericPopupView.class);
+
 		bindPresenterWidget(IFrameDataPresenter.class,
 				IFrameDataPresenter.IFrameView.class, IFrameDataView.class);
 
-		
-		bindPresenter(ProfilePresenter.class, ProfilePresenter.IProfileView.class,
-				ProfileView.class, ProfilePresenter.IProfileProxy.class);
-		
-		bindPresenterWidget(PieChartPresenter.class, PieChartPresenter.IPieChartView.class,
-				PieChartView.class);
-		
-		bindPresenterWidget(LineGraphPresenter.class, LineGraphPresenter.ILineGraphView.class,
-				LineGraphView.class);
+		bindPresenter(ProfilePresenter.class,
+				ProfilePresenter.IProfileView.class, ProfileView.class,
+				ProfilePresenter.IProfileProxy.class);
 
-		bindPresenter(SettingsPresenter.class, SettingsPresenter.ISettingsView.class,
-				SettingsView.class, SettingsPresenter.MyProxy.class);
-		
-		bindPresenterWidget(TableDataPresenter.class, TableDataPresenter.ITableDataView.class,
-				TableDataView.class);
-		
+		bindPresenterWidget(PieChartPresenter.class,
+				PieChartPresenter.IPieChartView.class, PieChartView.class);
+
+		bindPresenterWidget(LineGraphPresenter.class,
+				LineGraphPresenter.ILineGraphView.class, LineGraphView.class);
+
+		bindPresenter(SettingsPresenter.class,
+				SettingsPresenter.ISettingsView.class, SettingsView.class,
+				SettingsPresenter.MyProxy.class);
+
+		bindPresenterWidget(TableDataPresenter.class,
+				TableDataPresenter.ITableDataView.class, TableDataView.class);
+
 		bind(TabPanel.class);
 
 	}

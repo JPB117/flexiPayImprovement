@@ -34,14 +34,14 @@ public class MemberRegistrationView extends ViewImpl implements
 	@UiField
 	DivElement divPayment;
 	@UiField
-	DivElement divComplete;
+	DivElement divProforma;
 
 	@UiField
-	LIElement liPackage;
+	LIElement liTab1;
 	@UiField
-	LIElement liPayment;
+	LIElement liTab2;
 	@UiField
-	LIElement liComplete;
+	LIElement liTab3;
 
 	@UiField
 	TextField surname;
@@ -49,7 +49,7 @@ public class MemberRegistrationView extends ViewImpl implements
 	TextField other_names;
 	@UiField
 	TextField email_address;
-	
+
 	// @UiField
 	// DropDownList<> lstMemberCategory;
 
@@ -63,7 +63,7 @@ public class MemberRegistrationView extends ViewImpl implements
 	TextField postal_code;
 
 	private List<LIElement> liElements = new ArrayList<LIElement>();
-	private List<DivElement> divElements = new ArrayList<DivElement>();
+	private List<PageElement> pageElements = new ArrayList<PageElement>();
 
 	int counter = 0;
 
@@ -76,61 +76,75 @@ public class MemberRegistrationView extends ViewImpl implements
 
 		String url = "http://197.248.2.44:8080/ewallet-beta/#websiteClient";
 		framePayment.setUrl(url);
-		
+
 		// Li Elements
-		liElements.add(liPackage);
-		liElements.add(liPayment);
-		liElements.add(liComplete);
+		liElements.add(liTab1);
+		liElements.add(liTab2);
+		liElements.add(liTab3);
 
 		// Div Elements
-		divElements.add(divPackage);
-		divElements.add(divPayment);
-		divElements.add(divComplete);
+		pageElements.add(new PageElement(divPackage, "Submit", "Back"));
+		pageElements.add(new PageElement(divProforma,"Proceed to Pay"));
+		pageElements.add(new PageElement(divPayment,"Finish"));
 
-		setActive(liElements.get(counter), divElements.get(counter));
+		setActive(liElements.get(counter), pageElements.get(counter));
 
 		aBack.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				counter = counter-1;
-				removeActive(liElements.get(counter), divElements.get(counter));
-				setActive(liElements.get(counter), divElements.get(counter));
+				counter = counter - 1;
+				removeActive(liElements.get(counter), pageElements.get(counter));
+				setActive(liElements.get(counter), pageElements.get(counter));
 			}
 		});
 
 		aNext.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				counter = counter+1;
-				setActive(liElements.get(counter), divElements.get(counter));
+				counter = counter + 1;
+				setActive(liElements.get(counter), pageElements.get(counter));
 			}
 		});
 	}
 
-	private void removeActive(LIElement liElement, DivElement divElement) {
+	private void removeActive(LIElement liElement, PageElement page) {
+		setButtons(page);
 		liElement.removeClassName("active");
-		divElement.removeClassName("active");
-		System.err.println("Removed:" + counter);
+		page.getElement().removeClassName("active");
 	}
 
-	private void setActive(LIElement liElement, DivElement divElement) {
-		if(counter==0){
-			aBack.setVisible(false);
+	private void setButtons(PageElement page) {
+		if (page.getNextText() != null) {
+			aNext.getElement().removeClassName("hide");
+			aNext.setText(page.getNextText());
+		} else {
+			aNext.getElement().addClassName("hide");
 		}
+
+		if (page.getPreviousText() != null) {
+			aBack.getElement().removeClassName("hide");
+			aBack.setText(page.getPreviousText());
+		} else {
+			aBack.getElement().addClassName("hide");
+		}
+	}
+
+	private void setActive(LIElement liElement, PageElement page) {
 		clearAll();
+		setButtons(page);
 		liElement.addClassName("active");
-		divElement.addClassName("active");
+		page.getElement().addClassName("active");
 		System.err.println("Added:" + counter);
 	}
 
 	private void clearAll() {
-		liPackage.removeClassName("active");
-		liPayment.removeClassName("active");
-		liComplete.removeClassName("active");
+		liTab1.removeClassName("active");
+		liTab2.removeClassName("active");
+		liTab3.removeClassName("active");
 
 		divPackage.removeClassName("active");
 		divPayment.removeClassName("active");
-		divComplete.removeClassName("active");
+		divProforma.removeClassName("active");
 	}
 
 	@Override
@@ -142,4 +156,5 @@ public class MemberRegistrationView extends ViewImpl implements
 	public void createWizard() {
 
 	}
+
 }
