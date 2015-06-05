@@ -31,6 +31,10 @@ public class MemberRegistrationView extends ViewImpl implements
 
 	@UiField
 	DivElement divPackage;
+
+	@UiField
+	DivElement divCategories;
+
 	@UiField
 	DivElement divPayment;
 	@UiField
@@ -42,6 +46,8 @@ public class MemberRegistrationView extends ViewImpl implements
 	LIElement liTab2;
 	@UiField
 	LIElement liTab3;
+	@UiField
+	LIElement liTab4;
 
 	@UiField
 	TextField surname;
@@ -81,11 +87,14 @@ public class MemberRegistrationView extends ViewImpl implements
 		liElements.add(liTab1);
 		liElements.add(liTab2);
 		liElements.add(liTab3);
+		liElements.add(liTab4);
 
 		// Div Elements
 		pageElements.add(new PageElement(divPackage, "Submit", "Back"));
-		pageElements.add(new PageElement(divProforma,"Proceed to Pay"));
-		pageElements.add(new PageElement(divPayment,"Finish"));
+		pageElements.add(new PageElement(divCategories, "Proceed"));
+		pageElements.add(new PageElement(divProforma, "Proceed to Pay",
+				"Proceed To My Account"));
+		pageElements.add(new PageElement(divPayment, "Finish"));
 
 		setActive(liElements.get(counter), pageElements.get(counter));
 
@@ -141,9 +150,11 @@ public class MemberRegistrationView extends ViewImpl implements
 		liTab1.removeClassName("active");
 		liTab2.removeClassName("active");
 		liTab3.removeClassName("active");
+		liTab4.removeClassName("active");
 
 		divPackage.removeClassName("active");
 		divPayment.removeClassName("active");
+		divCategories.removeClassName("active");
 		divProforma.removeClassName("active");
 	}
 

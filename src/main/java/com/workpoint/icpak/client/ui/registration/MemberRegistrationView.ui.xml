@@ -10,7 +10,7 @@
 			<nav class="navbar">
 				<div class="container">
 					<div class="navbar-header" style="width: 100%; text-align: center;">
-						<a href="#" class="brand">
+						<a class="brand">
 							<img src="http://solutech.co.ke/icpak//assets/img/logo.png"
 								width="150px" />
 						</a>
@@ -22,7 +22,7 @@
 		<div class="image-container set-full-height">
 			<div class="container">
 				<div class="row">
-					<div class="col-sm-10 col-sm-offset-1">
+					<div class="col-sm-11">
 						<!-- Wizard container -->
 						<div class="wizard-container">
 							<div class="card wizard-card ct-wizard-green">
@@ -34,15 +34,17 @@
 								</div>
 
 								<ul class="nav nav-pills">
-									<li class="active" style="width: 33.3333333333333%;"
-										ui:field="liTab1">
+									<li class="active" style="width: 25%;" ui:field="liTab1">
 										<a>1 - Personal Information</a>
 									</li>
-									<li style="width: 33.3333333333333%;" ui:field="liTab2">
-										<a>2 - Proforma Invoice</a>
+									<li style="width: 25%;" ui:field="liTab2">
+										<a>2 - Membership Category</a>
 									</li>
-									<li style="width: 33.3333333333333%;" ui:field="liTab3">
-										<a>3 - Make Payment</a>
+									<li style="width: 25%;" ui:field="liTab3">
+										<a>3 - Proforma Invoice</a>
+									</li>
+									<li style="width:25%;" ui:field="liTab4">
+										<a>4 - Make Payment</a>
 									</li>
 								</ul>
 
@@ -50,10 +52,16 @@
 								<div class="tab-content">
 									<div class="tab-pane active" ui:field="divPackage">
 										<div class="row">
-
-											<div class="col-sm-12">
+											<div class="col-sm-12 hide">
 												<h4 class="info-text">Fill In Below Details:</h4>
 												<hr />
+											</div>
+
+											<div class="col-sm-12">
+												<div class="alert alert-success" role="alert">
+													Your application
+													has been submitted successfully!
+												</div>
 											</div>
 
 											<div class="col-sm-12">
@@ -83,8 +91,10 @@
 														</div>
 
 														<div class="col-xs-6">
-															<label>Category:</label>
-															<d:DropDownList ui:field="lstMemberCategory"></d:DropDownList>
+															<label for="phone">Phone Number</label>
+															<d:TextField ui:field="txtPhone" styleName="form-control"
+																placeholder="Phone Number" value="" required="true">
+															</d:TextField>
 														</div>
 													</div>
 												</div>
@@ -132,55 +142,213 @@
 										</div>
 									</div>
 
+									<div class="tab-pane" ui:field="divCategories">
+										<div class="row">
+											<div class="col-xs-12">
+												<div class="col-sm-12">
+													<h4 class="info-text">Select Category:</h4>
+													<hr />
+												</div>
+
+												<div class="pricing-table col-xs-3">
+													<div class="panel panel-primary" style="border:none;">
+														<div class="controle-header panel-heading panel-heading-landing">
+															<h1 class="panel-title panel-title-landing">Non-Practicing
+																Member</h1>
+														</div>
+
+														<div class="panel-body panel-body-landing">
+															<table class="table">
+																<tr>
+																	<td width="50px">
+																		<i class="fa fa-check"></i>
+																	</td>
+																	<td>Application Fee: Kshs.26,000</td>
+																</tr>
+																<tr>
+																	<td width="50px">
+																		<i class="fa fa-check"></i>
+																	</td>
+																	<td>Annual subscription: Kshs 10,000</td>
+																</tr>
+																<tr>
+																	<td width="50px">
+																		<i class="fa fa-check"></i>
+																	</td>
+																	<td>All CPA graduates who have experience of 3 years
+																		or
+																		more</td>
+																</tr>
+															</table>
+														</div>
+														<div class="panel-footer panel-footer-landing">
+															<g:Anchor styleName="btn btn-price btn-block btn-success">SELECT
+															</g:Anchor>
+														</div>
+													</div>
+												</div>
+
+												<div class="pricing-table col-xs-3">
+													<div class="panel panel-primary" style="border:none;">
+														<div class="controle-header panel-heading panel-heading-landing">
+															<h1 class="panel-title panel-title-landing">Practicing
+																Member</h1>
+														</div>
+
+														<div class="panel-body panel-body-landing">
+															<table class="table">
+																<tr>
+																	<td width="50px">
+																		<i class="fa fa-check"></i>
+																	</td>
+																	<td>Application Fee: Kshs.26,000</td>
+																</tr>
+																<tr>
+																	<td width="50px">
+																		<i class="fa fa-check"></i>
+																	</td>
+																	<td>Annual subscription: Kshs 10,000</td>
+																</tr>
+																<tr>
+																	<td width="50px">
+																		<i class="fa fa-check"></i>
+																	</td>
+																	<td>All CPA graduates who have experience of 3 years
+																		or
+																		more</td>
+																</tr>
+															</table>
+														</div>
+														<div class="panel-footer panel-footer-landing">
+															<a class="btn btn-price btn-block btn-success">SELECT</a>
+														</div>
+													</div>
+												</div>
+
+												<div class="pricing-table col-xs-3">
+													<div class="panel panel-primary" style="border:none;">
+														<div class="controle-header panel-heading panel-heading-landing">
+															<h1 class="panel-title panel-title-landing">OverSeas Member</h1>
+														</div>
+
+														<div class="panel-body panel-body-landing">
+															<table class="table">
+																<tr>
+																	<td width="50px">
+																		<i class="fa fa-check"></i>
+																	</td>
+																	<td>Application Fee: Kshs.26,000</td>
+																</tr>
+																<tr>
+																	<td width="50px">
+																		<i class="fa fa-check"></i>
+																	</td>
+																	<td>Annual subscription: Kshs 10,000</td>
+																</tr>
+																<tr>
+																	<td width="50px">
+																		<i class="fa fa-check"></i>
+																	</td>
+																	<td>All CPA graduates who have experience of 3 years
+																		or
+																		more</td>
+																</tr>
+															</table>
+														</div>
+														<div class="panel-footer panel-footer-landing">
+															<a class="btn btn-price btn-block btn-success">SELECT</a>
+														</div>
+													</div>
+												</div>
+
+												<div class="pricing-table col-xs-3">
+													<div class="panel panel-primary" style="border:none;">
+														<div class="controle-header panel-heading panel-heading-landing">
+															<h1 class="panel-title panel-title-landing">Associate</h1>
+														</div>
+
+														<div class="panel-body panel-body-landing">
+															<table class="table">
+																<tr>
+																	<td width="50px">
+																		<i class="fa fa-check"></i>
+																	</td>
+																	<td>Application Fee: Kshs.26,000</td>
+																</tr>
+																<tr>
+																	<td width="50px">
+																		<i class="fa fa-check"></i>
+																	</td>
+																	<td>Annual subscription: Kshs 10,000</td>
+																</tr>
+																<tr>
+																	<td width="50px">
+																		<i class="fa fa-check"></i>
+																	</td>
+																	<td>All CPA graduates who have experience of 3 years
+																		or
+																		more</td>
+																</tr>
+															</table>
+														</div>
+														<div class="panel-footer panel-footer-landing">
+															<a class="btn btn-price btn-block btn-success">SELECT</a>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+
+
 									<div class="tab-pane" ui:field="divProforma">
 										<div class="row">
-											<div class="alert alert-success" role="alert">
-												Your application
-												has been submitted successfully!
-											</div>
-										</div>
+											<div class="col-xs-12">
+												<div class="panel panel-default">
+													<div class="panel-heading">
+														<span ui:field="spnNames">Kimani Muriranja</span>
+													</div>
 
-										<div class="row">
+													<div class="panel-body">
+														Below is a summary of your application:
+														A Proforma invoice
+														has been sent to your email address(
+														<span class="spnEmail">tomkim@wira.io</span>
+														) to facilitate in the payment.
+														<br />
 
-											<div class="panel panel-default">
-												<div class="panel-body">
-													Dear
-													<span ui:field="spnNames">Kimani Muriranja</span>
-													,
-													Thank you for your interest in joining
-													ICPAK.
+														Below are the next steps:
+														<ol>
+															<li>
+																You can choose to complete your payment now by clicking
+																on the button
+																<strong> Proceed To Payment</strong>
+																and complete the registration.
+																<br />
+															</li>
 
-													Please note
-													that you will also be required to pay MEMBER
-													Registration
-													Fee (non-refundable) of Ksh. 5000.0.
-
-													Your Proforma invoice
-													is attached. Now you can pay online via
-													(MPESA,VISA,MasterCard) by clicking on the Complete
-													Registration Link below.
-
-													Use below credentials to Login into
-													your account:
-
-													Email address: tomkim@wira.io
-													Temporary
-													Password : UaOpZ2
+															<li>
+																You can choose to complete your payment later by
+																clicking on the button
+																<strong> Proceed To My Account</strong>
+															</li>
+														</ol>
+													</div>
 												</div>
 											</div>
 										</div>
-
-
-										<div class="tab-pane" ui:field="divPayment">
-											<div class="row">
-												<div class="col-md-12">
-													<g:Frame ui:field="framePayment" height="590px"
-														width="100%"></g:Frame>
-												</div>
-											</div>
-										</div>
-
 									</div>
+
+									<div class="tab-pane" ui:field="divPayment">
+										<div class="row">
+											<div class="col-md-12">
+												<g:Frame ui:field="framePayment" height="590px"
+													width="100%"></g:Frame>
+											</div>
+										</div>
+									</div>
+
+
 									<div class="wizard-footer">
 										<div class="pull-right">
 											<g:Anchor
