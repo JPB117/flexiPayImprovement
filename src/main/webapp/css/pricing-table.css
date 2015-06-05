@@ -6,35 +6,35 @@
     -moz-transition: all .3s ease;
     -webkit-transition: all .3s ease;
 }
-.pricing-table:hover {
-    box-shadow: 0px 0px 30px rgba(0,0,0, .2);
-}
-
-.pricing-table:hover>.panel-footer-landing {
+.pricing-table.active>.panel-footer-landing ,.pricing-table:hover>.panel-footer-landing {
     box-shadow: 0px 0px 30px rgba(0,0,0, .05) inset;
     -webkit-transition:  all .3s ease;
 }
 
-.pricing-table:hover>.panel>.panel-body-landing {
+.pricing-table:hover>.panel>.panel-body-landing, .pricing-table.active>.panel>.panel-body-landing {
     background: #5CB85C;
     -webkit-transition:  all .3s ease;
 }
-.pricing-table:hover>.panel>.panel-heading-landing-box {
+.pricing-table:hover>.panel>.panel-heading-landing-box, .pricing-table.active>.panel>.panel-heading-landing-box {
     background: #f0f0f0 !important;
     color: #333 !important;
     -webkit-transition:  all .3s ease;
 }
-.pricing-table:hover>.panel>.controle-header {
+.pricing-table:hover>.panel>.controle-header,.pricing-table.active>.panel>.controle-header {
     background: #5CB85C !important;
     -webkit-transition:  all .3s ease;
 }
-.pricing-table:hover>.panel>.panel-footer {
+.pricing-table:hover>.panel>.panel-footer,.pricing-table.active>.panel>.panel-footer {
     background: #5CB85C !important;
     -webkit-transition:  all .3s ease;
 }
 .pricing-table:hover>.panel>.panel-footer>.btn {
     border: solid 1px #fff !important;
     -webkit-transition:  all .3s ease;
+}
+
+.pricing-table.active>.panel>.panel-footer>.btn {
+    display:none;
 }
 
 .btn-price:hover {
