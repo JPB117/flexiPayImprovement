@@ -26,6 +26,7 @@ import com.icpak.rest.models.membership.MaritalStatus;
 import com.icpak.rest.models.membership.Member;
 import com.icpak.rest.models.membership.StudentType;
 import com.wordnik.swagger.annotations.ApiModel;
+import com.workpoint.icpak.shared.model.Gender;
 
 
 @ApiModel(value="User Data Model", 

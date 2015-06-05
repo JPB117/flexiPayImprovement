@@ -7,9 +7,9 @@ import com.icpak.rest.exceptions.ServiceException;
 import com.icpak.rest.models.ErrorCodes;
 import com.icpak.rest.models.membership.ApplicationFormEducational;
 import com.icpak.rest.models.membership.ApplicationFormHeader;
-import com.icpak.rest.models.membership.ApplicationType;
 import com.icpak.rest.models.membership.Category;
 import com.icpak.rest.models.membership.EduType;
+import com.workpoint.icpak.shared.model.ApplicationType;
 
 public class ApplicationFormDao extends BaseDao{
 

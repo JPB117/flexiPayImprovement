@@ -60,13 +60,13 @@
 												<div class="row">
 													<div class="col-xs-6">
 														<label for="firstname">Surname</label>
-														<d:TextField ui:field="surname" styleName="form-control"
+														<d:TextField ui:field="txtSurname" styleName="form-control"
 															placeholder="Enter Surname" value="" required="true">
 														</d:TextField>
 													</div>
 													<div class="col-xs-6">
 														<label for="lastname">Other Name</label>
-														<d:TextField ui:field="other_names" styleName="form-control"
+														<d:TextField ui:field="txtOtherNames" styleName="form-control"
 															placeholder="Enter Other Name" value="" required="true">
 														</d:TextField>
 													</div>
@@ -76,7 +76,7 @@
 													<div class="row">
 														<div class="col-xs-6">
 															<label for="emailaddress">Email Address</label>
-															<d:TextField ui:field="email_address"
+															<d:TextField ui:field="txtEmailAddress"
 																styleName="form-control" placeholder="Email address"
 																value="" required="true">
 															</d:TextField>
@@ -94,7 +94,7 @@
 													<div class="row">
 														<div class="col-xs-6">
 															<label for="emailaddress">Employer Name</label>
-															<d:TextField ui:field="employer" styleName="form-control"
+															<d:TextField ui:field="txtEmployer" styleName="form-control"
 																placeholder="Enter Employer's Name" value="" required="true">
 															</d:TextField>
 														</div>
@@ -102,7 +102,7 @@
 														<div class="col-xs-6">
 															<label for="applicationCategory">Town/City</label>
 
-															<d:TextField ui:field="city" styleName="form-control"
+															<d:TextField ui:field="txtCity" styleName="form-control"
 																placeholder="Enter Town/City" value="" required="true">
 															</d:TextField>
 														</div>
@@ -113,7 +113,7 @@
 													<div class="row">
 														<div class="col-xs-6">
 															<label for="emailaddress">Address</label>
-															<d:TextField ui:field="address" styleName="form-control"
+															<d:TextField ui:field="txtAddress" styleName="form-control"
 																placeholder="Enter Address" value="" required="true">
 															</d:TextField>
 														</div>
@@ -121,7 +121,7 @@
 														<div class="col-xs-6">
 															<label for="applicationCategory">Postal Code</label>
 
-															<d:TextField ui:field="postal_code"
+															<d:TextField ui:field="txtPostalCode"
 																styleName="form-control" placeholder="Enter Postal Code"
 																value="" required="true">
 															</d:TextField>
@@ -202,6 +202,7 @@
 					<footer>Copyright ICPAK 2015</footer>
 				</div>
 			</div>
+		</div>
 	</g:HTMLPanel>
 
 </ui:UiBinder>

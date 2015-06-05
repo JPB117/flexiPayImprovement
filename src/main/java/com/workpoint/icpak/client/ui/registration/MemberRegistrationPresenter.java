@@ -14,14 +14,14 @@ import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.workpoint.icpak.client.place.NameTokens;
+import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 
 public class MemberRegistrationPresenter
 		extends
 		Presenter<MemberRegistrationPresenter.MyView, MemberRegistrationPresenter.MyProxy> {
 
 	public interface MyView extends View {
-		void createWizard();
-
+		ApplicationFormHeaderDto getApplicationForm();
 	}
 
 	@ProxyCodeSplit
@@ -49,8 +49,8 @@ public class MemberRegistrationPresenter
 	@Override
 	protected void onBind() {
 		super.onBind();
-
-		getView().createWizard();
+		
+		
 	}
 
 	@Override

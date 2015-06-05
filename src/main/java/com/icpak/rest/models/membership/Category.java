@@ -10,6 +10,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.icpak.rest.models.base.PO;
 import com.wordnik.swagger.annotations.ApiModel;
+import com.workpoint.icpak.shared.model.ApplicationType;
+import com.workpoint.icpak.shared.model.CategoryDto;
 
 @ApiModel(description="Application Category charges")
 
@@ -64,5 +66,16 @@ public class Category extends PO{
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public CategoryDto toDto() {
+		CategoryDto category = new CategoryDto();
+		category.setRefId(refId);
+		category.setApplicationAmount(applicationAmount);
+		category.setDescription(description);
+		category.setRenewalAmount(renewalAmount);
+		category.setType(type);
+		
+		return null;
 	}
 }

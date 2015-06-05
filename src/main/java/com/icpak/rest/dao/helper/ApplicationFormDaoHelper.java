@@ -1,6 +1,7 @@
 package com.icpak.rest.dao.helper;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -21,7 +22,6 @@ import com.icpak.rest.models.ErrorCodes;
 import com.icpak.rest.models.auth.User;
 import com.icpak.rest.models.base.ResourceCollectionModel;
 import com.icpak.rest.models.membership.ApplicationFormHeader;
-import com.icpak.rest.models.membership.ApplicationType;
 import com.icpak.rest.models.membership.Category;
 import com.icpak.rest.models.util.Attachment;
 import com.icpak.rest.utils.Doc;
@@ -29,6 +29,8 @@ import com.icpak.rest.utils.DocumentHTMLMapper;
 import com.icpak.rest.utils.DocumentLine;
 import com.icpak.rest.utils.EmailServiceHelper;
 import com.icpak.rest.utils.HTMLToPDFConvertor;
+import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
+import com.workpoint.icpak.shared.model.ApplicationType;
 
 @Transactional
 public class ApplicationFormDaoHelper {
@@ -38,23 +40,25 @@ public class ApplicationFormDaoHelper {
 	@Inject MemberDao memberDao;
 	@Inject UsersDao userDao;
 	
-	public void createApplication(ApplicationFormHeader application){
+	public void createApplication(ApplicationFormHeaderDto application){
+		
 		if(application.getRefId()!=null){
 			updateApplication(application.getRefId(), application);
 			return;
 		}
 		
-//		if(application.getMember()!=null){
-//			application.setMember(memberDao.findByMemberId(application.getMember().getRefId()));
-//		}
-//		applicationDao.createApplication(application);
+		//Copy into PO
+		ApplicationFormHeader po = new ApplicationFormHeader();
+		po.copyFrom(application);
 		
-		applicationDao.createApplication(application);
-				
-		setCategory(application);	
-		User user = createTempUser(application);
-		sendEmail(application, user);
-		assert application.getId()!=null;
+		applicationDao.createApplication(po);
+		setCategory(po);	
+		
+		User user = createTempUser(po);
+		sendEmail(po, user);
+		
+		//Copy into DTO
+		po.copyInto(application);
 	}
 	
 	private User createTempUser(ApplicationFormHeader application) {
@@ -136,18 +140,11 @@ public class ApplicationFormDaoHelper {
 	
 	}
 
-	public void updateApplication(String applicationId, ApplicationFormHeader application){
+	public void updateApplication(String applicationId, ApplicationFormHeaderDto dto){
 		ApplicationFormHeader po = applicationDao.findByApplicationId(applicationId,true);
-		ApplicationFormHeader header = new ApplicationFormHeader();
-		header.setSurname(application.getSurname());
-		header.setOtherNames(application.getOtherNames());
-		header.setEmail(application.getEmail());
-		header.setApplicationType(application.getApplicationType());
-		header.setAddress1(application.getAddress1());
-		header.setPostCode(application.getPostCode());
-		header.setCity1(application.getCity1());
-		header.setEmployer(application.getEmployer());
-		setCategory(application);
+		po.copyFrom(dto);
+		setCategory(po);
+		
 		applicationDao.updateApplication(po);
 	}
 	
@@ -155,22 +152,17 @@ public class ApplicationFormDaoHelper {
 //		ApplicationFormHeader application = applicationDao.findByApplicationId(applicationId);
 //		applicationDao.delete(application);
 	}
-	public ResourceCollectionModel<ApplicationFormHeader> getAllApplications(Integer offset, Integer limit,
-			UriInfo uriInfo) {
-		int total = applicationDao.getApplicationCount();
-		
-		ResourceCollectionModel<ApplicationFormHeader> collection = 
-				new ResourceCollectionModel<>(offset,limit,total, uriInfo);
+	public List<ApplicationFormHeaderDto> getAllApplications(Integer offset, Integer limit,
+			String uri) {
+
 		List<ApplicationFormHeader> applications = applicationDao.getAllApplications(offset, limit);
-		
-		//List<ApplicationFormHeader> rtn = new ArrayList<>();
-//		for(ApplicationFormHeader application: applications){
-//			application.setUri(uriInfo.getAbsolutePath().toString()+"/"+application.getRefId());
-//			rtn.add(application.clone(ExpandTokens.DETAIL.toString()));
-//		}
-		
-		collection.setItems(applications);
-		return collection;
+		List<ApplicationFormHeaderDto> rtn = new ArrayList<>();
+		for(ApplicationFormHeader application: applications){
+			ApplicationFormHeaderDto dto  = application.toDto();
+			dto.setUri(uri+"/"+application.getRefId());
+			rtn.add(dto);
+		}
+		return rtn;
 	}
 	
 	public ApplicationFormHeader getApplicationById(String applicationId) {

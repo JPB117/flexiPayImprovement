@@ -1,282 +1,110 @@
-package com.icpak.rest.models.membership;
+package com.workpoint.icpak.shared.model;
 
 import java.sql.Timestamp;
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlSeeAlso;
 
-import com.icpak.rest.models.base.PO;
-import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
-import com.workpoint.icpak.shared.model.ApplicationType;
-import com.workpoint.icpak.shared.model.Gender;
+import com.icpak.rest.models.membership.Category;
+import com.wordnik.swagger.annotations.ApiModel;
 
-@Entity
-@Table(name="`Application Form Header`")
-public class ApplicationFormHeader extends PO{
+@ApiModel(description="Application Forms Filled by a member")
+
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlSeeAlso(Category.class)
+public class ApplicationFormHeaderDto extends SerializableObj{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@Column(name="`timestamp`",columnDefinition="timestamp  default current_timestamp")
-	private Timestamp timestamp;
-
-	@Column(name="`Application No_`")
 	private String applicationNo;
-	
-	@Column(name="`Date`", columnDefinition="datetime")
 	private Date date;
-	
-	@Column(name="`Application Date`", columnDefinition="datetime")
 	private String applicationDate;
-	
-	@Column(name="`Surname`", length=30)
 	private String surname;
-	
-	@Column(name="`Other Names`", length=30)
 	private String otherNames;
-	
-	@Column(name="`Date Of Birth`", columnDefinition="datetime")
 	private Date dob;
-	
-	@Column(name="`Gender`")
-	@Enumerated(EnumType.ORDINAL)
 	private Gender gender;
-	
-	@Column(name="`Marital Status`")
 	private int maritalStatus;
-	
-	@Column(name="`Nationality`", columnDefinition="varchar(20) ")
 	private String nationality;
-	
-	@Column(name="`Country of Origin`", columnDefinition="varchar(20) ")
 	private String country;
-	
-	@Column(name="`Address for Correspondence1`", columnDefinition="varchar(100) ")
 	private String address1;
-	
-	@Column(name="`Address for Correspondence2`", columnDefinition="varchar(100) ")
 	private String address2;
-
-	@Column(name="`Address for Correspondence3`", columnDefinition="varchar(100) ")
 	private String address3;
-			
-	@Column(name="`Telephone No_ 1`", columnDefinition="varchar(50) ")
 	private String telephone1;
-	
-	@Column(name="`Telephone No_ 2`", columnDefinition="varchar(50) ")
 	private String telephone2;
-
-	@Column(name="`Application Type`", columnDefinition="varchar(20) ")
-	@Enumerated(EnumType.STRING)
 	private ApplicationType applicationType;
-	
-	@Column(name="`Receipt No_`", columnDefinition="varchar(20)")
 	private String receiptNo;
-	
-	@Column(name="`Date of Receipt`", columnDefinition="datetime")
 	private Date receiptDate;
-	
-	@Column(name="`User ID`", columnDefinition="varchar(20)")
 	private String userId;
-	
-	@Column(name="`Region`", columnDefinition="varchar(20)")
 	private String region;
-	
-	@Column(name="`No_ Series`", columnDefinition="varchar(20)")
 	private String series;
-	
-	@Column(name="`HOD User ID`", columnDefinition="varchar(20)")
 	private String hodUserId;
-	
-	@Column(name="`HOD Date`", columnDefinition="datetime")
 	private Date hodDate;
-	
-	@Column(name="`HOD Time`", columnDefinition="datetime")
 	private Date hodTime;
-	
-	@Column(name="`HOD Recommendations`", columnDefinition="varchar(200)")
 	private String hodRecommendations;
-	
-	@Column(name="`Dean User ID`", columnDefinition="varchar(20)")
 	private String deanUserId;
-	
-	@Column(name="`Dean Date`", columnDefinition="datetime")
 	private Date deanDate;
-	
-	@Column(name="`Dean Time`", columnDefinition="datetime")
 	private Date deanTime;
-	
-	@Column(name="`Dean Recommendations`", length=200)
 	private String deanRecommendations;
-	
-	@Column(name="`Status`")
 	private int status;
-	
-	@Column(name="`Select`", columnDefinition="tinyint")
 	private int select;
-	
-	@Column(name="`Batch No_`", length=20)
 	private String batchNo;
-	
-	@Column(name="`Batch Date`", columnDefinition="datetime")
 	private Date batchDate;
-	
-	@Column(name="`Batch Time`", columnDefinition="datetime")
 	private Date batchTime;
-	
-	@Column(name="`Admission Board Recommendation`", length=200)
 	private String boardRecommendation;
-	
-	@Column(name="`Admission Board Date`", columnDefinition="datetime")
 	private Date boardDate;
-	
-	@Column(name="`Admission Board Time`", columnDefinition="datetime")
 	private Date boardTime;
-	
-	@Column(name="`Date Of Meeting`", columnDefinition="datetime")
 	private Date meetingDate;
-	
-	@Column(name="`Date Of Receipt Slip`", columnDefinition="datetime")
 	private Date receiptSlipDate;
-	
-	@Column(name="`Transaction No_`", length=20)
 	private String transactionNo;
-	
-	@Column(name="`Academic Year`", length=20)
 	private String academicYear;
-	
-	@Column(name="`Intake Code`", length=20)
 	private String intakeCode;
-	
-	@Column(name="`Settlement Type`", length=20)
 	private String settlementType;
-	
-	@Column(name="`ID Number`", length=8)
 	private String idNumber;
-	
-	@Column(name="`Date Sent for Approval`", columnDefinition="datetime")
 	private Date dateSentForApproval;
-	
-	@Column(name="`Issued Date`", columnDefinition="datetime")
 	private String issuedDate;
-	
-	@Column(name="`Campus`", length=50)
 	private String campus;
-	
-	@Column(name="`E-mail`", length=120)
 	private String email;
-	
-	@Column(name="`Honorific`")
 	private int honorific;
-	
-	@Column(name="`Conviction`", columnDefinition="tinyint  default 0")
 	private int conviction;
-	
-	@Column(name="`Offence`", length=250)
 	private String offence;
-	
-	@Column(name="`Date and Place`", length=250)
 	private String convictionDateAndPlace;
-	
-	@Column(name="`Sentence`", length=250)
 	private String sentence;
-	
-	@Column(name="`Contact Name`", length=50)
 	private String contactName;
-	
-	@Column(name="`Contact Address`", length=60)
 	private String contactAddress;
-	
-	@Column(name="`Contact Telephone`", length=40)
 	private String contactTelephone;
-	
-	@Column(name="`Contact Email`", length=150)
 	private String contactEmail;
-	
-	@Column(name="`KASNEB_FAQ No_`", length=50)
 	private String KASNEBFAQNo;
-	
-	@Column(name="`CPA_F_A_Q_`")
 	private String CPAFAQ;
-	
-	@Column(name="`Examination Body`", length=20)
 	private String examinationBody;
-	
-	@Column(name="`Payment Mode`")
-	private int paymentMode;
-	
-	@Column(name="`Post Code`", length=10)
 	private String postCode;
-	
-	@Column(name="`Foreign _ Local Applicant`", nullable=false)
+	private int paymentMode;
 	private int applicantType;
-	
-	@Column(name="`Responsibility Center`", length=20)
 	private String responsibilityCenter;
-	
-	@Column(name="`Document Type`", nullable=false)
 	private int documentType;
-	
-	@Column(name="`Customer Type`", length=20)
 	private String customerType;
-	
-	@Column(name="`Fax No_`", length=30)
 	private String faxNo;
-	
-	@Column(name="`Age`", columnDefinition="datetime")
 	private Date age;
-	
-	@Column(name="`City1`", length=30)
 	private String city1;
-	
-	@Column(name="`Designation`", length=70)
 	private String designation;
-	
-	@Column(name="`Position`", length=70)
 	private String position;
-	
-	@Column(name="`Employer Code`", length=20)
 	private String employerCode;
-	
 	private String employer;
-	
-	@Column(name="`Qualification`", length=100)
 	private String qualification;
-	
-	@Column(name="`Contact person`", length=50)
 	private String contactPerson;
-	
-	@Column(name="`District`", length=20)
 	private String district;
-	
-	@Column(name="`Gen_ Bus_ Posting Group`", length=10)
 	private String genBusPostingGroup;
-	
-	@Column(name="`VAT Bus_ Posting Group`", length=10)
 	private String vatBusPostingGroup;
-	
-	@Column(name="`Application Method`", length=10)
 	private int applicationMethod;
+	private CategoryDto category;
 	
-	@Transient
-	private Category category;
-	
-	public ApplicationFormHeader() {
-	}
-
-	public Timestamp getTimestamp() {
-		return timestamp;
-	}
-
-	public void setTimestamp(Timestamp timestamp) {
-		this.timestamp = timestamp;
+	public ApplicationFormHeaderDto() {
 	}
 
 	public String getApplicationNo() {
@@ -903,11 +731,11 @@ public class ApplicationFormHeader extends PO{
 		this.applicationMethod = applicationMethod;
 	}
 
-	public Category getCategory() {
+	public CategoryDto getCategory() {
 		return category;
 	}
 
-	public void setCategory(Category category) {
+	public void setCategory(CategoryDto category) {
 		this.category = category;
 	}
 
@@ -919,37 +747,5 @@ public class ApplicationFormHeader extends PO{
 		this.employer = employer;
 	}
 	
-	public ApplicationFormHeaderDto toDto(){
-		ApplicationFormHeaderDto dto = new ApplicationFormHeaderDto();
-		return dto;
-	}
-
-	public void copyFrom(ApplicationFormHeaderDto dto) {
-		setRefId(dto.getRefId());
-		setSurname(dto.getSurname());
-		setOtherNames(dto.getOtherNames());
-		setEmail(dto.getEmail());
-		setApplicationType(dto.getApplicationType());
-		setAddress1(dto.getAddress1());
-		setPostCode(dto.getPostCode());
-		setEmployer(dto.getEmployer());
-	}
-
-	public void copyInto(ApplicationFormHeaderDto dto) {
-		dto.setRefId(getRefId());
-		dto.setSurname(surname);
-		dto.setOtherNames(otherNames);
-		dto.setEmail(contactEmail);
-		
-		if(getCategory()!=null){
-			dto.setCategory(category.toDto());
-		}
-		
-		dto.setEmployer(employer);
-		dto.setCity1(city1);
-		dto.setAddress1(address1);
-		dto.setPostCode(postCode);
-		
-	}
 	
 }

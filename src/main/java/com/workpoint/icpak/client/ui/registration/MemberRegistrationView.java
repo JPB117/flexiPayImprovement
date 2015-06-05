@@ -14,7 +14,10 @@ import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
+import com.workpoint.icpak.client.ui.component.DropDownList;
 import com.workpoint.icpak.client.ui.component.TextField;
+import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
+import com.workpoint.icpak.shared.model.ApplicationType;
 
 public class MemberRegistrationView extends ViewImpl implements
 		MemberRegistrationPresenter.MyView {
@@ -53,6 +56,15 @@ public class MemberRegistrationView extends ViewImpl implements
 	// @UiField
 	// DropDownList<> lstMemberCategory;
 
+	@UiField TextField txtSurname;
+	@UiField TextField txtOtherNames;
+	@UiField TextField txtEmailAddress;
+	@UiField DropDownList<ApplicationType> lstMemberCategory;
+	@UiField TextField txtEmployer;
+	@UiField TextField txtCity;
+	@UiField TextField txtAddress;
+	@UiField TextField txtPostalCode;
+	
 	@UiField
 	TextField employer;
 	@UiField
@@ -66,6 +78,8 @@ public class MemberRegistrationView extends ViewImpl implements
 	private List<PageElement> pageElements = new ArrayList<PageElement>();
 
 	int counter = 0;
+	
+	
 
 	public interface Binder extends UiBinder<Widget, MemberRegistrationView> {
 	}
@@ -105,6 +119,13 @@ public class MemberRegistrationView extends ViewImpl implements
 				setActive(liElements.get(counter), pageElements.get(counter));
 			}
 		});
+		
+		List<ApplicationType> types= new ArrayList<ApplicationType>();
+		for(ApplicationType t: ApplicationType.values()){
+			types.add(t);
+		}
+
+		lstMemberCategory.setItems(types);
 	}
 
 	private void removeActive(LIElement liElement, PageElement page) {
@@ -134,7 +155,24 @@ public class MemberRegistrationView extends ViewImpl implements
 		setButtons(page);
 		liElement.addClassName("active");
 		page.getElement().addClassName("active");
-		System.err.println("Added:" + counter);
+		//System.err.println("Added:" + counter);
+	}
+	
+	public ApplicationFormHeaderDto getApplicationForm(){
+		ApplicationFormHeaderDto dto = new ApplicationFormHeaderDto();
+		//dto.setRefId(getRefId());
+		dto.setSurname(txtSurname.getValue());
+		dto.setOtherNames(txtOtherNames.getValue());
+		dto.setEmail(txtEmailAddress.getValue());
+		if(lstMemberCategory.getValue()!=null){
+			dto.setApplicantType(lstMemberCategory.getValue().ordinal());
+		}
+		dto.setEmployer(txtEmployer.getValue());
+		dto.setCity1(txtCity.getValue());
+		dto.setAddress1(txtAddress.getValue());
+		dto.setPostCode(txtPostalCode.getValue());
+		
+		return dto;
 	}
 
 	private void clearAll() {
@@ -150,11 +188,6 @@ public class MemberRegistrationView extends ViewImpl implements
 	@Override
 	public Widget asWidget() {
 		return widget;
-	}
-
-	@Override
-	public void createWizard() {
-
 	}
 
 }
