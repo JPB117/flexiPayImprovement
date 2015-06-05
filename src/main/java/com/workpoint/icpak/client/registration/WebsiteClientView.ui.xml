@@ -1,0 +1,191 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui' ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
+	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
+	xmlns:d='urn:import:com.workpoint.icpak.client.ui.component' 
+	ui:generateLocales='default'>
+
+	<g:HTMLPanel>
+		<div>
+			<nav class="navbar">
+				<div class="container">
+					<div class="navbar-header" style="width: 100%; text-align: center;">
+						<a href="#" class="brand">
+							<img src="http://solutech.co.ke/icpak//assets/img/logo.png"
+								width="150px" />
+						</a>
+					</div>
+				</div>
+			</nav>
+		</div>
+
+		<div class="image-container set-full-height">
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-10 col-sm-offset-1">
+						<!-- Wizard container -->
+						<div class="wizard-container">
+							<div class="card wizard-card ct-wizard-green">
+								<div class="wizard-header">
+									<h3>
+										Member Registration Form
+										<br />
+									</h3>
+								</div>
+
+								<ul class="nav nav-pills">
+									<li class="active" style="width: 33.3333333333333%;"
+										ui:field="liPackage">
+										<a>1 - Personal Information</a>
+									</li>
+									<li style="width: 33.3333333333333%;" ui:field="liPayment">
+										<a>2 - Make Payment</a>
+									</li>
+									<li style="width: 33.3333333333333%;" ui:field="liComplete">
+										<a>3 - Complete</a>
+									</li>
+								</ul>
+
+								<!-- Tab Content 1 -->
+								<div class="tab-content">
+									<div class="tab-pane active" ui:field="divPackage">
+										<div class="row">
+
+											<div class="col-sm-12">
+												<h4 class="info-text">Fill In Below Details:</h4>
+												<hr />
+											</div>
+
+											<div class="col-sm-12">
+												<div class="row">
+													<div class="col-xs-6">
+														<label for="firstname">Surname</label>
+														<d:TextField ui:field="surname" styleName="form-control"
+															placeholder="Enter Surname" value="" required="true">
+														</d:TextField>
+													</div>
+													<div class="col-xs-6">
+														<label for="lastname">Other Name</label>
+														<d:TextField ui:field="other_names" styleName="form-control"
+															placeholder="Enter Other Name" value="" required="true">
+														</d:TextField>
+													</div>
+												</div>
+
+												<div class="form-group">
+													<div class="row">
+														<div class="col-xs-6">
+															<label for="emailaddress">Email Address</label>
+															<d:TextField ui:field="email_address"
+																styleName="form-control" placeholder="Email address"
+																value="" required="true">
+															</d:TextField>
+														</div>
+
+														<div class="col-xs-6">
+															<label>Category:</label>
+															<d:DropDownList ui:field="lstMemberCategory"></d:DropDownList>
+														</div>
+													</div>
+												</div>
+
+
+												<div class="form-group">
+													<div class="row">
+														<div class="col-xs-6">
+															<label for="emailaddress">Employer Name</label>
+															<d:TextField ui:field="employer" styleName="form-control"
+																placeholder="Enter Employer's Name" value="" required="true">
+															</d:TextField>
+														</div>
+
+														<div class="col-xs-6">
+															<label for="applicationCategory">Town/City</label>
+
+															<d:TextField ui:field="city" styleName="form-control"
+																placeholder="Enter Town/City" value="" required="true">
+															</d:TextField>
+														</div>
+													</div>
+												</div>
+
+												<div class="form-group">
+													<div class="row">
+														<div class="col-xs-6">
+															<label for="emailaddress">Address</label>
+															<d:TextField ui:field="address" styleName="form-control"
+																placeholder="Enter Address" value="" required="true">
+															</d:TextField>
+														</div>
+
+														<div class="col-xs-6">
+															<label for="applicationCategory">Postal Code</label>
+
+															<d:TextField ui:field="postal_code"
+																styleName="form-control" placeholder="Enter Postal Code"
+																value="" required="true">
+															</d:TextField>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<div class="tab-pane" ui:field="divPayment">
+										<div class="row">
+											<div class="col-sm-12 hide">
+												<h4 class="info-text">Submit Payment:</h4>
+											</div>
+											<div class="col-md-12">
+												<g:Frame ui:field="framePayment" height="590px"
+													width="100%"></g:Frame>
+											</div>
+										</div>
+									</div>
+
+									<div class="tab-pane" ui:field="divComplete">
+										<div class="row">
+											<div class="col-sm-12">
+												<h4 class="info-text">Status:</h4>
+											</div>
+
+											<div class="alert alert-success" role="alert">
+												Your payment has
+												successfully been received!
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="wizard-footer">
+									<div class="pull-right">
+										<g:Anchor
+											styleName='btn btn-next btn-fill btn-success btn-wd
+										btn-sm'
+											ui:field="aNext">Proceed
+										</g:Anchor>
+									</div>
+									<div class="pull-left">
+										<g:Anchor
+											styleName='btn btn-previous btn-fill btn-default btn-wd btn-sm'
+											ui:field="aBack">Back
+										</g:Anchor>
+									</div>
+
+									<div class="clearfix"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="footer">
+			<div class="container">
+				<footer>Copyright ICPAK 2015</footer>
+			</div>
+		</div>
+	</g:HTMLPanel>
+
+</ui:UiBinder>

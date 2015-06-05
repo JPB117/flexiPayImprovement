@@ -21,4 +21,18 @@ public class TextField extends TextBox{
 			getElement().setAttribute("disabled", "disabled");
 		}
 	}
+	
+	public void setRequired(Boolean isRequired){
+		if(isRequired){
+			getElement().setAttribute("required", "required");
+		}
+	}
+	
+	public void setAutoComplete(boolean autocomplete){
+		if(autocomplete){
+			getElement().setAttribute("autocomplete", "on");
+		}else{
+			getElement().setAttribute("autocomplete", "off");
+		}
+	}
 }

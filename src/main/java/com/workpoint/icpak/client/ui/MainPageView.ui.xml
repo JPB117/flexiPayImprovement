@@ -1,31 +1,621 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-	xmlns:g='urn:import:com.google.gwt.user.client.ui'
-	ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui' ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
-	
-	<g:HTMLPanel styleName="main-body full-page">
-	    <span ui:field="loadingtext" class="span2 hide">Loading ...</span>
-	    <span ui:field="disconnectionText" class="serverdisconnected alert hide"></span>
-	      <div class="alert alert-success hidden" ui:field="divAlert">
-	            <span ui:field="spnAlertContent"></span><strong ui:field="spnSubject"></strong>
-	            <g:Anchor styleName="hand muted" ui:field="aView">View Document</g:Anchor>
-	     </div>  
-	        
-	 	<g:HTMLPanel ui:field="pHeader"></g:HTMLPanel>
-	    <!-- g:HTMLPanel ui:field="pContainer"/-->
-  		
-    	<!-- g:HTMLPanel ui:field="taskHeader"></g:HTMLPanel-->
-		
-		<!-- Domain Specific View goes here -->
-		<g:HTMLPanel styleName="full-page">
-   			<g:HTMLPanel ui:field="pContainer" styleName="full-page">			 	    
-			</g:HTMLPanel>	
-			<!-- div class="footer">
-				A product of Anger Enterprises <span class="copyyear"></span>
-			</div -->    
-		</g:HTMLPanel>
+
+	<!-- g:HTMLPanel styleName="main-body full-page" -->
+	<g:HTMLPanel>
+		<div data-ui-view="" data-autoscroll="false" class="wrapper ng-scope">
+			<!-- top navbar -->
+			<header ng-include="'app/views/partials/top-navbar.html'"
+				class="topnavbar-wrapper ng-scope">
+				<!-- START Top Navbar -->
+				<nav role="navigation" class="navbar topnavbar ng-scope">
+					<!-- START navbar header -->
+					<div class="navbar-header">
+						<a href="#/" class="navbar-brand">
+							<div class="brand-logo">
+								<img src="http://solutech.co.ke/icpak//assets/img/logo.png"
+									width="30px" class="img-responsive" />
+							</div>
+							<div class="brand-logo-collapsed">
+								<img src="http://solutech.co.ke/icpak//assets/img/logo.png"
+									class="img-responsive" />
+							</div>
+						</a>
+					</div>
+					<!-- END navbar header -->
+
+					<!-- START Nav wrapper -->
+					<div class="nav-wrapper">
+						<!-- START Left navbar -->
+						<ul class="nav navbar-nav">
+							<li>
+								<!-- Button used to collapse the left sidebar. Only visible on tablet 
+									and desktops -->
+								<a href="#" ng-click="app.layout.isCollapsed = !app.layout.isCollapsed"
+									class="hidden-xs">
+									<em class="fa fa-navicon"></em>
+								</a> <!-- Button to show/hide the sidebar on mobile. Visible on mobile only. -->
+								<a href="#" toggle-state="aside-toggled" no-persist="no-persist"
+									class="visible-xs sidebar-toggle">
+									<em class="fa fa-navicon"></em>
+								</a>
+							</li>
+							<!-- START User avatar toggle -->
+							<li>
+								<!-- Button used to collapse the left sidebar. Only visible on tablet 
+									and desktops -->
+								<a href="#" ng-click="toggleUserBlock()">
+									<em class="icon-user"></em>
+								</a>
+							</li>
+							<!-- END User avatar toggle -->
+						</ul>
+						<!-- END Left navbar -->
+						<!-- START Right Navbar -->
+						<ul class="nav navbar-nav navbar-right">
+							<!-- Search icon -->
+							<li class="hide">
+								<a href="#" search-open="search-open">
+									<em class="icon-magnifier"></em>
+								</a>
+							</li>
+
+							<!-- Fullscreen (only desktops) -->
+							<li class="visible-lg">
+								<a href="#" toggle-fullscreen="toggle-fullscreen">
+									<em class="fa fa-expand"></em>
+								</a>
+							</li>
+							<!-- START Alert menu -->
+							<li dropdown="" class="dropdown dropdown-list">
+								<a dropdown-toggle="" aria-haspopup="true" aria-expanded="false">
+									<em class="icon-bell"></em>
+									<div class="label label-danger">11</div>
+								</a> <!-- START Dropdown menu -->
+								<ul class="dropdown-menu animated flipInX">
+									<li>
+										<!-- START list group -->
+										<div class="list-group">
+											<!-- list item -->
+											<a href="#" class="list-group-item">
+												<div class="media-box">
+													<div class="pull-left">
+														<em class="fa fa-twitter fa-2x text-info"></em>
+													</div>
+													<div class="media-box-body clearfix">
+														<p class="m0">New followers</p>
+														<p class="m0 text-muted">
+															<small>1 new follower</small>
+														</p>
+													</div>
+												</div>
+											</a>
+											<!-- list item -->
+											<a href="#" class="list-group-item">
+												<div class="media-box">
+													<div class="pull-left">
+														<em class="fa fa-envelope fa-2x text-warning"></em>
+													</div>
+													<div class="media-box-body clearfix">
+														<p class="m0">New e-mails</p>
+														<p class="m0 text-muted">
+															<small>You have 10 new emails</small>
+														</p>
+													</div>
+												</div>
+											</a>
+											<!-- list item -->
+											<a href="#" class="list-group-item">
+												<div class="media-box">
+													<div class="pull-left">
+														<em class="fa fa-tasks fa-2x text-success"></em>
+													</div>
+													<div class="media-box-body clearfix">
+														<p class="m0">Pending Tasks</p>
+														<p class="m0 text-muted">
+															<small>11 pending task</small>
+														</p>
+													</div>
+												</div>
+											</a>
+											<!-- last list item -->
+											<a href="#" class="list-group-item">
+												<small translate="topbar.notification.MORE" class="ng-scope">
+													<span class="ng-scope">More notifications</span>
+												</small>
+												<span class="label label-danger pull-right">14</span>
+											</a>
+										</div> <!-- END list group -->
+									</li>
+								</ul> <!-- END Dropdown menu -->
+							</li>
+							<!-- END Alert menu -->
+							<!-- START Contacts button -->
+							<li>
+								<a href="http://solutech.co.ke/icpak/index.php/auth/logout">
+									<em class="fa fa-power-off"></em>
+									LogOut
+								</a>
+							</li>
+							<!-- END Contacts menu -->
+						</ul>
+						<!-- END Right Navbar -->
+					</div>
+					<!-- END Nav wrapper -->
+					<!-- START Search form -->
+					<form role="search" action="search.html"
+						class="navbar-form ng-pristine ng-valid hide">
+						<div class="form-group has-feedback">
+							<input type="text" placeholder="Type and hit enter.."
+								class="form-control" />
+							<div search-dismiss="search-dismiss" class="fa fa-times form-control-feedback"></div>
+						</div>
+						<button type="submit" class="hidden btn btn-default">Submit</button>
+					</form>
+					<!-- END Search form -->
+				</nav>
+				<!-- END Top Navbar -->
+			</header>
+			<aside ng-include="'app/views/partials/sidebar.html'"
+				ng-controller="SidebarController" class="aside ng-scope">
+				<!-- Inline template with sidebar items markup and ng-directives -->
+
+				<script type="text/ng-template" id="sidebar-renderer.html"
+					class="ng-scope">
+					<span ng-if="item.heading">{{(item.translate | translate) || item.text}}</span>
+					<a ng-if="!item.heading" ng-href="{{$state.href(item.sref, item.params)}}"
+						title="{{item.text}}">
+						<em ng-if="item.icon" class="{{item.icon}}"></em>
+						<div ng-if="item.alert" ng-class="item.label || 'label label-success'"
+							class="pull-right">{{item.alert}}</div>
+						<span>{{(item.translate | translate) || item.text}}</span>
+					</a>
+					<ul ng-if="item.submenu" collapse="isCollapse(pIndex)" ng-init="addCollapse(pIndex, item)"
+						class="nav sidebar-subnav">
+						<li class="sidebar-subnav-header">{{(item.translate | translate) || item.text}}</li>
+						<li ng-repeat="item in item.submenu" ng-include="'sidebar-renderer.html'"
+							ng-class="getMenuItemPropClasses(item)" ng-init="pIndex=(pIndex+'-'+$index); inSubmenu = true"
+							ng-click="toggleCollapse(pIndex)"></li>
+					</ul>
+				</script>
+
+
+				<div class="aside-inner ng-scope">
+					<nav class="sidebar" ng-transclude="" sidebar=""
+						sidebar-anyclick-close="">
+						<!-- START sidebar nav -->
+						<ul class="nav ng-scope">
+							<!-- START user info -->
+							<li class="has-user-block">
+								<div collapse="userBlockVisible" ng-controller="UserBlockController"
+									class="ng-scope collapse" style="height: 0px;">
+									<div class="item user-block">
+										<!-- User picture -->
+										<div class="user-block-picture">
+											<div class="user-block-status">
+												<img ng-src="app/img/user/02.jpg" alt="Avatar" width="60"
+													height="60" class="img-thumbnail img-circle" src="app/img/user/02.jpg" />
+												<div class="circle circle-success circle-lg"></div>
+											</div>
+										</div>
+										<!-- Name and Job -->
+										<div class="user-block-info">
+											<span class="user-block-name ng-binding">Welcome John</span>
+											<span class="user-block-role ng-binding">ng-developer</span>
+										</div>
+									</div>
+								</div>
+							</li>
+							<!-- END user info -->
+							<!-- Iterates over all sidebar items -->
+							<!-- ngRepeat: item in menuItems -->
+							<!-- ngInclude: 'sidebar-renderer.html' -->
+
+							<li class="ng-scope nav-heading">
+								<span class="ng-binding ng-scope">Main
+									Navigation</span>
+							</li>
+							<li role="presentation" class="">
+								<a href="http://solutech.co.ke/icpak/index.php/application/dashboard">
+									<em ng-if="item.icon" class="icon-speedometer"></em>
+									Home
+								</a>
+							</li>
+							<li role="presentation" class="">
+								<a href="http://solutech.co.ke/icpak/index.php/application/events">
+									<em class="fa fa-tags"></em>
+									Seminars and Events
+								</a>
+							</li>
+							<li role="presentation" class="">
+								<a href="http://solutech.co.ke/icpak/index.php/application/mycpd">
+									<em class="fa fa-graduation-cap"></em>
+									My C.P.D
+								</a>
+							</li>
+							<li role="presentation" class="">
+								<a
+									href="http://solutech.co.ke/icpak/index.php/application/statements">
+									<em class="fa fa-list-alt"></em>
+									My Statement
+								</a>
+							</li>
+							<li role="presentation" class="">
+								<a href="http://solutech.co.ke/icpak/index.php/application/offences">
+									<em class="fa fa-user-secret"></em>
+									My Offences
+								</a>
+							</li>
+							<li role="presentation" class="">
+								<a href="http://solutech.co.ke/icpak/index.php/application/enquiries">
+									<em class="fa fa-bullhorn"></em>
+									Make an Enquiry
+								</a>
+							</li>
+
+							<li role="presentation" class="active">
+								<a href="http://solutech.co.ke/icpak/index.php/application/profile">
+									<em class="icon-user"></em>
+									My Profile
+								</a>
+							</li>
+
+							<li role="presentation">
+								<a href="http://solutech.co.ke/icpak/index.php/auth/logout">
+									<em class="fa fa-power-off"></em>
+									Logout
+								</a>
+							</li>
+							<!-- end ngRepeat: item in menuItems -->
+							<!-- ngInclude: 'sidebar-renderer.html' -->
+						</ul>
+						<!-- END sidebar nav -->
+					</nav>
+				</div>
+			</aside>
+
+			<section class="ng-scope">
+				<div ui-view="" autoscroll="false" ng-class="app.viewAnimation"
+					class="content-wrapper ng-scope ng-fadeInUp">
+					<h3 class="ng-scope">
+						User Profile
+					</h3>
+					<div class="row">
+						<div class="col-xs-9">
+							<div class="row">
+								<div class="col-xs-2">
+									<img class="thumbnail"
+										src="http://solutech.co.ke/icpak//assets/img/no-image.png"
+										width="100px" />
+									<a href="">Edit Image</a>
+								</div>
+								<div class="col-xs-6">
+									<h5>
+										<strong>mdkimani@gmail.com mdkimani@gmail.com</strong>
+									</h5>
+									<a
+										href="http://solutech.co.ke/icpak/index.php/application/member_details">Edit
+										Profile</a>
+									|
+									<a href="http://solutech.co.ke/icpak/index.php/auth/change_password">Change
+										Password</a>
+									<br />
+									<span>
+										<h5>
+											<strong>Non-Member</strong>
+										</h5>
+									</span>
+									<div class="progress warning">
+										<div class="progress-bar " role="progressbar"
+											aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
+											style="width: 60%;">60%
+											Complete</div>
+									</div>
+								</div>
+
+							</div>
+							<div class="row">
+								<div class="col-xs-12">
+									<div role="tabpanel">
+
+										<!-- Nav tabs -->
+										<ul class="nav nav-tabs" role="tablist">
+											<li role="presentation" class="">
+												<a
+													href="http://solutech.co.ke/icpak/index.php/application/profile">Basic Information</a>
+											</li>
+											<li role="presentation" class="">
+												<a
+													href="http://solutech.co.ke/icpak/index.php/application/education">Education Information</a>
+											</li>
+
+											<li role="presentation" class="">
+												<a
+													href="http://solutech.co.ke/icpak/index.php/application/trainings">Trainings</a>
+											</li>
+											<li role="presentation" class="">
+												<a
+													href="http://solutech.co.ke/icpak/index.php/application/specialization">Specialization</a>
+											</li>
+										</ul>
+										<br />
+
+										<!-- Tab panes -->
+										<div class="tab-content">
+											<div role="tabpanel" class="tab-pane active" id="home">
+												<!-- Button trigger modal -->
+
+												<div class="row">
+													<div class="col-xs-6">
+
+														<table class="table">
+															<tbody>
+																<tr>
+																	<td>Surname:</td>
+																	<td>
+																		<i>Duggan</i>
+																	</td>
+																</tr>
+																<tr>
+																	<td>Other Name:</td>
+																	<td>
+																		<i>Kimani</i>
+																	</td>
+																</tr>
+																<tr>
+																	<td>Email Address:</td>
+																	<td>
+																		<i>mdkimani@gmail.com</i>
+																	</td>
+																</tr>
+																<tr>
+																	<td>Phone Number:</td>
+																	<td>
+																		<i></i>
+																	</td>
+																</tr>
+																<tr>
+																	<td>Gender:</td>
+																	<td>
+																		<i></i>
+																	</td>
+																</tr>
+																<tr>
+																	<td>Employer Name:</td>
+																	<td>Workpoint Limited</td>
+																</tr>
+																<tr>
+																	<td>Date Of Birth:</td>
+																	<td>
+																		<i></i>
+																	</td>
+																</tr>
+															</tbody>
+														</table>
+
+													</div>
+													<div class="col-xs-6">
+														<table class="table">
+															<tbody>
+																<tr>
+																	<td>Residence:</td>
+																	<td>
+																		<i></i>
+																	</td>
+																</tr>
+																<tr>
+																	<td>Address:</td>
+																	<td>
+																		<i>mdkimani@gmail.com</i>
+																	</td>
+																</tr>
+																<tr>
+																	<td>Town / City:</td>
+																	<td>
+																		<i>Nairobi</i>
+																	</td>
+																</tr>
+																<tr>
+																	<td>Country:</td>
+																	<td>
+																		<i></i>
+																	</td>
+																</tr>
+																<tr>
+																	<td>Membership:</td>
+																	<td>
+																		<i>ASSOCIATE</i>
+																	</td>
+																</tr>
+
+															</tbody>
+														</table>
+													</div>
+												</div>
+											</div>
+											<div role="tabpanel" class="tab-pane" id="profile">...</div>
+											<div role="tabpanel" class="tab-pane" id="messages">...</div>
+											<div role="tabpanel" class="tab-pane" id="settings">...</div>
+										</div>
+
+										<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+											aria-labelledby="myModalLabel" aria-hidden="true">
+											<div class="modal-dialog">
+												<div class="modal-content">
+													<form
+														action="http://solutech.co.ke/icpak/index.php/application/update_profile"
+														class="well" method="post" accept-charset="utf-8">
+														<div class="modal-header">
+															<button type="button" class="close" data-dismiss="modal"
+																aria-label="Close">
+																<span aria-hidden="true">×</span>
+															</button>
+															<h4 class="modal-title" id="myModalLabel">Update Profile</h4>
+														</div>
+														<div class="modal-body">
+
+															<div class="form-group">
+																<div class="row">
+																	<div class="col-xs-6">
+																		<label for="firstname">First Name</label>
+																		<input type="text" name="first_name" class="form-control"
+																			placeholder="First Name" />
+
+																		<h4>A PHP Error was encountered</h4>
+
+																		<p>Severity: Notice</p>
+																		<p>Message: Undefined property: stdClass::$first_name</p>
+																		<p>Filename: tabs/basic_tab.php</p>
+																		<p>Line Number: 59</p>
+
+																	</div>"
+																	required&gt;
+																</div>
+																<div class="col-xs-6">
+																	<label for="lastname">Last Name</label>
+																	<input type="text" name="last_name" class="form-control"
+																		placeholder="Last Name" />
+
+																	<h4>A PHP Error was encountered</h4>
+
+																	<p>Severity: Notice</p>
+																	<p>Message: Undefined property: stdClass::$last_name</p>
+																	<p>Filename: tabs/basic_tab.php</p>
+																	<p>Line Number: 64</p>
+
+																</div>"
+																required&gt;
+															</div>
+														</div>
+													</form>
+												</div>
+
+												<div class="form-group">
+													<div class="row">
+														<div class="col-xs-6">
+															<label for="emailaddress">Email Address</label>
+															<input type="text" name="email_address" class="form-control"
+																placeholder="Email address" value="mdkimani@gmail.com"
+																required="" />
+														</div>
+														<div class="col-xs-6">
+															<label>Phone Number</label>
+															<input type="text" class="form-control" name="phoneNumber"
+																placeholder="Enter Phone Number" value="mdkimani@gmail.com"
+																required="" />
+														</div>
+													</div>
+												</div>
+
+												<div class="form-group">
+													<div class="row">
+														<div class="col-xs-6">
+															<label>Gender</label>
+															<select name="gender" class="form-control"
+																required="">
+																<option value="">Select Gender</option>
+																<option value="MALE">MALE</option>
+																<option value="FEMALE">FEMALE</option>
+															</select>
+														</div>
+														<div class="col-xs-6">
+															<label for="cpassword">Date of Birth</label>
+															<input type="date" class="form-control" name="dob"
+																placeholder="Date of Birth" required="" />
+														</div>
+													</div>
+												</div>
+
+												<div class="form-group">
+													<div class="row">
+														<div class="col-xs-4">
+															<label>Residence</label>
+															<input type="text" class="form-control" name="residence"
+																placeholder="Enter Residence" required="" />
+														</div>
+														<div class="col-xs-4">
+															<label>Address</label>
+															<input type="text" class="form-control" name="address"
+																placeholder="Enter Address" required="" />
+														</div>
+														<div class="col-xs-4">
+															<label>City / Town</label>
+															<input type="text" class="form-control" name="city"
+																placeholder="Enter City" required="" />
+														</div>
+													</div>
+												</div>
+
+												<div class="form-group">
+													<div class="row">
+														<div class="col-xs-6">
+															<label>Country</label>
+															<select name="nationality" class="form-control"
+																required="">
+																<option value="">Select Country</option>
+																<option value="KENYA">KENYA</option>
+																<option value="UGANDA">UGANDA</option>
+															</select>
+														</div>
+														<div class="col-xs-6">
+															<label>Salutation</label>
+															<select name="salutation" class="form-control"
+																required="">
+																<option value="">Select Salutation</option>
+																<option value="MR">MR</option>
+																<option value="MRS">MRS</option>
+															</select>
+														</div>
+													</div>
+												</div>
+
+
+
+
+											</div>
+											<div class="modal-footer">
+												<button type="button" class="btn btn-default"
+													data-dismiss="modal">Close</button>
+												<button type="submit" class="btn btn-primary">Update Profile</button>
+											</div>
+											;
+										</div>
+									</div>
+								</div>
+
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+		</div>
+
+		<span ui:field="loadingtext" class="span2 hide">Loading ...</span>
+		<span ui:field="disconnectionText" class="serverdisconnected alert hide"></span>
+		<div class="alert alert-success hidden" ui:field="divAlert">
+			<span ui:field="spnAlertContent"></span>
+			<strong ui:field="spnSubject"></strong>
+			<g:Anchor styleName="hand muted" ui:field="aView">View Document</g:Anchor>
+		</div>
+
+
+		<div style="display:none">
+			<g:HTMLPanel ui:field="pHeader"></g:HTMLPanel>
+			<!-- g:HTMLPanel ui:field="pContainer"/ -->
+
+			<!-- g:HTMLPanel ui:field="taskHeader"></g:HTMLPanel -->
+
+			<!-- Domain Specific View goes here -->
+			<g:HTMLPanel styleName="full-page">
+				<g:HTMLPanel ui:field="pContainer" styleName="full-page">
+				</g:HTMLPanel>
+				<!-- div class="footer"> A product of Anger Enterprises <span class="copyyear"></span> 
+					</div -->
+			</g:HTMLPanel>
+		</div>
 	</g:HTMLPanel>
 </ui:UiBinder>
