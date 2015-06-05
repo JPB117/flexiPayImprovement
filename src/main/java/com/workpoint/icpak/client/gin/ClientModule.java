@@ -53,6 +53,8 @@ import com.workpoint.icpak.client.ui.popup.GenericPopupPresenter;
 import com.workpoint.icpak.client.ui.popup.GenericPopupView;
 import com.workpoint.icpak.client.ui.profile.ProfilePresenter;
 import com.workpoint.icpak.client.ui.profile.ProfileView;
+import com.workpoint.icpak.client.ui.registration.MemberRegistrationPresenter;
+import com.workpoint.icpak.client.ui.registration.MemberRegistrationView;
 import com.workpoint.icpak.client.ui.upload.UploadDocumentPresenter;
 import com.workpoint.icpak.client.ui.upload.UploadDocumentView;
 import com.workpoint.icpak.client.ui.upload.attachment.AttachmentPresenter;
@@ -92,6 +94,11 @@ public class ClientModule extends AbstractPresenterModule {
 		bindPresenterWidget(HeaderPresenter.class,
 				HeaderPresenter.IHeaderView.class, HeaderView.class);
 
+		
+		bindPresenter(MemberRegistrationPresenter.class,
+				MemberRegistrationPresenter.MyView.class, MemberRegistrationView.class,
+				MemberRegistrationPresenter.MyProxy.class);
+		
 		bindPresenter(ErrorPagePresenter.class,
 				ErrorPagePresenter.MyView.class, ErrorPageView.class,
 				ErrorPagePresenter.MyProxy.class);

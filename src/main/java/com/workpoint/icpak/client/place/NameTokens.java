@@ -27,6 +27,7 @@ public class NameTokens {
 	public static final String registry = "registry";
 	public static final String datatable = "datatable";
 	public static final String caseview = "caseview";
+	public static final String signup = "signup";
 
 	public static String getHome() {
 		return home;
