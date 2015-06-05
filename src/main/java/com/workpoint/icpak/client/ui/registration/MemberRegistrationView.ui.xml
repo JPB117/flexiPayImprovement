@@ -22,7 +22,7 @@
 		<div class="image-container set-full-height">
 			<div class="container">
 				<div class="row">
-					<div class="col-sm-11">
+					<div class="col-sm-11 col-md-offset-1">
 						<!-- Wizard container -->
 						<div class="wizard-container">
 							<div class="card wizard-card ct-wizard-green">
@@ -315,28 +315,27 @@
 													</div>
 
 													<div class="panel-body">
-														Your application has successfully successfully and your account has
-														been created successfully. A Proforma
-														invoice
+														Your application has successfully saved and your temporary
+														account. Also note that a Proforma
+														invoice and temporary password
 														has been sent
-														to your email address to facilitate in the payment.
+														to
+														your email
+														address for your reference.
 														<br />
 
-														Below are the next steps:
+														You can choose between the following:
 														<ol>
 															<li>
-																You can choose to complete your payment now by clicking
-																on the button
+																Complete your payment now - Click
 																<strong> Proceed To Payment</strong>
 																and complete the registration.
 																<br />
 															</li>
 
 															<li>
-																You can choose to complete your payment later by
-																clicking on the button
+																Complete your payment later - Click
 																<strong> Proceed To My Account(Pay Later).</strong>
-																Your credentials have been sent to your email.
 															</li>
 														</ol>
 													</div>
