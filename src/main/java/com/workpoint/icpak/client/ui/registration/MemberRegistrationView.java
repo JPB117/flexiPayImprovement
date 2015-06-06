@@ -59,7 +59,7 @@ public class MemberRegistrationView extends ViewImpl implements
 	@UiField TextField txtSurname;
 	@UiField TextField txtOtherNames;
 	@UiField TextField txtEmailAddress;
-	@UiField DropDownList<ApplicationType> lstMemberCategory;
+	//@UiField DropDownList<ApplicationType> lstMemberCategory;
 	@UiField TextField txtEmployer;
 	@UiField TextField txtCity;
 	@UiField TextField txtAddress;
@@ -70,8 +70,6 @@ public class MemberRegistrationView extends ViewImpl implements
 
 	int counter = 0;
 	
-	
-
 	public interface Binder extends UiBinder<Widget, MemberRegistrationView> {
 	}
 
@@ -89,8 +87,8 @@ public class MemberRegistrationView extends ViewImpl implements
 		liElements.add(liTab4);
 
 		// Div Elements
-		pageElements.add(new PageElement(divPackage, "Submit", "Back"));
-		pageElements.add(new PageElement(divCategories, "Proceed"));
+		pageElements.add(new PageElement(divPackage, "Next", "Back"));
+		pageElements.add(new PageElement(divCategories, "Submit"));
 		pageElements.add(new PageElement(divProforma, "Proceed to Pay",
 				"Proceed To My Account"));
 		pageElements.add(new PageElement(divPayment, "Finish"));
@@ -119,7 +117,7 @@ public class MemberRegistrationView extends ViewImpl implements
 			types.add(t);
 		}
 
-		lstMemberCategory.setItems(types);
+		//lstMemberCategory.setItems(types);
 	}
 
 	private void removeActive(LIElement liElement, PageElement page) {
@@ -158,9 +156,9 @@ public class MemberRegistrationView extends ViewImpl implements
 		dto.setSurname(txtSurname.getValue());
 		dto.setOtherNames(txtOtherNames.getValue());
 		dto.setEmail(txtEmailAddress.getValue());
-		if(lstMemberCategory.getValue()!=null){
-			dto.setApplicantType(lstMemberCategory.getValue().ordinal());
-		}
+//		if(lstMemberCategory.getValue()!=null){
+//			dto.setApplicantType(lstMemberCategory.getValue().ordinal());
+//		}
 		dto.setEmployer(txtEmployer.getValue());
 		dto.setCity1(txtCity.getValue());
 		dto.setAddress1(txtAddress.getValue());
