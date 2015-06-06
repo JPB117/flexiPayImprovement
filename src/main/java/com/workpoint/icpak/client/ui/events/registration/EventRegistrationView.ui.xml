@@ -1,0 +1,394 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui' ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
+	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
+	xmlns:d='urn:import:com.workpoint.icpak.client.ui.component'
+	ui:generateLocales='default'>
+
+	<g:HTMLPanel>
+		<div>
+			<nav class="navbar">
+				<div class="container">
+					<div class="navbar-header" style="width: 100%; text-align: center;">
+						<a class="brand">
+							<img src="http://solutech.co.ke/icpak//assets/img/logo.png"
+								width="150px" />
+						</a>
+					</div>
+				</div>
+			</nav>
+		</div>
+
+		<div class="image-container set-full-height">
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-11 col-md-offset-1">
+						<!-- Wizard container -->
+						<div class="wizard-container">
+							<div class="card wizard-card ct-wizard-green">
+								<div class="wizard-header">
+									<h3>
+										Member Registration Process
+										<br />
+									</h3>
+								</div>
+
+								<ul class="nav nav-pills">
+									<li class="active" style="width: 25%;" ui:field="liTab1">
+										<a>1 - Personal Information</a>
+									</li>
+									<li style="width: 25%;" ui:field="liTab2">
+										<a>2 - Membership Category</a>
+									</li>
+									<li style="width: 25%;" ui:field="liTab3">
+										<a>3 - Proforma Invoice</a>
+									</li>
+									<li style="width:25%;" ui:field="liTab4">
+										<a>4 - Make Payment</a>
+									</li>
+								</ul>
+
+								<!-- Tab Content 1 -->
+								<div class="tab-content">
+									<div class="tab-pane active" ui:field="divPackage">
+										<div class="row">
+											<div class="col-sm-12 hide">
+												<h4 class="info-text">Fill In Below Details:</h4>
+												<hr />
+											</div>
+
+											<div class="col-sm-12">
+												<div class="alert alert-success" role="alert">
+													Your application
+													has been submitted successfully!
+												</div>
+											</div>
+
+											<div class="col-sm-12">
+												<div class="row">
+													<div class="col-xs-6">
+														<label for="firstname">Surname</label>
+														<d:TextField ui:field="surname" styleName="form-control"
+															placeholder="Enter Surname" value="" required="true">
+														</d:TextField>
+													</div>
+													<div class="col-xs-6">
+														<label for="lastname">Other Name</label>
+														<d:TextField ui:field="other_names" styleName="form-control"
+															placeholder="Enter Other Name" value="" required="true">
+														</d:TextField>
+													</div>
+												</div>
+
+												<div class="form-group">
+													<div class="row">
+														<div class="col-xs-6">
+															<label for="emailaddress">Email Address</label>
+															<d:TextField ui:field="email_address"
+																styleName="form-control" placeholder="Email address"
+																value="" required="true">
+															</d:TextField>
+														</div>
+
+														<div class="col-xs-6">
+															<label for="phone">Phone Number</label>
+															<d:TextField ui:field="txtPhone" styleName="form-control"
+																placeholder="Phone Number" value="" required="true">
+															</d:TextField>
+														</div>
+													</div>
+												</div>
+
+
+												<div class="form-group">
+													<div class="row">
+														<div class="col-xs-6">
+															<label for="emailaddress">Employer Name</label>
+															<d:TextField ui:field="employer" styleName="form-control"
+																placeholder="Enter Employer's Name" value="" required="true">
+															</d:TextField>
+														</div>
+
+														<div class="col-xs-6">
+															<label for="applicationCategory">Town/City</label>
+
+															<d:TextField ui:field="city" styleName="form-control"
+																placeholder="Enter Town/City" value="" required="true">
+															</d:TextField>
+														</div>
+													</div>
+												</div>
+
+												<div class="form-group">
+													<div class="row">
+														<div class="col-xs-6">
+															<label for="emailaddress">Address</label>
+															<d:TextField ui:field="address" styleName="form-control"
+																placeholder="Enter Address" value="" required="true">
+															</d:TextField>
+														</div>
+
+														<div class="col-xs-6">
+															<label for="applicationCategory">Postal Code</label>
+
+															<d:TextField ui:field="postal_code"
+																styleName="form-control" placeholder="Enter Postal Code"
+																value="" required="true">
+															</d:TextField>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<div class="tab-pane" ui:field="divCategories">
+										<div class="row">
+											<div class="col-xs-12">
+												<div class="col-sm-12">
+													<h4 class="info-text">
+														<span ui:field="spnSelected">Select Category:</span>
+													</h4>
+													<hr />
+												</div>
+
+												<div class="pricing-table col-xs-3" ui:field="divNonPracticing">
+													<div class="panel panel-primary" style="border:none;">
+														<div class="controle-header panel-heading panel-heading-landing">
+															<h1 class="panel-title panel-title-landing">Non-Practicing</h1>
+														</div>
+
+														<div class="panel-body panel-body-landing">
+															<table class="table">
+																<tr>
+																	<td width="50px">
+																		<i class="fa fa-check"></i>
+																	</td>
+																	<td>Application Fee: Kshs.26,000</td>
+																</tr>
+																<tr>
+																	<td width="50px">
+																		<i class="fa fa-check"></i>
+																	</td>
+																	<td>Annual subscription: Kshs 10,000</td>
+																</tr>
+																<tr>
+																	<td width="50px">
+																		<i class="fa fa-check"></i>
+																	</td>
+																	<td>All CPA graduates who have experience of 3 years
+																		or
+																		more</td>
+																</tr>
+															</table>
+														</div>
+														<div class="panel-footer panel-footer-landing">
+															<g:Anchor styleName="btn btn-price btn-block btn-success"
+																ui:field="aNonPractising" name="NonPractising">SELECT
+															</g:Anchor>
+														</div>
+													</div>
+												</div>
+
+												<div class="pricing-table col-xs-3" ui:field="divPractising">
+													<div class="panel panel-primary" style="border:none;">
+														<div class="controle-header panel-heading panel-heading-landing">
+															<h1 class="panel-title panel-title-landing">Practicing
+																Member</h1>
+														</div>
+
+														<div class="panel-body panel-body-landing">
+															<table class="table">
+																<tr>
+																	<td width="50px">
+																		<i class="fa fa-check"></i>
+																	</td>
+																	<td>Application Fee: Kshs.26,000</td>
+																</tr>
+																<tr>
+																	<td width="50px">
+																		<i class="fa fa-check"></i>
+																	</td>
+																	<td>Annual subscription: Kshs 10,000</td>
+																</tr>
+																<tr>
+																	<td width="50px">
+																		<i class="fa fa-check"></i>
+																	</td>
+																	<td>All CPA graduates who have experience of 3 years
+																		or
+																		more</td>
+																</tr>
+															</table>
+														</div>
+														<div class="panel-footer panel-footer-landing">
+															<g:Anchor styleName="btn btn-price btn-block btn-success"
+																ui:field="aPractising" name="Practising">SELECT</g:Anchor>
+														</div>
+													</div>
+												</div>
+
+												<div class="pricing-table col-xs-3" ui:field="divOverseas">
+													<div class="panel panel-primary" style="border:none;">
+														<div class="controle-header panel-heading panel-heading-landing">
+															<h1 class="panel-title panel-title-landing">OverSeas Member</h1>
+														</div>
+
+														<div class="panel-body panel-body-landing">
+															<table class="table">
+																<tr>
+																	<td width="50px">
+																		<i class="fa fa-check"></i>
+																	</td>
+																	<td>Application Fee: Kshs.26,000</td>
+																</tr>
+																<tr>
+																	<td width="50px">
+																		<i class="fa fa-check"></i>
+																	</td>
+																	<td>Annual subscription: Kshs 10,000</td>
+																</tr>
+																<tr>
+																	<td width="50px">
+																		<i class="fa fa-check"></i>
+																	</td>
+																	<td>All CPA graduates who have experience of 3 years
+																		or
+																		more</td>
+																</tr>
+															</table>
+														</div>
+														<div class="panel-footer panel-footer-landing">
+															<g:Anchor styleName="btn btn-price btn-block btn-success"
+																ui:field="aOverseas" name="Overseas">SELECT</g:Anchor>
+														</div>
+													</div>
+												</div>
+
+												<div class="pricing-table col-xs-3" ui:field="divAssociate">
+													<div class="panel panel-primary" style="border:none;">
+														<div class="controle-header panel-heading panel-heading-landing">
+															<h1 class="panel-title panel-title-landing">Associate</h1>
+														</div>
+
+														<div class="panel-body panel-body-landing">
+															<table class="table">
+																<tr>
+																	<td width="50px">
+																		<i class="fa fa-check"></i>
+																	</td>
+																	<td>Application Fee: Kshs.26,000</td>
+																</tr>
+																<tr>
+																	<td width="50px">
+																		<i class="fa fa-check"></i>
+																	</td>
+																	<td>Annual subscription: Kshs 10,000</td>
+																</tr>
+																<tr>
+																	<td width="50px">
+																		<i class="fa fa-check"></i>
+																	</td>
+																	<td>All CPA graduates who have experience of 3 years
+																		or
+																		more</td>
+																</tr>
+															</table>
+														</div>
+														<div class="panel-footer panel-footer-landing">
+															<g:Anchor styleName="btn btn-price btn-block btn-success"
+																ui:field="aAssociate" name="Associate">SELECT</g:Anchor>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+
+
+									<div class="tab-pane" ui:field="divProforma">
+										<div class="row">
+											<div class="col-xs-12">
+												<div class="panel panel-default">
+													<div class="panel-heading">
+														<span ui:field="spnNames">Kimani Muriranja</span>
+													</div>
+
+													<div class="panel-body">
+														Your application has successfully saved and your temporary
+														account. Also note that a Proforma
+														invoice and temporary password
+														has been sent
+														to
+														your email
+														address for your reference.
+														<br />
+
+														You can choose between the following:
+														<ol>
+															<li>
+																Complete your payment now - Click
+																<strong> Proceed To Payment</strong>
+																and complete the registration.
+																<br />
+															</li>
+
+															<li>
+																Complete your payment later - Click
+																<strong> Proceed To My Account(Pay Later).</strong>
+															</li>
+														</ol>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<div class="tab-pane" ui:field="divPayment">
+										<div class="row">
+											<div class="col-md-12">
+												<g:Frame ui:field="framePayment" height="590px"
+													width="100%"></g:Frame>
+											</div>
+										</div>
+									</div>
+
+
+									<div class="wizard-footer">
+										<div class="pull-right">
+											<g:Anchor
+												styleName='btn btn-next btn-fill btn-success btn-wd
+										btn-sm hide'
+												ui:field="aNext">Proceed
+											</g:Anchor>
+										</div>
+										<div class="pull-left">
+											<g:Anchor
+												styleName='btn btn-previous btn-fill btn-default btn-wd btn-sm hide'
+												ui:field="aBack">Back
+											</g:Anchor>
+
+											<g:Anchor
+												styleName='btn btn-previous btn-fill btn-default btn-wd btn-sm hide'
+												ui:field="aAccount" href="#login">Go to my Account
+											</g:Anchor>
+										</div>
+
+										<div class="clearfix"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="footer">
+			<div class="container">
+				<footer>Copyright ICPAK 2015</footer>
+			</div>
+		</div>
+	</g:HTMLPanel>
+
+</ui:UiBinder>
