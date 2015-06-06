@@ -1,14 +1,7 @@
 package com.workpoint.icpak.client.ui.header;
 
-import java.util.Date;
-
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasBlurHandlers;
-import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.Anchor;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.PresenterWidget;
@@ -26,24 +19,11 @@ import com.workpoint.icpak.client.ui.events.LoadAlertsEvent;
 import com.workpoint.icpak.client.ui.events.LoadAlertsEvent.LoadAlertsHandler;
 import com.workpoint.icpak.client.ui.notifications.NotificationsPresenter;
 import com.workpoint.icpak.shared.model.UserDto;
-import com.workpoint.icpak.shared.model.Version;
 
 public class HeaderPresenter extends PresenterWidget<HeaderPresenter.IHeaderView> 
 implements AfterSaveHandler, AdminPageLoadHandler, ContextLoadedHandler, LoadAlertsHandler{
 
 	public interface IHeaderView extends View {
-		HasClickHandlers getLogout();
-		void setValues(String userNames, String userGroups, String orgName);
-		Anchor getNotificationsButton();
-		void setPopupVisible();
-		void setCount(Integer count);
-		HasBlurHandlers getpopupContainer();
-		void setLoading(boolean b);
-		void setAdminPageLookAndFeel(boolean isAdminPage);
-		void changeFocus();
-		void showAdminLink(boolean admin);
-		void setVersionInfo(Date created, String date, String version);
-		void setImage(UserDto currentUser);
 	}
 
 	//@Inject DispatchAsync dispatcher;
@@ -83,28 +63,6 @@ implements AfterSaveHandler, AdminPageLoadHandler, ContextLoadedHandler, LoadAle
 		this.addRegisteredHandler(AdminPageLoadEvent.TYPE, this);
 		this.addRegisteredHandler(ContextLoadedEvent.TYPE, this);
 		this.addRegisteredHandler(LoadAlertsEvent.TYPE, this);
-		getView().getLogout().addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				logout();
-			}
-		});
-		
-		getView().getNotificationsButton().addClickHandler(new ClickHandler() {
-			
-			@Override
-			public void onClick(ClickEvent event) {
-				//Clicks must be atleast 5 min apart
-				long currentTime = System.currentTimeMillis();
-				if((currentTime-lastLoad)> alertReloadInterval){
-					lastLoad=currentTime;
-				}else{
-					return;
-				}
-				
-				loadAlerts();
-			}
-		});
 	}
 
 	protected void loadAlerts() {
@@ -139,29 +97,6 @@ implements AfterSaveHandler, AdminPageLoadHandler, ContextLoadedHandler, LoadAle
 	
 	protected void loadAlertCount() {
 		alertTimer.cancel();
-		getView().setLoading(true);
-//		MultiRequestAction action = new MultiRequestAction();
-//		action.addRequest(new GetAlertCount());
-//		//action.addRequest(new GetNotificationsAction(AppContext.getUserId()));
-//		
-//		dispatcher.execute(action, new TaskServiceCallback<MultiRequestActionResult>() {
-//			@Override
-//			public void processResult(MultiRequestActionResult results) {
-//				
-//				
-//				GetAlertCountResult result = (GetAlertCountResult)results.get(0);				
-//				HashMap<TaskType,Integer> alerts = result.getCounts();				
-//				getView().setCount(alerts.get(TaskType.NOTIFICATIONS));				
-//				fireEvent(new AlertLoadEvent(alerts));				
-//				
-////				GetNotificationsActionResult notificationsResult = (GetNotificationsActionResult)results.get(1);
-////				assert notificationsResult!=null;
-////				fireEvent(new NotificationsLoadEvent(notificationsResult.getNotifications()));
-////				getView().setLoading(false);
-//				
-//				alertTimer.schedule(alertReloadInterval);
-//			}
-//		});
 		
 	}
 
@@ -182,19 +117,11 @@ implements AfterSaveHandler, AdminPageLoadHandler, ContextLoadedHandler, LoadAle
 
 	@Override
 	public void onAdminPageLoad(AdminPageLoadEvent event) {
-		getView().setAdminPageLookAndFeel(event.isAdminPage());
 	}
 
 	@Override
 	public void onContextLoaded(ContextLoadedEvent event) {
 		UserDto currentUser = event.getCurrentUser();
-		getView().setImage(currentUser);
-		getView().showAdminLink(currentUser.isAdmin());
-		getView().setValues(currentUser.getSurname(), currentUser.getGroupsAsString(), event.getOrganizationName());
-		
-		Version version = event.getVersion();
-		getView().setVersionInfo(version.getCreated(), version.getDate(), version.getVersion());
-		loadAlertCount();
 	}
 
 	@Override

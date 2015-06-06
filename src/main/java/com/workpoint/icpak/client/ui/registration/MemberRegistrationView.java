@@ -5,11 +5,13 @@ import java.util.List;
 
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.LIElement;
+import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.Widget;
@@ -34,6 +36,9 @@ public class MemberRegistrationView extends ViewImpl implements
 	Anchor aBack;
 
 	@UiField
+	Anchor aAccount;
+
+	@UiField
 	DivElement divPackage;
 
 	@UiField
@@ -43,6 +48,24 @@ public class MemberRegistrationView extends ViewImpl implements
 	DivElement divPayment;
 	@UiField
 	DivElement divProforma;
+
+	@UiField
+	Anchor aAssociate;
+	@UiField
+	Anchor aOverseas;
+	@UiField
+	Anchor aNonPractising;
+	@UiField
+	Anchor aPractising;
+
+	@UiField
+	DivElement divNonPracticing;
+	@UiField
+	DivElement divPractising;
+	@UiField
+	DivElement divAssociate;
+	@UiField
+	DivElement divOverseas;
 
 	@UiField
 	LIElement liTab1;
@@ -65,6 +88,11 @@ public class MemberRegistrationView extends ViewImpl implements
 	@UiField TextField txtAddress;
 	@UiField TextField txtPostalCode;
 
+	private String selectedName;
+
+	@UiField
+	SpanElement spnSelected;
+
 	private List<LIElement> liElements = new ArrayList<LIElement>();
 	private List<PageElement> pageElements = new ArrayList<PageElement>();
 
@@ -72,6 +100,30 @@ public class MemberRegistrationView extends ViewImpl implements
 	
 	public interface Binder extends UiBinder<Widget, MemberRegistrationView> {
 	}
+
+	ClickHandler selectHandler = new ClickHandler() {
+		@Override
+		public void onClick(ClickEvent event) {
+			Anchor selected = (Anchor) event.getSource();
+			selectedName = selected.getName();
+
+			spnSelected.setInnerText("You have selected:" + selectedName);
+
+			if (selectedName.equals("NonPractising")) {
+				removeActiveSelection(selected);
+				divNonPracticing.addClassName("active");
+			} else if (selectedName.equals("Practising")) {
+				removeActiveSelection(selected);
+				divPractising.addClassName("active");
+			} else if (selectedName.equals("Overseas")) {
+				removeActiveSelection(selected);
+				divOverseas.addClassName("active");
+			} else if (selectedName.equals("Associate")) {
+				removeActiveSelection(selected);
+				divAssociate.addClassName("active");
+			}
+		}
+	};
 
 	@Inject
 	public MemberRegistrationView(final Binder binder) {
@@ -86,12 +138,15 @@ public class MemberRegistrationView extends ViewImpl implements
 		liElements.add(liTab3);
 		liElements.add(liTab4);
 
-		// Div Elements
-		pageElements.add(new PageElement(divPackage, "Next", "Back"));
-		pageElements.add(new PageElement(divCategories, "Submit"));
-		pageElements.add(new PageElement(divProforma, "Proceed to Pay",
-				"Proceed To My Account"));
-		pageElements.add(new PageElement(divPayment, "Finish"));
+		aNonPractising.addClickHandler(selectHandler);
+		aPractising.addClickHandler(selectHandler);
+		aOverseas.addClickHandler(selectHandler);
+		aAssociate.addClickHandler(selectHandler);
+
+		pageElements.add(new PageElement(divPackage, "Proceed"));
+		pageElements.add(new PageElement(divCategories, "Submit", "Back"));
+		pageElements.add(new PageElement(divProforma, "Proceed to Pay"));
+		pageElements.add(new PageElement(divPayment, "Finish", "Back"));
 
 		setActive(liElements.get(counter), pageElements.get(counter));
 
@@ -99,6 +154,7 @@ public class MemberRegistrationView extends ViewImpl implements
 			@Override
 			public void onClick(ClickEvent event) {
 				counter = counter - 1;
+				showMyAccountLink(counter);
 				removeActive(liElements.get(counter), pageElements.get(counter));
 				setActive(liElements.get(counter), pageElements.get(counter));
 			}
@@ -108,16 +164,27 @@ public class MemberRegistrationView extends ViewImpl implements
 			@Override
 			public void onClick(ClickEvent event) {
 				counter = counter + 1;
+				showMyAccountLink(counter);
 				setActive(liElements.get(counter), pageElements.get(counter));
 			}
 		});
-		
-		List<ApplicationType> types= new ArrayList<ApplicationType>();
-		for(ApplicationType t: ApplicationType.values()){
-			types.add(t);
-		}
 
 		//lstMemberCategory.setItems(types);
+	}
+
+	protected void showMyAccountLink(int counter) {
+		if (counter == 2) {
+			aAccount.removeStyleName("hide");
+		} else {
+			aAccount.addStyleName("hide");
+		}
+	}
+
+	protected void removeActiveSelection(Anchor selected) {
+		divNonPracticing.removeClassName("active");
+		divPractising.removeClassName("active");
+		divOverseas.removeClassName("active");
+		divAssociate.removeClassName("active");
 	}
 
 	private void removeActive(LIElement liElement, PageElement page) {

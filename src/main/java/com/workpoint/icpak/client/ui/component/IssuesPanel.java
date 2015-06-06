@@ -19,20 +19,24 @@ public class IssuesPanel extends Widget {
 		this.ulRoot = DOM.createElement("ul");
 		this.spanTitle = DOM.createSpan();
 
-		//this.spanTitle.setInnerText("Summary");
+		// this.spanTitle.setInnerText("Summary");
 
 		container.appendChild(this.spanTitle);
 		container.appendChild(ulRoot);
 
 		setElement(container);
 
-		//setStyleName("alert alert-danger vld-Summary");
+		// setStyleName("alert alert-danger vld-Summary");
 		setStyleName("vld-Summary");
 	}
 
 	@Override
 	public void setTitle(String title) {
 		this.spanTitle.setInnerHTML(title);
+	}
+
+	public void setRole(String role) {
+		container.setAttribute("role", role);
 	}
 
 	public void addError(String error) {

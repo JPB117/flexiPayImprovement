@@ -22,13 +22,13 @@
 		<div class="image-container set-full-height">
 			<div class="container">
 				<div class="row">
-					<div class="col-sm-11">
+					<div class="col-sm-11 col-md-offset-1">
 						<!-- Wizard container -->
 						<div class="wizard-container">
 							<div class="card wizard-card ct-wizard-green">
 								<div class="wizard-header">
 									<h3>
-										Member Registration Form
+										Member Registration Process
 										<br />
 									</h3>
 								</div>
@@ -146,15 +146,16 @@
 										<div class="row">
 											<div class="col-xs-12">
 												<div class="col-sm-12">
-													<h4 class="info-text">Select Category:</h4>
+													<h4 class="info-text">
+														<span ui:field="spnSelected">Select Category:</span>
+													</h4>
 													<hr />
 												</div>
 
-												<div class="pricing-table col-xs-3">
+												<div class="pricing-table col-xs-3" ui:field="divNonPracticing">
 													<div class="panel panel-primary" style="border:none;">
 														<div class="controle-header panel-heading panel-heading-landing">
-															<h1 class="panel-title panel-title-landing">Non-Practicing
-																Member</h1>
+															<h1 class="panel-title panel-title-landing">Non-Practicing</h1>
 														</div>
 
 														<div class="panel-body panel-body-landing">
@@ -182,13 +183,14 @@
 															</table>
 														</div>
 														<div class="panel-footer panel-footer-landing">
-															<g:Anchor styleName="btn btn-price btn-block btn-success">SELECT
+															<g:Anchor styleName="btn btn-price btn-block btn-success"
+																ui:field="aNonPractising" name="NonPractising">SELECT
 															</g:Anchor>
 														</div>
 													</div>
 												</div>
 
-												<div class="pricing-table col-xs-3">
+												<div class="pricing-table col-xs-3" ui:field="divPractising">
 													<div class="panel panel-primary" style="border:none;">
 														<div class="controle-header panel-heading panel-heading-landing">
 															<h1 class="panel-title panel-title-landing">Practicing
@@ -220,12 +222,13 @@
 															</table>
 														</div>
 														<div class="panel-footer panel-footer-landing">
-															<a class="btn btn-price btn-block btn-success">SELECT</a>
+															<g:Anchor styleName="btn btn-price btn-block btn-success"
+																ui:field="aPractising" name="Practising">SELECT</g:Anchor>
 														</div>
 													</div>
 												</div>
 
-												<div class="pricing-table col-xs-3">
+												<div class="pricing-table col-xs-3" ui:field="divOverseas">
 													<div class="panel panel-primary" style="border:none;">
 														<div class="controle-header panel-heading panel-heading-landing">
 															<h1 class="panel-title panel-title-landing">OverSeas Member</h1>
@@ -256,12 +259,13 @@
 															</table>
 														</div>
 														<div class="panel-footer panel-footer-landing">
-															<a class="btn btn-price btn-block btn-success">SELECT</a>
+															<g:Anchor styleName="btn btn-price btn-block btn-success"
+																ui:field="aOverseas" name="Overseas">SELECT</g:Anchor>
 														</div>
 													</div>
 												</div>
 
-												<div class="pricing-table col-xs-3">
+												<div class="pricing-table col-xs-3" ui:field="divAssociate">
 													<div class="panel panel-primary" style="border:none;">
 														<div class="controle-header panel-heading panel-heading-landing">
 															<h1 class="panel-title panel-title-landing">Associate</h1>
@@ -292,7 +296,8 @@
 															</table>
 														</div>
 														<div class="panel-footer panel-footer-landing">
-															<a class="btn btn-price btn-block btn-success">SELECT</a>
+															<g:Anchor styleName="btn btn-price btn-block btn-success"
+																ui:field="aAssociate" name="Associate">SELECT</g:Anchor>
 														</div>
 													</div>
 												</div>
@@ -310,27 +315,27 @@
 													</div>
 
 													<div class="panel-body">
-														Below is a summary of your application:
-														A Proforma invoice
-														has been sent to your email address(
-														<span class="spnEmail">tomkim@wira.io</span>
-														) to facilitate in the payment.
+														Your application has successfully saved and your temporary
+														account. Also note that a Proforma
+														invoice and temporary password
+														has been sent
+														to
+														your email
+														address for your reference.
 														<br />
 
-														Below are the next steps:
+														You can choose between the following:
 														<ol>
 															<li>
-																You can choose to complete your payment now by clicking
-																on the button
+																Complete your payment now - Click
 																<strong> Proceed To Payment</strong>
 																and complete the registration.
 																<br />
 															</li>
 
 															<li>
-																You can choose to complete your payment later by
-																clicking on the button
-																<strong> Proceed To My Account</strong>
+																Complete your payment later - Click
+																<strong> Proceed To My Account(Pay Later).</strong>
 															</li>
 														</ol>
 													</div>
@@ -361,6 +366,11 @@
 											<g:Anchor
 												styleName='btn btn-previous btn-fill btn-default btn-wd btn-sm hide'
 												ui:field="aBack">Back
+											</g:Anchor>
+
+											<g:Anchor
+												styleName='btn btn-previous btn-fill btn-default btn-wd btn-sm hide'
+												ui:field="aAccount" href="#login">Go to my Account
 											</g:Anchor>
 										</div>
 

@@ -99,23 +99,6 @@ public class LoginPresenter extends
 	@Override
 	public void prepareFromRequest(PlaceRequest request) {
 		super.prepareFromRequest(request);
-		// redirect = request.getParameter("redirect", null);
-		//
-		//
-		// if(AppContext.isValid()){
-		// placeManager.revealDefaultPlace();
-		// // if(AppContext.isCurrentUserAdmin()){
-		// // History.newItem(NameTokens.processes);
-		// // }else{
-		// // placeManager.revealDefaultPlace();
-		// // }
-		//
-		// return;
-		// }else{
-		// //Actively clear context
-		// AppContext.clear();
-		// }
-		// loadName();
 	}
 
 	@Override
@@ -146,25 +129,6 @@ public class LoginPresenter extends
 		getView().clearViewItems(true);
 	};
 
-	private void loadName() {
-		// not secured -- probably a bad idea
-		// requestHelper.execute(new
-		// GetSettingsRequest(Arrays.asList(SETTINGNAME.ORGNAME)),
-		// new TaskServiceCallback<GetSettingsResponse>() {
-		// @Override
-		// public void processResult(GetSettingsResponse aResponse) {
-		// List<Setting> settings = aResponse.getSettings();
-		// if(settings!=null && !settings.isEmpty()){
-		// Setting setting = settings.get(0);
-		// Value value = setting.getValue();
-		// if(value.getValue()!=null){
-		// String orgName = value.getValue().toString();
-		// getView().setOrgName(orgName);
-		// }
-		// }
-		// }
-		// });
-	}
 
 	protected void login() {
 		if (getView().isValid()) {
