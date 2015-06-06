@@ -99,4 +99,16 @@ public class ApplicationFormDao extends BaseDao{
 						.setParameter("type", type.ordinal()));
 		}
 
+		public List<Category> getAllCategories() {
+			
+			return getResultList(getEntityManager().createQuery("FROM Category c where c.isActive=1"));
+		}
+
+		public Category getCategory(String categoryId) {
+			
+			return getSingleResultOrNull(getEntityManager()
+					.createQuery("FROM Category c where c.refId=:refId")
+					.setParameter("refId", categoryId));
+		}
+
 }

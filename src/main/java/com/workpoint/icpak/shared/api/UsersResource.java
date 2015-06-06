@@ -2,10 +2,12 @@ package com.workpoint.icpak.shared.api;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import com.icpak.rest.models.auth.User;
 import com.workpoint.icpak.shared.model.UserDto;
 
 @Path("users")
@@ -17,18 +19,19 @@ public interface UsersResource{
 //		public RestAction<List<User>> getAll(@QueryParam("offset") Integer offset,
 //				@QueryParam("limit") Integer limit);
 //		
-//		@GET
-//		@Path("/{userId}")
-//		@Produces(MediaType.APPLICATION_JSON)
-//		public RestAction<User> getById(
-//				@PathParam("userId") String userId);
-//		
+		@GET
+		@Path("/{userId}")
+		@Produces(MediaType.APPLICATION_JSON)
+		public UserDto getById(
+				@PathParam("userId") String userId);
+		
 		@GET
 		@Path("/auth")
 		@Produces(MediaType.APPLICATION_JSON)
 		public UserDto login(
 				@QueryParam("username") String username,
 				@QueryParam("password") String password);
+		
 		
 //		@POST
 //		@Consumes(MediaType.APPLICATION_JSON)

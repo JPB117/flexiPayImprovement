@@ -80,8 +80,8 @@ public class ApplicationFormHeaderDto extends SerializableObj{
 	private String contactAddress;
 	private String contactTelephone;
 	private String contactEmail;
-	private String KASNEBFAQNo;
-	private String CPAFAQ;
+	//private String KASNEBFAQNo;
+	//private String CPAFAQ;
 	private String examinationBody;
 	private String postCode;
 	private int paymentMode;
@@ -563,21 +563,21 @@ public class ApplicationFormHeaderDto extends SerializableObj{
 		this.contactEmail = contactEmail;
 	}
 
-	public String getKASNEBFAQNo() {
-		return KASNEBFAQNo;
-	}
+//	public String getKASNEBFAQNo() {
+//		return KASNEBFAQNo;
+//	}
+//
+//	public void setKASNEBFAQNo(String kASNEBFAQNo) {
+//		KASNEBFAQNo = kASNEBFAQNo;
+//	}
 
-	public void setKASNEBFAQNo(String kASNEBFAQNo) {
-		KASNEBFAQNo = kASNEBFAQNo;
-	}
-
-	public String getCPAFAQ() {
-		return CPAFAQ;
-	}
-
-	public void setCPAFAQ(String cPAFAQ) {
-		CPAFAQ = cPAFAQ;
-	}
+//	public String getCPAFAQ() {
+//		return CPAFAQ;
+//	}
+//
+//	public void setCPAFAQ(String cPAFAQ) {
+//		CPAFAQ = cPAFAQ;
+//	}
 
 	public String getExaminationBody() {
 		return examinationBody;

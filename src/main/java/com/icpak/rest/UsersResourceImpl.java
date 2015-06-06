@@ -80,13 +80,11 @@ public class UsersResourceImpl extends BaseResource<User> implements UsersResour
 	@Path("/{userId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Get a user by userId", response = User.class, consumes = MediaType.APPLICATION_JSON)
-	public Response getById(
-			@Context UriInfo uriInfo,
+	public UserDto getById(
 			@ApiParam(value = "User Id of the user to fetch", required = true) @PathParam("userId") String userId) {
 
 		User user = helper.getUser(userId);
-		return buildGetEntityResponse(uriInfo.getAbsolutePath().toString(),
-				user);
+		return user.getDTO();
 	}
 	
 	@GET

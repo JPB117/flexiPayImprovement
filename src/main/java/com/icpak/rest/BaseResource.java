@@ -88,8 +88,6 @@ public abstract class BaseResource<T extends ResourceModel> {
 	
 	public Response getAll(UriInfo uriInfo, Integer offset,Integer limit){return null;}
 	
-	public Response getById(UriInfo uriInfo,String entityRefId){return null;}
-	
 	public Response create(UriInfo uriInfo, T entity){return null;}
 	
 	public Response update(UriInfo uriInfo, String entityRefId, T entity){return null;}

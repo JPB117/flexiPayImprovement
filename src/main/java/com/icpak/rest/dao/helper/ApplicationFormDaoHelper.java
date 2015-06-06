@@ -31,6 +31,7 @@ import com.icpak.rest.utils.EmailServiceHelper;
 import com.icpak.rest.utils.HTMLToPDFConvertor;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 import com.workpoint.icpak.shared.model.ApplicationType;
+import com.workpoint.icpak.shared.model.CategoryDto;
 
 @Transactional
 public class ApplicationFormDaoHelper {
@@ -174,6 +175,43 @@ public class ApplicationFormDaoHelper {
 		setCategory(application);
 		
 		return application;
+	}
+
+	public List<CategoryDto> getAllCategories() {
+		List<Category> categories = applicationDao.getAllCategories();
+		
+		List<CategoryDto> dtos = new ArrayList<>();
+		for(Category c: categories){
+			dtos.add( c.toDto());
+		}
+		return dtos;
+	}
+
+	public Category getCategoryById(String categoryId) {
+		return applicationDao.getCategory(categoryId);
+	}
+
+	public void createCategory(CategoryDto dto) {
+		if(dto.getRefId()!=null){
+			updateCategory(dto.getRefId(), dto);
+			return;
+		}
+		
+		Category c = new Category();
+		c.copyFrom(dto);
+		applicationDao.save(c);
+		dto.setRefId(c.getRefId());
+		
+	}
+
+	public void updateCategory(String categoryId, CategoryDto dto) {
+		Category c = getCategoryById(categoryId);
+		c.copyFrom(dto);
+		applicationDao.save(c);
+	}
+
+	public void deleteCategory(String categoryId) {
+		applicationDao.delete(getCategoryById(categoryId));
 	}
 
 

@@ -76,6 +76,12 @@ public class Category extends PO{
 		category.setRenewalAmount(renewalAmount);
 		category.setType(type);
 		
-		return null;
+		return category;
+	}
+
+	public void copyFrom(CategoryDto dto) {
+		setDescription(dto.getDescription());
+		setApplicationAmount(dto.getApplicationAmount());
+		setRenewalAmount(dto.getRenewalAmount());
 	}
 }

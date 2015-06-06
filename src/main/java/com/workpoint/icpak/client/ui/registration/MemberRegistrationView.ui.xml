@@ -59,9 +59,9 @@
 
 											<div class="col-sm-12">
 												<div class="alert alert-success" role="alert">
-													Your application
-													has been submitted successfully!
+													Complete your application
 												</div>
+												<d:IssuesPanel ui:field="issuesPanel"></d:IssuesPanel>
 											</div>
 
 											<div class="col-sm-12">
@@ -164,21 +164,19 @@
 																	<td width="50px">
 																		<i class="fa fa-check"></i>
 																	</td>
-																	<td>Application Fee: Kshs.26,000</td>
+																	<td>Application Fee: Kshs.<span ui:field="spnNonPracticingFee"></span></td>
 																</tr>
 																<tr>
 																	<td width="50px">
 																		<i class="fa fa-check"></i>
 																	</td>
-																	<td>Annual subscription: Kshs 10,000</td>
+																	<td>Annual subscription: Kshs.<span ui:field="spnNonPracticingSubscription"></span></td>
 																</tr>
 																<tr>
 																	<td width="50px">
 																		<i class="fa fa-check"></i>
 																	</td>
-																	<td>All CPA graduates who have experience of 3 years
-																		or
-																		more</td>
+																	<td><span ui:field="spnNonPracticingCondition"></span></td>
 																</tr>
 															</table>
 														</div>
@@ -198,26 +196,24 @@
 														</div>
 
 														<div class="panel-body panel-body-landing">
-															<table class="table">
+																<table class="table">
 																<tr>
 																	<td width="50px">
 																		<i class="fa fa-check"></i>
 																	</td>
-																	<td>Application Fee: Kshs.26,000</td>
+																	<td>Application Fee: Kshs.<span ui:field="spnPracticingFee"></span></td>
 																</tr>
 																<tr>
 																	<td width="50px">
 																		<i class="fa fa-check"></i>
 																	</td>
-																	<td>Annual subscription: Kshs 10,000</td>
+																	<td>Annual subscription: Kshs.<span ui:field="spnPracticingSubscription"></span></td>
 																</tr>
 																<tr>
 																	<td width="50px">
 																		<i class="fa fa-check"></i>
 																	</td>
-																	<td>All CPA graduates who have experience of 3 years
-																		or
-																		more</td>
+																	<td><span ui:field="spnPracticingCondition"></span></td>
 																</tr>
 															</table>
 														</div>
@@ -235,26 +231,24 @@
 														</div>
 
 														<div class="panel-body panel-body-landing">
-															<table class="table">
+																<table class="table">
 																<tr>
 																	<td width="50px">
 																		<i class="fa fa-check"></i>
 																	</td>
-																	<td>Application Fee: Kshs.26,000</td>
+																	<td>Application Fee: Kshs.<span ui:field="spnOverseasFee"></span></td>
 																</tr>
 																<tr>
 																	<td width="50px">
 																		<i class="fa fa-check"></i>
 																	</td>
-																	<td>Annual subscription: Kshs 10,000</td>
+																	<td>Annual subscription: Kshs.<span ui:field="spnOverseasSubscription"></span></td>
 																</tr>
 																<tr>
 																	<td width="50px">
 																		<i class="fa fa-check"></i>
 																	</td>
-																	<td>All CPA graduates who have experience of 3 years
-																		or
-																		more</td>
+																	<td><span ui:field="spnOverseasCondition"></span></td>
 																</tr>
 															</table>
 														</div>
@@ -277,21 +271,19 @@
 																	<td width="50px">
 																		<i class="fa fa-check"></i>
 																	</td>
-																	<td>Application Fee: Kshs.26,000</td>
+																	<td>Application Fee: Kshs.<span ui:field="spnAssociateFee"></span></td>
 																</tr>
 																<tr>
 																	<td width="50px">
 																		<i class="fa fa-check"></i>
 																	</td>
-																	<td>Annual subscription: Kshs 10,000</td>
+																	<td>Annual subscription: Kshs.<span ui:field="spnAssociateSubscription"></span></td>
 																</tr>
 																<tr>
 																	<td width="50px">
 																		<i class="fa fa-check"></i>
 																	</td>
-																	<td>All CPA graduates who have experience of 3 years
-																		or
-																		more</td>
+																	<td><span ui:field="spnAssociateCondition"></span></td>
 																</tr>
 															</table>
 														</div>
