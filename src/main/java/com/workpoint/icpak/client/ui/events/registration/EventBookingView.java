@@ -12,6 +12,8 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Frame;
+import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
@@ -41,27 +43,12 @@ public class EventBookingView extends ViewImpl implements
 	DivElement divCategories;
 
 	@UiField
+	HTMLPanel panelDelegates;
+
+	@UiField
 	DivElement divPayment;
 	@UiField
 	DivElement divProforma;
-
-	@UiField
-	Anchor aAssociate;
-	@UiField
-	Anchor aOverseas;
-	@UiField
-	Anchor aNonPractising;
-	@UiField
-	Anchor aPractising;
-
-	@UiField
-	DivElement divNonPracticing;
-	@UiField
-	DivElement divPractising;
-	@UiField
-	DivElement divAssociate;
-	@UiField
-	DivElement divOverseas;
 
 	@UiField
 	LIElement liTab1;
@@ -100,8 +87,6 @@ public class EventBookingView extends ViewImpl implements
 	// @UiField
 	// DropDownList<> lstCountries;
 
-	@UiField
-	SpanElement spnSelected;
 
 	private List<LIElement> liElements = new ArrayList<LIElement>();
 	private List<PageElement> pageElements = new ArrayList<PageElement>();
@@ -110,30 +95,6 @@ public class EventBookingView extends ViewImpl implements
 
 	public interface Binder extends UiBinder<Widget, EventBookingView> {
 	}
-
-	ClickHandler selectHandler = new ClickHandler() {
-		@Override
-		public void onClick(ClickEvent event) {
-			Anchor selected = (Anchor) event.getSource();
-			selectedName = selected.getName();
-
-			spnSelected.setInnerText("You have selected:" + selectedName);
-
-			if (selectedName.equals("NonPractising")) {
-				removeActiveSelection(selected);
-				divNonPracticing.addClassName("active");
-			} else if (selectedName.equals("Practising")) {
-				removeActiveSelection(selected);
-				divPractising.addClassName("active");
-			} else if (selectedName.equals("Overseas")) {
-				removeActiveSelection(selected);
-				divOverseas.addClassName("active");
-			} else if (selectedName.equals("Associate")) {
-				removeActiveSelection(selected);
-				divAssociate.addClassName("active");
-			}
-		}
-	};
 
 	@Inject
 	public EventBookingView(final Binder binder) {
@@ -148,10 +109,6 @@ public class EventBookingView extends ViewImpl implements
 		liElements.add(liTab3);
 		liElements.add(liTab4);
 
-		aNonPractising.addClickHandler(selectHandler);
-		aPractising.addClickHandler(selectHandler);
-		aOverseas.addClickHandler(selectHandler);
-		aAssociate.addClickHandler(selectHandler);
 
 		// Div Elements
 		pageElements.add(new PageElement(divPackage, "Proceed"));
@@ -159,7 +116,7 @@ public class EventBookingView extends ViewImpl implements
 		pageElements.add(new PageElement(divProforma, "Proceed to Pay"));
 		pageElements.add(new PageElement(divPayment, "Finish", "Back"));
 
-		setActive(liElements.get(counter), pageElements.get(counter));
+		setActive(liElements.get(counter+1), pageElements.get(counter+1));
 
 		aBack.addClickHandler(new ClickHandler() {
 			@Override
@@ -189,12 +146,6 @@ public class EventBookingView extends ViewImpl implements
 		}
 	}
 
-	protected void removeActiveSelection(Anchor selected) {
-		divNonPracticing.removeClassName("active");
-		divPractising.removeClassName("active");
-		divOverseas.removeClassName("active");
-		divAssociate.removeClassName("active");
-	}
 
 	private void removeActive(LIElement liElement, PageElement page) {
 		setButtons(page);
@@ -226,6 +177,16 @@ public class EventBookingView extends ViewImpl implements
 		System.err.println("Added:" + counter);
 	}
 
+	@Override
+	public void setInSlot(Object slot, IsWidget content) {
+		if (slot == EventBookingPresenter.DELEGATE_SLOT) {
+			panelDelegates.clear();
+			if (content != null) {
+				panelDelegates.add(content);
+			}
+		}
+	}
+
 	private void clearAll() {
 		liTab1.removeClassName("active");
 		liTab2.removeClassName("active");
@@ -243,9 +204,5 @@ public class EventBookingView extends ViewImpl implements
 		return widget;
 	}
 
-	@Override
-	public void createWizard() {
-
-	}
 
 }

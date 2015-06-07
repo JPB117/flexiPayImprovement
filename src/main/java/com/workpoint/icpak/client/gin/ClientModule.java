@@ -43,6 +43,8 @@ import com.workpoint.icpak.client.ui.error.ErrorPresenter;
 import com.workpoint.icpak.client.ui.error.ErrorView;
 import com.workpoint.icpak.client.ui.error.NotfoundPresenter;
 import com.workpoint.icpak.client.ui.error.NotfoundView;
+import com.workpoint.icpak.client.ui.events.delegates.DelegatesPresenter;
+import com.workpoint.icpak.client.ui.events.delegates.DelegatesView;
 import com.workpoint.icpak.client.ui.events.registration.EventBookingPresenter;
 import com.workpoint.icpak.client.ui.events.registration.EventBookingView;
 import com.workpoint.icpak.client.ui.header.HeaderPresenter;
@@ -108,8 +110,7 @@ public class ClientModule extends AbstractPresenterModule {
 				MemberRegistrationPresenter.MyProxy.class);
 
 		bindPresenter(EventBookingPresenter.class,
-				EventBookingPresenter.MyView.class,
-				EventBookingView.class,
+				EventBookingPresenter.MyView.class, EventBookingView.class,
 				EventBookingPresenter.MyProxy.class);
 
 		bindPresenter(ErrorPagePresenter.class,
@@ -159,6 +160,9 @@ public class ClientModule extends AbstractPresenterModule {
 
 		bindPresenterWidget(UserItemPresenter.class,
 				UserItemPresenter.MyView.class, UserItemView.class);
+
+		bindPresenterWidget(DelegatesPresenter.class,
+				DelegatesPresenter.MyView.class, DelegatesView.class);
 
 		bindPresenterWidget(GroupPresenter.class, GroupPresenter.MyView.class,
 				GroupView.class);

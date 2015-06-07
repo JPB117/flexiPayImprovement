@@ -14,13 +14,12 @@ import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.workpoint.icpak.client.place.NameTokens;
+import com.workpoint.icpak.client.ui.events.delegates.DelegatesPresenter;
 
-public class EventBookingPresenter
-		extends
+public class EventBookingPresenter extends
 		Presenter<EventBookingPresenter.MyView, EventBookingPresenter.MyProxy> {
 
 	public interface MyView extends View {
-		void createWizard();
 
 	}
 
@@ -30,14 +29,18 @@ public class EventBookingPresenter
 	}
 
 	@ContentSlot
-	public static final Type<RevealContentHandler<?>> DOCPOPUP_SLOT = new Type<RevealContentHandler<?>>();
+	public static final Type<RevealContentHandler<?>> DELEGATE_SLOT = new Type<RevealContentHandler<?>>();
 
 	@Inject
 	PlaceManager placeManager;
 
 	@Inject
-	public EventBookingPresenter(final EventBus eventBus,
-			final MyView view, final MyProxy proxy) {
+	DelegatesPresenter delegatePresenter;
+	
+
+	@Inject
+	public EventBookingPresenter(final EventBus eventBus, final MyView view,
+			final MyProxy proxy) {
 		super(eventBus, view, proxy);
 	}
 
@@ -49,8 +52,8 @@ public class EventBookingPresenter
 	@Override
 	protected void onBind() {
 		super.onBind();
-
-		getView().createWizard();
+		
+		setInSlot(DELEGATE_SLOT, delegatePresenter);
 	}
 
 	@Override
