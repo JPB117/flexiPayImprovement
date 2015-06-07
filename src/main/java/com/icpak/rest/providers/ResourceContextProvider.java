@@ -1,7 +1,6 @@
 package com.icpak.rest.providers;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 
 import javax.ws.rs.ext.ContextResolver;

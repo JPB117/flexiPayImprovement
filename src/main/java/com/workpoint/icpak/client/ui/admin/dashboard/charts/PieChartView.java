@@ -2,7 +2,6 @@ package com.workpoint.icpak.client.ui.admin.dashboard.charts;
 
 import java.util.List;
 
-import com.workpoint.icpak.shared.model.dashboard.Data;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.editor.client.Editor.Path;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -32,6 +31,7 @@ import com.sencha.gxt.data.shared.PropertyAccess;
 import com.sencha.gxt.data.shared.StringLabelProvider;
 import com.sencha.gxt.widget.core.client.Resizable;
 import com.sencha.gxt.widget.core.client.Resizable.Dir;
+import com.workpoint.icpak.shared.model.dashboard.Data;
 
 public class PieChartView extends ViewImpl implements
 		PieChartPresenter.IPieChartView {

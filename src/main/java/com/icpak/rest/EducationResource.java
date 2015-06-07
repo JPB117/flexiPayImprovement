@@ -16,8 +16,8 @@ import javax.ws.rs.core.UriInfo;
 
 import com.google.inject.Inject;
 import com.icpak.rest.dao.helper.EducationDaoHelper;
-import com.icpak.rest.models.membership.EduType;
 import com.icpak.rest.models.membership.ApplicationFormEducational;
+import com.icpak.rest.models.membership.EduType;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;

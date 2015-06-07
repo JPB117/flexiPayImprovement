@@ -3,8 +3,6 @@ package com.workpoint.icpak.shared.model;
 import java.io.Serializable;
 import java.util.Date;
 
-import com.workpoint.icpak.shared.model.UserDto;
-
 public class Attachment implements Serializable{
 
 	/**

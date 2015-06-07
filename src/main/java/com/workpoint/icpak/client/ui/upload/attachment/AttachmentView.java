@@ -1,23 +1,19 @@
 package com.workpoint.icpak.client.ui.upload.attachment;
 
-import com.workpoint.icpak.client.model.UploadContext;
-import com.workpoint.icpak.client.ui.images.ImageResources;
-import com.workpoint.icpak.client.ui.upload.attachment.AttachmentPresenter.IAttachmentView;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style.Display;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
+import com.workpoint.icpak.client.model.UploadContext;
+import com.workpoint.icpak.client.ui.images.ImageResources;
+import com.workpoint.icpak.client.ui.upload.attachment.AttachmentPresenter.IAttachmentView;
 
 public class AttachmentView extends ViewImpl implements IAttachmentView{
 

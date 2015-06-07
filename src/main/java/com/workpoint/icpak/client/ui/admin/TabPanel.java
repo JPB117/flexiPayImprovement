@@ -1,6 +1,5 @@
 package com.workpoint.icpak.client.ui.admin;
 
-import com.workpoint.icpak.client.ui.component.BulletListPanel;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -12,6 +11,7 @@ import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.Tab;
 import com.gwtplatform.mvp.client.TabData;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
+import com.workpoint.icpak.client.ui.component.BulletListPanel;
 
 public class TabPanel extends AbstractTabPanel {
 

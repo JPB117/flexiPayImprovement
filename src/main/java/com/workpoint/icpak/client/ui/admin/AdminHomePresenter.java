@@ -1,10 +1,8 @@
 package com.workpoint.icpak.client.ui.admin;
 
-import com.workpoint.icpak.client.ui.MainPagePresenter;
-import com.workpoint.icpak.client.ui.events.ContextLoadedEvent;
-import com.google.web.bindery.event.shared.EventBus;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.inject.Inject;
+import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.ChangeTabHandler;
 import com.gwtplatform.mvp.client.RequestTabsHandler;
 import com.gwtplatform.mvp.client.Tab;
@@ -18,6 +16,8 @@ import com.gwtplatform.mvp.client.annotations.ProxyStandard;
 import com.gwtplatform.mvp.client.annotations.RequestTabs;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
+import com.workpoint.icpak.client.ui.MainPagePresenter;
+import com.workpoint.icpak.client.ui.events.ContextLoadedEvent;
 
 public class AdminHomePresenter extends
 	TabContainerPresenter<AdminHomePresenter.MyView, AdminHomePresenter.MyProxy>{

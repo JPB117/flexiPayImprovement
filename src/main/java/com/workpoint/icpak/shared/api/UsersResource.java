@@ -7,7 +7,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import com.icpak.rest.models.auth.User;
 import com.workpoint.icpak.shared.model.UserDto;
 
 @Path("users")

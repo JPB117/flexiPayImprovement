@@ -15,7 +15,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import com.google.inject.Inject;
-import com.icpak.rest.dao.helper.BookingsDaoHelper;
 import com.icpak.rest.dao.helper.SpecializationDaoHelper;
 import com.icpak.rest.models.membership.Specialization;
 import com.wordnik.swagger.annotations.Api;

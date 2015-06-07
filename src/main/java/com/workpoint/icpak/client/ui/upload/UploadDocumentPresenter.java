@@ -1,5 +1,12 @@
 package com.workpoint.icpak.client.ui.upload;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.inject.Inject;
+import com.google.web.bindery.event.shared.EventBus;
+import com.gwtplatform.mvp.client.PopupView;
+import com.gwtplatform.mvp.client.PresenterWidget;
 import com.workpoint.icpak.client.model.UploadContext;
 import com.workpoint.icpak.client.ui.events.CloseAttatchmentEvent;
 import com.workpoint.icpak.client.ui.events.CloseAttatchmentEvent.CloseAttatchmentHandler;
@@ -9,13 +16,6 @@ import com.workpoint.icpak.client.ui.events.UploadEndedEvent.UploadEndedHandler;
 import com.workpoint.icpak.client.ui.events.UploadStartedEvent;
 import com.workpoint.icpak.client.ui.events.UploadStartedEvent.UploadStartedHandler;
 import com.workpoint.icpak.client.ui.upload.custom.Uploader;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.web.bindery.event.shared.EventBus;
-import com.google.inject.Inject;
-import com.gwtplatform.mvp.client.PopupView;
-import com.gwtplatform.mvp.client.PresenterWidget;
 
 public class UploadDocumentPresenter extends
 		PresenterWidget<UploadDocumentPresenter.MyView> implements CloseAttatchmentHandler,

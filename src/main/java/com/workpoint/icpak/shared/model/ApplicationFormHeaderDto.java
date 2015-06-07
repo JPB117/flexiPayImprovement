@@ -1,6 +1,5 @@
 package com.workpoint.icpak.shared.model;
 
-import java.sql.Timestamp;
 import java.util.Date;
 
 import javax.xml.bind.annotation.XmlAccessType;

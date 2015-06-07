@@ -3,8 +3,8 @@ package com.workpoint.icpak.client.ui.component;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.workpoint.icpak.shared.model.Listable;
 import com.google.gwt.user.client.ui.SuggestOracle;
+import com.workpoint.icpak.shared.model.Listable;
 
 public class DataOracle<T extends Listable> extends SuggestOracle {
 

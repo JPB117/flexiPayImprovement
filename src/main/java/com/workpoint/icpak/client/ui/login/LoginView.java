@@ -1,6 +1,5 @@
 package com.workpoint.icpak.client.ui.login;
 
-import com.workpoint.icpak.client.ui.component.IssuesPanel;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -10,6 +9,7 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
+import com.workpoint.icpak.client.ui.component.IssuesPanel;
 
 public class LoginView extends ViewImpl implements LoginPresenter.ILoginView {
 

@@ -11,9 +11,9 @@ import com.google.inject.persist.Transactional;
 import com.icpak.rest.dao.ApplicationFormDao;
 import com.icpak.rest.dao.UsersDao;
 import com.icpak.rest.models.base.ResourceCollectionModel;
+import com.icpak.rest.models.membership.ApplicationFormEducational;
 import com.icpak.rest.models.membership.ApplicationFormHeader;
 import com.icpak.rest.models.membership.EduType;
-import com.icpak.rest.models.membership.ApplicationFormEducational;
 
 @Transactional
 public class EducationDaoHelper {

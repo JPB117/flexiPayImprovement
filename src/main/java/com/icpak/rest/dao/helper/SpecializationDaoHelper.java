@@ -11,8 +11,8 @@ import com.google.inject.persist.Transactional;
 import com.icpak.rest.dao.MemberDao;
 import com.icpak.rest.dao.UsersDao;
 import com.icpak.rest.models.base.ResourceCollectionModel;
-import com.icpak.rest.models.membership.Specialization;
 import com.icpak.rest.models.membership.Member;
+import com.icpak.rest.models.membership.Specialization;
 
 @Transactional
 public class SpecializationDaoHelper {

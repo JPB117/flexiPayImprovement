@@ -28,17 +28,17 @@
 							<div class="card wizard-card ct-wizard-green">
 								<div class="wizard-header">
 									<h3>
-										Member Registration Process
+										Event Registration Centre
 										<br />
 									</h3>
 								</div>
 
 								<ul class="nav nav-pills">
 									<li class="active" style="width: 25%;" ui:field="liTab1">
-										<a>1 - Personal Information</a>
+										<a>1 - Event Details</a>
 									</li>
 									<li style="width: 25%;" ui:field="liTab2">
-										<a>2 - Membership Category</a>
+										<a>2 - Delegates Attending</a>
 									</li>
 									<li style="width: 25%;" ui:field="liTab3">
 										<a>3 - Proforma Invoice</a>
@@ -52,48 +52,77 @@
 								<div class="tab-content">
 									<div class="tab-pane active" ui:field="divPackage">
 										<div class="row">
-											<div class="col-sm-12 hide">
-												<h4 class="info-text">Fill In Below Details:</h4>
+
+											<div class="col-sm-12">
+												<h4 class="info-text">Fill In Below Form:</h4>
 												<hr />
 											</div>
 
 											<div class="col-sm-12">
-												<div class="alert alert-success" role="alert">
-													Your application
-													has been submitted successfully!
+												<strong>
+													<span ui:field="spnEventName">IPSAS Seminar</span>
+												</strong>
+												<a data-toggle="collapse" data-target="#eventInfo"
+													aria-expanded="false" aria-controls="#eventInfo">
+													(show/hide event information)
+												</a>
+
+												<div class="collapse" id="eventInfo">
+													<div class="col-sm-12">
+														<div class="well row">
+															<div class="col-sm-6">
+																<strong>Starting Date:</strong>
+																<span ui:field="spnStartDate">June 10, 2015</span>
+																(
+																<span ui:field="spnDays2Go">1 day to Go</span>
+																)
+
+															</div>
+															<div class="col-sm-6">
+																<strong>Duration</strong>
+																<span ui:field="spnDuration">3 day(s)</span>
+															</div>
+														</div>
+													</div>
 												</div>
 											</div>
 
 											<div class="col-sm-12">
-												<div class="row">
-													<div class="col-xs-6">
-														<label for="firstname">Surname</label>
-														<d:TextField ui:field="surname" styleName="form-control"
-															placeholder="Enter Surname" value="" required="true">
-														</d:TextField>
-													</div>
-													<div class="col-xs-6">
-														<label for="lastname">Other Name</label>
-														<d:TextField ui:field="other_names" styleName="form-control"
-															placeholder="Enter Other Name" value="" required="true">
-														</d:TextField>
-													</div>
-												</div>
-
 												<div class="form-group">
 													<div class="row">
 														<div class="col-xs-6">
-															<label for="emailaddress">Email Address</label>
-															<d:TextField ui:field="email_address"
-																styleName="form-control" placeholder="Email address"
+															<label for="firstname">Company:</label>
+															<d:TextField ui:field="txtCompanyName"
+																styleName="form-control" placeholder="Company Name"
 																value="" required="true">
 															</d:TextField>
 														</div>
+														
+														<div class="col-xs-6">
+															<label for="phone">Office Telephone:</label>
+															<d:TextField ui:field="txtPhone" styleName="form-control"
+																placeholder="Office Name" value="" required="true">
+															</d:TextField>
+														</div>
+														
+													</div>
+												</div>
+
+												<div class="form-group">
+													<div class="row">
+														<div class="col-xs-6">
+															<label for="emailaddress">Postal Address</label>
+															<d:TextField ui:field="txtAddress" styleName="form-control"
+																placeholder="Enter Address" value="" required="true">
+															</d:TextField>
+														</div>
 
 														<div class="col-xs-6">
-															<label for="phone">Phone Number</label>
-															<d:TextField ui:field="txtPhone" styleName="form-control"
-																placeholder="Phone Number" value="" required="true">
+															<label for="applicationCategory">Postal Code</label>
+
+															<d:TextField ui:field="txtPostalCode"
+																styleName="form-control" placeholder="Enter Postal Code"
+																value="" required="true">
 															</d:TextField>
 														</div>
 													</div>
@@ -103,16 +132,15 @@
 												<div class="form-group">
 													<div class="row">
 														<div class="col-xs-6">
-															<label for="emailaddress">Employer Name</label>
-															<d:TextField ui:field="employer" styleName="form-control"
-																placeholder="Enter Employer's Name" value="" required="true">
-															</d:TextField>
+															<label for="emailaddress">Country:</label>
+															<d:DropDownList ui:field="lstCountries"
+																styleName="form-control">
+															</d:DropDownList>
 														</div>
 
 														<div class="col-xs-6">
 															<label for="applicationCategory">Town/City</label>
-
-															<d:TextField ui:field="city" styleName="form-control"
+															<d:TextField ui:field="txtCity" styleName="form-control"
 																placeholder="Enter Town/City" value="" required="true">
 															</d:TextField>
 														</div>
@@ -122,22 +150,26 @@
 												<div class="form-group">
 													<div class="row">
 														<div class="col-xs-6">
-															<label for="emailaddress">Address</label>
-															<d:TextField ui:field="address" styleName="form-control"
-																placeholder="Enter Address" value="" required="true">
-															</d:TextField>
-														</div>
-
-														<div class="col-xs-6">
-															<label for="applicationCategory">Postal Code</label>
-
-															<d:TextField ui:field="postal_code"
-																styleName="form-control" placeholder="Enter Postal Code"
+															<label for="contactPerson">Contact Person:</label>
+															<d:TextField ui:field="txtContactPerson"
+																styleName="form-control" placeholder="Email address"
 																value="" required="true">
 															</d:TextField>
+															<p class="text-warning">if self-sponsored, please enter your name</p>
+														</div>
+														<div class="col-xs-6">
+															<label for="contactPerson">Contact Email:</label>
+															<d:TextField ui:field="txtContactEmail"
+																styleName="form-control" placeholder="Email address"
+																value="" required="true">
+															</d:TextField>
+															<p class="text-warning">Please note that this is the email address
+																where
+																the proforma invoice will be sent</p>
 														</div>
 													</div>
 												</div>
+
 											</div>
 										</div>
 									</div>
@@ -317,11 +349,13 @@
 													<div class="panel-body">
 														Your application has successfully saved and your temporary
 														account. Also note that a Proforma
-														invoice and temporary password
+														invoice and temporary
+														password
 														has been sent
 														to
 														your email
-														address for your reference.
+														address for your
+														reference.
 														<br />
 
 														You can choose between the following:

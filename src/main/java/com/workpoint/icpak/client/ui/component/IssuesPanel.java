@@ -15,7 +15,7 @@ public class IssuesPanel extends Widget {
 	public IssuesPanel() {
 
 		container = Document.get().createDivElement();
-		container.addClassName("class='alert alert-danger' role='alert'");
+		
 
 		this.ulRoot = DOM.createElement("ul");
 		this.spanTitle = DOM.createSpan();
@@ -24,11 +24,12 @@ public class IssuesPanel extends Widget {
 
 		container.appendChild(this.spanTitle);
 		container.appendChild(ulRoot);
+		
+		container.addClassName("alert alert-danger");
+		container.setAttribute("role", "alert");
 
 		setElement(container);
 
-		// setStyleName("alert alert-danger vld-Summary");
-		setStyleName("vld-Summary");
 	}
 
 	@Override

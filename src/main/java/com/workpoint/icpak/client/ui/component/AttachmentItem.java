@@ -1,14 +1,5 @@
 package com.workpoint.icpak.client.ui.component;
 
-import com.workpoint.icpak.client.model.UploadContext;
-import com.workpoint.icpak.client.ui.AppManager;
-import com.workpoint.icpak.client.ui.OnOptionSelected;
-import com.workpoint.icpak.client.ui.events.DeleteAttachmentEvent;
-import com.workpoint.icpak.client.ui.events.ReloadAttachmentsEvent;
-import com.workpoint.icpak.client.ui.images.ImageResources;
-import com.workpoint.icpak.client.ui.upload.attachment.ShowAttachmentEvent;
-import com.workpoint.icpak.client.util.AppContext;
-import com.workpoint.icpak.shared.model.Attachment;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.dom.client.Style.Unit;
@@ -18,10 +9,17 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Widget;
+import com.workpoint.icpak.client.model.UploadContext;
+import com.workpoint.icpak.client.ui.AppManager;
+import com.workpoint.icpak.client.ui.OnOptionSelected;
+import com.workpoint.icpak.client.ui.events.DeleteAttachmentEvent;
+import com.workpoint.icpak.client.ui.images.ImageResources;
+import com.workpoint.icpak.client.ui.upload.attachment.ShowAttachmentEvent;
+import com.workpoint.icpak.client.util.AppContext;
+import com.workpoint.icpak.shared.model.Attachment;
 
 public class AttachmentItem extends Composite {
 

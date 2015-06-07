@@ -8,16 +8,12 @@ import gwtupload.client.IUploader.OnFinishUploaderHandler;
 import gwtupload.client.IUploader.OnStartUploaderHandler;
 import gwtupload.client.MultiUploader;
 import gwtupload.client.PreloadedImage;
-import gwtupload.client.SingleUploader;
 import gwtupload.client.PreloadedImage.OnLoadPreloadedImageHandler;
+import gwtupload.client.SingleUploader;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.workpoint.icpak.client.model.UploadContext;
-import com.workpoint.icpak.client.ui.events.UploadEndedEvent;
-import com.workpoint.icpak.client.ui.events.UploadStartedEvent;
-import com.workpoint.icpak.client.util.AppContext;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -25,6 +21,10 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.workpoint.icpak.client.model.UploadContext;
+import com.workpoint.icpak.client.ui.events.UploadEndedEvent;
+import com.workpoint.icpak.client.ui.events.UploadStartedEvent;
+import com.workpoint.icpak.client.util.AppContext;
 
 /**
  * 

@@ -1,12 +1,12 @@
 package com.workpoint.icpak.client.ui.upload.href;
 
-import com.workpoint.icpak.client.ui.events.CloseAttatchmentEvent;
-import com.workpoint.icpak.client.ui.events.CloseAttatchmentEvent.CloseAttatchmentHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.PopupView;
 import com.gwtplatform.mvp.client.PresenterWidget;
+import com.workpoint.icpak.client.ui.events.CloseAttatchmentEvent;
+import com.workpoint.icpak.client.ui.events.CloseAttatchmentEvent.CloseAttatchmentHandler;
 
 public class IFrameDataPresenter extends
 		PresenterWidget<IFrameDataPresenter.IFrameView> implements CloseAttatchmentHandler{

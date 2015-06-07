@@ -3,19 +3,14 @@ package com.icpak.servlet.modules;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.inject.Singleton;
-
 import org.apache.shiro.guice.web.GuiceShiroFilter;
-import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.persist.PersistFilter;
 import com.google.inject.persist.jpa.JpaPersistModule;
 import com.google.inject.servlet.ServletModule;
 import com.icpak.servlet.config.GenericBootstrapConstants;
 import com.icpak.servlet.swagger.SwaggerApiServlet;
 import com.sun.jersey.api.core.PackagesResourceConfig;
-import com.sun.jersey.api.core.ResourceConfig;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 
 /**

@@ -1,7 +1,5 @@
 package com.icpak.rest.utils;
 
-import com.itextpdf.text.DocumentException;
-
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -20,6 +18,8 @@ import org.w3c.dom.Document;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+
+import com.itextpdf.text.DocumentException;
 
 public class HTMLToPDFConvertor {
 

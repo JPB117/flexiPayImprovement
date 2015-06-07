@@ -2,7 +2,6 @@ package com.workpoint.icpak.client.ui.admin.dashboard.linegraph;
 
 import java.util.List;
 
-import com.workpoint.icpak.shared.model.dashboard.Data;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.editor.client.Editor.Path;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -33,6 +32,7 @@ import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.ModelKeyProvider;
 import com.sencha.gxt.data.shared.PropertyAccess;
 import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData;
+import com.workpoint.icpak.shared.model.dashboard.Data;
 
 public class LineGraphView extends ViewImpl implements
 		LineGraphPresenter.ILineGraphView {

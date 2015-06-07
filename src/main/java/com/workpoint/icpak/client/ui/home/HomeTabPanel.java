@@ -1,7 +1,5 @@
 package com.workpoint.icpak.client.ui.home;
 
-import com.workpoint.icpak.client.ui.admin.AbstractTabPanel;
-import com.workpoint.icpak.client.ui.component.BulletListPanel;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -9,6 +7,8 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.Tab;
 import com.gwtplatform.mvp.client.TabData;
+import com.workpoint.icpak.client.ui.admin.AbstractTabPanel;
+import com.workpoint.icpak.client.ui.component.BulletListPanel;
 
 public class HomeTabPanel extends AbstractTabPanel {
 

@@ -5,7 +5,6 @@ import java.util.List;
 import org.apache.shiro.crypto.hash.Sha256Hash;
 
 import com.icpak.rest.exceptions.ServiceException;
-import com.icpak.rest.models.ErrorCode;
 import com.icpak.rest.models.ErrorCodes;
 import com.icpak.rest.models.auth.Role;
 import com.icpak.rest.models.auth.User;

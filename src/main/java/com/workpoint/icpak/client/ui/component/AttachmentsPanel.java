@@ -3,11 +3,6 @@ package com.workpoint.icpak.client.ui.component;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.workpoint.icpak.client.ui.AppManager;
-import com.workpoint.icpak.client.ui.OnOptionSelected;
-import com.workpoint.icpak.client.ui.events.DeleteAttachmentEvent;
-import com.workpoint.icpak.client.util.AppContext;
-import com.workpoint.icpak.shared.model.Attachment;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.SpanElement;
@@ -20,6 +15,11 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Widget;
+import com.workpoint.icpak.client.ui.AppManager;
+import com.workpoint.icpak.client.ui.OnOptionSelected;
+import com.workpoint.icpak.client.ui.events.DeleteAttachmentEvent;
+import com.workpoint.icpak.client.util.AppContext;
+import com.workpoint.icpak.shared.model.Attachment;
 
 public class AttachmentsPanel extends Composite {
 

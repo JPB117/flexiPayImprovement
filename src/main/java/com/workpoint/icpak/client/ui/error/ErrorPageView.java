@@ -2,13 +2,13 @@ package com.workpoint.icpak.client.ui.error;
 
 import java.util.Date;
 
-import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
+import com.workpoint.icpak.client.ui.util.DateUtils;
 
 public class ErrorPageView extends ViewImpl implements
 		ErrorPagePresenter.MyView {

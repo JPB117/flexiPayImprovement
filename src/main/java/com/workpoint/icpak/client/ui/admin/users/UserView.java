@@ -3,15 +3,12 @@ package com.workpoint.icpak.client.ui.admin.users;
 import static com.workpoint.icpak.client.ui.admin.users.UserPresenter.GROUPSLOT;
 import static com.workpoint.icpak.client.ui.admin.users.UserPresenter.ITEMSLOT;
 
-import com.workpoint.icpak.client.place.NameTokens;
-import com.workpoint.icpak.client.ui.admin.users.save.UserSavePresenter.TYPE;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -20,6 +17,8 @@ import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
+import com.workpoint.icpak.client.place.NameTokens;
+import com.workpoint.icpak.client.ui.admin.users.save.UserSavePresenter.TYPE;
 
 public class UserView extends ViewImpl implements UserPresenter.MyView {
 

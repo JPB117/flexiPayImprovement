@@ -24,9 +24,7 @@ import javax.mail.util.ByteArrayDataSource;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 
-import com.icpak.rest.models.auth.User;
 import com.icpak.rest.models.util.Attachment;
-import com.icpak.servlet.swagger.SwaggerApiServlet;
 
 public class EmailServiceHelper {
 

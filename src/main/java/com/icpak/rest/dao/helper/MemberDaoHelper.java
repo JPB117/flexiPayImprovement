@@ -7,17 +7,14 @@ import javax.ws.rs.core.UriInfo;
 
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
-import com.icpak.rest.IDUtils;
 import com.icpak.rest.dao.MemberDao;
 import com.icpak.rest.dao.RolesDao;
 import com.icpak.rest.dao.UsersDao;
 import com.icpak.rest.exceptions.ServiceException;
 import com.icpak.rest.models.ErrorCodes;
-import com.icpak.rest.models.auth.User;
 import com.icpak.rest.models.base.ExpandTokens;
 import com.icpak.rest.models.base.ResourceCollectionModel;
 import com.icpak.rest.models.membership.Member;
-import com.icpak.rest.models.membership.MemberType;
 
 @Transactional
 public class MemberDaoHelper {

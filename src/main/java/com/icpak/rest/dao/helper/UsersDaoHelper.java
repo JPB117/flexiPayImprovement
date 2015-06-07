@@ -10,7 +10,6 @@ import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authc.credential.Sha256CredentialsMatcher;
-import org.apache.shiro.crypto.hash.Sha256Hash;
 
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
@@ -20,9 +19,9 @@ import com.icpak.rest.dao.RolesDao;
 import com.icpak.rest.dao.UsersDao;
 import com.icpak.rest.exceptions.ServiceException;
 import com.icpak.rest.models.ErrorCodes;
+import com.icpak.rest.models.auth.BioData;
 import com.icpak.rest.models.auth.Role;
 import com.icpak.rest.models.auth.User;
-import com.icpak.rest.models.auth.BioData;
 import com.icpak.rest.models.base.ExpandTokens;
 import com.icpak.rest.models.base.ResourceCollectionModel;
 import com.icpak.rest.models.base.ResourceModel;

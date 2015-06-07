@@ -18,7 +18,6 @@ import com.icpak.rest.models.ErrorCodes;
 import com.icpak.rest.models.base.ResourceCollectionModel;
 import com.icpak.rest.models.event.Booking;
 import com.icpak.rest.models.event.Delegate;
-import com.icpak.rest.models.membership.Contact;
 
 @Transactional
 public class BookingsDaoHelper {

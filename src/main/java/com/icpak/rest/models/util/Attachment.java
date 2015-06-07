@@ -14,7 +14,6 @@ import javax.xml.bind.annotation.XmlSeeAlso;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
-import com.icpak.rest.models.auth.BioData;
 import com.icpak.rest.models.base.PO;
 import com.icpak.rest.models.membership.Education;
 import com.icpak.rest.models.membership.Member;

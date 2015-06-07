@@ -7,8 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.ws.rs.core.UriInfo;
-
 import org.apache.commons.io.IOUtils;
 
 import com.google.inject.Inject;
@@ -20,7 +18,6 @@ import com.icpak.rest.dao.UsersDao;
 import com.icpak.rest.exceptions.ServiceException;
 import com.icpak.rest.models.ErrorCodes;
 import com.icpak.rest.models.auth.User;
-import com.icpak.rest.models.base.ResourceCollectionModel;
 import com.icpak.rest.models.membership.ApplicationFormHeader;
 import com.icpak.rest.models.membership.Category;
 import com.icpak.rest.models.util.Attachment;

@@ -1,18 +1,18 @@
 package com.workpoint.icpak.client.ui.upload;
 
-import com.workpoint.icpak.client.ui.AppManager;
-import com.workpoint.icpak.client.ui.upload.custom.Uploader;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.web.bindery.event.shared.EventBus;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.PopupViewImpl;
+import com.workpoint.icpak.client.ui.AppManager;
+import com.workpoint.icpak.client.ui.upload.custom.Uploader;
 
 public class UploadDocumentView extends PopupViewImpl implements
 		UploadDocumentPresenter.MyView {

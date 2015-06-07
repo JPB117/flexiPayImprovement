@@ -15,8 +15,6 @@ import com.icpak.rest.models.ErrorCodes;
 import com.icpak.rest.models.base.ExpandTokens;
 import com.icpak.rest.models.base.ResourceCollectionModel;
 import com.icpak.rest.models.membership.Branch;
-import com.icpak.rest.models.membership.Contact;
-import com.icpak.rest.models.membership.Member;
 import com.icpak.rest.models.membership.Practice;
 
 @Transactional

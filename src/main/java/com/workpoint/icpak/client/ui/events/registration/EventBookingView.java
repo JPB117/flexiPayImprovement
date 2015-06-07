@@ -10,7 +10,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.Widget;
@@ -73,26 +72,33 @@ public class EventBookingView extends ViewImpl implements
 	@UiField
 	LIElement liTab4;
 
-	@UiField
-	TextField surname;
-	@UiField
-	TextField other_names;
-	@UiField
-	TextField email_address;
-
-	// @UiField
-	// DropDownList<> lstMemberCategory;
-
-	@UiField
-	TextField employer;
-	@UiField
-	TextField city;
-	@UiField
-	TextField address;
-	@UiField
-	TextField postal_code;
-
 	private String selectedName;
+
+	@UiField
+	SpanElement spnEventName;
+	@UiField
+	SpanElement spnStartDate;
+	@UiField
+	SpanElement spnDays2Go;
+	@UiField
+	SpanElement spnDuration;
+
+	@UiField
+	TextField txtCompanyName;
+	@UiField
+	TextField txtPhone;
+	@UiField
+	TextField txtAddress;
+	@UiField
+	TextField txtPostalCode;
+	@UiField
+	TextField txtCity;
+	@UiField
+	TextField txtContactPerson;
+	@UiField
+	TextField txtContactEmail;
+	// @UiField
+	// DropDownList<> lstCountries;
 
 	@UiField
 	SpanElement spnSelected;
