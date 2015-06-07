@@ -8,32 +8,38 @@ public class ActionLink extends Anchor {
 
 	public ActionLink() {
 		addClickHandler(new ClickHandler() {
-			
+
 			@Override
 			public void onClick(ClickEvent event) {
-				//setStyleName("hidden");
-			}	
+				// setStyleName("hidden");
+			}
 		});
 	}
-	
+
 	public ActionLink(String text) {
 		super();
 		setText(text);
 	}
 
-	public void setDataToggle(String data){
+	public void setDataToggle(String data) {
 		getElement().setAttribute("data-toggle", data);
 	}
-	
-	public void setRole(String role){
-		getElement().setAttribute("role", role);
+
+	public void setDataTarget(String data) {
+		getElement().setAttribute("data-target", data);
 	}
-	
-	public void setDataOriginalTitle(String data){
+
+	@Override
+	public void setTitle(String title) {
+		super.setTitle(title);
+		getElement().setAttribute("data-original-title", title);
+	}
+
+	public void setDataOriginalTitle(String data) {
 		getElement().setAttribute("data-original-title", data);
 	}
-	
-	public void setDataPlacement(String data){
+
+	public void setDataPlacement(String data) {
 		getElement().setAttribute("data-placement", data);
 	}
 }

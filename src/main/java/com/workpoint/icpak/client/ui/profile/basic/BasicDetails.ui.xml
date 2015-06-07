@@ -1,0 +1,94 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:d='urn:import:com.workpoint.icpak.client.ui.component' xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<g:HTMLPanel>
+		<div class="row">
+			<div class="col-xs-6">
+
+				<table class="table">
+					<tbody>
+						<tr>
+							<td>Surname:</td>
+							<td>
+								<i>Duggan</i>
+							</td>
+						</tr>
+						<tr>
+							<td>Other Name:</td>
+							<td>
+								<i>Kimani</i>
+							</td>
+						</tr>
+						<tr>
+							<td>Email Address:</td>
+							<td>
+								<i>mdkimani@gmail.com</i>
+							</td>
+						</tr>
+						<tr>
+							<td>Phone Number:</td>
+							<td>
+								<i></i>
+							</td>
+						</tr>
+						<tr>
+							<td>Gender:</td>
+							<td>
+								<i></i>
+							</td>
+						</tr>
+						<tr>
+							<td>Employer Name:</td>
+							<td>Workpoint Limited</td>
+						</tr>
+						<tr>
+							<td>Date Of Birth:</td>
+							<td>
+								<i></i>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+
+			</div>
+			<div class="col-xs-6">
+				<table class="table">
+					<tbody>
+						<tr>
+							<td>Residence:</td>
+							<td>
+								<i></i>
+							</td>
+						</tr>
+						<tr>
+							<td>Address:</td>
+							<td>
+								<i>mdkimani@gmail.com</i>
+							</td>
+						</tr>
+						<tr>
+							<td>Town / City:</td>
+							<td>
+								<i>Nairobi</i>
+							</td>
+						</tr>
+						<tr>
+							<td>Country:</td>
+							<td>
+								<i></i>
+							</td>
+						</tr>
+						<tr>
+							<td>Membership:</td>
+							<td>
+								<i>ASSOCIATE</i>
+							</td>
+						</tr>
+
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+	</g:HTMLPanel>
+</ui:UiBinder> 
