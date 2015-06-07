@@ -25,10 +25,10 @@ import com.workpoint.icpak.client.ui.admin.dashboard.linegraph.LineGraphPresente
 import com.workpoint.icpak.client.ui.admin.dashboard.table.TableDataPresenter;
 import com.workpoint.icpak.client.ui.security.AdminGateKeeper;
 
-public class DashboardPresenter extends
-		Presenter<DashboardPresenter.IDashboardView, DashboardPresenter.MyProxy> {
+public class AdminDashboardPresenter extends
+		Presenter<AdminDashboardPresenter.IAdminDashboardView, AdminDashboardPresenter.IAdminDashboardProxy> {
 
-	public interface IDashboardView extends View {
+	public interface IAdminDashboardView extends View {
 
 		void setValues(Integer requestCount, Integer activeCount,
 				Integer failureCount);
@@ -36,9 +36,9 @@ public class DashboardPresenter extends
 	}
 	
 	@ProxyCodeSplit
-	@NameToken(NameTokens.dashboards)
+	@NameToken(NameTokens.admindashboards)
 	@UseGatekeeper(AdminGateKeeper.class)
-	public interface MyProxy extends TabContentProxyPlace<DashboardPresenter> {
+	public interface IAdminDashboardProxy extends TabContentProxyPlace<AdminDashboardPresenter> {
 	}
 	
 	@TabInfo(container = AdminHomePresenter.class)
@@ -60,7 +60,7 @@ public class DashboardPresenter extends
 	public static final Type<RevealContentHandler<?>> LONGLASTINGTASKS_SLOT = new Type<RevealContentHandler<?>>();
 	
 	@Inject
-	public DashboardPresenter(final EventBus eventBus, final IDashboardView view,MyProxy proxy,
+	public AdminDashboardPresenter(final EventBus eventBus, final IAdminDashboardView view,IAdminDashboardProxy proxy,
 			Provider<PieChartPresenter>pieChartProvider,
 			Provider<LineGraphPresenter>lineGraphProvider,
 			Provider<TableDataPresenter>tableDataProvider) {

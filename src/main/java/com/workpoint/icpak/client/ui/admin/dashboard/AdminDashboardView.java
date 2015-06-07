@@ -1,9 +1,9 @@
 package com.workpoint.icpak.client.ui.admin.dashboard;
 
-import static com.workpoint.icpak.client.ui.admin.dashboard.DashboardPresenter.LINEGRAPH_SLOT;
-import static com.workpoint.icpak.client.ui.admin.dashboard.DashboardPresenter.LONGLASTINGTASKS_SLOT;
-import static com.workpoint.icpak.client.ui.admin.dashboard.DashboardPresenter.OVERALLTURNAROUND_SLOT;
-import static com.workpoint.icpak.client.ui.admin.dashboard.DashboardPresenter.REQUESTSPERDOC_SLOT;
+import static com.workpoint.icpak.client.ui.admin.dashboard.AdminDashboardPresenter.LINEGRAPH_SLOT;
+import static com.workpoint.icpak.client.ui.admin.dashboard.AdminDashboardPresenter.LONGLASTINGTASKS_SLOT;
+import static com.workpoint.icpak.client.ui.admin.dashboard.AdminDashboardPresenter.OVERALLTURNAROUND_SLOT;
+import static com.workpoint.icpak.client.ui.admin.dashboard.AdminDashboardPresenter.REQUESTSPERDOC_SLOT;
 
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.i18n.client.NumberFormat;
@@ -15,10 +15,10 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
 
-public class DashboardView extends ViewImpl implements
-		DashboardPresenter.IDashboardView {
+public class AdminDashboardView extends ViewImpl implements
+		AdminDashboardPresenter.IAdminDashboardView {
 
-	public interface Binder extends UiBinder<Widget, DashboardView> {
+	public interface Binder extends UiBinder<Widget, AdminDashboardView> {
 	}
 
 	private Widget widget;
@@ -33,7 +33,7 @@ public class DashboardView extends ViewImpl implements
 	@UiField SpanElement spnFailureCount;
 	
 	@Inject
-	public DashboardView(final Binder binder) {
+	public AdminDashboardView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
 	}
 	

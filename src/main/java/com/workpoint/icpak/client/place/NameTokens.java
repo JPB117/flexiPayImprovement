@@ -11,7 +11,6 @@ public class NameTokens {
 	public static final String profile = "profile";
 	public static final String settings = "settings";
 	public static final String usermgt = "usermgt";
-	public static final String dashboards = "dashboards";
 	public static final String datasources = "datasources";
 	public static final String formbuilder = "formbuilder";
 	public static final String processes = "processes";
@@ -30,6 +29,11 @@ public class NameTokens {
 	public static final String signup = "signup";
 	public static final String eventBooking = "eventBooking";
 	public static final String registration = "registration";
+	public static final String enquiries = "enquiries";
+	public static final String admindashboards = "admindashboards";
+	public static final String offences = "offences";
+	public static final String statements = "statements";
+	public static final String events = "events";
 	public static final String cpd = "cpd";
 
 	public static String getHome() {

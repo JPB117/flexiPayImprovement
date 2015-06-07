@@ -32,13 +32,13 @@ public class CPDPresenter extends
 	
 	@ProxyCodeSplit
 	@NameToken(NameTokens.cpd)
-	//@UseGatekeeper(LoginGateKeeper.class)
+	@UseGatekeeper(LoginGateKeeper.class)
 	public interface ICPDProxy extends TabContentProxyPlace<CPDPresenter> {
 	}
 	
 	@TabInfo(container = HomePresenter.class)
     static TabData getTabLabel(LoginGateKeeper adminGatekeeper) {
-		TabDataExt data = new TabDataExt("My C.P.D","fa fa-graduation-cap",2,adminGatekeeper, true);
+		TabDataExt data = new TabDataExt("My C.P.D","fa fa-graduation-cap",3,adminGatekeeper, true);
         return data;
     }
 

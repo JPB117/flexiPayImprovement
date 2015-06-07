@@ -9,16 +9,14 @@ import com.gwtplatform.mvp.client.gin.DefaultModule;
 import com.workpoint.icpak.client.place.ClientPlaceManager;
 import com.workpoint.icpak.client.place.DefaultPlace;
 import com.workpoint.icpak.client.place.NameTokens;
-import com.workpoint.icpak.client.registration.WebsiteClientPresenter;
-import com.workpoint.icpak.client.registration.WebsiteClientView;
 import com.workpoint.icpak.client.ui.AppManager;
 import com.workpoint.icpak.client.ui.MainPagePresenter;
 import com.workpoint.icpak.client.ui.MainPageView;
 import com.workpoint.icpak.client.ui.admin.AdminHomePresenter;
 import com.workpoint.icpak.client.ui.admin.AdminHomeView;
 import com.workpoint.icpak.client.ui.admin.TabPanel;
-import com.workpoint.icpak.client.ui.admin.dashboard.DashboardPresenter;
-import com.workpoint.icpak.client.ui.admin.dashboard.DashboardView;
+import com.workpoint.icpak.client.ui.admin.dashboard.AdminDashboardPresenter;
+import com.workpoint.icpak.client.ui.admin.dashboard.AdminDashboardView;
 import com.workpoint.icpak.client.ui.admin.dashboard.charts.PieChartPresenter;
 import com.workpoint.icpak.client.ui.admin.dashboard.charts.PieChartView;
 import com.workpoint.icpak.client.ui.admin.dashboard.linegraph.LineGraphPresenter;
@@ -39,6 +37,10 @@ import com.workpoint.icpak.client.ui.admin.users.save.UserSavePresenter;
 import com.workpoint.icpak.client.ui.admin.users.save.UserSaveView;
 import com.workpoint.icpak.client.ui.cpd.CPDPresenter;
 import com.workpoint.icpak.client.ui.cpd.CPDView;
+import com.workpoint.icpak.client.ui.dashboard.DashboardPresenter;
+import com.workpoint.icpak.client.ui.dashboard.DashboardView;
+import com.workpoint.icpak.client.ui.enquiries.EnquiriesPresenter;
+import com.workpoint.icpak.client.ui.enquiries.EnquiriesView;
 import com.workpoint.icpak.client.ui.error.ErrorPagePresenter;
 import com.workpoint.icpak.client.ui.error.ErrorPageView;
 import com.workpoint.icpak.client.ui.error.ErrorPresenter;
@@ -47,6 +49,8 @@ import com.workpoint.icpak.client.ui.error.NotfoundPresenter;
 import com.workpoint.icpak.client.ui.error.NotfoundView;
 import com.workpoint.icpak.client.ui.events.registration.EventBookingPresenter;
 import com.workpoint.icpak.client.ui.events.registration.EventBookingView;
+import com.workpoint.icpak.client.ui.eventsandseminars.EventsPresenter;
+import com.workpoint.icpak.client.ui.eventsandseminars.EventsView;
 import com.workpoint.icpak.client.ui.header.HeaderPresenter;
 import com.workpoint.icpak.client.ui.header.HeaderView;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
@@ -55,12 +59,16 @@ import com.workpoint.icpak.client.ui.login.LoginPresenter;
 import com.workpoint.icpak.client.ui.login.LoginView;
 import com.workpoint.icpak.client.ui.notifications.NotificationsPresenter;
 import com.workpoint.icpak.client.ui.notifications.NotificationsView;
+import com.workpoint.icpak.client.ui.offences.OffencesPresenter;
+import com.workpoint.icpak.client.ui.offences.OffencesView;
 import com.workpoint.icpak.client.ui.popup.GenericPopupPresenter;
 import com.workpoint.icpak.client.ui.popup.GenericPopupView;
 import com.workpoint.icpak.client.ui.profile.ProfilePresenter;
 import com.workpoint.icpak.client.ui.profile.ProfileView;
 import com.workpoint.icpak.client.ui.registration.MemberRegistrationPresenter;
 import com.workpoint.icpak.client.ui.registration.MemberRegistrationView;
+import com.workpoint.icpak.client.ui.statements.StatementsPresenter;
+import com.workpoint.icpak.client.ui.statements.StatementsView;
 import com.workpoint.icpak.client.ui.upload.UploadDocumentPresenter;
 import com.workpoint.icpak.client.ui.upload.UploadDocumentView;
 import com.workpoint.icpak.client.ui.upload.attachment.AttachmentPresenter;
@@ -94,10 +102,6 @@ public class ClientModule extends AbstractPresenterModule {
 		bindPresenter(MainPagePresenter.class, MainPagePresenter.MyView.class,
 				MainPageView.class, MainPagePresenter.MyProxy.class);
 
-		bindPresenter(WebsiteClientPresenter.class,
-				WebsiteClientPresenter.MyView.class, WebsiteClientView.class,
-				WebsiteClientPresenter.MyProxy.class);
-
 		bindPresenter(HomePresenter.class, HomePresenter.IHomeView.class,
 				HomeView.class, HomePresenter.MyProxy.class);
 
@@ -109,10 +113,39 @@ public class ClientModule extends AbstractPresenterModule {
 				MemberRegistrationView.class,
 				MemberRegistrationPresenter.MyProxy.class);
 
+		bindPresenter(StatementsPresenter.class,
+				StatementsPresenter.IStatementsView.class,
+				StatementsView.class,
+				StatementsPresenter.IStatementsProxy.class);
+		
+		bindPresenter(OffencesPresenter.class,
+				OffencesPresenter.IOffencesView.class,
+				OffencesView.class,
+				OffencesPresenter.IOffencesProxy.class);
+		
+		bindPresenter(EnquiriesPresenter.class,
+				EnquiriesPresenter.IEnquiriesView.class,
+				EnquiriesView.class,
+				EnquiriesPresenter.IEnquiriesProxy.class);
+		
+		bindPresenter(EventsPresenter.class,
+				EventsPresenter.IEventsView.class,
+				EventsView.class,
+				EventsPresenter.IEventsProxy.class);
+		
 		bindPresenter(EventBookingPresenter.class,
 				EventBookingPresenter.MyView.class,
 				EventBookingView.class,
 				EventBookingPresenter.MyProxy.class);
+		
+		bindPresenter(DashboardPresenter.class,
+				DashboardPresenter.IDashboardView.class,
+				DashboardView.class,
+				DashboardPresenter.IDashboardProxy.class);
+
+		bindPresenter(CPDPresenter.class,
+				CPDPresenter.ICPDView.class, CPDView.class,
+				CPDPresenter.ICPDProxy.class);
 
 		bindPresenter(ErrorPagePresenter.class,
 				ErrorPagePresenter.MyView.class, ErrorPageView.class,
@@ -149,9 +182,9 @@ public class ClientModule extends AbstractPresenterModule {
 		bindPresenter(UserPresenter.class, UserPresenter.MyView.class,
 				UserView.class, UserPresenter.MyProxy.class);
 
-		bindPresenter(DashboardPresenter.class,
-				DashboardPresenter.IDashboardView.class, DashboardView.class,
-				DashboardPresenter.MyProxy.class);
+		bindPresenter(AdminDashboardPresenter.class,
+				AdminDashboardPresenter.IAdminDashboardView.class, AdminDashboardView.class,
+				AdminDashboardPresenter.IAdminDashboardProxy.class);
 
 		bindPresenterWidget(ReportsPresenter.class,
 				ReportsPresenter.MyView.class, ReportsView.class);
@@ -175,10 +208,6 @@ public class ClientModule extends AbstractPresenterModule {
 				ProfilePresenter.IProfileView.class, ProfileView.class,
 				ProfilePresenter.IProfileProxy.class);
 		
-		bindPresenter(CPDPresenter.class,
-				CPDPresenter.ICPDView.class, CPDView.class,
-				CPDPresenter.ICPDProxy.class);
-
 		bindPresenterWidget(PieChartPresenter.class,
 				PieChartPresenter.IPieChartView.class, PieChartView.class);
 

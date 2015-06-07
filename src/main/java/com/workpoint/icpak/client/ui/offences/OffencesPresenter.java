@@ -1,4 +1,4 @@
-package com.workpoint.icpak.client.ui.profile;
+package com.workpoint.icpak.client.ui.offences;
 
 //import com.workpoint.icpak.shared.requests.CheckPasswordRequest;
 //import com.workpoint.icpak.shared.requests.GetUserRequest;
@@ -23,27 +23,27 @@ import com.workpoint.icpak.client.ui.admin.TabDataExt;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
 import com.workpoint.icpak.client.ui.security.LoginGateKeeper;
 
-public class ProfilePresenter extends
-		Presenter<ProfilePresenter.IProfileView, ProfilePresenter.IProfileProxy>{
+public class OffencesPresenter extends
+		Presenter<OffencesPresenter.IOffencesView, OffencesPresenter.IOffencesProxy>{
 
-	public interface IProfileView extends View {
+	public interface IOffencesView extends View {
 		
 	}
 	
 	@ProxyCodeSplit
-	@NameToken(NameTokens.profile)
+	@NameToken(NameTokens.offences)
 	@UseGatekeeper(LoginGateKeeper.class)
-	public interface IProfileProxy extends TabContentProxyPlace<ProfilePresenter> {
+	public interface IOffencesProxy extends TabContentProxyPlace<OffencesPresenter> {
 	}
 	
 	@TabInfo(container = HomePresenter.class)
     static TabData getTabLabel(LoginGateKeeper adminGatekeeper) {
-		TabDataExt data = new TabDataExt("My Profile","icon-user",7,adminGatekeeper, true);
+		TabDataExt data = new TabDataExt("My Offences","fa fa-user-secret",4,adminGatekeeper, true);
         return data;
     }
 
 	@Inject
-	public ProfilePresenter(final EventBus eventBus, final IProfileView view,final IProfileProxy proxy) {
+	public OffencesPresenter(final EventBus eventBus, final IOffencesView view,final IOffencesProxy proxy) {
 		super(eventBus, view, proxy, HomePresenter.SLOT_SetTabContent);
 	}
 

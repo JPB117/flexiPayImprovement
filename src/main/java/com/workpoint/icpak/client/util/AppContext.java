@@ -79,7 +79,7 @@ public class AppContext {
 				}
 			}
 		}
-		return valid;
+		return true;
 	}
 	
 	private static void checkNeedReloadState() {
