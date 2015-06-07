@@ -74,8 +74,9 @@ public class UsersDao extends BaseDao{
 	}
 	public User findByUserId(String refId, boolean throwExceptionIfNull) {
 		User user = getSingleResultOrNull(
-				getEntityManager().createQuery("from User u where u.refId=:refId")
-				.setParameter("refId", refId));
+				getEntityManager().createQuery("from User u where u.isActive=1 and (u.refId=:refId or u.email=:email)")
+				.setParameter("refId", refId)
+				.setParameter("email", refId));
 		
 		if(user==null && throwExceptionIfNull){
 			throw new ServiceException(ErrorCodes.NOTFOUND,"User", "'"+refId+"'");
