@@ -25,8 +25,6 @@ public class IssuesPanel extends Widget {
 		container.appendChild(this.spanTitle);
 		container.appendChild(ulRoot);
 		
-		container.addClassName("alert alert-danger");
-		container.setAttribute("role", "alert");
 
 		setElement(container);
 

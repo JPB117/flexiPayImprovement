@@ -360,7 +360,13 @@ public class MemberRegistrationView extends ViewImpl implements
 				isValid = false;
 			}
 		}
-
+		
+		if(!isValid && isEmailValid){
+			issuesPanel.removeStyleName("hide");
+		}else{
+			issuesPanel.addStyleName("hide");
+		}
+		
 		return isValid && isEmailValid;
 	}
 

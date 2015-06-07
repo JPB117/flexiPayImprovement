@@ -58,7 +58,7 @@
 											</div>
 
 											<div class="col-sm-12">
-												<d:IssuesPanel ui:field="issuesPanel"></d:IssuesPanel>
+												<d:IssuesPanel ui:field="issuesPanel" styleName="hide alert alert-danger"></d:IssuesPanel>
 											</div>
 
 											<div class="col-sm-12">
@@ -338,6 +338,7 @@
 									<div class="tab-pane" ui:field="divProforma">
 										<div class="row">
 											<div class="col-xs-12">
+												<br/>
 												<div class="panel panel-default">
 													<div class="panel-heading">
 														<span ui:field="spnNames">Kimani Muriranja</span>
@@ -345,14 +346,13 @@
 
 													<div class="panel-body">
 														Your application has successfully saved and your temporary
-														account. Also note that a Proforma
+														account created. Also, a Proforma
 														invoice and temporary
 														password
 														has been sent
 														to
 														your email
-														address for your
-														reference.
+														address to facilitate in payment and Login.
 														<br />
 
 														You can choose between the following:
