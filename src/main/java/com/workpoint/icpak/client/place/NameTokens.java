@@ -28,6 +28,7 @@ public class NameTokens {
 	public static final String datatable = "datatable";
 	public static final String caseview = "caseview";
 	public static final String signup = "signup";
+	public static final String eventBooking = "eventBooking";
 
 	public static final String registration = "registration";
 
