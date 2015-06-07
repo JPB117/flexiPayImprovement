@@ -194,7 +194,8 @@ public class MemberRegistrationPresenter
 	}
 
 	protected void checkExists(String email) {
-		
+		getView().setEmailValid(true);
+
 		if (refid != null) {
 			return;
 		}
