@@ -4,6 +4,14 @@
     xmlns:d="urn:import:com.workpoint.icpak.client.ui.component">
 	<d:BulletPanel ui:field="liContainter">
 		<g:Anchor ui:field="aLink" styleName="hand">
+			<em ui:field="eIcon"></em>
+			<span ui:field="spnText"></span>
 		</g:Anchor>
 	</d:BulletPanel>
+	<!-- li role="presentation" class="active">
+			<a href="http://solutech.co.ke/icpak/index.php/application/profile">
+				
+				My Profile
+			</a>
+		</li -->
 </ui:UiBinder>

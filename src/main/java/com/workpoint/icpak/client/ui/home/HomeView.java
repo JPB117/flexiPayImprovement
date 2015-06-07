@@ -1,12 +1,7 @@
 package com.workpoint.icpak.client.ui.home;
 
-import static com.workpoint.icpak.client.ui.home.HomePresenter.DOCPOPUP_SLOT;
-import static com.workpoint.icpak.client.ui.home.HomePresenter.DOCTREE_SLOT;
-
-import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
@@ -22,21 +17,13 @@ public class HomeView extends ViewImpl implements HomePresenter.IHomeView {
 	public interface Binder extends UiBinder<Widget, HomeView> {
 	}
 
-	@UiField Anchor btnAdd;	
-	@UiField(provided=true) HomeTabPanel tabPanel;
+	@UiField HomeTabPanel tabPanel;
 	@UiField HTMLPanel tabContent;
-	@UiField HTMLPanel divDocPopup;
-	@UiField HTMLPanel panelDocTree;
+	//@UiField HTMLPanel panelDocTree;
 	
 	@Inject
-	public HomeView(final Binder binder,HomeTabPanel panel) {
-		this.tabPanel = panel;
+	public HomeView(final Binder binder) {
 		widget = binder.createAndBindUi(this);	
-		btnAdd.getElement().setAttribute("data-toggle", "dropdown");
-	}
-
-	public HasClickHandlers getAddButton() {
-		return btnAdd;
 	}
 	
 	@Override
@@ -81,30 +68,11 @@ public class HomeView extends ViewImpl implements HomePresenter.IHomeView {
 			if (content != null) {
 				tabContent.add(content);
 			}
-		}else if (slot == DOCPOPUP_SLOT) {
-			divDocPopup.clear();
-			if (content != null) {
-				divDocPopup.add(content);
-			}			
-		}else if(slot==DOCTREE_SLOT){
-			panelDocTree.clear();
-			if(content!=null){
-				panelDocTree.add(content);
-			}
 		}else {
 			super.setInSlot(slot, content);
 		}
 		
 	}
-
-
-//	@Override
-//	public void bindAlerts(HashMap<TaskType, Integer> alerts) {
-//		for (TaskType type : alerts.keySet()) {
-//			String text = (type.getTitle() + " (" + alerts.get(type) + ")");
-//			tabPanel.changeTab(type,text);
-//		}
-//	}
 
 	@Override
 	public void showDocsList() {

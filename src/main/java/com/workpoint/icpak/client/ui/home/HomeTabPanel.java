@@ -1,8 +1,10 @@
 package com.workpoint.icpak.client.ui.home;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.Tab;
@@ -18,14 +20,15 @@ public class HomeTabPanel extends AbstractTabPanel {
 	interface HomeTabPanelUiBinder extends UiBinder<Widget, HomeTabPanel> {
 	}
 	
+//	/collapse="userBlockVisible" ng-controller="UserBlockController"
+	//style="height: 0px;"
+	
+	@UiField HTMLPanel userDiv;
 	@UiField BulletListPanel linksPanel;
 	
 	public HomeTabPanel() {
 		initWidget(uiBinder.createAndBindUi(this));
-	}
-	
-	public void setPanelContent(IsWidget panelContent) {
-		//Moved this to the Home View
+		userDiv.getElement().getStyle().setHeight(0.0, Unit.PX);
 	}
 	
 	@Override
@@ -39,12 +42,9 @@ public class HomeTabPanel extends AbstractTabPanel {
 		return new TabItem(tabData);
 	}
 
-//	public void changeTab(TaskType type, String text) {
-//		for(Tab tab: tabList){
-//			TabItem item = (TabItem)tab;
-//			if(item.isFor(type)){
-//				item.setText(text);
-//			}
-//		}
-//	}
+	@Override
+	public void setPanelContent(IsWidget panelContent) {
+		
+	}
+
 }

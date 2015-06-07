@@ -139,7 +139,20 @@
 					</ul>
 					<!-- END Right Navbar -->
 				</div>
-			</nav>
+			<!-- START Search form -->
+					<form role="search" action="search.html"
+						class="navbar-form ng-pristine ng-valid hide">
+						<div class="form-group has-feedback">
+							<input type="text" placeholder="Type and hit enter.."
+								class="form-control" />
+							<div search-dismiss="search-dismiss" class="fa fa-times form-control-feedback"></div>
+						</div>
+						<button type="submit" class="hidden btn btn-default">Submit</button>
+					</form>
+					<!-- END Search form -->
+				</nav>
+				<!-- END Top Navbar -->
+			
 		</header>
 	</g:HTMLPanel>
 </ui:UiBinder>
