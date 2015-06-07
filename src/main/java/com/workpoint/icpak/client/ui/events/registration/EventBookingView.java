@@ -17,9 +17,10 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
 import com.workpoint.icpak.client.ui.component.TextField;
+import com.workpoint.icpak.client.ui.registration.PageElement;
 
-public class EventRegistrationView extends ViewImpl implements
-		EventRegistrationPresenter.MyView {
+public class EventBookingView extends ViewImpl implements
+		EventBookingPresenter.MyView {
 
 	private final Widget widget;
 
@@ -101,7 +102,7 @@ public class EventRegistrationView extends ViewImpl implements
 
 	int counter = 0;
 
-	public interface Binder extends UiBinder<Widget, EventRegistrationView> {
+	public interface Binder extends UiBinder<Widget, EventBookingView> {
 	}
 
 	ClickHandler selectHandler = new ClickHandler() {
@@ -129,7 +130,7 @@ public class EventRegistrationView extends ViewImpl implements
 	};
 
 	@Inject
-	public EventRegistrationView(final Binder binder) {
+	public EventBookingView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
 
 		String url = "http://197.248.2.44:8080/ewallet-beta/#websiteClient";

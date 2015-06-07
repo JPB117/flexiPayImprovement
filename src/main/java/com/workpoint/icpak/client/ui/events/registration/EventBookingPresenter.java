@@ -15,9 +15,9 @@ import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.workpoint.icpak.client.place.NameTokens;
 
-public class EventRegistrationPresenter
+public class EventBookingPresenter
 		extends
-		Presenter<EventRegistrationPresenter.MyView, EventRegistrationPresenter.MyProxy> {
+		Presenter<EventBookingPresenter.MyView, EventBookingPresenter.MyProxy> {
 
 	public interface MyView extends View {
 		void createWizard();
@@ -25,8 +25,8 @@ public class EventRegistrationPresenter
 	}
 
 	@ProxyCodeSplit
-	@NameToken(NameTokens.signup)
-	public interface MyProxy extends ProxyPlace<EventRegistrationPresenter> {
+	@NameToken(NameTokens.eventBooking)
+	public interface MyProxy extends ProxyPlace<EventBookingPresenter> {
 	}
 
 	@ContentSlot
@@ -36,7 +36,7 @@ public class EventRegistrationPresenter
 	PlaceManager placeManager;
 
 	@Inject
-	public EventRegistrationPresenter(final EventBus eventBus,
+	public EventBookingPresenter(final EventBus eventBus,
 			final MyView view, final MyProxy proxy) {
 		super(eventBus, view, proxy);
 	}
