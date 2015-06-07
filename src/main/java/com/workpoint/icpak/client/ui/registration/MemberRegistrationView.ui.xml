@@ -52,15 +52,12 @@
 								<div class="tab-content">
 									<div class="tab-pane active" ui:field="divPackage">
 										<div class="row">
-											<div class="col-sm-12 hide">
-												<h4 class="info-text">Fill In Below Details:</h4>
+											<div class="col-sm-12">
+												<h4 class="info-text">Complete your application:</h4>
 												<hr />
 											</div>
 
 											<div class="col-sm-12">
-												<div class="alert alert-success" role="alert">
-													Complete your application
-												</div>
 												<d:IssuesPanel ui:field="issuesPanel"></d:IssuesPanel>
 											</div>
 
@@ -74,8 +71,9 @@
 													</div>
 													<div class="col-xs-6">
 														<label for="lastname">Other Name</label>
-														<d:TextField ui:field="txtOtherNames" styleName="form-control"
-															placeholder="Enter Other Name" value="" required="true">
+														<d:TextField ui:field="txtOtherNames"
+															styleName="form-control" placeholder="Enter Other Name"
+															value="" required="true">
 														</d:TextField>
 													</div>
 												</div>
@@ -104,8 +102,9 @@
 													<div class="row">
 														<div class="col-xs-6">
 															<label for="emailaddress">Employer Name</label>
-															<d:TextField ui:field="txtEmployer" styleName="form-control"
-																placeholder="Enter Employer's Name" value="" required="true">
+															<d:TextField ui:field="txtEmployer"
+																styleName="form-control" placeholder="Enter Employer's Name"
+																value="" required="true">
 															</d:TextField>
 														</div>
 
@@ -152,6 +151,12 @@
 													<hr />
 												</div>
 
+												<div class="col-sm-12">
+													<d:IssuesPanel ui:field="issuesPanelCategory"></d:IssuesPanel>
+												</div>
+
+
+
 												<div class="pricing-table col-xs-3" ui:field="divNonPracticing">
 													<div class="panel panel-primary" style="border:none;">
 														<div class="controle-header panel-heading panel-heading-landing">
@@ -164,19 +169,27 @@
 																	<td width="50px">
 																		<i class="fa fa-check"></i>
 																	</td>
-																	<td>Application Fee: Kshs.<span ui:field="spnNonPracticingFee"></span></td>
+																	<td>
+																		Application Fee: Kshs.
+																		<span ui:field="spnNonPracticingFee"></span>
+																	</td>
 																</tr>
 																<tr>
 																	<td width="50px">
 																		<i class="fa fa-check"></i>
 																	</td>
-																	<td>Annual subscription: Kshs.<span ui:field="spnNonPracticingSubscription"></span></td>
+																	<td>
+																		Annual subscription: Kshs.
+																		<span ui:field="spnNonPracticingSubscription"></span>
+																	</td>
 																</tr>
 																<tr>
 																	<td width="50px">
 																		<i class="fa fa-check"></i>
 																	</td>
-																	<td><span ui:field="spnNonPracticingCondition"></span></td>
+																	<td>
+																		<span ui:field="spnNonPracticingCondition"></span>
+																	</td>
 																</tr>
 															</table>
 														</div>
@@ -196,24 +209,32 @@
 														</div>
 
 														<div class="panel-body panel-body-landing">
-																<table class="table">
+															<table class="table">
 																<tr>
 																	<td width="50px">
 																		<i class="fa fa-check"></i>
 																	</td>
-																	<td>Application Fee: Kshs.<span ui:field="spnPracticingFee"></span></td>
+																	<td>
+																		Application Fee: Kshs.
+																		<span ui:field="spnPracticingFee"></span>
+																	</td>
 																</tr>
 																<tr>
 																	<td width="50px">
 																		<i class="fa fa-check"></i>
 																	</td>
-																	<td>Annual subscription: Kshs.<span ui:field="spnPracticingSubscription"></span></td>
+																	<td>
+																		Annual subscription: Kshs.
+																		<span ui:field="spnPracticingSubscription"></span>
+																	</td>
 																</tr>
 																<tr>
 																	<td width="50px">
 																		<i class="fa fa-check"></i>
 																	</td>
-																	<td><span ui:field="spnPracticingCondition"></span></td>
+																	<td>
+																		<span ui:field="spnPracticingCondition"></span>
+																	</td>
 																</tr>
 															</table>
 														</div>
@@ -231,24 +252,32 @@
 														</div>
 
 														<div class="panel-body panel-body-landing">
-																<table class="table">
+															<table class="table">
 																<tr>
 																	<td width="50px">
 																		<i class="fa fa-check"></i>
 																	</td>
-																	<td>Application Fee: Kshs.<span ui:field="spnOverseasFee"></span></td>
+																	<td>
+																		Application Fee: Kshs.
+																		<span ui:field="spnOverseasFee"></span>
+																	</td>
 																</tr>
 																<tr>
 																	<td width="50px">
 																		<i class="fa fa-check"></i>
 																	</td>
-																	<td>Annual subscription: Kshs.<span ui:field="spnOverseasSubscription"></span></td>
+																	<td>
+																		Annual subscription: Kshs.
+																		<span ui:field="spnOverseasSubscription"></span>
+																	</td>
 																</tr>
 																<tr>
 																	<td width="50px">
 																		<i class="fa fa-check"></i>
 																	</td>
-																	<td><span ui:field="spnOverseasCondition"></span></td>
+																	<td>
+																		<span ui:field="spnOverseasCondition"></span>
+																	</td>
 																</tr>
 															</table>
 														</div>
@@ -271,19 +300,27 @@
 																	<td width="50px">
 																		<i class="fa fa-check"></i>
 																	</td>
-																	<td>Application Fee: Kshs.<span ui:field="spnAssociateFee"></span></td>
+																	<td>
+																		Application Fee: Kshs.
+																		<span ui:field="spnAssociateFee"></span>
+																	</td>
 																</tr>
 																<tr>
 																	<td width="50px">
 																		<i class="fa fa-check"></i>
 																	</td>
-																	<td>Annual subscription: Kshs.<span ui:field="spnAssociateSubscription"></span></td>
+																	<td>
+																		Annual subscription: Kshs.
+																		<span ui:field="spnAssociateSubscription"></span>
+																	</td>
 																</tr>
 																<tr>
 																	<td width="50px">
 																		<i class="fa fa-check"></i>
 																	</td>
-																	<td><span ui:field="spnAssociateCondition"></span></td>
+																	<td>
+																		<span ui:field="spnAssociateCondition"></span>
+																	</td>
 																</tr>
 															</table>
 														</div>
@@ -309,11 +346,13 @@
 													<div class="panel-body">
 														Your application has successfully saved and your temporary
 														account. Also note that a Proforma
-														invoice and temporary password
+														invoice and temporary
+														password
 														has been sent
 														to
 														your email
-														address for your reference.
+														address for your
+														reference.
 														<br />
 
 														You can choose between the following:
@@ -351,7 +390,8 @@
 											<g:Anchor
 												styleName='btn btn-next btn-fill btn-success btn-wd
 										btn-sm hide'
-												ui:field="aNext">Proceed
+												ui:field="aNext">
+												Proceed
 											</g:Anchor>
 										</div>
 										<div class="pull-left">
