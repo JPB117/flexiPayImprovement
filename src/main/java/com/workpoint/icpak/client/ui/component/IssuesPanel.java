@@ -15,6 +15,7 @@ public class IssuesPanel extends Widget {
 	public IssuesPanel() {
 
 		container = Document.get().createDivElement();
+		container.addClassName("class='alert alert-danger' role='alert'");
 
 		this.ulRoot = DOM.createElement("ul");
 		this.spanTitle = DOM.createSpan();

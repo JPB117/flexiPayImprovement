@@ -173,15 +173,20 @@ public class MemberRegistrationPresenter
 				new AbstractAsyncCallback<ApplicationFormHeaderDto>() {
 					@Override
 					public void onSuccess(ApplicationFormHeaderDto result) {
-						getView().setLoadingState(
-								(Anchor) getView().getANext(), false);
+						removeError();
 						// result;
 						getView().bindForm(result);
 						getView().next();
 					}
 
+					private void removeError() {
+						getView().setLoadingState(
+								(Anchor) getView().getANext(), false);
+					}
+
 					@Override
 					public void onFailure(Throwable caught) {
+						removeError();
 						// TODO Auto-generated method stub
 						super.onFailure(caught);
 					}
