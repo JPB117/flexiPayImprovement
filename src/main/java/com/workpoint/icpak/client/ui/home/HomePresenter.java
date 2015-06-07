@@ -1,6 +1,5 @@
 package com.workpoint.icpak.client.ui.home;
 
-import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -34,7 +33,6 @@ ProcessingHandler, ProcessingCompletedHandler{
 		void changeTab(Tab tab, TabData tabData, String historyToken);
 		void showmask(boolean b);
 		//void bindAlerts(HashMap<TaskType, Integer> alerts);
-		HasClickHandlers getAddButton();
 		void showDocsList();
 	}
 	
@@ -83,7 +81,6 @@ ProcessingHandler, ProcessingCompletedHandler{
 		addRegisteredHandler(ProcessingCompletedEvent.TYPE, this);
 		
 	}
-	
 	
 	@Override
 	protected void onReset() {

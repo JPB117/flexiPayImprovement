@@ -1,4 +1,4 @@
-package com.workpoint.icpak.client.ui.profile;
+package com.workpoint.icpak.client.ui.cpd;
 
 //import com.workpoint.icpak.shared.requests.CheckPasswordRequest;
 //import com.workpoint.icpak.shared.requests.GetUserRequest;
@@ -23,27 +23,27 @@ import com.workpoint.icpak.client.ui.admin.TabDataExt;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
 import com.workpoint.icpak.client.ui.security.LoginGateKeeper;
 
-public class ProfilePresenter extends
-		Presenter<ProfilePresenter.IProfileView, ProfilePresenter.IProfileProxy>{
+public class CPDPresenter extends
+		Presenter<CPDPresenter.ICPDView, CPDPresenter.ICPDProxy>{
 
-	public interface IProfileView extends View {
+	public interface ICPDView extends View {
 		
 	}
 	
 	@ProxyCodeSplit
-	@NameToken(NameTokens.profile)
-	@UseGatekeeper(LoginGateKeeper.class)
-	public interface IProfileProxy extends TabContentProxyPlace<ProfilePresenter> {
+	@NameToken(NameTokens.cpd)
+	//@UseGatekeeper(LoginGateKeeper.class)
+	public interface ICPDProxy extends TabContentProxyPlace<CPDPresenter> {
 	}
 	
 	@TabInfo(container = HomePresenter.class)
     static TabData getTabLabel(LoginGateKeeper adminGatekeeper) {
-		TabDataExt data = new TabDataExt("My Profile","icon-user",11,adminGatekeeper, true);
+		TabDataExt data = new TabDataExt("My C.P.D","fa fa-graduation-cap",2,adminGatekeeper, true);
         return data;
     }
 
 	@Inject
-	public ProfilePresenter(final EventBus eventBus, final IProfileView view,final IProfileProxy proxy) {
+	public CPDPresenter(final EventBus eventBus, final ICPDView view,final ICPDProxy proxy) {
 		super(eventBus, view, proxy, HomePresenter.SLOT_SetTabContent);
 	}
 

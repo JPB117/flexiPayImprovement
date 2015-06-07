@@ -22,13 +22,13 @@ public class MainPageView extends ViewImpl implements MainPagePresenter.MyView {
 
 	@UiField HTMLPanel pHeader;
 	@UiField HTMLPanel pContainer;
-	@UiField SpanElement loadingtext;
-	@UiField DivElement divAlert;
-	@UiField SpanElement spnAlertContent;
-	@UiField Anchor aView;
-	@UiField Element spnSubject;
+	//@UiField SpanElement loadingtext;
+	//@UiField DivElement divAlert;
+	//@UiField SpanElement spnAlertContent;
+	//@UiField Anchor aView;
+	//@UiField Element spnSubject;
 	
-	@UiField Element disconnectionText;
+	//@UiField Element disconnectionText;
 	
 	Timer timer = new Timer() {
 		
@@ -43,7 +43,7 @@ public class MainPageView extends ViewImpl implements MainPagePresenter.MyView {
 	@Inject
 	public MainPageView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
-		loadingtext.setId("loading-text");
+		//loadingtext.setId("loading-text");
 		
 	}
 
@@ -75,29 +75,29 @@ public class MainPageView extends ViewImpl implements MainPagePresenter.MyView {
 
 	@Override
 	public void showProcessing(boolean processing,String message) {
-		if(processing){
-			if(message!=null){
-				loadingtext.setInnerText(message);
-			}
-			loadingtext.removeClassName("hide");
-		}else{
-			loadingtext.setInnerText("Loading ...");
-			loadingtext.addClassName("hide");
-		}
+//		if(processing){
+//			if(message!=null){
+//				loadingtext.setInnerText(message);
+//			}
+//			loadingtext.removeClassName("hide");
+//		}else{
+//			loadingtext.setInnerText("Loading ...");
+//			loadingtext.addClassName("hide");
+//		}
 	}
 	
 	@Override
 	public void setAlertVisible(String subject, String statement,String url){
-		divAlert.removeClassName("hidden");
-		spnAlertContent.setInnerText(statement);
-		spnSubject.setInnerText(subject);
-		aView.setHref(url);
-		timer.cancel();
-		timer.schedule(10000);
+//		divAlert.removeClassName("hidden");
+//		spnAlertContent.setInnerText(statement);
+//		spnSubject.setInnerText(subject);
+//		aView.setHref(url);
+//		timer.cancel();
+//		timer.schedule(10000);
 	}
 	
 	public void hideAlert(){
-		divAlert.addClassName("hidden");
+//		divAlert.addClassName("hidden");
 	}
 
 	@Override
@@ -105,13 +105,13 @@ public class MainPageView extends ViewImpl implements MainPagePresenter.MyView {
 		if(message==null){
 			message = "Cannot connect to server....";
 		}
-		disconnectionText.setInnerText(message);
-		disconnectionText.removeClassName("hide");
+//		disconnectionText.setInnerText(message);
+//		disconnectionText.removeClassName("hide");
 	}
 
 	@Override
 	public void clearDisconnectionMsg() {
-		disconnectionText.addClassName("hide");
+//		disconnectionText.addClassName("hide");
 	}
 
 }

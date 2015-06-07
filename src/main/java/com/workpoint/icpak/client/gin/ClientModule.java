@@ -37,6 +37,8 @@ import com.workpoint.icpak.client.ui.admin.users.item.UserItemPresenter;
 import com.workpoint.icpak.client.ui.admin.users.item.UserItemView;
 import com.workpoint.icpak.client.ui.admin.users.save.UserSavePresenter;
 import com.workpoint.icpak.client.ui.admin.users.save.UserSaveView;
+import com.workpoint.icpak.client.ui.cpd.CPDPresenter;
+import com.workpoint.icpak.client.ui.cpd.CPDView;
 import com.workpoint.icpak.client.ui.error.ErrorPagePresenter;
 import com.workpoint.icpak.client.ui.error.ErrorPageView;
 import com.workpoint.icpak.client.ui.error.ErrorPresenter;
@@ -172,6 +174,10 @@ public class ClientModule extends AbstractPresenterModule {
 		bindPresenter(ProfilePresenter.class,
 				ProfilePresenter.IProfileView.class, ProfileView.class,
 				ProfilePresenter.IProfileProxy.class);
+		
+		bindPresenter(CPDPresenter.class,
+				CPDPresenter.ICPDView.class, CPDView.class,
+				CPDPresenter.ICPDProxy.class);
 
 		bindPresenterWidget(PieChartPresenter.class,
 				PieChartPresenter.IPieChartView.class, PieChartView.class);
