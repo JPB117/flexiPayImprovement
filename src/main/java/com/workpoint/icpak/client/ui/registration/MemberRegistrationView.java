@@ -15,6 +15,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Frame;
+import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
@@ -101,6 +102,9 @@ public class MemberRegistrationView extends ViewImpl implements
 	TextField txtCity;
 	@UiField
 	TextField txtAddress;
+
+	@UiField
+	IssuesPanel issuesPanelCategory;
 	@UiField
 	TextField txtPostalCode;
 
@@ -133,7 +137,7 @@ public class MemberRegistrationView extends ViewImpl implements
 
 	@UiField
 	SpanElement spnSelected;
-	
+
 	@UiField
 	SpanElement spnNames;
 
@@ -146,7 +150,6 @@ public class MemberRegistrationView extends ViewImpl implements
 	}
 
 	ApplicationType type = null;
-	
 
 	ClickHandler selectHandler = new ClickHandler() {
 		@Override
@@ -154,25 +157,27 @@ public class MemberRegistrationView extends ViewImpl implements
 			Anchor selected = (Anchor) event.getSource();
 			selectedName = selected.getName();
 
-			
-
 			if (selectedName.equals("NonPractising")) {
 				removeActiveSelection(selected);
-				spnSelected.setInnerText("You have selected: " + "Non Practising Member");
+				spnSelected.setInnerText("You have selected: "
+						+ "Non Practising Member");
 				divNonPracticing.addClassName("active");
 				type = ApplicationType.NON_PRACTISING;
 			} else if (selectedName.equals("Practising")) {
-				spnSelected.setInnerText("You have selected: " + "Practising Member");
+				spnSelected.setInnerText("You have selected: "
+						+ "Practising Member");
 				removeActiveSelection(selected);
 				divPractising.addClassName("active");
 				type = ApplicationType.PRACTISING;
 			} else if (selectedName.equals("Overseas")) {
-				spnSelected.setInnerText("You have selected: " + "Overseas Member");
+				spnSelected.setInnerText("You have selected: "
+						+ "Overseas Member");
 				removeActiveSelection(selected);
 				divOverseas.addClassName("active");
 				type = ApplicationType.OVERSEAS;
 			} else if (selectedName.equals("Associate")) {
-				spnSelected.setInnerText("You have selected: " + "Associate Member");
+				spnSelected.setInnerText("You have selected: "
+						+ "Associate Member");
 				removeActiveSelection(selected);
 				divAssociate.addClassName("active");
 				type = ApplicationType.ASSOCIATE;
@@ -370,27 +375,32 @@ public class MemberRegistrationView extends ViewImpl implements
 			switch (dto.getType()) {
 			case NON_PRACTISING:
 
-				 spnNonPracticingFee.setInnerText(dto.getApplicationAmount()+"");
-				 spnNonPracticingSubscription.setInnerText(dto.getRenewalAmount()+"");
-				 spnNonPracticingCondition.setInnerText(dto.getDescription());
+				spnNonPracticingFee.setInnerText(dto.getApplicationAmount()
+						+ "");
+				spnNonPracticingSubscription.setInnerText(dto
+						.getRenewalAmount() + "");
+				spnNonPracticingCondition.setInnerText(dto.getDescription());
 				break;
 			case PRACTISING:
 
-				 spnPracticingFee.setInnerText(dto.getApplicationAmount()+"");
-				 spnPracticingSubscription.setInnerText(dto.getRenewalAmount()+"");
-				 spnPracticingCondition.setInnerText(dto.getDescription());
+				spnPracticingFee.setInnerText(dto.getApplicationAmount() + "");
+				spnPracticingSubscription.setInnerText(dto.getRenewalAmount()
+						+ "");
+				spnPracticingCondition.setInnerText(dto.getDescription());
 				break;
 			case OVERSEAS:
 
-				 spnOverseasFee.setInnerText(dto.getApplicationAmount()+"");
-				 spnOverseasSubscription.setInnerText(dto.getRenewalAmount()+"");
-				 spnOverseasCondition.setInnerText(dto.getDescription());
+				spnOverseasFee.setInnerText(dto.getApplicationAmount() + "");
+				spnOverseasSubscription.setInnerText(dto.getRenewalAmount()
+						+ "");
+				spnOverseasCondition.setInnerText(dto.getDescription());
 				break;
 			case ASSOCIATE:
-				
-				 spnAssociateFee.setInnerText(dto.getApplicationAmount()+"");
-				 spnAssociateSubscription.setInnerText(dto.getRenewalAmount()+"");
-				 spnAssociateCondition.setInnerText(dto.getDescription());
+
+				spnAssociateFee.setInnerText(dto.getApplicationAmount() + "");
+				spnAssociateSubscription.setInnerText(dto.getRenewalAmount()
+						+ "");
+				spnAssociateCondition.setInnerText(dto.getDescription());
 				break;
 			}
 		}
@@ -408,20 +418,39 @@ public class MemberRegistrationView extends ViewImpl implements
 
 	@Override
 	public void bindForm(ApplicationFormHeaderDto result) {
-		spnNames.setInnerText(result.getSurname()+" "+result.getOtherNames());
+		spnNames.setInnerText(result.getSurname() + " "
+				+ result.getOtherNames());
 	}
 
 	@Override
 	public void next() {
 		counter = counter + 1;
 		showMyAccountLink(counter);
-		setActive(liElements.get(counter),
-				pageElements.get(counter));
+		setActive(liElements.get(counter), pageElements.get(counter));
 	}
 
 	@Override
 	public int getCounter() {
 		return counter;
+	}
+
+	public void setLoadingState(Anchor anchor, boolean isLoading) {
+		String previousText = anchor.getText();
+		if (isLoading) {
+			anchor.getElement().setAttribute("disabled", "disabled");
+			anchor.getElement()
+					.setInnerHTML(
+							"<span class='fa fa-spinner fa-spin' ui:field='spnSpinner'></span>Submitting...");
+		} else {
+			anchor.getElement().removeAttribute("disabled");
+			anchor.setText(previousText);
+		}
+	}
+
+	@Override
+	public void showError(String error) {
+		issuesPanelCategory.clear();
+		issuesPanelCategory.addError(error);
 	}
 
 }

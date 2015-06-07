@@ -59,6 +59,10 @@ public class MemberRegistrationPresenter
 		void next();
 
 		int getCounter();
+
+		void setLoadingState(Anchor anchor, boolean isLoading);
+
+		void showError(String string);
 	}
 
 	@ProxyCodeSplit
@@ -117,30 +121,38 @@ public class MemberRegistrationPresenter
 			public void onClick(ClickEvent event) {
 
 				if (getView().isValid()) {
+
 					Anchor a = (Anchor) getView().getANext();
-					if (getView().getCounter()==1) {
-						//User has selected a category and clicked submit
+					if (getView().getCounter() == 1) {
+
+						// User has selected a category and clicked submit
 						submit(getView().getApplicationForm());
-						
-						//We navigate next after server side has generated an account and submitted an email to user.
-					}else{
+
+						// We navigate next after server side has generated an
+						// account and submitted an email to user.
+					} else {
 						getView().next();
-					}					
-					
+					}
+
 				} else if (getView().getCounter() == 1) {
-					//This wont work since MemberRegistrationPresenter injects itself in the root panel,
-					//not MainPagePresenter - i.e At this point MainPagePresenter
-					//is not instantiated, yet AppManager popup is presented by MainPagePresenter
-					AppManager.showPopUp("Select Category",
-							"Please Select a member category",
-							new OnOptionSelected() {
-								@Override
-								public void onSelect(String name) {
-								}
-							}, "Ok");
+					// This wont work since MemberRegistrationPresenter injects
+					// itself in the root panel,
+					// not MainPagePresenter - i.e At this point
+					// MainPagePresenter
+					// is not instantiated, yet AppManager popup is presented by
+					
+					// MainPagePresenter
+					// AppManager.showPopUp("Select Category",
+					// "Please Select a member category",
+					// new OnOptionSelected() {
+					// @Override
+					// public void onSelect(String name) {
+					// }
+					// }, "Ok");
+					
+					getView().showError("Kindly select a category");
 				}
-				
-				
+
 			}
 		});
 
@@ -155,18 +167,29 @@ public class MemberRegistrationPresenter
 	}
 
 	protected void submit(ApplicationFormHeaderDto applicationForm) {
+		getView().setLoadingState((Anchor) getView().getANext(), true);
+
 		applicationDelegate.withCallback(
 				new AbstractAsyncCallback<ApplicationFormHeaderDto>() {
 					@Override
 					public void onSuccess(ApplicationFormHeaderDto result) {
+						getView().setLoadingState(
+								(Anchor) getView().getANext(), false);
 						// result;
 						getView().bindForm(result);
 						getView().next();
+					}
+
+					@Override
+					public void onFailure(Throwable caught) {
+						// TODO Auto-generated method stub
+						super.onFailure(caught);
 					}
 				}).create(applicationForm);
 	}
 
 	protected void checkExists(String email) {
+		
 		if (refid != null) {
 			return;
 		}
