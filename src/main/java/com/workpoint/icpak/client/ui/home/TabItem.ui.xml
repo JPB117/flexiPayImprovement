@@ -8,10 +8,4 @@
 			<span ui:field="spnText"></span>
 		</g:Anchor>
 	</d:BulletPanel>
-	<!-- li role="presentation" class="active">
-			<a href="http://solutech.co.ke/icpak/index.php/application/profile">
-				
-				My Profile
-			</a>
-		</li -->
 </ui:UiBinder>

@@ -20,9 +20,6 @@ public class HomeTabPanel extends AbstractTabPanel {
 	interface HomeTabPanelUiBinder extends UiBinder<Widget, HomeTabPanel> {
 	}
 	
-//	/collapse="userBlockVisible" ng-controller="UserBlockController"
-	//style="height: 0px;"
-	
 	@UiField HTMLPanel userDiv;
 	@UiField BulletListPanel linksPanel;
 	

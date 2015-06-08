@@ -1,0 +1,35 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.workpoint.icpak.client.ui.component">
+
+	<g:HTMLPanel styleName="tr" ui:field="row">
+		<g:HTMLPanel styleName="td" ui:field="divInstitution">
+			KCA University
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td" ui:field="divFrom">
+			2014-12-10
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td" ui:field="divTo">
+			2014-12-10
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td" ui:field="divExamBody">
+			KASNEB
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td" ui:field="divDivision">
+			ACCOUNTING
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td" ui:field="divAwarded">
+			SECOND CLASS UPPER
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td" ui:field="divRegNo">
+			p15/29333/09
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td" ui:field="divSectionPassed">
+			CPA(K)
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td" ui:field="divAction">
+			<d:ActionLink styleName="fa fa-pencil btn btn-primary"></d:ActionLink>
+			<d:ActionLink styleName="fa fa-trash-o btn btn-danger"></d:ActionLink>
+		</g:HTMLPanel>
+	</g:HTMLPanel>
+</ui:UiBinder> 

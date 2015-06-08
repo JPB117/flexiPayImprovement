@@ -28,6 +28,7 @@ public class EventsPresenter extends
 	public interface IEventsProxy extends TabContentProxyPlace<EventsPresenter> {
 	}
 
+	
 	@TabInfo(container = HomePresenter.class)
 	static TabData getTabLabel(LoginGateKeeper adminGatekeeper) {
 		TabDataExt data = new TabDataExt("Events and Seminars", "fa fa-tags",

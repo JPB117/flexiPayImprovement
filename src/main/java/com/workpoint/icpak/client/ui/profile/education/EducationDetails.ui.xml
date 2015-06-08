@@ -2,7 +2,16 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:d='urn:import:com.workpoint.icpak.client.ui.component' xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	<g:HTMLPanel>
-	
-		Education
+		<div class="col-sm-12">
+			<d:ActionLink styleName="btn btn-next btn-fill btn-primary btn-wd btn-sm">
+				<i class="fa fa-plus"></i>
+				Add Record
+			</d:ActionLink>
+		</div>
+		<br />
+		<div class="col-sm-12">
+			<d:TableView ui:field="tblEducationalDetail" autoNumber="false">
+			</d:TableView>
+		</div>
 	</g:HTMLPanel>
 </ui:UiBinder> 

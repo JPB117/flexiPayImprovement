@@ -46,8 +46,8 @@ public class ProfileView extends ViewImpl implements
 		divTabs.setContent(Arrays.asList(new TabContent(basicDetail,
 				"basic_details", true), new TabContent(educationDetail,
 				"education_details", false), new TabContent(specializationDetail,
-				"training_details", false), new TabContent(trainingDetail,
-				"specialisation_details", false)));
+				"specialisation_details", false), new TabContent(trainingDetail,
+				"training_details", false)));
 
 	}
 
