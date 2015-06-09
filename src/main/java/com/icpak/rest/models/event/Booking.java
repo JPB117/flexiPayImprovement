@@ -267,7 +267,6 @@ public class Booking extends PO{
 		setPaymentMode(dto.getPaymentMode());
 		setPaymentDate(dto.getPaymentDate());
 		setStatus(dto.getStatus());
-		setRefId(dto.getRefId());
 	}
 
 	public Contact getContact() {

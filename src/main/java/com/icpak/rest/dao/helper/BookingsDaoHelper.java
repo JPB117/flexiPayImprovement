@@ -114,8 +114,10 @@ public class BookingsDaoHelper {
 			values.put("quoteNo", booking.getId());
 			values.put("date", booking.getBookingDate());
 			values.put("firstName", booking.getContact().getContactName());
-			values.put("DocumentURL", "http://www.solutech.co.ke/icpak/");
+			values.put("DocumentURL", "http://127.0.0.1:8888/icpakportal.html");
 			values.put("email", booking.getContact().getEmail());
+			values.put("eventId", booking.getEvent().getRefId());
+			values.put("bookingId", booking.getRefId());
 			Doc doc = new Doc(values);
 			
 			Event event = booking.getEvent();
@@ -149,7 +151,7 @@ public class BookingsDaoHelper {
 			InputStream is = EmailServiceHelper.class.getClassLoader().getResourceAsStream("booking-email.html");
 			String html = IOUtils.toString(is);
 			html = new DocumentHTMLMapper().map(doc, html);
-			EmailServiceHelper.sendEmail(html, "RE: ICPAK Event Registration",
+			EmailServiceHelper.sendEmail(html, "RE: ICPAK '"+booking.getEvent().getName()+"' Event Registration",
 					Arrays.asList(booking.getContact().getEmail()),
 					Arrays.asList(booking.getContact().getContactName()), attachment);	
 			
@@ -179,11 +181,16 @@ public class BookingsDaoHelper {
 		List<DelegateDto> dtos = dto.getDelegates();
 		Collection<Delegate> delegates = new ArrayList<>();
 		for (DelegateDto delegateDto : dtos) {
-			delegates.add(get(delegateDto));
+			
+			Delegate delegate = get(delegateDto);
+			dao.save(delegate);
+			delegates.add(delegate);
 		}
 		poBooking.setDelegates(delegates);
 		
 		dao.save(poBooking);
+		
+		sendProInvoice(poBooking);
 
 		return poBooking.toDto();
 	}

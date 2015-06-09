@@ -1,5 +1,7 @@
 package com.workpoint.icpak.shared.model;
 
+import net.sf.ehcache.search.aggregator.Count;
+
 
 public class Country extends SerializableObj implements Listable{
 
@@ -36,6 +38,15 @@ public class Country extends SerializableObj implements Listable{
 
 	public String getCode() {
 		return code;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj==null || ! (obj instanceof Country) || ((Country)obj).code==null){
+			return false;
+		}
+		
+		return code.equals(((Country)obj).code);
 	}
 
 	public void setCode(String code) {

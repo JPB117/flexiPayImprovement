@@ -427,6 +427,23 @@ public class EventBookingView extends ViewImpl implements
 	@Override
 	public void bindBooking(BookingDto booking) {
 		spnNames.setInnerText(booking.getContact().getContactName());
+		
+		if(booking.getContact()!=null){
+			txtAddress.setValue(booking.getContact().getAddress());
+			txtCompanyName.setValue(booking.getContact().getCompany());
+			txtCity.setValue(booking.getContact().getCity());
+			txtContactPerson.setValue(booking.getContact().getContactName());
+			//lstCountry.setValue().getDisplayName(booking.getContact().getCountry());
+			txtContactEmail.setValue(booking.getContact().getEmail());
+			txtPostalCode.setValue(booking.getContact().getPostCode());
+			txtPhone.setValue(booking.getContact().getTelephoneNumbers());
+		}
+		
+		
+		if(booking.getDelegates()!=null){
+			tblDelegates.setData(mapper.getDataModels(booking.getDelegates()));
+		}
+
 	}
 
 }

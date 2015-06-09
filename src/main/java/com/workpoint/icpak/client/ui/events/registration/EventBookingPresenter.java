@@ -144,6 +144,7 @@ public class EventBookingPresenter extends
 	public void prepareFromRequest(PlaceRequest request) {
 		super.prepareFromRequest(request);
 		eventId = request.getParameter("eventId", "9J4oKtW898RyOClP");
+		bookingId = request.getParameter("bookingId", null);
 
 		countriesResource.withCallback(
 				new AbstractAsyncCallback<List<Country>>() {
@@ -167,6 +168,15 @@ public class EventBookingPresenter extends
 				getView().setEvent(event);
 			}
 		}).getById(eventId);
+		
+		if(bookingId!=null){
+			eventsResource.withCallback(new AbstractAsyncCallback<BookingDto>() {
+				@Override
+				public void onSuccess(BookingDto booking) {
+					getView().bindBooking(booking);
+				}
+			}).bookings(eventId).getById(bookingId);
+		}
 
 	}
 
