@@ -12,7 +12,8 @@ public class GenericBootstrapConstants {
 	 * "com.sun.jersey.config.property.packages", packages separated by commas
 	 */
 	//public static final String JERSEY_PROPERTY_PACKAGES="com.icpak.rest;com.wordnik.swagger.jersey.listing";
-	public static final String JERSEY_PROPERTY_PACKAGES="com.icpak.rest;com.wordnik.swagger.jaxrs.listing";
+	public static final String JERSEY_PROPERTY_PACKAGES="com.icpak.rest;com.wordnik.swagger.jaxrs.listing;"
+			+ "com.workpoint.icpak.shared.model";
 	
 	/**
 	 * main properties file that gets loaded at first

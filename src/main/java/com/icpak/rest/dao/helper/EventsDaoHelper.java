@@ -3,65 +3,61 @@ package com.icpak.rest.dao.helper;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.ws.rs.core.UriInfo;
-
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import com.icpak.rest.IDUtils;
 import com.icpak.rest.dao.EventsDao;
-import com.icpak.rest.models.base.ResourceCollectionModel;
 import com.icpak.rest.models.event.Event;
+import com.workpoint.icpak.shared.model.events.EventDto;
 
 @Transactional
 public class EventsDaoHelper {
 
 	@Inject EventsDao dao;
 	
-	public ResourceCollectionModel<Event> getAllEvents(UriInfo uriInfo, Integer offset,
+	public List<EventDto> getAllEvents(String uri, Integer offset,
 			Integer limit) {
 
-		ResourceCollectionModel<Event> events = new ResourceCollectionModel<>(offset,limit, dao.getEventCount(),uriInfo);
-		
 		List<Event> list = dao.getAllEvents(offset, limit);
-		List<Event> eventsList = new ArrayList<>();
+		List<EventDto> eventsList = new ArrayList<>();
 		
 		for(Event e : list){
-			Event event = e.clone();
-			e.setUri(uriInfo.getAbsolutePath().toString()+"/"+event.getRefId());
-			eventsList.add(e);
+			EventDto event = e.toDto();
+			event.setUri(uri+"/"+event.getRefId());
+			eventsList.add(event);
 		}
-		events.setItems(eventsList);
 		
-		return events;
+		return eventsList;
 	}
 
-	public Event getEventById(String eventId) {
+	public EventDto getEventById(String eventId) {
 
 		Event event = dao.getByEventId(eventId);
-		return event;
+		return event.toDto();
 	}
 	
-	public void createEvent(Event event) {
+	public void createEvent(EventDto dto) {
 		
-		assert event.getRefId()==null;
+		assert dto.getRefId()==null;
+		
+		Event event = new Event();
 		event.setRefId(IDUtils.generateId());
+		event.copyFrom(dto);
 		dao.save(event);
 		
+		dto.setRefId(event.getRefId());
 		assert event.getId()!=null;
 	}
 
-	public void updateEvent(String eventId, Event event) {
-		assert event.getRefId()!=null;
-		
-		Event poEvent = getEventById(eventId);
-		poEvent.setDescription(event.getDescription());
-		poEvent.setName(event.getName());
-		poEvent.setRefId(event.getRefId());
+	public void updateEvent(String eventId, EventDto dto) {
+		assert dto.getRefId()!=null;
+		Event poEvent = dao.getByEventId(eventId);
+		poEvent.copyFrom(dto);
 		dao.save(poEvent);
 	}
 
 	public void deleteEvent(String eventId) {
-		Event event = getEventById(eventId);
+		Event event = dao.getByEventId(eventId);
 		dao.delete(event);
 	}
 }

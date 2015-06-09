@@ -16,6 +16,9 @@ import javax.xml.bind.annotation.XmlTransient;
 
 import com.icpak.rest.models.base.PO;
 import com.wordnik.swagger.annotations.ApiModel;
+import com.workpoint.icpak.shared.model.EventStatus;
+import com.workpoint.icpak.shared.model.EventType;
+import com.workpoint.icpak.shared.model.events.EventDto;
 
 /**
  * Event model 
@@ -50,7 +53,11 @@ public class Event extends PO{
 	private Date endDate;
 	private EventStatus status;
 	private EventType type;
+	
+	@Column(nullable=false)
 	private Double memberPrice;
+	
+	@Column(nullable=false)
 	private Double nonMemberPrice;
 	
 	@XmlTransient
@@ -174,6 +181,35 @@ public class Event extends PO{
 
 	public void setNonMemberPrice(Double nonMemberPrice) {
 		this.nonMemberPrice = nonMemberPrice;
+	}
+
+	public EventDto toDto() {
+		EventDto dto = new EventDto();
+		dto.setCpdHours(cpdHours);
+		dto.setDescription(description);
+		dto.setEndDate(endDate);
+		dto.setStartDate(startDate);
+		dto.setMemberPrice(memberPrice);
+		dto.setName(name);
+		dto.setNonMemberPrice(nonMemberPrice);
+		dto.setStatus(status);
+		dto.setType(type);
+		dto.setVenue(dto.getVenue());
+		
+		return dto;
+	}
+
+	public void copyFrom(EventDto dto) {
+		setCpdHours(dto.getCpdHours());
+		setDescription(dto.getDescription());
+		setEndDate(dto.getEndDate());
+		setStartDate(dto.getStartDate());
+		setMemberPrice(dto.getMemberPrice());
+		setName(dto.getName());
+		setNonMemberPrice(dto.getNonMemberPrice());
+		setStatus(dto.getStatus());
+		setType(dto.getType());
+		setVenue(dto.getVenue());
 	}
 
 }

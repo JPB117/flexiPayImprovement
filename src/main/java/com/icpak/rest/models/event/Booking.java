@@ -1,8 +1,10 @@
 package com.icpak.rest.models.event;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -22,6 +24,9 @@ import com.icpak.rest.models.base.ExpandTokens;
 import com.icpak.rest.models.base.PO;
 import com.icpak.rest.models.membership.Contact;
 import com.wordnik.swagger.annotations.ApiModel;
+import com.workpoint.icpak.shared.model.PaymentStatus;
+import com.workpoint.icpak.shared.model.events.BookingDto;
+import com.workpoint.icpak.shared.model.events.DelegateDto;
 
 /**
  * Booking Model 
@@ -43,10 +48,6 @@ public class Booking extends PO{
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private String companyName;
-	
-//	@OneToOne(mappedBy="booking", 
-//			cascade={CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE})
 	@Embedded
 	private Contact contact;
 	
@@ -66,7 +67,7 @@ public class Booking extends PO{
 	private Date paymentDate;
 	private Double amountDue;
 	private Double amountPaid;
-	private PaymentStatus paymentStatus= PaymentStatus.PAID;
+	private PaymentStatus paymentStatus= PaymentStatus.NOTPAID;
 	
 	@OneToMany(mappedBy="booking",fetch=FetchType.LAZY,cascade={CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE})
 	private Collection<Delegate> delegates = new HashSet<>();
@@ -125,7 +126,6 @@ public class Booking extends PO{
 		booking.setPaymentMode(paymentMode);
 		
 		//booking.setContact(contact);
-		booking.setCompanyName(companyName);
 		booking.setCurrency(currency);
 		if(delegates!=null)
 		for(Delegate delegate: delegates){
@@ -161,23 +161,7 @@ public class Booking extends PO{
 	private void addDelegate(Delegate delegate) {
 		delegates.add(delegate);
 	}
-
-	public String getCompanyName() {
-		return companyName;
-	}
-
-	public void setCompanyName(String companyName) {
-		this.companyName = companyName;
-	}
-
-//	public Contact getContact() {
-//		return contact;
-//	}
-//
-//	public void setContact(Contact contact) {
-//		this.contact = contact;
-//	}
-
+	
 	public String getPaymentMode() {
 		return paymentMode;
 	}
@@ -212,6 +196,7 @@ public class Booking extends PO{
 			delegates.add(delegate);
 			delegate.setBooking(this);
 		}
+		setDelegatesCount(delegates.size());
 	}
 
 	public String getEventId() {
@@ -244,6 +229,53 @@ public class Booking extends PO{
 
 	public void setPaymentStatus(PaymentStatus paymentStatus) {
 		this.paymentStatus = paymentStatus;
+	}
+
+	public BookingDto toDto() {
+		
+		BookingDto dto = new BookingDto();
+		dto.setAmountDue(amountDue);
+		dto.setAmountPaid(amountPaid);
+		dto.setBookingDate(bookingDate);
+		dto.setContact(contact.toDto());
+		dto.setCurrency(currency);
+		if(getDelegates()!=null){
+			List<DelegateDto> dtos = new ArrayList<>();
+			for(Delegate delegate: delegates){
+				dtos.add(delegate.toDto());
+			}
+			dto.setDelegates(dtos);
+		}
+		
+		
+		if(getEvent()!=null){
+			dto.setEventRefId(getEvent().getRefId());
+		}
+		dto.setPaymentDate(paymentDate);
+		dto.setPaymentDate(paymentDate);
+		dto.setPaymentMode(paymentMode);
+		dto.setPaymentRef(paymentRef);
+		dto.setPaymentStatus(paymentStatus);
+		dto.setRefId(paymentRef);
+		dto.setStatus(status);
+		
+		return dto;
+	}
+
+	public void copyFrom(BookingDto dto) {
+		setBookingDate(dto.getBookingDate());
+		setPaymentMode(dto.getPaymentMode());
+		setPaymentDate(dto.getPaymentDate());
+		setStatus(dto.getStatus());
+		setRefId(dto.getRefId());
+	}
+
+	public Contact getContact() {
+		return contact;
+	}
+
+	public void setContact(Contact contact) {
+		this.contact = contact;
 	}
 	
 }

@@ -26,7 +26,7 @@ import com.workpoint.icpak.client.place.NameTokens;
 import com.workpoint.icpak.client.service.AbstractAsyncCallback;
 import com.workpoint.icpak.client.ui.component.TextField;
 import com.workpoint.icpak.shared.api.ApplicationFormResource;
-import com.workpoint.icpak.shared.api.CategoryResource;
+import com.workpoint.icpak.shared.api.CategoriesResource;
 import com.workpoint.icpak.shared.api.UsersResource;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 import com.workpoint.icpak.shared.model.CategoryDto;
@@ -79,14 +79,14 @@ public class MemberRegistrationPresenter
 
 	private ResourceDelegate<ApplicationFormResource> applicationDelegate;
 
-	private ResourceDelegate<CategoryResource> categoriesDelegate;
+	private ResourceDelegate<CategoriesResource> categoriesDelegate;
 
 	@Inject
 	public MemberRegistrationPresenter(final EventBus eventBus,
 			final MyView view, final MyProxy proxy,
 			ResourceDelegate<ApplicationFormResource> applicationDelegate,
 			ResourceDelegate<UsersResource> usersDelegate,
-			ResourceDelegate<CategoryResource> categoriesDelegate) {
+			ResourceDelegate<CategoriesResource> categoriesDelegate) {
 		super(eventBus, view, proxy);
 		this.applicationDelegate = applicationDelegate;
 		this.usersDelegate = usersDelegate;

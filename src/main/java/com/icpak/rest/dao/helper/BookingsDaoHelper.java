@@ -1,11 +1,15 @@
 package com.icpak.rest.dao.helper;
 
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import javax.ws.rs.core.UriInfo;
+import org.apache.commons.io.IOUtils;
 
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
@@ -15,119 +19,183 @@ import com.icpak.rest.dao.EventsDao;
 import com.icpak.rest.dao.UsersDao;
 import com.icpak.rest.exceptions.ServiceException;
 import com.icpak.rest.models.ErrorCodes;
-import com.icpak.rest.models.base.ResourceCollectionModel;
 import com.icpak.rest.models.event.Booking;
 import com.icpak.rest.models.event.Delegate;
+import com.icpak.rest.models.event.Event;
+import com.icpak.rest.models.membership.Category;
+import com.icpak.rest.models.membership.Contact;
+import com.icpak.rest.models.util.Attachment;
+import com.icpak.rest.utils.Doc;
+import com.icpak.rest.utils.DocumentHTMLMapper;
+import com.icpak.rest.utils.DocumentLine;
+import com.icpak.rest.utils.EmailServiceHelper;
+import com.icpak.rest.utils.HTMLToPDFConvertor;
+import com.workpoint.icpak.shared.model.ApplicationType;
+import com.workpoint.icpak.shared.model.events.BookingDto;
+import com.workpoint.icpak.shared.model.events.ContactDto;
+import com.workpoint.icpak.shared.model.events.DelegateDto;
 
 @Transactional
 public class BookingsDaoHelper {
 
-	@Inject BookingsDao dao;
-	@Inject UsersDao userDao;
-	@Inject EventsDao eventDao;
-	
-	public ResourceCollectionModel<Booking> getAllBookings(UriInfo uriInfo, 
-			String eventId,	Integer offset,	Integer limit) {
+	@Inject
+	BookingsDao dao;
+	@Inject
+	UsersDao userDao;
+	@Inject
+	EventsDao eventDao;
 
-		ResourceCollectionModel<Booking> bookings = new ResourceCollectionModel<>(offset,limit, dao.getBookingCount(),uriInfo);
-		
+	public List<BookingDto> getAllBookings(String uriInfo, String eventId,
+			Integer offset, Integer limit) {
+
 		List<Booking> list = dao.getAllBookings(offset, limit);
-		
-		List<Booking> clones = new ArrayList<>();
-		for(Booking booking: list){
-			Booking clone = booking.clone();
-			clone.setUri(uriInfo.getAbsolutePath()+"/"+clone.getRefId());
-			clone.getEvent().setUri(uriInfo.getBaseUri()+"events/"+clone.getEvent().getRefId());
-			//clone.getUser().setUri(uriInfo.getBaseUri()+"users/"+clone.getUser().getRefId());
-			clones.add(clone);
+
+		List<BookingDto> clones = new ArrayList<>();
+		for (Booking booking : list) {
+			BookingDto dto = booking.toDto();
+			dto.setUri(uriInfo + "/" + dto.getRefId());
+			// dto.getEvent().setUri(uriInfo.getBaseUri()+"events/"+clone.getEvent().getRefId());
+			clones.add(dto);
 		}
-		
-		bookings.setItems(clones);
-		return bookings;
+
+		return clones;
 	}
 
-	public Booking getBookingById(String eventId,String bookingId) {
+	public BookingDto getBookingById(String eventId, String bookingId) {
 
 		Booking booking = dao.getByBookingId(bookingId);
-		
-		return booking.clone();
-	}
-	
-	public Booking createBooking(String eventId,Booking booking) {
-		assert booking.getRefId()==null;
-		
-		booking.setRefId(IDUtils.generateId());
-		booking.setBookingDate(new Date());
-		booking.setStatus(booking.getStatus());
-		
-//		Contact c = booking.getContact();
-//		booking.setContact(null);
-		booking.setEvent(eventDao.getByEventId(eventId));
-		
-		if(booking.getDelegates()!=null)
-		for(Delegate delegate: booking.getDelegates()){
-			delegate.setBooking(booking);
-		}
-		
-		dao.save(booking);
-		
-//		if(c!=null){			
-//			c.setBooking(booking);
-//			dao.save(c);
-//			booking.setContact(c);
-//		}
-		
-		assert booking.getId()!=null;
-		
-		
-		return booking.clone();
+		return booking.toDto();
 	}
 
-	public Booking updateBooking(String eventId,String bookingId, Booking booking) {
-		assert booking.getRefId()!=null;
+	public BookingDto createBooking(String eventId, BookingDto dto) {
+		assert dto.getRefId() == null;
+
+		Booking booking = new Booking();
+		booking.setRefId(IDUtils.generateId());
+		booking.setEvent(eventDao.getByEventId(eventId));
+		if (dto.getContact() != null) {
+			Contact poContact = new Contact();
+			ContactDto contactDto = dto.getContact();
+			poContact.copyFrom(contactDto);
+			booking.setContact(poContact);
+		}
+		booking.copyFrom(dto);
+		dao.createBooking(booking);
 		
-		Booking poBooking = getBookingById(eventId,bookingId);
-		poBooking.setBookingDate(booking.getBookingDate());
-		poBooking.setCompanyName(booking.getCompanyName());
-		poBooking.setPaymentMode(booking.getPaymentMode());
-		poBooking.setPaymentDate(booking.getPaymentDate());
+		List<DelegateDto> dtos = dto.getDelegates();
+		Collection<Delegate> delegates = new ArrayList<>();
+		for (DelegateDto delegateDto : dtos) {
+			Delegate d = get(delegateDto);
+			
+			d.setBooking(booking);
+			dao.save(d);
+			delegates.add(d);
+		}
 		
-//		if(booking.getContact()!=null){
-//			Contact poContact = poBooking.getContact();
-//			if(poContact==null){
-//				poContact = new Contact();
-//			}
-//			
-//			Contact contact = booking.getContact();
-//			poContact.setCity(contact.getCity());
-//			poContact.setCountry(contact.getCountry());
-//			poContact.setContactName(contact.getContactName());
-//			poContact.setPhysicalAddress(contact.getPhysicalAddress());
-//			poContact.setPostalCode(contact.getPostalCode());
-//			poContact.setEmail(contact.getEmail());
-//			poContact.setFax(contact.getFax());
-//		}
+		dao.getEntityManager().merge(booking);
 		
-		Collection<Delegate> delegates = booking.getDelegates();
+		//Copy into dto
+		dto.setRefId(booking.getRefId());
+		int i=0;
+		for(Delegate delegate: booking.getDelegates()){
+			dto.getDelegates().get(i).setRefId(delegate.getRefId());
+		}
+		
+		sendProInvoice(booking);
+		
+		return dto;
+	}
+
+	private void sendProInvoice(Booking booking) {
+		try{
+			Map<String,Object> values  = new HashMap<String, Object>();
+			values.put("companyName", booking.getContact().getCompany());
+			values.put("companyAddress", booking.getContact().getAddress());
+			values.put("quoteNo", booking.getId());
+			values.put("date", booking.getBookingDate());
+			values.put("firstName", booking.getContact().getContactName());
+			values.put("DocumentURL", "http://www.solutech.co.ke/icpak/");
+			values.put("email", booking.getContact().getEmail());
+			Doc doc = new Doc(values);
+			
+			Event event = booking.getEvent();
+			
+			double amount = 0.0;
+			for(Delegate delegate : booking.getDelegates()){
+				Map<String,Object> line  = new HashMap<String, Object>();
+				line.put("description", delegate.getSurname()+" "+delegate.getOtherNames());
+				Double price = event.getNonMemberPrice();
+				if(delegate.getMemberRegistrationNo()!=null){
+					price = event.getMemberPrice();
+				}
+				amount+=price;
+				line.put("unitPrice", price);
+				line.put("amount", price);
+				doc.addDetail(new DocumentLine("invoiceDetails",line));
+			}
+			
+			values.put("totalAmount", amount);
+			
+			
+			//PDF Invoice Generation
+			InputStream inv = EmailServiceHelper.class.getClassLoader().getResourceAsStream("proforma-invoice.html");
+			String invoiceHTML = IOUtils.toString(inv);
+			byte[] invoicePDF = new HTMLToPDFConvertor().convert(doc, new String(invoiceHTML));
+			Attachment attachment = new Attachment();
+			attachment.setAttachment(invoicePDF);
+			attachment.setName("ProForma Invoice_"+booking.getContact().getContactName()+".pdf");
+			
+			//Email Template parse and map variables
+			InputStream is = EmailServiceHelper.class.getClassLoader().getResourceAsStream("booking-email.html");
+			String html = IOUtils.toString(is);
+			html = new DocumentHTMLMapper().map(doc, html);
+			EmailServiceHelper.sendEmail(html, "RE: ICPAK Event Registration",
+					Arrays.asList(booking.getContact().getEmail()),
+					Arrays.asList(booking.getContact().getContactName()), attachment);	
+			
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+
+	public BookingDto updateBooking(String eventId, String bookingId,
+			BookingDto dto) {
+		assert dto.getRefId() != null;
+
+		Booking poBooking = dao.getByBookingId(bookingId);
+		poBooking.copyFrom(dto);
+		poBooking.setEvent(eventDao.getByEventId(eventId));
+		if (dto.getContact() != null) {
+			Contact poContact = poBooking.getContact();
+			if (poContact == null) {
+				poContact = new Contact();
+			}
+			
+			ContactDto contactDto = dto.getContact();
+			poContact.copyFrom(contactDto);
+		}
+
+		List<DelegateDto> dtos = dto.getDelegates();
+		Collection<Delegate> delegates = new ArrayList<>();
+		for (DelegateDto delegateDto : dtos) {
+			delegates.add(get(delegateDto));
+		}
 		poBooking.setDelegates(delegates);
 		
-		poBooking.setStatus(booking.getStatus());
-		
-//		if(booking.getUser()==null || booking.getUser().getRefId()==null ){
-//			throw new ServiceException(ErrorCodes.ILLEGAL_ARGUMENT, "User", "UserId=null");
-//		}
-		
-//		if(booking.getUser().getRefId()==null){
-//			String userId = booking.getUser().getRefId();
-//			User user = userDao.findByUserId(userId, true);
-//			poBooking.setUser(user);
-//		}
-		
-		poBooking.setEvent(eventDao.getByEventId(eventId));
-		poBooking.setRefId(booking.getRefId());
 		dao.save(poBooking);
+
+		return poBooking.toDto();
+	}
+
+	private Delegate get(DelegateDto delegateDto) {
+		Delegate delegate = new Delegate();
+		if(delegateDto.getRefId()!=null){
+			delegate = eventDao.findByRefId(delegate.getRefId(), Delegate.class);
+		}
 		
-		return poBooking.clone();
+		delegate.copyFrom(delegateDto);
+		return delegate;
 	}
 
 	public void deleteBooking(String eventId, String bookingId) {
@@ -135,22 +203,24 @@ public class BookingsDaoHelper {
 		dao.delete(booking);
 	}
 
-	public void processPayment(String eventId, String bookingId,
+	public BookingDto processPayment(String eventId, String bookingId,
 			String paymentMode, String paymentRef) {
 		Booking booking = dao.getByBookingId(bookingId);
-		//Check if payment ref already exists
+		// Check if payment ref already exists
 		boolean exists = dao.isPaymentValid(paymentRef);
-		if(exists){
+		if (exists) {
 			throw new ServiceException(ErrorCodes.DUPLICATEVALUE, "Payment Ref");
 		}
-		
-		if(booking!=null){
+
+		if (booking != null) {
 			booking.setPaymentRef(paymentRef);
 			booking.setPaymentMode(paymentMode);
 			booking.setPaymentDate(new Date());
 		}
 		
 		dao.save(booking);
+		
+		return booking.toDto();
 	}
 
 }

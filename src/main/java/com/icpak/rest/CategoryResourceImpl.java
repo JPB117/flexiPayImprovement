@@ -17,13 +17,13 @@ import com.icpak.rest.dao.helper.ApplicationFormDaoHelper;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
-import com.workpoint.icpak.shared.api.CategoryResource;
+import com.workpoint.icpak.shared.api.CategoriesResource;
 import com.workpoint.icpak.shared.model.CategoryDto;
 
 
 @Path("categories")
 @Api(value="categories", description="Handles CRUD for Categories")
-public class CategoryResourceImpl implements CategoryResource{
+public class CategoryResourceImpl implements CategoriesResource{
 
 	@Inject ApplicationFormDaoHelper helper;
 

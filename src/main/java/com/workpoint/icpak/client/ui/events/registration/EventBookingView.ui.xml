@@ -3,6 +3,7 @@
 	xmlns:g='urn:import:com.google.gwt.user.client.ui' ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	xmlns:d='urn:import:com.workpoint.icpak.client.ui.component'
+	xmlns:grid='urn:import:com.workpoint.icpak.client.ui.grid'
 	ui:generateLocales='default'>
 
 	<g:HTMLPanel>
@@ -60,7 +61,7 @@
 
 											<div class="col-sm-12">
 												<strong>
-													<span ui:field="spnEventName">IPSAS Seminar</span>
+													<span ui:field="spnEventName"></span>
 												</strong>
 												<a data-toggle="collapse" data-target="#eventInfo"
 													aria-expanded="false" aria-controls="#eventInfo">
@@ -73,19 +74,21 @@
 														<div class="well row">
 															<div class="col-sm-6">
 																<strong>Starting Date:</strong>
-																<span ui:field="spnStartDate">June 10, 2015</span>
+																<span ui:field="spnStartDate"></span>
 																(
-																<span ui:field="spnDays2Go">1 day to Go</span>
+																<span ui:field="spnDays2Go"></span>
 																)
 
 															</div>
 															<div class="col-sm-6">
 																<strong>Duration</strong>
-																<span ui:field="spnDuration">3 day(s)</span>
+																<span ui:field="spnDuration"></span>
 															</div>
 														</div>
 													</div>
 												</div>
+												<d:IssuesPanel ui:field="issuesPanel"
+													styleName="hide alert alert-danger"></d:IssuesPanel>
 											</div>
 
 											<div class="col-sm-12">
@@ -134,7 +137,7 @@
 													<div class="row">
 														<div class="col-xs-6">
 															<label for="emailaddress">Country:</label>
-															<d:DropDownList ui:field="lstCountries"
+															<d:DropDownList ui:field="lstCountry"
 																styleName="form-control">
 															</d:DropDownList>
 														</div>
@@ -176,7 +179,27 @@
 									</div>
 
 									<div class="tab-pane" ui:field="divCategories">
-										<g:HTMLPanel ui:field="panelDelegates">
+										<g:HTMLPanel styleName="row">
+
+											<div class="col-sm-12">
+												<h4 class="info-text">
+													<span ui:field="spnSelected">Fill In the Delegates to Attend:</span>
+												</h4>
+												<hr />
+											</div>
+
+											<div class="col-sm-12">
+												<d:ActionLink ui:field="aAddRow" styleName="btn btn-primary">Add
+													Delegate</d:ActionLink>
+											</div>
+											<div class="col-sm-12">
+												<d:IssuesPanel ui:field="issuesPanelDelegate"
+													styleName="hide alert alert-danger"></d:IssuesPanel>
+											</div>
+											<div class="col-sm-12">
+												<grid:AggregationGrid ui:field="tblDelegates"></grid:AggregationGrid>
+											</div>
+
 										</g:HTMLPanel>
 									</div>
 

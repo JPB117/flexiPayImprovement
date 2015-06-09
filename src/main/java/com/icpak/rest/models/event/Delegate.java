@@ -13,6 +13,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 import com.icpak.rest.models.base.PO;
 import com.wordnik.swagger.annotations.ApiModel;
+import com.workpoint.icpak.shared.model.events.DelegateDto;
 
 @ApiModel(value="Event delegates", description="List of delegates sharing a single booking")
 
@@ -29,12 +30,12 @@ public class Delegate extends PO{
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private boolean isRegisteredMember;
 	private String memberRegistrationNo;
 	private String title;
 	private String surname;
 	private String otherNames;
 	private String email;
+	
 	@Transient
 	private String bookingId;
 	
@@ -42,14 +43,6 @@ public class Delegate extends PO{
 	@JoinColumn(name="booking_id")
 	@XmlTransient
 	private Booking booking;
-
-	public boolean isRegisteredMember() {
-		return isRegisteredMember;
-	}
-
-	public void setRegisteredMember(boolean isRegisteredMember) {
-		this.isRegisteredMember = isRegisteredMember;
-	}
 
 	public String getMemberRegistrationNo() {
 		return memberRegistrationNo;
@@ -107,5 +100,26 @@ public class Delegate extends PO{
 	@Override
 	public int hashCode() {
 		return super.hashCode();
+	}
+
+	public void copyFrom(DelegateDto delegateDto) {
+		setEmail(delegateDto.getEmail());
+		setMemberRegistrationNo(delegateDto.getMemberRegistrationNo());
+		setOtherNames(delegateDto.getOtherNames());
+		setSurname(delegateDto.getSurname());
+		setTitle(delegateDto.getTitle());
+		setRefId(delegateDto.getRefId());
+	}
+
+	public DelegateDto toDto() {
+		DelegateDto dto  = new DelegateDto();
+		dto.setEmail(email);
+		dto.setMemberRegistrationNo(memberRegistrationNo);
+		dto.setOtherNames(otherNames);
+		dto.setRefId(bookingId);
+		dto.setSurname(surname);
+		dto.setTitle(title);
+		
+		return dto;
 	}
 }

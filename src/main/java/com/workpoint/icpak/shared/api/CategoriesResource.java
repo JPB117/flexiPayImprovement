@@ -15,7 +15,7 @@ import javax.ws.rs.core.MediaType;
 import com.workpoint.icpak.shared.model.CategoryDto;
 
 @Path("categories")
-public interface CategoryResource {
+public interface CategoriesResource {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)

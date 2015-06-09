@@ -6,6 +6,8 @@ import com.google.gwt.user.client.ui.Anchor;
 
 public class ActionLink extends Anchor {
 
+	private Object model;
+
 	public ActionLink() {
 		addClickHandler(new ClickHandler() {
 
@@ -14,6 +16,10 @@ public class ActionLink extends Anchor {
 				// setStyleName("hidden");
 			}
 		});
+	}
+	
+	public ActionLink(Object model){
+		this.model = model;
 	}
 
 	public ActionLink(String text) {
@@ -41,5 +47,13 @@ public class ActionLink extends Anchor {
 
 	public void setDataPlacement(String data) {
 		getElement().setAttribute("data-placement", data);
+	}
+
+	public Object getModel() {
+		return model;
+	}
+
+	public void setModel(Object model) {
+		this.model = model;
 	}
 }

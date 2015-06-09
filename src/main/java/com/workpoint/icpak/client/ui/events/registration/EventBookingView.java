@@ -1,6 +1,9 @@
 package com.workpoint.icpak.client.ui.events.registration;
 
+import static com.workpoint.icpak.client.ui.util.StringUtils.*;
+
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.google.gwt.dom.client.DivElement;
@@ -12,13 +15,26 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Frame;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
+import com.workpoint.icpak.client.ui.component.ActionLink;
+import com.workpoint.icpak.client.ui.component.DropDownList;
+import com.workpoint.icpak.client.ui.component.IssuesPanel;
 import com.workpoint.icpak.client.ui.component.TextField;
+import com.workpoint.icpak.client.ui.grid.AggregationGrid;
+import com.workpoint.icpak.client.ui.grid.ColumnConfig;
+import com.workpoint.icpak.client.ui.grid.DataMapper;
+import com.workpoint.icpak.client.ui.grid.DataModel;
 import com.workpoint.icpak.client.ui.registration.PageElement;
+import com.workpoint.icpak.client.ui.util.DateUtils;
+import com.workpoint.icpak.shared.model.Country;
+import com.workpoint.icpak.shared.model.DataType;
+import com.workpoint.icpak.shared.model.PaymentStatus;
+import com.workpoint.icpak.shared.model.events.BookingDto;
+import com.workpoint.icpak.shared.model.events.ContactDto;
+import com.workpoint.icpak.shared.model.events.DelegateDto;
+import com.workpoint.icpak.shared.model.events.EventDto;
 
 public class EventBookingView extends ViewImpl implements
 		EventBookingPresenter.MyView {
@@ -43,9 +59,6 @@ public class EventBookingView extends ViewImpl implements
 	DivElement divCategories;
 
 	@UiField
-	HTMLPanel panelDelegates;
-
-	@UiField
 	DivElement divPayment;
 	@UiField
 	DivElement divProforma;
@@ -58,8 +71,6 @@ public class EventBookingView extends ViewImpl implements
 	LIElement liTab3;
 	@UiField
 	LIElement liTab4;
-
-	private String selectedName;
 
 	@UiField
 	SpanElement spnEventName;
@@ -84,13 +95,67 @@ public class EventBookingView extends ViewImpl implements
 	TextField txtContactPerson;
 	@UiField
 	TextField txtContactEmail;
-	// @UiField
-	// DropDownList<> lstCountries;
 
+	@UiField
+	DropDownList<Country> lstCountry;
+
+	@UiField
+	IssuesPanel issuesPanel;
+
+	@UiField IssuesPanel issuesPanelDelegate;
+	
+	@UiField
+	AggregationGrid tblDelegates;
+	
+	@UiField SpanElement spnNames;
+	
+	@UiField
+	ActionLink aAddRow;
 
 	private List<LIElement> liElements = new ArrayList<LIElement>();
 	private List<PageElement> pageElements = new ArrayList<PageElement>();
 
+	DataMapper mapper = new DataMapper() {
+
+		@Override
+		public List<DataModel> getDataModels(List objs) {
+			List<DataModel> models = new ArrayList<DataModel>();
+			for (Object o : objs) {
+				DelegateDto dto = (DelegateDto) o;
+
+				DataModel model = new DataModel();
+				model.set("memberNo", dto.getMemberRegistrationNo());
+				model.set("title", dto.getTitle());
+				model.set("surname", dto.getSurname());
+				model.set("otherNames", dto.getOtherNames());
+				model.set("email", dto.getEmail());
+				models.add(model);
+			}
+			return models;
+		}
+
+		@Override
+		public DelegateDto getData(DataModel model) {
+			DelegateDto dto = new DelegateDto();
+			
+			if(model.isEmpty()){
+				return null;
+			}
+			
+			dto.setMemberRegistrationNo(model.get("memberNo") == null ? null : model.get(
+					"memberNo").toString());
+			dto.setTitle(model.get("title") == null ? null : model.get("title")
+					.toString());
+			dto.setSurname(model.get("surname") == null ? null : model.get(
+					"surname").toString());
+			dto.setOtherNames(model.get("otherNames") == null ? null : model.get(
+					"otherNames").toString());
+			dto.setEmail(model.get("email") == null ? null : model.get(
+					"email").toString());
+
+			return dto;
+		}
+	};
 	int counter = 0;
 
 	public interface Binder extends UiBinder<Widget, EventBookingView> {
@@ -99,6 +164,29 @@ public class EventBookingView extends ViewImpl implements
 	@Inject
 	public EventBookingView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
+		
+		tblDelegates.setAutoNumber(false);
+		List<ColumnConfig> configs = new ArrayList<ColumnConfig>();
+		ColumnConfig config = new ColumnConfig("memberNo", "Member No",
+				DataType.STRING);
+		configs.add(config);
+		config = new ColumnConfig("title", "Title", DataType.STRING);
+		configs.add(config);
+		config = new ColumnConfig("surname", "Surname", DataType.STRING);
+		configs.add(config);
+		config = new ColumnConfig("otherNames", "Other Names", DataType.STRING);
+		configs.add(config);
+		config = new ColumnConfig("email", "e-Mail", DataType.STRING);
+		configs.add(config);
+		tblDelegates.setColumnConfigs(configs);
+
+		aAddRow.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				tblDelegates.addRowData(new DataModel());
+			}
+		});
 
 		String url = "http://197.248.2.44:8080/ewallet-beta/#websiteClient";
 		framePayment.setUrl(url);
@@ -109,14 +197,13 @@ public class EventBookingView extends ViewImpl implements
 		liElements.add(liTab3);
 		liElements.add(liTab4);
 
-
 		// Div Elements
 		pageElements.add(new PageElement(divPackage, "Proceed"));
 		pageElements.add(new PageElement(divCategories, "Submit", "Back"));
 		pageElements.add(new PageElement(divProforma, "Proceed to Pay"));
 		pageElements.add(new PageElement(divPayment, "Finish", "Back"));
 
-		setActive(liElements.get(counter+1), pageElements.get(counter+1));
+		setActive(liElements.get(counter), pageElements.get(counter));
 
 		aBack.addClickHandler(new ClickHandler() {
 			@Override
@@ -124,15 +211,6 @@ public class EventBookingView extends ViewImpl implements
 				counter = counter - 1;
 				showMyAccountLink(counter);
 				removeActive(liElements.get(counter), pageElements.get(counter));
-				setActive(liElements.get(counter), pageElements.get(counter));
-			}
-		});
-
-		aNext.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				counter = counter + 1;
-				showMyAccountLink(counter);
 				setActive(liElements.get(counter), pageElements.get(counter));
 			}
 		});
@@ -145,7 +223,6 @@ public class EventBookingView extends ViewImpl implements
 			aAccount.addStyleName("hide");
 		}
 	}
-
 
 	private void removeActive(LIElement liElement, PageElement page) {
 		setButtons(page);
@@ -174,17 +251,7 @@ public class EventBookingView extends ViewImpl implements
 		setButtons(page);
 		liElement.addClassName("active");
 		page.getElement().addClassName("active");
-		System.err.println("Added:" + counter);
-	}
-
-	@Override
-	public void setInSlot(Object slot, IsWidget content) {
-		if (slot == EventBookingPresenter.DELEGATE_SLOT) {
-			panelDelegates.clear();
-			if (content != null) {
-				panelDelegates.add(content);
-			}
-		}
+		// System.err.println("Added:" + counter);
 	}
 
 	private void clearAll() {
@@ -199,10 +266,167 @@ public class EventBookingView extends ViewImpl implements
 		divProforma.removeClassName("active");
 	}
 
+	public boolean isValid() {
+		boolean isValid = true;
+		issuesPanel.clear();
+		issuesPanelDelegate.clear();
+
+		if (counter == 0) {
+			if (isNullOrEmpty(txtCompanyName.getValue())) {
+				isValid = false;
+				issuesPanel.addError("Company name is required");
+			}
+
+			if (isNullOrEmpty(txtPhone.getValue())) {
+				isValid = false;
+				issuesPanel.addError("Telephone is required");
+			}
+
+			if (isNullOrEmpty(txtPostalCode.getValue())) {
+				isValid = false;
+				issuesPanel.addError("Postal Code is required");
+			}
+
+			if (isNullOrEmpty(txtAddress.getValue())) {
+				isValid = false;
+				issuesPanel.addError("Address is required");
+			}
+
+			if (lstCountry.getValue() == null) {
+				isValid = false;
+				issuesPanel.addError("Country is required");
+			}
+
+			if (isNullOrEmpty(txtCity.getValue())) {
+				isValid = false;
+				issuesPanel.addError("City is required");
+			}
+
+			if (isNullOrEmpty(txtContactPerson.getValue())) {
+				isValid = false;
+				issuesPanel.addError("Contact is required");
+			}
+
+			if (isNullOrEmpty(txtContactEmail.getValue())) {
+				isValid = false;
+				issuesPanel.addError("e-Mail is required");
+			}
+		} else if (counter == 1) {
+			if(getDelegates().size()==0){
+				isValid=false;
+				
+			}
+		}
+
+		if (isValid) {
+			issuesPanel.addStyleName("hide");
+		} else {
+			issuesPanel.removeStyleName("hide");
+		}
+
+		return isValid;
+
+	}
+
 	@Override
 	public Widget asWidget() {
 		return widget;
 	}
 
+	@Override
+	public void setCountries(List<Country> countries) {
+		lstCountry.setItems(countries);	
+		for(Country c: countries){
+			if(c.getName().equals("KE")){
+				lstCountry.setValue(c);
+				break;
+			}
+		}
+	}
+
+	public Anchor getANext() {
+		return aNext;
+	}
+
+	@Override
+	public int getCounter() {
+		return counter;
+	}
+
+	@Override
+	public void next() {
+		counter = counter + 1;
+		showMyAccountLink(counter);
+		setActive(liElements.get(counter), pageElements.get(counter));
+	}
+
+	@Override
+	public void addError(String error) {
+		issuesPanelDelegate.removeStyleName("hide");
+		issuesPanelDelegate.clear();
+		issuesPanelDelegate.addError(error);
+	}
+
+	public BookingDto getBooking() {
+		BookingDto dto = new BookingDto();
+		// dto.setAmountDue(amountDue);
+		// dto.setAmountPaid(amountPaid);
+		// dto.setPaymentDate(paymentDate);
+		// dto.setPaymentDate(paymentDate);
+		// dto.setPaymentMode(paymentMode);
+		// dto.setPaymentRef(paymentRef);
+		dto.setStatus("");
+		dto.setPaymentStatus(PaymentStatus.NOTPAID);
+		dto.setBookingDate(new Date());
+		dto.setContact(getContact());
+		// dto.setCurrency(currency);
+		dto.setDelegates(getDelegates());
+
+		return dto;
+
+	}
+
+	private List<DelegateDto> getDelegates() {
+
+		return tblDelegates.getData(mapper);
+	}
+
+	private ContactDto getContact() {
+
+		ContactDto contact = new ContactDto();
+		contact.setAddress(txtAddress.getValue());
+		contact.setCompany(txtCompanyName.getValue());
+		contact.setCity(txtCity.getValue());
+		contact.setCompany(txtCompanyName.getValue());
+		contact.setContactName(txtContactPerson.getValue());
+		contact.setCountry(lstCountry.getValue().getDisplayName());
+		contact.setEmail(txtContactEmail.getValue());
+		contact.setPostCode(txtPostalCode.getValue());
+		contact.setTelephoneNumbers(txtPhone.getValue());
+
+		return contact;
+	}
+
+	@Override
+	public void setEvent(EventDto event) {
+		spnEventName.setInnerText(event.getName());
+
+		if (event.getStartDate() != null) {
+			spnStartDate.setInnerText(DateUtils.DATEFORMAT.format(event
+					.getStartDate()));
+			if (event.getEndDate() != null) {
+				spnDuration.setInnerText(DateUtils.getTimeDifference(event.getStartDate(), event.getEndDate()));
+			}
+			
+			spnDays2Go.setInnerText(DateUtils.getTimeDifference(new Date(),
+					event.getStartDate()));
+		}
+
+	}
+
+	@Override
+	public void bindBooking(BookingDto booking) {
+		spnNames.setInnerText(booking.getContact().getContactName());
+	}
 
 }

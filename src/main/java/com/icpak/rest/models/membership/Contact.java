@@ -11,6 +11,7 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.wordnik.swagger.annotations.ApiModel;
+import com.workpoint.icpak.shared.model.events.ContactDto;
 
 
 @ApiModel(description="A Persons or organizations contacts")
@@ -29,7 +30,9 @@ public class Contact{
 	 * 
 	 */
 	private ContactType type;
-	private boolean isPrimaryContact;
+	private boolean isPrimaryContact=true;
+	
+	private String company;
 	
 	@Column(name="`Address`",  columnDefinition="varchar(50)")
 	private String address;
@@ -75,8 +78,6 @@ public class Contact{
 	@Column(length=500)
 	private String physicalAddress;
 	
-	private String postalCode;
-	
 	private String country;
 	
 //	@OneToOne
@@ -114,14 +115,6 @@ public class Contact{
 
 	public void setPhysicalAddress(String physicalAddress) {
 		this.physicalAddress = physicalAddress;
-	}
-
-	public String getPostalCode() {
-		return postalCode;
-	}
-
-	public void setPostalCode(String postalCode) {
-		this.postalCode = postalCode;
 	}
 
 	public String getContactName() {
@@ -178,6 +171,109 @@ public class Contact{
 
 	public void setMobileNumbers(String mobileNumbers) {
 		this.mobileNumbers = mobileNumbers;
+	}
+
+	public String getCompany() {
+		return company;
+	}
+
+	public void setCompany(String company) {
+		this.company = company;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getAddress2() {
+		return address2;
+	}
+
+	public void setAddress2(String address2) {
+		this.address2 = address2;
+	}
+
+	public String getTelexNo() {
+		return telexNo;
+	}
+
+	public void setTelexNo(String telexNo) {
+		this.telexNo = telexNo;
+	}
+
+	public String getTerritoryCode() {
+		return territoryCode;
+	}
+
+	public void setTerritoryCode(String territoryCode) {
+		this.territoryCode = territoryCode;
+	}
+
+	public String getTelexAnswerBack() {
+		return telexAnswerBack;
+	}
+
+	public void setTelexAnswerBack(String telexAnswerBack) {
+		this.telexAnswerBack = telexAnswerBack;
+	}
+
+	public String getPostCode() {
+		return postCode;
+	}
+
+	public void setPostCode(String postCode) {
+		this.postCode = postCode;
+	}
+
+	public String getCounty() {
+		return county;
+	}
+
+	public void setCounty(String county) {
+		this.county = county;
+	}
+
+	public void copyFrom(ContactDto contactDto) {
+		setAddress(contactDto.getAddress() );
+		setAddress2(contactDto.getAddress2());
+		setCompany(contactDto.getCompany());
+		setCity(contactDto.getCity());
+		setCompany(contactDto.getCompany());
+		setContactName(contactDto.getContactName());
+		setCountry(contactDto.getCountry());
+		setEmail(contactDto.getEmail());
+		setFax(contactDto.getFax());
+		setPhysicalAddress(contactDto.getPhysicalAddress());
+		setPostCode(contactDto.getPostCode());
+		setTelephoneNumbers(contactDto.getTelephoneNumbers());
+		setTelexNo(contactDto.getTelexNo());
+		setTerritoryCode(contactDto.getTerritoryCode());
+		setWebsite(contactDto.getWebsite());
+	}
+
+	public ContactDto toDto() {
+		ContactDto contact = new ContactDto();
+		contact.setAddress(address);
+		contact.setAddress2(address2);
+		contact.setCompany(company);
+		contact.setCity(city);
+		contact.setCompany(company);
+		contact.setContactName(contactName);
+		contact.setCountry(country);
+		contact.setEmail(email);
+		contact.setFax(fax);
+		contact.setPhysicalAddress(physicalAddress);
+		contact.setPostCode(postCode);
+		contact.setTelephoneNumbers(telephoneNumbers);
+		contact.setTelexNo(telexNo);
+		contact.setTerritoryCode(territoryCode);
+		contact.setWebsite(website);
+		
+		return contact;
 	}
 
 }
