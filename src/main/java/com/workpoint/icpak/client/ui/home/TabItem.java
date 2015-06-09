@@ -28,7 +28,6 @@ public class TabItem extends AbstractTabItem {
 		super(tabData);
 		initWidget(uiBinder.createAndBindUi(this));
 		setText(data.getLabel());
-		//role="presentation" class="active"
 		liContainter.getElement().setAttribute("role","presentation");
 		
 		TabDataExt data = (TabDataExt)tabData;
