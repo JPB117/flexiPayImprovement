@@ -11,7 +11,6 @@ import com.wordnik.swagger.annotations.ApiModel;
 @ApiModel(description = "Audit Compliance in audit application")
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlSeeAlso({ Member.class })
 
 @Embeddable
 public class Compliance{

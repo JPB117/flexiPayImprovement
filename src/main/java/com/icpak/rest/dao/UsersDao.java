@@ -20,8 +20,8 @@ public class UsersDao extends BaseDao{
     }
 
     public void createUser(User user) {
-    	if(user.getPassword()!=null && user.getId()==null)
-    		user.setPassword(encrypt(user.getPassword()));
+    	if(user.getHashedPassword()!=null && user.getId()==null)
+    		user.setPassword(encrypt(user.getHashedPassword()));
     	
         save( user );
     }

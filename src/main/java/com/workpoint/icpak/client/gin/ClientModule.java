@@ -94,7 +94,7 @@ public class ClientModule extends AbstractPresenterModule {
 				ClientPlaceManager.class).build());
 
 		// bindConstant().annotatedWith(DefaultPlace.class).to(NameTokens.home);
-		bindConstant().annotatedWith(DefaultPlace.class).to(NameTokens.signup);
+		bindConstant().annotatedWith(DefaultPlace.class).to(NameTokens.login);
 		bindConstant().annotatedWith(ErrorPlace.class).to(NameTokens.error);
 		bindConstant().annotatedWith(SecurityCookie.class).to(
 				Definitions.AUTHENTICATIONCOOKIE);

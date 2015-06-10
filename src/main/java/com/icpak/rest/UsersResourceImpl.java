@@ -96,14 +96,12 @@ public class UsersResourceImpl extends BaseResource<User> implements UsersResour
 			@ApiParam(value = "Username of the user to authenticate", required = true) @QueryParam("username") String username,
 			@ApiParam(value = "Password of the user", required = true) @QueryParam("password") String password){
 		
-		UserDto loggedIn = helper.authenticate(username, password).getDTO();
+		UserDto loggedIn = helper.authenticate(username, password);
 		String uri = httpContext.getRequest().getPath();
 		//String uri = uriInfo.getAbsolutePath().toString().replace("auth", loggedIn.getRefId());
 		loggedIn.setUri(uri);
 		
 		return loggedIn;
-//		return buildGetEntityResponse(uri,
-//				loggedIn);
 	}
 	
 	@POST

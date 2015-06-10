@@ -129,6 +129,7 @@ public class EventBookingView extends ViewImpl implements
 				model.set("surname", dto.getSurname());
 				model.set("otherNames", dto.getOtherNames());
 				model.set("email", dto.getEmail());
+				//model.set("hotel", dto.get);
 				models.add(model);
 			}
 			return models;
@@ -152,7 +153,7 @@ public class EventBookingView extends ViewImpl implements
 					"otherNames").toString());
 			dto.setEmail(model.get("email") == null ? null : model.get(
 					"email").toString());
-
+			
 			return dto;
 		}
 	};

@@ -13,7 +13,6 @@ import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import com.icpak.rest.IDUtils;
 import com.icpak.rest.dao.ApplicationFormDao;
-import com.icpak.rest.dao.MemberDao;
 import com.icpak.rest.dao.UsersDao;
 import com.icpak.rest.exceptions.ServiceException;
 import com.icpak.rest.models.ErrorCodes;
@@ -35,7 +34,6 @@ public class ApplicationFormDaoHelper {
 
 	
 	@Inject ApplicationFormDao applicationDao;
-	@Inject MemberDao memberDao;
 	@Inject UsersDao userDao;
 	
 	public void createApplication(ApplicationFormHeaderDto application){
@@ -96,7 +94,7 @@ public class ApplicationFormDaoHelper {
 			values.put("firstName", application.getOtherNames());
 			values.put("DocumentURL", "http://www.solutech.co.ke/icpak/");
 			values.put("email", application.getEmail());
-			values.put("password", user.getPassword());
+			values.put("password", user.getHashedPassword());
 			Doc doc = new Doc(values);
 			
 			ApplicationType type = application.getApplicationType();

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<!--Outer Container-->
+<table width="100%" height="300px" cellpadding="0"
+	style="padding: 20px;" bgcolor="#DFDFDF">
+	<tr align="centre">
+		<td>
+			<!--Inner container -->
+			<table width="600px" height="" align="center" cellpadding="0"
+				cellspacing="0" bgcolor="#FFFFFF"
+				style="border-collapse: separate; border-spacing: 3px; color: #000000; padding: 16px 20px; border: 1px solid #ffffff; border-bottom: 2px solid #bcbcbc; border-left: 1px solid #cecece; border-right: 1px solid #cecece; font-family: Helvetica, Arial, sans-serif;">
+				<tr>
+					<td colspan="2"><img class="imgLogo" src="cid:imageLogo"
+						width="200px" height="100px"></img></td>
+				</tr>
+				<!--spacer -->
+				<tr class="spacer" height="10px";>
+					<td colspan="2"></td>
+				</tr>
+
+				<tr>
+					<td>Dear @#firstName,
+						<p>
+
+							You have successfully booked for this event. Refer below for booking details:  <br /> <br/>
+							<b>Booking Code</b> @#bookingId<br/>
+							
+							NOTE: To make any ammendments to your booking, follow this link:<br>
+								@@DocumentURL#eventBooking;eventId=@#eventId;bookingId=@#bookingId
+							The booking code specified above will be required.
+							 
+							<br/><br/>
+							Now you can pay online via <strong>(MPESA,VISA,MasterCard)</strong>
+							by clicking on the 'Complete Booking' Link below. <br /> <br/>
+							
+							</p>
+						
+					</td>
+				</tr>
+				<tr>
+					<td style="padding-top: 10px;"><a
+						style="display: inline-block; padding: 8px 12px; margin-bottom: 0; font-size: 14px; font-weight: 500; line-height: 1.428571429; text-align: center; white-space: nowrap; vertical-align: middle; cursor: pointer; border: 1px solid transparent; border-radius: 4px; color: #ffffff; background-color: #5cb85c; border-color: #5cb85c; text-decoration: none;"
+						href="@@DocumentURL">Complete Booking</a></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+
+</html>

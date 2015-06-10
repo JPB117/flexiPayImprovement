@@ -9,14 +9,12 @@ import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlSeeAlso;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.icpak.rest.models.base.PO;
 import com.icpak.rest.models.membership.Education;
-import com.icpak.rest.models.membership.Member;
 import com.icpak.rest.models.membership.TrainingAndExperience;
 import com.wordnik.swagger.annotations.ApiModel;
 
@@ -26,7 +24,6 @@ import com.wordnik.swagger.annotations.ApiModel;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlSeeAlso({Member.class})
 
 @Entity
 @Table(name="attachment")

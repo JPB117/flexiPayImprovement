@@ -36,7 +36,7 @@ public class ICPAKAuthenticatingRealm extends AuthenticatingRealm {
 		User user = getUserDao().findUser(token.getUsername());
 		if (user != null) {
 			return new SimpleAuthenticationInfo(user.getId(),
-					user.getPassword(), getName());
+					user.getHashedPassword(), getName());
 		}
 		return null;
 

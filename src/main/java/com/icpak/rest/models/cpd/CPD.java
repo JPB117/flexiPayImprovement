@@ -14,9 +14,9 @@ import javax.xml.bind.annotation.XmlTransient;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
+import com.google.gwt.core.ext.soyc.Member;
 import com.icpak.rest.models.base.PO;
 import com.icpak.rest.models.event.Event;
-import com.icpak.rest.models.membership.Member;
 import com.wordnik.swagger.annotations.ApiModel;
 import com.workpoint.icpak.shared.model.CPDStatus;
 
@@ -41,10 +41,6 @@ public class CPD extends PO{
 
 	@ManyToOne
 	@XmlTransient
-	private Member member;
-	
-	@ManyToOne
-	@XmlTransient
 	private Event event;
 	
 	private Date startDate; //Copied from Event details;
@@ -59,14 +55,6 @@ public class CPD extends PO{
 	private String memberId;
 	
 	public CPD() {
-	}
-
-	public Member getMember() {
-		return member;
-	}
-
-	public void setMember(Member member) {
-		this.member = member;
 	}
 
 	public Event getEvent() {

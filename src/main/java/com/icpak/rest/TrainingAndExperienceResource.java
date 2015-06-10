@@ -14,10 +14,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import com.google.inject.Inject;
-import com.icpak.rest.dao.helper.TrainingAndExperienceDaoHelper;
 import com.icpak.rest.models.membership.TrainingAndExperience;
-import com.icpak.rest.models.membership.TrainingExperienceType;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
@@ -25,7 +22,7 @@ import com.wordnik.swagger.annotations.ApiParam;
 @Api(value="", description="Handles CRUD for event TrainingAndExperience")
 public class TrainingAndExperienceResource extends BaseResource<TrainingAndExperience>{
 
-	@Inject TrainingAndExperienceDaoHelper helper;
+	//@Inject TrainingAndExperienceDaoHelper helper;
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -35,7 +32,7 @@ public class TrainingAndExperienceResource extends BaseResource<TrainingAndExper
 			@ApiParam(value="Starting point to fetch") @QueryParam("offset") Integer offset,
 			@ApiParam(value="No of Items to fetch") @QueryParam("limit") Integer limit) {
 		
-		return buildCollectionResponse(helper.getAllTrainingEntrys(uriInfo, memberId, offset, limit));
+		return null;//buildCollectionResponse(helper.getAllTrainingEntrys(uriInfo, memberId, offset, limit));
 	}
 	
 	@GET
@@ -47,7 +44,7 @@ public class TrainingAndExperienceResource extends BaseResource<TrainingAndExper
 			@ApiParam(value="Starting point to fetch") @QueryParam("offset") Integer offset,
 			@ApiParam(value="No of Items to fetch") @QueryParam("limit") Integer limit) {
 		
-		return buildCollectionResponse(helper.getAllTrainingEntrys(uriInfo, memberId, TrainingExperienceType.TRAINING, offset, limit));
+		return null;//buildCollectionResponse(helper.getAllTrainingEntrys(uriInfo, memberId, TrainingExperienceType.TRAINING, offset, limit));
 	}
 	
 	@GET
@@ -59,7 +56,7 @@ public class TrainingAndExperienceResource extends BaseResource<TrainingAndExper
 			@ApiParam(value="Starting point to fetch") @QueryParam("offset") Integer offset,
 			@ApiParam(value="No of Items to fetch") @QueryParam("limit") Integer limit) {
 		
-		return buildCollectionResponse(helper.getAllTrainingEntrys(uriInfo, memberId,TrainingExperienceType.TRAINING, offset, limit));
+		return null;//buildCollectionResponse(helper.getAllTrainingEntrys(uriInfo, memberId,TrainingExperienceType.TRAINING, offset, limit));
 	}
 	
 	@GET
@@ -71,7 +68,7 @@ public class TrainingAndExperienceResource extends BaseResource<TrainingAndExper
 			@ApiParam(value="Starting point to fetch") @QueryParam("offset") Integer offset,
 			@ApiParam(value="No of Items to fetch") @QueryParam("limit") Integer limit) {
 		
-		return buildCollectionResponse(helper.getAllTrainingEntrys(uriInfo, memberId,TrainingExperienceType.TRAINING, offset, limit));
+		return null;//buildCollectionResponse(helper.getAllTrainingEntrys(uriInfo, memberId,TrainingExperienceType.TRAINING, offset, limit));
 	}
 
 	@GET
@@ -82,10 +79,10 @@ public class TrainingAndExperienceResource extends BaseResource<TrainingAndExper
 			@ApiParam(value="Member for which the training details are requested") @PathParam("memberId") String memberId,
 			@ApiParam(value="Entry Id of the training to fetch", required=true) @PathParam("eduEntryId") String eduEntryId) {
 		
-		TrainingAndExperience training = helper.getTrainingEntryById(memberId,eduEntryId);
+		//TrainingAndExperience training = helper.getTrainingEntryById(memberId,eduEntryId);
 		//training.getEvent().setUri(uriInfo.getBaseUri()+"events/"+training.getEvent().getRefId());
 		//training.getUser().setUri(uriInfo.getBaseUri()+"users/"+training.getUser().getRefId());
-		return buildGetEntityResponse(uriInfo.getAbsolutePath().toString(), training);
+		return null;//buildGetEntityResponse(uriInfo.getAbsolutePath().toString(), training);
 	}
 
 	@POST
@@ -96,12 +93,12 @@ public class TrainingAndExperienceResource extends BaseResource<TrainingAndExper
 			@ApiParam(value="Member for which training is being created") @PathParam("memberId") String memberId,
 			TrainingAndExperience training) {
 		
-		training = helper.createTrainingEntry(memberId,training);
-		String uri = uriInfo.getAbsolutePath()+"/"+training.getRefId();
+//		training = helper.createTrainingEntry(memberId,training);
+//		String uri = uriInfo.getAbsolutePath()+"/"+training.getRefId();
 		//training.getEvent().setUri(uriInfo.getBaseUri()+"events/"+training.getEvent().getRefId());
 //		training.getUser().setUri(uriInfo.getBaseUri()+"users/"+training.getUser().getRefId());
 		
-		return buildCreateEntityResponse(uri, training);
+		return null;//buildCreateEntityResponse(uri, training);
 	}
 
 	@PUT
@@ -115,10 +112,10 @@ public class TrainingAndExperienceResource extends BaseResource<TrainingAndExper
 			@ApiParam(value="Entry Id of the training to update", required=true) @PathParam("eduEntryId") String eduEntryId, 
 			TrainingAndExperience training) {
 		
-		training = helper.updateTrainingEntry(memberId,eduEntryId, training);
+//		training = helper.updateTrainingEntry(memberId,eduEntryId, training);
 		//training.getEvent().setUri(uriInfo.getBaseUri()+"events/"+training.getEvent().getRefId());
 //		training.getUser().setUri(uriInfo.getBaseUri()+"users/"+training.getUser().getRefId());
-		return buildUpdateEntityResponse(uriInfo.getAbsolutePath().toString(), training);
+		return null;//buildUpdateEntityResponse(uriInfo.getAbsolutePath().toString(), training);
 	}
 
 	@DELETE
@@ -128,8 +125,8 @@ public class TrainingAndExperienceResource extends BaseResource<TrainingAndExper
 	public Response delete(
 			@ApiParam(value="Member from which training is being deleted") @PathParam("memberId") String memberId,
 			@ApiParam(value="Entry Id of the training to delete", required=true) @PathParam("eduEntryId") String eduEntryId) {
-		helper.deleteTrainingEntry(memberId,eduEntryId);
-		return buildDeleteEntityResponse();
+//		helper.deleteTrainingEntry(memberId,eduEntryId);
+		return null;//buildDeleteEntityResponse();
 	}
 
 }

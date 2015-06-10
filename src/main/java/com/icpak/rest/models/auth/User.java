@@ -25,14 +25,10 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -49,7 +45,6 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.icpak.rest.models.base.ExpandTokens;
 import com.icpak.rest.models.base.PO;
-import com.icpak.rest.models.membership.Member;
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 import com.workpoint.icpak.shared.model.UserDto;
@@ -63,7 +58,7 @@ import com.workpoint.icpak.shared.model.UserDto;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlSeeAlso({Member.class,BioData.class})
+@XmlSeeAlso({BioData.class})
 @JsonSerialize(include=Inclusion.NON_NULL)
 
 @Entity
@@ -104,11 +99,6 @@ public class User extends PO{
     
     @Transient
     private BioData userData=null;
-    
-    @JsonIgnore
-    @XmlTransient
-    @OneToOne(fetch=FetchType.LAZY)
-    private Member member; //A system user can be a member of ICPAK
     
     private String memberId;
     
@@ -163,10 +153,6 @@ public class User extends PO{
 		user.setCreated(getCreated());
 		user.setUpdated(getUpdated());
 		
-		if(user.getMember()!=null){
-			user.setMemberId(user.getMember().getRefId());
-		}
-		
 		if(expand!=null){
 			for(String token: expand){
 //				if(token.equals("bookings")){
@@ -206,26 +192,10 @@ public class User extends PO{
 		userData.setUser(this);
 	}
 	
-	@PreUpdate
-	@PrePersist
-	public void updateUserDataRef(){
-		if(refId==null && member!=null){
-			setRefId(member.getRefId());
-		}
-	}
-
 	public void copy(User user) {
 		setEmail(user.getEmail());
-		setPassword(user.getPassword());
+		setPassword(user.getHashedPassword());
 		//setUsername(user.getUsername());
-	}
-
-	public Member getMember() {
-		return member;
-	}
-
-	public void setMember(Member member) {
-		this.member = member;
 	}
 
 	public String getEmail() {
@@ -237,7 +207,7 @@ public class User extends PO{
 		this.username = email;
 	}
 
-	public String getPassword() {
+	public String getHashedPassword() {
 		return password;
 	}
 
@@ -292,20 +262,13 @@ public class User extends PO{
 	public void setNationality(String nationality) {
 		this.nationality = nationality;
 	}
-	
-	public String getFullName(){
-		if(member==null){
-			return null;
-		}
-		return member.getFullNames();
-	}
 
 	public UserDto getDTO() {
 		UserDto dto = new UserDto();
 		
 		dto.setEmail(email);
 		dto.setUserId(refId);
-		dto.setName(getFullName());
+		//dto.setName(getFullName());
 		dto.setRefId(refId);
 		//dto.setName(name);
 		return dto;

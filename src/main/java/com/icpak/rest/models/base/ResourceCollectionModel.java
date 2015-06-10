@@ -14,11 +14,9 @@ import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 import com.icpak.rest.BaseResource;
 import com.icpak.rest.exceptions.ServiceException;
 import com.icpak.rest.models.ErrorCodes;
-import com.icpak.rest.models.auth.User;
 import com.icpak.rest.models.cpd.CPD;
 import com.icpak.rest.models.cpd.CPDSummary;
 import com.icpak.rest.models.event.Event;
-import com.icpak.rest.models.membership.Member;
 
 /**
  * Model for all Collection returns 
@@ -31,7 +29,7 @@ import com.icpak.rest.models.membership.Member;
 @JsonSerialize(include=Inclusion.NON_NULL)
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlSeeAlso({User.class,Member.class, Event.class, CPD.class, CPDSummary.class})
+@XmlSeeAlso({Event.class, CPD.class, CPDSummary.class})
 public class ResourceCollectionModel<T extends ResourceModel> extends ResourceModel{
 
 	private Integer offset;

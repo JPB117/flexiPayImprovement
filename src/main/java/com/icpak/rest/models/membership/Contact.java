@@ -18,7 +18,6 @@ import com.workpoint.icpak.shared.model.events.ContactDto;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlSeeAlso({Member.class})
 
 //@Entity
 //@Table(name="contact")

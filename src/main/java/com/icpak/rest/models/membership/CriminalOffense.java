@@ -33,11 +33,6 @@ public class CriminalOffense extends PO{
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	@XmlTransient
-	@ManyToOne
-	@JoinColumn(name="memberid")
-	private Member member;
-	
 	@Transient
 	private String memberId;
 	
@@ -49,12 +44,6 @@ public class CriminalOffense extends PO{
 	public CriminalOffense() {
 	}
 	
-	public Member getMember() {
-		return member;
-	}
-	public void setMember(Member member) {
-		this.member = member;
-	}
 	public String getOffense() {
 		return offense;
 	}
@@ -80,13 +69,6 @@ public class CriminalOffense extends PO{
 		this.sentenceImposed = sentenceImposed;
 	}
 	
-	public CriminalOffense clone(String ...details){
-		if(member!=null)
-			this.setMemberId(member.getRefId());
-		
-		return this;
-	}
-
 	public String getMemberId() {
 		return memberId;
 	}
@@ -96,7 +78,6 @@ public class CriminalOffense extends PO{
 	}
 
 	public void copyFrom(CriminalOffense offenseEntry) {
-		this.member = offenseEntry.getMember();
 		this.memberId = offenseEntry.getMemberId();
 		this.offense = offenseEntry.getOffense();
 		this.dateConvicted = offenseEntry.getDateConvicted();

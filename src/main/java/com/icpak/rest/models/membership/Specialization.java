@@ -32,11 +32,6 @@ public class Specialization extends PO{
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@XmlTransient
-	@ManyToOne
-	@JoinColumn(name="memberid")
-	private Member member;
-
 	@XmlElement
 	private String specialization;
 
@@ -52,21 +47,10 @@ public class Specialization extends PO{
 		this.specialization = specialization;
 	}
 
-	public Member getMember() {
-		return member;
-	}
-
-	public void setMember(Member member) {
-		this.member = member;
-	}
-	
 	public Specialization clone(String...details){
 		Specialization s = new Specialization();
 		s.setRefId(refId);
 		s.setSpecialization(specialization);
-		if(this.member!=null){
-			s.setMemberId(member.getRefId());
-		}
 		
 		return s;
 	}

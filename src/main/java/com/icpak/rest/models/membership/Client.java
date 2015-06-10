@@ -21,7 +21,6 @@ import com.wordnik.swagger.annotations.ApiModel;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlSeeAlso({Member.class})
 
 @Entity
 @Table(name="client")

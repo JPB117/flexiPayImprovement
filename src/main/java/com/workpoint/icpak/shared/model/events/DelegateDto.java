@@ -13,6 +13,7 @@ public class DelegateDto extends SerializableObj{
 	private String surname;
 	private String otherNames;
 	private String email;
+	private String hotel;
 	
 	public DelegateDto() {
 		

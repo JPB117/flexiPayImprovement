@@ -28,7 +28,6 @@ import com.wordnik.swagger.annotations.ApiModel;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlSeeAlso({Member.class})
 
 @Entity
 @Table(name="practice")
@@ -51,10 +50,6 @@ public class Practice extends PO{
 	private Date practiceCommenceDate;
 	private Date registrationDate; // Date firm registered (With registrar of companies or icpak?)
 	private String pin; // KRA PIN
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="memberid")
-	private Member member;
 	
 	@ElementCollection(fetch=FetchType.LAZY)
     @CollectionTable(name="practice_categories")
@@ -147,14 +142,6 @@ public class Practice extends PO{
 
 	public void setPin(String pin) {
 		this.pin = pin;
-	}
-
-	public Member getMember() {
-		return member;
-	}
-
-	public void setMember(Member member) {
-		this.member = member;
 	}
 
 	public Collection<String> getPracticeCategories() {

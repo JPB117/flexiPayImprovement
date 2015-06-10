@@ -7,16 +7,12 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlSeeAlso;
-import javax.xml.bind.annotation.XmlTransient;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -29,7 +25,6 @@ import com.wordnik.swagger.annotations.ApiModel;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlSeeAlso({Member.class})
 
 @Entity
 @Table(name="education")
@@ -41,11 +36,6 @@ public class Education extends PO{
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@XmlTransient
-	@ManyToOne
-	@JoinColumn(name = "memberid")
-	private Member member;
-	
 	@Transient
 	private String memberId;
 	
@@ -66,14 +56,6 @@ public class Education extends PO{
 	
 	@OneToMany(mappedBy="education",fetch=FetchType.LAZY, cascade={CascadeType.PERSIST, CascadeType.REMOVE})
 	Collection<Attachment> attachments;
-
-	public Member getMember() {
-		return member;
-	}
-
-	public void setMember(Member member) {
-		this.member = member;
-	}
 
 	public String getInstitution() {
 		return institution;

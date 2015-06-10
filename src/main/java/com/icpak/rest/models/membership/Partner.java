@@ -19,7 +19,6 @@ import com.wordnik.swagger.annotations.ApiModel;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlSeeAlso({Member.class})
 
 @Entity
 @Table(name="partner")
@@ -31,9 +30,6 @@ public class Partner extends PO{
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@ManyToOne
-	@JoinColumn(name="memberid")
-	private Member member;
 	
 	@ManyToOne
 	@JoinColumn(name="practiceid")
@@ -48,12 +44,6 @@ public class Partner extends PO{
 	
 	public Partner(){}
 	
-	public Member getMember() {
-		return member;
-	}
-	public void setMember(Member member) {
-		this.member = member;
-	}
 	public Practice getPractice() {
 		return practice;
 	}

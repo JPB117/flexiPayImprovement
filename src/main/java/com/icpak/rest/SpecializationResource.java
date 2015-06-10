@@ -14,8 +14,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import com.google.inject.Inject;
-import com.icpak.rest.dao.helper.SpecializationDaoHelper;
 import com.icpak.rest.models.membership.Specialization;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -24,7 +22,7 @@ import com.wordnik.swagger.annotations.ApiParam;
 @Api(value="", description="Handles CRUD for event Specialization")
 public class SpecializationResource extends BaseResource<Specialization>{
 
-	@Inject SpecializationDaoHelper helper;
+	//@Inject SpecializationDaoHelper helper;
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -34,7 +32,7 @@ public class SpecializationResource extends BaseResource<Specialization>{
 			@ApiParam(value="Starting point to fetch") @QueryParam("offset") Integer offset,
 			@ApiParam(value="No of Items to fetch") @QueryParam("limit") Integer limit) {
 		
-		return buildCollectionResponse(helper.getAllSpecializations(uriInfo, memberId, offset, limit));
+		return null;//buildCollectionResponse(helper.getAllSpecializations(uriInfo, memberId, offset, limit));
 	}
 
 	@GET
@@ -45,10 +43,10 @@ public class SpecializationResource extends BaseResource<Specialization>{
 			@ApiParam(value="Member for which the education details are requested") @PathParam("memberId") String memberId,
 			@ApiParam(value="Entry Id of the education to fetch", required=true) @PathParam("eduEntryId") String eduEntryId) {
 		
-		Specialization education = helper.getSpecializationById(memberId,eduEntryId);
+		//Specialization education = helper.getSpecializationById(memberId,eduEntryId);
 		//education.getEvent().setUri(uriInfo.getBaseUri()+"events/"+education.getEvent().getRefId());
 		//education.getUser().setUri(uriInfo.getBaseUri()+"users/"+education.getUser().getRefId());
-		return buildGetEntityResponse(uriInfo.getAbsolutePath().toString(), education);
+		return null;//buildGetEntityResponse(uriInfo.getAbsolutePath().toString(), education);
 	}
 
 	@POST
@@ -59,12 +57,12 @@ public class SpecializationResource extends BaseResource<Specialization>{
 			@ApiParam(value="Member for which education is being created") @PathParam("memberId") String memberId,
 			Specialization education) {
 		
-		education = helper.createSpecialization(memberId,education);
-		String uri = uriInfo.getAbsolutePath()+"/"+education.getRefId();
+//		education = helper.createSpecialization(memberId,education);
+//		String uri = uriInfo.getAbsolutePath()+"/"+education.getRefId();
 		//education.getEvent().setUri(uriInfo.getBaseUri()+"events/"+education.getEvent().getRefId());
 //		education.getUser().setUri(uriInfo.getBaseUri()+"users/"+education.getUser().getRefId());
 		
-		return buildCreateEntityResponse(uri, education);
+		return null;//buildCreateEntityResponse(uri, education);
 	}
 
 	@PUT
@@ -78,10 +76,10 @@ public class SpecializationResource extends BaseResource<Specialization>{
 			@ApiParam(value="Entry Id of the education to update", required=true) @PathParam("eduEntryId") String eduEntryId, 
 			Specialization education) {
 		
-		education = helper.updateSpecialization(memberId,eduEntryId, education);
+//		education = helper.updateSpecialization(memberId,eduEntryId, education);
 		//education.getEvent().setUri(uriInfo.getBaseUri()+"events/"+education.getEvent().getRefId());
 //		education.getUser().setUri(uriInfo.getBaseUri()+"users/"+education.getUser().getRefId());
-		return buildUpdateEntityResponse(uriInfo.getAbsolutePath().toString(), education);
+		return null;//buildUpdateEntityResponse(uriInfo.getAbsolutePath().toString(), education);
 	}
 
 	@DELETE
@@ -91,8 +89,8 @@ public class SpecializationResource extends BaseResource<Specialization>{
 	public Response delete(
 			@ApiParam(value="Member from which education is being deleted") @PathParam("memberId") String memberId,
 			@ApiParam(value="Entry Id of the education to delete", required=true) @PathParam("eduEntryId") String eduEntryId) {
-		helper.deleteSpecialization(memberId,eduEntryId);
-		return buildDeleteEntityResponse();
+		//helper.deleteSpecialization(memberId,eduEntryId);
+		return null;//buildDeleteEntityResponse();
 	}
 
 }

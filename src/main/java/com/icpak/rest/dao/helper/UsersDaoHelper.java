@@ -25,9 +25,9 @@ import com.icpak.rest.models.auth.User;
 import com.icpak.rest.models.base.ExpandTokens;
 import com.icpak.rest.models.base.ResourceCollectionModel;
 import com.icpak.rest.models.base.ResourceModel;
-import com.icpak.rest.models.membership.Member;
 import com.icpak.rest.models.util.Attachment;
 import com.icpak.rest.security.ICPAKAuthenticatingRealm;
+import com.workpoint.icpak.shared.model.UserDto;
 
 @Transactional
 public class UsersDaoHelper {
@@ -63,7 +63,6 @@ public class UsersDaoHelper {
 		}else{
 			BioData data = po.getUserData();
 			data.setAgeGroup(user.getUserData().getAgeGroup());
-			data.setCounty(user.getUserData().getCounty());
 			data.setDob(user.getUserData().getDob());
 			data.setFirstName(user.getUserData().getFirstName());
 			data.setLastName(user.getUserData().getLastName());
@@ -77,16 +76,16 @@ public class UsersDaoHelper {
 		
 		dao.updateUser(po);
 
-		if(po.getMember()==null){
-			createDefaultMemberForUser(po);
-		}
+//		if(po.getMember()==null){
+//			createDefaultMemberForUser(po);
+//		}
 	}
 	
 	private void createDefaultMemberForUser(User user) {
 		//create and empty member a/c
-		Member member = new Member(user.getRefId());
-		user.setMember(member);
-		dao.save(member);
+//		Member member = new Member(user.getRefId());
+//		user.setMember(member);
+//		dao.save(member);
 		
 	}
 
@@ -159,14 +158,7 @@ public class UsersDaoHelper {
 	}
 
 	@SuppressWarnings("deprecation")
-	public User authenticate(String username, String password) {
-		if(true){
-			User user = new User();
-			user.setEmail(username);
-			user.setPassword(password);
-			return user;
-		}
-		
+	public UserDto authenticate(String username, String password) {
 		Sha256CredentialsMatcher matcher = new Sha256CredentialsMatcher();
 		User user = dao.findUser(username);
 		if(password==null || user==null){
@@ -186,7 +178,7 @@ public class UsersDaoHelper {
 			throw new ServiceException(ErrorCodes.UNAUTHORIZEDACCESS);
 		}
 		
-		return user.clone();
+		return user.getDTO();
 	}
 
 	public void setProfilePic(String userId, byte[] bites, String fileName,
@@ -214,11 +206,11 @@ public class UsersDaoHelper {
 
 	public void updatePassword(String userId, String newPassword) {
 		User user = dao.findByUserId(userId);
-		if(user.getPassword()==null || user.getPassword().isEmpty()){
+		if(user.getHashedPassword()==null || user.getHashedPassword().isEmpty()){
 			throw new ServiceException(ErrorCodes.ILLEGAL_ARGUMENT, "'New Password'", "'NULL'");
 		}
 		
-		user.setPassword(dao.encrypt(user.getPassword()));
+		user.setPassword(dao.encrypt(user.getHashedPassword()));
 		dao.save(user);
 	}
 

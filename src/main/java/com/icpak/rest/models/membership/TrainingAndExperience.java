@@ -52,11 +52,6 @@ public class TrainingAndExperience extends PO{
 	private String clientsHandled;
 	private Date datePassed;
 
-	@XmlTransient
-	@ManyToOne
-	@JoinColumn(name = "member_id")
-	private Member member;
-	
 	@Transient
 	private String memberId;
 	
@@ -141,14 +136,6 @@ public class TrainingAndExperience extends PO{
 		this.datePassed = datePassed;
 	}
 
-	public Member getMember() {
-		return member;
-	}
-
-	public void setMember(Member member) {
-		this.member = member;
-	}
-
 	public Collection<Attachment> getAttachments() {
 		return attachments;
 	}
@@ -164,12 +151,6 @@ public class TrainingAndExperience extends PO{
 	public void setReferees(Collection<Referee> referees) {
 		this.referees = referees;
 	} 
-	
-	public TrainingAndExperience clone(String ...detail){
-		if(this.member!=null)
-		this.setMemberId(member.getRefId());
-		return this;
-	}
 
 	public String getMemberId() {
 		return memberId;

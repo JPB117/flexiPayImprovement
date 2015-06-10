@@ -9,17 +9,14 @@ import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import com.icpak.rest.dao.CPDDao;
 import com.icpak.rest.dao.EventsDao;
-import com.icpak.rest.dao.MemberDao;
 import com.icpak.rest.models.base.ResourceCollectionModel;
 import com.icpak.rest.models.cpd.CPD;
 import com.icpak.rest.models.event.Event;
-import com.icpak.rest.models.membership.Member;
 
 @Transactional
 public class CPDDaoHelper {
 
 	@Inject CPDDao dao;
-	@Inject MemberDao memberDao;
 	@Inject EventsDao eventDao;
 	
 	public ResourceCollectionModel getAllCPD(String memberId, Integer offset,
@@ -47,10 +44,10 @@ public class CPDDaoHelper {
 	}
 
 	public void create(String memberId,CPD cpd) {
-		Member member = memberDao.findByMemberId(memberId);
-		Event event = eventDao.getByEventId(cpd.getEventId());
-		cpd.setEvent(event);
-		cpd.setMember(member);
+//		Member member = memberDao.findByMemberId(memberId);
+//		Event event = eventDao.getByEventId(cpd.getEventId());
+//		cpd.setEvent(event);
+//		cpd.setMember(member);
 		
 		dao.save(cpd);
 	}

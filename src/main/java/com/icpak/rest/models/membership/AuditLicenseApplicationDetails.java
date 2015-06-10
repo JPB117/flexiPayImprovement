@@ -24,7 +24,6 @@ import com.wordnik.swagger.annotations.ApiModel;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlSeeAlso({Member.class})
 
 @Entity
 @Table(name="auditlicenceapplication")
@@ -73,10 +72,6 @@ public class AuditLicenseApplicationDetails extends PO{
 	@Column(columnDefinition="int default 1")
 	private int complianceAntiMoneyLaudering;
 	
-	@OneToOne
-	@JoinColumn(name="applicationid")
-	private Application application;
-
 	private String practiceId;
 	
 	@Embedded
@@ -220,14 +215,6 @@ public class AuditLicenseApplicationDetails extends PO{
 
 	public void setComplianceAntiMoneyLaudering(int complianceAntiMoneyLaudering) {
 		this.complianceAntiMoneyLaudering = complianceAntiMoneyLaudering;
-	}
-
-	public Application getApplication() {
-		return application;
-	}
-
-	public void setApplication(Application application) {
-		this.application = application;
 	}
 
 	public String getPracticeId() {
