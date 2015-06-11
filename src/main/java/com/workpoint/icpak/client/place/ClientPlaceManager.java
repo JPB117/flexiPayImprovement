@@ -23,20 +23,7 @@ public class ClientPlaceManager extends PlaceManagerImpl {
 
 	@Override
 	public void revealDefaultPlace() {
-		revealPlace(defaultPlaceRequest, true);
+		revealPlace(defaultPlaceRequest, false);
 	}
 	
-	@Override
-	public void revealErrorPlace(String invalidHistoryToken) {
-		super.revealErrorPlace(NameTokens.error404);
-	}
-	
-	@Override
-	public void revealUnauthorizedPlace(String unauthorizedHistoryToken) {
-		//Window.alert("Unauthorized place!!!!!!");
-		PlaceRequest place = new PlaceRequest.Builder().nameToken("login")
-				.with("redirect", unauthorizedHistoryToken).build();
-		
-		revealPlace(place,true);
-	}
 }

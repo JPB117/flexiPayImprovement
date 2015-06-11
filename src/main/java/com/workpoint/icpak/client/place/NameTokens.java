@@ -36,6 +36,8 @@ public class NameTokens {
 	public static final String events = "events";
 	public static final String cpd = "cpd";
 
+	public static final String unauthorized="unauthorized";
+
 	public static String getHome() {
 		return home;
 	}

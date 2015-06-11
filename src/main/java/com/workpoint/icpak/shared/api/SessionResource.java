@@ -28,17 +28,17 @@ import javax.ws.rs.core.MediaType;
 import com.workpoint.icpak.shared.model.CurrentUserDto;
 
 
-@Path("/session")
-@Produces(MediaType.APPLICATION_JSON)
+//@Path("/session")
+//@Produces(MediaType.APPLICATION_JSON)
 public interface SessionResource {
 	
-    @DELETE
+//    @DELETE
     void logout();
 
-    @GET
+//    @GET
     CurrentUserDto getCurrentUser();
 
-    @POST
-    @Path("/remember-me")
+//    @POST
+//    @Path("/remember-me")
     void rememberMe(@CookieParam("LoggedInCookie") Cookie cookie);
 }

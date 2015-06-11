@@ -15,8 +15,8 @@ import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.workpoint.icpak.client.place.NameTokens;
 import com.workpoint.icpak.client.ui.MainPagePresenter;
 
-public class ErrorPagePresenter extends
-		Presenter<ErrorPagePresenter.MyView, ErrorPagePresenter.MyProxy> {
+public class UnauthorizedPagePresenter extends
+		Presenter<UnauthorizedPagePresenter.MyView, UnauthorizedPagePresenter.MyProxy> {
 
 	public interface MyView extends View {
 		
@@ -24,15 +24,15 @@ public class ErrorPagePresenter extends
 	}
 
 	@ProxyCodeSplit
-	@NameToken(NameTokens.error)
+	@NameToken(NameTokens.unauthorized)
 	@NoGatekeeper
-	public interface MyProxy extends ProxyPlace<ErrorPagePresenter> {
+	public interface MyProxy extends ProxyPlace<UnauthorizedPagePresenter> {
 	}
 	
 //	@Inject DispatchAsync dispatcher;
 
 	@Inject
-	public ErrorPagePresenter(final EventBus eventBus, final MyView view,
+	public UnauthorizedPagePresenter(final EventBus eventBus, final MyView view,
 			final MyProxy proxy) {
 		super(eventBus, view, proxy);
 	}

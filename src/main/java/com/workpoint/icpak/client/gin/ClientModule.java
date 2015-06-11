@@ -4,6 +4,7 @@ import com.gwtplatform.dispatch.rest.client.RestApplicationPath;
 import com.gwtplatform.dispatch.rest.client.gin.RestDispatchAsyncModule;
 import com.gwtplatform.dispatch.shared.SecurityCookie;
 import com.gwtplatform.mvp.client.annotations.ErrorPlace;
+import com.gwtplatform.mvp.client.annotations.UnauthorizedPlace;
 import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
 import com.gwtplatform.mvp.client.gin.DefaultModule;
 import com.workpoint.icpak.client.place.ClientPlaceManager;
@@ -47,6 +48,8 @@ import com.workpoint.icpak.client.ui.error.ErrorPresenter;
 import com.workpoint.icpak.client.ui.error.ErrorView;
 import com.workpoint.icpak.client.ui.error.NotfoundPresenter;
 import com.workpoint.icpak.client.ui.error.NotfoundView;
+import com.workpoint.icpak.client.ui.error.UnauthorizedPagePresenter;
+import com.workpoint.icpak.client.ui.error.UnauthorizedPageView;
 import com.workpoint.icpak.client.ui.events.registration.EventBookingPresenter;
 import com.workpoint.icpak.client.ui.events.registration.EventBookingView;
 import com.workpoint.icpak.client.ui.eventsandseminars.EventsPresenter;
@@ -96,6 +99,7 @@ public class ClientModule extends AbstractPresenterModule {
 		// bindConstant().annotatedWith(DefaultPlace.class).to(NameTokens.home);
 		bindConstant().annotatedWith(DefaultPlace.class).to(NameTokens.login);
 		bindConstant().annotatedWith(ErrorPlace.class).to(NameTokens.error);
+		bindConstant().annotatedWith(UnauthorizedPlace.class).to(NameTokens.unauthorized);
 		bindConstant().annotatedWith(SecurityCookie.class).to(
 				Definitions.AUTHENTICATIONCOOKIE);
 
@@ -143,6 +147,10 @@ public class ClientModule extends AbstractPresenterModule {
 		bindPresenter(ErrorPagePresenter.class,
 				ErrorPagePresenter.MyView.class, ErrorPageView.class,
 				ErrorPagePresenter.MyProxy.class);
+		
+		bindPresenter(UnauthorizedPagePresenter.class,
+				UnauthorizedPagePresenter.MyView.class, UnauthorizedPageView.class,
+				UnauthorizedPagePresenter.MyProxy.class);
 
 		bindPresenterWidget(ErrorPresenter.class, ErrorPresenter.MyView.class,
 				ErrorView.class);
