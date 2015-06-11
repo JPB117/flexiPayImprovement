@@ -16,6 +16,7 @@ import com.google.inject.persist.Transactional;
 import com.icpak.rest.BaseResource;
 import com.icpak.rest.IDUtils;
 import com.icpak.rest.dao.RolesDao;
+import com.icpak.rest.dao.TransactionsDao;
 import com.icpak.rest.dao.UsersDao;
 import com.icpak.rest.exceptions.ServiceException;
 import com.icpak.rest.models.ErrorCodes;
@@ -25,9 +26,11 @@ import com.icpak.rest.models.auth.User;
 import com.icpak.rest.models.base.ExpandTokens;
 import com.icpak.rest.models.base.ResourceCollectionModel;
 import com.icpak.rest.models.base.ResourceModel;
+import com.icpak.rest.models.trx.Transaction;
 import com.icpak.rest.models.util.Attachment;
 import com.icpak.rest.security.ICPAKAuthenticatingRealm;
 import com.workpoint.icpak.shared.model.UserDto;
+import com.workpoint.icpak.shared.trx.TransactionDto;
 
 @Transactional
 public class UsersDaoHelper {
@@ -35,6 +38,7 @@ public class UsersDaoHelper {
 	@Inject UsersDao dao;
 	@Inject RolesDao roleDao;
 	@Inject ICPAKAuthenticatingRealm realm;
+	@Inject TransactionsDao trxDao;
 	
 	public void create(User user){
 		user.setRefId(IDUtils.generateId());
@@ -159,7 +163,7 @@ public class UsersDaoHelper {
 
 	@SuppressWarnings("deprecation")
 	public UserDto authenticate(String username, String password) {
-		
+				
 		Sha256CredentialsMatcher matcher = new Sha256CredentialsMatcher();
 		User user = dao.findUser(username);
 		if(password==null || user==null){
@@ -213,6 +217,18 @@ public class UsersDaoHelper {
 		
 		user.setPassword(dao.encrypt(user.getHashedPassword()));
 		dao.save(user);
+	}
+
+	public List<TransactionDto> getTransactions(String userId) {
+		
+		List<Transaction> trxs= trxDao.getTransactions(userId);
+		List<TransactionDto> trxDtos = new ArrayList<>();
+		for(Transaction trx: trxs){
+			TransactionDto dto = trx.toDto();
+			trxDtos.add(dto);
+		}
+		
+		return trxDtos;
 	}
 
 }

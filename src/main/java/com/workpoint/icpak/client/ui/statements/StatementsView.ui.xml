@@ -20,7 +20,7 @@
 					</div>
 				</div>
 				
-				<div class="row-fluid">
+				<div class="col-sm-12">
 					<p:TransactionsHeader ui:field="headerContainer">
 					</p:TransactionsHeader>
 				</div>
@@ -29,7 +29,7 @@
 
 			<div class="row-fluid full-page content-body">
 				<g:HTMLPanel ui:field="divMiddleContent" styleName="tabbable tabs-below full-page">
-					<g:HTMLPanel styleName="search-bar" ui:field="divSearchBox">
+					<g:HTMLPanel styleName="search-bar hide" ui:field="divSearchBox">
 						<div class="input-append">
 							<d:TextField ui:field="txtSearchBox" placeholder="Search here"></d:TextField>
 						</div>

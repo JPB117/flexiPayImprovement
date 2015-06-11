@@ -2,6 +2,7 @@ package com.icpak.rest;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -22,6 +23,7 @@ import org.apache.commons.io.IOUtils;
 import com.google.inject.Inject;
 import com.icpak.rest.dao.helper.UsersDaoHelper;
 import com.icpak.rest.models.auth.User;
+import com.icpak.rest.models.trx.Transaction;
 import com.icpak.rest.models.util.Attachment;
 import com.sun.jersey.api.core.HttpContext;
 import com.sun.jersey.core.header.FormDataContentDisposition;
@@ -32,6 +34,7 @@ import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 import com.workpoint.icpak.shared.api.UsersResource;
 import com.workpoint.icpak.shared.model.UserDto;
+import com.workpoint.icpak.shared.trx.TransactionDto;
 
 /**
  * StormPath REST API Design Ideas ->
@@ -202,5 +205,17 @@ public class UsersResourceImpl extends BaseResource<User> implements UsersResour
 		helper.delete(userId);
 
 		return buildDeleteEntityResponse();
+	}
+	
+	@GET
+	@Path("/{userId}/transactions")
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "Get a transactions by userId", response = Transaction.class, consumes = MediaType.APPLICATION_JSON)
+	public List<TransactionDto> getTransactions(
+			@ApiParam(value = "User Id of the user to fetch", required = true) @PathParam("userId") String userId) {
+
+		List<TransactionDto> trxs = helper.getTransactions(userId);
+		
+		return trxs;
 	}
 }

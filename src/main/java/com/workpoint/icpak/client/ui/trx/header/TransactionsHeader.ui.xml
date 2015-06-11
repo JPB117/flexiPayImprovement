@@ -3,33 +3,33 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" 
 	xmlns:d='urn:import:com.workpoint.icpak.client.ui.component'>
 
-	<g:HTMLPanel styleName="summary-container">
-		<div class="row-fluid">
-			<div class="span4">
+	<g:HTMLPanel styleName="summary-container col-sm-12">
+		<div class="row">
+			<div class="span4 col-sm-4">
 				<div class="big-text">
 					<span class="" ui:field="spnMoneyIn" title="Money In">
 					15,000/-
 					</span>
 				</div>
-				<div class="bold muted helper-font-small">MONEY IN</div>
+				<div class="bold muted helper-font-small">Total Payment</div>
 			</div>
 
-			<div class="span4">
+			<div class="span4 col-sm-4">
 				<div class="big-text">
 					<span class="" ui:field="spnMoneyOut" title="Money Out">
 					14,000/-
 					</span>
 				</div>
-				<div class="bold muted helper-font-small">MONEY USED</div>
+				<div class="bold muted helper-font-small">Money Owed</div>
 			</div>
 
-			<div class="span4 no-border">
+			<div class="span4 no-border col-sm-4">
 				<div class="big-text">
 					<span class="" ui:field="spnBalance" title="Balance">
 					1,000/-
 					</span>
 				</div>
-				<div class="bold muted helper-font-small">BALANCE</div>
+				<div class="bold muted helper-font-small">Balance</div>
 			</div>
 		</div>
 	</g:HTMLPanel>

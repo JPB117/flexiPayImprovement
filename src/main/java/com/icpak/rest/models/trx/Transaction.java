@@ -11,6 +11,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.icpak.rest.models.base.PO;
 import com.wordnik.swagger.annotations.ApiModel;
+import com.workpoint.icpak.shared.trx.TransactionDto;
 import com.workpoint.icpak.shared.trx.TrxType;
 
 /**
@@ -19,7 +20,7 @@ import com.workpoint.icpak.shared.trx.TrxType;
  *
  */
 
-@ApiModel(value="Transaction Model", description="An transaction represents an ICPAK transaction/Seminar/Webinar/Course")
+@ApiModel(value="Transaction Model", description="A transaction model")
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -110,6 +111,21 @@ public class Transaction extends PO{
 
 	public void setDocumentNo(String documentNo) {
 		this.documentNo = documentNo;
+	}
+
+	public TransactionDto toDto() {
+		
+		TransactionDto dto = new TransactionDto();
+		dto.setAmount(amount);
+		dto.setBalance(balance);
+		dto.setDate(date);
+		dto.setDescription(description);
+		dto.setDocumentNo(documentNo);
+		dto.setDueDate(dueDate);
+		dto.setType(type);
+		dto.setUserId(userId);
+		
+		return dto;
 	}
 	
 	

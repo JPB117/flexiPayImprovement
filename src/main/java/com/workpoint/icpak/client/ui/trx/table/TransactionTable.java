@@ -29,7 +29,7 @@ public class TransactionTable extends Composite {
 
 	public TransactionTable() {
 		initWidget(uiBinder.createAndBindUi(this));
-		tblView.setAutoNumber(true);
+		tblView.setAutoNumber(false);
 		createHeader();
 	}
 
@@ -58,9 +58,8 @@ public class TransactionTable extends Composite {
 		super.onLoad();
 	}
 
-	public void setSalesTable(boolean isSalesTable) {
-		this.isSalesTable = isSalesTable;
-		createHeader();
+	public void setAutoNumber(boolean autoNumber) {
+		tblView.setAutoNumber(false);
 	}
 
 }
