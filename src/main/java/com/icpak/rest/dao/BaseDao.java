@@ -84,7 +84,11 @@ public class BaseDao {
 	}
 
 	public <T> T findByRefId(String refId, Class<?> clazz){
-		return findByRefId(refId, clazz, new HashMap<String, Object>(), true);
+		return findByRefId(refId, clazz, true);
+	}
+	
+	public <T> T findByRefId(String refId, Class<?> clazz, boolean throwExceptionIfNull) {
+		return findByRefId(refId, clazz, new HashMap<String, Object>(), throwExceptionIfNull);
 	}
 	
 	public <T> T findByRefId(String refId, Class<?> clazz, Map<String, Object> params, boolean throwExceptionIfNull) {

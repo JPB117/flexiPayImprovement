@@ -11,6 +11,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.icpak.rest.models.base.PO;
 import com.wordnik.swagger.annotations.ApiModel;
+import com.workpoint.icpak.shared.trx.DocType;
 import com.workpoint.icpak.shared.trx.TransactionDto;
 import com.workpoint.icpak.shared.trx.TrxType;
 
@@ -44,6 +45,11 @@ public class Transaction extends PO{
 	@Column(nullable=false)
 	private TrxType type;
 	private String documentNo;
+	
+	private DocType documentType; //BOOKING, EVENT 
+	
+	private String paymentMode;
+	private String status;
 	
 	public Transaction() {
 	
@@ -126,6 +132,22 @@ public class Transaction extends PO{
 		dto.setUserId(userId);
 		
 		return dto;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getPaymentMode() {
+		return paymentMode;
+	}
+
+	public void setPaymentMode(String paymentMode) {
+		this.paymentMode = paymentMode;
 	}
 	
 	
