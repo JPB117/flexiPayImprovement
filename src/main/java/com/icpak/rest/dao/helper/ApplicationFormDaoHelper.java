@@ -3,6 +3,7 @@ package com.icpak.rest.dao.helper;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +36,7 @@ public class ApplicationFormDaoHelper {
 	
 	@Inject ApplicationFormDao applicationDao;
 	@Inject UsersDao userDao;
+	@Inject TransactionDaoHelper trxHelper;
 	
 	public void createApplication(ApplicationFormHeaderDto application){
 		
@@ -113,14 +115,16 @@ public class ApplicationFormDaoHelper {
 			category.getApplicationAmount();
 			doc.addDetail(new DocumentLine("invoiceDetails",line));
 			
+			String documentNo = "ProForma Invoice_"+application.getSurname();
 			//PDF Invoice Generation
 			InputStream inv = EmailServiceHelper.class.getClassLoader().getResourceAsStream("proforma-invoice.html");
 			String invoiceHTML = IOUtils.toString(inv);
 			byte[] invoicePDF = new HTMLToPDFConvertor().convert(doc, new String(invoiceHTML));
 			Attachment attachment = new Attachment();
 			attachment.setAttachment(invoicePDF);
-			attachment.setName("ProForma Invoice_"+application.getSurname()+".pdf");
+			attachment.setName(documentNo+".pdf");
 			
+			String subject = "ICPAK Member Registration";
 			//Email Template parse and map variables
 			InputStream is = EmailServiceHelper.class.getClassLoader().getResourceAsStream("application-email.html");
 			String html = IOUtils.toString(is);
@@ -129,6 +133,9 @@ public class ApplicationFormDaoHelper {
 					Arrays.asList(application.getEmail()),
 					Arrays.asList(application.getSurname()+" "+application.getOtherNames()), attachment);	
 			
+			trxHelper.charge(user.getRefId(),
+					new Date(), subject,null , category.getApplicationAmount(),
+					documentNo);
 			
 		}catch(Exception e){
 			e.printStackTrace();

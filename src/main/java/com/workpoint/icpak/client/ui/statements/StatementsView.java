@@ -11,7 +11,8 @@ public class StatementsView extends ViewImpl implements StatementsPresenter.ISta
 
 	private final Widget widget;
 	
-	@UiField HTMLPanel container; 
+	@UiField HTMLPanel container;
+	
 	public interface Binder extends UiBinder<Widget, StatementsView> {
 	}
 

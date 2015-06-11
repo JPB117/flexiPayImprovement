@@ -54,6 +54,7 @@ public class Booking extends PO{
 	private String paymentMode;//MPesa, VISA etc
 	private String currency;
 	private Date bookingDate;
+	private String userId; //Member who made the booking
 	
 	@Transient
 	private String eventId;
@@ -275,6 +276,14 @@ public class Booking extends PO{
 
 	public void setContact(Contact contact) {
 		this.contact = contact;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 	
 }

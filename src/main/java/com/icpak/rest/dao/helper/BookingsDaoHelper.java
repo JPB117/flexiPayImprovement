@@ -44,6 +44,8 @@ public class BookingsDaoHelper {
 	UsersDao userDao;
 	@Inject
 	EventsDao eventDao;
+	
+	@Inject TransactionDaoHelper trxHelper;
 
 	public List<BookingDto> getAllBookings(String uriInfo, String eventId,
 			Integer offset, Integer limit) {
@@ -138,7 +140,7 @@ public class BookingsDaoHelper {
 			
 			values.put("totalAmount", amount);
 			
-			
+			String subject = booking.getEvent().getName()+"' Event Registration";
 			//PDF Invoice Generation
 			InputStream inv = EmailServiceHelper.class.getClassLoader().getResourceAsStream("proforma-invoice.html");
 			String invoiceHTML = IOUtils.toString(inv);
@@ -151,10 +153,13 @@ public class BookingsDaoHelper {
 			InputStream is = EmailServiceHelper.class.getClassLoader().getResourceAsStream("booking-email.html");
 			String html = IOUtils.toString(is);
 			html = new DocumentHTMLMapper().map(doc, html);
-			EmailServiceHelper.sendEmail(html, "RE: ICPAK '"+booking.getEvent().getName()+"' Event Registration",
+			EmailServiceHelper.sendEmail(html, "RE: ICPAK '"+subject,
 					Arrays.asList(booking.getContact().getEmail()),
 					Arrays.asList(booking.getContact().getContactName()), attachment);	
 			
+			trxHelper.charge(booking.getUserId(),
+					booking.getBookingDate(), subject, event.getStartDate(), amount,
+					"Booking #"+booking.getId());
 			
 		}catch(Exception e){
 			e.printStackTrace();
