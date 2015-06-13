@@ -55,7 +55,7 @@ public class CPDDaoHelper {
 	public void update(String memberId, String cpdId, CPD cpd) {
 		CPD poCPD = dao.findByCPDId(cpdId);
 		Event event = eventDao.getByEventId(cpd.getEventId());
-		poCPD.setEvent(event);
+		//poCPD.setEvent(event);
 		poCPD.setCpdHours(cpd.getCpdHours());
 		poCPD.setStatus(cpd.getStatus());
 		poCPD.setStartDate(cpd.getStartDate());
