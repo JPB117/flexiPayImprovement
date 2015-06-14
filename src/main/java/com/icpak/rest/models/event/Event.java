@@ -185,6 +185,7 @@ public class Event extends PO{
 
 	public EventDto toDto() {
 		EventDto dto = new EventDto();
+		dto.setRefId(getRefId());
 		dto.setCpdHours(cpdHours);
 		dto.setDescription(description);
 		dto.setEndDate(endDate);
