@@ -11,7 +11,7 @@
 			<g:HTMLPanel ui:field="pHeader">
 			</g:HTMLPanel>
 			<!-- Domain Specific View goes here -->
-			<g:HTMLPanel>
+			<g:HTMLPanel styleName="set-full-height">
 				<g:HTMLPanel ui:field="pContainer" styleName="set-full-height">
 				</g:HTMLPanel>
 				<!-- div class="footer"> A product of Anger Enterprises <span class="copyyear"></span> 

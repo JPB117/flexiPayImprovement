@@ -1,10 +1,6 @@
-package com.workpoint.icpak.shared.model.events;
+package com.workpoint.icpak.shared.model;
 
 import java.util.Date;
-
-import com.workpoint.icpak.shared.model.EventStatus;
-import com.workpoint.icpak.shared.model.EventType;
-import com.workpoint.icpak.shared.model.SerializableObj;
 
 public class EventDto extends SerializableObj{
 

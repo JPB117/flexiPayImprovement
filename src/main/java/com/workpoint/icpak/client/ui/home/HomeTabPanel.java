@@ -35,7 +35,6 @@ public class HomeTabPanel extends AbstractTabPanel {
 
 	@Override
 	protected Tab createNewTab(TabData tabData) {
-		
 		return new TabItem(tabData);
 	}
 

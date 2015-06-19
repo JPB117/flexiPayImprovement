@@ -1,9 +1,6 @@
 package com.workpoint.icpak.shared.model;
 
-import net.sf.ehcache.search.aggregator.Count;
-
-
-public class Country extends SerializableObj implements Listable{
+public class Country extends SerializableObj implements Listable {
 
 	/**
 	 * 
@@ -14,12 +11,12 @@ public class Country extends SerializableObj implements Listable{
 
 	public Country() {
 	}
-	
-	public Country(String code,String displayName) {
+
+	public Country(String code, String displayName) {
 		this.code = code;
 		this.displayName = displayName;
 	}
-	
+
 	@Override
 	public String getName() {
 		return code;
@@ -29,24 +26,24 @@ public class Country extends SerializableObj implements Listable{
 	public String getDisplayName() {
 		return displayName;
 	}
-	
+
 	@Override
 	public String toString() {
-		
-		return "{name:"+code+",displayName:"+displayName+"}";
+		return "{name:" + code + ",displayName:" + displayName + "}";
 	}
 
 	public String getCode() {
 		return code;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
-		if(obj==null || ! (obj instanceof Country) || ((Country)obj).code==null){
+		if (obj == null || !(obj instanceof Country)
+				|| ((Country) obj).code == null) {
 			return false;
 		}
-		
-		return code.equals(((Country)obj).code);
+
+		return code.equals(((Country) obj).code);
 	}
 
 	public void setCode(String code) {
@@ -57,5 +54,4 @@ public class Country extends SerializableObj implements Listable{
 		this.displayName = displayName;
 	}
 
-	
 }

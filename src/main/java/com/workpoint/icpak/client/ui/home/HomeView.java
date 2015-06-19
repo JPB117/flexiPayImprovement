@@ -19,7 +19,6 @@ public class HomeView extends ViewImpl implements HomePresenter.IHomeView {
 
 	@UiField HomeTabPanel tabPanel;
 	@UiField HTMLPanel tabContent;
-	//@UiField HTMLPanel panelDocTree;
 	
 	@Inject
 	public HomeView(final Binder binder) {

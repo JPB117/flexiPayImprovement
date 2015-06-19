@@ -22,7 +22,7 @@ import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 import com.workpoint.icpak.shared.api.BookingsResource;
 import com.workpoint.icpak.shared.api.EventsResource;
-import com.workpoint.icpak.shared.model.events.EventDto;
+import com.workpoint.icpak.shared.model.EventDto;
 
 @Path("events")
 @Api(value="events", description="Handles CRUD for Events")

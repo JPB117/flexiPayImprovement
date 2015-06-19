@@ -38,7 +38,7 @@ public class StatementsPresenter extends
 	
 	@TabInfo(container = HomePresenter.class)
     static TabData getTabLabel(LoginGateKeeper adminGatekeeper) {
-		TabDataExt data = new TabDataExt("My Statements","fa fa-briefcase",3,adminGatekeeper, true);
+		TabDataExt data = new TabDataExt("My Statements","fa fa-briefcase",5,adminGatekeeper, true);
         return data;
     }
 

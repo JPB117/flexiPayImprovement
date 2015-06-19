@@ -8,6 +8,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
+import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.tabs.TabContent;
 import com.workpoint.icpak.client.ui.component.tabs.TabHeader;
 import com.workpoint.icpak.client.ui.component.tabs.TabPanel;
@@ -24,6 +25,12 @@ public class ProfileView extends ViewImpl implements
 	HTMLPanel container;
 	@UiField
 	TabPanel divTabs;
+
+	@UiField
+	ActionLink aChangePassword;
+
+	@UiField
+	ActionLink aEdit;
 
 	public interface Binder extends UiBinder<Widget, ProfileView> {
 	}
@@ -45,9 +52,9 @@ public class ProfileView extends ViewImpl implements
 
 		divTabs.setContent(Arrays.asList(new TabContent(basicDetail,
 				"basic_details", true), new TabContent(educationDetail,
-				"education_details", false), new TabContent(specializationDetail,
-				"specialisation_details", false), new TabContent(trainingDetail,
-				"training_details", false)));
+				"education_details", false), new TabContent(
+				specializationDetail, "specialisation_details", false),
+				new TabContent(trainingDetail, "training_details", false)));
 
 	}
 

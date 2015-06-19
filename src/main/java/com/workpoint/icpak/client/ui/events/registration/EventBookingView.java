@@ -13,6 +13,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.Widget;
@@ -30,11 +31,11 @@ import com.workpoint.icpak.client.ui.registration.PageElement;
 import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.shared.model.Country;
 import com.workpoint.icpak.shared.model.DataType;
+import com.workpoint.icpak.shared.model.EventDto;
 import com.workpoint.icpak.shared.model.PaymentStatus;
 import com.workpoint.icpak.shared.model.events.BookingDto;
 import com.workpoint.icpak.shared.model.events.ContactDto;
 import com.workpoint.icpak.shared.model.events.DelegateDto;
-import com.workpoint.icpak.shared.model.events.EventDto;
 
 public class EventBookingView extends ViewImpl implements
 		EventBookingPresenter.MyView {
@@ -102,13 +103,15 @@ public class EventBookingView extends ViewImpl implements
 	@UiField
 	IssuesPanel issuesPanel;
 
-	@UiField IssuesPanel issuesPanelDelegate;
-	
+	@UiField
+	IssuesPanel issuesPanelDelegate;
+
 	@UiField
 	AggregationGrid tblDelegates;
-	
-	@UiField SpanElement spnNames;
-	
+
+	@UiField
+	SpanElement spnNames;
+
 	@UiField
 	ActionLink aAddRow;
 
@@ -129,7 +132,7 @@ public class EventBookingView extends ViewImpl implements
 				model.set("surname", dto.getSurname());
 				model.set("otherNames", dto.getOtherNames());
 				model.set("email", dto.getEmail());
-				//model.set("hotel", dto.get);
+				// model.set("hotel", dto.get);
 				models.add(model);
 			}
 			return models;
@@ -138,22 +141,22 @@ public class EventBookingView extends ViewImpl implements
 		@Override
 		public DelegateDto getData(DataModel model) {
 			DelegateDto dto = new DelegateDto();
-			
-			if(model.isEmpty()){
+
+			if (model.isEmpty()) {
 				return null;
 			}
-			
-			dto.setMemberRegistrationNo(model.get("memberNo") == null ? null : model.get(
-					"memberNo").toString());
+
+			dto.setMemberRegistrationNo(model.get("memberNo") == null ? null
+					: model.get("memberNo").toString());
 			dto.setTitle(model.get("title") == null ? null : model.get("title")
 					.toString());
 			dto.setSurname(model.get("surname") == null ? null : model.get(
 					"surname").toString());
-			dto.setOtherNames(model.get("otherNames") == null ? null : model.get(
-					"otherNames").toString());
-			dto.setEmail(model.get("email") == null ? null : model.get(
-					"email").toString());
-			
+			dto.setOtherNames(model.get("otherNames") == null ? null : model
+					.get("otherNames").toString());
+			dto.setEmail(model.get("email") == null ? null : model.get("email")
+					.toString());
+
 			return dto;
 		}
 	};
@@ -165,7 +168,7 @@ public class EventBookingView extends ViewImpl implements
 	@Inject
 	public EventBookingView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
-		
+
 		tblDelegates.setAutoNumber(false);
 		List<ColumnConfig> configs = new ArrayList<ColumnConfig>();
 		ColumnConfig config = new ColumnConfig("memberNo", "Member No",
@@ -189,7 +192,8 @@ public class EventBookingView extends ViewImpl implements
 			}
 		});
 
-		String url = "http://197.248.2.44:8080/ewallet-beta/#websiteClient";
+		// 197.248.4.221
+		String url = "http://localhost:8080/flexipay/#websiteClient";
 		framePayment.setUrl(url);
 
 		// Li Elements
@@ -313,9 +317,9 @@ public class EventBookingView extends ViewImpl implements
 				issuesPanel.addError("e-Mail is required");
 			}
 		} else if (counter == 1) {
-			if(getDelegates().size()==0){
-				isValid=false;
-				
+			if (getDelegates().size() == 0) {
+				isValid = false;
+
 			}
 		}
 
@@ -336,9 +340,9 @@ public class EventBookingView extends ViewImpl implements
 
 	@Override
 	public void setCountries(List<Country> countries) {
-		lstCountry.setItems(countries);	
-		for(Country c: countries){
-			if(c.getName().equals("KE")){
+		lstCountry.setItems(countries);
+		for (Country c : countries) {
+			if (c.getName().equals("KE")) {
 				lstCountry.setValue(c);
 				break;
 			}
@@ -410,15 +414,18 @@ public class EventBookingView extends ViewImpl implements
 
 	@Override
 	public void setEvent(EventDto event) {
+		
+		
 		spnEventName.setInnerText(event.getName());
-
+		
 		if (event.getStartDate() != null) {
 			spnStartDate.setInnerText(DateUtils.DATEFORMAT.format(event
 					.getStartDate()));
 			if (event.getEndDate() != null) {
-				spnDuration.setInnerText(DateUtils.getTimeDifference(event.getStartDate(), event.getEndDate()));
+				spnDuration.setInnerText(DateUtils.getTimeDifference(
+						event.getStartDate(), event.getEndDate()));
 			}
-			
+
 			spnDays2Go.setInnerText(DateUtils.getTimeDifference(new Date(),
 					event.getStartDate()));
 		}
@@ -428,20 +435,19 @@ public class EventBookingView extends ViewImpl implements
 	@Override
 	public void bindBooking(BookingDto booking) {
 		spnNames.setInnerText(booking.getContact().getContactName());
-		
-		if(booking.getContact()!=null){
+
+		if (booking.getContact() != null) {
 			txtAddress.setValue(booking.getContact().getAddress());
 			txtCompanyName.setValue(booking.getContact().getCompany());
 			txtCity.setValue(booking.getContact().getCity());
 			txtContactPerson.setValue(booking.getContact().getContactName());
-			//lstCountry.setValue().getDisplayName(booking.getContact().getCountry());
+			// lstCountry.setValue().getDisplayName(booking.getContact().getCountry());
 			txtContactEmail.setValue(booking.getContact().getEmail());
 			txtPostalCode.setValue(booking.getContact().getPostCode());
 			txtPhone.setValue(booking.getContact().getTelephoneNumbers());
 		}
-		
-		
-		if(booking.getDelegates()!=null){
+
+		if (booking.getDelegates() != null) {
 			tblDelegates.setData(mapper.getDataModels(booking.getDelegates()));
 		}
 

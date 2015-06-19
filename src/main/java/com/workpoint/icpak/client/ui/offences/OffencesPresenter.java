@@ -38,7 +38,7 @@ public class OffencesPresenter extends
 	
 	@TabInfo(container = HomePresenter.class)
     static TabData getTabLabel(LoginGateKeeper adminGatekeeper) {
-		TabDataExt data = new TabDataExt("My Offences","fa fa-user-secret",4,adminGatekeeper, true);
+		TabDataExt data = new TabDataExt("My Offences","fa fa-user-secret",6,adminGatekeeper, true);
         return data;
     }
 
