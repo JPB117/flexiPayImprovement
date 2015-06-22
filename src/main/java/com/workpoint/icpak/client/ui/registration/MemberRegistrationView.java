@@ -18,6 +18,7 @@ import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
+import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.IssuesPanel;
 import com.workpoint.icpak.client.ui.component.TextField;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
@@ -57,13 +58,16 @@ public class MemberRegistrationView extends ViewImpl implements
 	Anchor aOverseas;
 	@UiField
 	Anchor aNonPractising;
-	@UiField
-	Anchor aPractising;
+
+//	@UiField
+//	Anchor aPractising;
 
 	@UiField
 	DivElement divNonPracticing;
-	@UiField
-	DivElement divPractising;
+
+	// @UiField
+	// DivElement divPractising;
+
 	@UiField
 	DivElement divAssociate;
 	@UiField
@@ -138,7 +142,7 @@ public class MemberRegistrationView extends ViewImpl implements
 	private List<LIElement> liElements = new ArrayList<LIElement>();
 	private List<PageElement> pageElements = new ArrayList<PageElement>();
 
-	int counter = 0;
+	int counter = 2;
 
 	public interface Binder extends UiBinder<Widget, MemberRegistrationView> {
 	}
@@ -161,7 +165,7 @@ public class MemberRegistrationView extends ViewImpl implements
 				spnSelected.setInnerText("You have selected: "
 						+ "Practising Member");
 				removeActiveSelection(selected);
-				divPractising.addClassName("active");
+//				divPractising.addClassName("active");
 				type = ApplicationType.PRACTISING;
 			} else if (selectedName.equals("Overseas")) {
 				spnSelected.setInnerText("You have selected: "
@@ -195,7 +199,7 @@ public class MemberRegistrationView extends ViewImpl implements
 		liElements.add(liTab4);
 
 		aNonPractising.addClickHandler(selectHandler);
-		aPractising.addClickHandler(selectHandler);
+//		aPractising.addClickHandler(selectHandler);
 		aOverseas.addClickHandler(selectHandler);
 		aAssociate.addClickHandler(selectHandler);
 
@@ -229,7 +233,7 @@ public class MemberRegistrationView extends ViewImpl implements
 
 	protected void removeActiveSelection(Anchor selected) {
 		divNonPracticing.removeClassName("active");
-		divPractising.removeClassName("active");
+		// divPractising.removeClassName("active");
 		divOverseas.removeClassName("active");
 		divAssociate.removeClassName("active");
 	}
@@ -360,13 +364,13 @@ public class MemberRegistrationView extends ViewImpl implements
 				isValid = false;
 			}
 		}
-		
-		if(!isValid && isEmailValid){
+
+		if (!isValid && isEmailValid) {
 			issuesPanel.removeStyleName("hide");
-		}else{
+		} else {
 			issuesPanel.addStyleName("hide");
 		}
-		
+
 		return isValid && isEmailValid;
 	}
 
@@ -374,7 +378,6 @@ public class MemberRegistrationView extends ViewImpl implements
 		for (CategoryDto dto : dtos) {
 			switch (dto.getType()) {
 			case NON_PRACTISING:
-
 				spnNonPracticingFee.setInnerText(dto.getApplicationAmount()
 						+ "");
 				spnNonPracticingSubscription.setInnerText(dto
@@ -434,17 +437,9 @@ public class MemberRegistrationView extends ViewImpl implements
 		return counter;
 	}
 
-	public void setLoadingState(Anchor anchor, boolean isLoading) {
-		String previousText = anchor.getText();
-		if (isLoading) {
-			anchor.getElement().setAttribute("disabled", "disabled");
-			anchor.getElement()
-					.setInnerHTML(
-							"<span class='fa fa-spinner fa-spin' ui:field='spnSpinner'></span>Submitting...");
-		} else {
-			anchor.getElement().removeAttribute("disabled");
-			anchor.setText(previousText);
-		}
+	@Override
+	public void setLoadingState(ActionLink anchor, boolean isLoading) {
+		anchor.setLoadingState(anchor, isLoading);
 	}
 
 	@Override

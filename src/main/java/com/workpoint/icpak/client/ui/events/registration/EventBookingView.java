@@ -1,6 +1,6 @@
 package com.workpoint.icpak.client.ui.events.registration;
 
-import static com.workpoint.icpak.client.ui.util.StringUtils.*;
+import static com.workpoint.icpak.client.ui.util.StringUtils.isNullOrEmpty;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -13,7 +13,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.Widget;
@@ -115,6 +114,9 @@ public class EventBookingView extends ViewImpl implements
 	@UiField
 	ActionLink aAddRow;
 
+	@UiField
+	SpanElement spnEventTitle;
+
 	private List<LIElement> liElements = new ArrayList<LIElement>();
 	private List<PageElement> pageElements = new ArrayList<PageElement>();
 
@@ -160,11 +162,11 @@ public class EventBookingView extends ViewImpl implements
 			return dto;
 		}
 	};
-	int counter = 0;
+	int counter = 2;
 
 	public interface Binder extends UiBinder<Widget, EventBookingView> {
 	}
-
+	
 	@Inject
 	public EventBookingView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
@@ -319,17 +321,17 @@ public class EventBookingView extends ViewImpl implements
 		} else if (counter == 1) {
 			if (getDelegates().size() == 0) {
 				isValid = false;
-
 			}
 		}
 
+		// show/hide isValid Panel
 		if (isValid) {
 			issuesPanel.addStyleName("hide");
 		} else {
 			issuesPanel.removeStyleName("hide");
 		}
-
-		return isValid;
+		// return isValid;
+		return true;
 
 	}
 
@@ -414,10 +416,9 @@ public class EventBookingView extends ViewImpl implements
 
 	@Override
 	public void setEvent(EventDto event) {
-		
-		
+
 		spnEventName.setInnerText(event.getName());
-		
+
 		if (event.getStartDate() != null) {
 			spnStartDate.setInnerText(DateUtils.DATEFORMAT.format(event
 					.getStartDate()));
@@ -435,13 +436,11 @@ public class EventBookingView extends ViewImpl implements
 	@Override
 	public void bindBooking(BookingDto booking) {
 		spnNames.setInnerText(booking.getContact().getContactName());
-
 		if (booking.getContact() != null) {
 			txtAddress.setValue(booking.getContact().getAddress());
 			txtCompanyName.setValue(booking.getContact().getCompany());
 			txtCity.setValue(booking.getContact().getCity());
 			txtContactPerson.setValue(booking.getContact().getContactName());
-			// lstCountry.setValue().getDisplayName(booking.getContact().getCountry());
 			txtContactEmail.setValue(booking.getContact().getEmail());
 			txtPostalCode.setValue(booking.getContact().getPostCode());
 			txtPhone.setValue(booking.getContact().getTelephoneNumbers());

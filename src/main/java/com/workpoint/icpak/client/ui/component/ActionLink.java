@@ -17,8 +17,8 @@ public class ActionLink extends Anchor {
 			}
 		});
 	}
-	
-	public ActionLink(Object model){
+
+	public ActionLink(Object model) {
 		this.model = model;
 	}
 
@@ -56,4 +56,18 @@ public class ActionLink extends Anchor {
 	public void setModel(Object model) {
 		this.model = model;
 	}
+
+	public void setLoadingState(Anchor anchor, boolean isLoading) {
+		String previousText = anchor.getText();
+		if (isLoading) {
+			anchor.getElement().setAttribute("disabled", "disabled");
+			anchor.getElement()
+					.setInnerHTML(
+							"<span class='fa fa-spinner fa-spin' ui:field='spnSpinner'></span>Submitting...");
+		} else {
+			anchor.getElement().removeAttribute("disabled");
+			anchor.setText(previousText);
+		}
+	}
+
 }

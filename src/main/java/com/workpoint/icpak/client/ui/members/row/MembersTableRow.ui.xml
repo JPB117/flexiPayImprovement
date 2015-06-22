@@ -16,7 +16,7 @@
 			tomkim@wira.io
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td text-center" ui:field="divProfile">
-			<div class="radial-bar radial-bar-25 radial-bar-xs">25%</div>
+			<div class="radial-bar radial-bar-25 radial-bar-xs" data-label="50%"></div>
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divStatus">
 			<span class="label label-warning">Pending</span>
