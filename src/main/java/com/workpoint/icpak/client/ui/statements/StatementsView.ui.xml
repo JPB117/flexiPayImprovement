@@ -3,8 +3,8 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
 	xmlns:g='urn:import:com.google.gwt.user.client.ui' ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
 	xmlns:d='urn:import:com.workpoint.icpak.client.ui.component'
-	xmlns:p='urn:import:com.workpoint.icpak.client.ui.trx.header'
-	xmlns:table='urn:import:com.workpoint.icpak.client.ui.trx.table'
+	xmlns:p='urn:import:com.workpoint.icpak.client.ui.statements.header'
+	xmlns:table='urn:import:com.workpoint.icpak.client.ui.statements.table'
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
 

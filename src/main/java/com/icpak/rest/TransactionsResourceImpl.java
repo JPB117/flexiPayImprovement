@@ -15,22 +15,22 @@ import com.workpoint.icpak.shared.api.TransactionsResource;
 import com.workpoint.icpak.shared.trx.TransactionDto;
 
 @Path("transactions")
-public class TransactionsResourceImpl implements TransactionsResource{
+public class TransactionsResourceImpl implements TransactionsResource {
 
-	@Inject TransactionDaoHelper trxDaoHelper;
-	
+	@Inject
+	TransactionDaoHelper trxDaoHelper;
+
 	@POST
-	public void makePayment(@QueryParam("refId") String paymentRef, 
+	public void makePayment(@QueryParam("refId") String paymentRef,
 			@QueryParam("status") String status,
-			@QueryParam("paymentMode") String paymentMode){
-		
-		trxDaoHelper.receivePayment(paymentRef,paymentMode,status); 
+			@QueryParam("paymentMode") String paymentMode) {
+
+		trxDaoHelper.receivePayment(paymentRef, paymentMode, status);
 	}
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<TransactionDto> getAllTrxs(@QueryParam("userId") String userId) {
-		
 		return trxDaoHelper.getTransactions(userId);
 	}
 }

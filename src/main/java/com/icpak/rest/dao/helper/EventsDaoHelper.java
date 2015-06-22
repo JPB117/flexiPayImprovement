@@ -8,7 +8,7 @@ import com.google.inject.persist.Transactional;
 import com.icpak.rest.IDUtils;
 import com.icpak.rest.dao.EventsDao;
 import com.icpak.rest.models.event.Event;
-import com.workpoint.icpak.shared.model.events.EventDto;
+import com.workpoint.icpak.shared.model.EventDto;
 
 @Transactional
 public class EventsDaoHelper {

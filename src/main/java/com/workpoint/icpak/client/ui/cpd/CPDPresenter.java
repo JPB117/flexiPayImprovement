@@ -38,7 +38,7 @@ public class CPDPresenter extends
 	
 	@TabInfo(container = HomePresenter.class)
     static TabData getTabLabel(LoginGateKeeper adminGatekeeper) {
-		TabDataExt data = new TabDataExt("My C.P.D","fa fa-graduation-cap",3,adminGatekeeper, true);
+		TabDataExt data = new TabDataExt("My C.P.D","fa fa-graduation-cap",4,adminGatekeeper, true);
         return data;
     }
 

@@ -60,6 +60,8 @@ import com.workpoint.icpak.client.ui.home.HomePresenter;
 import com.workpoint.icpak.client.ui.home.HomeView;
 import com.workpoint.icpak.client.ui.login.LoginPresenter;
 import com.workpoint.icpak.client.ui.login.LoginView;
+import com.workpoint.icpak.client.ui.members.MembersPresenter;
+import com.workpoint.icpak.client.ui.members.MembersView;
 import com.workpoint.icpak.client.ui.notifications.NotificationsPresenter;
 import com.workpoint.icpak.client.ui.notifications.NotificationsView;
 import com.workpoint.icpak.client.ui.offences.OffencesPresenter;
@@ -99,7 +101,8 @@ public class ClientModule extends AbstractPresenterModule {
 		// bindConstant().annotatedWith(DefaultPlace.class).to(NameTokens.home);
 		bindConstant().annotatedWith(DefaultPlace.class).to(NameTokens.login);
 		bindConstant().annotatedWith(ErrorPlace.class).to(NameTokens.error);
-		bindConstant().annotatedWith(UnauthorizedPlace.class).to(NameTokens.unauthorized);
+		bindConstant().annotatedWith(UnauthorizedPlace.class).to(
+				NameTokens.unauthorized);
 		bindConstant().annotatedWith(SecurityCookie.class).to(
 				Definitions.AUTHENTICATIONCOOKIE);
 
@@ -144,12 +147,17 @@ public class ClientModule extends AbstractPresenterModule {
 		bindPresenter(CPDPresenter.class, CPDPresenter.ICPDView.class,
 				CPDView.class, CPDPresenter.ICPDProxy.class);
 
+		bindPresenter(MembersPresenter.class,
+				MembersPresenter.IMembersView.class, MembersView.class,
+				MembersPresenter.IMembersProxy.class);
+
 		bindPresenter(ErrorPagePresenter.class,
 				ErrorPagePresenter.MyView.class, ErrorPageView.class,
 				ErrorPagePresenter.MyProxy.class);
-		
+
 		bindPresenter(UnauthorizedPagePresenter.class,
-				UnauthorizedPagePresenter.MyView.class, UnauthorizedPageView.class,
+				UnauthorizedPagePresenter.MyView.class,
+				UnauthorizedPageView.class,
 				UnauthorizedPagePresenter.MyProxy.class);
 
 		bindPresenterWidget(ErrorPresenter.class, ErrorPresenter.MyView.class,

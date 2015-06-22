@@ -1,11 +1,10 @@
 package com.workpoint.icpak.client.ui.events.registration;
 
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -21,14 +20,13 @@ import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.workpoint.icpak.client.place.NameTokens;
 import com.workpoint.icpak.client.service.AbstractAsyncCallback;
-import com.workpoint.icpak.shared.api.BookingsResource;
 import com.workpoint.icpak.shared.api.CountriesResource;
 import com.workpoint.icpak.shared.api.EventsResource;
 //import com.workpoint.icpak.shared.api.EventsResource;
 import com.workpoint.icpak.shared.model.Country;
+import com.workpoint.icpak.shared.model.EventDto;
 import com.workpoint.icpak.shared.model.events.BookingDto;
 //import com.workpoint.icpak.shared.model.events.BookingDto;
-import com.workpoint.icpak.shared.model.events.EventDto;
 
 public class EventBookingPresenter extends
 		Presenter<EventBookingPresenter.MyView, EventBookingPresenter.MyProxy> {
@@ -47,7 +45,7 @@ public class EventBookingPresenter extends
 		void addError(String error);
 
 		void setEvent(EventDto event);
-		
+
 		BookingDto getBooking();
 
 		void bindBooking(BookingDto booking);
@@ -136,7 +134,7 @@ public class EventBookingPresenter extends
 						public void onSuccess(BookingDto booking) {
 							getView().bindBooking(booking);
 							getView().next();
-							
+
 						}
 					}).bookings(eventId).create(dto);
 		}
@@ -148,36 +146,56 @@ public class EventBookingPresenter extends
 		eventId = request.getParameter("eventId", "9J4oKtW898RyOClP");
 		bookingId = request.getParameter("bookingId", null);
 
-		countriesResource.withCallback(
-				new AbstractAsyncCallback<List<Country>>() {
-					public void onSuccess(List<Country> countries) {
-						Collections.sort(countries, new Comparator<Country>() {
-							@Override
-							public int compare(Country o1, Country o2) {
-
-								return o1.getDisplayName().compareTo(
-										o2.getDisplayName());
-							}
-						});
-
-						getView().setCountries(countries);
-					};
-				}).getAll();
+		// countriesResource.withCallback(
+		// new AbstractAsyncCallback<List<Country>>() {
+		// public void onSuccess(List<Country> countries) {
+		// Window.alert("Loaded countries!!" + countries);
+		// Collections.sort(countries, new Comparator<Country>() {
+		// @Override
+		// public int compare(Country o1, Country o2) {
+		// return o1.getDisplayName().compareTo(
+		// o2.getDisplayName());
+		// }
+		// });
+		//
+		// getView().setCountries(countries);
+		// };
+		// }).getAll();
 
 		eventsResource.withCallback(new AbstractAsyncCallback<EventDto>() {
 			@Override
 			public void onSuccess(EventDto event) {
+				Window.alert(">>>>>>>>>>>>Set event called" + event.getName());
 				getView().setEvent(event);
 			}
-		}).getById(eventId);
-		
-		if(bookingId!=null){
-			eventsResource.withCallback(new AbstractAsyncCallback<BookingDto>() {
-				@Override
-				public void onSuccess(BookingDto booking) {
-					getView().bindBooking(booking);
+
+			@Override
+			public void onFailure(Throwable caught) {
+				Window.alert(">>>>>>>>Failure on loading data!!!!"
+						+ caught.getMessage());
+				Window.alert(caught.getClass() + "<br>"
+						+ caught.getStackTrace());
+
+				StringBuffer buffer = new StringBuffer();
+				for (StackTraceElement elem : caught.getStackTrace()) {
+					buffer.append(elem.getLineNumber() + ">>"
+							+ elem.getClassName() + ">>" + elem.getMethodName());
 				}
-			}).bookings(eventId).getById(bookingId);
+
+				Window.alert(buffer.toString());
+
+				super.onFailure(caught);
+			}
+		}).getById(eventId);
+
+		if (bookingId != null) {
+			eventsResource
+					.withCallback(new AbstractAsyncCallback<BookingDto>() {
+						@Override
+						public void onSuccess(BookingDto booking) {
+							getView().bindBooking(booking);
+						}
+					}).bookings(eventId).getById(bookingId);
 		}
 
 	}

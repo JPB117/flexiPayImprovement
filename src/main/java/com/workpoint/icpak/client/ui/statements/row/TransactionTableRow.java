@@ -1,4 +1,4 @@
-package com.workpoint.icpak.client.ui.trx.row;
+package com.workpoint.icpak.client.ui.statements.row;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
