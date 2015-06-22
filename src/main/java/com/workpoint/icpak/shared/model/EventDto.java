@@ -1,6 +1,8 @@
 package com.workpoint.icpak.shared.model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class EventDto extends SerializableObj{
 
@@ -19,6 +21,7 @@ public class EventDto extends SerializableObj{
 	private EventType type;
 	private Double memberPrice;
 	private Double nonMemberPrice;
+	private List<AccommodationDto> accommodation = new ArrayList<AccommodationDto>();
 	
 	public EventDto() {
 	}
@@ -101,6 +104,14 @@ public class EventDto extends SerializableObj{
 
 	public void setNonMemberPrice(Double nonMemberPrice) {
 		this.nonMemberPrice = nonMemberPrice;
+	}
+
+	public List<AccommodationDto> getAccommodation() {
+		return accommodation;
+	}
+
+	public void setAccommodation(List<AccommodationDto> accommodation) {
+		this.accommodation = accommodation;
 	}
 	
 	

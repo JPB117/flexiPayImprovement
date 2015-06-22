@@ -42,9 +42,9 @@ public class UsersDaoHelper {
 	
 	public void create(User user){
 		user.setRefId(IDUtils.generateId());
-		if(user.getUserData()!=null){
-			user.getUserData().setUser(user);
-		}
+//		if(user.getUserData()!=null){
+//			user.getUserData().setUser(user);
+//		}
 		
 		dao.createUser(user);
 		createDefaultMemberForUser(user);
@@ -75,7 +75,7 @@ public class UsersDaoHelper {
 			data.setOverseas(user.getUserData().isOverseas());
 			data.setSalutation(user.getUserData().getSalutation());
 			data.setTitle(user.getUserData().getTitle());
-			data.setResidence(user.getUserData().getResidence());
+			//data.setResidence(user.getUserData().getResidence());
 		}
 		
 		dao.updateUser(po);

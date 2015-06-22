@@ -13,6 +13,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -104,14 +105,9 @@ public class BioData {
 
 	private String title;// Not sure - will see
 
-	@XmlTransient
-	@OneToOne
-	@JoinColumn(name = "userid")
-	private User user;
-
 	private Long delegateId; // Event delegate id
 
-	private String residence;
+	//private String residence;
 	private boolean isOverseas;
 
 	public BioData() {
@@ -173,14 +169,6 @@ public class BioData {
 		this.dob = dob;
 	}
 
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
-
 	public Long getDelegateId() {
 		return delegateId;
 	}
@@ -197,13 +185,13 @@ public class BioData {
 		this.nationality = nationality;
 	}
 
-	public String getResidence() {
-		return residence;
-	}
-
-	public void setResidence(String residence) {
-		this.residence = residence;
-	}
+//	public String getResidence() {
+//		return residence;
+//	}
+//
+//	public void setResidence(String residence) {
+//		this.residence = residence;
+//	}
 
 	public boolean isOverseas() {
 		return isOverseas;
@@ -229,7 +217,7 @@ public class BioData {
 		setLastName(userData.lastName);
 		setNationality(userData.nationality);
 		setOverseas(userData.isOverseas);
-		setResidence(userData.residence);
+		//setResidence(userData.residence);
 		setSalutation(userData.salutation);
 		setTitle(userData.title);
 	}

@@ -30,7 +30,7 @@ import com.workpoint.icpak.shared.api.ApplicationFormResource;
 import com.workpoint.icpak.shared.api.CategoriesResource;
 import com.workpoint.icpak.shared.api.UsersResource;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
-import com.workpoint.icpak.shared.model.CategoryDto;
+import com.workpoint.icpak.shared.model.ApplicationCategoryDto;
 import com.workpoint.icpak.shared.model.UserDto;
 
 public class MemberRegistrationPresenter
@@ -48,7 +48,7 @@ public class MemberRegistrationPresenter
 
 		void setEmailValid(boolean isValid);
 
-		void setCategories(List<CategoryDto> dtos);
+		void setCategories(List<ApplicationCategoryDto> dtos);
 
 		boolean isValid();
 
@@ -212,9 +212,9 @@ public class MemberRegistrationPresenter
 	public void prepareFromRequest(PlaceRequest request) {
 		super.prepareFromRequest(request);
 		categoriesDelegate.withCallback(
-				new AbstractAsyncCallback<List<CategoryDto>>() {
+				new AbstractAsyncCallback<List<ApplicationCategoryDto>>() {
 					@Override
-					public void onSuccess(List<CategoryDto> result) {
+					public void onSuccess(List<ApplicationCategoryDto> result) {
 						getView().setCategories(result);
 					}
 				}).getAll();

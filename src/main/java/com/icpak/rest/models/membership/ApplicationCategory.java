@@ -11,7 +11,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import com.icpak.rest.models.base.PO;
 import com.wordnik.swagger.annotations.ApiModel;
 import com.workpoint.icpak.shared.model.ApplicationType;
-import com.workpoint.icpak.shared.model.CategoryDto;
+import com.workpoint.icpak.shared.model.ApplicationCategoryDto;
 
 @ApiModel(description="Application Category charges")
 
@@ -20,7 +20,7 @@ import com.workpoint.icpak.shared.model.CategoryDto;
 
 @Entity
 @Table(name="ApplicationCategory")
-public class Category extends PO{
+public class ApplicationCategory extends PO{
 
 	/**
 	 * 
@@ -33,7 +33,7 @@ public class Category extends PO{
 	private double applicationAmount;
 	private Double renewalAmount;
 	
-	public Category() {
+	public ApplicationCategory() {
 	}
 
 	public ApplicationType getType() {
@@ -68,8 +68,8 @@ public class Category extends PO{
 		this.description = description;
 	}
 
-	public CategoryDto toDto() {
-		CategoryDto category = new CategoryDto();
+	public ApplicationCategoryDto toDto() {
+		ApplicationCategoryDto category = new ApplicationCategoryDto();
 		category.setRefId(refId);
 		category.setApplicationAmount(applicationAmount);
 		category.setDescription(description);
@@ -79,7 +79,7 @@ public class Category extends PO{
 		return category;
 	}
 
-	public void copyFrom(CategoryDto dto) {
+	public void copyFrom(ApplicationCategoryDto dto) {
 		setDescription(dto.getDescription());
 		setApplicationAmount(dto.getApplicationAmount());
 		setRenewalAmount(dto.getRenewalAmount());

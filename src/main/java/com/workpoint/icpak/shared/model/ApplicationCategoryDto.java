@@ -1,6 +1,6 @@
 package com.workpoint.icpak.shared.model;
 
-public class CategoryDto extends SerializableObj{
+public class ApplicationCategoryDto extends SerializableObj{
 
 	/**
 	 * 
@@ -11,7 +11,7 @@ public class CategoryDto extends SerializableObj{
 	private double applicationAmount;
 	private Double renewalAmount;
 	
-	public CategoryDto() {
+	public ApplicationCategoryDto() {
 	}
 
 	public ApplicationType getType() {

@@ -22,7 +22,7 @@ import com.workpoint.icpak.client.ui.component.IssuesPanel;
 import com.workpoint.icpak.client.ui.component.TextField;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 import com.workpoint.icpak.shared.model.ApplicationType;
-import com.workpoint.icpak.shared.model.CategoryDto;
+import com.workpoint.icpak.shared.model.ApplicationCategoryDto;
 
 public class MemberRegistrationView extends ViewImpl implements
 		MemberRegistrationPresenter.MyView {
@@ -370,8 +370,8 @@ public class MemberRegistrationView extends ViewImpl implements
 		return isValid && isEmailValid;
 	}
 
-	public void setCategories(List<CategoryDto> dtos) {
-		for (CategoryDto dto : dtos) {
+	public void setCategories(List<ApplicationCategoryDto> dtos) {
+		for (ApplicationCategoryDto dto : dtos) {
 			switch (dto.getType()) {
 			case NON_PRACTISING:
 

@@ -24,11 +24,13 @@ import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -97,7 +99,7 @@ public class User extends PO{
     @Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
     private Set<Role> roles = new HashSet<Role>();
     
-    @Transient
+    @Embedded
     private BioData userData=null;
     
     private String memberId;
@@ -187,9 +189,6 @@ public class User extends PO{
 
 	public void setUserData(BioData userData) {
 		this.userData = userData;
-		
-		if(userData!=null)
-		userData.setUser(this);
 	}
 	
 	public void copy(User user) {

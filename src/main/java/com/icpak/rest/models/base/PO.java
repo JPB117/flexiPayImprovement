@@ -37,7 +37,8 @@ public abstract class PO extends ResourceModel implements Serializable{
 	@GeneratedValue
 	private Long id;
 	
-	@Column(nullable=false, unique=true, updatable=false, length=45)
+	//@Column(nullable=false, unique=true, updatable=false, length=45)
+	@Column(nullable=false)
     //@Index(name="idx_ref_id")
 	protected String refId;
 
