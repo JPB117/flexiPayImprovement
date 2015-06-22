@@ -25,6 +25,7 @@ import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.workpoint.icpak.client.place.NameTokens;
 import com.workpoint.icpak.client.service.AbstractAsyncCallback;
+import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.TextField;
 import com.workpoint.icpak.shared.api.ApplicationFormResource;
 import com.workpoint.icpak.shared.api.CategoriesResource;
@@ -58,7 +59,7 @@ public class MemberRegistrationPresenter
 
 		int getCounter();
 
-		void setLoadingState(Anchor anchor, boolean isLoading);
+		void setLoadingState(ActionLink anchor, boolean isLoading);
 
 		void showError(String string);
 	}
@@ -139,7 +140,7 @@ public class MemberRegistrationPresenter
 					// not MainPagePresenter - i.e At this point
 					// MainPagePresenter
 					// is not instantiated, yet AppManager popup is presented by
-					
+
 					// MainPagePresenter
 					// AppManager.showPopUp("Select Category",
 					// "Please Select a member category",
@@ -148,7 +149,7 @@ public class MemberRegistrationPresenter
 					// public void onSelect(String name) {
 					// }
 					// }, "Ok");
-					
+
 					getView().showError("Kindly select a category");
 				}
 
@@ -166,7 +167,7 @@ public class MemberRegistrationPresenter
 	}
 
 	protected void submit(ApplicationFormHeaderDto applicationForm) {
-		getView().setLoadingState((Anchor) getView().getANext(), true);
+		getView().setLoadingState((ActionLink) getView().getANext(), true);
 
 		applicationDelegate.withCallback(
 				new AbstractAsyncCallback<ApplicationFormHeaderDto>() {
@@ -180,7 +181,7 @@ public class MemberRegistrationPresenter
 
 					private void removeError() {
 						getView().setLoadingState(
-								(Anchor) getView().getANext(), false);
+								(ActionLink) getView().getANext(), false);
 					}
 
 					@Override
