@@ -4,10 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.TableHeader;
 import com.workpoint.icpak.client.ui.component.TableView;
 
@@ -18,6 +22,18 @@ public class EducationDetails extends Composite {
 
 	@UiField
 	TableView tblEducationalDetail;
+
+	@UiField
+	ActionLink aAdd;
+
+	@UiField
+	ActionLink aSave;
+
+	@UiField
+	HTMLPanel panelForm;
+
+	@UiField
+	HTMLPanel panelTable;
 
 	List<TableHeader> tblHeaders = new ArrayList<TableHeader>();
 
@@ -31,6 +47,20 @@ public class EducationDetails extends Composite {
 		createTableHeader();
 
 		createRows();
+
+		aAdd.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				showForm(true);
+			}
+		});
+
+		aSave.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				showForm(false);
+			}
+		});
 	}
 
 	private void createTableHeader() {
@@ -53,5 +83,17 @@ public class EducationDetails extends Composite {
 			tblEducationalDetail.addRow(row);
 		}
 
+	}
+
+	protected void showForm(boolean show) {
+		if (show) {
+			aAdd.setVisible(false);
+			panelForm.removeStyleName("hide");
+			panelTable.addStyleName("hide");
+		} else {
+			aAdd.setVisible(true);
+			panelTable.removeStyleName("hide");
+			panelForm.addStyleName("hide");
+		}
 	}
 }

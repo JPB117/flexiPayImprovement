@@ -4,10 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.TableHeader;
 import com.workpoint.icpak.client.ui.component.TableView;
 import com.workpoint.icpak.client.ui.profile.education.EducationTableRow;
@@ -22,6 +26,18 @@ public class SpecializationDetails extends Composite {
 	@UiField
 	TableView tblSpecialization;
 
+	@UiField
+	ActionLink aAdd;
+
+	@UiField
+	ActionLink aSave;
+
+	@UiField
+	HTMLPanel panelForm;
+
+	@UiField
+	HTMLPanel panelTable;
+
 	interface SpecialisationDetailsUiBinder extends
 			UiBinder<Widget, SpecializationDetails> {
 	}
@@ -30,6 +46,20 @@ public class SpecializationDetails extends Composite {
 		initWidget(uiBinder.createAndBindUi(this));
 		createHeader();
 		createRows();
+
+		aAdd.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				showForm(true);
+			}
+		});
+
+		aSave.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				showForm(false);
+			}
+		});
 	}
 
 	private void createHeader() {
@@ -46,6 +76,18 @@ public class SpecializationDetails extends Composite {
 			tblSpecialization.addRow(row);
 		}
 
+	}
+
+	protected void showForm(boolean show) {
+		if (show) {
+			aAdd.setVisible(false);
+			panelForm.removeStyleName("hide");
+			panelTable.addStyleName("hide");
+		} else {
+			aAdd.setVisible(true);
+			panelTable.removeStyleName("hide");
+			panelForm.addStyleName("hide");
+		}
 	}
 
 }
