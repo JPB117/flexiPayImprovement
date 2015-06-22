@@ -19,5 +19,5 @@ public interface TransactionsResource {
 	
 	
 	@GET
-	public List<TransactionDto> getAllTrxs(String userId);
+	public List<TransactionDto> getAllTrxs(@QueryParam("userId") String userId);
 }
