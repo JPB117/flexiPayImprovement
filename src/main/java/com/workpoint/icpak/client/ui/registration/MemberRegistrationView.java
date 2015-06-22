@@ -185,7 +185,7 @@ public class MemberRegistrationView extends ViewImpl implements
 	public MemberRegistrationView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
 
-		String url = "http://197.248.2.44:8080/ewallet-beta/#websiteClient";
+		String url = "http://197.248.4.221:8080/ewallet/#websiteClient";
 		framePayment.setUrl(url);
 
 		// Li Elements

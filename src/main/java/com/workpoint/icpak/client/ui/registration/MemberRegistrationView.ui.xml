@@ -28,7 +28,7 @@
 							<div class="card wizard-card ct-wizard-green">
 								<div class="wizard-header">
 									<h3>
-										Member Registration Process
+										Member Registration Center
 										<br />
 									</h3>
 								</div>
@@ -58,7 +58,8 @@
 											</div>
 
 											<div class="col-sm-12">
-												<d:IssuesPanel ui:field="issuesPanel" styleName="hide alert alert-danger"></d:IssuesPanel>
+												<d:IssuesPanel ui:field="issuesPanel"
+													styleName="hide alert alert-danger"></d:IssuesPanel>
 											</div>
 
 											<div class="col-sm-12">
@@ -338,7 +339,7 @@
 									<div class="tab-pane" ui:field="divProforma">
 										<div class="row">
 											<div class="col-xs-12">
-												<br/>
+												<br />
 												<div class="panel panel-default">
 													<div class="panel-heading">
 														<span ui:field="spnNames">Kimani Muriranja</span>
@@ -352,7 +353,8 @@
 														has been sent
 														to
 														your email
-														address to facilitate in payment and Login.
+														address to facilitate in
+														payment and Login.
 														<br />
 
 														You can choose between the following:

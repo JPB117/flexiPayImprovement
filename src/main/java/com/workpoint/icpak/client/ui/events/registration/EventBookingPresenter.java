@@ -26,6 +26,7 @@ import com.workpoint.icpak.shared.api.EventsResource;
 import com.workpoint.icpak.shared.model.Country;
 import com.workpoint.icpak.shared.model.EventDto;
 import com.workpoint.icpak.shared.model.events.BookingDto;
+
 //import com.workpoint.icpak.shared.model.events.BookingDto;
 
 public class EventBookingPresenter extends
@@ -165,16 +166,17 @@ public class EventBookingPresenter extends
 		eventsResource.withCallback(new AbstractAsyncCallback<EventDto>() {
 			@Override
 			public void onSuccess(EventDto event) {
-				Window.alert(">>>>>>>>>>>>Set event called" + event.getName());
+				// Window.alert(">>>>>>>>>>>>Set event called" +
+				// event.getName());
 				getView().setEvent(event);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				Window.alert(">>>>>>>>Failure on loading data!!!!"
-						+ caught.getMessage());
-				Window.alert(caught.getClass() + "<br>"
-						+ caught.getStackTrace());
+				// Window.alert(">>>>>>>>Failure on loading data!!!!"
+				// + caught.getMessage());
+				// Window.alert(caught.getClass() + "<br>"
+				// + caught.getStackTrace());
 
 				StringBuffer buffer = new StringBuffer();
 				for (StackTraceElement elem : caught.getStackTrace()) {
@@ -182,7 +184,7 @@ public class EventBookingPresenter extends
 							+ elem.getClassName() + ">>" + elem.getMethodName());
 				}
 
-				Window.alert(buffer.toString());
+				// Window.alert(buffer.toString());
 
 				super.onFailure(caught);
 			}
