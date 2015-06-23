@@ -8,7 +8,7 @@ import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
 import com.workpoint.icpak.client.ui.members.row.MembersTableRow;
 import com.workpoint.icpak.client.ui.members.table.MembersTable;
-import com.workpoint.icpak.client.ui.statements.row.TransactionTableRow;
+import com.workpoint.icpak.client.ui.statements.row.StatementTableRow;
 
 public class MembersView extends ViewImpl implements
 		MembersPresenter.IMembersView {
