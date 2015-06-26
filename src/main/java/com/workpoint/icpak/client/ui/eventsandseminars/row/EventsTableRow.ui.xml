@@ -1,0 +1,28 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.workpoint.icpak.client.ui.component">
+
+	<g:HTMLPanel styleName="tr" ui:field="row">
+		<g:HTMLPanel styleName="td" ui:field="divDate">
+			21st - 22nd January
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td" ui:field="divEventName">
+			<g:Anchor ui:field="aEventName">C-Suite Seminar</g:Anchor>
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td" ui:field="divEventLocation">
+			Nairobi
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td" ui:field="divCPDHours">
+			24
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td" ui:field="divDelegates">
+			1,500
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td" ui:field="divPaidAmount">
+			120,500
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td" ui:field="divUnPaidAmount">
+			10,500
+		</g:HTMLPanel>
+	</g:HTMLPanel>
+</ui:UiBinder> 

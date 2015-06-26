@@ -1,4 +1,4 @@
-package com.workpoint.icpak.client.ui.events.delegates.row;
+package com.workpoint.icpak.client.ui.eventsandseminars.delegates.row;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -33,8 +33,11 @@ public class DelegateTableRow extends RowWidget {
 	HTMLPanel divEmail;
 	@UiField
 	HTMLPanel divAccomodation;
-
 	@UiField
+	HTMLPanel divAttendance;
+	@UiField
+	HTMLPanel divPaymentStatus;
+
 	ActionLink aRemove;
 
 	private Integer rowId;
@@ -63,5 +66,15 @@ public class DelegateTableRow extends RowWidget {
 		divOtherNames.add(otherNames);
 		divEmail.add(email);
 		this.rowId = rowId;
+	}
+
+	public void showAdvancedDetails(boolean show) {
+		if (show) {
+			divPaymentStatus.setVisible(true);
+			divAttendance.setVisible(true);
+		} else {
+			divPaymentStatus.setVisible(false);
+			divAttendance.setVisible(false);
+		}
 	}
 }
