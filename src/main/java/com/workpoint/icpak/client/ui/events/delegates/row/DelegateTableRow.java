@@ -31,6 +31,8 @@ public class DelegateTableRow extends RowWidget {
 	HTMLPanel divOtherNames;
 	@UiField
 	HTMLPanel divEmail;
+	@UiField
+	HTMLPanel divAccomodation;
 
 	@UiField
 	ActionLink aRemove;

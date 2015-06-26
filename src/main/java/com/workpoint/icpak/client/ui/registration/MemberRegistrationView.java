@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -13,8 +14,10 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Frame;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
@@ -29,6 +32,18 @@ public class MemberRegistrationView extends ViewImpl implements
 		MemberRegistrationPresenter.MyView {
 
 	private final Widget widget;
+
+	@UiField
+	HTMLPanel divMainContainer;
+
+	@UiField
+	HTMLPanel divHeaderContainer;
+
+	@UiField
+	HTMLPanel divFooter;
+
+	@UiField
+	HTMLPanel divContent;
 
 	@UiField
 	Frame framePayment;
@@ -59,8 +74,8 @@ public class MemberRegistrationView extends ViewImpl implements
 	@UiField
 	Anchor aNonPractising;
 
-//	@UiField
-//	Anchor aPractising;
+	// @UiField
+	// Anchor aPractising;
 
 	@UiField
 	DivElement divNonPracticing;
@@ -165,7 +180,7 @@ public class MemberRegistrationView extends ViewImpl implements
 				spnSelected.setInnerText("You have selected: "
 						+ "Practising Member");
 				removeActiveSelection(selected);
-//				divPractising.addClassName("active");
+				// divPractising.addClassName("active");
 				type = ApplicationType.PRACTISING;
 			} else if (selectedName.equals("Overseas")) {
 				spnSelected.setInnerText("You have selected: "
@@ -199,7 +214,7 @@ public class MemberRegistrationView extends ViewImpl implements
 		liElements.add(liTab4);
 
 		aNonPractising.addClickHandler(selectHandler);
-//		aPractising.addClickHandler(selectHandler);
+		// aPractising.addClickHandler(selectHandler);
 		aOverseas.addClickHandler(selectHandler);
 		aAssociate.addClickHandler(selectHandler);
 
@@ -303,6 +318,22 @@ public class MemberRegistrationView extends ViewImpl implements
 	public HasClickHandlers getANext() {
 
 		return aNext;
+	}
+
+	@Override
+	public void setMiddleHeight() {
+		int totalHeight = Window.getClientHeight();
+		int topHeight = divHeaderContainer.getOffsetHeight();
+		// int footerHeight = divFooter.getOffsetHeight();
+		// int topicsHeight = divHeaderContainer.getOffsetHeight();
+		int middleHeight = totalHeight - topHeight;
+
+		// Window.alert("\nTotalHeight:" + totalHeight + "MiddleHeight>>"
+		// + middleHeight + "TopHeight" + topHeight);
+
+		if (middleHeight > 0) {
+			divContent.setHeight(middleHeight + "px");
+		}
 	}
 
 	@Override

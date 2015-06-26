@@ -1,5 +1,7 @@
 package com.workpoint.icpak.client.ui.events.registration;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -50,6 +52,8 @@ public class EventBookingPresenter extends
 		BookingDto getBooking();
 
 		void bindBooking(BookingDto booking);
+
+		void setMiddleHeight();
 	}
 
 	@ProxyCodeSplit
@@ -147,21 +151,20 @@ public class EventBookingPresenter extends
 		eventId = request.getParameter("eventId", "9J4oKtW898RyOClP");
 		bookingId = request.getParameter("bookingId", null);
 
-		// countriesResource.withCallback(
-		// new AbstractAsyncCallback<List<Country>>() {
-		// public void onSuccess(List<Country> countries) {
-		// Window.alert("Loaded countries!!" + countries);
-		// Collections.sort(countries, new Comparator<Country>() {
-		// @Override
-		// public int compare(Country o1, Country o2) {
-		// return o1.getDisplayName().compareTo(
-		// o2.getDisplayName());
-		// }
-		// });
-		//
-		// getView().setCountries(countries);
-		// };
-		// }).getAll();
+		countriesResource.withCallback(
+				new AbstractAsyncCallback<List<Country>>() {
+					public void onSuccess(List<Country> countries) {
+						Collections.sort(countries, new Comparator<Country>() {
+							@Override
+							public int compare(Country o1, Country o2) {
+								return o1.getDisplayName().compareTo(
+										o2.getDisplayName());
+							}
+						});
+
+						getView().setCountries(countries);
+					};
+				}).getAll();
 
 		eventsResource.withCallback(new AbstractAsyncCallback<EventDto>() {
 			@Override
@@ -205,6 +208,7 @@ public class EventBookingPresenter extends
 	@Override
 	protected void onReset() {
 		super.onReset();
+		getView().setMiddleHeight();
 	}
 
 }

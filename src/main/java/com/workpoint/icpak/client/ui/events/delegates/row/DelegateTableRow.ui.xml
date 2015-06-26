@@ -13,6 +13,8 @@
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divEmail">
 		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td" ui:field="divAccomodation">
+		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divAction">
 			<d:ActionLink ui:field="aRemove">remove</d:ActionLink>
 		</g:HTMLPanel>

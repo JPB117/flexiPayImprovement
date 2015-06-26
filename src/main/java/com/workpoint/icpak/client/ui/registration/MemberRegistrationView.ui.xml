@@ -6,8 +6,9 @@
 	xmlns:proforma='urn:import:com.workpoint.icpak.client.ui.events.registration.proforma'
 	ui:generateLocales='default'>
 
-	<g:HTMLPanel>
-		<div>
+	<g:HTMLPanel ui:field="divMainContainer">
+
+		<g:HTMLPanel ui:field="divHeaderContainer" styleName="top-header">
 			<nav class="navbar">
 				<div class="container">
 					<div class="navbar-header" style="width: 100%; text-align: center;">
@@ -18,9 +19,10 @@
 					</div>
 				</div>
 			</nav>
-		</div>
+		</g:HTMLPanel>
 
-		<div class="image-container set-full-height">
+		<g:HTMLPanel styleName="image-container set-full-height"
+			ui:field="divContent">
 			<div class="container">
 				<div class="row">
 					<div class="col-sm-11 col-md-offset-1">
@@ -422,13 +424,13 @@
 					</div>
 				</div>
 			</div>
-		</div>
+		</g:HTMLPanel>
 
-		<div class="footer">
+		<g:HTMLPanel styleName="footer" ui:field="divFooter">
 			<div class="container">
 				<footer>Copyright ICPAK 2015</footer>
 			</div>
-		</div>
+		</g:HTMLPanel>
 	</g:HTMLPanel>
 
 </ui:UiBinder>
