@@ -6,7 +6,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
-import com.workpoint.icpak.client.ui.statements.row.TransactionTableRow;
+import com.workpoint.icpak.client.ui.statements.row.StatementTableRow;
 import com.workpoint.icpak.client.ui.statements.table.TransactionTable;
 
 public class StatementsView extends ViewImpl implements
@@ -34,7 +34,7 @@ public class StatementsView extends ViewImpl implements
 
 	private void showData() {
 		for (int i = 0; i < 20; i++) {
-			TransactionTableRow row = new TransactionTableRow();
+			StatementTableRow row = new StatementTableRow();
 			tblView.createRow(row);
 		}
 	}

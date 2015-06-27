@@ -5,7 +5,7 @@
 	xmlns:d='urn:import:com.workpoint.icpak.client.ui.component' xmlns:tab='urn:import:com.workpoint.icpak.client.ui.home'
 	ui:generateLocales='default'>
 
-	<g:HTMLPanel>
+	<g:HTMLPanel styleName="set-full-height">
 		<aside ng-include="'app/views/partials/sidebar.html'"
 			ng-controller="SidebarController" class="aside ng-scope">
 			<!-- Inline template with sidebar items markup and ng-directives -->
@@ -39,9 +39,9 @@
 				</nav>
 			</div>
 		</aside>
-		<section class="ng-scope">
-			<g:HTMLPanel ui:field="tabContent"></g:HTMLPanel>
+		<section class="ng-scope" style="height: 600px;">
+			<g:HTMLPanel ui:field="tabContent" styleName="set-full-height"></g:HTMLPanel>
 		</section>
 	</g:HTMLPanel><!--End of Container -->
-	
+
 </ui:UiBinder>

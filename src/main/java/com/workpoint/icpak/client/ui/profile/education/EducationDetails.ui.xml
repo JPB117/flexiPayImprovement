@@ -3,15 +3,118 @@
 	xmlns:d='urn:import:com.workpoint.icpak.client.ui.component' xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	<g:HTMLPanel>
 		<div class="col-sm-12">
-			<d:ActionLink styleName="btn btn-next btn-fill btn-primary btn-wd btn-sm">
+			<d:ActionLink styleName="btn btn-next btn-fill btn-primary btn-wd btn-sm"
+				ui:field="aAdd">
 				<i class="fa fa-plus"></i>
 				Add Record
 			</d:ActionLink>
 		</div>
 		<br />
-		<div class="col-sm-12">
-			<d:TableView ui:field="tblEducationalDetail" autoNumber="false">
-			</d:TableView>
-		</div>
+		<g:HTMLPanel ui:field="panelTable">
+			<div class="col-sm-12">
+				<d:TableView ui:field="tblEducationalDetail" autoNumber="false">
+				</d:TableView>
+			</div>
+		</g:HTMLPanel>
+
+		<g:HTMLPanel ui:field="panelForm" styleName="hide">
+			<div class="col-sm-12" style="background:#FFFFFF">
+				<div class="row">
+					<div class="col-sm-12">
+						<h4 class="info-text">Complete below Form:</h4>
+						<hr />
+					</div>
+					<div class="form-group">
+						<div class="row">
+							<div class="col-xs-6">
+								<label for="institution">Institution Name</label>
+								<d:TextField type="text" name="institution" class="form-control"
+									placeholder="Enter Institution Name" value="" required="true">
+								</d:TextField>
+							</div>
+							<div class="col-xs-6">
+								<label for="exambody">Examination Body</label>
+								<d:TextField type="text" name="examiningBody" class="form-control"
+									placeholder="Enter Examination Body" value="" required="true"></d:TextField>
+							</div>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="row">
+							<div class="col-xs-6">
+								<label for="startdate">Start Date</label>
+								<d:TextField type="date" name="startDate" class="form-control"
+									placeholder="Enter Start Date" value="" required="true">
+								</d:TextField>
+							</div>
+							<div class="col-xs-6">
+								<label for="class">Date Completed</label>
+								<d:TextField type="date" name="dateCompleted" class="form-control"
+									placeholder="Enter End Date" value="" required="true">
+								</d:TextField>
+							</div>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="row">
+							<div class="col-xs-6">
+								<label for="enddate">Section Passed</label>
+								<d:TextField type="text" name="sectionsPassed"
+									class="form-control" placeholder="Enter Section passed" value=""
+									required="true">
+								</d:TextField>
+							</div>
+							<div class="col-xs-6">
+								<label for="award">Registration Number</label>
+								<d:TextField type="text" name="registrationNo"
+									class="form-control" placeholder="Enter Start Date" value=""
+									required="true">
+								</d:TextField>
+							</div>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="row">
+							<div class="col-xs-6">
+								<label for="enddate">Class / Division</label>
+								<d:TextField type="text" name="classOrDivision"
+									class="form-control" placeholder="Enter Class or Division"
+									value="" required="true">
+								</d:TextField>
+							</div>
+							<div class="col-xs-6">
+								<label for="enddate">Award</label>
+								<d:TextField type="text" name="award" class="form-control"
+									placeholder="Enter Award" value="" required="true">
+								</d:TextField>
+							</div>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="row">
+							<div class="col-xs-6">
+								<label for="enddate">Education Type:</label>
+								<d:TextField type="text" name="award" class="form-control"
+									placeholder="Enter Education Type" value="" required="true">
+								</d:TextField>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-sm-12">
+						<d:ActionLink
+							styleName="btn btn-next btn-fill btn-primary btn-wd btn-sm pull-right"
+							ui:field="aSave">
+							Save
+						</d:ActionLink>
+					</div>
+				</div>
+			</div>
+		</g:HTMLPanel>
+
 	</g:HTMLPanel>
 </ui:UiBinder> 

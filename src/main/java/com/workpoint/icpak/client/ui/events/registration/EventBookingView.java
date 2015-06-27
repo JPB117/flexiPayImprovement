@@ -7,14 +7,17 @@ import java.util.Date;
 import java.util.List;
 
 import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Frame;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
@@ -40,6 +43,21 @@ public class EventBookingView extends ViewImpl implements
 		EventBookingPresenter.MyView {
 
 	private final Widget widget;
+
+	@UiField
+	HTMLPanel divMainContainer;
+
+	@UiField
+	HTMLPanel divHeaderContainer;
+
+	@UiField
+	HTMLPanel divFooter;
+
+	@UiField
+	Element divHeaderTopics;
+
+	@UiField
+	HTMLPanel divContent;
 
 	@UiField
 	Frame framePayment;
@@ -162,11 +180,11 @@ public class EventBookingView extends ViewImpl implements
 			return dto;
 		}
 	};
-	int counter = 2;
+	int counter = 0;
 
 	public interface Binder extends UiBinder<Widget, EventBookingView> {
 	}
-	
+
 	@Inject
 	public EventBookingView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
@@ -184,10 +202,13 @@ public class EventBookingView extends ViewImpl implements
 		configs.add(config);
 		config = new ColumnConfig("email", "e-Mail", DataType.STRING);
 		configs.add(config);
+		config = new ColumnConfig("accomodation", "Accomodation",
+				DataType.SELECTBASIC);
+		configs.add(config);
+		
 		tblDelegates.setColumnConfigs(configs);
 
 		aAddRow.addClickHandler(new ClickHandler() {
-
 			@Override
 			public void onClick(ClickEvent event) {
 				tblDelegates.addRowData(new DataModel());
@@ -195,7 +216,7 @@ public class EventBookingView extends ViewImpl implements
 		});
 
 		// 197.248.4.221
-		String url = "http://localhost:8080/flexipay/#websiteClient";
+		String url = "http://197.248.4.221:8080/ewallet/#websiteClient";
 		framePayment.setUrl(url);
 
 		// Li Elements
@@ -394,8 +415,23 @@ public class EventBookingView extends ViewImpl implements
 	}
 
 	private List<DelegateDto> getDelegates() {
-
 		return tblDelegates.getData(mapper);
+	}
+
+	@Override
+	public void setMiddleHeight() {
+		int totalHeight = Window.getClientHeight();
+		int topHeight = divHeaderContainer.getOffsetHeight();
+		// int footerHeight = divFooter.getOffsetHeight();
+		// int topicsHeight = divHeaderContainer.getOffsetHeight();
+		int middleHeight = totalHeight - topHeight;
+
+		// Window.alert("\nTotalHeight:" + totalHeight + "MiddleHeight>>"
+		// + middleHeight + "TopHeight" + topHeight);
+
+		if (middleHeight > 0) {
+			divContent.setHeight(middleHeight + "px");
+		}
 	}
 
 	private ContactDto getContact() {

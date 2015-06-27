@@ -2,16 +2,158 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:d='urn:import:com.workpoint.icpak.client.ui.component' xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	<g:HTMLPanel styleName="row">
-			<div class="col-sm-12">
-			<d:ActionLink styleName="btn btn-next btn-fill btn-primary btn-wd btn-sm">
+		<div class="col-sm-12">
+			<d:ActionLink styleName="btn btn-next btn-fill btn-primary btn-wd btn-sm"
+				ui:field="aAdd">
 				<i class="fa fa-plus"></i>
 				Add Record
 			</d:ActionLink>
 		</div>
 		<br />
-		<div class="col-sm-12">
-			<d:TableView ui:field="tblSpecialization" autoNumber="false">
-			</d:TableView>
-		</div>
+
+		<g:HTMLPanel ui:field="panelTable">
+			<div class="col-sm-12">
+				<d:TableView ui:field="tblSpecialization" autoNumber="false">
+				</d:TableView>
+			</div>
+		</g:HTMLPanel>
+
+
+		<g:HTMLPanel ui:field="panelForm" styleName="hide">
+			<div class="col-sm-12" style="background:#FFFFFF">
+				<div class="row">
+					<div class="col-sm-12">
+						<h4 class="info-text">Check your specializations below:</h4>
+						<hr />
+					</div>
+
+					<div class="col-sm-12">
+						<d:IssuesPanel ui:field="issuesPanel" styleName="hide alert alert-danger"></d:IssuesPanel>
+					</div>
+
+					<div class="col-sm-12">
+						<div class="row">
+							<div class="col-sm-3">
+								<h5>Practice</h5>
+								<div class="checkbox">
+									<label>
+										<g:CheckBox> Auditing</g:CheckBox>
+									</label>
+								</div>
+
+								<div class="checkbox">
+									<label>
+										<g:CheckBox> Taxation</g:CheckBox>
+									</label>
+								</div>
+
+								<div class="checkbox">
+									<label>
+										<g:CheckBox> Financial Consulting</g:CheckBox>
+									</label>
+								</div>
+
+								<div class="checkbox">
+									<label>
+										<g:CheckBox> HR Consultancy</g:CheckBox>
+									</label>
+								</div>
+							</div>
+
+							<div class="col-sm-3">
+								<h5>Commerce and Industry</h5>
+								<div class="checkbox">
+									<label>
+										<g:CheckBox> Banking</g:CheckBox>
+									</label>
+								</div>
+
+								<div class="checkbox">
+									<label>
+										<g:CheckBox> Finance</g:CheckBox>
+									</label>
+								</div>
+
+								<div class="checkbox">
+									<label>
+										<g:CheckBox> Insurance</g:CheckBox>
+									</label>
+								</div>
+
+								<div class="checkbox">
+									<label>
+										<g:CheckBox> Manufacturing</g:CheckBox>
+									</label>
+								</div>
+
+								<div class="checkbox">
+									<label>
+										<g:CheckBox> Hotel</g:CheckBox>
+									</label>
+								</div>
+
+								<div class="checkbox">
+									<label>
+										<g:CheckBox> Other service industry</g:CheckBox>
+									</label>
+								</div>
+							</div>
+
+							<div class="col-sm-3">
+								<h5>Public Sector</h5>
+								<div class="checkbox">
+									<label>
+										<g:CheckBox> Central Government</g:CheckBox>
+									</label>
+								</div>
+
+								<div class="checkbox">
+									<label>
+										<g:CheckBox> Local Government</g:CheckBox>
+									</label>
+								</div>
+
+								<div class="checkbox">
+									<label>
+										<g:CheckBox> State Corporation</g:CheckBox>
+									</label>
+								</div>
+
+								<div class="checkbox">
+									<label>
+										<g:CheckBox> Co-operative</g:CheckBox>
+									</label>
+								</div>
+							</div>
+
+							<div class="col-sm-3">
+								<h5>Training</h5>
+								<div class="checkbox">
+									<label>
+										<g:CheckBox> Education or Academia</g:CheckBox>
+									</label>
+								</div>
+
+								<div class="checkbox">
+									<label>
+										<g:CheckBox> NGOs</g:CheckBox>
+									</label>
+								</div>
+							</div>
+
+						</div>
+
+						<div class="col-sm-12">
+							<d:ActionLink
+								styleName="btn btn-next btn-fill btn-primary btn-wd btn-sm pull-right"
+								ui:field="aSave">
+								Save
+							</d:ActionLink>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</g:HTMLPanel>
 	</g:HTMLPanel>
 </ui:UiBinder> 

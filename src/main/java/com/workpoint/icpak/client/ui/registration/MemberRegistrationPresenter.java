@@ -63,6 +63,8 @@ public class MemberRegistrationPresenter
 		void setLoadingState(ActionLink anchor, boolean isLoading);
 
 		void showError(String string);
+
+		void setMiddleHeight();
 	}
 
 	@ProxyCodeSplit
@@ -222,6 +224,8 @@ public class MemberRegistrationPresenter
 	@Override
 	protected void onReset() {
 		super.onReset();
+
+		getView().setMiddleHeight();
 	}
 
 }

@@ -10,6 +10,7 @@ import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.annotations.TabInfo;
 import com.gwtplatform.mvp.client.annotations.UseGatekeeper;
 import com.gwtplatform.mvp.client.proxy.TabContentProxyPlace;
+import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.workpoint.icpak.client.place.NameTokens;
 import com.workpoint.icpak.client.ui.admin.TabDataExt;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
@@ -20,6 +21,8 @@ public class EventsPresenter extends
 
 	public interface IEventsView extends View {
 
+		void showAdvancedView(boolean show);
+
 	}
 
 	@ProxyCodeSplit
@@ -28,7 +31,6 @@ public class EventsPresenter extends
 	public interface IEventsProxy extends TabContentProxyPlace<EventsPresenter> {
 	}
 
-	
 	@TabInfo(container = HomePresenter.class)
 	static TabData getTabLabel(LoginGateKeeper adminGatekeeper) {
 		TabDataExt data = new TabDataExt("Events and Seminars", "fa fa-tags",
@@ -45,6 +47,24 @@ public class EventsPresenter extends
 	@Override
 	protected void onBind() {
 		super.onBind();
+	}
+
+	@Override
+	public void prepareFromRequest(PlaceRequest request) {
+		super.prepareFromRequest(request);
+		clear();
+		final String eventId = request.getParameter("eventId", "");
+
+		// Load Event Details to View
+		if (!eventId.isEmpty()) {
+			getView().showAdvancedView(true);
+		} else {
+			getView().showAdvancedView(false);
+		}
+	}
+
+	private void clear() {
+		// TODO Auto-generated method stub
 
 	}
 

@@ -32,23 +32,5 @@ http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistenc
             <property name="hibernate.cache.use_query_cache" value="true"/>
             <property name="hibernate.cache.use_second_level_cache" value="true"/>
         </properties>
-        
-        <!-- properties>
-			<property name="hibernate.dialect" value="org.hibernate.dialect.SQLServerDialect" />
-			<property name="hibernate.connection.driver_class"
-				value="com.microsoft.sqlserver.jdbc.SQLServerDriver" />
-			<property name="hibernate.connection.url"
-				value="jdbc:sqlserver://197.248.4.221:1433;databaseName=ICPAK" />
-			<property name="hibernate.connection.username" value="root" />
-			<property name="hibernate.connection.password" value="wira#2015" />
-			<property name="hibernate.hbm2ddl.auto" value="update" />
-			<property name="hibernate.show_sql" value="false" />
-			
-            <property name="hibernate.cache.region.factory_class" value="org.hibernate.cache.ehcache.EhCacheRegionFactory"/>
-            <property name="hibernate.cache.use_query_cache" value="true"/>
-            <property name="hibernate.cache.use_second_level_cache" value="true"/>
-            <property name="hibernate.show_sql" value="true" />
-            <property name="hibernate.hbm2ddl.auto" value="none" />
-		</properties -->
     </persistence-unit>
 </persistence>

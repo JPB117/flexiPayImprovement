@@ -4,9 +4,51 @@
 	xmlns:g='urn:import:com.google.gwt.user.client.ui' ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
 	xmlns:d='urn:import:com.workpoint.icpak.client.ui.component' xmlns:up='urn:import:com.workpoint.icpak.client.ui.upload.custom'
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
+	xmlns:p='urn:import:com.workpoint.icpak.client.ui.eventsandseminars.header'
+	xmlns:table='urn:import:com.workpoint.icpak.client.ui.eventsandseminars.table'
+	xmlns:table2='urn:import:com.workpoint.icpak.client.ui.eventsandseminars.delegates.table'
 	ui:generateLocales='default'>
 
-	<g:HTMLPanel ui:field="container"	styleName="content-wrapper ng-scope ng-fadeInUp">
-		
+	<g:HTMLPanel ui:field="container"
+		styleName="content-wrapper ng-scope ng-fadeInUp">
+
+		<h3 class="ng-scope">
+			Events and Seminars Management
+		</h3>
+		<g:HTMLPanel styleName="row" ui:field="panelEvents">
+			<div class="col-sm-12">
+				<p:EventsHeader ui:field="headerContainer">
+				</p:EventsHeader>
+			</div>
+			<div class="panel panel-default">
+				<div class="panel-heading">All Event Details</div>
+				<div class="panel-body">
+					<div class="col-sm-12">
+						<table:EventsTable ui:field="tblView">
+						</table:EventsTable>
+					</div>
+				</div>
+			</div>
+		</g:HTMLPanel>
+
+
+		<g:HTMLPanel styleName="row" ui:field="panelEventDrillDown">
+			<div class="col-sm-12">
+				<h4 class="info-text">
+					<span ui:field="spnEventTitle">P.A.C Event</span>
+				</h4>
+				<hr />
+			</div>
+			<div class="panel panel-default">
+				<div class="panel-heading">Delegates</div>
+				<div class="panel-body">
+					<div class="col-sm-12">
+						<table2:DelegatesTable ui:field="tblDelegates">
+						</table2:DelegatesTable>
+					</div>
+				</div>
+			</div>
+		</g:HTMLPanel>
+
 	</g:HTMLPanel>
 </ui:UiBinder>

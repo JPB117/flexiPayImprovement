@@ -12,7 +12,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.workpoint.icpak.client.ui.component.TableHeader;
 import com.workpoint.icpak.client.ui.component.TableView;
 import com.workpoint.icpak.client.ui.members.row.MembersTableRow;
-import com.workpoint.icpak.client.ui.statements.row.TransactionTableRow;
+import com.workpoint.icpak.client.ui.statements.row.StatementTableRow;
 
 public class MembersTable extends Composite {
 
