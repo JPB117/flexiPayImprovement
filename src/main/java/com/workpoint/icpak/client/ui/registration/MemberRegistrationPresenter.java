@@ -8,6 +8,7 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.GwtEvent.Type;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -121,10 +122,7 @@ public class MemberRegistrationPresenter
 			public void onClick(ClickEvent event) {
 
 				if (getView().isValid()) {
-
-					Anchor a = (Anchor) getView().getANext();
 					if (getView().getCounter() == 1) {
-
 						// User has selected a category and clicked submit
 						submit(getView().getApplicationForm());
 
@@ -135,6 +133,7 @@ public class MemberRegistrationPresenter
 					}
 
 				} else if (getView().getCounter() == 1) {
+					Window.alert("Category not selected!!");
 					// This wont work since MemberRegistrationPresenter injects
 					// itself in the root panel,
 					// not MainPagePresenter - i.e At this point
@@ -168,7 +167,7 @@ public class MemberRegistrationPresenter
 
 	protected void submit(ApplicationFormHeaderDto applicationForm) {
 		getView().setLoadingState((ActionLink) getView().getANext(), true);
-
+		
 		applicationDelegate.withCallback(
 				new AbstractAsyncCallback<ApplicationFormHeaderDto>() {
 					@Override
@@ -187,7 +186,6 @@ public class MemberRegistrationPresenter
 					@Override
 					public void onFailure(Throwable caught) {
 						removeError();
-						// TODO Auto-generated method stub
 						super.onFailure(caught);
 					}
 				}).create(applicationForm);

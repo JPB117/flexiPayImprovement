@@ -15,6 +15,7 @@ public class GenericBootstrapConstants {
 	// JERSEY_PROPERTY_PACKAGES="com.icpak.rest;com.wordnik.swagger.jersey.listing";
 	public static final String JERSEY_PROPERTY_PACKAGES = "com.icpak.rest;com.wordnik.swagger.jaxrs.listing;"
 			+ "com.workpoint.icpak.shared.model;"
+			+ "com.workpoint.icpak.shared.model.auth;"
 			+ "com.workpoint.icpak.shared.model.events";
 
 	/**

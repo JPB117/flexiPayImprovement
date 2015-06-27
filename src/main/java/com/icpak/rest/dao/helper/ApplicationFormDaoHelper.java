@@ -17,6 +17,7 @@ import com.icpak.rest.dao.ApplicationFormDao;
 import com.icpak.rest.dao.UsersDao;
 import com.icpak.rest.exceptions.ServiceException;
 import com.icpak.rest.models.ErrorCodes;
+import com.icpak.rest.models.auth.BioData;
 import com.icpak.rest.models.auth.User;
 import com.icpak.rest.models.membership.ApplicationFormHeader;
 import com.icpak.rest.models.membership.ApplicationCategory;
@@ -68,11 +69,16 @@ public class ApplicationFormDaoHelper {
 		po.setCity(application.getCity1());
 		po.setNationality(application.getNationality());
 		
+		BioData bioData = new BioData();
+		bioData.setFirstName(application.getOtherNames());
+		bioData.setLastName(application.getSurname());
+		po.setUserData(bioData);
+		
+		//Generate Password
 		String password = IDUtils.generateTempPassword();
 		po.setPassword(password);
 		
 		userDao.createUser(po);
-		
 		User u = po.clone();
 		u.setPassword(password);
 		

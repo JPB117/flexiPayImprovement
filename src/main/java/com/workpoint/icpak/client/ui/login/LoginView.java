@@ -104,7 +104,7 @@ public class LoginView extends ViewImpl implements LoginPresenter.ILoginView {
 
 	@Override
 	public void clearErrors() {
-		issues.clear();
+		//issues.clear();
 	}
 
 	@Override
@@ -135,5 +135,10 @@ public class LoginView extends ViewImpl implements LoginPresenter.ILoginView {
 
 	@Override
 	public void setOrgName(String orgName) {
+	}
+
+	@Override
+	public void setLoginButtonEnabled(boolean b) {
+		
 	}
 }

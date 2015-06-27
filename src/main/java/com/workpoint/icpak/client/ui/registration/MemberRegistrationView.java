@@ -13,6 +13,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.Widget;
@@ -142,7 +143,7 @@ public class MemberRegistrationView extends ViewImpl implements
 	private List<LIElement> liElements = new ArrayList<LIElement>();
 	private List<PageElement> pageElements = new ArrayList<PageElement>();
 
-	int counter = 2;
+	int counter = 0;
 
 	public interface Binder extends UiBinder<Widget, MemberRegistrationView> {
 	}
@@ -361,6 +362,7 @@ public class MemberRegistrationView extends ViewImpl implements
 			}
 		} else if (counter == 1) {
 			if (type == null) {
+				Window.alert("Error.. category not selected");
 				isValid = false;
 			}
 		}

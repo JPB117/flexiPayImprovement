@@ -1,6 +1,8 @@
 package com.workpoint.icpak.shared.api;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -8,6 +10,8 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import com.workpoint.icpak.shared.model.UserDto;
+import com.workpoint.icpak.shared.model.auth.LogInAction;
+import com.workpoint.icpak.shared.model.auth.LogInResult;
 
 @Path("users")
 public interface UsersResource{
@@ -30,6 +34,12 @@ public interface UsersResource{
 		public UserDto login(
 				@QueryParam("username") String username,
 				@QueryParam("password") String password);
+		
+		@POST
+		@Path("/auth2")
+		@Consumes(MediaType.APPLICATION_JSON)
+		@Produces(MediaType.APPLICATION_JSON)
+		public LogInResult execLogin(LogInAction loginData);
 		
 		
 //		@POST

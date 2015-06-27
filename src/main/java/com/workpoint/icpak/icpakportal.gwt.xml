@@ -37,6 +37,9 @@
 	  </any>
 	</replace-with>
 	
+	<!-- Other Inherits -->
+	<inherits name="com.google.common.collect.Collect"/>
+	
 	<!-- Specify the app entry point class. NOT REQUIRED com.gwtplatform.mvp.MvpWithEntryPoint   -->
 	<!-- entry-point class='com.workpoint.icpak.client.GWTHT'/ -->
 

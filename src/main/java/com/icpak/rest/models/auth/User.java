@@ -267,6 +267,8 @@ public class User extends PO{
 		
 		dto.setEmail(email);
 		dto.setUserId(refId);
+		dto.setName(userData.getFirstName());
+		dto.setSurname(userData.getLastName());
 		//dto.setName(getFullName());
 		dto.setRefId(refId);
 		//dto.setName(name);

@@ -3,6 +3,7 @@ package com.icpak.rest;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -34,6 +35,8 @@ import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 import com.workpoint.icpak.shared.api.UsersResource;
 import com.workpoint.icpak.shared.model.UserDto;
+import com.workpoint.icpak.shared.model.auth.LogInAction;
+import com.workpoint.icpak.shared.model.auth.LogInResult;
 import com.workpoint.icpak.shared.trx.TransactionDto;
 
 /**
@@ -59,6 +62,8 @@ import com.workpoint.icpak.shared.trx.TransactionDto;
 @Api(value = "users", description = "Handles CRUD on User data")
 public class UsersResourceImpl extends BaseResource<User> implements UsersResource {
 
+	private final Logger logger = Logger.getLogger(UsersResourceImpl.class.getName());
+	
 	@Inject UsersDaoHelper helper;
 
 	private HttpContext httpContext;
@@ -99,7 +104,7 @@ public class UsersResourceImpl extends BaseResource<User> implements UsersResour
 			@ApiParam(value = "Username of the user to authenticate", required = true) @QueryParam("username") String username,
 			@ApiParam(value = "Password of the user", required = true) @QueryParam("password") String password){
 		
-		UserDto loggedIn = helper.authenticate(username, password);
+		UserDto loggedIn = helper.execLogin(new LogInAction(username, password)).getCurrentUserDto().getUser();
 		String uri = httpContext.getRequest().getPath();
 		//String uri = uriInfo.getAbsolutePath().toString().replace("auth", loggedIn.getRefId());
 		loggedIn.setUri(uri);
@@ -217,5 +222,14 @@ public class UsersResourceImpl extends BaseResource<User> implements UsersResour
 		List<TransactionDto> trxs = helper.getTransactions(userId);
 		
 		return trxs;
+	}
+
+	@POST
+	@Path("/auth2")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public LogInResult execLogin(LogInAction loginData) {
+
+		return helper.execLogin(loginData);
 	}
 }

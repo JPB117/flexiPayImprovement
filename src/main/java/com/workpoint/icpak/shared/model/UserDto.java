@@ -76,8 +76,7 @@ public class UserDto implements Listable,Serializable {
 	
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
-		return getFullName();
+		return "{refId:"+refId+",userId:"+userId+",fullNames:"+getFullName()+"}";
 	}
 
 	public List<UserGroup> getGroups() {

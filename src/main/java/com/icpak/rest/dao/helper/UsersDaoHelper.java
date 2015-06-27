@@ -3,6 +3,7 @@ package com.icpak.rest.dao.helper;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.ws.rs.core.UriInfo;
 
@@ -17,6 +18,7 @@ import com.icpak.rest.BaseResource;
 import com.icpak.rest.IDUtils;
 import com.icpak.rest.dao.RolesDao;
 import com.icpak.rest.dao.TransactionsDao;
+import com.icpak.rest.dao.UserSessionDao;
 import com.icpak.rest.dao.UsersDao;
 import com.icpak.rest.exceptions.ServiceException;
 import com.icpak.rest.models.ErrorCodes;
@@ -29,16 +31,25 @@ import com.icpak.rest.models.base.ResourceModel;
 import com.icpak.rest.models.trx.Transaction;
 import com.icpak.rest.models.util.Attachment;
 import com.icpak.rest.security.ICPAKAuthenticatingRealm;
+import com.icpak.rest.security.authentication.AuthenticationException;
+import com.icpak.rest.security.authentication.Authenticator;
 import com.workpoint.icpak.shared.model.UserDto;
+import com.workpoint.icpak.shared.model.auth.ActionType;
+import com.workpoint.icpak.shared.model.auth.CurrentUserDto;
+import com.workpoint.icpak.shared.model.auth.LogInAction;
+import com.workpoint.icpak.shared.model.auth.LogInResult;
 import com.workpoint.icpak.shared.trx.TransactionDto;
 
 @Transactional
 public class UsersDaoHelper {
 
+	Logger logger = Logger.getLogger(UsersDaoHelper.class.getName());
 	@Inject UsersDao dao;
 	@Inject RolesDao roleDao;
-	@Inject ICPAKAuthenticatingRealm realm;
 	@Inject TransactionsDao trxDao;
+	@Inject Authenticator authenticator;
+	
+	@Inject UserSessionDao loginCookieDao;
 	
 	public void create(User user){
 		user.setRefId(IDUtils.generateId());
@@ -161,31 +172,6 @@ public class UsersDaoHelper {
 		return user.clone();
 	}
 
-	@SuppressWarnings("deprecation")
-	public UserDto authenticate(String username, String password) {
-				
-		Sha256CredentialsMatcher matcher = new Sha256CredentialsMatcher();
-		User user = dao.findUser(username);
-		if(password==null || user==null){
-			throw new ServiceException(ErrorCodes.UNAUTHORIZEDACCESS);
-		}
-		
-		AuthenticationToken token = new UsernamePasswordToken(username, password);
-		UsernamePasswordToken authcToken = new UsernamePasswordToken(username, password);
-		boolean isMatch=false;
-		try{
-			isMatch = matcher.doCredentialsMatch(token, realm.getAuthenticationInfo(authcToken));
-		}catch(IncorrectCredentialsException e){
-			throw new ServiceException(ErrorCodes.UNAUTHORIZEDACCESS);
-		}
-		
-		if(!isMatch){
-			throw new ServiceException(ErrorCodes.UNAUTHORIZEDACCESS);
-		}
-		
-		return user.getDTO();
-	}
-
 	public void setProfilePic(String userId, byte[] bites, String fileName,
 			String contentType) {
 		dao.disableProfilePics(userId);
@@ -231,4 +217,52 @@ public class UsersDaoHelper {
 		return trxDtos;
 	}
 
+	public LogInResult execLogin(LogInAction action) {
+		UserDto userDto;
+		boolean isLoggedIn = true;
+
+        if (action.getActionType() == ActionType.VIA_COOKIE) {
+            userDto = getUserFromCookie(action.getLoggedInCookie());
+        } else {
+            userDto = getUserFromCredentials(action.getUsername(), action.getPassword());
+        }
+        
+        isLoggedIn = userDto!=null;
+
+        CurrentUserDto currentUserDto = new CurrentUserDto(isLoggedIn, userDto);
+
+        String loggedInCookie = "";
+        if (isLoggedIn) {
+            loggedInCookie = loginCookieDao.createSessionCookie(userDto);
+        }
+
+        logger.info("LogInHandlerexecut(): actiontype=" + action.getActionType());
+        logger.info("LogInHandlerexecut(): currentUserDto=" + currentUserDto);
+        logger.info("LogInHandlerexecut(): loggedInCookie=" + loggedInCookie);
+
+        assert action.getActionType()==null;
+        return new LogInResult(action.getActionType(), currentUserDto, loggedInCookie);
+	}
+
+	 private UserDto getUserFromCookie(String loggedInCookie) {
+	        UserDto userDto = null;
+	        try {
+	            userDto = authenticator.authenticatCookie(loggedInCookie);
+	        } catch (AuthenticationException e) {
+	            //isLoggedIn = false;
+	        }
+
+	        return userDto;
+	    }
+
+	    private UserDto getUserFromCredentials(String username, String password) {
+	        UserDto userDto = null;
+	        try {
+	            userDto = authenticator.authenticateCredentials(username, password);
+	        } catch (AuthenticationException e) {
+	            //isLoggedIn = false;
+	        }
+
+	        return userDto;
+	    }
 }
