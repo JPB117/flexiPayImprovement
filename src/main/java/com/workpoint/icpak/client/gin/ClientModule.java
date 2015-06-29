@@ -14,6 +14,8 @@ import com.workpoint.icpak.client.security.CurrentUser;
 import com.workpoint.icpak.client.ui.AppManager;
 import com.workpoint.icpak.client.ui.MainPagePresenter;
 import com.workpoint.icpak.client.ui.MainPageView;
+import com.workpoint.icpak.client.ui.accomodation.AccomodationPresenter;
+import com.workpoint.icpak.client.ui.accomodation.AccomodationView;
 import com.workpoint.icpak.client.ui.admin.AdminHomePresenter;
 import com.workpoint.icpak.client.ui.admin.AdminHomeView;
 import com.workpoint.icpak.client.ui.admin.TabPanel;
@@ -132,6 +134,11 @@ public class ClientModule extends AbstractPresenterModule {
 		bindPresenter(OffencesPresenter.class,
 				OffencesPresenter.IOffencesView.class, OffencesView.class,
 				OffencesPresenter.IOffencesProxy.class);
+
+		bindPresenter(AccomodationPresenter.class,
+				AccomodationPresenter.IAccomodationView.class,
+				AccomodationView.class,
+				AccomodationPresenter.IAccomodationProxy.class);
 
 		bindPresenter(EnquiriesPresenter.class,
 				EnquiriesPresenter.IEnquiriesView.class, EnquiriesView.class,

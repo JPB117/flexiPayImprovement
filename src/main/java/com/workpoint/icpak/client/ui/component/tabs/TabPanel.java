@@ -40,4 +40,25 @@ public class TabPanel extends Composite {
 			tabContainer.add(w);
 		}
 	}
+
+	public void setPosition(TabPosition position) {
+		navContainer.setStyleName(position.getStyleName());
+	}
+
+	public enum TabPosition {
+
+		STACKED("nav nav-stacked"), PILLS(
+				"nav nav-tabs");
+
+		private String styleName;
+
+		TabPosition(String styleName) {
+			this.styleName = styleName;
+		}
+
+		public String getStyleName() {
+			return styleName;
+		}
+
+	}
 }

@@ -75,15 +75,8 @@ public class MemberRegistrationView extends ViewImpl implements
 	Anchor aOverseas;
 	@UiField
 	Anchor aNonPractising;
-
-	// @UiField
-	// Anchor aPractising;
-
 	@UiField
 	DivElement divNonPracticing;
-
-	// @UiField
-	// DivElement divPractising;
 
 	@UiField
 	DivElement divAssociate;
@@ -110,7 +103,7 @@ public class MemberRegistrationView extends ViewImpl implements
 	TextField txtEmailAddress;
 	@UiField
 	TextField txtPhone;
-	// @UiField DropDownList<ApplicationType> lstMemberCategory;
+
 	@UiField
 	TextField txtEmployer;
 	@UiField
@@ -122,8 +115,6 @@ public class MemberRegistrationView extends ViewImpl implements
 	IssuesPanel issuesPanelCategory;
 	@UiField
 	TextField txtPostalCode;
-
-	private String selectedName;
 
 	@UiField
 	SpanElement spnNonPracticingFee;
@@ -160,6 +151,7 @@ public class MemberRegistrationView extends ViewImpl implements
 
 	private List<LIElement> liElements = new ArrayList<LIElement>();
 	private List<PageElement> pageElements = new ArrayList<PageElement>();
+	private String selectedName;
 
 	int counter = 0;
 

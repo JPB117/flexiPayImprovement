@@ -1,8 +1,13 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-	xmlns:g="urn:import:com.google.gwt.user.client.ui" 
-	xmlns:d="urn:import:com.workpoint.icpak.client.ui.component">
-	<g:HTMLPanel>
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.workpoint.icpak.client.ui.component">
+	<g:HTMLPanel styleName="tabbable">
+		<g:HTMLPanel styleName="search-bar" ui:field="divSearchBox">
+			<div class="input-append">
+				<d:TextField ui:field="txtSearchBox" placeholder="Search here"></d:TextField>
+			</div>
+		</g:HTMLPanel>
+
 		<d:TableView ui:field="tblView" striped="false" isGrid="false"
 			bordered="true" autoNumber="true" styleName="table-programs">
 		</d:TableView>
