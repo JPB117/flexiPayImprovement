@@ -34,6 +34,7 @@ import com.icpak.rest.security.ICPAKAuthenticatingRealm;
 import com.icpak.rest.security.authentication.AuthenticationException;
 import com.icpak.rest.security.authentication.Authenticator;
 import com.workpoint.icpak.shared.model.UserDto;
+import com.workpoint.icpak.shared.model.auth.AccountStatus;
 import com.workpoint.icpak.shared.model.auth.ActionType;
 import com.workpoint.icpak.shared.model.auth.CurrentUserDto;
 import com.workpoint.icpak.shared.model.auth.LogInAction;
@@ -265,4 +266,16 @@ public class UsersDaoHelper {
 
 	        return userDto;
 	    }
+
+		public void changePassword(String userId,String newPassword) {
+			User user = dao.findByUserId(userId);
+			user.setPassword(newPassword);
+			dao.changePassword(user);
+		}
+
+		public void activateAccount(String userId, AccountStatus activated) {
+			User user = dao.findByUserId(userId);
+			user.setStatus(activated);
+		}
+		
 }

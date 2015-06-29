@@ -34,7 +34,7 @@ public class LoginView extends ViewImpl implements LoginPresenter.ILoginView {
 	@Inject
 	public LoginView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
-		username.getElement().setAttribute("Placeholder", "email Address");
+		username.getElement().setAttribute("Placeholder", "eMail Address");
 		username.getElement().setId("userid");
 		username.removeStyleName("gwt-TextBox");
 

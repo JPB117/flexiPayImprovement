@@ -26,6 +26,11 @@ public class UsersDao extends BaseDao{
         save( user );
     }
     
+    public void changePassword(User user) {
+    	user.setPassword(encrypt(user.getHashedPassword()));
+    	createUser(user);
+	}
+    
     public String encrypt(String password){
     	return new Sha256Hash(password).toHex();
     }
@@ -106,4 +111,5 @@ public class UsersDao extends BaseDao{
 		}
 		return attachment;
 	}
+	
 }

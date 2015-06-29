@@ -35,6 +35,7 @@ import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 import com.workpoint.icpak.shared.api.UsersResource;
 import com.workpoint.icpak.shared.model.UserDto;
+import com.workpoint.icpak.shared.model.auth.AccountStatus;
 import com.workpoint.icpak.shared.model.auth.LogInAction;
 import com.workpoint.icpak.shared.model.auth.LogInResult;
 import com.workpoint.icpak.shared.trx.TransactionDto;
@@ -231,5 +232,20 @@ public class UsersResourceImpl extends BaseResource<User> implements UsersResour
 	public LogInResult execLogin(LogInAction loginData) {
 
 		return helper.execLogin(loginData);
+	}
+	
+	@POST
+	@Path("/{userId}/account-status/activate")
+	@Produces(MediaType.APPLICATION_JSON)
+	public void activateAccount(@PathParam("userId") String userId){
+		helper.activateAccount(userId, AccountStatus.ACTIVATED);
+	}
+	
+	@POST
+	@Path("/userId/password")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public void changePassword(@PathParam("userId") String userId,@QueryParam("password") String newPassword){
+		helper.changePassword(userId, newPassword);
 	}
 }

@@ -24,16 +24,16 @@
 					<div class="col-sm-12">
 						<br />
 						<div class="col-sm-6">
-							WorkPoint Ltd
+							<g:InlineLabel ui:field="lblCompany"></g:InlineLabel>
 							<br />
-							37425-00100
+							<g:InlineLabel ui:field="lblAddress"></g:InlineLabel>
 							<br />
 						</div>
 						<div class="col-sm-6">
 							<b>Quote No:</b>
-							55896
+							<g:InlineLabel ui:field="lblQuoteNo"></g:InlineLabel>
 							<br />
-							23-06-2015
+							<g:InlineLabel ui:field="lblInvoiceDate"></g:InlineLabel>
 							<br />
 						</div>
 					</div>

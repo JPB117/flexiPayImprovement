@@ -5,15 +5,12 @@ import java.util.logging.Logger;
 
 import javax.ws.rs.core.NewCookie;
 
-import com.google.common.base.Strings;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
-import com.google.gwt.user.client.Cookies;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.inject.Inject;
@@ -34,6 +31,7 @@ import com.workpoint.icpak.client.place.NameTokens;
 import com.workpoint.icpak.client.place.ParameterTokens;
 import com.workpoint.icpak.client.security.CurrentUser;
 import com.workpoint.icpak.client.service.AbstractAsyncCallback;
+import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.api.ApiParameters;
 import com.workpoint.icpak.shared.api.SessionResource;
 import com.workpoint.icpak.shared.api.UsersResource;
@@ -47,29 +45,17 @@ public class LoginPresenter extends
 
 	public interface ILoginView extends View {
 		String getUsername();
-
 		String getPassword();
-
 		Anchor getLoginBtn();
-
 		TextBox getPasswordBox();
-
 		boolean isValid();
-
 		void setError(String err);
-
 		void showLoginProgress();
-
 		void clearLoginProgress();
-
 		void clearViewItems(boolean status);
-
 		TextBox getUserNameBox();
-
 		void clearErrors();
-
 		void setOrgName(String orgName);
-
 		void setLoginButtonEnabled(boolean b);
 	}
 
@@ -114,14 +100,19 @@ public class LoginPresenter extends
 	@Override
 	public void prepareFromRequest(PlaceRequest request) {
 		super.prepareFromRequest(request);
+		if (AppContext.hasLoggedInCookie()) {
+			tryLoggingInWithCookieFirst();
+		}
 	}
 
 	@Override
 	protected void onReveal() {
-		if (!Strings.isNullOrEmpty(getLoggedInCookie())) {
-			tryLoggingInWithCookieFirst();
-		}
+//		if (AppContext.hasLoggedInCookie()) {
+//			tryLoggingInWithCookieFirst();
+//		}
 	}
+	
+	
 
 	@Override
 	protected void onBind() {
@@ -244,12 +235,12 @@ public class LoginPresenter extends
 
 	private void tryLoggingInWithCookieFirst() {
 		getView().setLoginButtonEnabled(false);
-		LogInAction logInAction = new LogInAction(getLoggedInCookie());
+		
+		String loggedInCookie = AppContext.getLoggedInCookie();
+		LogInAction logInAction = new LogInAction(loggedInCookie);
+		
 		callServerLoginAction(logInAction);
 	}
 
-	private String getLoggedInCookie() {
-		return Cookies.getCookie(ApiParameters.LOGIN_COOKIE);
-	}
 
 }

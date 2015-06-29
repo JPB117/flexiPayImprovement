@@ -2,6 +2,7 @@ package com.workpoint.icpak.client.util;
 
 import java.util.Date;
 
+import com.google.common.base.Strings;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.user.client.Cookies;
@@ -10,8 +11,11 @@ import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
+import com.gwtplatform.mvp.shared.proxy.PlaceRequest.Builder;
 import com.workpoint.icpak.client.place.NameTokens;
+import com.workpoint.icpak.client.place.ParameterTokens;
 import com.workpoint.icpak.client.security.CurrentUser;
+import com.workpoint.icpak.shared.api.ApiParameters;
 import com.workpoint.icpak.shared.model.UserDto;
 import com.workpoint.icpak.shared.model.Version;
 import com.workpoint.icpak.shared.model.auth.CurrentUserDto;
@@ -62,57 +66,30 @@ public class AppContext {
 	}
 	 
 	public static boolean isValid(){
-		//System.err.println("Session Cookie Asked:: "+CookieManager.getAuthCookie());
-		
-		boolean valid = user.isLoggedIn();
-		
-		if(valid){
-			checkNeedReloadState();
-		}else{
-			//store targetUrl
-			PlaceRequest req = placeManager.getCurrentPlaceRequest();
-			
-			if(req!=null && !req.matchesNameToken(NameTokens.login)){
-				if(req.getNameToken()!=null){
-					String token = placeManager.buildHistoryToken(req);
-					Cookies.setCookie(Definitions.PENDINGREQUESTURL, token);
-				}
-			}
+		boolean isValid = user.isLoggedIn();
+		if(isValid){
+			return true;
 		}
-		return true;
-	}
-	
-	private static void checkNeedReloadState() {
-		if(user.getUser()==null || user.getUser().getUserId()==null){
-			reloadContext();
-		}
+		
+		PlaceRequest request = placeManager.getCurrentPlaceRequest();
+		PlaceRequest place = new Builder().nameToken(NameTokens.login)
+				.with(ParameterTokens.REDIRECT, request.getNameToken())
+				.build();
+		
+		placeManager.revealPlace(place);	
+		
+		return false;
 	}
 
-	static boolean reloading =false;//Controlled reload
+	public static String getLoggedInCookie() {
+		return Cookies.getCookie(ApiParameters.LOGIN_COOKIE);
+	}
+	
+	static boolean isReloading =false;
 	public static void reloadContext() {
-		if(!reloading){
-			reloading=true;
-//			dispatcher.execute(new GetContextRequest(), new TaskServiceCallback<GetContextRequestResult>() {
-//				@Override
-//				public void processResult(GetContextRequestResult result) {
-//					//System.err.println("Reloading Context!!!!!!!!!!!!!!!!!!!!");
-//					organizationName= result.getOrganizationName();
-//					setUserValues(result.getUser());
-//					version = result.getVersion();
-//					reportViewImpl = result.getReportViewImpl();
-//					
-//					ContextLoadedEvent event = new ContextLoadedEvent(result.getUser(), version);
-//					event.setOrganizationName(organizationName);
-//					eventBus.fireEvent(event);
-//					reloading=false;
-//				}
-//				
-//				@Override
-//				public void onFailure(Throwable caught) {
-//					reloading=false;
-//					super.onFailure(caught);
-//				}
-//			});
+		if(!isReloading){
+			isReloading=true;
+			
 		}
 	}
 	
@@ -210,4 +187,10 @@ public class AppContext {
 	public static void clear() {
 		user.fromCurrentUserDto(new CurrentUserDto());
 	}
+
+	public static boolean hasLoggedInCookie() {
+		return !Strings.isNullOrEmpty(getLoggedInCookie());
+	}
+	
+	
 }

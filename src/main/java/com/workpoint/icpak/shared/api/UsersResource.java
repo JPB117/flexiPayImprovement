@@ -10,6 +10,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import com.workpoint.icpak.shared.model.UserDto;
+import com.workpoint.icpak.shared.model.auth.AccountStatus;
 import com.workpoint.icpak.shared.model.auth.LogInAction;
 import com.workpoint.icpak.shared.model.auth.LogInResult;
 
@@ -40,6 +41,18 @@ public interface UsersResource{
 		@Consumes(MediaType.APPLICATION_JSON)
 		@Produces(MediaType.APPLICATION_JSON)
 		public LogInResult execLogin(LogInAction loginData);
+		
+		@POST
+		@Path("/{userId}/account-status/activate")
+		@Produces(MediaType.APPLICATION_JSON)
+		public void activateAccount(@PathParam("userId") String userId);
+		
+		@POST
+		@Path("/userId/password")
+		@Consumes(MediaType.APPLICATION_JSON)
+		@Produces(MediaType.APPLICATION_JSON)
+		public void changePassword(@PathParam("userId") String userId,
+				@QueryParam("password") String newPassword);
 		
 		
 //		@POST

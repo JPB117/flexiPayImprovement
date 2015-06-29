@@ -265,6 +265,8 @@ public class ApplicationFormHeader extends PO{
 	@Column(name="`Application Method`", length=10)
 	private int applicationMethod;
 	
+	private String invoiceRef;
+	
 //	@Transient
 //	private ApplicationCategory category;
 //	
@@ -921,6 +923,7 @@ public class ApplicationFormHeader extends PO{
 	
 	public ApplicationFormHeaderDto toDto(){
 		ApplicationFormHeaderDto dto = new ApplicationFormHeaderDto();
+		copyInto(dto);
 		return dto;
 	}
 
@@ -933,6 +936,7 @@ public class ApplicationFormHeader extends PO{
 		setAddress1(dto.getAddress1());
 		setPostCode(dto.getPostCode());
 		setEmployer(dto.getEmployer());
+		setInvoiceRef(dto.getInvoiceRef());
 	}
 
 	public void copyInto(ApplicationFormHeaderDto dto) {
@@ -949,7 +953,16 @@ public class ApplicationFormHeader extends PO{
 		dto.setCity1(city1);
 		dto.setAddress1(address1);
 		dto.setPostCode(postCode);
+		dto.setInvoiceRef(invoiceRef);
 		
+	}
+
+	public String getInvoiceRef() {
+		return invoiceRef;
+	}
+
+	public void setInvoiceRef(String invoiceRef) {
+		this.invoiceRef = invoiceRef;
 	}
 	
 }

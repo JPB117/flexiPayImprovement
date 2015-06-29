@@ -8,8 +8,6 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.GwtEvent.Type;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Anchor;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rest.delegates.client.ResourceDelegate;
@@ -30,9 +28,11 @@ import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.TextField;
 import com.workpoint.icpak.shared.api.ApplicationFormResource;
 import com.workpoint.icpak.shared.api.CategoriesResource;
+import com.workpoint.icpak.shared.api.InvoiceResource;
 import com.workpoint.icpak.shared.api.UsersResource;
-import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 import com.workpoint.icpak.shared.model.ApplicationCategoryDto;
+import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
+import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.UserDto;
 
 public class MemberRegistrationPresenter
@@ -65,6 +65,8 @@ public class MemberRegistrationPresenter
 		void showError(String string);
 
 		void setMiddleHeight();
+
+		void bindInvoice(InvoiceDto invoice);
 	}
 
 	@ProxyCodeSplit
@@ -87,16 +89,20 @@ public class MemberRegistrationPresenter
 
 	private ResourceDelegate<CategoriesResource> categoriesDelegate;
 
+	private ResourceDelegate<InvoiceResource> invoiceResource;
+
 	@Inject
 	public MemberRegistrationPresenter(final EventBus eventBus,
 			final MyView view, final MyProxy proxy,
 			ResourceDelegate<ApplicationFormResource> applicationDelegate,
 			ResourceDelegate<UsersResource> usersDelegate,
-			ResourceDelegate<CategoriesResource> categoriesDelegate) {
+			ResourceDelegate<CategoriesResource> categoriesDelegate,
+			ResourceDelegate<InvoiceResource> invoiceResource) {
 		super(eventBus, view, proxy);
 		this.applicationDelegate = applicationDelegate;
 		this.usersDelegate = usersDelegate;
 		this.categoriesDelegate = categoriesDelegate;
+		this.invoiceResource = invoiceResource;
 	}
 
 	@Override
@@ -135,22 +141,6 @@ public class MemberRegistrationPresenter
 					}
 
 				} else if (getView().getCounter() == 1) {
-					Window.alert("Category not selected!!");
-					// This wont work since MemberRegistrationPresenter injects
-					// itself in the root panel,
-					// not MainPagePresenter - i.e At this point
-					// MainPagePresenter
-					// is not instantiated, yet AppManager popup is presented by
-
-					// MainPagePresenter
-					// AppManager.showPopUp("Select Category",
-					// "Please Select a member category",
-					// new OnOptionSelected() {
-					// @Override
-					// public void onSelect(String name) {
-					// }
-					// }, "Ok");
-
 					getView().showError("Kindly select a category");
 				}
 
@@ -177,7 +167,9 @@ public class MemberRegistrationPresenter
 						removeError();
 						// result;
 						getView().bindForm(result);
-						getView().next();
+						
+						getInvoice(result.getInvoiceRef());
+					
 					}
 
 					private void removeError() {
@@ -191,6 +183,19 @@ public class MemberRegistrationPresenter
 						super.onFailure(caught);
 					}
 				}).create(applicationForm);
+		
+	}
+
+	protected void getInvoice(String invoiceRef) {
+		
+		invoiceResource.withCallback(new AbstractAsyncCallback<InvoiceDto>() {
+			@Override
+			public void onSuccess(InvoiceDto invoice) {
+				getView().bindInvoice(invoice);
+				getView().next();
+			}
+		}).getInvoice(invoiceRef);
+		
 	}
 
 	protected void checkExists(String email) {
@@ -224,7 +229,6 @@ public class MemberRegistrationPresenter
 	@Override
 	protected void onReset() {
 		super.onReset();
-
 		getView().setMiddleHeight();
 	}
 

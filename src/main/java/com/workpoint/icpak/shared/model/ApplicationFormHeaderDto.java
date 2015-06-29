@@ -102,6 +102,7 @@ public class ApplicationFormHeaderDto extends SerializableObj{
 	private String vatBusPostingGroup;
 	private int applicationMethod;
 	private ApplicationCategoryDto category;
+	private String invoiceRef;
 	
 	public ApplicationFormHeaderDto() {
 	}
@@ -750,6 +751,14 @@ public class ApplicationFormHeaderDto extends SerializableObj{
 	public String toString() {
 		
 		return "{email:"+email+",address1:"+address1+"}";
+	}
+
+	public String getInvoiceRef() {
+		return invoiceRef;
+	}
+
+	public void setInvoiceRef(String invoiceRef) {
+		this.invoiceRef = invoiceRef;
 	}
 	
 }

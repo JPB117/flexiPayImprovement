@@ -7,12 +7,15 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Widget;
 import com.workpoint.icpak.client.ui.component.TableHeader;
 import com.workpoint.icpak.client.ui.component.TableView;
 import com.workpoint.icpak.client.ui.events.registration.proforma.details.ProformaTableRow;
 import com.workpoint.icpak.client.ui.events.registration.proforma.last.ProformaLastRow;
-import com.workpoint.icpak.client.ui.statements.row.StatementTableRow;
+import com.workpoint.icpak.client.ui.util.DateUtils;
+import com.workpoint.icpak.shared.model.InvoiceDto;
+import com.workpoint.icpak.shared.model.InvoiceLineDto;
 
 public class ProformaInvoice extends Composite {
 
@@ -22,8 +25,11 @@ public class ProformaInvoice extends Composite {
 	interface ProformaInvoiceUiBinder extends UiBinder<Widget, ProformaInvoice> {
 	}
 
-	@UiField
-	TableView tblProforma;
+	@UiField TableView tblProforma;
+	@UiField InlineLabel lblCompany;
+	@UiField InlineLabel lblAddress;
+	@UiField InlineLabel lblQuoteNo;
+	@UiField InlineLabel lblInvoiceDate;
 
 	public ProformaInvoice() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -36,7 +42,7 @@ public class ProformaInvoice extends Composite {
 	public void createHeader() {
 		List<TableHeader> th = new ArrayList<TableHeader>();
 		th.add(new TableHeader("Description"));
-		th.add(new TableHeader("Quantity"));
+		th.add(new TableHeader("Unit Price"));
 		th.add(new TableHeader("Amount"));
 		tblProforma.setTableHeaders(th);
 	}
@@ -51,6 +57,22 @@ public class ProformaInvoice extends Composite {
 
 	public void clearRows() {
 		tblProforma.clearRows();
+	}
+
+	public void setInvoice(InvoiceDto invoice) {
+		lblCompany.setText(invoice.getCompanyName());
+		lblAddress.setText(invoice.getCompanyAddress());
+		lblInvoiceDate.setText(DateUtils.DATEFORMAT.format(invoice.getDate()));
+		lblQuoteNo.setText(invoice.getDocumentNo());
+		
+		for(InvoiceLineDto line: invoice.getLines()){
+			tblProforma.addRow(new InlineLabel(line.getDescription()),
+					new InlineLabel(line.getUnitPrice()+""),
+					new InlineLabel(line.getTotalAmount()+""));
+		}
+		tblProforma.addRow(new InlineLabel(),
+				new InlineLabel("Grand Total"),
+				new InlineLabel(invoice.getAmount()+""));
 	}
 
 }
