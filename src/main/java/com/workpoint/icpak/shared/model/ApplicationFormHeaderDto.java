@@ -7,14 +7,14 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
 
-import com.icpak.rest.models.membership.Category;
+import com.icpak.rest.models.membership.ApplicationCategory;
 import com.wordnik.swagger.annotations.ApiModel;
 
 @ApiModel(description="Application Forms Filled by a member")
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlSeeAlso(Category.class)
+@XmlSeeAlso(ApplicationCategory.class)
 public class ApplicationFormHeaderDto extends SerializableObj{
 
 	/**
@@ -101,7 +101,7 @@ public class ApplicationFormHeaderDto extends SerializableObj{
 	private String genBusPostingGroup;
 	private String vatBusPostingGroup;
 	private int applicationMethod;
-	private CategoryDto category;
+	private ApplicationCategoryDto category;
 	
 	public ApplicationFormHeaderDto() {
 	}
@@ -730,11 +730,11 @@ public class ApplicationFormHeaderDto extends SerializableObj{
 		this.applicationMethod = applicationMethod;
 	}
 
-	public CategoryDto getCategory() {
+	public ApplicationCategoryDto getCategory() {
 		return category;
 	}
 
-	public void setCategory(CategoryDto category) {
+	public void setCategory(ApplicationCategoryDto category) {
 		this.category = category;
 	}
 

@@ -18,7 +18,7 @@ import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 import com.workpoint.icpak.shared.api.CategoriesResource;
-import com.workpoint.icpak.shared.model.CategoryDto;
+import com.workpoint.icpak.shared.model.ApplicationCategoryDto;
 
 
 @Path("categories")
@@ -34,22 +34,22 @@ public class CategoryResourceImpl implements CategoriesResource{
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value="Retrieve all active Categories")
-	public List<CategoryDto> getAll() {
+	public List<ApplicationCategoryDto> getAll() {
 		
-		List<CategoryDto> dtos = helper.getAllCategories();
+		List<ApplicationCategoryDto> dtos = helper.getAllCategories();
 		return dtos;
 	}
 	
 	@GET
 	@Path("/{categoryId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	@ApiOperation(value="Get a category by categoryId", response=CategoryDto.class, consumes=MediaType.APPLICATION_JSON)
-	public CategoryDto getById(	
+	@ApiOperation(value="Get a category by categoryId", response=ApplicationCategoryDto.class, consumes=MediaType.APPLICATION_JSON)
+	public ApplicationCategoryDto getById(	
 			@ApiParam(value="CategoryDto Id of the category to fetch", required=true) 
 			@PathParam("categoryId") String categoryId) {
 		
 		String uri = getUri();
-		CategoryDto dto = helper.getCategoryById(categoryId).toDto();
+		ApplicationCategoryDto dto = helper.getCategoryById(categoryId).toDto();
 		dto.setUri(uri);
 		return dto;
 	}
@@ -57,8 +57,8 @@ public class CategoryResourceImpl implements CategoriesResource{
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	@ApiOperation(value="Create a new category", response=CategoryDto.class, consumes=MediaType.APPLICATION_JSON)
-	public CategoryDto create(CategoryDto category) {
+	@ApiOperation(value="Create a new category", response=ApplicationCategoryDto.class, consumes=MediaType.APPLICATION_JSON)
+	public ApplicationCategoryDto create(ApplicationCategoryDto category) {
 		
 		helper.createCategory(category);
 		String uri = getUri()+"/"+category.getRefId();
@@ -71,12 +71,12 @@ public class CategoryResourceImpl implements CategoriesResource{
 	@Path("/{categoryId}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	@ApiOperation(value="Update an existing category", response=CategoryDto.class, 
+	@ApiOperation(value="Update an existing category", response=ApplicationCategoryDto.class, 
 	consumes=MediaType.APPLICATION_JSON, produces=MediaType.APPLICATION_JSON)
-	public CategoryDto update(
+	public ApplicationCategoryDto update(
 			@ApiParam(value="CategoryDto Id of the category to update", required=true)
 			@PathParam("categoryId") String categoryId, 
-			CategoryDto category) {
+			ApplicationCategoryDto category) {
 		helper.updateCategory(categoryId, category);
 		category.setUri(getUri());
 		

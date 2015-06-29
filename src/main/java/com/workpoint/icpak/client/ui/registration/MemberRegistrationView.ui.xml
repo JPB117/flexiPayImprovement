@@ -397,23 +397,23 @@
 
 									<div class="wizard-footer">
 										<div class="pull-right">
-											<g:Anchor
+											<d:ActionLink
 												styleName='btn btn-next btn-fill btn-success btn-wd
 										btn-sm hide'
 												ui:field="aNext">
 												Proceed
-											</g:Anchor>
+											</d:ActionLink>
 										</div>
 										<div class="pull-left">
-											<g:Anchor
+											<d:ActionLink
 												styleName='btn btn-previous btn-fill btn-default btn-wd btn-sm hide'
 												ui:field="aBack">Back
-											</g:Anchor>
+											</d:ActionLink>
 
-											<g:Anchor
+											<d:ActionLink
 												styleName='btn btn-previous btn-fill btn-default btn-wd btn-sm hide'
 												ui:field="aAccount" href="#login">Go to my Account
-											</g:Anchor>
+											</d:ActionLink>
 										</div>
 
 										<div class="clearfix"></div>

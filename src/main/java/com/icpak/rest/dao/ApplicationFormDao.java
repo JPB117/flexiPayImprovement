@@ -7,7 +7,7 @@ import com.icpak.rest.exceptions.ServiceException;
 import com.icpak.rest.models.ErrorCodes;
 import com.icpak.rest.models.membership.ApplicationFormEducational;
 import com.icpak.rest.models.membership.ApplicationFormHeader;
-import com.icpak.rest.models.membership.Category;
+import com.icpak.rest.models.membership.ApplicationCategory;
 import com.icpak.rest.models.membership.EduType;
 import com.workpoint.icpak.shared.model.ApplicationType;
 
@@ -54,8 +54,8 @@ public class ApplicationFormDao extends BaseDao{
 			return application;
 		}
 
-		public Category findApplicationCategory(ApplicationType type) {
-			return getSingleResultOrNull(getEntityManager().createQuery("select u from Category u"
+		public ApplicationCategory findApplicationCategory(ApplicationType type) {
+			return getSingleResultOrNull(getEntityManager().createQuery("select u from ApplicationCategory u"
 	    			+ " where u.isActive=1 and u.type=:type").setParameter("type", type));
 		}
 
@@ -99,15 +99,15 @@ public class ApplicationFormDao extends BaseDao{
 						.setParameter("type", type.ordinal()));
 		}
 
-		public List<Category> getAllCategories() {
+		public List<ApplicationCategory> getAllCategories() {
 			
-			return getResultList(getEntityManager().createQuery("FROM Category c where c.isActive=1"));
+			return getResultList(getEntityManager().createQuery("FROM ApplicationCategory c where c.isActive=1"));
 		}
 
-		public Category getCategory(String categoryId) {
+		public ApplicationCategory getCategory(String categoryId) {
 			
 			return getSingleResultOrNull(getEntityManager()
-					.createQuery("FROM Category c where c.refId=:refId")
+					.createQuery("FROM ApplicationCategory c where c.refId=:refId")
 					.setParameter("refId", categoryId));
 		}
 

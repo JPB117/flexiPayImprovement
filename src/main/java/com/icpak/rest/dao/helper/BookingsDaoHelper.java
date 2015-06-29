@@ -22,7 +22,7 @@ import com.icpak.rest.models.ErrorCodes;
 import com.icpak.rest.models.event.Booking;
 import com.icpak.rest.models.event.Delegate;
 import com.icpak.rest.models.event.Event;
-import com.icpak.rest.models.membership.Category;
+import com.icpak.rest.models.membership.ApplicationCategory;
 import com.icpak.rest.models.membership.Contact;
 import com.icpak.rest.models.util.Attachment;
 import com.icpak.rest.utils.Doc;

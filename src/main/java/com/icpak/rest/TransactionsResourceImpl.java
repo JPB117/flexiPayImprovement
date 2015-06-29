@@ -31,7 +31,6 @@ public class TransactionsResourceImpl implements TransactionsResource {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<TransactionDto> getAllTrxs(@QueryParam("userId") String userId) {
-
 		return trxDaoHelper.getTransactions(userId);
 	}
 }

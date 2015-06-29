@@ -16,29 +16,12 @@
 
 package com.workpoint.icpak.shared.api;
 
-import javax.ws.rs.CookieParam;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Cookie;
-import javax.ws.rs.core.MediaType;
-
-import com.workpoint.icpak.shared.model.auth.CurrentUserDto;
-
-
-@Path("/session")
-@Produces(MediaType.APPLICATION_JSON)
-public interface SessionResource {
-	
-    @DELETE
-    void logout();
-
-    @GET
-    CurrentUserDto getCurrentUser();
-
-    @POST
-    @Path("/remember-me")
-    void rememberMe(@CookieParam("LoggedInCookie") Cookie cookie);
+public class ApiParameters {
+    public static final String ID = "id";
+    public static final String LIMIT = "limit";
+    public static final String OFFSET = "offset";
+    public static final String COLOR = "color";
+    public static final String DATE = "date";
+    public static final String DATE_FORMAT = "MM-yyyy-dd";
+    public static final String LOGIN_COOKIE = "LoggedInCookie";
 }

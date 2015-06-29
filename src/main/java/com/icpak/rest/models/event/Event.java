@@ -1,7 +1,9 @@
 package com.icpak.rest.models.event;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -16,6 +18,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 import com.icpak.rest.models.base.PO;
 import com.wordnik.swagger.annotations.ApiModel;
+import com.workpoint.icpak.shared.model.AccommodationDto;
 import com.workpoint.icpak.shared.model.EventDto;
 import com.workpoint.icpak.shared.model.EventStatus;
 import com.workpoint.icpak.shared.model.EventType;
@@ -30,7 +33,7 @@ import com.workpoint.icpak.shared.model.EventType;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlSeeAlso({Booking.class})
+@XmlSeeAlso({Booking.class, Accommodation.class})
 
 @Entity
 @Table(name="event")
@@ -63,6 +66,10 @@ public class Event extends PO{
 	@XmlTransient
 	@OneToMany(mappedBy="event")
 	Set<Booking> bookings=new HashSet<>();
+	
+	@OneToMany(mappedBy="event")
+	Set<Accommodation> accommodation=new HashSet<>();
+	
 	
 	public Event() {
 	}
@@ -185,6 +192,7 @@ public class Event extends PO{
 
 	public EventDto toDto() {
 		EventDto dto = new EventDto();
+		dto.setRefId(getRefId());
 		dto.setCpdHours(cpdHours);
 		dto.setDescription(description);
 		dto.setEndDate(endDate);
@@ -195,6 +203,15 @@ public class Event extends PO{
 		dto.setStatus(status);
 		dto.setType(type);
 		dto.setVenue(dto.getVenue());
+		
+		if(getAccommodation()!=null){
+			List<AccommodationDto> accommodations  = new ArrayList<>();
+			for(Accommodation a: getAccommodation()){
+				accommodations.add(a.toDto());
+			}
+			dto.setAccommodation(accommodations);
+		}
+		
 		
 		return dto;
 	}
@@ -210,6 +227,14 @@ public class Event extends PO{
 		setStatus(dto.getStatus());
 		setType(dto.getType());
 		setVenue(dto.getVenue());
+	}
+
+	public Set<Accommodation> getAccommodation() {
+		return accommodation;
+	}
+
+	public void setAccommodation(Set<Accommodation> accommodation) {
+		this.accommodation = accommodation;
 	}
 
 }

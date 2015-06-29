@@ -16,8 +16,8 @@
 
 package com.workpoint.icpak.client.security;
 
-import com.workpoint.icpak.shared.model.CurrentUserDto;
 import com.workpoint.icpak.shared.model.UserDto;
+import com.workpoint.icpak.shared.model.auth.CurrentUserDto;
 
 
 public class CurrentUser {

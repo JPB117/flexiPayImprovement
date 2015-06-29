@@ -1,17 +1,19 @@
 package com.workpoint.icpak.client.ui.login;
 
-//import com.workpoint.icpak.shared.model.Value;
-//import com.workpoint.icpak.shared.model.settingss.SETTINGNAME;
-//import com.workpoint.icpak.shared.model.settingss.Setting;
-//import com.workpoint.icpak.shared.requests.GetSettingsRequest;
-//import com.workpoint.icpak.shared.requests.LoginRequest;
-//import com.workpoint.icpak.shared.responses.GetSettingsResponse;
-//import com.workpoint.icpak.shared.responses.LoginRequestResult;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.ws.rs.core.NewCookie;
+
+import com.google.common.base.Strings;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.user.client.Cookies;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.inject.Inject;
@@ -27,15 +29,21 @@ import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealRootLayoutContentEvent;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
+import com.gwtplatform.mvp.shared.proxy.PlaceRequest.Builder;
 import com.workpoint.icpak.client.place.NameTokens;
+import com.workpoint.icpak.client.place.ParameterTokens;
+import com.workpoint.icpak.client.security.CurrentUser;
 import com.workpoint.icpak.client.service.AbstractAsyncCallback;
-import com.workpoint.icpak.client.ui.security.LoginGateKeeper;
-import com.workpoint.icpak.client.util.AppContext;
+import com.workpoint.icpak.shared.api.ApiParameters;
+import com.workpoint.icpak.shared.api.SessionResource;
 import com.workpoint.icpak.shared.api.UsersResource;
-import com.workpoint.icpak.shared.model.UserDto;
+import com.workpoint.icpak.shared.model.auth.ActionType;
+import com.workpoint.icpak.shared.model.auth.CurrentUserDto;
+import com.workpoint.icpak.shared.model.auth.LogInAction;
+import com.workpoint.icpak.shared.model.auth.LogInResult;
 
 public class LoginPresenter extends
-		Presenter<LoginPresenter.ILoginView, LoginPresenter.MyProxy> {
+		Presenter<LoginPresenter.ILoginView, LoginPresenter.ILoginProxy> {
 
 	public interface ILoginView extends View {
 		String getUsername();
@@ -61,35 +69,41 @@ public class LoginPresenter extends
 		void clearErrors();
 
 		void setOrgName(String orgName);
+
+		void setLoginButtonEnabled(boolean b);
 	}
 
 	@ProxyCodeSplit
 	@NameToken(NameTokens.login)
 	@NoGatekeeper
-	public interface MyProxy extends ProxyPlace<LoginPresenter> {
+	public interface ILoginProxy extends ProxyPlace<LoginPresenter> {
 	}
+
+	private final CurrentUser currentUser;
 
 	@Inject
 	RestDispatch requestHelper;
-
+	
 	@Inject
 	PlaceManager placeManager;
 
-	@Inject
-	LoginGateKeeper gateKeeper;
-
-	String redirect = null;
+	private static final Logger LOGGER = Logger.getLogger(LoginPresenter.class
+			.getName());
+	private static final int REMEMBER_ME_DAYS = 14;
 
 	private ResourceDelegate<UsersResource> usersDelegate;
 
+	private ResourceDelegate<SessionResource> sessionResource;
+
 	@Inject
 	public LoginPresenter(final EventBus eventBus, final ILoginView view,
-			final MyProxy proxy, 
-			ResourceDelegate<UsersResource> usersDelegate
-			) {
+			final ILoginProxy proxy, final CurrentUser currentUser,
+			ResourceDelegate<UsersResource> usersDelegate,
+			ResourceDelegate<SessionResource> sessionResource) {
 		super(eventBus, view, proxy);
 		this.usersDelegate = usersDelegate;
-		
+		this.currentUser = currentUser;
+		this.sessionResource = sessionResource;
 	}
 
 	@Override
@@ -103,13 +117,21 @@ public class LoginPresenter extends
 	}
 
 	@Override
+	protected void onReveal() {
+		if (!Strings.isNullOrEmpty(getLoggedInCookie())) {
+			tryLoggingInWithCookieFirst();
+		}
+	}
+
+	@Override
 	protected void onBind() {
 		super.onBind();
 
 		getView().getLoginBtn().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				login();
+				callServerLoginAction(new LogInAction(getView().getUsername(),
+						getView().getPassword()));
 			}
 		});
 
@@ -117,7 +139,8 @@ public class LoginPresenter extends
 			@Override
 			public void onKeyDown(KeyDownEvent event) {
 				if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-					login();
+					callServerLoginAction(new LogInAction(getView()
+							.getUsername(), getView().getPassword()));
 				}
 			}
 		};
@@ -130,54 +153,103 @@ public class LoginPresenter extends
 		getView().clearViewItems(true);
 	};
 
+	private void callServerLoginAction(final LogInAction logInAction) {
 
-	protected void login() {
 		if (getView().isValid()) {
 			getView().clearErrors();
 			getView().showLoginProgress();
-			
-			usersDelegate.withCallback(new AbstractAsyncCallback<UserDto>() {
-				@Override
-				public void onSuccess(UserDto result) {
-					AppContext.setSessionValues(result,"XXXXX");
-					placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.profile).build());
-				}
-			}).login(getView().getUsername(),
-					getView().getPassword());
 
-			// requestHelper.execute(new LoginRequest(getView().getUsername(),
-			// getView().getPassword()),
-			// new TaskServiceCallback<LoginRequestResult>() {
-			// @Override
-			// public void processResult(LoginRequestResult result) {
-			// boolean isValid = result.isValid();
-			// if(isValid){
-			// AppContext.setSessionValues(result.getUser(),
-			// result.getSessionId());
-			//
-			// if(redirect!=null){
-			// History.newItem(redirect);
-			// }else{
-			// placeManager.revealDefaultPlace();
-			// }
-			// AppContext.reloadContext();
-			// fireEvent(new LoadAlertsEvent());
-			//
-			// }else{
-			// getView().clearLoginProgress();
-			// getView().getPasswordBox().setText("");
-			// getView().setError("Wrong username or password");
-			// }
-			// }
-			//
-			// @Override
-			// public void onFailure(Throwable caught) {
-			// getView().clearLoginProgress();
-			// super.onFailure(caught);
-			// getView().setError("Could authenticate user. Please report this to your administrator");
-			// }
-			// });
+			usersDelegate.withCallback(
+					new AbstractAsyncCallback<LogInResult>() {
+						@Override
+						public void onSuccess(LogInResult result) {
+							getView().clearLoginProgress();
+							
+							LOGGER.log(Level.SEVERE, "Wrong username or password......");
+							if (result.getCurrentUserDto().isLoggedIn()) {
+								setLoggedInCookie(result.getLoggedInCookie());
+							}
+
+							if (result.getActionType() == ActionType.VIA_COOKIE) {
+								onLoginCallSucceededForCookie(result
+										.getCurrentUserDto());
+							} else {
+								onLoginCallSucceeded(result.getCurrentUserDto());
+							}
+
+						}
+
+						@Override
+						public void onFailure(Throwable caught) {
+							getView().clearLoginProgress();
+							super.onFailure(caught);
+							getView().setError("Could authenticate user. Please report this to your administrator");
+							LOGGER.log(
+									Level.SEVERE,
+									"callServerLoginAction(): Server failed to process login call.",
+									caught);
+						}
+					}).execLogin(logInAction);
 		}
+
+	}
+
+	private void onLoginCallSucceededForCookie(CurrentUserDto currentUserDto) {
+		getView().setLoginButtonEnabled(true);
+
+		if (currentUserDto.isLoggedIn()) {
+			onLoginCallSucceeded(currentUserDto);
+		}
+	}
+
+	private void onLoginCallSucceeded(CurrentUserDto currentUserDto) {
+		LOGGER.log(Level.SEVERE, "Wrong username or password......");
+		
+		if (currentUserDto.isLoggedIn()) {
+			currentUser.fromCurrentUserDto(currentUserDto);
+			redirectToLoggedOnPage();
+		} else {
+			getView().setError("Wrong username or password");
+		}
+	}
+
+	private void redirectToLoggedOnPage() {
+		String token = placeManager.getCurrentPlaceRequest().getParameter(
+				ParameterTokens.REDIRECT, NameTokens.getOnLoginDefaultPage());
+		PlaceRequest placeRequest = new Builder().nameToken(token).build();
+
+		placeManager.revealPlace(placeRequest);
+	}
+
+	private void setLoggedInCookie(String value) {
+		String path = "/";
+		String domain = getDomain();
+		int maxAge = REMEMBER_ME_DAYS * 24 * 60 * 60 * 1000;
+		boolean secure = false;
+
+		NewCookie newCookie = new NewCookie(ApiParameters.LOGIN_COOKIE, value,
+				path, domain, "", maxAge, secure);
+		sessionResource.withoutCallback().rememberMe(newCookie);
+
+		LOGGER.info("LoginPresenter.setLoggedInCookie() Set client cookie="
+				+ value);
+	}
+
+	private String getDomain() {
+		String domain = GWT.getHostPageBaseURL().replaceAll(".*//", "")
+				.replaceAll("/", "").replaceAll(":.*", "");
+
+		return "localhost".equalsIgnoreCase(domain) ? null : domain;
+	}
+
+	private void tryLoggingInWithCookieFirst() {
+		getView().setLoginButtonEnabled(false);
+		LogInAction logInAction = new LogInAction(getLoggedInCookie());
+		callServerLoginAction(logInAction);
+	}
+
+	private String getLoggedInCookie() {
+		return Cookies.getCookie(ApiParameters.LOGIN_COOKIE);
 	}
 
 }

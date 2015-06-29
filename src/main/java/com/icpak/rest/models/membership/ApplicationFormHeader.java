@@ -265,9 +265,9 @@ public class ApplicationFormHeader extends PO{
 	@Column(name="`Application Method`", length=10)
 	private int applicationMethod;
 	
-	@Transient
-	private Category category;
-	
+//	@Transient
+//	private ApplicationCategory category;
+//	
 	public ApplicationFormHeader() {
 	}
 
@@ -903,13 +903,13 @@ public class ApplicationFormHeader extends PO{
 		this.applicationMethod = applicationMethod;
 	}
 
-	public Category getCategory() {
-		return category;
-	}
-
-	public void setCategory(Category category) {
-		this.category = category;
-	}
+//	public ApplicationCategory getCategory() {
+//		return category;
+//	}
+//
+//	public void setCategory(ApplicationCategory category) {
+//		this.category = category;
+//	}
 
 	public String getEmployer() {
 		return employer;
@@ -941,9 +941,9 @@ public class ApplicationFormHeader extends PO{
 		dto.setOtherNames(otherNames);
 		dto.setEmail(contactEmail);
 		
-		if(getCategory()!=null){
-			dto.setCategory(category.toDto());
-		}
+//		if(getCategory()!=null){
+//			dto.setCategory(category.toDto());
+//		}
 		
 		dto.setEmployer(employer);
 		dto.setCity1(city1);

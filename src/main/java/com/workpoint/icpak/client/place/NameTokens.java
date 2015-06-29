@@ -77,4 +77,9 @@ public class NameTokens {
 		return payment;
 	}
 
+	public static String getOnLoginDefaultPage() {
+		
+		return profile;
+	}
+
 }

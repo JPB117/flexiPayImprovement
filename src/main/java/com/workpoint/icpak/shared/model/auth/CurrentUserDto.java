@@ -14,13 +14,16 @@
  * the License.
  */
 
-package com.workpoint.icpak.shared.model;
+package com.workpoint.icpak.shared.model.auth;
 
 import java.io.Serializable;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.xml.bind.annotation.XmlRootElement;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.workpoint.icpak.shared.model.UserDto;
+
+@XmlRootElement
 public class CurrentUserDto implements Serializable {
 	
     /**
@@ -36,8 +39,8 @@ public class CurrentUserDto implements Serializable {
 
     @JsonCreator
     public CurrentUserDto(
-            @JsonProperty("loggedIn") Boolean loggedIn,
-            @JsonProperty("user") UserDto user) {
+            Boolean loggedIn,
+            UserDto user) {
         this.loggedIn = loggedIn;
         this.user = user;
     }
@@ -58,4 +61,8 @@ public class CurrentUserDto implements Serializable {
         s += " CurrentUserDto }";
         return s;
     }
+
+	public void setLoggedIn(Boolean loggedIn) {
+		this.loggedIn = loggedIn;
+	}
 }

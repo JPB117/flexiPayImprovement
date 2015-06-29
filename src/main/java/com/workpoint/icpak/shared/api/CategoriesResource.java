@@ -12,32 +12,32 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import com.workpoint.icpak.shared.model.CategoryDto;
+import com.workpoint.icpak.shared.model.ApplicationCategoryDto;
 
 @Path("categories")
 public interface CategoriesResource {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<CategoryDto> getAll();
+	public List<ApplicationCategoryDto> getAll();
 	
 	@GET
 	@Path("/{categoryId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public CategoryDto getById(@PathParam("categoryId") String categoryId);
+	public ApplicationCategoryDto getById(@PathParam("categoryId") String categoryId);
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public CategoryDto create(CategoryDto category);
+	public ApplicationCategoryDto create(ApplicationCategoryDto category);
 
 	@PUT
 	@Path("/{categoryId}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public CategoryDto update(
+	public ApplicationCategoryDto update(
 			@PathParam("categoryId") String categoryId, 
-			CategoryDto category);
+			ApplicationCategoryDto category);
 	
 	@DELETE
 	@Path("/{categoryId}")

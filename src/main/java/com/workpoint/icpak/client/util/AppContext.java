@@ -11,8 +11,10 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.workpoint.icpak.client.place.NameTokens;
+import com.workpoint.icpak.client.security.CurrentUser;
 import com.workpoint.icpak.shared.model.UserDto;
 import com.workpoint.icpak.shared.model.Version;
+import com.workpoint.icpak.shared.model.auth.CurrentUserDto;
 
 
 /**
@@ -25,11 +27,10 @@ public class AppContext {
 	
 	@Inject static EventBus eventBus;
 	@Inject static PlaceManager placeManager;
+	@Inject static CurrentUser user;
 	static Version version;
 
 	static String organizationName;
-	
-	private static final UserDto user = new UserDto();
 	
 	static Timer timer = new Timer() {
 		
@@ -63,8 +64,7 @@ public class AppContext {
 	public static boolean isValid(){
 		//System.err.println("Session Cookie Asked:: "+CookieManager.getAuthCookie());
 		
-		boolean valid = false;
-		valid  = CookieManager.getAuthCookie()!=null;
+		boolean valid = user.isLoggedIn();
 		
 		if(valid){
 			checkNeedReloadState();
@@ -83,7 +83,7 @@ public class AppContext {
 	}
 	
 	private static void checkNeedReloadState() {
-		if(user.getUserId()==null){
+		if(user.getUser()==null || user.getUser().getUserId()==null){
 			reloadContext();
 		}
 	}
@@ -117,12 +117,6 @@ public class AppContext {
 	}
 	
 	protected static void setUserValues(UserDto User) {
-		user.setName(User.getName());
-		user.setUserId(User.getUserId());
-		//user.setGroups(User.getGroups());
-		user.setEmail(User.getEmail());
-		user.setSurname(User.getSurname());
-		user.setId(User.getId());
 		CookieManager.setSessionValue(Definitions.ISADMINSESSION, User.isAdmin()? "Y":"N");
 	}
 
@@ -137,15 +131,15 @@ public class AppContext {
 	}
 	
 	public static String getUserId(){
-		return user.getUserId();
+		return user.getUser().getRefId();
 	}
 	
 	public static String getUserNames(){
-		return user.getName();
+		return user.getUser().getFullName();
 	}
 	
 	public static String getUserGroups(){
-		return user.getGroupsAsString();
+		return user.getUser().getGroupsAsString();
 	}
 	
 	public static EventBus getEventBus(){
@@ -161,7 +155,7 @@ public class AppContext {
 	}
 	
 	public static UserDto getContextUser(){
-		return user;
+		return user.getUser();
 	}
 
 	public static boolean isCurrentUserAdmin() {
@@ -201,7 +195,7 @@ public class AppContext {
 		String moduleUrl = getBaseUrl();				
 		String url = moduleUrl
 				+ "/getreport?ACTION=GetUser&userId="
-				+ user.getUserId();
+				+ user.getUser().getUserId();
 		return url;
 	}
 	
@@ -214,11 +208,6 @@ public class AppContext {
 	}
 	
 	public static void clear() {
-		user.setEmail(null);
-		//user.setGroups(new ArrayList<UserGroup>());
-		user.setId(null);
-		user.setSurname(null);
-		user.setPassword(null);
-		user.setUserId(null);
+		user.fromCurrentUserDto(new CurrentUserDto());
 	}
 }

@@ -12,7 +12,7 @@ import com.icpak.rest.models.util.Attachment;
 
 public class UsersDao extends BaseDao{
 
-    public User findUser(String username) {
+    public User findUserByUsername(String username) {
         assert username!=null;
         String query = "from User u where u.username = :username";
         return getSingleResultOrNull(getEntityManager().createQuery(query)
