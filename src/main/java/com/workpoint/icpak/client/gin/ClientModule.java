@@ -63,6 +63,8 @@ import com.workpoint.icpak.client.ui.home.HomePresenter;
 import com.workpoint.icpak.client.ui.home.HomeView;
 import com.workpoint.icpak.client.ui.login.LoginPresenter;
 import com.workpoint.icpak.client.ui.login.LoginView;
+import com.workpoint.icpak.client.ui.login.createpassword.CreatePasswordPresenter;
+import com.workpoint.icpak.client.ui.login.createpassword.CreatePasswordView;
 import com.workpoint.icpak.client.ui.members.MembersPresenter;
 import com.workpoint.icpak.client.ui.members.MembersView;
 import com.workpoint.icpak.client.ui.notifications.NotificationsPresenter;
@@ -100,8 +102,8 @@ public class ClientModule extends AbstractPresenterModule {
 
 		install(new DefaultModule.Builder().placeManager(
 				ClientPlaceManager.class).build());
-		
-		//SECURITY
+
+		// SECURITY
 		bind(CurrentUser.class).asEagerSingleton();
 
 		// bindConstant().annotatedWith(DefaultPlace.class).to(NameTokens.home);
@@ -176,6 +178,11 @@ public class ClientModule extends AbstractPresenterModule {
 
 		bindPresenter(LoginPresenter.class, LoginPresenter.ILoginView.class,
 				LoginView.class, LoginPresenter.ILoginProxy.class);
+
+		bindPresenter(CreatePasswordPresenter.class,
+				CreatePasswordPresenter.ILoginView.class,
+				CreatePasswordView.class,
+				CreatePasswordPresenter.ILoginProxy.class);
 
 		requestStaticInjection(AppContext.class);
 		requestStaticInjection(AppManager.class);
