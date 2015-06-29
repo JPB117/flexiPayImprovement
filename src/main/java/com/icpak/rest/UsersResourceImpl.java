@@ -242,7 +242,7 @@ public class UsersResourceImpl extends BaseResource<User> implements UsersResour
 	}
 	
 	@POST
-	@Path("/userId/password")
+	@Path("/{userId}/password")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public void changePassword(@PathParam("userId") String userId,@QueryParam("password") String newPassword){

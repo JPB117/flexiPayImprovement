@@ -56,6 +56,10 @@ public class ApplicationFormDaoHelper {
 		ApplicationFormHeader po = new ApplicationFormHeader();
 		po.copyFrom(application);
 		
+		//Create Temp User
+		User user = createTempUser(po);
+		po.setUserRefId(user.getRefId());
+		
 		//Generate Invoice
 		InvoiceDto invoice = generateInvoice(po);
 		po.setInvoiceRef(invoice.getRefId());		
@@ -63,7 +67,7 @@ public class ApplicationFormDaoHelper {
 		
 		//setCategory(po);	
 		
-		User user = createTempUser(po);
+		//Send Email
 		sendEmail(po, invoice, user);
 		
 		//Copy into DTO

@@ -48,7 +48,7 @@ public interface UsersResource{
 		public void activateAccount(@PathParam("userId") String userId);
 		
 		@POST
-		@Path("/userId/password")
+		@Path("/{userId}/password")
 		@Consumes(MediaType.APPLICATION_JSON)
 		@Produces(MediaType.APPLICATION_JSON)
 		public void changePassword(@PathParam("userId") String userId,

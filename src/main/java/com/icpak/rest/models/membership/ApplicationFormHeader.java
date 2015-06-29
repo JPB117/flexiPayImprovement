@@ -267,6 +267,8 @@ public class ApplicationFormHeader extends PO{
 	
 	private String invoiceRef;
 	
+	private String userRefId;
+	
 //	@Transient
 //	private ApplicationCategory category;
 //	
@@ -937,6 +939,7 @@ public class ApplicationFormHeader extends PO{
 		setPostCode(dto.getPostCode());
 		setEmployer(dto.getEmployer());
 		setInvoiceRef(dto.getInvoiceRef());
+		setUserRefId(dto.getUserRefId());
 	}
 
 	public void copyInto(ApplicationFormHeaderDto dto) {
@@ -948,7 +951,7 @@ public class ApplicationFormHeader extends PO{
 //		if(getCategory()!=null){
 //			dto.setCategory(category.toDto());
 //		}
-		
+		dto.setUserRefId(userRefId);
 		dto.setEmployer(employer);
 		dto.setCity1(city1);
 		dto.setAddress1(address1);
@@ -963,6 +966,14 @@ public class ApplicationFormHeader extends PO{
 
 	public void setInvoiceRef(String invoiceRef) {
 		this.invoiceRef = invoiceRef;
+	}
+
+	public String getUserRefId() {
+		return userRefId;
+	}
+
+	public void setUserRefId(String userRefId) {
+		this.userRefId = userRefId;
 	}
 	
 }

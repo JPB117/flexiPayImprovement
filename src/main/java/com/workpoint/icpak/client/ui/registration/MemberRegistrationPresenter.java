@@ -8,6 +8,7 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.GwtEvent.Type;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rest.delegates.client.ResourceDelegate;
@@ -45,7 +46,9 @@ public class MemberRegistrationPresenter
 		HasClickHandlers getANext();
 
 		HasClickHandlers getABack();
-
+		
+		Anchor getActivateAccLink();
+		
 		TextField getEmail();
 
 		void setEmailValid(boolean isValid);
@@ -123,7 +126,7 @@ public class MemberRegistrationPresenter
 						checkExists(email);
 					}
 				});
-
+		
 		getView().getANext().addClickHandler(new ClickHandler() {
 
 			@Override
@@ -168,6 +171,7 @@ public class MemberRegistrationPresenter
 						// result;
 						getView().bindForm(result);
 						
+						getView().getActivateAccLink().setHref("#activateacc;uid="+result.getUserRefId());
 						getInvoice(result.getInvoiceRef());
 					
 					}

@@ -395,7 +395,7 @@ public class MemberRegistrationView extends ViewImpl implements
 			}
 		}
 
-		if (!isValid && isEmailValid) {
+		if (!isValid || !isEmailValid) {
 			issuesPanel.removeStyleName("hide");
 		} else {
 			issuesPanel.addStyleName("hide");
@@ -482,6 +482,10 @@ public class MemberRegistrationView extends ViewImpl implements
 	public void bindInvoice(InvoiceDto invoice) {
 		proformaInv.clearRows();
 		proformaInv.setInvoice(invoice);
+	}
+	
+	public Anchor getActivateAccLink(){
+		return aAccount;
 	}
 
 }

@@ -75,8 +75,6 @@ public class LoginPresenter extends
 
 	private static final Logger LOGGER = Logger.getLogger(LoginPresenter.class
 			.getName());
-	private static final int REMEMBER_ME_DAYS = 14;
-
 	private ResourceDelegate<UsersResource> usersDelegate;
 
 	private ResourceDelegate<SessionResource> sessionResource;
@@ -158,7 +156,7 @@ public class LoginPresenter extends
 							
 							LOGGER.log(Level.SEVERE, "Wrong username or password......");
 							if (result.getCurrentUserDto().isLoggedIn()) {
-								setLoggedInCookie(result.getLoggedInCookie());
+								AppContext.setLoggedInCookie(result.getLoggedInCookie());
 							}
 
 							if (result.getActionType() == ActionType.VIA_COOKIE) {
@@ -198,39 +196,10 @@ public class LoginPresenter extends
 		
 		if (currentUserDto.isLoggedIn()) {
 			currentUser.fromCurrentUserDto(currentUserDto);
-			redirectToLoggedOnPage();
+			AppContext.redirectToLoggedOnPage();
 		} else {
 			getView().setError("Wrong username or password");
 		}
-	}
-
-	private void redirectToLoggedOnPage() {
-		String token = placeManager.getCurrentPlaceRequest().getParameter(
-				ParameterTokens.REDIRECT, NameTokens.getOnLoginDefaultPage());
-		PlaceRequest placeRequest = new Builder().nameToken(token).build();
-
-		placeManager.revealPlace(placeRequest);
-	}
-
-	private void setLoggedInCookie(String value) {
-		String path = "/";
-		String domain = getDomain();
-		int maxAge = REMEMBER_ME_DAYS * 24 * 60 * 60 * 1000;
-		boolean secure = false;
-
-		NewCookie newCookie = new NewCookie(ApiParameters.LOGIN_COOKIE, value,
-				path, domain, "", maxAge, secure);
-		sessionResource.withoutCallback().rememberMe(newCookie);
-
-		LOGGER.info("LoginPresenter.setLoggedInCookie() Set client cookie="
-				+ value);
-	}
-
-	private String getDomain() {
-		String domain = GWT.getHostPageBaseURL().replaceAll(".*//", "")
-				.replaceAll("/", "").replaceAll(":.*", "");
-
-		return "localhost".equalsIgnoreCase(domain) ? null : domain;
 	}
 
 	private void tryLoggingInWithCookieFirst() {

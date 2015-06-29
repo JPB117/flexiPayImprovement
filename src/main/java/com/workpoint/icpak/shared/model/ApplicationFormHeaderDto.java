@@ -103,6 +103,7 @@ public class ApplicationFormHeaderDto extends SerializableObj{
 	private int applicationMethod;
 	private ApplicationCategoryDto category;
 	private String invoiceRef;
+	private String userRefId;
 	
 	public ApplicationFormHeaderDto() {
 	}
@@ -759,6 +760,14 @@ public class ApplicationFormHeaderDto extends SerializableObj{
 
 	public void setInvoiceRef(String invoiceRef) {
 		this.invoiceRef = invoiceRef;
+	}
+
+	public String getUserRefId() {
+		return userRefId;
+	}
+
+	public void setUserRefId(String userRefId) {
+		this.userRefId = userRefId;
 	}
 	
 }

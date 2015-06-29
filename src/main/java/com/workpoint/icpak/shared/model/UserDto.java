@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.workpoint.icpak.shared.model.auth.AccountStatus;
+
 @XmlRootElement
 public class UserDto implements Listable,Serializable {
 
@@ -21,6 +23,7 @@ public class UserDto implements Listable,Serializable {
 	private ArrayList<UserGroup> groups = new ArrayList<UserGroup>() ;
 	private int participated;
 	private int inbox;
+	private AccountStatus status = AccountStatus.NEWACC;
 	
 	public UserDto() {
 	}
@@ -180,5 +183,13 @@ public class UserDto implements Listable,Serializable {
 
 	public void setRefId(String refId) {
 		this.refId = refId;
+	}
+
+	public AccountStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(AccountStatus status) {
+		this.status = status;
 	}
 }

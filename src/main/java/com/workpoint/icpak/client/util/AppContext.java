@@ -1,6 +1,9 @@
 package com.workpoint.icpak.client.util;
 
 import java.util.Date;
+import java.util.logging.Level;
+
+import javax.ws.rs.core.NewCookie;
 
 import com.google.common.base.Strings;
 import com.google.gwt.core.client.GWT;
@@ -9,6 +12,7 @@ import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Timer;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
+import com.gwtplatform.dispatch.rest.delegates.client.ResourceDelegate;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest.Builder;
@@ -16,6 +20,8 @@ import com.workpoint.icpak.client.place.NameTokens;
 import com.workpoint.icpak.client.place.ParameterTokens;
 import com.workpoint.icpak.client.security.CurrentUser;
 import com.workpoint.icpak.shared.api.ApiParameters;
+import com.workpoint.icpak.shared.api.SessionResource;
+import com.workpoint.icpak.shared.api.UsersResource;
 import com.workpoint.icpak.shared.model.UserDto;
 import com.workpoint.icpak.shared.model.Version;
 import com.workpoint.icpak.shared.model.auth.CurrentUserDto;
@@ -32,6 +38,11 @@ public class AppContext {
 	@Inject static EventBus eventBus;
 	@Inject static PlaceManager placeManager;
 	@Inject static CurrentUser user;
+	@Inject static ResourceDelegate<UsersResource> usersDelegate;
+	@Inject static ResourceDelegate<SessionResource> sessionResource;
+	private static final int REMEMBER_ME_DAYS = 14;
+
+	
 	static Version version;
 
 	static String organizationName;
@@ -192,5 +203,33 @@ public class AppContext {
 		return !Strings.isNullOrEmpty(getLoggedInCookie());
 	}
 	
+	public static void redirectToLoggedOnPage() {
+		String token = placeManager.getCurrentPlaceRequest().getParameter(
+				ParameterTokens.REDIRECT, NameTokens.getOnLoginDefaultPage());
+		PlaceRequest placeRequest = new Builder().nameToken(token).build();
+
+		placeManager.revealPlace(placeRequest);
+	}
+
+	public static void setLoggedInCookie(String value) {
+		String path = "/";
+		String domain = getDomain();
+		int maxAge = REMEMBER_ME_DAYS * 24 * 60 * 60 * 1000;
+		boolean secure = false;
+
+		NewCookie newCookie = new NewCookie(ApiParameters.LOGIN_COOKIE, value,
+				path, domain, "", maxAge, secure);
+		sessionResource.withoutCallback().rememberMe(newCookie);
+
+//		LOGGER.info("LoginPresenter.setLoggedInCookie() Set client cookie="
+//				+ value);
+	}
+
+	public static String getDomain() {
+		String domain = GWT.getHostPageBaseURL().replaceAll(".*//", "")
+				.replaceAll("/", "").replaceAll(":.*", "");
+
+		return "localhost".equalsIgnoreCase(domain) ? null : domain;
+	}
 	
 }
