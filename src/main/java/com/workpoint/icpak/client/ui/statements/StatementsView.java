@@ -17,9 +17,6 @@ public class StatementsView extends ViewImpl implements
 	@UiField
 	TransactionTable tblView;
 
-	@UiField
-	HTMLPanel container;
-
 	public interface Binder extends UiBinder<Widget, StatementsView> {
 	}
 

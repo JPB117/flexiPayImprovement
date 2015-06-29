@@ -1,5 +1,5 @@
 html,body{
-	overflow-y:auto !important;
+	/* overflow-y:auto !important; */
 }
 .set-full-height{
 	height:100%;
@@ -689,13 +689,17 @@ label{
     font-weight: 400;
 }
 
+.top-header .navbar{
+    margin-bottom: 0px !important;
+}
+
 .image-container{
     height: 100%;
     background-position: center center;
     background-size: cover;
-    margin-top: 10px;
+    margin-top: 0px;
+    overflow-y: auto;
 }
-
 
 .wizard-container{
     padding-top: 10px;

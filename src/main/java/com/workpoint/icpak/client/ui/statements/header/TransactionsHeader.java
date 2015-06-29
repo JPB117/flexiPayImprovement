@@ -17,10 +17,10 @@ public class TransactionsHeader extends Composite {
 	}
 
 	@UiField
-	SpanElement spnMoneyIn;
+	SpanElement spnTransactions;
 
 	@UiField
-	SpanElement spnMoneyOut;
+	SpanElement spnAmount;
 
 	@UiField
 	SpanElement spnBalance;

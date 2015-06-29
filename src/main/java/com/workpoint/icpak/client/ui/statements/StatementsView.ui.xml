@@ -2,24 +2,27 @@
 
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
 	xmlns:g='urn:import:com.google.gwt.user.client.ui' ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
-	xmlns:d='urn:import:com.workpoint.icpak.client.ui.component'
-	xmlns:p='urn:import:com.workpoint.icpak.client.ui.statements.header'
+	xmlns:d='urn:import:com.workpoint.icpak.client.ui.component' xmlns:p='urn:import:com.workpoint.icpak.client.ui.statements.header'
 	xmlns:table='urn:import:com.workpoint.icpak.client.ui.statements.table'
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
 
-	<g:HTMLPanel styleName="activities-page" ui:field="container">
-		<g:HTMLPanel styleName="full-page" ui:field="divMainContainer">
+	<g:HTMLPanel styleName="set-full-height">
+		<g:HTMLPanel styleName="content-wrapper ng-scope ng-fadeInUp"
+			ui:field="divMainContainer">
+			<h3 class="ng-scope">
+				My Statement
+			</h3>
 
 			<g:HTMLPanel styleName="content-top" ui:field="divContentTop">
 				<!--Action Buttons -->
 				<div class="action-buttons row-fluid">
 					<div class="span6 date-box hide">
-						<!-- d:DateBoxDropDown ui:field="boxDateBox"></d:DateBoxDropDown-->
+						<!-- d:DateBoxDropDown ui:field="boxDateBox"></d:DateBoxDropDown -->
 						<d:ActionLink ui:field="aRefresh"></d:ActionLink>
 					</div>
 				</div>
-				
+
 				<div class="col-sm-12">
 					<p:TransactionsHeader ui:field="headerContainer">
 					</p:TransactionsHeader>

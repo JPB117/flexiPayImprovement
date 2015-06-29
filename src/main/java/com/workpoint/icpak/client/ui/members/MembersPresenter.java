@@ -40,7 +40,7 @@ public class MembersPresenter
 
 	@TabInfo(container = HomePresenter.class)
 	static TabData getTabLabel(LoginGateKeeper adminGatekeeper) {
-		TabDataExt data = new TabDataExt("Membership", "icon-users", 3,
+		TabDataExt data = new TabDataExt("Membership", "icon-users", 4,
 				adminGatekeeper, true);
 		return data;
 	}

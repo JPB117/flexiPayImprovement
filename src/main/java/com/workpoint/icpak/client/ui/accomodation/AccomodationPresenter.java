@@ -1,4 +1,4 @@
-package com.workpoint.icpak.client.ui.cpd;
+package com.workpoint.icpak.client.ui.accomodation;
 
 //import com.workpoint.icpak.shared.requests.CheckPasswordRequest;
 //import com.workpoint.icpak.shared.requests.GetUserRequest;
@@ -23,36 +23,40 @@ import com.workpoint.icpak.client.ui.admin.TabDataExt;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
 import com.workpoint.icpak.client.ui.security.LoginGateKeeper;
 
-public class CPDPresenter extends
-		Presenter<CPDPresenter.ICPDView, CPDPresenter.ICPDProxy>{
+public class AccomodationPresenter
+		extends
+		Presenter<AccomodationPresenter.IAccomodationView, AccomodationPresenter.IAccomodationProxy> {
 
-	public interface ICPDView extends View {
-		
+	public interface IAccomodationView extends View {
+
 	}
-	
+
 	@ProxyCodeSplit
-	@NameToken(NameTokens.cpd)
+	@NameToken(NameTokens.accomodation)
 	@UseGatekeeper(LoginGateKeeper.class)
-	public interface ICPDProxy extends TabContentProxyPlace<CPDPresenter> {
+	public interface IAccomodationProxy extends
+			TabContentProxyPlace<AccomodationPresenter> {
 	}
-	
+
 	@TabInfo(container = HomePresenter.class)
-    static TabData getTabLabel(LoginGateKeeper adminGatekeeper) {
-		TabDataExt data = new TabDataExt("My C.P.D","fa fa-graduation-cap",5,adminGatekeeper, true);
-        return data;
-    }
+	static TabData getTabLabel(LoginGateKeeper adminGatekeeper) {
+		TabDataExt data = new TabDataExt("Accomodation", "fa fa-bed", 3,
+				adminGatekeeper, true);
+		return data;
+	}
 
 	@Inject
-	public CPDPresenter(final EventBus eventBus, final ICPDView view,final ICPDProxy proxy) {
+	public AccomodationPresenter(final EventBus eventBus,
+			final IAccomodationView view, final IAccomodationProxy proxy) {
 		super(eventBus, view, proxy, HomePresenter.SLOT_SetTabContent);
 	}
 
 	@Override
 	protected void onBind() {
 		super.onBind();
-		
+
 	}
-	
+
 	protected void save() {
 	}
 

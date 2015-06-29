@@ -12407,6 +12407,9 @@ now {
 	border-style: solid;
 	border-width: 0 1px 1px;
 	border-color: #dde6e9
+;
+	overflow-y: auto;
+	overflow-x: hidden;
 }
 
 .nav-pills+.tab-content {
@@ -12586,6 +12589,8 @@ html {
 
 body, html {
 	height: 100%
+;
+	overflow-y: hidden;
 }
 
 .wrapper {
@@ -12638,7 +12643,9 @@ body, html {
 	margin-left: 0;
 	z-index: 111;
 	background-color: #f5f7fa;
-	margin-bottom: 60px !important
+	margin-bottom: 60px !important;
+	overflow-y: auto !important;
+	max-height: 100%;
 }
 
 .wrapper>footer {
@@ -12665,6 +12672,8 @@ body, html {
 	width: 100%;
 	border-top: 1px solid rgba(0, 0, 0, .15);
 	margin-top: -1px
+;
+	overflow-y: auto !important;
 }
 
 .content-wrapper>.unwrap {

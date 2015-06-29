@@ -5,6 +5,7 @@
 	xmlns:d='urn:import:com.workpoint.icpak.client.ui.component' xmlns:up='urn:import:com.workpoint.icpak.client.ui.upload.custom'
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	xmlns:t='urn:import:com.workpoint.icpak.client.ui.component.tabs'
+	xmlns:password='urn:import:com.workpoint.icpak.client.ui.profile.password'
 	ui:generateLocales='default'>
 
 	<g:HTMLPanel ui:field="container"
@@ -13,54 +14,69 @@
 			User Profile
 		</h3>
 
-		<div class="row">
-			<div class="col-xs-12">
-				<div class="row">
-					<div class="col-xs-2">
-						<img class="thumbnail"
-							src="http://solutech.co.ke/icpak/assets/img/no-image.png" width="100px" />
-						<a href="">Edit Image</a>
-					</div>
-					<div class="col-xs-6">
-						<h5>
-							<strong>Tom Kimani Muriranja</strong>
-						</h5>
-						<h5>
-							mdkimani@gmail.com
-						</h5>
-						<d:ActionLink ui:field="aEdit">Edit
-							Profile</d:ActionLink>
-						|
-						<d:ActionLink ui:field="aChangePassword">Change
-							Password</d:ActionLink>
-						<br />
-						<span>
-							<h5>
-								<span class="label label-info">Practising-Member</span>
-							</h5>
-						</span>
-						<div class="progress warning">
-							<div class="progress-bar " role="progressbar" aria-valuenow="60"
-								aria-valuemin="0" aria-valuemax="100" style="width: 30%;">60%
-								Complete</div>
+		<g:HTMLPanel ui:field="divProfileContent">
+			<g:HTMLPanel styleName="row">
+				<div class="panel widget">
+					<div class="panel-header">
+						<div class="dropdown pull-right">
+							<a class="btn btn-default dropdown-toggle" id="dropdownMenu1"
+								data-toggle="dropdown" aria-expanded="true">
+								Edit
+								<span class="caret"></span>
+							</a>
+							<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+								<li>
+									<d:ActionLink ui:field="aEdit">
+										Edit Profile
+									</d:ActionLink>
+								</li>
+								<li>
+									<d:ActionLink ui:field="aChangePassword">
+										Change Password
+									</d:ActionLink>
+								</li>
+							</ul>
 						</div>
 					</div>
-
+					<div class="panel-body">
+						<div class="col-sm-2">
+							<img class="thumbnail" src="img/james.jpg" width="200px"
+								height="200px" />
+						</div>
+						<div class="col-sm-10">
+							<h3 class="m0">
+								<strong>
+									<span ui:field="spnNames">CPA Tom Kimani Muriranja</span>
+								</strong>
+							</h3>
+							<span class="text-muted">Non-Practising Member</span>
+							<br />
+							<span class="label label-success label-fill">Membership Active</span>
+						</div>
+					</div>
 				</div>
-				<div class="row">
-					<div class="panel panel-default">
-						<div class="panel-heading">Profile Information</div>
+			</g:HTMLPanel>
 
-						<div class="panel-body">
-							<div class="col-xs-12">
-								<!-- Tabs -->
-								<t:TabPanel ui:field="divTabs">
-								</t:TabPanel>
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="row">
+						<div class="panel panel-default">
+							<div class="panel-heading">Profile Information</div>
+							<div class="panel-body">
+								<div class="col-xs-12">
+									<!-- Tabs -->
+									<t:TabPanel ui:field="divTabs">
+									</t:TabPanel>
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-		</div>
+		</g:HTMLPanel>
+
+		<g:HTMLPanel ui:field="divPasswordContent">
+			<password:PasswordWidget ui:field="panelPasswordWidget"></password:PasswordWidget>
+		</g:HTMLPanel>
 	</g:HTMLPanel>
 </ui:UiBinder>

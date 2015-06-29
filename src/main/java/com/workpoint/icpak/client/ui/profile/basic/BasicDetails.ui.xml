@@ -2,51 +2,60 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:d='urn:import:com.workpoint.icpak.client.ui.component' xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	<g:HTMLPanel>
+
 		<div class="row">
 			<div class="col-xs-6">
-
 				<table class="table">
 					<tbody>
 						<tr>
-							<td>Surname:</td>
 							<td>
-								<i>Duggan</i>
+								<Strong>Phone:</Strong>
+							</td>
+							<td>
+								<i>+25472972421</i>
 							</td>
 						</tr>
 						<tr>
-							<td>Other Name:</td>
 							<td>
-								<i>Kimani</i>
+								<Strong>Email:</Strong>
+							</td>
+							<td>
+								<i>kimani@wira.io</i>
 							</td>
 						</tr>
 						<tr>
-							<td>Email Address:</td>
 							<td>
-								<i>mdkimani@gmail.com</i>
+								<Strong>Employer:</Strong>
+							</td>
+							<td>
+								<i>Workpoint Ltd</i>
+							</td>
+						</tr>
+
+						<tr>
+							<td>
+								<Strong>Date Of Birth:</Strong>
+							</td>
+							<td>
+								<i>06/11/1990</i>
+							</td>
+						</tr>
+
+						<tr>
+							<td>
+								<Strong>Gender:</Strong>
+							</td>
+							<td>
+								<i>Male</i>
 							</td>
 						</tr>
 						<tr>
-							<td>Phone Number:</td>
 							<td>
-								<i></i>
+								<Strong>Employer Name:</Strong>
 							</td>
-						</tr>
-						<tr>
-							<td>Gender:</td>
-							<td>
-								<i></i>
-							</td>
-						</tr>
-						<tr>
-							<td>Employer Name:</td>
 							<td>Workpoint Limited</td>
 						</tr>
-						<tr>
-							<td>Date Of Birth:</td>
-							<td>
-								<i></i>
-							</td>
-						</tr>
+
 					</tbody>
 				</table>
 
@@ -55,36 +64,47 @@
 				<table class="table">
 					<tbody>
 						<tr>
-							<td>Residence:</td>
 							<td>
-								<i></i>
+								<Strong>Residence:</Strong>
 							</td>
-						</tr>
-						<tr>
-							<td>Address:</td>
-							<td>
-								<i>mdkimani@gmail.com</i>
-							</td>
-						</tr>
-						<tr>
-							<td>Town / City:</td>
 							<td>
 								<i>Nairobi</i>
 							</td>
 						</tr>
 						<tr>
-							<td>Country:</td>
 							<td>
-								<i></i>
+								<Strong>Address:</Strong>
 							</td>
-						</tr>
-						<tr>
-							<td>Membership:</td>
 							<td>
-								<i>ASSOCIATE</i>
+								<i>37425</i>
 							</td>
 						</tr>
 
+						<tr>
+							<td>
+								<Strong>Postal Code:</Strong>
+							</td>
+							<td>
+								<i>00100</i>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<Strong>Country:</Strong>
+							</td>
+							<td>
+								<i>Kenya</i>
+							</td>
+						</tr>
+
+						<tr>
+							<td>
+								<Strong>Town/City:</Strong>
+							</td>
+							<td>
+								<i>Nairobi</i>
+							</td>
+						</tr>
 					</tbody>
 				</table>
 			</div>
