@@ -47,6 +47,8 @@ public class EducationDetails extends Composite {
 		createTableHeader();
 
 		createRows();
+		
+		setEditMode(false);
 
 		aAdd.addClickHandler(new ClickHandler() {
 			@Override
@@ -94,6 +96,14 @@ public class EducationDetails extends Composite {
 			aAdd.setVisible(true);
 			panelTable.removeStyleName("hide");
 			panelForm.addStyleName("hide");
+		}
+	}
+
+	public void setEditMode(boolean editMode) {
+		if(editMode){
+			aAdd.setVisible(true);
+		}else{
+			aAdd.setVisible(false);
 		}
 	}
 }

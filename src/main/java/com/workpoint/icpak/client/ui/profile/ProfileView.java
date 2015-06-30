@@ -44,6 +44,10 @@ public class ProfileView extends ViewImpl implements
 
 	@UiField
 	PasswordWidget panelPasswordWidget;
+	private BasicDetails basicDetail;
+	private EducationDetails educationDetail;
+	private SpecializationDetails specializationDetail;
+	private TrainingDetails trainingDetail;
 
 	public interface Binder extends UiBinder<Widget, ProfileView> {
 	}
@@ -52,10 +56,10 @@ public class ProfileView extends ViewImpl implements
 	public ProfileView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
 
-		BasicDetails basicDetail = new BasicDetails();
-		EducationDetails educationDetail = new EducationDetails();
-		SpecializationDetails specializationDetail = new SpecializationDetails();
-		TrainingDetails trainingDetail = new TrainingDetails();
+		basicDetail = new BasicDetails();
+		educationDetail = new EducationDetails();
+		specializationDetail = new SpecializationDetails();
+		trainingDetail = new TrainingDetails();
 
 		showChangePassword(false);
 
@@ -73,6 +77,7 @@ public class ProfileView extends ViewImpl implements
 				specializationDetail, "specialisation_details", false),
 				new TabContent(trainingDetail, "training_details", false)));
 
+		/* Change Password */
 		aChangePassword.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -91,6 +96,16 @@ public class ProfileView extends ViewImpl implements
 		panelPasswordWidget.getCancelButton()
 				.addClickHandler(hidePasswordPanel);
 
+		/* Set Edit Mode */
+		aEdit.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				basicDetail.setEditMode(true);
+				educationDetail.setEditMode(true);
+				specializationDetail.setEditMode(true);
+				trainingDetail.setEditMode(true);
+			}
+		});
 	}
 
 	@Override

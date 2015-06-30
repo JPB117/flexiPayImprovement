@@ -1,12 +1,9 @@
 package com.workpoint.icpak.client.ui.registration;
 
-import static com.workpoint.icpak.client.ui.util.StringUtils.isNullOrEmpty;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.dom.client.DivElement;
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -24,9 +21,10 @@ import com.gwtplatform.mvp.client.ViewImpl;
 import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.IssuesPanel;
 import com.workpoint.icpak.client.ui.component.TextField;
+import com.workpoint.icpak.client.ui.registration.form.MemberRegistrationForm;
+import com.workpoint.icpak.shared.model.ApplicationCategoryDto;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 import com.workpoint.icpak.shared.model.ApplicationType;
-import com.workpoint.icpak.shared.model.ApplicationCategoryDto;
 
 public class MemberRegistrationView extends ViewImpl implements
 		MemberRegistrationPresenter.MyView {
@@ -43,6 +41,9 @@ public class MemberRegistrationView extends ViewImpl implements
 	HTMLPanel divFooter;
 
 	@UiField
+	MemberRegistrationForm memberRegistrationForm;
+
+	@UiField
 	HTMLPanel divContent;
 
 	@UiField
@@ -55,13 +56,10 @@ public class MemberRegistrationView extends ViewImpl implements
 
 	@UiField
 	Anchor aAccount;
-
 	@UiField
 	DivElement divPackage;
-
 	@UiField
 	DivElement divCategories;
-
 	@UiField
 	DivElement divPayment;
 	@UiField
@@ -91,29 +89,7 @@ public class MemberRegistrationView extends ViewImpl implements
 	LIElement liTab4;
 
 	@UiField
-	IssuesPanel issuesPanel;
-
-	@UiField
-	TextField txtSurname;
-	@UiField
-	TextField txtOtherNames;
-	@UiField
-	TextField txtEmailAddress;
-	@UiField
-	TextField txtPhone;
-
-	@UiField
-	TextField txtEmployer;
-	@UiField
-	TextField txtCity;
-	@UiField
-	TextField txtAddress;
-
-	@UiField
 	IssuesPanel issuesPanelCategory;
-	@UiField
-	TextField txtPostalCode;
-
 	@UiField
 	SpanElement spnNonPracticingFee;
 	@UiField
@@ -187,10 +163,11 @@ public class MemberRegistrationView extends ViewImpl implements
 				divAssociate.addClassName("active");
 				type = ApplicationType.ASSOCIATE;
 			}
+			
+			memberRegistrationForm.setType(type);
+			
 		}
 	};
-
-	private boolean isEmailValid = true;
 
 	@Inject
 	public MemberRegistrationView(final Binder binder) {
@@ -228,6 +205,8 @@ public class MemberRegistrationView extends ViewImpl implements
 		});
 
 		// lstMemberCategory.setItems(types);
+		
+		memberRegistrationForm.setCounter(counter);
 	}
 
 	protected void showMyAccountLink(int counter) {
@@ -275,18 +254,7 @@ public class MemberRegistrationView extends ViewImpl implements
 	}
 
 	public ApplicationFormHeaderDto getApplicationForm() {
-		ApplicationFormHeaderDto dto = new ApplicationFormHeaderDto();
-		// dto.setRefId(getRefId());
-		dto.setSurname(txtSurname.getValue());
-		dto.setOtherNames(txtOtherNames.getValue());
-		dto.setEmail(txtEmailAddress.getValue());
-		dto.setEmployer(txtEmployer.getValue());
-		dto.setCity1(txtCity.getValue());
-		dto.setAddress1(txtAddress.getValue());
-		dto.setPostCode(txtPostalCode.getValue());
-		dto.setApplicationType(type);
-
-		return dto;
+		return memberRegistrationForm.getApplicationForm();
 	}
 
 	private void clearAll() {
@@ -335,67 +303,11 @@ public class MemberRegistrationView extends ViewImpl implements
 
 	@Override
 	public TextField getEmail() {
-		return txtEmailAddress;
+		return memberRegistrationForm.getEmail();
 	}
 
 	public boolean isValid() {
-		boolean isValid = true;
-		issuesPanel.clear();
-
-		if (counter == 0) {
-			if (!isEmailValid) {
-				issuesPanel.addError("e-Mail " + txtEmailAddress.getValue()
-						+ " is already registered");
-			}
-
-			if (isNullOrEmpty(txtSurname.getValue())) {
-				isValid = false;
-				issuesPanel.addError("Surname is required");
-			}
-
-			if (isNullOrEmpty(txtOtherNames.getValue())) {
-				isValid = false;
-				issuesPanel.addError("Other Names is required");
-			}
-
-			if (isNullOrEmpty(txtEmailAddress.getValue())) {
-				isValid = false;
-				issuesPanel.addError("Email is required");
-			}
-
-			if (isNullOrEmpty(txtPhone.getValue())) {
-				isValid = false;
-				issuesPanel.addError("Phone Number is required");
-			}
-
-			if (isNullOrEmpty(txtEmployer.getValue())) {
-				isValid = false;
-				issuesPanel.addError("Employer is required");
-			}
-
-			if (isNullOrEmpty(txtCity.getValue())) {
-				isValid = false;
-				issuesPanel.addError("City is required");
-			}
-
-			if (isNullOrEmpty(txtAddress.getValue())) {
-				isValid = false;
-				issuesPanel.addError("Address is required");
-			}
-		} else if (counter == 1) {
-			if (type == null) {
-				Window.alert("Error.. category not selected");
-				isValid = false;
-			}
-		}
-
-		if (!isValid && isEmailValid) {
-			issuesPanel.removeStyleName("hide");
-		} else {
-			issuesPanel.addStyleName("hide");
-		}
-
-		return isValid && isEmailValid;
+		return memberRegistrationForm.isValid();
 	}
 
 	public void setCategories(List<ApplicationCategoryDto> dtos) {
@@ -435,12 +347,7 @@ public class MemberRegistrationView extends ViewImpl implements
 
 	@Override
 	public void setEmailValid(boolean isEmailValid) {
-		issuesPanel.clear();
-		this.isEmailValid = isEmailValid;
-		if (!isEmailValid) {
-			issuesPanel.addError("e-Mail " + txtEmailAddress.getValue()
-					+ " is already registered");
-		}
+		memberRegistrationForm.setEmailValid(isEmailValid);
 	}
 
 	@Override

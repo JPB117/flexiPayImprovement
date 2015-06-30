@@ -99,4 +99,11 @@ public class TrainingDetails extends Composite {
 		}
 	}
 
+	public void setEditMode(boolean editMode) {
+		if (editMode) {
+			aAdd.setVisible(true);
+		} else {
+			aAdd.setVisible(false);
+		}
+	}
 }
