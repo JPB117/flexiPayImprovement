@@ -7,6 +7,12 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 import com.workpoint.icpak.client.ui.component.ActionLink;
+import com.workpoint.icpak.client.ui.component.IssuesPanel;
+import com.workpoint.icpak.client.ui.component.PasswordField;
+import com.workpoint.icpak.client.ui.component.TextField;
+import com.workpoint.icpak.shared.model.UserDto;
+
+import static com.workpoint.icpak.client.ui.util.StringUtils.*;
 
 public class PasswordWidget extends Composite {
 
@@ -21,12 +27,13 @@ public class PasswordWidget extends Composite {
 
 	@UiField
 	ActionLink aSave;
+	
+	@UiField IssuesPanel issues;
+	@UiField TextField txtEmail;
+	@UiField PasswordField txtPassword;
+	@UiField PasswordField txtConfirmPassword;
 
 	public PasswordWidget() {
-		initWidget(uiBinder.createAndBindUi(this));
-	}
-
-	public PasswordWidget(String firstName) {
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 
@@ -36,6 +43,46 @@ public class PasswordWidget extends Composite {
 
 	public HasClickHandlers getCancelButton() {
 		return aCancel;
+	}
+
+	public void setUser(UserDto user) {
+		txtEmail.setText(user.getEmail());
+	}
+	
+	public boolean isValid(){
+		boolean isValid=true;
+		issues.clear();
+		
+		if(isNullOrEmpty(txtPassword.getValue())){
+			issues.addError("Password is required");
+			isValid=false;
+		}
+		
+		if(isNullOrEmpty(txtConfirmPassword.getValue())){
+			issues.addError("'Confirm Password' is required");
+			isValid=false;
+		}
+		
+		
+		if(!txtPassword.getValue().equals(txtConfirmPassword.getValue())){
+			issues.addError("Password and 'Confirm Password' fields do not match");
+			isValid=false;
+		}
+		
+		return isValid;
+	}
+
+	public String getPassword() {
+		
+		return txtPassword.getValue();
+	}
+
+	public void addError(String error) {
+		issues.addError(error);
+	}
+
+	public void setSaveEnabled(boolean enable) {
+		
 	}
 
 }

@@ -5,15 +5,12 @@ import java.util.logging.Logger;
 
 import javax.ws.rs.core.NewCookie;
 
-import com.google.common.base.Strings;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
-import com.google.gwt.user.client.Cookies;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.inject.Inject;
@@ -34,6 +31,7 @@ import com.workpoint.icpak.client.place.NameTokens;
 import com.workpoint.icpak.client.place.ParameterTokens;
 import com.workpoint.icpak.client.security.CurrentUser;
 import com.workpoint.icpak.client.service.AbstractAsyncCallback;
+import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.api.ApiParameters;
 import com.workpoint.icpak.shared.api.SessionResource;
 import com.workpoint.icpak.shared.api.UsersResource;
@@ -47,29 +45,17 @@ public class LoginPresenter extends
 
 	public interface ILoginView extends View {
 		String getUsername();
-
 		String getPassword();
-
 		Anchor getLoginBtn();
-
 		TextBox getPasswordBox();
-
 		boolean isValid();
-
 		void setError(String err);
-
 		void showLoginProgress();
-
 		void clearLoginProgress();
-
 		void clearViewItems(boolean status);
-
 		TextBox getUserNameBox();
-
 		void clearErrors();
-
 		void setOrgName(String orgName);
-
 		void setLoginButtonEnabled(boolean b);
 	}
 
@@ -89,8 +75,6 @@ public class LoginPresenter extends
 
 	private static final Logger LOGGER = Logger.getLogger(LoginPresenter.class
 			.getName());
-	private static final int REMEMBER_ME_DAYS = 14;
-
 	private ResourceDelegate<UsersResource> usersDelegate;
 
 	private ResourceDelegate<SessionResource> sessionResource;
@@ -114,14 +98,19 @@ public class LoginPresenter extends
 	@Override
 	public void prepareFromRequest(PlaceRequest request) {
 		super.prepareFromRequest(request);
+		if (AppContext.hasLoggedInCookie()) {
+			tryLoggingInWithCookieFirst();
+		}
 	}
 
 	@Override
 	protected void onReveal() {
-		if (!Strings.isNullOrEmpty(getLoggedInCookie())) {
-			tryLoggingInWithCookieFirst();
-		}
+//		if (AppContext.hasLoggedInCookie()) {
+//			tryLoggingInWithCookieFirst();
+//		}
 	}
+	
+	
 
 	@Override
 	protected void onBind() {
@@ -167,7 +156,7 @@ public class LoginPresenter extends
 							
 							LOGGER.log(Level.SEVERE, "Wrong username or password......");
 							if (result.getCurrentUserDto().isLoggedIn()) {
-								setLoggedInCookie(result.getLoggedInCookie());
+								AppContext.setLoggedInCookie(result.getLoggedInCookie());
 							}
 
 							if (result.getActionType() == ActionType.VIA_COOKIE) {
@@ -207,49 +196,20 @@ public class LoginPresenter extends
 		
 		if (currentUserDto.isLoggedIn()) {
 			currentUser.fromCurrentUserDto(currentUserDto);
-			redirectToLoggedOnPage();
+			AppContext.redirectToLoggedOnPage();
 		} else {
 			getView().setError("Wrong username or password");
 		}
 	}
 
-	private void redirectToLoggedOnPage() {
-		String token = placeManager.getCurrentPlaceRequest().getParameter(
-				ParameterTokens.REDIRECT, NameTokens.getOnLoginDefaultPage());
-		PlaceRequest placeRequest = new Builder().nameToken(token).build();
-
-		placeManager.revealPlace(placeRequest);
-	}
-
-	private void setLoggedInCookie(String value) {
-		String path = "/";
-		String domain = getDomain();
-		int maxAge = REMEMBER_ME_DAYS * 24 * 60 * 60 * 1000;
-		boolean secure = false;
-
-		NewCookie newCookie = new NewCookie(ApiParameters.LOGIN_COOKIE, value,
-				path, domain, "", maxAge, secure);
-		sessionResource.withoutCallback().rememberMe(newCookie);
-
-		LOGGER.info("LoginPresenter.setLoggedInCookie() Set client cookie="
-				+ value);
-	}
-
-	private String getDomain() {
-		String domain = GWT.getHostPageBaseURL().replaceAll(".*//", "")
-				.replaceAll("/", "").replaceAll(":.*", "");
-
-		return "localhost".equalsIgnoreCase(domain) ? null : domain;
-	}
-
 	private void tryLoggingInWithCookieFirst() {
 		getView().setLoginButtonEnabled(false);
-		LogInAction logInAction = new LogInAction(getLoggedInCookie());
+		
+		String loggedInCookie = AppContext.getLoggedInCookie();
+		LogInAction logInAction = new LogInAction(loggedInCookie);
+		
 		callServerLoginAction(logInAction);
 	}
 
-	private String getLoggedInCookie() {
-		return Cookies.getCookie(ApiParameters.LOGIN_COOKIE);
-	}
 
 }

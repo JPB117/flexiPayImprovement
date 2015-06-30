@@ -63,8 +63,8 @@ import com.workpoint.icpak.client.ui.home.HomePresenter;
 import com.workpoint.icpak.client.ui.home.HomeView;
 import com.workpoint.icpak.client.ui.login.LoginPresenter;
 import com.workpoint.icpak.client.ui.login.LoginView;
-import com.workpoint.icpak.client.ui.login.createpassword.CreatePasswordPresenter;
-import com.workpoint.icpak.client.ui.login.createpassword.CreatePasswordView;
+import com.workpoint.icpak.client.ui.login.createpassword.ActivateAccountPresenter;
+import com.workpoint.icpak.client.ui.login.createpassword.ActivateAccountView;
 import com.workpoint.icpak.client.ui.members.MembersPresenter;
 import com.workpoint.icpak.client.ui.members.MembersView;
 import com.workpoint.icpak.client.ui.notifications.NotificationsPresenter;
@@ -179,10 +179,10 @@ public class ClientModule extends AbstractPresenterModule {
 		bindPresenter(LoginPresenter.class, LoginPresenter.ILoginView.class,
 				LoginView.class, LoginPresenter.ILoginProxy.class);
 
-		bindPresenter(CreatePasswordPresenter.class,
-				CreatePasswordPresenter.ILoginView.class,
-				CreatePasswordView.class,
-				CreatePasswordPresenter.ILoginProxy.class);
+		bindPresenter(ActivateAccountPresenter.class,
+				ActivateAccountPresenter.IActivateAccountView.class,
+				ActivateAccountView.class,
+				ActivateAccountPresenter.IActivateAccountProxy.class);
 
 		requestStaticInjection(AppContext.class);
 		requestStaticInjection(AppManager.class);

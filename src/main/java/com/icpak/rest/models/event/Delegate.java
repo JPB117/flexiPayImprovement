@@ -35,6 +35,7 @@ public class Delegate extends PO{
 	private String surname;
 	private String otherNames;
 	private String email;
+	private boolean isMember;
 	
 	@Transient
 	private String bookingId;
@@ -122,4 +123,13 @@ public class Delegate extends PO{
 		
 		return dto;
 	}
+
+	public boolean isMember() {
+		return isMember;
+	}
+
+	public void setMember(boolean isMember) {
+		this.isMember = isMember;
+	}
+
 }

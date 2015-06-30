@@ -31,6 +31,8 @@ import com.icpak.rest.utils.DocumentLine;
 import com.icpak.rest.utils.EmailServiceHelper;
 import com.icpak.rest.utils.HTMLToPDFConvertor;
 import com.workpoint.icpak.shared.model.ApplicationType;
+import com.workpoint.icpak.shared.model.InvoiceDto;
+import com.workpoint.icpak.shared.model.InvoiceLineDto;
 import com.workpoint.icpak.shared.model.events.BookingDto;
 import com.workpoint.icpak.shared.model.events.ContactDto;
 import com.workpoint.icpak.shared.model.events.DelegateDto;
@@ -110,12 +112,14 @@ public class BookingsDaoHelper {
 
 	private void sendProInvoice(Booking booking) {
 		try{
+			InvoiceDto invoice = generateInvoice(booking);
+			
 			Map<String,Object> values  = new HashMap<String, Object>();
-			values.put("companyName", booking.getContact().getCompany());
-			values.put("companyAddress", booking.getContact().getAddress());
+			values.put("companyName", invoice.getCompanyName());
+			values.put("companyAddress", invoice.getCompanyAddress());
 			values.put("quoteNo", booking.getId());
-			values.put("date", booking.getBookingDate());
-			values.put("firstName", booking.getContact().getContactName());
+			values.put("date", invoice.getDate());
+			values.put("firstName", invoice.getContactName());
 			values.put("DocumentURL", "http://127.0.0.1:8888/icpakportal.html");
 			values.put("email", booking.getContact().getEmail());
 			values.put("eventId", booking.getEvent().getRefId());
@@ -125,20 +129,16 @@ public class BookingsDaoHelper {
 			Event event = booking.getEvent();
 			
 			double amount = 0.0;
-			for(Delegate delegate : booking.getDelegates()){
+			
+			for(InvoiceLineDto dto : invoice.getLines()){
 				Map<String,Object> line  = new HashMap<String, Object>();
-				line.put("description", delegate.getSurname()+" "+delegate.getOtherNames());
-				Double price = event.getNonMemberPrice();
-				if(delegate.getMemberRegistrationNo()!=null){
-					price = event.getMemberPrice();
-				}
-				amount+=price;
-				line.put("unitPrice", price);
-				line.put("amount", price);
+				line.put("description", dto.getDescription());
+				line.put("unitPrice", dto.getUnitPrice());
+				line.put("amount", dto.getTotalAmount());
 				doc.addDetail(new DocumentLine("invoiceDetails",line));
 			}
 			
-			values.put("totalAmount", amount);
+			values.put("totalAmount", invoice.getAmount());
 			
 			String subject = booking.getEvent().getName()+"' Event Registration";
 			//PDF Invoice Generation
@@ -164,6 +164,36 @@ public class BookingsDaoHelper {
 		}catch(Exception e){
 			e.printStackTrace();
 		}
+	}
+	
+	public InvoiceDto generateInvoice(Booking booking){
+		Event event = booking.getEvent();
+		InvoiceDto invoice   = new InvoiceDto();
+		
+		double amount = 0.0;
+		for(Delegate delegate : booking.getDelegates()){
+			InvoiceLineDto dto = new InvoiceLineDto();
+			dto.setDescription( delegate.getSurname()+" "+delegate.getOtherNames());
+			
+			Double price = event.getNonMemberPrice();
+			if(delegate.getMemberRegistrationNo()!=null || delegate.isMember()){
+				price = event.getMemberPrice();
+			}
+			dto.setUnitPrice(price);
+			amount+=price;
+			
+			dto.setTotalAmount(price);
+			invoice.addLine(dto);
+		}
+		invoice.setAmount(amount);
+		invoice.setDocumentNo(booking.getId()+"");
+		invoice.setCompanyName(booking.getContact().getCompany());
+		invoice.setDate(booking.getBookingDate());
+		invoice.setCompanyAddress(booking.getContact().getAddress());
+		invoice.setContactName(booking.getContact().getContactName());
+		invoice.setPhoneNumber(booking.getContact().getTelephoneNumbers());
+		
+		return invoice;
 	}
 
 	public BookingDto updateBooking(String eventId, String bookingId,

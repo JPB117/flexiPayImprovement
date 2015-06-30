@@ -14,6 +14,8 @@ import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import com.icpak.rest.IDUtils;
 import com.icpak.rest.dao.ApplicationFormDao;
+import com.icpak.rest.dao.InvoiceDao;
+import com.icpak.rest.dao.InvoiceDaoHelper;
 import com.icpak.rest.dao.UsersDao;
 import com.icpak.rest.exceptions.ServiceException;
 import com.icpak.rest.models.ErrorCodes;
@@ -21,6 +23,7 @@ import com.icpak.rest.models.auth.BioData;
 import com.icpak.rest.models.auth.User;
 import com.icpak.rest.models.membership.ApplicationFormHeader;
 import com.icpak.rest.models.membership.ApplicationCategory;
+import com.icpak.rest.models.trx.Invoice;
 import com.icpak.rest.models.util.Attachment;
 import com.icpak.rest.utils.Doc;
 import com.icpak.rest.utils.DocumentHTMLMapper;
@@ -30,6 +33,8 @@ import com.icpak.rest.utils.HTMLToPDFConvertor;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 import com.workpoint.icpak.shared.model.ApplicationType;
 import com.workpoint.icpak.shared.model.ApplicationCategoryDto;
+import com.workpoint.icpak.shared.model.InvoiceDto;
+import com.workpoint.icpak.shared.model.InvoiceLineDto;
 
 @Transactional
 public class ApplicationFormDaoHelper {
@@ -37,6 +42,7 @@ public class ApplicationFormDaoHelper {
 	
 	@Inject ApplicationFormDao applicationDao;
 	@Inject UsersDao userDao;
+	@Inject InvoiceDaoHelper invoiceHelper;
 	@Inject TransactionDaoHelper trxHelper;
 	
 	public void createApplication(ApplicationFormHeaderDto application){
@@ -50,11 +56,19 @@ public class ApplicationFormDaoHelper {
 		ApplicationFormHeader po = new ApplicationFormHeader();
 		po.copyFrom(application);
 		
+		//Create Temp User
+		User user = createTempUser(po);
+		po.setUserRefId(user.getRefId());
+		
+		//Generate Invoice
+		InvoiceDto invoice = generateInvoice(po);
+		po.setInvoiceRef(invoice.getRefId());		
 		applicationDao.createApplication(po);
+		
 		//setCategory(po);	
 		
-		User user = createTempUser(po);
-		sendEmail(po, user);
+		//Send Email
+		sendEmail(po, invoice, user);
 		
 		//Copy into DTO
 		po.copyInto(application);
@@ -86,8 +100,8 @@ public class ApplicationFormDaoHelper {
 	}
 
 
-	private void sendEmail(ApplicationFormHeader application,User user) {
-		
+	private void sendEmail(ApplicationFormHeader application,InvoiceDto invoice,User user) {
+
 		try{
 			Map<String,Object> values  = new HashMap<String, Object>();
 			values.put("companyName", application.getEmployerCode());
@@ -100,20 +114,13 @@ public class ApplicationFormDaoHelper {
 			values.put("password", user.getHashedPassword());
 			Doc doc = new Doc(values);
 			
-			ApplicationType type = application.getApplicationType();
-			ApplicationCategory category = applicationDao.findApplicationCategory(type);
-			
-			if(category==null){
-				//throw new NullPointerException("Application Category "+type+" not found");
-				throw new ServiceException(ErrorCodes.NOTFOUND,"Application Category '"+type+"'");
-			}
-			
 			Map<String,Object> line  = new HashMap<String, Object>();
-			line.put("description", category.getDescription());
-			line.put("unitPrice", category.getApplicationAmount());
-			line.put("amount", category.getApplicationAmount());
-			values.put("totalAmount", category.getApplicationAmount());
-			category.getApplicationAmount();
+			InvoiceLineDto lineDto = invoice.getLines().get(0);
+			
+			line.put("description", lineDto.getDescription());
+			line.put("unitPrice", lineDto.getUnitPrice());
+			line.put("amount", lineDto.getTotalAmount());
+			values.put("totalAmount", lineDto.getTotalAmount());
 			doc.addDetail(new DocumentLine("invoiceDetails",line));
 			
 			String documentNo = "ProForma Invoice_"+application.getSurname();
@@ -135,13 +142,41 @@ public class ApplicationFormDaoHelper {
 					Arrays.asList(application.getSurname()+" "+application.getOtherNames()), attachment);	
 			
 			trxHelper.charge(user.getRefId(),
-					new Date(), subject,null , category.getApplicationAmount(),
+					new Date(), subject,null ,invoice.getAmount(),
 					documentNo);
 			
 		}catch(Exception e){
 			e.printStackTrace();
 		}
 	
+	}
+
+	private InvoiceDto generateInvoice(ApplicationFormHeader application) {
+		ApplicationType type = application.getApplicationType();
+		ApplicationCategory category = applicationDao.findApplicationCategory(type);
+		
+		if(category==null){
+			//throw new NullPointerException("Application Category "+type+" not found");
+			throw new ServiceException(ErrorCodes.NOTFOUND,"Application Category '"+type+"'");
+		}
+		
+		String documentNo = "ProForma Invoice_"+application.getSurname();
+		
+		InvoiceDto dto   = new InvoiceDto();
+		dto.setDocumentNo(documentNo);
+		dto.setAmount(category.getApplicationAmount());
+		dto.setCompanyName(application.getEmployer());
+		dto.setCompanyAddress(application.getContactAddress());
+		dto.setPhoneNumber(application.getContactTelephone());
+		dto.setContactName(application.getSurname()+" "+application.getOtherNames());
+		dto.setDate(new Date());
+		dto.addLine(new InvoiceLineDto(category.getDescription(),
+				category.getApplicationAmount(),
+				category.getApplicationAmount()));
+		
+		dto = invoiceHelper.save(dto);
+		
+		return dto;
 	}
 
 	public void updateApplication(String applicationId, ApplicationFormHeaderDto dto){
@@ -215,6 +250,11 @@ public class ApplicationFormDaoHelper {
 
 	public void deleteCategory(String categoryId) {
 		applicationDao.delete(getCategoryById(categoryId));
+	}
+
+	public InvoiceDto getInvoice(String applicationId) {
+		
+		return generateInvoice(getApplicationById(applicationId));
 	}
 
 

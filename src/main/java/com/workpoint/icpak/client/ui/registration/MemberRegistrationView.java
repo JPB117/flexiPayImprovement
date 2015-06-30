@@ -21,10 +21,12 @@ import com.gwtplatform.mvp.client.ViewImpl;
 import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.IssuesPanel;
 import com.workpoint.icpak.client.ui.component.TextField;
+import com.workpoint.icpak.client.ui.events.registration.proforma.ProformaInvoice;
 import com.workpoint.icpak.client.ui.registration.form.MemberRegistrationForm;
 import com.workpoint.icpak.shared.model.ApplicationCategoryDto;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 import com.workpoint.icpak.shared.model.ApplicationType;
+import com.workpoint.icpak.shared.model.InvoiceDto;
 
 public class MemberRegistrationView extends ViewImpl implements
 		MemberRegistrationPresenter.MyView {
@@ -121,6 +123,9 @@ public class MemberRegistrationView extends ViewImpl implements
 	@UiField
 	SpanElement spnNames;
 
+	@UiField
+	ProformaInvoice proformaInv;
+
 	private List<LIElement> liElements = new ArrayList<LIElement>();
 	private List<PageElement> pageElements = new ArrayList<PageElement>();
 	private String selectedName;
@@ -163,9 +168,9 @@ public class MemberRegistrationView extends ViewImpl implements
 				divAssociate.addClassName("active");
 				type = ApplicationType.ASSOCIATE;
 			}
-			
+
 			memberRegistrationForm.setType(type);
-			
+
 		}
 	};
 
@@ -205,7 +210,7 @@ public class MemberRegistrationView extends ViewImpl implements
 		});
 
 		// lstMemberCategory.setItems(types);
-		
+
 		memberRegistrationForm.setCounter(counter);
 	}
 
@@ -377,6 +382,16 @@ public class MemberRegistrationView extends ViewImpl implements
 	public void showError(String error) {
 		issuesPanelCategory.clear();
 		issuesPanelCategory.addError(error);
+	}
+
+	@Override
+	public void bindInvoice(InvoiceDto invoice) {
+		proformaInv.clearRows();
+		proformaInv.setInvoice(invoice);
+	}
+
+	public Anchor getActivateAccLink() {
+		return aAccount;
 	}
 
 }

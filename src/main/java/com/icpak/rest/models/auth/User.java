@@ -26,6 +26,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -50,6 +52,7 @@ import com.icpak.rest.models.base.PO;
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 import com.workpoint.icpak.shared.model.UserDto;
+import com.workpoint.icpak.shared.model.auth.AccountStatus;
 
 /**
  * Simple class that represents any User domain entity in any application.
@@ -109,6 +112,9 @@ public class User extends PO{
     private String address;
     private String city;
     private String nationality; 
+    
+    @Enumerated(EnumType.STRING)
+    private AccountStatus status = AccountStatus.NEWACC;
     
     public User() {
 	}
@@ -271,8 +277,17 @@ public class User extends PO{
 		dto.setSurname(userData.getLastName());
 		//dto.setName(getFullName());
 		dto.setRefId(refId);
+		dto.setStatus(status);
 		//dto.setName(name);
 		return dto;
+	}
+
+	public AccountStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(AccountStatus status) {
+		this.status = status;
 	}
 
 }

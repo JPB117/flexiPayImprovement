@@ -293,7 +293,7 @@
 												</div>
 
 												<div class="row">
-													<proforma:ProformaInvoice></proforma:ProformaInvoice>
+													<proforma:ProformaInvoice ui:field="proformaInv"></proforma:ProformaInvoice>
 												</div>
 
 											</div>
@@ -327,7 +327,7 @@
 
 											<d:ActionLink
 												styleName='btn btn-previous btn-fill btn-default btn-wd btn-sm hide'
-												ui:field="aAccount" href="#login">Go to my Account
+												ui:field="aAccount" href="#activateacc">Go to my Account
 											</d:ActionLink>
 										</div>
 

@@ -14,6 +14,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
+import com.workpoint.icpak.shared.model.InvoiceDto;
 
 @Path("applications")
 public interface ApplicationFormResource{
@@ -27,11 +28,18 @@ public interface ApplicationFormResource{
 	@Path("/{applicationId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public ApplicationFormHeaderDto getById(@PathParam("applicationId") String applicationId);
+	
+	@GET
+	@Path("/{applicationId}/invoice")
+	@Produces(MediaType.APPLICATION_JSON)
+	public InvoiceDto getInvoiceByBookingId(@PathParam("applicationId") String applicationId,
+			@QueryParam("download") String download);
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public ApplicationFormHeaderDto create(ApplicationFormHeaderDto application);
+	
 
 	@PUT
 	@Path("/{applicationId}")

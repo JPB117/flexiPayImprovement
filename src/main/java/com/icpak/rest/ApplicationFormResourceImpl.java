@@ -22,6 +22,7 @@ import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 import com.workpoint.icpak.shared.api.ApplicationFormResource;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
+import com.workpoint.icpak.shared.model.InvoiceDto;
 
 
 @Path("applications")
@@ -152,5 +153,14 @@ public class ApplicationFormResourceImpl implements ApplicationFormResource{
 	@Path("/{applicationId}/offenses")
 	public CriminalOffensesResource bookings(@InjectParam CriminalOffensesResource resource){
 		return resource;
+	}
+
+	@Override
+	@GET
+	@Path("/{applicationId}/invoice")
+	@Produces(MediaType.APPLICATION_JSON)
+	public InvoiceDto getInvoiceByBookingId(@PathParam("applicationId") String applicationId,
+			@QueryParam("download") String download){
+		return helper.getInvoice(applicationId);
 	}
 }
