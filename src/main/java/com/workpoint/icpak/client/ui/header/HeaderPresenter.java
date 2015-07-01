@@ -1,15 +1,25 @@
 package com.workpoint.icpak.client.ui.header;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.Timer;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
+import com.gwtplatform.dispatch.rest.delegates.client.ResourceDelegate;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
+import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
+import com.gwtplatform.mvp.shared.proxy.PlaceRequest.Builder;
+import com.workpoint.icpak.client.place.NameTokens;
+import com.workpoint.icpak.client.place.ParameterTokens;
+import com.workpoint.icpak.client.service.AbstractAsyncCallback;
 import com.workpoint.icpak.client.ui.events.AdminPageLoadEvent;
+import com.workpoint.icpak.client.ui.events.LogoutEvent;
 import com.workpoint.icpak.client.ui.events.AdminPageLoadEvent.AdminPageLoadHandler;
 import com.workpoint.icpak.client.ui.events.AfterSaveEvent;
 import com.workpoint.icpak.client.ui.events.AfterSaveEvent.AfterSaveHandler;
@@ -18,12 +28,14 @@ import com.workpoint.icpak.client.ui.events.ContextLoadedEvent.ContextLoadedHand
 import com.workpoint.icpak.client.ui.events.LoadAlertsEvent;
 import com.workpoint.icpak.client.ui.events.LoadAlertsEvent.LoadAlertsHandler;
 import com.workpoint.icpak.client.ui.notifications.NotificationsPresenter;
+import com.workpoint.icpak.shared.api.SessionResource;
 import com.workpoint.icpak.shared.model.UserDto;
 
 public class HeaderPresenter extends PresenterWidget<HeaderPresenter.IHeaderView> 
 implements AfterSaveHandler, AdminPageLoadHandler, ContextLoadedHandler, LoadAlertsHandler{
 
 	public interface IHeaderView extends View {
+		public HasClickHandlers getALogout();
 	}
 
 	//@Inject DispatchAsync dispatcher;
@@ -37,10 +49,10 @@ implements AfterSaveHandler, AdminPageLoadHandler, ContextLoadedHandler, LoadAle
 	
 	@ContentSlot
 	public static final Type<RevealContentHandler<?>> NOTIFICATIONS_SLOT = new Type<RevealContentHandler<?>>();
-
 	
 	@Inject
 	public HeaderPresenter(final EventBus eventBus, final IHeaderView view) {
+		
 		super(eventBus, view);
 		alertTimer.scheduleRepeating(alertReloadInterval);
 	}
@@ -63,6 +75,14 @@ implements AfterSaveHandler, AdminPageLoadHandler, ContextLoadedHandler, LoadAle
 		this.addRegisteredHandler(AdminPageLoadEvent.TYPE, this);
 		this.addRegisteredHandler(ContextLoadedEvent.TYPE, this);
 		this.addRegisteredHandler(LoadAlertsEvent.TYPE, this);
+		
+		getView().getALogout().addClickHandler(new ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent event) {
+				fireEvent(new LogoutEvent());
+			}
+		});
 	}
 
 	protected void loadAlerts() {
@@ -98,16 +118,6 @@ implements AfterSaveHandler, AdminPageLoadHandler, ContextLoadedHandler, LoadAle
 	protected void loadAlertCount() {
 		alertTimer.cancel();
 		
-	}
-
-	protected void logout() {
-//		dispatcher.execute(new LogoutAction(), new TaskServiceCallback<LogoutActionResult>() {
-//			@Override
-//			public void processResult(LogoutActionResult result) {
-//				AppContext.destroy();
-//				placeManager.revealErrorPlace("login");
-//			}
-//		});
 	}
 
 	@Override

@@ -10,6 +10,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rest.delegates.client.ResourceDelegate;
@@ -79,7 +80,11 @@ public class AppContext {
 	public static boolean isValid(){
 		boolean isValid = user.isLoggedIn();
 		if(isValid){
+			Window.alert("####User Logged in!!!!!");
 			return true;
+			
+		}else{
+			Window.alert("User Not Logged in!!!!!");
 		}
 		
 		PlaceRequest request = placeManager.getCurrentPlaceRequest();
@@ -201,35 +206,6 @@ public class AppContext {
 
 	public static boolean hasLoggedInCookie() {
 		return !Strings.isNullOrEmpty(getLoggedInCookie());
-	}
-	
-	public static void redirectToLoggedOnPage() {
-		String token = placeManager.getCurrentPlaceRequest().getParameter(
-				ParameterTokens.REDIRECT, NameTokens.getOnLoginDefaultPage());
-		PlaceRequest placeRequest = new Builder().nameToken(token).build();
-
-		placeManager.revealPlace(placeRequest);
-	}
-
-	public static void setLoggedInCookie(String value) {
-		String path = "/";
-		String domain = getDomain();
-		int maxAge = REMEMBER_ME_DAYS * 24 * 60 * 60 * 1000;
-		boolean secure = false;
-
-		NewCookie newCookie = new NewCookie(ApiParameters.LOGIN_COOKIE, value,
-				path, domain, "", maxAge, secure);
-		sessionResource.withoutCallback().rememberMe(newCookie);
-
-//		LOGGER.info("LoginPresenter.setLoggedInCookie() Set client cookie="
-//				+ value);
-	}
-
-	public static String getDomain() {
-		String domain = GWT.getHostPageBaseURL().replaceAll(".*//", "")
-				.replaceAll("/", "").replaceAll(":.*", "");
-
-		return "localhost".equalsIgnoreCase(domain) ? null : domain;
 	}
 	
 }

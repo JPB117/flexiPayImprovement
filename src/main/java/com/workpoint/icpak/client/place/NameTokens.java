@@ -77,7 +77,7 @@ public class NameTokens {
 
 	public static String getOnLoginDefaultPage() {
 		
-		return profile;
+		return home;
 	}
 
 }

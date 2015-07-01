@@ -34,7 +34,7 @@ public class ProfilePresenter
 	}
 
 	final CurrentUser currentUser;
-	
+
 	@ProxyCodeSplit
 	@NameToken(NameTokens.profile)
 	@UseGatekeeper(LoginGateKeeper.class)
@@ -65,20 +65,21 @@ public class ProfilePresenter
 	@Override
 	public void prepareFromRequest(PlaceRequest request) {
 		super.prepareFromRequest(request);
-		loadData();
-	}
-	
-	private void loadData() {
-		String applicationRefId = currentUser.getUser().getApplicationRefId();
-		
-	}
-
-	protected void save() {
 	}
 
 	@Override
-	protected void onReset() {
-		super.onReset();
+	protected void onReveal() {
+		super.onReveal();
+		loadData();
+	}
+
+	private void loadData() {
+		String applicationRefId = currentUser.getUser() == null ? null
+				: currentUser.getUser().getApplicationRefId();
+
+	}
+
+	protected void save() {
 	}
 
 }

@@ -34,12 +34,12 @@ public class SessionResourceImpl implements SessionResource {
         this.currentUserDtoProvider = currentUserDtoProvider;
     }
 
-    @DELETE
+    @GET
     public CurrentUserDto getCurrentUser() {
         return currentUserDtoProvider.get();
     }
     
-    @GET
+    @DELETE
     public void logout() {
         authenticator.logout();
     }

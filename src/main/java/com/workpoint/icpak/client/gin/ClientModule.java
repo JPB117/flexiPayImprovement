@@ -105,6 +105,9 @@ public class ClientModule extends AbstractPresenterModule {
 
 		// SECURITY
 		bind(CurrentUser.class).asEagerSingleton();
+		
+		requestStaticInjection(AppContext.class);
+		requestStaticInjection(AppManager.class);
 
 		// bindConstant().annotatedWith(DefaultPlace.class).to(NameTokens.home);
 		bindConstant().annotatedWith(DefaultPlace.class).to(NameTokens.login);
@@ -183,9 +186,6 @@ public class ClientModule extends AbstractPresenterModule {
 				ActivateAccountPresenter.IActivateAccountView.class,
 				ActivateAccountView.class,
 				ActivateAccountPresenter.IActivateAccountProxy.class);
-
-		requestStaticInjection(AppContext.class);
-		requestStaticInjection(AppManager.class);
 
 		bindPresenter(NotfoundPresenter.class, NotfoundPresenter.MyView.class,
 				NotfoundView.class, NotfoundPresenter.MyProxy.class);

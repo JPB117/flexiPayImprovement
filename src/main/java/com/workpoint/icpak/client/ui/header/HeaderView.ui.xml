@@ -76,10 +76,10 @@
 						<!-- END Alert menu -->
 						<!-- START Contacts button -->
 						<li>
-							<a>
+							<g:Anchor ui:field="aLogout">
 								<em class="fa fa-power-off"></em>
 								LogOut
-							</a>
+							</g:Anchor>
 						</li>
 						<!-- END Contacts menu -->
 					</ul>

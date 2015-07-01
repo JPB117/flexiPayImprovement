@@ -8,6 +8,7 @@ import com.google.inject.Provider;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.common.client.IndirectProvider;
 import com.gwtplatform.common.client.StandardProvider;
+import com.gwtplatform.dispatch.rest.delegates.client.ResourceDelegate;
 import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.View;
@@ -33,6 +34,7 @@ import com.workpoint.icpak.client.ui.header.HeaderPresenter;
 import com.workpoint.icpak.client.ui.upload.attachment.ShowAttachmentEvent;
 import com.workpoint.icpak.client.ui.upload.attachment.ShowAttachmentEvent.ShowAttachmentHandler;
 import com.workpoint.icpak.client.ui.upload.href.IFrameDataPresenter;
+import com.workpoint.icpak.shared.api.SessionResource;
 
 public class MainPagePresenter extends
 		Presenter<MainPagePresenter.MyView, MainPagePresenter.MyProxy> 
@@ -60,8 +62,6 @@ ProcessingHandler, ShowAttachmentHandler, ClientDisconnectionHandler{
 	@Inject HeaderPresenter headerPresenter;
 		
 	IndirectProvider<ErrorPresenter> errorFactory;
-	
-	//@Inject DispatchAsync dispatcher;
 	
 	@Inject PlaceManager placeManager;
 

@@ -3,6 +3,8 @@ package com.workpoint.icpak.client.ui.login.createpassword;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.ws.rs.core.NewCookie;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -27,6 +29,7 @@ import com.workpoint.icpak.client.service.AbstractAsyncCallback;
 import com.workpoint.icpak.client.ui.login.LoginPresenter;
 import com.workpoint.icpak.client.ui.profile.password.PasswordWidget;
 import com.workpoint.icpak.client.util.AppContext;
+import com.workpoint.icpak.shared.api.ApiParameters;
 import com.workpoint.icpak.shared.api.SessionResource;
 import com.workpoint.icpak.shared.api.UsersResource;
 import com.workpoint.icpak.shared.model.UserDto;
@@ -134,7 +137,7 @@ public class ActivateAccountPresenter
 						//getView().clearLoginProgress();
 						
 						if (result.getCurrentUserDto().isLoggedIn()) {
-							AppContext.setLoggedInCookie(result.getLoggedInCookie());
+							//setLoggedInCookie(result.getLoggedInCookie());
 						}
 
 						if (result.getActionType() == ActionType.VIA_COOKIE) {
@@ -184,6 +187,5 @@ public class ActivateAccountPresenter
 
 		placeManager.revealPlace(placeRequest);
 	}
-
 
 }

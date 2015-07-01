@@ -1,6 +1,9 @@
 package com.workpoint.icpak.client.ui.header;
 
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
@@ -14,6 +17,8 @@ public class HeaderView extends ViewImpl implements HeaderPresenter.IHeaderView 
 
 
 	boolean isSelected = false;
+	
+	@UiField Anchor aLogout;
 
 	@Inject
 	public HeaderView(final Binder binder) {
@@ -23,6 +28,10 @@ public class HeaderView extends ViewImpl implements HeaderPresenter.IHeaderView 
 	@Override
 	public Widget asWidget() {
 		return widget;
+	}
+	
+	public HasClickHandlers getALogout(){
+		return aLogout;
 	}
 
 }
