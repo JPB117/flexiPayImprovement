@@ -15,6 +15,7 @@ public class UserDto implements Listable,Serializable {
 	private Long id;
 	private String uri;
 	private String refId;
+	private String applicationRefId;
 	private String name;
 	private String userId;
 	private String email;
@@ -191,5 +192,13 @@ public class UserDto implements Listable,Serializable {
 
 	public void setStatus(AccountStatus status) {
 		this.status = status;
+	}
+
+	public String getApplicationRefId() {
+		return applicationRefId;
+	}
+
+	public void setApplicationRefId(String applicationRefId) {
+		this.applicationRefId = applicationRefId;
 	}
 }

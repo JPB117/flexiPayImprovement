@@ -180,7 +180,9 @@ public class EventBookingView extends ViewImpl implements
 			return dto;
 		}
 	};
-	int counter = 0;
+	
+	//int counter = 0;
+	int counter = 1;
 
 	public interface Binder extends UiBinder<Widget, EventBookingView> {
 	}
@@ -192,7 +194,7 @@ public class EventBookingView extends ViewImpl implements
 		tblDelegates.setAutoNumber(false);
 		List<ColumnConfig> configs = new ArrayList<ColumnConfig>();
 		ColumnConfig config = new ColumnConfig("memberNo", "Member No",
-				DataType.STRING);
+				DataType.STRING,"","input-small");
 		configs.add(config);
 		config = new ColumnConfig("title", "Title", DataType.STRING);
 		configs.add(config);

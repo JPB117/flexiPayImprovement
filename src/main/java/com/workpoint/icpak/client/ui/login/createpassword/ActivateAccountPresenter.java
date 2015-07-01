@@ -19,7 +19,9 @@ import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealRootLayoutContentEvent;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
+import com.gwtplatform.mvp.shared.proxy.PlaceRequest.Builder;
 import com.workpoint.icpak.client.place.NameTokens;
+import com.workpoint.icpak.client.place.ParameterTokens;
 import com.workpoint.icpak.client.security.CurrentUser;
 import com.workpoint.icpak.client.service.AbstractAsyncCallback;
 import com.workpoint.icpak.client.ui.login.LoginPresenter;
@@ -131,7 +133,6 @@ public class ActivateAccountPresenter
 					public void onSuccess(LogInResult result) {
 						//getView().clearLoginProgress();
 						
-						LOGGER.log(Level.SEVERE, "Wrong username or password......");
 						if (result.getCurrentUserDto().isLoggedIn()) {
 							AppContext.setLoggedInCookie(result.getLoggedInCookie());
 						}
@@ -167,14 +168,22 @@ public class ActivateAccountPresenter
 	}
 
 	private void onLoginCallSucceeded(CurrentUserDto currentUserDto) {
-		LOGGER.log(Level.SEVERE, "Wrong username or password......");
 		
 		if (currentUserDto.isLoggedIn()) {
 			currentUser.fromCurrentUserDto(currentUserDto);
-			AppContext.redirectToLoggedOnPage();
+			redirectToLoggedOnPage();
 		} else {
 			getView().setError("Wrong username or password");
 		}
 	}
+	
+	void redirectToLoggedOnPage() {
+		String token = placeManager.getCurrentPlaceRequest().getParameter(
+				ParameterTokens.REDIRECT, NameTokens.getOnLoginDefaultPage());
+		PlaceRequest placeRequest = new Builder().nameToken(token).build();
+
+		placeManager.revealPlace(placeRequest);
+	}
+
 
 }

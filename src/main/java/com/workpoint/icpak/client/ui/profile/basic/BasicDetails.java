@@ -18,7 +18,7 @@ public class BasicDetails extends Composite {
 
 	public BasicDetails() {
 		initWidget(uiBinder.createAndBindUi(this));
-
+		
 	}
 
 }

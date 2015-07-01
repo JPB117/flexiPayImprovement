@@ -111,5 +111,13 @@ public class UsersDao extends BaseDao{
 		}
 		return attachment;
 	}
+
+	public String getApplicationRefId(String userRef) {
+		
+		String sql = "select refid from `Application Form Header` where userRefId=:userRef";
+		return getSingleResultOrNull(getEntityManager()
+				.createNativeQuery(sql)
+				.setParameter("userRef", userRef));
+	}
 	
 }

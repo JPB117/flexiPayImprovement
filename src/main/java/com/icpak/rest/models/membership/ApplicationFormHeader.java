@@ -8,7 +8,6 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import com.icpak.rest.models.base.PO;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;

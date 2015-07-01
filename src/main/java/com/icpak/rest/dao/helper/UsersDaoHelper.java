@@ -109,6 +109,7 @@ public class UsersDaoHelper {
 		User user = dao.findByUserId(userId);
 		dao.delete(user);
 	}
+	
 	public ResourceCollectionModel<User> getAllUsers(Integer offset, Integer limit,
 			UriInfo uriInfo) {
 		ResourceCollectionModel<User> collection = getAllUsers(offset, limit, uriInfo, null);
@@ -230,12 +231,13 @@ public class UsersDaoHelper {
         
         isLoggedIn = userDto!=null;
 
-        CurrentUserDto currentUserDto = new CurrentUserDto(isLoggedIn, userDto);
-
         String loggedInCookie = "";
         if (isLoggedIn) {
             loggedInCookie = loginCookieDao.createSessionCookie(userDto);
+            userDto.setApplicationRefId(getApplicationRefId(userDto.getRefId()));
         }
+
+        CurrentUserDto currentUserDto = new CurrentUserDto(isLoggedIn, userDto);
 
         logger.info("LogInHandlerexecut(): actiontype=" + action.getActionType());
         logger.info("LogInHandlerexecut(): currentUserDto=" + currentUserDto);
@@ -249,6 +251,7 @@ public class UsersDaoHelper {
 	        UserDto userDto = null;
 	        try {
 	            userDto = authenticator.authenticatCookie(loggedInCookie);
+	            userDto.setApplicationRefId(getApplicationRefId(userDto.getRefId()));
 	        } catch (AuthenticationException e) {
 	            //isLoggedIn = false;
 	        }
@@ -260,6 +263,7 @@ public class UsersDaoHelper {
 	        UserDto userDto = null;
 	        try {
 	            userDto = authenticator.authenticateCredentials(username, password);
+	            userDto.setApplicationRefId(getApplicationRefId(userDto.getRefId()));
 	        } catch (AuthenticationException e) {
 	            //isLoggedIn = false;
 	        }
@@ -276,6 +280,10 @@ public class UsersDaoHelper {
 		public void activateAccount(String userId, AccountStatus activated) {
 			User user = dao.findByUserId(userId);
 			user.setStatus(activated);
+		}
+		
+		public String getApplicationRefId(String userRef){
+			return dao.getApplicationRefId(userRef);
 		}
 		
 }
