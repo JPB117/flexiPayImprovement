@@ -14,10 +14,16 @@
 			User Profile
 		</h3>
 
-		<g:HTMLPanel ui:field="divProfileContent">
+		<g:HTMLPanel ui:field="divProfileContent" styleName="col-xs-12">
 			<g:HTMLPanel styleName="row">
 				<div class="col-xs-12">
 					<div class="panel widget">
+						<div class="ember-view popovercontainer ribbon" disabled="false"
+							data-original-title="" title="">
+							<div class="ribbon-inner ribbon-draft">
+								Pending
+							</div>
+						</div>
 						<div class="panel-header">
 							<div class="dropdown pull-right">
 								<a class="btn btn-default dropdown-toggle" id="dropdownMenu1"
@@ -41,8 +47,9 @@
 						</div>
 						<div class="panel-body">
 							<div class="col-sm-2">
-								<img class="thumbnail" src="img/james.jpg" width="200px"
-									height="200px" />
+								<br />
+								<img class="thumbnail col-sm-offset-1" src="img/james.jpg"
+									width="200px" height="200px" />
 							</div>
 							<div class="col-sm-10">
 								<h3 class="m0">
@@ -50,59 +57,22 @@
 								</h3>
 
 								<div class="row">
-									<p class="m0">
-										<span>Membership:</span>
-										Non-Practising
-									</p>
-									<br />
-									
-									<span>Profile Status:</span>
-									<span class="label label-success label-fill">Active</span>
-
-									<br />
-
-									<span>Profile Completion:</span>
-									100%
-								</div>
-
-
-								<div class="text-center bg-gray-dark p-lg mb-xl hide">
-									<div class="row row-table">
-										<div class="col-xs-4 br">
-											<h3 class="m0">Non-Practising</h3>
-											<p class="m0">
-												<span>Membership</span>
-											</p>
-										</div>
-										<div class="col-xs-4 br">
-											<h3 class="m0">Active</h3>
-											<p class="m0">Profile Status</p>
-										</div>
-										<div class="col-xs-4">
-											<h3 class="m0">100%</h3>
-											<p class="m0">Profile Completion</p>
+									<div class="col-sm-4">
+										<p class="text-muted">
+											<br />
+											Non-Practising
+										</p>
+										<div class="progress progress-striped progress-xs">
+											<br />
+											<div role="progressbar" aria-valuenow="80" aria-valuemin="0"
+												aria-valuemax="100" class="progress-bar progress-bar-green progress-80">
+												<span class="sr-only">80% Complete</span>
+											</div>
 										</div>
 									</div>
 								</div>
-								<!-- <span class="text-muted">Non-Practising Member</span> -->
-								<!-- <br /> -->
-								<!-- <span class="label label-success label-fill">Membership Active</span> -->
 
-								<!-- <div class="radial-bar radial-bar-25 radial-bar-xs" -->
-								<!-- data-label="50%"></div> -->
 							</div>
-						</div>
-					</div>
-				</div>
-
-				<div class="col-xs-4 hide">
-					<div class="panel widget">
-						<div class="panel-header">
-							Profile Completion
-						</div>
-						<div class="panel-body">
-							<div class="radial-bar radial-bar-25 radial-bar-xs"
-								data-label="50%"></div>
 						</div>
 					</div>
 				</div>
@@ -110,15 +80,13 @@
 
 			<div class="row">
 				<div class="col-xs-12">
-					<div class="row">
-						<div class="panel widget">
-							<div class="panel-heading">Profile Information</div>
-							<div class="panel-body">
-								<div class="col-xs-12">
-									<!-- Tabs -->
-									<t:TabPanel ui:field="divTabs">
-									</t:TabPanel>
-								</div>
+					<div class="panel widget">
+						<div class="panel-heading">Profile Information</div>
+						<div class="panel-body">
+							<div class="col-xs-12">
+								<!-- Tabs -->
+								<t:TabPanel ui:field="divTabs">
+								</t:TabPanel>
 							</div>
 						</div>
 					</div>

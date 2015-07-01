@@ -55,10 +55,6 @@ public class NameTokens {
 		return error404;
 	}
 
-	// public static String getActivities() {
-	// return activities;
-	// }
-
 	public static String getProfile() {
 		return profile;
 	}

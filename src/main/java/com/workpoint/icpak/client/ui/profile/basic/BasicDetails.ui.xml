@@ -1,14 +1,15 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-	xmlns:d='urn:import:com.workpoint.icpak.client.ui.component' xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	xmlns:d='urn:import:com.workpoint.icpak.client.ui.component' xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:form='urn:import:com.workpoint.icpak.client.ui.registration.form'>
 	<g:HTMLPanel>
 
 		<div class="row">
-			<div class="col-xs-6">
-				<table class="table">
+			<g:HTMLPanel styleName="col-xs-12" ui:field="panelDisplay">
+				<table class="table table-bordered table-striped">
 					<tbody>
 						<tr>
-							<td>
+							<td width="30%">
 								<Strong>Phone:</Strong>
 							</td>
 							<td>
@@ -56,13 +57,6 @@
 							<td>Workpoint Limited</td>
 						</tr>
 
-					</tbody>
-				</table>
-
-			</div>
-			<div class="col-xs-6">
-				<table class="table">
-					<tbody>
 						<tr>
 							<td>
 								<Strong>Residence:</Strong>
@@ -105,9 +99,18 @@
 								<i>Nairobi</i>
 							</td>
 						</tr>
+
 					</tbody>
 				</table>
-			</div>
+			</g:HTMLPanel>
+
+			<g:HTMLPanel styleName="col-xs-12" ui:field="panelEditMode">
+				<form:MemberRegistrationForm ui:field="panelRegistration"></form:MemberRegistrationForm>
+				<div class="fieldset">
+					<d:ActionLink ui:field="aSave" styleName="btn btn-primary pull-left">Save</d:ActionLink>
+					<d:ActionLink ui:field="aCancel" styleName="btn btn-primary pull-right">Cancel</d:ActionLink>
+				</div>
+			</g:HTMLPanel>
 		</div>
 
 	</g:HTMLPanel>
