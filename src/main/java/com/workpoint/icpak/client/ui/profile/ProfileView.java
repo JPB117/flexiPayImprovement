@@ -1,12 +1,18 @@
 package com.workpoint.icpak.client.ui.profile;
 
+import gwtupload.client.IUploader;
+
 import java.util.Arrays;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.ErrorEvent;
+import com.google.gwt.event.dom.client.ErrorHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
@@ -20,6 +26,7 @@ import com.workpoint.icpak.client.ui.profile.education.EducationDetails;
 import com.workpoint.icpak.client.ui.profile.password.PasswordWidget;
 import com.workpoint.icpak.client.ui.profile.specialization.SpecializationDetails;
 import com.workpoint.icpak.client.ui.profile.training.TrainingDetails;
+import com.workpoint.icpak.client.ui.upload.custom.Uploader;
 
 public class ProfileView extends ViewImpl implements
 		ProfilePresenter.IProfileView {
@@ -43,6 +50,25 @@ public class ProfileView extends ViewImpl implements
 	HTMLPanel divProfileContent;
 
 	@UiField
+	HTMLPanel panelProfile;
+	@UiField
+	HTMLPanel PanelProfileDisplay;
+
+	@UiField
+	HTMLPanel divEditDropDown;
+
+	@UiField
+	HTMLPanel divSavePanel;
+
+	@UiField
+	Uploader uploader;
+	@UiField
+	FocusPanel panelPicture;
+
+	@UiField
+	Image imgUser;
+
+	@UiField
 	PasswordWidget panelPasswordWidget;
 	private BasicDetails basicDetail;
 	private EducationDetails educationDetail;
@@ -62,6 +88,7 @@ public class ProfileView extends ViewImpl implements
 		trainingDetail = new TrainingDetails();
 
 		showChangePassword(false);
+		setEditMode(false);
 
 		divTabs.setHeaders(Arrays.asList(new TabHeader("Basic Information",
 				true, "basic_details"), new TabHeader("Education Information",
@@ -96,16 +123,49 @@ public class ProfileView extends ViewImpl implements
 		panelPasswordWidget.getCancelButton()
 				.addClickHandler(hidePasswordPanel);
 
+		imgUser.setUrl("img/james.jpg");
+
 		/* Set Edit Mode */
 		aEdit.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
+				setEditMode(true);
 				basicDetail.setEditMode(true);
 				educationDetail.setEditMode(true);
 				specializationDetail.setEditMode(true);
 				trainingDetail.setEditMode(true);
 			}
 		});
+
+		imgUser.addErrorHandler(new ErrorHandler() {
+			@Override
+			public void onError(ErrorEvent event) {
+				imgUser.setUrl("img/blueman.png");
+			}
+		});
+
+		uploader.addOnFinishUploaderHandler(new IUploader.OnFinishUploaderHandler() {
+			@Override
+			public void onFinish(IUploader uploaderRef) {
+				// setImage(AppContext.getContextUser());
+				// String url = imgUser.getUrl();
+				// imgUser.setUrl(url + "&version=" + Random.nextInt());
+			}
+		});
+	}
+
+	protected void setEditMode(boolean editMode) {
+		if (editMode) {
+			PanelProfileDisplay.setVisible(false);
+			panelProfile.setVisible(true);
+			divEditDropDown.setVisible(false);
+			divSavePanel.setVisible(true);
+		} else {
+			PanelProfileDisplay.setVisible(true);
+			panelProfile.setVisible(false);
+			divEditDropDown.setVisible(true);
+			divSavePanel.setVisible(false);
+		}
 	}
 
 	@Override

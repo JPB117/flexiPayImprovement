@@ -123,7 +123,7 @@ public class LoginPresenter extends
 
 	@Override
 	public boolean useManualReveal() {
-		return true;
+		return false;
 	}
 
 	@Override
@@ -161,47 +161,44 @@ public class LoginPresenter extends
 	};
 
 	private void callServerLoginAction(final LogInAction logInAction) {
-
 		getView().clearErrors();
 		getView().showLoginProgress();
 
 		usersDelegate.withCallback(
-				ManualRevealCallback.create(this,
-						new AbstractAsyncCallback<LogInResult>() {
-							@Override
-							public void onSuccess(LogInResult result) {
-								getView().clearLoginProgress();
-								
-								if (result.getCurrentUserDto().isLoggedIn()) {
-									setLoggedInCookie(result
-											.getLoggedInCookie());
-								}
+		// ManualRevealCallback.create(this,
+				new AbstractAsyncCallback<LogInResult>() {
+					@Override
+					public void onSuccess(LogInResult result) {
+						getView().clearLoginProgress();
 
-								if (result.getActionType() == ActionType.VIA_COOKIE) {
-									onLoginCallSucceededForCookie(result
-											.getCurrentUserDto());
-								} else {
-									onLoginCallSucceeded(result
-											.getCurrentUserDto());
-								}
+						if (result.getCurrentUserDto().isLoggedIn()) {
+							setLoggedInCookie(result.getLoggedInCookie());
+						}
 
-							}
+						if (result.getActionType() == ActionType.VIA_COOKIE) {
+							onLoginCallSucceededForCookie(result
+									.getCurrentUserDto());
+						} else {
+							onLoginCallSucceeded(result.getCurrentUserDto());
+						}
 
-							@Override
-							public void onFailure(Throwable caught) {
-								super.onFailure(caught);
-								getView().clearLoginProgress();
-								LOGGER.log(Level.SEVERE,
-										"Wrong username or password......");
-								getView()
-										.setError("Wrong username or password");
-								// getView().setError("Could authenticate user. Please report this to your administrator");
-								// LOGGER.log(
-								// Level.SEVERE,
-								// "callServerLoginAction(): Server failed to process login call.",
-								// caught);
-							}
-						})).execLogin(logInAction);
+					}
+
+					@Override
+					public void onFailure(Throwable caught) {
+						super.onFailure(caught);
+						getView().clearLoginProgress();
+						LOGGER.log(Level.SEVERE,
+								"Wrong username or password......");
+						getView().setError("Wrong username or password");
+						// getView().setError("Could authenticate user. Please report this to your administrator");
+						// LOGGER.log(
+						// Level.SEVERE,
+						// "callServerLoginAction(): Server failed to process login call.",
+						// caught);
+					}
+				}// )
+				).execLogin(logInAction);
 
 	}
 

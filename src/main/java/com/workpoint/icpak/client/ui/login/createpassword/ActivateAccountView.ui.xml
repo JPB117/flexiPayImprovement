@@ -5,9 +5,24 @@
 	ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	xmlns:password='urn:import:com.workpoint.icpak.client.ui.profile.password'
-	
+
 	ui:generateLocales='default'>
 	<g:HTMLPanel>
-		<password:PasswordWidget ui:field="panelPasswordWidget"></password:PasswordWidget>
+		<g:HTMLPanel ui:field="divHeaderContainer" styleName="top-header">
+			<nav class="navbar">
+				<div class="container">
+					<div class="navbar-header" style="width: 100%; text-align: center;">
+						<a class="brand">
+							<img src="img/icpak_logo.png" width="150px" />
+						</a>
+					</div>
+				</div>
+			</nav>
+		</g:HTMLPanel>
+
+		<div class="col-xs-10 col-xs-offset-1">
+			<password:PasswordWidget ui:field="panelPasswordWidget"></password:PasswordWidget>
+		</div>
+
 	</g:HTMLPanel>
 </ui:UiBinder>

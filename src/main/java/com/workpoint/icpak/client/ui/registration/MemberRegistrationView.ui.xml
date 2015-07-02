@@ -14,7 +14,7 @@
 				<div class="container">
 					<div class="navbar-header" style="width: 100%; text-align: center;">
 						<a class="brand">
-							<img src="http://solutech.co.ke/icpak//assets/img/logo.png"
+							<img src="img/icpak_logo.png"
 								width="150px" />
 						</a>
 					</div>
@@ -56,7 +56,8 @@
 								<div class="tab-content">
 									<div class="tab-pane active" ui:field="divPackage">
 										<div class="row">
-											<form:MemberRegistrationForm ui:field="memberRegistrationForm"></form:MemberRegistrationForm>
+											<form:MemberRegistrationForm
+												ui:field="memberRegistrationForm"></form:MemberRegistrationForm>
 										</div>
 									</div>
 
@@ -293,7 +294,9 @@
 												</div>
 
 												<div class="row">
-													<proforma:ProformaInvoice ui:field="proformaInv"></proforma:ProformaInvoice>
+													<div class="alert alert-success">Below is your proforma Invoice. The same invoice has also been submitted to your email address.</div>
+													<proforma:ProformaInvoice
+														ui:field="proformaInv"></proforma:ProformaInvoice>
 												</div>
 
 											</div>

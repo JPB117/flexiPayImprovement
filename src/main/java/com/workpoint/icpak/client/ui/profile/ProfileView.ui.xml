@@ -25,7 +25,8 @@
 							</div>
 						</div>
 						<div class="panel-header">
-							<div class="dropdown pull-right">
+							<g:HTMLPanel styleName="dropdown pull-right"
+								ui:field="divEditDropDown">
 								<a class="btn btn-default dropdown-toggle" id="dropdownMenu1"
 									data-toggle="dropdown" aria-expanded="true">
 									Edit
@@ -43,36 +44,55 @@
 										</d:ActionLink>
 									</li>
 								</ul>
-							</div>
+							</g:HTMLPanel>
+
+							<g:HTMLPanel ui:field="divSavePanel">
+								<d:ActionLink ui:field="aSaveChanges"
+									styleName="btn btn-primary btn-fill pull-right">Save
+									Changes</d:ActionLink>
+							</g:HTMLPanel>
 						</div>
 						<div class="panel-body">
-							<div class="col-sm-2">
-								<br />
-								<img class="thumbnail col-sm-offset-1" src="img/james.jpg"
-									width="200px" height="200px" />
-							</div>
-							<div class="col-sm-10">
-								<h3 class="m0">
-									<span ui:field="spnNames">Tom Kimani Muriranja</span>
-								</h3>
-
-								<div class="row">
-									<div class="col-sm-4">
-										<p class="text-muted">
-											<br />
-											Non-Practising
-										</p>
-										<div class="progress progress-striped progress-xs">
-											<br />
-											<div role="progressbar" aria-valuenow="80" aria-valuemin="0"
-												aria-valuemax="100" class="progress-bar progress-bar-green progress-80">
-												<span class="sr-only">80% Complete</span>
-											</div>
+							<g:HTMLPanel ui:field="profileViewMode">
+								<div class="col-sm-2">
+									<br />
+									<g:HTMLPanel ui:field="profileViewEditMode">
+										<div class="profile-page">
+											<g:FocusPanel ui:field="panelPicture">
+												<g:Image ui:field="imgUser" styleName="thumbnail col-sm-offset-1" />
+											</g:FocusPanel>
 										</div>
-									</div>
+									</g:HTMLPanel>
 								</div>
 
-							</div>
+								<div class="col-sm-10">
+									<g:HTMLPanel ui:field="panelProfile">
+										<up:Uploader ui:field="uploader" styleName="custom-file-input"></up:Uploader>
+									</g:HTMLPanel>
+
+									<g:HTMLPanel ui:field="PanelProfileDisplay">
+										<h3 class="m0">
+											<span ui:field="spnNames">Tom Kimani Muriranja</span>
+										</h3>
+										<div class="row">
+											<div class="col-sm-4">
+												<p class="text-muted">
+													<br />
+													Non-Practising
+												</p>
+												<div class="progress progress-striped progress-xs">
+													<div role="progressbar" aria-valuenow="80"
+														aria-valuemin="0" aria-valuemax="100"
+														class="progress-bar progress-bar-green progress-80">
+														<span class="text-muted small">80% Complete</span>
+													</div>
+												</div>
+											</div>
+										</div>
+									</g:HTMLPanel>
+								</div>
+							</g:HTMLPanel>
+
 						</div>
 					</div>
 				</div>

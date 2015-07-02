@@ -46,9 +46,9 @@ public class MemberRegistrationPresenter
 		HasClickHandlers getANext();
 
 		HasClickHandlers getABack();
-		
+
 		Anchor getActivateAccLink();
-		
+
 		TextField getEmail();
 
 		void setEmailValid(boolean isValid);
@@ -126,7 +126,7 @@ public class MemberRegistrationPresenter
 						checkExists(email);
 					}
 				});
-		
+
 		getView().getANext().addClickHandler(new ClickHandler() {
 
 			@Override
@@ -139,6 +139,7 @@ public class MemberRegistrationPresenter
 
 						// We navigate next after server side has generated an
 						// account and submitted an email to user.
+						getView().next();
 					} else {
 						getView().next();
 					}
@@ -162,7 +163,7 @@ public class MemberRegistrationPresenter
 
 	protected void submit(ApplicationFormHeaderDto applicationForm) {
 		getView().setLoadingState((ActionLink) getView().getANext(), true);
-		
+
 		applicationDelegate.withCallback(
 				new AbstractAsyncCallback<ApplicationFormHeaderDto>() {
 					@Override
@@ -170,10 +171,11 @@ public class MemberRegistrationPresenter
 						removeError();
 						// result;
 						getView().bindForm(result);
-						
-						getView().getActivateAccLink().setHref("#activateacc;uid="+result.getUserRefId());
+
+						getView().getActivateAccLink().setHref(
+								"#activateacc;uid=" + result.getUserRefId());
 						getInvoice(result.getInvoiceRef());
-					
+
 					}
 
 					private void removeError() {
@@ -187,11 +189,11 @@ public class MemberRegistrationPresenter
 						super.onFailure(caught);
 					}
 				}).create(applicationForm);
-		
+
 	}
 
 	protected void getInvoice(String invoiceRef) {
-		
+
 		invoiceResource.withCallback(new AbstractAsyncCallback<InvoiceDto>() {
 			@Override
 			public void onSuccess(InvoiceDto invoice) {
@@ -199,7 +201,7 @@ public class MemberRegistrationPresenter
 				getView().next();
 			}
 		}).getInvoice(invoiceRef);
-		
+
 	}
 
 	protected void checkExists(String email) {
