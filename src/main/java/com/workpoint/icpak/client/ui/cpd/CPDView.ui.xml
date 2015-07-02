@@ -2,7 +2,10 @@
 
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
 	xmlns:g='urn:import:com.google.gwt.user.client.ui' ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
-	xmlns:d='urn:import:com.workpoint.icpak.client.ui.component' xmlns:up='urn:import:com.workpoint.icpak.client.ui.upload.custom'
+	xmlns:d='urn:import:com.workpoint.icpak.client.ui.component' xmlns:p='urn:import:com.workpoint.icpak.client.ui.cpd.header'
+	xmlns:table='urn:import:com.workpoint.icpak.client.ui.cpd.table'
+	xmlns:up='urn:import:com.workpoint.icpak.client.ui.upload.custom'
+	xmlns:t='urn:import:com.workpoint.icpak.client.ui.component.tabs'
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
 
@@ -11,8 +14,18 @@
 		<h3 class="ng-scope">
 			My CPD
 		</h3>
-		
-		
 
+		<div class="row">
+			<div class="col-sm-12">
+				<p:CPDHeader ui:field="headerContainer">
+				</p:CPDHeader>
+			</div>
+
+			<div ui:field="divTab1Content" class="tab-pane fade in active">
+				<!-- Tabs -->
+				<t:TabPanel ui:field="divTabs">
+				</t:TabPanel>
+			</div>
+		</div>
 	</g:HTMLPanel>
 </ui:UiBinder>
