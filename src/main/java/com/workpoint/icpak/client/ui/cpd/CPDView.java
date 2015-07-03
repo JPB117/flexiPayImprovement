@@ -19,7 +19,8 @@ public class CPDView extends ViewImpl implements CPDPresenter.ICPDView {
 
 	private final Widget widget;
 
-	private TabPanel divTabs;
+	@UiField
+	TabPanel divTabs;
 
 	@UiField
 	HTMLPanel container;
@@ -37,13 +38,14 @@ public class CPDView extends ViewImpl implements CPDPresenter.ICPDView {
 		unconfirmedWidget = new UnconfirmedCPD();
 		confirmedWidget = new ConfirmedCPD();
 
-		divTabs.setHeaders(Arrays.asList(new TabHeader("Confirmed CPD", true,
-				"confirmed_cpd"), new TabHeader("Un-Confirmed CPD", false,
-				"unconfirmed_cpd")));
+		 divTabs.setHeaders(Arrays.asList(
+		 new TabHeader("Confirmed CPD", true,"confirmed_cpd"),
+		 new TabHeader("Un-Confirmed CPD", false,"unconfirmed_cpd")
+		 ));
 
-		divTabs.setContent(Arrays.asList(new TabContent(unconfirmedWidget,
-				"confirmed_cpd", true), new TabContent(confirmedWidget,
-				"unconfirmed_cpd", false)));
+		 divTabs.setContent(Arrays.asList(
+		 new TabContent(unconfirmedWidget,"confirmed_cpd", true),
+		 new TabContent(confirmedWidget,"unconfirmed_cpd", false)));
 
 		divTabs.setPosition(TabPosition.PILLS);
 

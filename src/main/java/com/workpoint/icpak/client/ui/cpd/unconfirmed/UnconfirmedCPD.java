@@ -7,10 +7,10 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class UnconfirmedCPD extends Composite {
 
-	private static TillDetailsUiBinder uiBinder = GWT
-			.create(TillDetailsUiBinder.class);
+	private static UnconfirmedCPDUiBinder uiBinder = GWT
+			.create(UnconfirmedCPDUiBinder.class);
 
-	interface TillDetailsUiBinder extends UiBinder<Widget, UnconfirmedCPD> {
+	interface UnconfirmedCPDUiBinder extends UiBinder<Widget, UnconfirmedCPD> {
 	}
 
 	public UnconfirmedCPD() {

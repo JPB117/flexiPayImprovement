@@ -11,9 +11,9 @@
 					</div>
 					<div class="col-xs-8 pv-lg">
 						<div class="h2 mt0">
-							<span ui:field="spnTransactions">1,700</span>
+							<span ui:field="spnTransactions">40</span>
 						</div>
-						<div class="text-uppercase">Transactions</div>
+						<div class="text-uppercase">Total CPD Hours</div>
 					</div>
 				</div>
 			</div>
@@ -28,10 +28,10 @@
 					<div class="col-xs-8 pv-lg">
 						<div class="h2 mt0">
 							<span class="" ui:field="spnAmount">
-								500,000
+								10
 							</span>
 						</div>
-						<div class="text-uppercase">Total Amount</div>
+						<div class="text-uppercase">Confirmed CPD</div>
 					</div>
 				</div>
 			</div>
@@ -47,10 +47,10 @@
 					<div class="col-xs-8 pv-lg">
 						<div class="h2 mt0">
 							<span class="" ui:field="spnBalance" title="Balance">
-								20,000
+								30
 							</span>
 						</div>
-						<div class="bold muted helper-font-small">Balance</div>
+						<div class="bold muted helper-font-small">Un-Confirmed CPD</div>
 					</div>
 				</div>
 			</div>
