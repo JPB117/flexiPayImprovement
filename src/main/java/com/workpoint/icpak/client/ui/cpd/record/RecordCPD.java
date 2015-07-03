@@ -1,4 +1,4 @@
-package com.workpoint.icpak.client.ui.cpd.unconfirmed;
+package com.workpoint.icpak.client.ui.cpd.record;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -10,43 +10,45 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.workpoint.icpak.client.ui.component.ActionLink;
 
-public class UnconfirmedCPD extends Composite {
+public class RecordCPD extends Composite {
 
 	private static UnconfirmedCPDUiBinder uiBinder = GWT
 			.create(UnconfirmedCPDUiBinder.class);
 
-	interface UnconfirmedCPDUiBinder extends UiBinder<Widget, UnconfirmedCPD> {
+	interface UnconfirmedCPDUiBinder extends UiBinder<Widget, RecordCPD> {
 	}
 
 	@UiField
-	HTMLPanel panelNew;
+	HTMLPanel panelForm;
 
 	@UiField
-	HTMLPanel panelListing;
-	
-	@UiField 
-	ActionLink aCreate;
+	HTMLPanel panelCategories;
 
-	public UnconfirmedCPD() {
+	@UiField
+	ActionLink aCategoryD;
+
+	public RecordCPD() {
 		initWidget(uiBinder.createAndBindUi(this));
-		showRecordPanel(false);
 		
-		aCreate.addClickHandler(new ClickHandler() {
+		aCategoryD.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				showRecordPanel(true);
+				showForm(true);
 			}
 		});
+		
+		showForm(false);
 	}
 
-	private void showRecordPanel(boolean show) {
+	protected void showForm(boolean show) {
 		if (show) {
-			panelListing.setVisible(false);
-			panelNew.setVisible(true);
+			panelForm.setVisible(true);
+			panelCategories.setVisible(false);
 		} else {
-			panelListing.setVisible(true);
-			panelNew.setVisible(false);
+			panelForm.setVisible(false);
+			panelCategories.setVisible(true);
 		}
+
 	}
 
 }

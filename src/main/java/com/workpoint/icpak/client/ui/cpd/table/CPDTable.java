@@ -6,12 +6,11 @@ import java.util.List;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 import com.workpoint.icpak.client.ui.component.TableHeader;
 import com.workpoint.icpak.client.ui.component.TableView;
-import com.workpoint.icpak.client.ui.statements.row.StatementTableRow;
+import com.workpoint.icpak.client.ui.cpd.table.row.CPDTableRow;
 
 public class CPDTable extends Composite {
 
@@ -42,7 +41,7 @@ public class CPDTable extends Composite {
 		tblView.setTableHeaders(th);
 	}
 
-	public void createRow(StatementTableRow row) {
+	public void createRow(CPDTableRow row) {
 		tblView.addRow(row);
 	}
 
