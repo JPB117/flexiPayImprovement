@@ -5,15 +5,15 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 
-public class UnconfirmedCPD extends Composite {
+public class UnConfirmedCPD extends Composite {
 
-	private static UnconfirmedCPDUiBinder uiBinder = GWT
-			.create(UnconfirmedCPDUiBinder.class);
+	private static UnConfirmedCPDUiBinder uiBinder = GWT
+			.create(UnConfirmedCPDUiBinder.class);
 
-	interface UnconfirmedCPDUiBinder extends UiBinder<Widget, UnconfirmedCPD> {
+	interface UnConfirmedCPDUiBinder extends UiBinder<Widget, UnConfirmedCPD> {
 	}
 
-	public UnconfirmedCPD() {
+	public UnConfirmedCPD() {
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 

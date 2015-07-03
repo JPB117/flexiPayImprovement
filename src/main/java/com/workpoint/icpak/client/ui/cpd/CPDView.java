@@ -13,7 +13,7 @@ import com.workpoint.icpak.client.ui.component.tabs.TabHeader;
 import com.workpoint.icpak.client.ui.component.tabs.TabPanel;
 import com.workpoint.icpak.client.ui.component.tabs.TabPanel.TabPosition;
 import com.workpoint.icpak.client.ui.cpd.confirmed.ConfirmedCPD;
-import com.workpoint.icpak.client.ui.cpd.unconfirmed.UnconfirmedCPD;
+import com.workpoint.icpak.client.ui.cpd.unconfirmed.UnConfirmedCPD;
 
 public class CPDView extends ViewImpl implements CPDPresenter.ICPDView {
 
@@ -26,7 +26,7 @@ public class CPDView extends ViewImpl implements CPDPresenter.ICPDView {
 	HTMLPanel container;
 
 	private ConfirmedCPD confirmedWidget;
-	private UnconfirmedCPD unconfirmedWidget;
+	private UnConfirmedCPD unconfirmedWidget;
 
 	public interface Binder extends UiBinder<Widget, CPDView> {
 	}
@@ -35,7 +35,7 @@ public class CPDView extends ViewImpl implements CPDPresenter.ICPDView {
 	public CPDView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
 
-		unconfirmedWidget = new UnconfirmedCPD();
+		unconfirmedWidget = new UnConfirmedCPD();
 		confirmedWidget = new ConfirmedCPD();
 
 		 divTabs.setHeaders(Arrays.asList(
