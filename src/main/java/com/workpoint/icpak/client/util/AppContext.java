@@ -80,12 +80,16 @@ public class AppContext {
 	public static boolean isValid(){
 		boolean isValid = user.isLoggedIn();
 		if(isValid){
-			Window.alert("####User Logged in!!!!!");
 			return true;
-			
-		}else{
-			Window.alert("User Not Logged in!!!!!");
 		}
+		
+//		if(isValid){
+//			Window.alert("####User Logged in!!!!!");
+//			return true;
+//			
+//		}else{
+//			Window.alert("User Not Logged in!!!!!");
+//		}
 		
 		PlaceRequest request = placeManager.getCurrentPlaceRequest();
 		PlaceRequest place = new Builder().nameToken(NameTokens.login)

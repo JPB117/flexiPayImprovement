@@ -176,13 +176,12 @@ public class UsersDaoHelper {
 
 	public void setProfilePic(String userId, byte[] bites, String fileName,
 			String contentType) {
-		dao.disableProfilePics(userId);
 		User user = dao.findByUserId(userId);
 		Attachment attachment = new Attachment();
 		attachment.setAttachment(bites);
 		attachment.setContentType(contentType);
 		attachment.setName(fileName);
-		//attachment.setUser(user);
+		attachment.setProfilePicUserId(userId);
 		
 		dao.save(attachment);
 	}

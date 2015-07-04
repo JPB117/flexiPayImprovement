@@ -13,7 +13,7 @@
 								<Strong>Phone:</Strong>
 							</td>
 							<td>
-								<i>+25472972421</i>
+								<i ui:field="elPhone">+25472972421</i>
 							</td>
 						</tr>
 						<tr>
@@ -21,15 +21,7 @@
 								<Strong>Email:</Strong>
 							</td>
 							<td>
-								<i>kimani@wira.io</i>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<Strong>Employer:</Strong>
-							</td>
-							<td>
-								<i>Workpoint Ltd</i>
+								<i ui:field="elEmail">kimani@wira.io</i>
 							</td>
 						</tr>
 
@@ -38,7 +30,7 @@
 								<Strong>Date Of Birth:</Strong>
 							</td>
 							<td>
-								<i>06/11/1990</i>
+								<i ui:field="elDob">06/11/1990</i>
 							</td>
 						</tr>
 
@@ -47,14 +39,14 @@
 								<Strong>Gender:</Strong>
 							</td>
 							<td>
-								<i>Male</i>
+								<i ui:field="elSex">Male</i>
 							</td>
 						</tr>
 						<tr>
 							<td>
 								<Strong>Employer Name:</Strong>
 							</td>
-							<td>Workpoint Limited</td>
+							<td ui:field="elEmployer">Workpoint Limited</td>
 						</tr>
 
 						<tr>
@@ -62,7 +54,7 @@
 								<Strong>Residence:</Strong>
 							</td>
 							<td>
-								<i>Nairobi</i>
+								<i ui:field="elResidence">Nairobi</i>
 							</td>
 						</tr>
 						<tr>
@@ -70,7 +62,7 @@
 								<Strong>Address:</Strong>
 							</td>
 							<td>
-								<i>37425</i>
+								<i ui:field="elAddress">37425</i>
 							</td>
 						</tr>
 
@@ -79,7 +71,7 @@
 								<Strong>Postal Code:</Strong>
 							</td>
 							<td>
-								<i>00100</i>
+								<i ui:field="elPostalCode">00100</i>
 							</td>
 						</tr>
 						<tr>
@@ -87,7 +79,7 @@
 								<Strong>Country:</Strong>
 							</td>
 							<td>
-								<i>Kenya</i>
+								<i ui:field="elCountry">Kenya</i>
 							</td>
 						</tr>
 
@@ -96,7 +88,7 @@
 								<Strong>Town/City:</Strong>
 							</td>
 							<td>
-								<i>Nairobi</i>
+								<i ui:field="elCity">Nairobi</i>
 							</td>
 						</tr>
 
@@ -108,7 +100,7 @@
 				<form:MemberRegistrationForm ui:field="panelRegistration"></form:MemberRegistrationForm>
 				<div class="fieldset">
 					<d:ActionLink ui:field="aSave" styleName="btn btn-primary pull-left">Save</d:ActionLink>
-					<d:ActionLink ui:field="aCancel" styleName="btn btn-primary pull-right">Cancel</d:ActionLink>
+					<d:ActionLink ui:field="aCancel" href="#profile" styleName="btn btn-primary pull-right">Cancel</d:ActionLink>
 				</div>
 			</g:HTMLPanel>
 		</div>

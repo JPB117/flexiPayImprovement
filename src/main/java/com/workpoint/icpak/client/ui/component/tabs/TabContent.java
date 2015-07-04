@@ -12,6 +12,7 @@ public class TabContent extends Composite {
 	@UiField MyHTMLPanel divItem;
 	private static TabContentUiBinder uiBinder = GWT
 			.create(TabContentUiBinder.class);
+	private Boolean isActive;
 
 	interface TabContentUiBinder extends UiBinder<Widget, TabContent> {
 	}
@@ -24,6 +25,8 @@ public class TabContent extends Composite {
 	}
 	
 	public void setisActive(Boolean isActive) {
+		
+		this.isActive = isActive;
 		if(isActive){
 			divItem.addStyleName("active");
 		}else{
@@ -33,6 +36,10 @@ public class TabContent extends Composite {
 
 	public void setId(String id) {
 		divItem.setCssId(id);
+	}
+
+	public boolean isActive() {
+		return isActive;
 	}
 	
 	

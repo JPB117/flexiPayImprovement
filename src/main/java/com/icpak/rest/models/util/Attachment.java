@@ -50,6 +50,9 @@ public class Attachment extends PO{
 	@JoinColumn(name="trainingExperienceId")
 	private TrainingAndExperience trainingAndExperience;
 	
+	//Profile Pic
+	private String profilePicUserId;
+	
 	public Attachment() {
 		super();
 	}
@@ -105,5 +108,13 @@ public class Attachment extends PO{
 		a.setRefId(refId);
 		
 		return a;
+	}
+
+	public String getProfilePicUserId() {
+		return profilePicUserId;
+	}
+
+	public void setProfilePicUserId(String profilePicUserId) {
+		this.profilePicUserId = profilePicUserId;
 	}
 }

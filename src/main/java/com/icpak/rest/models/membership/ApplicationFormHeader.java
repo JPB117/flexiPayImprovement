@@ -935,6 +935,8 @@ public class ApplicationFormHeader extends PO{
 		setEmail(dto.getEmail());
 		setApplicationType(dto.getApplicationType());
 		setAddress1(dto.getAddress1());
+		setTelephone1(dto.getTelephone1());
+		setCity1(dto.getCity1());
 		setPostCode(dto.getPostCode());
 		setEmployer(dto.getEmployer());
 		setInvoiceRef(dto.getInvoiceRef());
@@ -945,17 +947,15 @@ public class ApplicationFormHeader extends PO{
 		dto.setRefId(getRefId());
 		dto.setSurname(surname);
 		dto.setOtherNames(otherNames);
-		dto.setEmail(contactEmail);
-		
-//		if(getCategory()!=null){
-//			dto.setCategory(category.toDto());
-//		}
+		dto.setEmail(email);
 		dto.setUserRefId(userRefId);
 		dto.setEmployer(employer);
 		dto.setCity1(city1);
 		dto.setAddress1(address1);
+		dto.setTelephone1(telephone1);
 		dto.setPostCode(postCode);
 		dto.setInvoiceRef(invoiceRef);
+		dto.setApplicationType(applicationType);
 		
 	}
 

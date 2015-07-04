@@ -79,6 +79,7 @@ public class ApplicationFormHeaderDto extends SerializableObj{
 	private String contactAddress;
 	private String contactTelephone;
 	private String contactEmail;
+	private String residence;
 	//private String KASNEBFAQNo;
 	//private String CPAFAQ;
 	private String examinationBody;
@@ -768,6 +769,14 @@ public class ApplicationFormHeaderDto extends SerializableObj{
 
 	public void setUserRefId(String userRefId) {
 		this.userRefId = userRefId;
+	}
+
+	public String getResidence() {
+		return residence;
+	}
+
+	public void setResidence(String residence) {
+		this.residence = residence;
 	}
 	
 }

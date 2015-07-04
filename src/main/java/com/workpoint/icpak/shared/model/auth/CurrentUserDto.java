@@ -65,4 +65,8 @@ public class CurrentUserDto implements Serializable {
 	public void setLoggedIn(Boolean loggedIn) {
 		this.loggedIn = loggedIn;
 	}
+
+	public void setUser(UserDto user) {
+		this.user = user;
+	}
 }

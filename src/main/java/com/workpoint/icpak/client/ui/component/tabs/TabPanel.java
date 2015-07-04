@@ -40,6 +40,17 @@ public class TabPanel extends Composite {
 			tabContainer.add(w);
 		}
 	}
+	
+	public int getActiveTab(){
+		for(int i=0; i<tabContainer.getWidgetCount(); i++){
+			TabContent content = (TabContent)tabContainer.getWidget(i);
+			if(content.isActive()){
+				return i;
+			}
+		}
+		
+		return -1;
+	}
 
 	public void setPosition(TabPosition position) {
 		navContainer.setStyleName(position.getStyleName());

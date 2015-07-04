@@ -211,12 +211,12 @@ public class LoginPresenter extends
 	}
 
 	private void onLoginCallSucceeded(CurrentUserDto currentUserDto) {
-		LOGGER.log(Level.SEVERE, "Wrong username or password......");
 
 		if (currentUserDto.isLoggedIn()) {
 			currentUser.fromCurrentUserDto(currentUserDto);
 			redirectToLoggedOnPage();
 		} else {
+			LOGGER.log(Level.SEVERE, "Wrong username or password......");
 			getView().setError("Wrong username or password");
 		}
 	}

@@ -101,7 +101,7 @@ public class UsersDao extends BaseDao{
 
 	public Attachment getProfilePic(String userId) {
 		
-		String sql = "SELECT a FROM Attachment a where a.isActive=1 and a.user.refId=:userid";
+		String sql = "SELECT a FROM Attachment a where a.isActive=1 and a.profilePicUserId=:userid";
 		
 		Attachment attachment=getSingleResultOrNull(getEntityManager()
 				.createQuery(sql)
