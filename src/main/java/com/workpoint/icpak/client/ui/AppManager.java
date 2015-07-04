@@ -16,6 +16,7 @@ public class AppManager {
 
 	@Inject
 	static MainPagePresenter mainPagePresenter;
+
 	@Inject
 	static GenericPopupPresenter popupPresenter;
 
@@ -28,8 +29,9 @@ public class AppManager {
 			final OnOptionSelected onOptionSelected, String... buttons) {
 		showPopUp(header, widget, null, onOptionSelected, buttons);
 	}
-	
-	public static void showPopUp(String header, Widget widget,final String customPopupStyle,
+
+	public static void showPopUp(String header, Widget widget,
+			final String customPopupStyle,
 			final OnOptionSelected onOptionSelected, String... buttons) {
 		popupPresenter.setHeader(header);
 		popupPresenter.setInSlot(GenericPopupPresenter.BODY_SLOT, null);
@@ -37,28 +39,28 @@ public class AppManager {
 
 		popupPresenter.getView().setInSlot(GenericPopupPresenter.BODY_SLOT,
 				widget);
-		
-		if(customPopupStyle!=null){
+
+		if (customPopupStyle != null) {
 			popupPresenter.getView().addStyleName(customPopupStyle);
-			//popupPresenter.getView().removeStyleName("modal");
+			// popupPresenter.getView().removeStyleName("modal");
 		}
-		
+
 		for (final String text : buttons) {
 			Anchor aLnk = new Anchor();
 			if (text.equals("Cancel")) {
 				aLnk.setHTML("&nbsp;<i class=\"icon-remove\"></i>" + text);
-				aLnk.setStyleName("btn btn-danger pull-left");
+				aLnk.setStyleName("btn btn-default btn-fill pull-right");
 			} else {
 				aLnk.setHTML(text
 						+ "&nbsp;<i class=\"icon-double-angle-right\"></i>");
-				aLnk.setStyleName("btn btn-primary pull-right");
+				aLnk.setStyleName("btn btn-primary btn-fill pull-left");
 			}
 
 			aLnk.addClickHandler(new ClickHandler() {
 
 				@Override
 				public void onClick(ClickEvent event) {
-										
+
 					if (onOptionSelected instanceof OptionControl) {
 						((OptionControl) onOptionSelected)
 								.setPopupView((PopupView) (popupPresenter
@@ -68,10 +70,10 @@ public class AppManager {
 						popupPresenter.getView().hide();
 						onOptionSelected.onSelect(text);
 					}
-					
-					
-					if(!popupPresenter.isVisible() && customPopupStyle!=null){
-						popupPresenter.getView().removeStyleName(customPopupStyle);
+
+					if (!popupPresenter.isVisible() && customPopupStyle != null) {
+						popupPresenter.getView().removeStyleName(
+								customPopupStyle);
 					}
 				}
 			});
@@ -79,8 +81,7 @@ public class AppManager {
 					GenericPopupPresenter.BUTTON_SLOT, aLnk);
 		}
 
-		mainPagePresenter.addToPopupSlot(popupPresenter, false);
-		// popupPresenter.getView().center();
+		mainPagePresenter.addToPopupSlot(popupPresenter, true);
 	}
 
 	public static void showPopUp(String header,
@@ -88,7 +89,7 @@ public class AppManager {
 			final OnOptionSelected onOptionSelected, String... buttons) {
 		showPopUp(header, presenter.asWidget(), onOptionSelected, buttons);
 	}
-	
+
 	/**
 	 * Returns positions of the modal/popover in Relative to the browser size
 	 * 

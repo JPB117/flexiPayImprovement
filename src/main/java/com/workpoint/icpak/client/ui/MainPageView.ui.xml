@@ -14,8 +14,6 @@
 			<g:HTMLPanel styleName="set-full-height">
 				<g:HTMLPanel ui:field="pContainer" styleName="set-full-height">
 				</g:HTMLPanel>
-				<!-- div class="footer"> A product of Anger Enterprises <span class="copyyear"></span> 
-					</div -->
 			</g:HTMLPanel>
 		</div>
 	</g:HTMLPanel>

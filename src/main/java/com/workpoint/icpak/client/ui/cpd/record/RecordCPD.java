@@ -25,18 +25,29 @@ public class RecordCPD extends Composite {
 	HTMLPanel panelCategories;
 
 	@UiField
+	ActionLink aCategoryA;
+	@UiField
+	ActionLink aCategoryB;
+	@UiField
+	ActionLink aCategoryC;
+	@UiField
 	ActionLink aCategoryD;
 
 	public RecordCPD() {
 		initWidget(uiBinder.createAndBindUi(this));
-		
-		aCategoryD.addClickHandler(new ClickHandler() {
+
+		ClickHandler handler = new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				showForm(true);
 			}
-		});
-		
+		};
+
+		aCategoryA.addClickHandler(handler);
+		aCategoryB.addClickHandler(handler);
+		aCategoryC.addClickHandler(handler);
+		aCategoryD.addClickHandler(handler);
+
 		showForm(false);
 	}
 

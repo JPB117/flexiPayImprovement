@@ -107,9 +107,12 @@
 			<g:HTMLPanel styleName="col-xs-12" ui:field="panelEditMode">
 				<form:MemberRegistrationForm ui:field="panelRegistration"></form:MemberRegistrationForm>
 				<div class="fieldset">
-					<d:ActionLink ui:field="aSave" styleName="btn btn-primary pull-left">Save</d:ActionLink>
-					<d:ActionLink ui:field="aCancel" styleName="btn btn-primary pull-right">Cancel</d:ActionLink>
+					<d:ActionLink ui:field="aSave"
+						styleName="btn btn-primary pull-left btn-fill">Save</d:ActionLink>
+					<d:ActionLink ui:field="aCancel"
+						styleName="btn btn-default pull-right btn-fill">Cancel</d:ActionLink>
 				</div>
+				
 			</g:HTMLPanel>
 		</div>
 

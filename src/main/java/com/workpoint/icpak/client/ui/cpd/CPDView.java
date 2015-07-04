@@ -7,8 +7,10 @@ import java.util.List;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.CalendarUtil;
@@ -21,6 +23,8 @@ import com.workpoint.icpak.client.ui.component.tabs.TabHeader;
 import com.workpoint.icpak.client.ui.component.tabs.TabPanel;
 import com.workpoint.icpak.client.ui.component.tabs.TabPanel.TabPosition;
 import com.workpoint.icpak.client.ui.cpd.confirmed.ConfirmedCPD;
+import com.workpoint.icpak.client.ui.cpd.table.CPDTable;
+import com.workpoint.icpak.client.ui.cpd.table.row.CPDTableRow;
 import com.workpoint.icpak.client.ui.cpd.unconfirmed.UnconfirmedCPD;
 import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.shared.model.Listable;
@@ -49,6 +53,12 @@ public class CPDView extends ViewImpl implements CPDPresenter.ICPDView {
 
 	@UiField
 	ActionLink aShowFilter;
+
+	@UiField
+	CPDTable tblView;
+
+	@UiField
+	ActionLink aCreate;
 
 	List<Year> allYears = new ArrayList<Year>();
 	private int totalYears = 20;
@@ -102,11 +112,20 @@ public class CPDView extends ViewImpl implements CPDPresenter.ICPDView {
 				} else {
 					showDateFilter(true);
 				}
-
+				
 			}
 		});
-
 		showDateFilter(false);
+
+		createRow(new CPDTableRow());
+	}
+
+	public HasClickHandlers getRecordButton(){
+		return aCreate;
+	}
+
+	private void createRow(CPDTableRow cpdTableRow) {
+		tblView.createRow(cpdTableRow);
 	}
 
 	protected void showDateFilter(boolean showFilter) {

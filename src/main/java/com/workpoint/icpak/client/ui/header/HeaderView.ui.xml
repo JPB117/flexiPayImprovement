@@ -13,11 +13,11 @@
 				<div class="navbar-header">
 					<a href="#/" class="navbar-brand">
 						<div class="brand-logo">
-							<img src="http://solutech.co.ke/icpak/assets/img/logo.png"
+							<img src="img/icpak_logo.png"
 								width="30px" class="img-responsive" />
 						</div>
 						<div class="brand-logo-collapsed">
-							<img src="http://solutech.co.ke/icpak/assets/img/logo.png"
+							<img src="img/icpak_logo.png"
 								class="img-responsive" />
 						</div>
 					</a>
