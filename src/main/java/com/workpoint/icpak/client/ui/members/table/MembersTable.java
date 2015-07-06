@@ -65,21 +65,4 @@ public class MembersTable extends Composite {
 	public void setAutoNumber(boolean autoNumber) {
 		tblView.setAutoNumber(false);
 	}
-
-	public void bindApplications(List<ApplicationFormHeaderDto> list) {
-		clearRows();
-		
-		for(ApplicationFormHeaderDto dto: list){
-			Date regDate = dto.getApplicationDate()!=null? dto.getApplicationDate():
-				dto.getDate()!=null? dto.getDate(): dto.getCreated();
-			
-			tblView.addRow(new InlineLabel(DateUtils.DATEFORMAT.format(regDate)),
-					new InlineLabel(dto.getMemberNo()),
-					new InlineLabel(dto.getFullNames()),
-					new InlineLabel(dto.getEmail()),
-					new InlineLabel(dto.getPercCompletion()),
-					new InlineLabel(dto.getStatus()+""));
-		}
-	}
-
 }

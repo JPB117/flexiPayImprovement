@@ -11,7 +11,7 @@
 					</div>
 					<div class="col-xs-8 pv-lg">
 						<div class="h2 mt0">
-							<span ui:field="spnTotalApplication">1700</span>
+							<span ui:field="spnTotalApplication"></span>
 						</div>
 						<div class="text-uppercase">Total Application</div>
 					</div>
@@ -28,7 +28,6 @@
 					<div class="col-xs-8 pv-lg">
 						<div class="h2 mt0">
 							<span class="" ui:field="spnTotalProcessed" title="Money Out">
-								200
 							</span>
 						</div>
 						<div class="text-uppercase">Processed</div>
@@ -47,7 +46,6 @@
 					<div class="col-xs-8 pv-lg">
 						<div class="h2 mt0">
 							<span class="" ui:field="spnTotalPending" title="Balance">
-								50
 							</span>
 						</div>
 						<div class="bold muted helper-font-small">Pending</div>

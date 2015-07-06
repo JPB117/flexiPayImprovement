@@ -4,22 +4,18 @@
 
 	<g:HTMLPanel styleName="tr" ui:field="row">
 		<g:HTMLPanel styleName="td" ui:field="divDate">
-			2014-05-10
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divMemberNo">
-			2784112
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divMemberName">
-			Tom Kimani
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divEmail">
-			tomkim@wira.io
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td text-center" ui:field="divProfile">
-			<div class="radial-bar radial-bar-25 radial-bar-xs" data-label="50%"></div>
+			<div ui:field="divCompletion" class="radial-bar radial-bar-xs" data-label="50%"></div>
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divStatus">
-			<span class="label label-warning">Pending</span>
+			<span ui:field="spnStatus" class="label label-warning"></span>
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td hide" ui:field="divAction">
 			<d:ActionLink styleName="fa fa-check btn btn-primary"></d:ActionLink>
