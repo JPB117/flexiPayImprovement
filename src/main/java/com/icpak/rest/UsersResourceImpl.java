@@ -142,10 +142,11 @@ public class UsersResourceImpl extends BaseResource<User> implements UsersResour
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Upload profile photo", consumes = MediaType.MULTIPART_FORM_DATA)
-	public Response create(@ApiParam(value = "User Id of the user", required = true) @PathParam("userId") String userId,
-			@FormDataParam("file") FormDataBodyPart body,
-			@FormDataParam("file") InputStream inputStream,
-		    @FormDataParam("file") FormDataContentDisposition fileDisposition) throws IOException {
+	public Response create(
+			@ApiParam(value = "User Id of the user", required = true) @PathParam("userId") String userId,
+			@FormDataParam("Filedata") FormDataBodyPart body,
+			@FormDataParam("Filedata") InputStream inputStream,
+		    @FormDataParam("Filedata") FormDataContentDisposition fileDisposition) throws IOException {
 		
 		byte[] bites = IOUtils.toByteArray(inputStream);
 		

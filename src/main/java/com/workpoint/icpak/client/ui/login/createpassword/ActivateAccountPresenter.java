@@ -120,7 +120,8 @@ public class ActivateAccountPresenter
 						usersDelegate.withoutCallback()
 						.changePassword(user.getRefId(), getView().getPassword());
 						
-						executeLogin(user.getEmail(), getView().getPassword());
+						placeManager.revealPlace(new PlaceRequest.Builder().
+								nameToken(NameTokens.login).build());
 					}
 					
 				}

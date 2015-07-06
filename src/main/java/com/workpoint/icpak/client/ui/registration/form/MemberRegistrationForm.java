@@ -122,6 +122,7 @@ public class MemberRegistrationForm extends Composite {
 		dto.setEmployer(txtEmployer.getValue());
 		dto.setCity1(txtCity.getValue());
 		dto.setAddress1(txtAddress.getValue());
+		dto.setTelephone1(txtPhone.getValue());
 		dto.setPostCode(txtPostalCode.getValue());
 		dto.setApplicationType(type);
 		return dto;
@@ -143,5 +144,19 @@ public class MemberRegistrationForm extends Composite {
 	public void setType(ApplicationType type) {
 		this.type = type;
 	}
+
+	public void bind(ApplicationFormHeaderDto application) {
+		txtSurname.setValue(application.getSurname());
+		txtOtherNames.setValue(application.getOtherNames());
+		txtEmailAddress.setValue(application.getEmail());
+		txtEmployer.setValue(application.getEmployer());
+		txtCity.setValue(application.getCity1());
+		txtPhone.setValue(application.getTelephone1());
+		txtAddress.setValue(application.getAddress1());
+		txtPostalCode.setValue(application.getPostCode());
+		type = application.getApplicationType();
+	}
+	
+	
 
 }

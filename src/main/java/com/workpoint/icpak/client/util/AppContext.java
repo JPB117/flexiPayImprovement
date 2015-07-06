@@ -7,7 +7,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rest.delegates.client.ResourceDelegate;
@@ -80,12 +79,16 @@ public class AppContext {
 	public static boolean isValid() {
 		boolean isValid = user.isLoggedIn();
 		if (isValid) {
-			// Window.alert("####User Logged in!!!!!");
 			return true;
-
-		} else {
-			// Window.alert("User Not Logged in!!!!!");
 		}
+
+		// if(isValid){
+		// Window.alert("####User Logged in!!!!!");
+		// return true;
+		//
+		// }else{
+		// Window.alert("User Not Logged in!!!!!");
+		// }
 
 		PlaceRequest request = placeManager.getCurrentPlaceRequest();
 		PlaceRequest place = new Builder().nameToken(NameTokens.login)

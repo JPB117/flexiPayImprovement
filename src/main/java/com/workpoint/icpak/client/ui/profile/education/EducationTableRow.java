@@ -53,5 +53,5 @@ public class EducationTableRow extends RowWidget {
 		divRegNo.getElement().setInnerHTML(transaction.getCustomerName());*/
 		
 	}
-
+	
 }

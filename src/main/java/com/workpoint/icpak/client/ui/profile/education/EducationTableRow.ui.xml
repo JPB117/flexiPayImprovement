@@ -4,28 +4,20 @@
 
 	<g:HTMLPanel styleName="tr" ui:field="row">
 		<g:HTMLPanel styleName="td" ui:field="divInstitution">
-			KCA University
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divFrom">
-			2014-12-10
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divTo">
-			2014-12-10
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divExamBody">
-			KASNEB
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divDivision">
-			ACCOUNTING
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divAwarded">
-			SECOND CLASS UPPER
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divRegNo">
-			p15/29333/09
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divSectionPassed">
-			CPA(K)
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divAction">
 			<d:ActionLink styleName="fa fa-pencil btn btn-primary"></d:ActionLink>

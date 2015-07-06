@@ -136,10 +136,6 @@ public class MemberRegistrationPresenter
 					if (getView().getCounter() == 1) {
 						// User has selected a category and clicked submit
 						submit(getView().getApplicationForm());
-
-						// We navigate next after server side has generated an
-						// account and submitted an email to user.
-						getView().next();
 					} else {
 						getView().next();
 					}

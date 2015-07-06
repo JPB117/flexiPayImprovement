@@ -1,12 +1,18 @@
 package com.workpoint.icpak.client.ui.profile.basic;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.workpoint.icpak.client.ui.component.ActionLink;
+import com.workpoint.icpak.client.ui.registration.form.MemberRegistrationForm;
+import com.workpoint.icpak.client.ui.util.DateUtils;
+import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 
 public class BasicDetails extends Composite {
 
@@ -20,6 +26,20 @@ public class BasicDetails extends Composite {
 	HTMLPanel panelDisplay;
 	@UiField
 	HTMLPanel panelEditMode;
+	
+	@UiField Element elPhone;
+	@UiField Element elEmail;
+	@UiField Element elDob;
+	@UiField Element elSex;
+	@UiField Element elEmployer;
+	@UiField Element elResidence;
+	@UiField Element elAddress;
+	@UiField Element elPostalCode;
+	@UiField Element elCountry;
+	@UiField Element elCity;
+	@UiField Anchor aSave;
+	@UiField Anchor aCancel;
+	@UiField MemberRegistrationForm panelRegistration;
 
 	public BasicDetails() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -37,4 +57,41 @@ public class BasicDetails extends Composite {
 		}
 	}
 
+	public void bindDetails(ApplicationFormHeaderDto result) {
+		elPhone.setInnerText(result.getTelephone1());
+		elEmail.setInnerText(result.getEmail());
+		
+		if(result.getDob()!=null){
+			elDob.setInnerText(DateUtils.DATEFORMAT.format(result.getDate()));
+		}
+		
+		if(result.getGender()!=null){
+			elSex.setInnerText(result.getGender().name());
+		}
+		
+		elEmployer.setInnerText(result.getEmployer());
+		elResidence.setInnerText(result.getResidence());
+		elAddress.setInnerText(result.getAddress1());
+		elPostalCode.setInnerText(result.getPostCode());
+		elCountry.setInnerText(result.getCountry());
+		elCity.setInnerText(result.getCity1());
+		
+		panelRegistration.bind(result);
+	}
+	
+	public ApplicationFormHeaderDto getApplicationForm(){
+		return panelRegistration.getApplicationForm();
+	}
+
+	public HasClickHandlers getSaveButton(){
+		return aSave;
+	}
+
+	public boolean isValid() {
+		return panelRegistration.isValid();
+	}
+
+	public HasClickHandlers getCancelButton() {
+		return aCancel;
+	}
 }

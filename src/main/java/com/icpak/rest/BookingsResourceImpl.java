@@ -40,8 +40,6 @@ public class BookingsResourceImpl implements BookingsResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Retrieve all active bookings")
 	public List<BookingDto> getAll(
-			// @ApiParam(value="Event for which bookings are requested")
-			// @PathParam("eventId") String eventId,
 			@ApiParam(value = "Starting point to fetch") @QueryParam("offset") Integer offset,
 			@ApiParam(value = "No of Items to fetch") @QueryParam("limit") Integer limit) {
 		String uri = "";
@@ -55,8 +53,6 @@ public class BookingsResourceImpl implements BookingsResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Get a booking by bookingId", response = Booking.class, consumes = MediaType.APPLICATION_JSON)
 	public BookingDto getById(
-	// @ApiParam(value="Event for which the booking are requested")
-	// @PathParam("eventId") String eventId,
 			@ApiParam(value = "Booking Id of the booking to fetch", required = true) @PathParam("bookingId") String bookingId) {
 
 		String uri = "";

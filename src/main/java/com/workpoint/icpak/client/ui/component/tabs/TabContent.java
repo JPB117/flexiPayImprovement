@@ -30,9 +30,13 @@ public class TabContent extends Composite {
 			divItem.removeStyleName("active");
 		}
 	}
-
+	
 	public void setId(String id) {
 		divItem.setCssId(id);
+	}
+
+	public boolean isActive() {
+		return divItem.getStyleName().contains("active");
 	}
 	
 	
