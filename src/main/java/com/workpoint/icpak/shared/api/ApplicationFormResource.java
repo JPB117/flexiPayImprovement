@@ -24,6 +24,9 @@ public interface ApplicationFormResource{
 	public List<ApplicationFormHeaderDto> getAll(@QueryParam("offset") Integer offset,
 			@QueryParam("limit") Integer limit);
 	
+	@Path("/{applicationId}/education")
+	public EducationResource education(@PathParam("applicationId") String applicationId);
+	
 	@GET
 	@Path("/{applicationId}")
 	@Produces(MediaType.APPLICATION_JSON)

@@ -9,11 +9,15 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.persist.PersistFilter;
 import com.google.inject.persist.jpa.JpaPersistModule;
 import com.google.inject.servlet.ServletModule;
+import com.icpak.rest.BookingsResourceImpl;
+import com.icpak.rest.EducationResourceImpl;
 import com.icpak.rest.factory.ResourceFactory;
 import com.icpak.servlet.config.GenericBootstrapConstants;
 import com.icpak.servlet.swagger.SwaggerApiServlet;
 import com.sun.jersey.api.core.PackagesResourceConfig;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
+import com.workpoint.icpak.shared.api.BookingsResource;
+import com.workpoint.icpak.shared.api.EducationResource;
 
 /**
  * This class bootstraps the application Servlet (Jersey 1.18.1). 
@@ -32,7 +36,8 @@ public class BootstrapServletModule extends ServletModule{
 		install(new BootstrapPropertiesModule());
 
 		//Install subresource factory
-		install(new FactoryModuleBuilder().build(ResourceFactory.class));
+		install(new FactoryModuleBuilder()
+		.build(ResourceFactory.class));
 		
 		
 		//Initialize Persistence JPA Unit of Work if present

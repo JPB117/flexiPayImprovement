@@ -1,6 +1,7 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-	xmlns:d='urn:import:com.workpoint.icpak.client.ui.component' xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	xmlns:d='urn:import:com.workpoint.icpak.client.ui.component' 
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	<g:HTMLPanel>
 		<div class="col-sm-12">
 			<d:ActionLink styleName="btn btn-next btn-fill btn-primary btn-wd btn-sm"
@@ -21,6 +22,7 @@
 			<div class="col-sm-12" style="background:#FFFFFF">
 				<div class="row">
 					<div class="col-sm-12">
+						<d:IssuesPanel ui:field="issues"></d:IssuesPanel>
 						<h4 class="info-text">Complete below Form:</h4>
 						<hr />
 					</div>
@@ -28,13 +30,13 @@
 						<div class="row">
 							<div class="col-xs-6">
 								<label for="institution">Institution Name</label>
-								<d:TextField type="text" name="institution" class="form-control"
+								<d:TextField type="text" ui:field="txtInstitution" class="form-control"
 									placeholder="Enter Institution Name" value="" required="true">
 								</d:TextField>
 							</div>
 							<div class="col-xs-6">
 								<label for="exambody">Examination Body</label>
-								<d:TextField type="text" name="examiningBody" class="form-control"
+								<d:TextField type="text" ui:field="txtExaminingBody" class="form-control"
 									placeholder="Enter Examination Body" value="" required="true"></d:TextField>
 							</div>
 						</div>
@@ -44,13 +46,13 @@
 						<div class="row">
 							<div class="col-xs-6">
 								<label for="startdate">Start Date</label>
-								<d:TextField type="date" name="startDate" class="form-control"
+								<d:TextField type="date" ui:field="dtStartDate" class="form-control"
 									placeholder="Enter Start Date" value="" required="true">
 								</d:TextField>
 							</div>
 							<div class="col-xs-6">
 								<label for="class">Date Completed</label>
-								<d:TextField type="date" name="dateCompleted" class="form-control"
+								<d:TextField type="date" ui:field="dtDateCompleted" class="form-control"
 									placeholder="Enter End Date" value="" required="true">
 								</d:TextField>
 							</div>
@@ -61,14 +63,14 @@
 						<div class="row">
 							<div class="col-xs-6">
 								<label for="enddate">Section Passed</label>
-								<d:TextField type="text" name="sectionsPassed"
+								<d:TextField type="text" ui:field="txtSectionsPassed"
 									class="form-control" placeholder="Enter Section passed" value=""
 									required="true">
 								</d:TextField>
 							</div>
 							<div class="col-xs-6">
 								<label for="award">Registration Number</label>
-								<d:TextField type="text" name="registrationNo"
+								<d:TextField type="text" ui:field="txtRegistrationNo"
 									class="form-control" placeholder="Enter Start Date" value=""
 									required="true">
 								</d:TextField>
@@ -80,14 +82,14 @@
 						<div class="row">
 							<div class="col-xs-6">
 								<label for="enddate">Class / Division</label>
-								<d:TextField type="text" name="classOrDivision"
+								<d:TextField type="text" ui:field="txtClassOrDivision"
 									class="form-control" placeholder="Enter Class or Division"
 									value="" required="true">
 								</d:TextField>
 							</div>
 							<div class="col-xs-6">
 								<label for="enddate">Award</label>
-								<d:TextField type="text" name="award" class="form-control"
+								<d:TextField type="text" ui:field="txtAward" class="form-control"
 									placeholder="Enter Award" value="" required="true">
 								</d:TextField>
 							</div>
@@ -98,7 +100,7 @@
 						<div class="row">
 							<div class="col-xs-6">
 								<label for="enddate">Education Type:</label>
-								<d:TextField type="text" name="award" class="form-control"
+								<d:TextField type="text" ui:field="txtEduType" class="form-control"
 									placeholder="Enter Education Type" value="" required="true">
 								</d:TextField>
 							</div>

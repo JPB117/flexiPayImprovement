@@ -25,9 +25,9 @@ public class ApplicationFormEducationalDto extends SerializableObj{
 	private String classDivisionAttained;
 	private int certificateAwarded;
 	private String examiningBody;
-	private String qualificationDesc;
+	private String qualificationDesc; //Msc, BSC, KCSE
 	private String qualificationCode;
-	private int type;
+	private EduType type;
 	private String regNo;
 	private String sections;
 	private String description;
@@ -123,14 +123,6 @@ public class ApplicationFormEducationalDto extends SerializableObj{
 		this.qualificationCode = qualificationCode;
 	}
 
-	public int getType() {
-		return type;
-	}
-
-	public void setType(int type) {
-		this.type = type;
-	}
-
 	public String getRegNo() {
 		return regNo;
 	}
@@ -153,5 +145,13 @@ public class ApplicationFormEducationalDto extends SerializableObj{
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public EduType getType() {
+		return type;
+	}
+
+	public void setType(EduType type) {
+		this.type = type;
 	}
 }

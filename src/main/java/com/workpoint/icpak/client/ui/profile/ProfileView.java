@@ -3,6 +3,7 @@ package com.workpoint.icpak.client.ui.profile;
 import gwtupload.client.IUploader;
 
 import java.util.Arrays;
+import java.util.List;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -32,6 +33,7 @@ import com.workpoint.icpak.client.ui.profile.password.PasswordWidget;
 import com.workpoint.icpak.client.ui.profile.specialization.SpecializationDetails;
 import com.workpoint.icpak.client.ui.profile.training.TrainingDetails;
 import com.workpoint.icpak.client.ui.upload.custom.Uploader;
+import com.workpoint.icpak.shared.model.ApplicationFormEducationalDto;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 
 public class ProfileView extends ViewImpl implements
@@ -244,8 +246,21 @@ public class ProfileView extends ViewImpl implements
 		if(getActiveTab()==0){
 			//BasicDetails
 			return basicDetail.isValid();
+		}else if(getActiveTab()==1){
+			return educationDetail.isValid();
 		}
 		
 		return false;
+	}
+
+	@Override
+	public ApplicationFormEducationalDto getEducationDetails() {
+		
+		return educationDetail.getEducationDto();
+	}
+
+	@Override
+	public void bindEducationDetails(List<ApplicationFormEducationalDto> result) {
+		educationDetail.bindDetails(result);
 	}
 }

@@ -17,12 +17,10 @@ import com.google.inject.Inject;
 import com.icpak.rest.dao.helper.ApplicationFormDaoHelper;
 import com.icpak.rest.factory.ResourceFactory;
 import com.icpak.rest.models.membership.ApplicationFormHeader;
-import com.sun.jersey.api.core.InjectParam;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 import com.workpoint.icpak.shared.api.ApplicationFormResource;
-import com.workpoint.icpak.shared.api.BookingsResource;
 import com.workpoint.icpak.shared.api.EducationResource;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 import com.workpoint.icpak.shared.model.InvoiceDto;
@@ -105,64 +103,64 @@ public class ApplicationFormResourceImpl implements ApplicationFormResource{
 	}
 	
 	@Path("/{applicationId}/education")
-	public EducationResource bookings(@PathParam("applicationId") String applicationId){
+	public EducationResource education(@PathParam("applicationId") String applicationId){
 		return factory.createEducationResource(applicationId);
 	}
 	
-	/**
-	 * Member CPD
-	 * 
-	 * @param resource
-	 * @return
-	 */
-	@Path("/{applicationId}/cpd")
-	public CPDResource bookings(@InjectParam CPDResource resource){
-		return resource;
-	}
+//	/**
+//	 * Member CPD
+//	 * 
+//	 * @param resource
+//	 * @return
+//	 */
+//	@Path("/{applicationId}/cpd")
+//	public CPDResource bookings(@InjectParam CPDResource resource){
+//		return resource;
+//	}
 	
-	/**
-	 * Member Education
-	 * 
-	 * @param resource
-	 * @return
-	 */
-	@Path("/{applicationId}/education")
-	public EducationResourceImpl education(@InjectParam EducationResourceImpl resource){
-		return resource;
-	}
-	
-	/**
-	 * Member Training And Experience
-	 * 
-	 * @param resource
-	 * @return
-	 */
-	@Path("/{applicationId}/training")
-	public TrainingAndExperienceResource bookings(@InjectParam TrainingAndExperienceResource resource){
-		return resource;
-	}
-	
-	/**
-	 * Member Training And Experience
-	 * 
-	 * @param resource
-	 * @return
-	 */
-	@Path("/{applicationId}/specialization")
-	public SpecializationResource bookings(@InjectParam SpecializationResource resource){
-		return resource;
-	}
-	
-	/**
-	 * Member Criminal Offenses
-	 * 
-	 * @param resource
-	 * @return
-	 */
-	@Path("/{applicationId}/offenses")
-	public CriminalOffensesResource bookings(@InjectParam CriminalOffensesResource resource){
-		return resource;
-	}
+//	/**
+//	 * Member Education
+//	 * 
+//	 * @param resource
+//	 * @return
+//	 */
+//	@Path("/{applicationId}/education")
+//	public EducationResourceImpl education(@InjectParam EducationResourceImpl resource){
+//		return resource;
+//	}
+//	
+//	/**
+//	 * Member Training And Experience
+//	 * 
+//	 * @param resource
+//	 * @return
+//	 */
+//	@Path("/{applicationId}/training")
+//	public TrainingAndExperienceResource bookings(@InjectParam TrainingAndExperienceResource resource){
+//		return resource;
+//	}
+//	
+//	/**
+//	 * Member Training And Experience
+//	 * 
+//	 * @param resource
+//	 * @return
+//	 */
+//	@Path("/{applicationId}/specialization")
+//	public SpecializationResource bookings(@InjectParam SpecializationResource resource){
+//		return resource;
+//	}
+//	
+//	/**
+//	 * Member Criminal Offenses
+//	 * 
+//	 * @param resource
+//	 * @return
+//	 */
+//	@Path("/{applicationId}/offenses")
+//	public CriminalOffensesResource bookings(@InjectParam CriminalOffensesResource resource){
+//		return resource;
+//	}
 
 	@Override
 	@GET

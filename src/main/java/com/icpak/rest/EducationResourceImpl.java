@@ -18,12 +18,12 @@ import javax.ws.rs.core.UriInfo;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.icpak.rest.dao.helper.EducationDaoHelper;
-import com.icpak.rest.models.membership.EduType;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 import com.workpoint.icpak.shared.api.EducationResource;
 import com.workpoint.icpak.shared.model.ApplicationFormEducationalDto;
+import com.workpoint.icpak.shared.model.EduType;
 
 @Api(value="", description="Handles CRUD for event ApplicationFormEducationalDto")
 public class EducationResourceImpl 	implements EducationResource{
@@ -40,7 +40,7 @@ public class EducationResourceImpl 	implements EducationResource{
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value="Retrieve all active education entries")
-	public List<ApplicationFormEducationalDto> getAll(@ApiParam(value="Application for which education entries are requested") @PathParam("applicationId") String applicationId,
+	public List<ApplicationFormEducationalDto> getAll(
 			@ApiParam(value="Starting point to fetch") @QueryParam("offset") Integer offset,
 			@ApiParam(value="No of Items to fetch") @QueryParam("limit") Integer limit) {
 		
@@ -66,12 +66,8 @@ public class EducationResourceImpl 	implements EducationResource{
 	@ApiOperation(value="Create a new education entry", response=ApplicationFormEducationalDto.class, consumes=MediaType.APPLICATION_JSON)
 	public ApplicationFormEducationalDto create(
 			ApplicationFormEducationalDto education) {
-		
 		education = helper.createEducationEntry(applicationId,education);
 		String uri = "";
-		//education.getEvent().setUri(uriInfo.getBaseUri()+"events/"+education.getEvent().getRefId());
-//		education.getUser().setUri(uriInfo.getBaseUri()+"users/"+education.getUser().getRefId());
-		
 		return education;
 	}
 
@@ -81,13 +77,11 @@ public class EducationResourceImpl 	implements EducationResource{
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value="Update an existing education", response=ApplicationFormEducationalDto.class, 
 	consumes=MediaType.APPLICATION_JSON, produces=MediaType.APPLICATION_JSON)
-	public ApplicationFormEducationalDto update(@Context UriInfo uriInfo, 
+	public ApplicationFormEducationalDto update( 
 			@ApiParam(value="Entry Id of the education to update", required=true) @PathParam("eduEntryId") String eduEntryId, 
 			ApplicationFormEducationalDto education) {
 		
 		education = helper.updateEducationEntry(applicationId,eduEntryId, education);
-		//education.getEvent().setUri(uriInfo.getBaseUri()+"events/"+education.getEvent().getRefId());
-//		education.getUser().setUri(uriInfo.getBaseUri()+"users/"+education.getUser().getRefId());
 		return education;
 	}
 
@@ -104,12 +98,11 @@ public class EducationResourceImpl 	implements EducationResource{
 	@Path("academics")
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value="Retrieve all active academic education entries")
-	public List<ApplicationFormEducationalDto> getAllAcademic(@Context UriInfo uriInfo,
-			@ApiParam(value="Application for which education entries are requested") @PathParam("applicationId") String applicationId,
+	public List<ApplicationFormEducationalDto> getAllAcademic(
 			@ApiParam(value="Starting point to fetch") @QueryParam("offset") Integer offset,
 			@ApiParam(value="No of Items to fetch") @QueryParam("limit") Integer limit) {
 		
-		return helper.getAllEducationEntrys(uriInfo, applicationId,
+		return helper.getAllEducationEntrys("", applicationId,
 				EduType.ACADEMIA, offset, limit);
 	}
 	
@@ -117,12 +110,11 @@ public class EducationResourceImpl 	implements EducationResource{
 	@Path("professional")
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value="Retrieve all active professional education entries")
-	public List<ApplicationFormEducationalDto> getAllProfessional(@Context UriInfo uriInfo,
-			@ApiParam(value="Application for which education entries are requested") @PathParam("applicationId") String applicationId,
+	public List<ApplicationFormEducationalDto> getAllProfessional(
 			@ApiParam(value="Starting point to fetch") @QueryParam("offset") Integer offset,
 			@ApiParam(value="No of Items to fetch") @QueryParam("limit") Integer limit) {
 		
-		return helper.getAllEducationEntrys(uriInfo, applicationId,
+		return helper.getAllEducationEntrys("", applicationId,
 				EduType.PROFESSIONALACCEXAMS, offset, limit);
 	}
 

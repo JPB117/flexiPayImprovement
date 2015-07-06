@@ -14,8 +14,8 @@ import com.icpak.rest.models.base.PO;
 import com.icpak.rest.models.base.ResourceCollectionModel;
 import com.icpak.rest.models.membership.ApplicationFormEducational;
 import com.icpak.rest.models.membership.ApplicationFormHeader;
-import com.icpak.rest.models.membership.EduType;
 import com.workpoint.icpak.shared.model.ApplicationFormEducationalDto;
+import com.workpoint.icpak.shared.model.EduType;
 
 @Transactional
 public class EducationDaoHelper {
@@ -69,7 +69,7 @@ public class EducationDaoHelper {
 		dao.delete(eduEntry);
 	}
 
-	public List<ApplicationFormEducationalDto> getAllEducationEntrys(UriInfo uriInfo,
+	public List<ApplicationFormEducationalDto> getAllEducationEntrys(String uriInfo,
 			String applicationId, EduType academia, Integer offset,
 			Integer limit) {
 		return new ArrayList<>();

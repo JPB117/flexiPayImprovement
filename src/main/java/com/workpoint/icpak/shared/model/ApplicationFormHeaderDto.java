@@ -178,7 +178,7 @@ public class ApplicationFormHeaderDto extends SerializableObj{
 	}
 
 	public void setNationality(String nationality) {
-		nationality = nationality;
+		this.nationality = nationality;
 	}
 
 	public String getCountry() {

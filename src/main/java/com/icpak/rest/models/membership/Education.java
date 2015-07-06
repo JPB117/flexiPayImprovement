@@ -20,6 +20,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import com.icpak.rest.models.base.PO;
 import com.icpak.rest.models.util.Attachment;
 import com.wordnik.swagger.annotations.ApiModel;
+import com.workpoint.icpak.shared.model.EduType;
 
 @ApiModel(description="Education details of a member")
 

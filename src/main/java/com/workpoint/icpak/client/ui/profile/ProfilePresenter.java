@@ -8,6 +8,8 @@ package com.workpoint.icpak.client.ui.profile;
 //import com.workpoint.icpak.shared.responses.GetUserRequestResult;
 //import com.workpoint.icpak.shared.responses.SaveUserResponse;
 //import com.workpoint.icpak.shared.responses.UpdatePasswordResponse;
+import java.util.List;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -31,6 +33,7 @@ import com.workpoint.icpak.client.ui.admin.TabDataExt;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
 import com.workpoint.icpak.client.ui.security.LoginGateKeeper;
 import com.workpoint.icpak.shared.api.ApplicationFormResource;
+import com.workpoint.icpak.shared.model.ApplicationFormEducationalDto;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 
 public class ProfilePresenter
@@ -48,6 +51,8 @@ public class ProfilePresenter
 		ApplicationFormHeaderDto getBasicDetails();
 		boolean isValid();
 		void setEditMode(boolean editMode);
+		ApplicationFormEducationalDto getEducationDetails();
+		void bindEducationDetails(List<ApplicationFormEducationalDto> result);
 	}
 
 	private final CurrentUser currentUser;
@@ -84,10 +89,17 @@ public class ProfilePresenter
 		getView().getSaveButton().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				if (getView().getActiveTab() == 0) {
+				int currentTab = getView().getActiveTab(); 
+				if (currentTab == 0) {
 					// Basic Details
 					saveBasicDetails();
+				}else if(currentTab==1){
+					
+					saveEducationInformation();
+				}else if(currentTab==2){
+					
 				}
+				
 			}
 		});
 		
@@ -106,6 +118,18 @@ public class ProfilePresenter
 				getView().setEditMode(false);
 			}
 		});
+	}
+
+	protected void saveEducationInformation() {
+//		if(getView().isValid()){
+//			applicationDelegate.withCallback(new AbstractAsyncCallback<ApplicationFormEducationalDto>() {
+//				@Override
+//				public void onSuccess(ApplicationFormEducationalDto result) {
+//					
+//				}
+//			}).education(getApplicationRefId())
+//			.create(getView().getEducationDetails());
+//		}
 	}
 
 	protected void saveBasicDetails() {
@@ -146,7 +170,7 @@ public class ProfilePresenter
 		String applicationRefId = getApplicationRefId();
 		
 		//Window.alert("ApplicationID = "+applicationRefId+" >> User = "+currentUser.getUser());
-		if (applicationRefId != null)
+		if (applicationRefId != null){
 			applicationDelegate.withCallback(
 					new AbstractAsyncCallback<ApplicationFormHeaderDto>() {
 						@Override
@@ -154,6 +178,16 @@ public class ProfilePresenter
 							getView().bindBasicDetails(result);
 						}
 					}).getById(applicationRefId);
+			
+//			applicationDelegate.withCallback(new AbstractAsyncCallback<List<ApplicationFormEducationalDto>>() {
+//				@Override
+//				public void onSuccess(List<ApplicationFormEducationalDto> result) {
+//					getView().bindEducationDetails(result);
+//				}
+//			}).education(applicationRefId)
+//			.getAll(0, 100);
+//			
+		}
 	}
 
 	String getApplicationRefId() {
