@@ -16,6 +16,7 @@ import com.workpoint.icpak.client.ui.component.DateField;
 import com.workpoint.icpak.client.ui.component.DropDownList;
 import com.workpoint.icpak.client.ui.component.IssuesPanel;
 import com.workpoint.icpak.client.ui.component.TextField;
+import com.workpoint.icpak.client.ui.upload.custom.Uploader;
 import com.workpoint.icpak.shared.model.Listable;
 
 public class RecordCPD extends Composite {
@@ -48,7 +49,7 @@ public class RecordCPD extends Composite {
 	DateField txtEndDate;
 
 	@UiField
-	IssuesPanel uploader;
+	Uploader uploader;
 
 	@UiField
 	DropDownList<Category> lstCategory;
