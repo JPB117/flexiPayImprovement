@@ -787,8 +787,7 @@ public class ApplicationFormHeaderDto extends SerializableObj{
 	}
 
 	public String getPercCompletion() {
-		
-		return "50%";
+		return "45";
 	}
 
 	public Date getCreated() {

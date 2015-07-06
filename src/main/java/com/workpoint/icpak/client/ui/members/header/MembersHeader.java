@@ -27,5 +27,11 @@ public class MembersHeader extends Composite {
 	public MembersHeader() {
 		initWidget(uiBinder.createAndBindUi(this));
 	}
+	
+	public void setValues(int totalApplications, int totalProcessed, int totalPending){
+		spnTotalApplication.setInnerText(totalApplications+"");
+		spnTotalProcessed.setInnerText(totalProcessed+"");
+		spnTotalPending.setInnerText(totalPending+"");
+	}
 
 }

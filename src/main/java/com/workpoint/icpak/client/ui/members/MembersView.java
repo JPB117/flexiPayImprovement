@@ -8,9 +8,9 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
+import com.workpoint.icpak.client.ui.members.header.MembersHeader;
 import com.workpoint.icpak.client.ui.members.row.MembersTableRow;
 import com.workpoint.icpak.client.ui.members.table.MembersTable;
-import com.workpoint.icpak.client.ui.statements.row.StatementTableRow;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 
 public class MembersView extends ViewImpl implements
@@ -22,6 +22,9 @@ public class MembersView extends ViewImpl implements
 
 	@UiField
 	MembersTable tblView;
+	
+	@UiField
+	MembersHeader headerContainer;
 
 	public interface Binder extends UiBinder<Widget, MembersView> {
 	}
@@ -29,14 +32,6 @@ public class MembersView extends ViewImpl implements
 	@Inject
 	public MembersView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
-		showData();
-	}
-
-	private void showData() {
-		for (int i = 0; i < 20; i++) {
-			MembersTableRow row = new MembersTableRow();
-			tblView.createRow(row);
-		}
 	}
 
 	@Override
@@ -45,8 +40,14 @@ public class MembersView extends ViewImpl implements
 	}
 
 	@Override
-	public void bindApplications(List<ApplicationFormHeaderDto> result) {
-		tblView.bindApplications(result);
+	public void bindApplications(List<ApplicationFormHeaderDto> list) {
+		headerContainer.setValues(list.size(), 0, list.size());
+		
+		tblView.clearRows();
+		for(ApplicationFormHeaderDto dto: list){
+			MembersTableRow row = new MembersTableRow(dto);
+			tblView.createRow(row);
+		}
 	}
 
 }
