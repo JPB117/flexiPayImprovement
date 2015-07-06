@@ -46,15 +46,15 @@
 						<div class="row">
 							<div class="col-xs-6">
 								<label for="startdate">Start Date</label>
-								<d:TextField type="date" ui:field="dtStartDate" class="form-control"
+								<d:DateField ui:field="dtStartDate" class="form-control"
 									placeholder="Enter Start Date" value="" required="true">
-								</d:TextField>
+								</d:DateField>
 							</div>
 							<div class="col-xs-6">
 								<label for="class">Date Completed</label>
-								<d:TextField type="date" ui:field="dtDateCompleted" class="form-control"
+								<d:DateField ui:field="dtDateCompleted" class="form-control"
 									placeholder="Enter End Date" value="" required="true">
-								</d:TextField>
+								</d:DateField>
 							</div>
 						</div>
 					</div>

@@ -13,12 +13,16 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Widget;
+import com.sencha.gxt.legacy.client.mvc.AppEvent;
 import com.workpoint.icpak.client.ui.component.ActionLink;
+import com.workpoint.icpak.client.ui.component.DateField;
 import com.workpoint.icpak.client.ui.component.IssuesPanel;
 import com.workpoint.icpak.client.ui.component.TableHeader;
 import com.workpoint.icpak.client.ui.component.TableView;
 import com.workpoint.icpak.client.ui.component.TextField;
+import com.workpoint.icpak.client.ui.events.EditModelEvent;
 import com.workpoint.icpak.client.ui.util.DateUtils;
+import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.model.ApplicationFormEducationalDto;
 
 import static com.workpoint.icpak.client.ui.util.StringUtils.*;
@@ -45,8 +49,8 @@ public class EducationDetails extends Composite {
 	
 	@UiField TextField txtInstitution;
 	@UiField TextField txtExaminingBody;
-	@UiField TextField dtStartDate;
-	@UiField TextField dtDateCompleted;
+	@UiField DateField dtStartDate;
+	@UiField DateField dtDateCompleted;
 	@UiField TextField txtSectionsPassed;
 	@UiField TextField txtRegistrationNo;
 	@UiField TextField txtClassOrDivision;
@@ -56,6 +60,8 @@ public class EducationDetails extends Composite {
 	@UiField IssuesPanel issues;
 
 	List<TableHeader> tblHeaders = new ArrayList<TableHeader>();
+
+	private ApplicationFormEducationalDto educationDto;
 	
 	interface EducationDetailsUiBinder extends
 			UiBinder<Widget, EducationDetails> {
@@ -108,12 +114,12 @@ public class EducationDetails extends Composite {
 	}
 
 	protected void showForm(boolean show) {
+		aAdd.setVisible(!show);
+		
 		if (show) {
-			aAdd.setVisible(false);
 			panelForm.removeStyleName("hide");
 			panelTable.addStyleName("hide");
 		} else {
-			aAdd.setVisible(true);
 			panelTable.removeStyleName("hide");
 			panelForm.addStyleName("hide");
 		}
@@ -121,12 +127,7 @@ public class EducationDetails extends Composite {
 
 	public void setEditMode(boolean editMode) {
 		showForm(editMode);
-		if(editMode){
-			aAdd.setVisible(true);
-			
-		}else{
-			aAdd.setVisible(false);
-		}
+		aAdd.setVisible(editMode);
 	}
 
 	public boolean isValid() {
@@ -143,19 +144,20 @@ public class EducationDetails extends Composite {
 			issues.addError("Examining Body is mandatory");
 		}
 		
-		issues.addError("Start date is mandatory >> "+dtStartDate.getValue());
-		if(isNullOrEmpty(dtStartDate.getValue())){	
+		if(dtStartDate.getValueDate()==null){	
 			isValid=false;
 			issues.addError("Start date is mandatory");
 		}
-		if(isNullOrEmpty(dtDateCompleted.getValue())){	
+		if(dtDateCompleted.getValueDate()==null){	
 			isValid=false;
 			issues.addError("Date Completed is mandatory");	
 		}
+		
 		if(isNullOrEmpty(txtSectionsPassed.getValue())){	
 			isValid=false;
 			issues.addError("Sections Passed is mandatory");	
 		}
+		
 		if(isNullOrEmpty(txtRegistrationNo.getValue())){	
 			isValid=false;
 			issues.addError("Registration No is mandatory");	
@@ -175,10 +177,14 @@ public class EducationDetails extends Composite {
 	public ApplicationFormEducationalDto getEducationDto() {
 		
 		ApplicationFormEducationalDto dto = new ApplicationFormEducationalDto();
+		if(educationDto!=null){
+			dto = educationDto;
+		}
+		
 		dto.setWhereObtained(txtInstitution.getValue());
 		dto.setExaminingBody(txtExaminingBody.getValue());
-//		dto.setFromDate(dtStartDate.getValue());
-//		dto.setToDate(dtDateCompleted.getValue());
+		dto.setFromDate(dtStartDate.getValueDate());
+		dto.setToDate(dtDateCompleted.getValueDate());
 		dto.setSections(txtSectionsPassed.getValue());
 		dto.setRegNo(txtRegistrationNo.getValue());
 		dto.setClassDivisionAttained(txtClassOrDivision.getValue());
@@ -188,9 +194,32 @@ public class EducationDetails extends Composite {
 		return dto;
 	}
 
+	
 	public void bindDetails(List<ApplicationFormEducationalDto> result) {
 		tblEducationalDetail.clearRows();
 		for(ApplicationFormEducationalDto edu: result){
+			
+			final ActionLink edit  = new ActionLink(edu, "Edit");
+			edit.addClickHandler(new ClickHandler() {
+				
+				@Override
+				public void onClick(ClickEvent event) {
+					AppContext.fireEvent(new EditModelEvent(edit.getModel()));
+				}
+			});
+			
+			final ActionLink delete  = new ActionLink(edu, "Delete");
+			delete.addClickHandler(new ClickHandler() {
+				
+				@Override
+				public void onClick(ClickEvent event) {
+					AppContext.fireEvent(new EditModelEvent(edit.getModel(), true));
+				}
+			});
+			
+			HTMLPanel panel = new HTMLPanel("");
+			panel.add(edit);
+			panel.add(delete);
 			tblEducationalDetail.addRow(new InlineLabel(edu.getWhereObtained()),
 					new InlineLabel(DateUtils.DATEFORMAT.format(edu.getFromDate())),
 					new InlineLabel(DateUtils.DATEFORMAT.format(edu.getToDate())),
@@ -199,11 +228,17 @@ public class EducationDetails extends Composite {
 					new InlineLabel(edu.getCertificateAwarded()+""),
 					new InlineLabel(edu.getRegNo()),
 					new InlineLabel(edu.getSections()),
-					new ActionLink(edu));
+					panel
+					);
 		}
 	}
 	
 	public HasClickHandlers getSaveButton(){
 		return aSave;
+	}
+
+	public void bindDetail(ApplicationFormEducationalDto educationDto) {
+		this.educationDto = educationDto;
+		
 	}
 }
