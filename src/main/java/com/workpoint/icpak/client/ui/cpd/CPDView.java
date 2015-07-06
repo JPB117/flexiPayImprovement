@@ -128,7 +128,7 @@ public class CPDView extends ViewImpl implements CPDPresenter.ICPDView {
 		tblView.createRow(cpdTableRow);
 	}
 
-	protected void showDateFilter(boolean showFilter) {
+	public void showDateFilter(boolean showFilter) {
 		if (showFilter) {
 			panelDates.setVisible(true);
 			isDateFilterShown = true;

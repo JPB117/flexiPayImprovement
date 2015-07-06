@@ -46,29 +46,32 @@ public class AppManager {
 		}
 
 		for (final String text : buttons) {
-			Anchor aLnk = new Anchor();
+			final Anchor aLnk = new Anchor();
 			if (text.equals("Cancel")) {
 				aLnk.setHTML("&nbsp;<i class=\"icon-remove\"></i>" + text);
 				aLnk.setStyleName("btn btn-default btn-fill pull-right");
-			} else {
+			} else if (text.equals("Save")) {
 				aLnk.setHTML(text
 						+ "&nbsp;<i class=\"icon-double-angle-right\"></i>");
 				aLnk.setStyleName("btn btn-primary btn-fill pull-left");
+			} else if (text.equals("Next")) {
+				aLnk.setHTML(text
+						+ "&nbsp;<i class=\"icon-double-angle-right\"></i>");
+				aLnk.setStyleName("btn btn-primary btn-fill pull-right");
 			}
 
 			aLnk.addClickHandler(new ClickHandler() {
 
 				@Override
 				public void onClick(ClickEvent event) {
-
 					if (onOptionSelected instanceof OptionControl) {
 						((OptionControl) onOptionSelected)
 								.setPopupView((PopupView) (popupPresenter
 										.getView()));
-						onOptionSelected.onSelect(text);
+						onOptionSelected.onSelect(text, aLnk);
 					} else {
 						popupPresenter.getView().hide();
-						onOptionSelected.onSelect(text);
+						onOptionSelected.onSelect(text, aLnk);
 					}
 
 					if (!popupPresenter.isVisible() && customPopupStyle != null) {

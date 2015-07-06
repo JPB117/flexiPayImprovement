@@ -23,6 +23,7 @@ import com.gwtplatform.mvp.client.annotations.UseGatekeeper;
 import com.gwtplatform.mvp.client.proxy.TabContentProxyPlace;
 import com.workpoint.icpak.client.place.NameTokens;
 import com.workpoint.icpak.client.ui.AppManager;
+import com.workpoint.icpak.client.ui.OnOptionSelected;
 import com.workpoint.icpak.client.ui.admin.TabDataExt;
 import com.workpoint.icpak.client.ui.cpd.record.RecordCPD;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
@@ -76,8 +77,8 @@ public class CPDPresenter extends
 
 	protected void showCreatePopup() {
 		RecordCPD cpdRecord = new RecordCPD();
-		AppManager.showPopUp("Record CPD", cpdRecord.asWidget(), null, "Save",
-				"Cancel");
+		AppManager.showPopUp("Record CPD Wizard", cpdRecord.asWidget(), cpdRecord.getOptionSelection()
+				, "Next");
 
 		// addToPopupSlot(popup);
 	}

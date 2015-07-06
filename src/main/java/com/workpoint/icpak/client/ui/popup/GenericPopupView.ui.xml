@@ -3,7 +3,7 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d='urn:import:com.workpoint.icpak.client.ui.component'>
 
 	<g:PopupPanel ui:field="popUpPanel" glassEnabled="true"
-		styleName="modal" modal="true" width="70%">
+		styleName="modal" modal="true" width="85%">
 		<g:HTMLPanel styleName="modal-content">
 			<g:HTMLPanel styleName="modal-header">
 				<h5>
