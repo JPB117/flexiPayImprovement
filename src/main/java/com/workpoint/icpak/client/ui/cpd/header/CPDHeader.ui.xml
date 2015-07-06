@@ -3,54 +3,65 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d='urn:import:com.workpoint.icpak.client.ui.component'>
 
 	<g:HTMLPanel styleName="row">
-		<div class="col-lg-4">
-			<div class="panel widget bg-primary">
-				<div class="row row-table">
-					<div class="col-xs-4 text-center bg-primary-dark pv-lg">
-						<em class="icon-cloud-upload fa-3x"></em>
-					</div>
-					<div class="col-xs-8 pv-lg">
-						<div class="h2 mt0">
-							<span ui:field="spnTransactions">40</span>
-						</div>
-						<div class="text-uppercase">Total CPD Hours</div>
-					</div>
-				</div>
+		<div class="row">
+			<div class="col-lg-12">
+				<span ui:field="spnDebug"></span>
 			</div>
 		</div>
 
-		<div class="col-lg-4">
-			<div class="panel widget bg-primary">
-				<div class="row row-table">
-					<div class="col-xs-4 text-center bg-primary-dark pv-lg">
-						<em class="icon-cloud-upload fa-3x"></em>
-					</div>
-					<div class="col-xs-8 pv-lg">
-						<div class="h2 mt0">
-							<span class="" ui:field="spnAmount">
-								10
-							</span>
+		<br />
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="col-lg-4">
+					<div class="panel widget">
+						<div class="row row-table">
+							<div class="col-lg-8 pv-lg text-center">
+								<div class="h2 mt0">
+									<span ui:field="spnTransactions">40</span>
+								</div>
+								<div class="text-uppercase">Total CPD Hours</div>
+							</div>
+							<div class="col-lg-4 text-right text-muted">
+								<em class="fa fa-gamepad fa-2x"></em>
+							</div>
 						</div>
-						<div class="text-uppercase">Confirmed CPD</div>
 					</div>
 				</div>
-			</div>
 
-		</div>
-
-		<div class="col-lg-4">
-			<div class="panel widget bg-primary">
-				<div class="row row-table">
-					<div class="col-xs-4 text-center bg-primary-dark pv-lg">
-						<em class="icon-cloud-upload fa-3x"></em>
-					</div>
-					<div class="col-xs-8 pv-lg">
-						<div class="h2 mt0">
-							<span class="" ui:field="spnBalance" title="Balance">
-								30
-							</span>
+				<div class="col-lg-4">
+					<div class="panel widget">
+						<div class="row row-table">
+							<div class="col-xs-8 pv-lg text-center">
+								<div class="h2 mt0">
+									<span class="" ui:field="spnAmount">
+										10
+									</span>
+								</div>
+								<div class="text-uppercase">Confirmed CPD</div>
+							</div>
+							<div class="col-lg-4 text-right text-muted">
+								<em class="fa fa-gamepad fa-2x"></em>
+							</div>
 						</div>
-						<div class="bold muted helper-font-small">Un-Confirmed CPD</div>
+					</div>
+				</div>
+
+				<div class="col-lg-4">
+					<div class="panel widget">
+						<div class="row row-table">
+							<div class="col-xs-8 pv-lg text-center">
+								<div class="h2 mt0">
+									<span class="" ui:field="spnBalance" title="Balance">
+										30
+									</span>
+								</div>
+								<div class="bold muted helper-font-small">Un-Confirmed CPD</div>
+							</div>
+
+							<div class="col-lg-4 text-right text-muted">
+								<em class="fa fa-gamepad fa-2x"></em>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>

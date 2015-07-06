@@ -4,7 +4,6 @@
 	xmlns:g='urn:import:com.google.gwt.user.client.ui' ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
 	xmlns:d='urn:import:com.workpoint.icpak.client.ui.component' xmlns:p='urn:import:com.workpoint.icpak.client.ui.cpd.header'
 	xmlns:table='urn:import:com.workpoint.icpak.client.ui.cpd.table'
-	xmlns:up='urn:import:com.workpoint.icpak.client.ui.upload.custom'
 	xmlns:t='urn:import:com.workpoint.icpak.client.ui.component.tabs'
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
@@ -13,18 +12,43 @@
 		styleName="content-wrapper ng-scope ng-fadeInUp">
 		<h3 class="ng-scope">
 			My CPD
+			<span class="spnPeriod">(Jan 2015 - Dec 2015)</span>
+			<d:ActionLink styleName="fa fa-caret-down" ui:field="aShowFilter"></d:ActionLink>
 		</h3>
 
+		<g:HTMLPanel styleName="row" ui:field="panelDates">
+			<div class="col-lg-12">
+				<form class="form-inline">
+					<div class="form-group">
+						<label for="from">From:</label>
+						<d:DropDownList ui:field="lstFrom" styleName="form-control"></d:DropDownList>
+					</div>
+					<div class="form-group">
+						<label for="to">to:</label>
+						<d:DropDownList ui:field="lstTo" styleName="form-control"></d:DropDownList>
+					</div>
+				</form>
+			</div>
+		</g:HTMLPanel>
+
 		<div class="row">
-			<div class="col-sm-12">
+			<div class="col-lg-12">
 				<p:CPDHeader ui:field="headerContainer">
 				</p:CPDHeader>
 			</div>
-
-			<div ui:field="divTab1Content" class="tab-pane fade in active">
-				<!-- Tabs -->
-				<t:TabPanel ui:field="divTabs">
-				</t:TabPanel>
+		</div>
+		<div class="row">
+			<div class="col-lg-12">
+				<g:HTMLPanel styleName="panel widget" ui:field="panelListing">
+					<div class="panel-heading">CPD Summary</div>
+					<div class="panel-body">
+						<div ui:field="divTab1Content" class="tab-pane fade in active">
+							<!-- Tabs -->
+							<t:TabPanel ui:field="divTabs">
+							</t:TabPanel>
+						</div>
+					</div>
+				</g:HTMLPanel>
 			</div>
 		</div>
 	</g:HTMLPanel>

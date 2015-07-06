@@ -18,19 +18,6 @@ public class CPDTableRow extends RowWidget {
 
 	@UiField
 	HTMLPanel row;
-	@UiField
-	HTMLPanel divDate;
-	@UiField
-	HTMLPanel divDocNum;
-	@UiField
-	HTMLPanel divDescription;
-	@UiField
-	HTMLPanel divDueDate;
-	@UiField
-	HTMLPanel divAmount;
-	@UiField
-	HTMLPanel divBalance;
-
 	public CPDTableRow() {
 		initWidget(uiBinder.createAndBindUi(this));
 	}

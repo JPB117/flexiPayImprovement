@@ -12,8 +12,7 @@ public class CPDHeader extends Composite {
 	private static ActivityHeaderUiBinder uiBinder = GWT
 			.create(ActivityHeaderUiBinder.class);
 
-	interface ActivityHeaderUiBinder extends
-			UiBinder<Widget, CPDHeader> {
+	interface ActivityHeaderUiBinder extends UiBinder<Widget, CPDHeader> {
 	}
 
 	@UiField
@@ -23,10 +22,15 @@ public class CPDHeader extends Composite {
 	SpanElement spnAmount;
 
 	@UiField
+	SpanElement spnDebug;
+
+	@UiField
 	SpanElement spnBalance;
+
 
 	public CPDHeader() {
 		initWidget(uiBinder.createAndBindUi(this));
+
 	}
 
 }

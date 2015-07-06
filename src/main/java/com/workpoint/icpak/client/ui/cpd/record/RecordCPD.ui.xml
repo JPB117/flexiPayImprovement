@@ -1,0 +1,215 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:d='urn:import:com.workpoint.icpak.client.ui.component' xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:table='urn:import:com.workpoint.icpak.client.ui.cpd.table'>
+
+	<g:HTMLPanel>
+		<div class="col-lg-12">
+			<p>
+				This page allows you to record your CPD. Please note that this
+				return should include only
+				<strong>NON ICPAK</strong>
+				organised courses and unstructured CPD.
+				CPD awards for ICPAK
+				programmes will be made directly from the
+				attendance list(s).
+			</p>
+		</div>
+
+		<g:HTMLPanel styleName="col-lg-12" ui:field="panelCategories">
+			<h5>Select CPD Categories:</h5>
+			<hr />
+
+			<div id="accordion" role="tablist" aria-multiselectable="true"
+				class="panel-group">
+
+				<div class="row">
+					<div class="col-lg-6">
+						<div id="panelDemo1" class="panel panel-default">
+							<div class="panel-heading">
+								Category A
+								<a data-toggle="collapse" data-target="#categoryA"
+									aria-expanded="false" aria-controls="categoryA" class="pull-right">
+									<em class="fa fa-minus"></em>
+								</a>
+							</div>
+							<div class="panel-wrapper collapse in" aria-expanded="false"
+								id="categoryA">
+								<div class="panel-body">
+									<p>Courses run by the Institute, or IFAC or APSEA member body
+										or
+										by any other Professional Institute and association within
+										its
+										continuing professional education programme or any other
+										CPE
+										attained in order to comply with a regulator requiring
+										compliance
+										with CPE.</p>
+								</div>
+								<div class="panel-footer">
+									<d:ActionLink ui:field="aCategoryA" styleName="btn btn-primary btn-fill">Select</d:ActionLink>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-lg-6">
+						<div id="panelDemo2" class="panel panel-default">
+							<div class="panel-heading">
+								Category B
+								<a data-toggle="collapse" data-target="#categoryB"
+									aria-expanded="false" aria-controls="categoryB" class="pull-right">
+									<em class="fa fa-minus"></em>
+								</a>
+							</div>
+							<div class="panel-wrapper collapse in" aria-expanded="false"
+								id="categoryB">
+								<div class="panel-body">
+									<p>Relevant individual study programmes and additional
+										qualifications attained through private study, distance
+										learning,
+										or attendance at formal courses of MBA and similar
+										programmes as
+										defined under section 6 of the CPE guidelines.</p>
+								</div>
+								<div class="panel-footer">
+									<d:ActionLink ui:field="aCategoryB" styleName="btn btn-primary btn-fill">Select</d:ActionLink>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+
+				<div class="row">
+					<div class="col-lg-6">
+						<div id="panelDemo3" class="panel panel-default">
+							<div class="panel-heading">
+								Category C
+								<a data-toggle="collapse" data-target="#categoryC"
+									aria-expanded="false" aria-controls="categoryC" class="pull-right">
+									<em class="fa fa-minus"></em>
+								</a>
+							</div>
+							<div class="panel-wrapper collapse in" aria-expanded="false"
+								id="categoryC">
+								<div class="panel-body">
+									<p>CPE activities
+										covering research, presentations at seminar,
+										service in technical
+										or project committees, precourse reading
+										or
+										similar activities as
+										defined under section 6 of the
+										guidelines
+										subject to a maximum of
+										five (5) hours of structured
+										CPE
+										per&nbsp;
+										year and or a maximum
+										of
+										thirty (30) hours over a
+										three
+										year
+										reporting period.</p>
+								</div>
+								<div class="panel-footer">
+									<d:ActionLink ui:field="aCategoryC" styleName="btn btn-primary btn-fill">Select</d:ActionLink>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-6">
+						<div id="panelDemo4" class="panel panel-default">
+							<div class="panel-heading">
+								Category D
+								<a data-toggle="collapse" data-target="#categoryD"
+									aria-expanded="false" aria-controls="categoryD" class="pull-right">
+									<em class="fa fa-minus"></em>
+								</a>
+							</div>
+							<div class="panel-wrapper collapse in" aria-expanded="false"
+								id="categoryD">
+								<div class="panel-body">
+									<p>UNSTRUCTURED:
+										Reading of technical,&nbsp; professional,
+										financial or business
+										literature and use of audiotapes or
+										videotapes.</p>
+								</div>
+								<div class="panel-footer">
+									<d:ActionLink ui:field="aCategoryD" styleName="btn btn-primary btn-fill">Select</d:ActionLink>
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</g:HTMLPanel>
+
+		<g:HTMLPanel styleName="col-lg-12" ui:field="panelForm">
+			<div class="form-group">
+				<div class="row">
+					<div class="col-xs-12">
+						<label for="firstname">Title:</label>
+						<d:TextField ui:field="txtTitle" styleName="form-control"
+							placeholder="Enter Title" value="" required="true">
+						</d:TextField>
+					</div>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="row">
+					<div class="col-xs-12">
+						<label for="firstname">Organizer:</label>
+						<d:TextField ui:field="txtOrganizer" styleName="form-control"
+							placeholder="Enter Title" value="" required="true">
+						</d:TextField>
+					</div>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="row">
+					<div class="col-xs-6">
+						<label for="firstname">From:</label>
+						<d:TextField ui:field="txtStartDate" styleName="form-control"
+							placeholder="Enter Title" value="" required="true">
+						</d:TextField>
+					</div>
+
+					<div class="col-xs-6">
+						<label for="firstname">End Date:</label>
+						<d:TextField ui:field="txtEndDate" styleName="form-control"
+							placeholder="Enter Title" value="" required="true">
+						</d:TextField>
+					</div>
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<div class="row">
+					<div class="col-xs-6">
+						<label for="firstname">Attachments:</label>
+						<d:ActionLink ui:field="aAttach" styleName="btn btn-primary btn-fill">Browse
+							Files</d:ActionLink>
+					</div>
+				</div>
+
+			</div>
+		</g:HTMLPanel>
+
+		<div class="alert alert-info">
+			<strong>Please Note:</strong>
+			Once you return your CPD, your record will go into the
+			Un-Confirmed
+			CPD Queue, pending confirmation from the Training
+			&amp; Development
+			Team.
+		</div>
+	</g:HTMLPanel>
+
+</ui:UiBinder> 
