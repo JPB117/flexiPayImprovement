@@ -77,12 +77,12 @@ public class EducationDetails extends Composite {
 			}
 		});
 
-		aSave.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				showForm(false);
-			}
-		});
+//		aSave.addClickHandler(new ClickHandler() {
+//			@Override
+//			public void onClick(ClickEvent event) {
+//				showForm(false);
+//			}
+//		});
 	}
 
 	private void createTableHeader() {
@@ -120,8 +120,10 @@ public class EducationDetails extends Composite {
 	}
 
 	public void setEditMode(boolean editMode) {
+		showForm(editMode);
 		if(editMode){
 			aAdd.setVisible(true);
+			
 		}else{
 			aAdd.setVisible(false);
 		}
@@ -141,6 +143,7 @@ public class EducationDetails extends Composite {
 			issues.addError("Examining Body is mandatory");
 		}
 		
+		issues.addError("Start date is mandatory >> "+dtStartDate.getValue());
 		if(isNullOrEmpty(dtStartDate.getValue())){	
 			isValid=false;
 			issues.addError("Start date is mandatory");

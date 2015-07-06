@@ -14,6 +14,7 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Random;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -262,5 +263,9 @@ public class ProfileView extends ViewImpl implements
 	@Override
 	public void bindEducationDetails(List<ApplicationFormEducationalDto> result) {
 		educationDetail.bindDetails(result);
+	}
+	
+	public HasClickHandlers getEducationDetailSaveButton(){
+		return educationDetail.getSaveButton();
 	}
 }

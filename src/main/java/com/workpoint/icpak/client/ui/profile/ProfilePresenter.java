@@ -53,6 +53,7 @@ public class ProfilePresenter
 		void setEditMode(boolean editMode);
 		ApplicationFormEducationalDto getEducationDetails();
 		void bindEducationDetails(List<ApplicationFormEducationalDto> result);
+		HasClickHandlers getEducationDetailSaveButton();
 	}
 
 	private final CurrentUser currentUser;
@@ -94,7 +95,7 @@ public class ProfilePresenter
 					// Basic Details
 					saveBasicDetails();
 				}else if(currentTab==1){
-					
+					//Education Infor
 					saveEducationInformation();
 				}else if(currentTab==2){
 					
@@ -111,6 +112,14 @@ public class ProfilePresenter
 			}
 		});
 		
+		getView().getEducationDetailSaveButton().addClickHandler(new ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent event) {
+				saveEducationInformation();
+			}
+		});
+		
 		getView().getCancelDetailButton().addClickHandler(new ClickHandler() {
 			
 			@Override
@@ -121,15 +130,15 @@ public class ProfilePresenter
 	}
 
 	protected void saveEducationInformation() {
-//		if(getView().isValid()){
-//			applicationDelegate.withCallback(new AbstractAsyncCallback<ApplicationFormEducationalDto>() {
-//				@Override
-//				public void onSuccess(ApplicationFormEducationalDto result) {
-//					
-//				}
-//			}).education(getApplicationRefId())
-//			.create(getView().getEducationDetails());
-//		}
+		if(getView().isValid()){
+			applicationDelegate.withCallback(new AbstractAsyncCallback<ApplicationFormEducationalDto>() {
+				@Override
+				public void onSuccess(ApplicationFormEducationalDto result) {
+					
+				}
+			}).education(getApplicationRefId())
+			.create(getView().getEducationDetails());
+		}
 	}
 
 	protected void saveBasicDetails() {
@@ -179,14 +188,14 @@ public class ProfilePresenter
 						}
 					}).getById(applicationRefId);
 			
-//			applicationDelegate.withCallback(new AbstractAsyncCallback<List<ApplicationFormEducationalDto>>() {
-//				@Override
-//				public void onSuccess(List<ApplicationFormEducationalDto> result) {
-//					getView().bindEducationDetails(result);
-//				}
-//			}).education(applicationRefId)
-//			.getAll(0, 100);
-//			
+			applicationDelegate.withCallback(new AbstractAsyncCallback<List<ApplicationFormEducationalDto>>() {
+				@Override
+				public void onSuccess(List<ApplicationFormEducationalDto> result) {
+					getView().bindEducationDetails(result);
+				}
+			}).education(applicationRefId)
+			.getAll(0, 100);
+			
 		}
 	}
 
@@ -195,10 +204,6 @@ public class ProfilePresenter
 				: currentUser.getUser().getApplicationRefId();
 
 		return applicationRefId;
-	}
-
-	protected void save() {
-
 	}
 
 }
