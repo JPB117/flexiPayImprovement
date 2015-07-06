@@ -239,6 +239,16 @@ public class EducationDetails extends Composite {
 
 	public void bindDetail(ApplicationFormEducationalDto educationDto) {
 		this.educationDto = educationDto;
-		
+				
+
+		txtInstitution.setValue(educationDto.getWhereObtained());;
+		txtExaminingBody.setValue(educationDto.getExaminingBody());
+		dtStartDate.setValue(educationDto.getFromDate());
+		dtDateCompleted.setValue(educationDto.getToDate());
+		txtSectionsPassed.setValue(educationDto.getSections());
+		txtRegistrationNo.setValue(educationDto.getRegNo());
+		txtClassOrDivision.setValue(educationDto.getClassDivisionAttained());
+		//txtAward.setValue(educationDto.getCertificateAwarded());
+		//txtEduType.setValue(educationDto.getType().name());
 	}
 }
