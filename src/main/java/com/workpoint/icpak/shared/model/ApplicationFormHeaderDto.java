@@ -24,7 +24,8 @@ public class ApplicationFormHeaderDto extends SerializableObj{
 
 	private String applicationNo;
 	private Date date;
-	private String applicationDate;
+	private Date created;
+	private Date applicationDate;
 	private String surname;
 	private String otherNames;
 	private Date dob;
@@ -105,6 +106,7 @@ public class ApplicationFormHeaderDto extends SerializableObj{
 	private ApplicationCategoryDto category;
 	private String invoiceRef;
 	private String userRefId;
+	private String memberNo;
 	
 	public ApplicationFormHeaderDto() {
 	}
@@ -123,14 +125,6 @@ public class ApplicationFormHeaderDto extends SerializableObj{
 
 	public void setDate(Date date) {
 		this.date = date;
-	}
-
-	public String getApplicationDate() {
-		return applicationDate;
-	}
-
-	public void setApplicationDate(String applicationDate) {
-		this.applicationDate = applicationDate;
 	}
 
 	public String getSurname() {
@@ -777,6 +771,40 @@ public class ApplicationFormHeaderDto extends SerializableObj{
 
 	public void setResidence(String residence) {
 		this.residence = residence;
+	}
+
+	public String getMemberNo() {
+		return memberNo;
+	}
+
+	public void setMemberNo(String memberNo) {
+		this.memberNo = memberNo;
+	}
+
+	public String getFullNames() {
+		
+		return surname+" "+otherNames;
+	}
+
+	public String getPercCompletion() {
+		
+		return "50%";
+	}
+
+	public Date getCreated() {
+		return created;
+	}
+
+	public void setCreated(Date created) {
+		this.created = created;
+	}
+
+	public Date getApplicationDate() {
+		return applicationDate;
+	}
+
+	public void setApplicationDate(Date applicationDate) {
+		this.applicationDate = applicationDate;
 	}
 	
 }

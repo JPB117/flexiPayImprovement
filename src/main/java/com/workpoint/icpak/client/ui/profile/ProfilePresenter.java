@@ -164,11 +164,6 @@ public class ProfilePresenter
 	}
 
 	@Override
-	public void prepareFromRequest(PlaceRequest request) {
-		super.prepareFromRequest(request);
-	}
-
-	@Override
 	protected void onReveal() {
 		super.onReveal();
 		loadData();

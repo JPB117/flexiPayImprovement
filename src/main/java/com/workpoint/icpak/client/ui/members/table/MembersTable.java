@@ -1,6 +1,7 @@
 package com.workpoint.icpak.client.ui.members.table;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
@@ -8,11 +9,14 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Widget;
 import com.workpoint.icpak.client.ui.component.TableHeader;
 import com.workpoint.icpak.client.ui.component.TableView;
 import com.workpoint.icpak.client.ui.members.row.MembersTableRow;
 import com.workpoint.icpak.client.ui.statements.row.StatementTableRow;
+import com.workpoint.icpak.client.ui.util.DateUtils;
+import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 
 public class MembersTable extends Composite {
 
@@ -60,6 +64,22 @@ public class MembersTable extends Composite {
 
 	public void setAutoNumber(boolean autoNumber) {
 		tblView.setAutoNumber(false);
+	}
+
+	public void bindApplications(List<ApplicationFormHeaderDto> list) {
+		clearRows();
+		
+		for(ApplicationFormHeaderDto dto: list){
+			Date regDate = dto.getApplicationDate()!=null? dto.getApplicationDate():
+				dto.getDate()!=null? dto.getDate(): dto.getCreated();
+			
+			tblView.addRow(new InlineLabel(DateUtils.DATEFORMAT.format(regDate)),
+					new InlineLabel(dto.getMemberNo()),
+					new InlineLabel(dto.getFullNames()),
+					new InlineLabel(dto.getEmail()),
+					new InlineLabel(dto.getPercCompletion()),
+					new InlineLabel(dto.getStatus()+""));
+		}
 	}
 
 }
