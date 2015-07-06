@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 import com.icpak.rest.models.base.PO;
+import com.workpoint.icpak.shared.model.ApplicationFormEducationalDto;
 
 @Entity
 @Table(name = "`Application Form Educational`")
@@ -190,23 +191,45 @@ public class ApplicationFormEducational extends PO {
 		this.description = description;
 	}
 
-	public void copyFrom(ApplicationFormEducational eduEntry) {
+	public void copyFrom(ApplicationFormEducationalDto dto) {
 		
-		setCertificateAwarded(eduEntry.getCertificateAwarded());
-		setClassDivisionAttained(eduEntry.getClassDivisionAttained());
-		setDescription(eduEntry.getDescription());
-		setExaminingBody(eduEntry.getExaminingBody());
-		setFromDate(eduEntry.getFromDate());
-		setLineNo(eduEntry.getLineNo());
-		setQualificationCode(eduEntry.getQualificationCode());
-		setQualificationDesc(eduEntry.getQualificationDesc());
-		setRegNo(eduEntry.getRegNo());
-		setSections(eduEntry.getSections());
-		setToDate(eduEntry.getToDate());
-		setType(eduEntry.getType());
-		setWhereObtained(eduEntry.getWhereObtained());
+		setCertificateAwarded(dto.getCertificateAwarded());
+		setClassDivisionAttained(dto.getClassDivisionAttained());
+		setDescription(dto.getDescription());
+		setExaminingBody(dto.getExaminingBody());
+		setFromDate(dto.getFromDate());
+		setLineNo(dto.getLineNo());
+		setQualificationCode(dto.getQualificationCode());
+		setQualificationDesc(dto.getQualificationDesc());
+		setRegNo(dto.getRegNo());
+		setSections(dto.getSections());
+		setToDate(dto.getToDate());
+		setType(dto.getType());
+		setWhereObtained(dto.getWhereObtained());
 		//setApplicationNo(applicationNo);
 		//setRefId(refId);
+	}
+	
+	public ApplicationFormEducationalDto toDto() {
+		ApplicationFormEducationalDto dto = new ApplicationFormEducationalDto();
+		dto.setApplicationNo(applicationNo);
+		dto.setApplicationRefId(applicationRefId);
+		dto.setCertificateAwarded(certificateAwarded);
+		dto.setClassDivisionAttained(classDivisionAttained);
+		dto.setDescription(description);
+		dto.setExaminingBody(examiningBody);
+		dto.setFromDate(fromDate);
+		dto.setLineNo(lineNo);
+		dto.setQualificationCode(qualificationCode);
+		dto.setQualificationDesc(qualificationDesc);
+		dto.setRefId(applicationRefId);
+		dto.setRegNo(regNo);
+		dto.setSections(sections);
+		dto.setToDate(toDate);
+		dto.setType(type);
+		dto.setWhereObtained(whereObtained);
+		
+		return dto;
 	}
 
 	public String getApplicationRefId() {
@@ -216,5 +239,6 @@ public class ApplicationFormEducational extends PO {
 	public void setApplicationRefId(String applicationRefId) {
 		this.applicationRefId = applicationRefId;
 	}
+
 
 }

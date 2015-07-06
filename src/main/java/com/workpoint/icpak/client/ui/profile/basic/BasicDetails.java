@@ -38,6 +38,7 @@ public class BasicDetails extends Composite {
 	@UiField Element elCountry;
 	@UiField Element elCity;
 	@UiField Anchor aSave;
+	@UiField Anchor aCancel;
 	@UiField MemberRegistrationForm panelRegistration;
 
 	public BasicDetails() {
@@ -88,5 +89,9 @@ public class BasicDetails extends Composite {
 
 	public boolean isValid() {
 		return panelRegistration.isValid();
+	}
+
+	public HasClickHandlers getCancelButton() {
+		return aCancel;
 	}
 }

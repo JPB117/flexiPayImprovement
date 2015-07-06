@@ -15,7 +15,7 @@ import javax.ws.rs.core.MediaType;
 
 import com.google.inject.Inject;
 import com.icpak.rest.dao.helper.EventsDaoHelper;
-import com.icpak.rest.factory.BookingsResourceFactory;
+import com.icpak.rest.factory.ResourceFactory;
 import com.icpak.rest.models.event.Event;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -30,7 +30,7 @@ public class EventsResourceImpl implements EventsResource{
 
 	@Inject EventsDaoHelper helper;
 	
-	@Inject BookingsResourceFactory factory;
+	@Inject ResourceFactory factory;
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -45,7 +45,7 @@ public class EventsResourceImpl implements EventsResource{
 	
 	@Path("/{eventId}/bookings")
 	public BookingsResource bookings(@PathParam("eventId") String eventId){
-		return factory.create(eventId);
+		return factory.createBookingResource(eventId);
 	}
 
 	@GET

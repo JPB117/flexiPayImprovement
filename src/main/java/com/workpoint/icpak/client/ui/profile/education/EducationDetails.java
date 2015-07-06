@@ -36,7 +36,7 @@ public class EducationDetails extends Composite {
 	HTMLPanel panelTable;
 
 	List<TableHeader> tblHeaders = new ArrayList<TableHeader>();
-
+	
 	interface EducationDetailsUiBinder extends
 			UiBinder<Widget, EducationDetails> {
 	}

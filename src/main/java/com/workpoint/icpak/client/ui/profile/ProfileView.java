@@ -12,7 +12,7 @@ import com.google.gwt.event.dom.client.ErrorHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -88,6 +88,7 @@ public class ProfileView extends ViewImpl implements
 	private EducationDetails educationDetail;
 	private SpecializationDetails specializationDetail;
 	private TrainingDetails trainingDetail;
+	private String url;
 
 	public interface Binder extends UiBinder<Widget, ProfileView> {
 	}
@@ -146,10 +147,6 @@ public class ProfileView extends ViewImpl implements
 			@Override
 			public void onClick(ClickEvent event) {
 				setEditMode(true);
-				basicDetail.setEditMode(true);
-				educationDetail.setEditMode(true);
-				specializationDetail.setEditMode(true);
-				trainingDetail.setEditMode(true);
 			}
 		});
 
@@ -163,14 +160,18 @@ public class ProfileView extends ViewImpl implements
 		uploader.addOnFinishUploaderHandler(new IUploader.OnFinishUploaderHandler() {
 			@Override
 			public void onFinish(IUploader uploaderRef) {
-				// setImage(AppContext.getContextUser());
-				// String url = imgUser.getUrl();
-				// imgUser.setUrl(url + "&version=" + Random.nextInt());
+				imgUser.setUrl(url + "?version=" + Random.nextInt());
 			}
 		});
 	}
 
-	protected void setEditMode(boolean editMode) {
+	public void setEditMode(boolean editMode) {
+
+		basicDetail.setEditMode(editMode);
+		educationDetail.setEditMode(editMode);
+		specializationDetail.setEditMode(editMode);
+		trainingDetail.setEditMode(editMode);
+		
 		if (editMode) {
 			PanelProfileDisplay.setVisible(false);
 			panelProfile.setVisible(true);
@@ -212,7 +213,8 @@ public class ProfileView extends ViewImpl implements
 		String refId = user.getUser().getRefId();
 		uploader.setContext(new UploadContext("api/users/"+refId+"/profile"));
 		
-		imgUser.setUrl("api/users/"+refId+"/profile");
+		url = "api/users/"+refId+"/profile";
+		imgUser.setUrl(url);
 	}
 
 	public HasClickHandlers getSaveButton(){
@@ -227,7 +229,15 @@ public class ProfileView extends ViewImpl implements
 	public ApplicationFormHeaderDto getBasicDetails() {
 		return basicDetail.getApplicationForm();
 	}
-
+	
+	public HasClickHandlers getSaveBasicDetailsButton(){
+		return basicDetail.getSaveButton();
+	}
+	
+	public HasClickHandlers getCancelDetailButton(){
+		return basicDetail.getCancelButton();
+	}
+	
 	@Override
 	public boolean isValid() {
 

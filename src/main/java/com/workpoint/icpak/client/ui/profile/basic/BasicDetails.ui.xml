@@ -13,7 +13,7 @@
 								<Strong>Phone:</Strong>
 							</td>
 							<td>
-								<i ui:field="elPhone">+25472972421</i>
+								<i ui:field="elPhone"></i>
 							</td>
 						</tr>
 						<tr>
@@ -21,7 +21,7 @@
 								<Strong>Email:</Strong>
 							</td>
 							<td>
-								<i ui:field="elEmail">kimani@wira.io</i>
+								<i ui:field="elEmail"></i>
 							</td>
 						</tr>
 
@@ -30,7 +30,7 @@
 								<Strong>Date Of Birth:</Strong>
 							</td>
 							<td>
-								<i ui:field="elDob">06/11/1990</i>
+								<i ui:field="elDob"></i>
 							</td>
 						</tr>
 
@@ -39,14 +39,14 @@
 								<Strong>Gender:</Strong>
 							</td>
 							<td>
-								<i ui:field="elSex">Male</i>
+								<i ui:field="elSex"></i>
 							</td>
 						</tr>
 						<tr>
 							<td>
 								<Strong>Employer Name:</Strong>
 							</td>
-							<td ui:field="elEmployer">Workpoint Limited</td>
+							<td ui:field="elEmployer"></td>
 						</tr>
 
 						<tr>
@@ -54,7 +54,7 @@
 								<Strong>Residence:</Strong>
 							</td>
 							<td>
-								<i ui:field="elResidence">Nairobi</i>
+								<i ui:field="elResidence"></i>
 							</td>
 						</tr>
 						<tr>
@@ -62,7 +62,7 @@
 								<Strong>Address:</Strong>
 							</td>
 							<td>
-								<i ui:field="elAddress">37425</i>
+								<i ui:field="elAddress"></i>
 							</td>
 						</tr>
 
@@ -71,7 +71,7 @@
 								<Strong>Postal Code:</Strong>
 							</td>
 							<td>
-								<i ui:field="elPostalCode">00100</i>
+								<i ui:field="elPostalCode"></i>
 							</td>
 						</tr>
 						<tr>
@@ -79,7 +79,7 @@
 								<Strong>Country:</Strong>
 							</td>
 							<td>
-								<i ui:field="elCountry">Kenya</i>
+								<i ui:field="elCountry"></i>
 							</td>
 						</tr>
 
@@ -88,7 +88,7 @@
 								<Strong>Town/City:</Strong>
 							</td>
 							<td>
-								<i ui:field="elCity">Nairobi</i>
+								<i ui:field="elCity"></i>
 							</td>
 						</tr>
 

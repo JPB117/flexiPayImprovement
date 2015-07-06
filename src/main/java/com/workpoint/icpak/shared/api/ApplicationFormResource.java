@@ -40,7 +40,6 @@ public interface ApplicationFormResource{
 	@Produces(MediaType.APPLICATION_JSON)
 	public ApplicationFormHeaderDto create(ApplicationFormHeaderDto application);
 	
-
 	@PUT
 	@Path("/{applicationId}")
 	@Consumes(MediaType.APPLICATION_JSON)

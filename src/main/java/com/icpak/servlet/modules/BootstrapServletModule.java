@@ -9,7 +9,7 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.persist.PersistFilter;
 import com.google.inject.persist.jpa.JpaPersistModule;
 import com.google.inject.servlet.ServletModule;
-import com.icpak.rest.factory.BookingsResourceFactory;
+import com.icpak.rest.factory.ResourceFactory;
 import com.icpak.servlet.config.GenericBootstrapConstants;
 import com.icpak.servlet.swagger.SwaggerApiServlet;
 import com.sun.jersey.api.core.PackagesResourceConfig;
@@ -32,7 +32,7 @@ public class BootstrapServletModule extends ServletModule{
 		install(new BootstrapPropertiesModule());
 
 		//Install subresource factory
-		install(new FactoryModuleBuilder().build(BookingsResourceFactory.class));
+		install(new FactoryModuleBuilder().build(ResourceFactory.class));
 		
 		
 		//Initialize Persistence JPA Unit of Work if present

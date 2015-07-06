@@ -11,6 +11,7 @@ package com.workpoint.icpak.client.ui.profile;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rest.delegates.client.ResourceDelegate;
@@ -39,16 +40,14 @@ public class ProfilePresenter
 	public interface IProfileView extends View {
 
 		void bindBasicDetails(ApplicationFormHeaderDto result);
-
 		void bindCurrentUser(CurrentUser user);
-
 		HasClickHandlers getSaveButton();
-
+		HasClickHandlers getCancelDetailButton();
+		HasClickHandlers getSaveBasicDetailsButton();
 		int getActiveTab();
-
 		ApplicationFormHeaderDto getBasicDetails();
-
 		boolean isValid();
+		void setEditMode(boolean editMode);
 	}
 
 	private final CurrentUser currentUser;
@@ -83,13 +82,28 @@ public class ProfilePresenter
 	protected void onBind() {
 		super.onBind();
 		getView().getSaveButton().addClickHandler(new ClickHandler() {
-
 			@Override
 			public void onClick(ClickEvent event) {
 				if (getView().getActiveTab() == 0) {
 					// Basic Details
 					saveBasicDetails();
 				}
+			}
+		});
+		
+		getView().getSaveBasicDetailsButton().addClickHandler(new ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent event) {
+				saveBasicDetails();
+			}
+		});
+		
+		getView().getCancelDetailButton().addClickHandler(new ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent event) {
+				getView().setEditMode(false);
 			}
 		});
 	}
@@ -103,7 +117,9 @@ public class ProfilePresenter
 						@Override
 						public void onSuccess(ApplicationFormHeaderDto result) {
 							// result;
+							getView().setEditMode(false);
 							getView().bindBasicDetails(result);
+							
 						}
 
 						@Override
@@ -126,10 +142,10 @@ public class ProfilePresenter
 	}
 
 	private void loadData() {
-		String applicationRefId = getApplicationRefId();
-
 		getView().bindCurrentUser(currentUser);
-
+		String applicationRefId = getApplicationRefId();
+		
+		//Window.alert("ApplicationID = "+applicationRefId+" >> User = "+currentUser.getUser());
 		if (applicationRefId != null)
 			applicationDelegate.withCallback(
 					new AbstractAsyncCallback<ApplicationFormHeaderDto>() {

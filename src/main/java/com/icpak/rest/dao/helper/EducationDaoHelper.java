@@ -10,10 +10,12 @@ import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import com.icpak.rest.dao.ApplicationFormDao;
 import com.icpak.rest.dao.UsersDao;
+import com.icpak.rest.models.base.PO;
 import com.icpak.rest.models.base.ResourceCollectionModel;
 import com.icpak.rest.models.membership.ApplicationFormEducational;
 import com.icpak.rest.models.membership.ApplicationFormHeader;
 import com.icpak.rest.models.membership.EduType;
+import com.workpoint.icpak.shared.model.ApplicationFormEducationalDto;
 
 @Transactional
 public class EducationDaoHelper {
@@ -21,79 +23,56 @@ public class EducationDaoHelper {
 	@Inject UsersDao userDao;
 	@Inject ApplicationFormDao dao;
 	
-	public ResourceCollectionModel<ApplicationFormEducational> getAllEducationEntrys(UriInfo uriInfo, 
+	public List<ApplicationFormEducationalDto> getAllEducationEntrys(String uriInfo, 
 			String applicationId,Integer offset,	Integer limit) {
 
-		ApplicationFormHeader application = dao.findByApplicationId(applicationId);
-		int size = dao.getEducationCount(applicationId);
-		ResourceCollectionModel<ApplicationFormEducational> educationEntries = new ResourceCollectionModel<>(offset,limit,
-				size,uriInfo);
 		Collection<ApplicationFormEducational> list = dao.getEducation(applicationId);
 		
-		List<ApplicationFormEducational> clones = new ArrayList<>();
-		for(ApplicationFormEducational eduEntry: list){
-			clones.add(eduEntry);
-//			ApplicationFormEducational clone = eduEntry.clone();
-//			clone.setUri(uriInfo.getAbsolutePath()+"/"+clone.getRefId());
-//			clone.setMemberId(applicationId);
-//			clones.add(clone);
+		List<ApplicationFormEducationalDto> dtos = new ArrayList<>();
+		for(ApplicationFormEducational e: list){
+			dtos.add(e.toDto());
 		}
-		
-		educationEntries.setItems(clones);
-		return educationEntries;
-	}
-	
-	public ResourceCollectionModel<ApplicationFormEducational> getAllEducationEntrys(UriInfo uriInfo, 
-			String applicationId,EduType type, Integer offset,	Integer limit) {
-		ApplicationFormHeader application = dao.findByApplicationId(applicationId);
-		int size =dao.getEducationCount(applicationId, type);
-		Collection<ApplicationFormEducational> list = dao.getEducation(applicationId, type);
-		
-		ResourceCollectionModel<ApplicationFormEducational> educationEntries = new ResourceCollectionModel<>(offset,limit,
-				size,uriInfo);
-
-		List<ApplicationFormEducational> clones = new ArrayList<>();
-		for(ApplicationFormEducational eduEntry: list){
-//			ApplicationFormEducational clone = eduEntry.clone();
-//			clone.setUri(uriInfo.getAbsolutePath()+"/"+clone.getRefId());
-//			clone.setMemberId(applicationId);
-//			clones.add(clone);
-			clones.add(eduEntry);
-		}
-		
-		educationEntries.setItems(clones);
-		return educationEntries;
+		return dtos;
 	}
 
-	public ApplicationFormEducational getEducationEntryById(String applicationId, String eduEntryId) {
+	public ApplicationFormEducationalDto getEducationEntryById(String applicationId, String eduEntryId) {
 
 		ApplicationFormEducational eduEntry = dao.findByRefId(eduEntryId, ApplicationFormEducational.class);
-		return eduEntry;
+		return eduEntry.toDto();
 	}
 	
-	public ApplicationFormEducational createEducationEntry(String applicationId, ApplicationFormEducational eduEntry) {
-		assert eduEntry.getRefId()==null;
+	public ApplicationFormEducationalDto createEducationEntry(String applicationId, 
+			ApplicationFormEducationalDto dto) {
 		ApplicationFormHeader application = dao.findByApplicationId(applicationId);
-		//eduEntry.setApplication(application);
-		eduEntry.setApplicationRefId(applicationId);
-		dao.save(eduEntry);		
 		
-		return eduEntry;
+		ApplicationFormEducational edu = new ApplicationFormEducational();
+		edu.setApplicationRefId(application.getRefId());
+		edu.copyFrom(dto);
+		
+		dao.save(edu);		
+		
+		return edu.toDto();
 	}
 
-	public ApplicationFormEducational updateEducationEntry(String applicationId,String eduEntryId, ApplicationFormEducational eduEntry) {
+	public ApplicationFormEducationalDto updateEducationEntry(String applicationId,String eduEntryId,
+			ApplicationFormEducationalDto eduEntry) {
 		assert eduEntry.getRefId()!=null;
 		
 		ApplicationFormEducational poEducationEntry = dao.findByRefId(eduEntryId, ApplicationFormEducational.class);
 		poEducationEntry.copyFrom(eduEntry);
-		
-		dao.save(eduEntry);
-		return poEducationEntry;
+		dao.save(poEducationEntry);
+		return poEducationEntry.toDto();
 	}
 
 	public void deleteEducationEntry(String applicationId, String eduEntryId) {
 		ApplicationFormEducational eduEntry = dao.findByRefId(eduEntryId, ApplicationFormEducational.class);
 		dao.delete(eduEntry);
+	}
+
+	public List<ApplicationFormEducationalDto> getAllEducationEntrys(UriInfo uriInfo,
+			String applicationId, EduType academia, Integer offset,
+			Integer limit) {
+		return new ArrayList<>();
 	}
 
 }

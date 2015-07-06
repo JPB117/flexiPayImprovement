@@ -181,6 +181,11 @@ public class ApplicationFormDaoHelper {
 
 	public void updateApplication(String applicationId, ApplicationFormHeaderDto dto){
 		ApplicationFormHeader po = applicationDao.findByApplicationId(applicationId,true);
+		
+		//Fields only generated once
+		dto.setUserId(po.getUserRefId()); 
+		dto.setInvoiceRef(po.getInvoiceRef());
+		
 		po.copyFrom(dto);
 		//setCategory(po);
 		

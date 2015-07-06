@@ -15,12 +15,15 @@ import javax.ws.rs.core.MediaType;
 
 import com.google.inject.Inject;
 import com.icpak.rest.dao.helper.ApplicationFormDaoHelper;
+import com.icpak.rest.factory.ResourceFactory;
 import com.icpak.rest.models.membership.ApplicationFormHeader;
 import com.sun.jersey.api.core.InjectParam;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 import com.workpoint.icpak.shared.api.ApplicationFormResource;
+import com.workpoint.icpak.shared.api.BookingsResource;
+import com.workpoint.icpak.shared.api.EducationResource;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 
@@ -30,6 +33,7 @@ import com.workpoint.icpak.shared.model.InvoiceDto;
 public class ApplicationFormResourceImpl implements ApplicationFormResource{
 
 	@Inject ApplicationFormDaoHelper helper;
+	@Inject ResourceFactory factory;
 
 	private String getUri() {
 		return "";
@@ -100,6 +104,11 @@ public class ApplicationFormResourceImpl implements ApplicationFormResource{
 		helper.deleteApplication(applicationId);
 	}
 	
+	@Path("/{applicationId}/education")
+	public EducationResource bookings(@PathParam("applicationId") String applicationId){
+		return factory.createEducationResource(applicationId);
+	}
+	
 	/**
 	 * Member CPD
 	 * 
@@ -118,7 +127,7 @@ public class ApplicationFormResourceImpl implements ApplicationFormResource{
 	 * @return
 	 */
 	@Path("/{applicationId}/education")
-	public EducationResource education(@InjectParam EducationResource resource){
+	public EducationResourceImpl education(@InjectParam EducationResourceImpl resource){
 		return resource;
 	}
 	

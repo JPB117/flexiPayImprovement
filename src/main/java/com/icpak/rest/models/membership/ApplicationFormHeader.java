@@ -929,7 +929,6 @@ public class ApplicationFormHeader extends PO{
 	}
 
 	public void copyFrom(ApplicationFormHeaderDto dto) {
-		setRefId(dto.getRefId());
 		setSurname(dto.getSurname());
 		setOtherNames(dto.getOtherNames());
 		setEmail(dto.getEmail());
@@ -939,8 +938,6 @@ public class ApplicationFormHeader extends PO{
 		setCity1(dto.getCity1());
 		setPostCode(dto.getPostCode());
 		setEmployer(dto.getEmployer());
-		setInvoiceRef(dto.getInvoiceRef());
-		setUserRefId(dto.getUserRefId());
 	}
 
 	public void copyInto(ApplicationFormHeaderDto dto) {
