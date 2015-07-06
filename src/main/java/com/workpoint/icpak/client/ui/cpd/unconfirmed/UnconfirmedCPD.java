@@ -12,10 +12,10 @@ import com.workpoint.icpak.client.ui.component.ActionLink;
 
 public class UnconfirmedCPD extends Composite {
 
-	private static UnConfirmedCPDUiBinder uiBinder = GWT
-			.create(UnConfirmedCPDUiBinder.class);
+	private static UnconfirmedCPDUiBinder uiBinder = GWT
+			.create(UnconfirmedCPDUiBinder.class);
 
-	interface UnConfirmedCPDUiBinder extends UiBinder<Widget, UnconfirmedCPD> {
+	interface UnconfirmedCPDUiBinder extends UiBinder<Widget, UnconfirmedCPD> {
 	}
 
 	@UiField
