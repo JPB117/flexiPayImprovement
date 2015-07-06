@@ -33,7 +33,7 @@ public class ApplicationFormHeader extends PO{
 	private Date date;
 	
 	@Column(name="`Application Date`", columnDefinition="datetime")
-	private String applicationDate;
+	private Date applicationDate;
 	
 	@Column(name="`Surname`", length=30)
 	private String surname;
@@ -298,14 +298,6 @@ public class ApplicationFormHeader extends PO{
 		this.date = date;
 	}
 
-	public String getApplicationDate() {
-		return applicationDate;
-	}
-
-	public void setApplicationDate(String applicationDate) {
-		this.applicationDate = applicationDate;
-	}
-
 	public String getSurname() {
 		return surname;
 	}
@@ -351,7 +343,7 @@ public class ApplicationFormHeader extends PO{
 	}
 
 	public void setNationality(String nationality) {
-		nationality = nationality;
+		this.nationality = nationality;
 	}
 
 	public String getCountry() {
@@ -942,6 +934,9 @@ public class ApplicationFormHeader extends PO{
 
 	public void copyInto(ApplicationFormHeaderDto dto) {
 		dto.setRefId(getRefId());
+		dto.setCreated(getCreated());
+		dto.setApplicationDate(applicationDate);
+		dto.setDate(date);
 		dto.setSurname(surname);
 		dto.setOtherNames(otherNames);
 		dto.setEmail(email);
@@ -970,6 +965,14 @@ public class ApplicationFormHeader extends PO{
 
 	public void setUserRefId(String userRefId) {
 		this.userRefId = userRefId;
+	}
+
+	public Date getApplicationDate() {
+		return applicationDate;
+	}
+
+	public void setApplicationDate(Date applicationDate) {
+		this.applicationDate = applicationDate;
 	}
 	
 }

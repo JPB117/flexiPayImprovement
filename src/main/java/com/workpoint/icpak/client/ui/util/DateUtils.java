@@ -12,6 +12,7 @@ import com.google.gwt.user.datepicker.client.CalendarUtil;
  */
 public class DateUtils {
 	static String datepattern = "dd/MM/yyyy";
+	static String datepattern_sys = "yyyy-MM-dd";
 	static String yearpattern = "yyyy";
 	static String createdpattern = "dd/MM/yyyy HH:mm";
 	static String fullPattern = "EEE,MMM d,yyyy";
@@ -24,6 +25,8 @@ public class DateUtils {
 			.getFormat(createdpattern);
 	public static final DateTimeFormat DATEFORMAT = DateTimeFormat
 			.getFormat(datepattern);
+	public static final DateTimeFormat DATEFORMAT_SYS = DateTimeFormat
+			.getFormat(datepattern_sys);
 	public static final DateTimeFormat YEARFORMAT = DateTimeFormat
 			.getFormat(yearpattern);
 	public static final DateTimeFormat HALFDATEFORMAT = DateTimeFormat

@@ -46,6 +46,9 @@ public class IssuesPanel extends Widget {
 		this.ulRoot.appendChild(liElement);
 
 		this.addStyleDependentName("show");
+		
+		//Added scroll into view
+		getElement().scrollIntoView();
 	}
 
 	public void clear() {

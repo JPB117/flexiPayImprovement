@@ -177,7 +177,8 @@
 
 					<div class="col-lg-6">
 						<label for="firstname">Category:</label>
-						<d:DropDownList ui:field="lstDropDown"></d:DropDownList>
+						<d:DropDownList ui:field="lstCategory"></d:DropDownList>
+						<p class="text-info">Refer to Categories listing in the previous page</p>
 					</div>
 				</div>
 			</div>
@@ -187,20 +188,14 @@
 					<div class="col-xs-6">
 						<label for="from">From:</label>
 						<div id="datetimepicker2" class="input-group date">
-							<d:DateField styleName="form-control"></d:DateField>
-							<span class="input-group-addon">
-								<span class="fa fa-calendar"></span>
-							</span>
+							<d:DateField styleName="form-control" ui:field="txtStartDate"></d:DateField>
 						</div>
 					</div>
 
 					<div class="col-xs-6">
 						<label for="endDate">End Date:</label>
 						<div id="datetimepicker1" class="input-group date">
-							<d:DateField styleName="form-control"></d:DateField>
-							<span class="input-group-addon">
-								<span class="fa fa-calendar"></span>
-							</span>
+							<d:DateField styleName="form-control" ui:field="txtEndDate"></d:DateField>
 						</div>
 					</div>
 				</div>

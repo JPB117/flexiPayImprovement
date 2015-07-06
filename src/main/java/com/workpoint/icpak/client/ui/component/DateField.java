@@ -1,21 +1,31 @@
 package com.workpoint.icpak.client.ui.component;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.user.client.ui.Widget;
+import java.util.Date;
+import static com.workpoint.icpak.client.ui.util.DateUtils.*;
+import static com.workpoint.icpak.client.ui.util.StringUtils.*;
 
-public class DateField extends TextField {
-
-	private static DateFieldUiBinder uiBinder = GWT
-			.create(DateFieldUiBinder.class);
-
-	interface DateFieldUiBinder extends UiBinder<Widget, DateField> {
-	}
+public class DateField extends TextField{
 
 	public DateField() {
-		super();
 		setType("date");
-		
 	}
-
+	
+	public Date getValueDate(){
+		String dateStr = getValue();
+		//yyyy-MM-dd
+		
+		if(isNullOrEmpty(dateStr)){
+			return null;
+		}
+		
+		return DATEFORMAT_SYS.parse(dateStr);
+	}
+	
+	public void setValue(Date date){
+		if(date==null){
+			setValue("");
+		}else{
+			setValue(DATEFORMAT_SYS.format(date));
+		}
+	}
 }

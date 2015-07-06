@@ -26,6 +26,13 @@ public class ActionLink extends Anchor {
 		super();
 		setText(text);
 	}
+	
+	public ActionLink(Object model, String text) {
+		super();
+		this.model = model;
+		setText(text);
+	}
+
 
 	public void setDataToggle(String data) {
 		getElement().setAttribute("data-toggle", data);

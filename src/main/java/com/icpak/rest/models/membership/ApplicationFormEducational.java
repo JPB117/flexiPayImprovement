@@ -211,6 +211,7 @@ public class ApplicationFormEducational extends PO {
 	
 	public ApplicationFormEducationalDto toDto() {
 		ApplicationFormEducationalDto dto = new ApplicationFormEducationalDto();
+		dto.setRefId(getRefId());
 		dto.setApplicationNo(applicationNo);
 		dto.setApplicationRefId(applicationRefId);
 		dto.setCertificateAwarded(certificateAwarded);
@@ -221,7 +222,6 @@ public class ApplicationFormEducational extends PO {
 		dto.setLineNo(lineNo);
 		dto.setQualificationCode(qualificationCode);
 		dto.setQualificationDesc(qualificationDesc);
-		dto.setRefId(applicationRefId);
 		dto.setRegNo(regNo);
 		dto.setSections(sections);
 		dto.setToDate(toDate);

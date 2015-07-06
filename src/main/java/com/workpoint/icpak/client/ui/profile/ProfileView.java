@@ -268,4 +268,9 @@ public class ProfileView extends ViewImpl implements
 	public HasClickHandlers getEducationDetailSaveButton(){
 		return educationDetail.getSaveButton();
 	}
+
+	@Override
+	public void bindEducationDetail(ApplicationFormEducationalDto dto) {
+		educationDetail.bindDetail(dto);
+	}
 }
