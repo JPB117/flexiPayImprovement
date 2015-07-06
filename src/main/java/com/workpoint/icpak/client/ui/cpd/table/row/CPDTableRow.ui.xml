@@ -19,5 +19,8 @@
 		<g:HTMLPanel styleName="td" ui:field="divCPD">
 			40
 		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td" ui:field="divCPDStatus">
+			<span class="label label-success">Confirmed</span>
+		</g:HTMLPanel>
 	</g:HTMLPanel>
 </ui:UiBinder> 
