@@ -10,7 +10,7 @@
 					<i class="icon-cogs"></i>
 					<span ui:field="spnHeader" />
 					<g:Anchor ui:field="aClose">
-						<i class="icon-remove pull-right" />
+						<i class="fa fa-close pull-right" />
 					</g:Anchor>
 				</h5>
 			</g:HTMLPanel>
