@@ -119,5 +119,14 @@ public class UsersDao extends BaseDao{
 				.createNativeQuery(sql)
 				.setParameter("userRef", userRef));
 	}
+
+	public boolean hasMember(User po) {
+		
+		Number val = getSingleResultOrNull(getEntityManager()
+				.createQuery("select count(*) from Member where userRefId=:userId")
+				.setParameter("userId", po.getRefId()));
+		
+		return val.intValue()>0;
+	}
 	
 }

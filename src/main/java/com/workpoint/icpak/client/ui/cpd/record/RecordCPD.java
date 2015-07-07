@@ -2,7 +2,9 @@ package com.workpoint.icpak.client.ui.cpd.record;
 
 import static com.workpoint.icpak.client.ui.util.StringUtils.isNullOrEmpty;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -17,6 +19,8 @@ import com.workpoint.icpak.client.ui.component.DropDownList;
 import com.workpoint.icpak.client.ui.component.IssuesPanel;
 import com.workpoint.icpak.client.ui.component.TextField;
 import com.workpoint.icpak.client.ui.upload.custom.Uploader;
+import com.workpoint.icpak.shared.model.CPDCategory;
+import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.shared.model.Listable;
 
 public class RecordCPD extends Composite {
@@ -43,25 +47,26 @@ public class RecordCPD extends Composite {
 	TextField txtOrganizer;
 
 	@UiField
-	DateField txtStartDate;
+	DateField dtStartDate;
 
 	@UiField
-	DateField txtEndDate;
+	DateField dtEndDate;
 
 	@UiField
 	Uploader uploader;
 
 	@UiField
-	DropDownList<Category> lstCategory;
+	DropDownList<CPDCategory> lstCategory;
 
 	public RecordCPD() {
 		initWidget(uiBinder.createAndBindUi(this));
 		showForm(false);
 
-		lstCategory.setItems(Arrays.asList(new Category("Category A", "A"),
-				new Category("Category B", "B"),
-				new Category("Category C", "C"),
-				new Category("Category D", "D")));
+		List<CPDCategory> categories = new ArrayList<CPDCategory>();
+		for(CPDCategory cat: CPDCategory.values()){
+			categories.add(cat);
+		}
+		lstCategory.setItems(categories);
 	}
 
 	public boolean isValid() {
@@ -73,12 +78,15 @@ public class RecordCPD extends Composite {
 		} else if (isNullOrEmpty(txtOrganizer.getValue())) {
 			isValid = false;
 			issues.addError("Organizer is mandatory");
-		} else if (isNullOrEmpty(txtStartDate.getValue())) {
+		} else if (dtStartDate.getValueDate()==null) {
 			isValid = false;
-			issues.addError("Organizer is mandatory");
-		} else if (isNullOrEmpty(lstCategory.getValue())) {
+			issues.addError("Start date is mandatory");
+		}else if (dtEndDate.getValueDate()==null) {
 			isValid = false;
-			issues.addError("Organizer is mandatory");
+			issues.addError("End date is mandatory");
+		}else if (lstCategory.getValue()==null) {
+			isValid = false;
+			issues.addError("Category is mandatory");
 		}
 		return isValid;
 	}
@@ -93,26 +101,19 @@ public class RecordCPD extends Composite {
 		}
 	}
 
-	public class Category implements Listable {
-		String name;
-		String value;
-
-		public Category(String name, String value) {
-			this.name = name;
-			this.value = value;
-		}
-		@Override
-		public String getName() {
-			return value;
-		}
-		@Override
-		public String getDisplayName() {
-			return name;
-		}
-	}
-
-	public Object getCPD() {
-		return null;
+	public CPDDto getCPD() {
+		
+		CPDDto dto = new CPDDto();
+		dto.setCategory(lstCategory.getValue());
+		//dto.setCpdHours();
+		dto.setEndDate(dtEndDate.getValueDate());
+		//dto.setMemberId(memberId);
+		dto.setOrganizer(txtOrganizer.getValue());
+		dto.setStartDate(dtStartDate.getValueDate());
+		//dto.setStatus();
+		dto.setTitle(txtTitle.getValue());
+		
+		return dto;
 	}
 
 }

@@ -4,23 +4,18 @@
 
 	<g:HTMLPanel styleName="tr" ui:field="row">
 		<g:HTMLPanel styleName="td" ui:field="divDate">
-			1
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divCourseName">
-			Mombasa Seminar
-			Workshop
+			
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divOrganiser">
-			Dennis Milgo
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divCategory">
-			Taxation
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divCPD">
-			40
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divCPDStatus">
-			<span class="label label-success">Confirmed</span>
+			<span ui:field="spnStatus" class="label label-success">Confirmed</span>
 		</g:HTMLPanel>
 	</g:HTMLPanel>
 </ui:UiBinder> 

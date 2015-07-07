@@ -22,7 +22,6 @@ import com.wordnik.swagger.annotations.ApiParam;
 import com.workpoint.icpak.shared.api.CPDResource;
 import com.workpoint.icpak.shared.model.CPDDto;
 
-@Path("")
 @Api(value = "", description = "Handles CRUD on cpd data")
 public class CPDResourceImpl implements CPDResource{
 

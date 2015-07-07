@@ -19,7 +19,7 @@ public class CPDDao extends BaseDao {
 
 	public List<CPD> getAllCPDs(String memberId, Integer offSet, Integer limit) {
 		return getResultList(getEntityManager().createQuery(
-				"select u from CPD u where u.isActive=1 and u.member.refId=:memberId")
+				"select u from CPD u where u.isActive=1 and u.memberId=:memberId")
 				.setParameter("memberId", memberId),
 				offSet,
 				limit);
@@ -35,7 +35,7 @@ public class CPDDao extends BaseDao {
 		if (memberId != null) {
 			number = getSingleResultOrNull(getEntityManager()
 					.createNativeQuery(
-							"select count(*) from cpd c inner join member m on (c.member_id=m.id) "
+							"select count(*) from cpd c inner join member m on (c.memberId=m.refId) "
 							+ "where c.isactive=1 and m.refId=:refId")
 							.setParameter("refId", memberId));
 		}else{

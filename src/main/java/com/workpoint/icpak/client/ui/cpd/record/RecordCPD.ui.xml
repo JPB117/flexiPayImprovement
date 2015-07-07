@@ -188,14 +188,14 @@
 					<div class="col-xs-6">
 						<label for="from">From:</label>
 						<div id="datetimepicker2" class="date">
-							<d:DateField styleName="form-control" ui:field="txtStartDate"></d:DateField>
+							<d:DateField styleName="form-control" ui:field="dtStartDate"></d:DateField>
 						</div>
 					</div>
 
 					<div class="col-xs-6">
 						<label for="endDate">End Date:</label>
 						<div id="datetimepicker1" class="date">
-							<d:DateField styleName="form-control" ui:field="txtEndDate"></d:DateField>
+							<d:DateField styleName="form-control" ui:field="dtEndDate"></d:DateField>
 						</div>
 					</div>
 				</div>

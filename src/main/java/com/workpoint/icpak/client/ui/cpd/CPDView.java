@@ -10,7 +10,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.CalendarUtil;
@@ -23,10 +22,12 @@ import com.workpoint.icpak.client.ui.component.tabs.TabHeader;
 import com.workpoint.icpak.client.ui.component.tabs.TabPanel;
 import com.workpoint.icpak.client.ui.component.tabs.TabPanel.TabPosition;
 import com.workpoint.icpak.client.ui.cpd.confirmed.ConfirmedCPD;
+import com.workpoint.icpak.client.ui.cpd.header.CPDHeader;
 import com.workpoint.icpak.client.ui.cpd.table.CPDTable;
 import com.workpoint.icpak.client.ui.cpd.table.row.CPDTableRow;
 import com.workpoint.icpak.client.ui.cpd.unconfirmed.UnconfirmedCPD;
 import com.workpoint.icpak.client.ui.util.DateUtils;
+import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.shared.model.Listable;
 
 public class CPDView extends ViewImpl implements CPDPresenter.ICPDView {
@@ -56,7 +57,9 @@ public class CPDView extends ViewImpl implements CPDPresenter.ICPDView {
 
 	@UiField
 	CPDTable tblView;
-
+	
+	@UiField CPDHeader headerContainer;
+	
 	@UiField
 	ActionLink aCreate;
 
@@ -164,6 +167,16 @@ public class CPDView extends ViewImpl implements CPDPresenter.ICPDView {
 			return DateUtils.YEARFORMAT.format(pickDate);
 		}
 
+	}
+
+	@Override
+	public void bindResults(List<CPDDto> result) {
+		headerContainer.setValues(result.size(), 0,0);
+		
+		tblView.clearRows();
+		for(CPDDto dto: result){
+			tblView.createRow(new CPDTableRow(dto));
+		}
 	}
 
 }

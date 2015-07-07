@@ -1,6 +1,6 @@
 package com.workpoint.icpak.shared.model;
 
-public enum CPDCategory {
+public enum CPDCategory implements Listable{
 
 	CATEGORY_A("Category A"),
 	CATEGORY_B("Category B"),
@@ -16,6 +16,11 @@ public enum CPDCategory {
 
 	public String getDisplayName() {
 		return displayName;
+	}
+
+	@Override
+	public String getName() {
+		return name();
 	}
 	
 }

@@ -15,37 +15,33 @@ import javax.ws.rs.core.MediaType;
 
 import com.workpoint.icpak.shared.model.CPDDto;
 
+@Produces(MediaType.APPLICATION_JSON)
 public interface CPDResource {
 
 	@GET
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
 	public List<CPDDto> getAll(
 			@QueryParam("offset") Integer offset,
 			@QueryParam("limit") Integer limit);
 	
 	@GET
 	@Path("/{cpdId}")
-	@Produces(MediaType.APPLICATION_JSON)
 	public CPDDto getById(@PathParam("cpdId") String cpdId);
 	
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
 	public CPDDto create(CPDDto cpd);
 	
 
 	@PUT
 	@Path("/{cpdId}")
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
 	public CPDDto update(@PathParam("cpdId") String cpdId,
 			CPDDto cpd);
 	
 
 	@DELETE
 	@Path("/{cpdId}")
-	@Produces(MediaType.APPLICATION_JSON)
 	public void delete(
 			@PathParam("cpdId") String cpdId);
 

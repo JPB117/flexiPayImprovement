@@ -781,12 +781,12 @@ public class ApplicationFormHeaderDto extends SerializableObj{
 		this.memberNo = memberNo;
 	}
 
-	public String getFullNames() {
+	public String fullNames() {
 		
 		return surname+" "+otherNames;
 	}
 
-	public String getPercCompletion() {
+	public String percCompletion() {
 		return "45";
 	}
 

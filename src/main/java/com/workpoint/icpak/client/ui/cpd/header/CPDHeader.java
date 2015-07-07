@@ -33,4 +33,12 @@ public class CPDHeader extends Composite {
 
 	}
 
+
+	public void setValues(int totalHrs, int confirmed, int unconfirmed) {
+		spnTransactions.setInnerText(totalHrs+"");
+		spnAmount.setInnerText(confirmed+"");
+		spnBalance.setInnerText(unconfirmed+"");
+		
+	}
+
 }

@@ -28,6 +28,7 @@ import com.icpak.rest.models.auth.User;
 import com.icpak.rest.models.base.ExpandTokens;
 import com.icpak.rest.models.base.ResourceCollectionModel;
 import com.icpak.rest.models.base.ResourceModel;
+import com.icpak.rest.models.membership.Member;
 import com.icpak.rest.models.trx.Transaction;
 import com.icpak.rest.models.util.Attachment;
 import com.icpak.rest.security.ICPAKAuthenticatingRealm;
@@ -92,17 +93,16 @@ public class UsersDaoHelper {
 		
 		dao.updateUser(po);
 
-//		if(po.getMember()==null){
-//			createDefaultMemberForUser(po);
-//		}
+		if(!dao.hasMember(po)){
+			createDefaultMemberForUser(po);
+		}
 	}
 	
 	private void createDefaultMemberForUser(User user) {
 		//create and empty member a/c
-//		Member member = new Member(user.getRefId());
-//		user.setMember(member);
-//		dao.save(member);
-		
+		Member member = new Member(user.getRefId());
+		member.setRefId(user.getRefId());
+		dao.save(member);
 	}
 
 	public void delete(String userId){
