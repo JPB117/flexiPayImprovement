@@ -25,13 +25,14 @@ import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.annotations.TabInfo;
 import com.gwtplatform.mvp.client.annotations.UseGatekeeper;
 import com.gwtplatform.mvp.client.proxy.TabContentProxyPlace;
-import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.workpoint.icpak.client.place.NameTokens;
 import com.workpoint.icpak.client.security.CurrentUser;
 import com.workpoint.icpak.client.service.AbstractAsyncCallback;
 import com.workpoint.icpak.client.ui.admin.TabDataExt;
 import com.workpoint.icpak.client.ui.events.EditModelEvent;
 import com.workpoint.icpak.client.ui.events.EditModelEvent.EditModelHandler;
+import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
+import com.workpoint.icpak.client.ui.events.ProcessingEvent;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
 import com.workpoint.icpak.client.ui.security.LoginGateKeeper;
 import com.workpoint.icpak.shared.api.ApplicationFormResource;
@@ -150,18 +151,20 @@ public class ProfilePresenter
 
 	protected void saveEducationInformation() {
 		if (getView().isValid()) {
+			fireEvent(new ProcessingEvent());
 			ApplicationFormEducationalDto dto = getView().getEducationDetails();
 			if (dto.getRefId() != null) {
 				applicationDelegate
-				.withCallback(
-						new AbstractAsyncCallback<ApplicationFormEducationalDto>() {
-							@Override
-							public void onSuccess(
-									ApplicationFormEducationalDto result) {
-								getView().setEditMode(false);
-								loadData();
-							}
-						}).education(getApplicationRefId())
+						.withCallback(
+								new AbstractAsyncCallback<ApplicationFormEducationalDto>() {
+									@Override
+									public void onSuccess(
+											ApplicationFormEducationalDto result) {
+										fireEvent(new ProcessingCompletedEvent());
+										getView().setEditMode(false);
+										loadData();
+									}
+								}).education(getApplicationRefId())
 						.update(dto.getRefId(), dto);
 			} else {
 				applicationDelegate
@@ -170,6 +173,7 @@ public class ProfilePresenter
 									@Override
 									public void onSuccess(
 											ApplicationFormEducationalDto result) {
+										fireEvent(new ProcessingCompletedEvent());
 										getView().setEditMode(false);
 										loadData();
 									}
@@ -180,6 +184,7 @@ public class ProfilePresenter
 
 	protected void saveBasicDetails() {
 		if (getView().isValid()) {
+			fireEvent(new ProcessingEvent());
 			ApplicationFormHeaderDto applicationForm = getView()
 					.getBasicDetails();
 			applicationDelegate.withCallback(
@@ -189,10 +194,13 @@ public class ProfilePresenter
 							// result;
 							getView().bindBasicDetails(result);
 							getView().setEditMode(false);
+							fireEvent(new ProcessingCompletedEvent());
 						}
 
 						@Override
 						public void onFailure(Throwable caught) {
+							fireEvent(new ProcessingCompletedEvent());
+							Window.alert("Oops an error occured while saving the data..");
 							super.onFailure(caught);
 						}
 					}).update(getApplicationRefId(), applicationForm);

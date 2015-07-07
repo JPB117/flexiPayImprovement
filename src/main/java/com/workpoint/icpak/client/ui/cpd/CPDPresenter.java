@@ -24,6 +24,7 @@ import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.annotations.TabInfo;
 import com.gwtplatform.mvp.client.annotations.UseGatekeeper;
 import com.gwtplatform.mvp.client.proxy.TabContentProxyPlace;
+import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.workpoint.icpak.client.place.NameTokens;
 import com.workpoint.icpak.client.security.CurrentUser;
 import com.workpoint.icpak.client.service.AbstractAsyncCallback;
@@ -45,6 +46,9 @@ public class CPDPresenter extends
 		HasClickHandlers getRecordButton();
 
 		void bindResults(List<CPDDto> result);
+
+		void showDetailedView();
+
 	}
 
 	@ProxyCodeSplit
@@ -163,6 +167,14 @@ public class CPDPresenter extends
 				: currentUser.getUser().getApplicationRefId();
 
 		return applicationRefId;
+	}
+	
+	
+	@Override
+	public void prepareFromRequest(PlaceRequest request) {
+		super.prepareFromRequest(request);
+		
+		getView().showDetailedView();
 	}
 
 }

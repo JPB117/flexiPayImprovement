@@ -7,6 +7,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Anchor;
@@ -14,6 +16,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.workpoint.icpak.client.ui.OptionControl;
+import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.DateField;
 import com.workpoint.icpak.client.ui.component.DropDownList;
 import com.workpoint.icpak.client.ui.component.IssuesPanel;
@@ -36,6 +39,9 @@ public class RecordCPD extends Composite {
 
 	@UiField
 	HTMLPanel panelCategories;
+
+	@UiField
+	ActionLink aPreviousForm;
 
 	@UiField
 	IssuesPanel issues;
@@ -63,7 +69,7 @@ public class RecordCPD extends Composite {
 		showForm(false);
 
 		List<CPDCategory> categories = new ArrayList<CPDCategory>();
-		for(CPDCategory cat: CPDCategory.values()){
+		for (CPDCategory cat : CPDCategory.values()) {
 			categories.add(cat);
 		}
 		lstCategory.setItems(categories);
@@ -78,13 +84,13 @@ public class RecordCPD extends Composite {
 		} else if (isNullOrEmpty(txtOrganizer.getValue())) {
 			isValid = false;
 			issues.addError("Organizer is mandatory");
-		} else if (dtStartDate.getValueDate()==null) {
+		} else if (dtStartDate.getValueDate() == null) {
 			isValid = false;
 			issues.addError("Start date is mandatory");
-		}else if (dtEndDate.getValueDate()==null) {
+		} else if (dtEndDate.getValueDate() == null) {
 			isValid = false;
 			issues.addError("End date is mandatory");
-		}else if (lstCategory.getValue()==null) {
+		} else if (lstCategory.getValue() == null) {
 			isValid = false;
 			issues.addError("Category is mandatory");
 		}
@@ -102,17 +108,17 @@ public class RecordCPD extends Composite {
 	}
 
 	public CPDDto getCPD() {
-		
+
 		CPDDto dto = new CPDDto();
 		dto.setCategory(lstCategory.getValue());
-		//dto.setCpdHours();
+		// dto.setCpdHours();
 		dto.setEndDate(dtEndDate.getValueDate());
-		//dto.setMemberId(memberId);
+		// dto.setMemberId(memberId);
 		dto.setOrganizer(txtOrganizer.getValue());
 		dto.setStartDate(dtStartDate.getValueDate());
-		//dto.setStatus();
+		// dto.setStatus();
 		dto.setTitle(txtTitle.getValue());
-		
+
 		return dto;
 	}
 

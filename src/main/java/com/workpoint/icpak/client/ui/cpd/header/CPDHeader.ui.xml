@@ -22,7 +22,7 @@
 								<div class="text-uppercase">Total CPD Hours</div>
 							</div>
 							<div class="col-lg-4 text-right text-muted">
-								<em class="fa fa-gamepad fa-2x"></em>
+								<em class="fa fa-briefcase fa-2x"></em>
 							</div>
 						</div>
 					</div>
@@ -40,7 +40,7 @@
 								<div class="text-uppercase">Confirmed CPD</div>
 							</div>
 							<div class="col-lg-4 text-right text-muted">
-								<em class="fa fa-gamepad fa-2x"></em>
+								<em class="fa fa-check fa-2x"></em>
 							</div>
 						</div>
 					</div>
@@ -59,7 +59,7 @@
 							</div>
 
 							<div class="col-lg-4 text-right text-muted">
-								<em class="fa fa-gamepad fa-2x"></em>
+								<em class="fa fa-clock-o fa-2x"></em>
 							</div>
 						</div>
 					</div>

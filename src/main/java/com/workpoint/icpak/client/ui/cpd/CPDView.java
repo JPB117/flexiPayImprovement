@@ -57,9 +57,10 @@ public class CPDView extends ViewImpl implements CPDPresenter.ICPDView {
 
 	@UiField
 	CPDTable tblView;
-	
-	@UiField CPDHeader headerContainer;
-	
+
+	@UiField
+	CPDHeader headerContainer;
+
 	@UiField
 	ActionLink aCreate;
 
@@ -115,7 +116,7 @@ public class CPDView extends ViewImpl implements CPDPresenter.ICPDView {
 				} else {
 					showDateFilter(true);
 				}
-				
+
 			}
 		});
 		showDateFilter(false);
@@ -123,7 +124,7 @@ public class CPDView extends ViewImpl implements CPDPresenter.ICPDView {
 		createRow(new CPDTableRow());
 	}
 
-	public HasClickHandlers getRecordButton(){
+	public HasClickHandlers getRecordButton() {
 		return aCreate;
 	}
 
@@ -177,6 +178,10 @@ public class CPDView extends ViewImpl implements CPDPresenter.ICPDView {
 		for(CPDDto dto: result){
 			tblView.createRow(new CPDTableRow(dto));
 		}
+	}
+
+	public void showDetailedView() {
+
 	}
 
 }

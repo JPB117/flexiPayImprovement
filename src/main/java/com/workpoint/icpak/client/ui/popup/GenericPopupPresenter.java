@@ -8,6 +8,7 @@ import com.gwtplatform.mvp.client.PopupView;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
+import com.workpoint.icpak.client.ui.AppManager;
 
 public class GenericPopupPresenter extends
 		PresenterWidget<GenericPopupPresenter.MyView> {
@@ -25,18 +26,23 @@ public class GenericPopupPresenter extends
 
 	@ContentSlot
 	public static final Type<RevealContentHandler<?>> BODY_SLOT = new Type<RevealContentHandler<?>>();
-	
+
 	public static final Object BUTTON_SLOT = new Object();
-	
+
 	@Inject
 	public GenericPopupPresenter(final EventBus eventBus, final MyView view) {
 		super(eventBus, view);
-		
+
 	}
 
 	@Override
 	protected void onBind() {
 		super.onBind();
+	}
+
+	public void center() {
+		int[] position = AppManager.calculatePosition(20, 45);
+		getView().getPopUpPanel().setPopupPosition(position[1], position[0]);
 	}
 
 	@Override
