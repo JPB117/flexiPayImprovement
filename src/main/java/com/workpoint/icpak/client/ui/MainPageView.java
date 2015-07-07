@@ -1,12 +1,8 @@
 package com.workpoint.icpak.client.ui;
 
-import com.google.gwt.dom.client.DivElement;
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
@@ -20,98 +16,78 @@ public class MainPageView extends ViewImpl implements MainPagePresenter.MyView {
 	public interface Binder extends UiBinder<Widget, MainPageView> {
 	}
 
-	@UiField HTMLPanel pHeader;
-	@UiField HTMLPanel pContainer;
-	//@UiField SpanElement loadingtext;
-	//@UiField DivElement divAlert;
-	//@UiField SpanElement spnAlertContent;
-	//@UiField Anchor aView;
-	//@UiField Element spnSubject;
-	
-	//@UiField Element disconnectionText;
-	
+	@UiField
+	HTMLPanel pHeader;
+	@UiField
+	HTMLPanel pContainer;
+	@UiField
+	HTMLPanel panelContent;
+
 	Timer timer = new Timer() {
-		
+
 		@Override
 		public void run() {
 			hideAlert();
 		}
 	};
 
-	
-	
 	@Inject
 	public MainPageView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
-		//loadingtext.setId("loading-text");
-		
+		// loadingtext.setId("loading-text");
+
 	}
 
 	@Override
 	public Widget asWidget() {
 		return widget;
 	}
-	
+
 	@Override
 	public void setInSlot(Object slot, IsWidget content) {
-		if(slot==MainPagePresenter.HEADER_content){
+		if (slot == MainPagePresenter.HEADER_content) {
 			pHeader.clear();
-			
-			if(content!=null){
+
+			if (content != null) {
 				pHeader.add(content);
-			}			
-		}else if(slot==MainPagePresenter.CONTENT_SLOT){
+			}
+		} else if (slot == MainPagePresenter.CONTENT_SLOT) {
 			pContainer.clear();
-			
-			if(content!=null){
+
+			if (content != null) {
 				pContainer.add(content);
 			}
-			
-		}
-		else{
+
+		} else {
 			super.setInSlot(slot, content);
 		}
 	}
 
 	@Override
-	public void showProcessing(boolean processing,String message) {
-//		if(processing){
-//			if(message!=null){
-//				loadingtext.setInnerText(message);
-//			}
-//			loadingtext.removeClassName("hide");
-//		}else{
-//			loadingtext.setInnerText("Loading ...");
-//			loadingtext.addClassName("hide");
-//		}
+	public void showProcessing(boolean processing, String message) {
+		
 	}
-	
+
 	@Override
-	public void setAlertVisible(String subject, String statement,String url){
-//		divAlert.removeClassName("hidden");
-//		spnAlertContent.setInnerText(statement);
-//		spnSubject.setInnerText(subject);
-//		aView.setHref(url);
-//		timer.cancel();
-//		timer.schedule(10000);
+	public void setAlertVisible(String subject, String statement, String url) {
 	}
-	
-	public void hideAlert(){
-//		divAlert.addClassName("hidden");
+
+	public void hideAlert() {
+		// divAlert.addClassName("hidden");
 	}
 
 	@Override
 	public void showDisconnectionMessage(String message) {
-		if(message==null){
+		if (message == null) {
 			message = "Cannot connect to server....";
 		}
-//		disconnectionText.setInnerText(message);
-//		disconnectionText.removeClassName("hide");
+		// disconnectionText.setInnerText(message);
+		// disconnectionText.removeClassName("hide");
 	}
 
 	@Override
 	public void clearDisconnectionMsg() {
-//		disconnectionText.addClassName("hide");
+		// disconnectionText.addClassName("hide");
 	}
 
 }

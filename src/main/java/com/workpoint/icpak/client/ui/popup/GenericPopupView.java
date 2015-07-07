@@ -7,6 +7,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.PopupPanel;
@@ -46,9 +47,6 @@ public class GenericPopupView extends PopupViewImpl implements
 			}
 		});
 
-		int[] position = AppManager.calculatePosition(20, 50);
-		popUpPanel.setPopupPosition(position[1], position[0]);
-		
 		popUpPanel.getElement().getStyle().setDisplay(Display.BLOCK);
 		popUpPanel.setGlassStyleName("modal-backdrop fade in");
 
@@ -67,7 +65,7 @@ public class GenericPopupView extends PopupViewImpl implements
 	public PopupPanel getPopUpPanel() {
 		return popUpPanel;
 	}
-
+	
 	@Override
 	public void setInSlot(Object slot, IsWidget content) {
 

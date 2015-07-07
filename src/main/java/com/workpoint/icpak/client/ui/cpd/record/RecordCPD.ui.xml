@@ -116,7 +116,7 @@
 			<div class="form-group">
 				<div class="row">
 					<div class="col-xs-6">
-						<label for="firstname">Attachments:</label>
+						<label for="firstname">Please attach relevant documents to show as proof.</label>
 						<up:Uploader ui:field="uploader" styleName="custom-file-input"></up:Uploader>
 					</div>
 				</div>

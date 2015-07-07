@@ -11,7 +11,7 @@
 			<g:HTMLPanel ui:field="pHeader">
 			</g:HTMLPanel>
 			<!-- Domain Specific View goes here -->
-			<g:HTMLPanel styleName="set-full-height">
+			<g:HTMLPanel styleName="set-full-height" ui:field="panelContent">
 				<g:HTMLPanel ui:field="pContainer" styleName="set-full-height">
 				</g:HTMLPanel>
 			</g:HTMLPanel>

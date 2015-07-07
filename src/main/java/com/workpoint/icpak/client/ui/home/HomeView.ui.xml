@@ -39,7 +39,7 @@
 				</nav>
 			</div>
 		</aside>
-		<section class="ng-scope" style="height: 600px;">
+		<section class="ng-scope" ui:field="panelContent">
 			<g:HTMLPanel ui:field="tabContent" styleName="set-full-height"></g:HTMLPanel>
 		</section>
 	</g:HTMLPanel><!--End of Container -->

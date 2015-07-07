@@ -1,7 +1,6 @@
 package com.workpoint.icpak.client.ui.home;
 
 import com.google.gwt.event.shared.GwtEvent.Type;
-import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rest.delegates.client.ResourceDelegate;
@@ -48,6 +47,8 @@ public class HomePresenter extends
 
 		// void bindAlerts(HashMap<TaskType, Integer> alerts);
 		void showDocsList();
+
+		void setMiddleHeight();
 	}
 
 	@ProxyStandard
@@ -106,6 +107,7 @@ public class HomePresenter extends
 	@Override
 	protected void onReset() {
 		super.onReset();
+		getView().setMiddleHeight();
 	}
 
 	public void onProcessingCompleted(ProcessingCompletedEvent event) {
@@ -124,22 +126,21 @@ public class HomePresenter extends
 
 	@Override
 	public void onLogout(LogoutEvent event) {
-		
+
 		sessionResource.withCallback(new AbstractAsyncCallback<Void>() {
 			@Override
 			public void onSuccess(Void result) {
 				AppContext.clear();
-				PlaceRequest placeRequest = new Builder().nameToken(NameTokens.login)
-						.build();
+				PlaceRequest placeRequest = new Builder().nameToken(
+						NameTokens.login).build();
 				placeManager.revealPlace(placeRequest);
 			}
-			
+
 			@Override
 			public void onFailure(Throwable caught) {
 				super.onFailure(caught);
 			}
 		}).logout();
-		
 
 	}
 
