@@ -468,87 +468,135 @@ h1 .subtitle {
 }
 
 .input-group
+
  
+
 .form-control
+
+
 :first-child
 ,
 .input-group-addon
+
+
 :first-child
 ,
 .input-group-btn
+
+
 :first-child
 >
 .btn
 ,
 .input-group-btn
+
+
 :first-child
 >
 .dropdown-toggle
 ,
 .input-group-btn
+
+
 :last-child
 >
 .btn
+
+
 :not
+
  
+
 (
 :last-child
+
  
+
 )
 :not
+
  
+
 (
 .dropdown-toggle
 
+
 	
+
 )
 {
 border-right
+
+
 :
+
  
+
 0
 none
+
+
 ;
-
-
 }
 .input-group
+
  
+
 .form-control
+
+
 :last-child
 ,
 .input-group-addon
+
+
 :last-child
 ,
 .input-group-btn
+
+
 :last-child
 >
 .btn
 ,
 .input-group-btn
+
+
 :last-child
 >
 .dropdown-toggle
 ,
 .input-group-btn
+
+
 :first-child
 >
 .btn
+
+
 :not
+
  
+
 (
 :first-child
+
  
+
 )
 {
 border-left
+
+
 :
+
  
+
 0
 none
+
+
 ;
-
-
 }
 .form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control
 	{
@@ -771,7 +819,7 @@ none
 }
 
 .modal-header {
-	border: 0 none;
+	/* border: 0 none; */
 }
 
 .tooltip {
@@ -1382,7 +1430,6 @@ label {
 		min-width: 140px;
 	}
 }
-
 
 .profile-page input[type="file"]:focus {
 	outline: none;
