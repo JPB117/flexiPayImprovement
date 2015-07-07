@@ -81,16 +81,21 @@ public class RecordCPD extends Composite {
 		if (isNullOrEmpty(txtTitle.getValue())) {
 			isValid = false;
 			issues.addError("Title is mandatory");
-		} else if (isNullOrEmpty(txtOrganizer.getValue())) {
+		}
+		
+		if (isNullOrEmpty(txtOrganizer.getValue())) {
 			isValid = false;
 			issues.addError("Organizer is mandatory");
-		} else if (dtStartDate.getValueDate() == null) {
+		}
+		if (dtStartDate.getValueDate() == null) {
 			isValid = false;
 			issues.addError("Start date is mandatory");
-		} else if (dtEndDate.getValueDate() == null) {
+		}
+		if (dtEndDate.getValueDate() == null) {
 			isValid = false;
 			issues.addError("End date is mandatory");
-		} else if (lstCategory.getValue() == null) {
+		}
+		if (lstCategory.getValue() == null) {
 			isValid = false;
 			issues.addError("Category is mandatory");
 		}

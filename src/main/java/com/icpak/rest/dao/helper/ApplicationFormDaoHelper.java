@@ -42,6 +42,7 @@ public class ApplicationFormDaoHelper {
 	
 	@Inject ApplicationFormDao applicationDao;
 	@Inject UsersDao userDao;
+	@Inject UsersDaoHelper usersDaoHelper;
 	@Inject InvoiceDaoHelper invoiceHelper;
 	@Inject TransactionDaoHelper trxHelper;
 	
@@ -88,9 +89,10 @@ public class ApplicationFormDaoHelper {
 		bioData.setLastName(application.getSurname());
 		po.setUserData(bioData);
 		
-		//Generate Password
 		String password = IDUtils.generateTempPassword();
 		po.setPassword(password);
+		
+		usersDaoHelper.create(po);
 		
 		userDao.createUser(po);
 		User u = po.clone();

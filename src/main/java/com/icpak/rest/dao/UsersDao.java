@@ -128,5 +128,14 @@ public class UsersDao extends BaseDao{
 		
 		return val.intValue()>0;
 	}
+
+	public String getMemberId(String userRefId) {
+		
+		String memberId = getSingleResultOrNull(getEntityManager()
+				.createQuery("select refId from Member where userRefId=:userId")
+				.setParameter("userId", userRefId));
+		
+		return memberId;
+	}
 	
 }

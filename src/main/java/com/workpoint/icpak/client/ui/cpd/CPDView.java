@@ -172,7 +172,7 @@ public class CPDView extends ViewImpl implements CPDPresenter.ICPDView {
 
 	@Override
 	public void bindResults(List<CPDDto> result) {
-		headerContainer.setValues(result.size(), 0,0);
+		headerContainer.setValues(result.size(), 0,result.size());
 		
 		tblView.clearRows();
 		for(CPDDto dto: result){

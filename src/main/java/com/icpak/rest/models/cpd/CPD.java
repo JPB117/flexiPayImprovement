@@ -76,7 +76,10 @@ public class CPD extends PO{
 		setCpdHours(dto.getCpdHours());
 		setEndDate(dto.getEndDate());
 		setStartDate(dto.getStartDate());
-		setStatus(dto.getStatus());
+		
+		if(dto.getStatus()!=null)
+			setStatus(dto.getStatus());
+		
 		setCategory(dto.getCategory());
 		setMemberId(dto.getMemberId());
 		setOrganizer(dto.getOrganizer());
@@ -86,6 +89,7 @@ public class CPD extends PO{
 	public CPDDto toDTO() {
 		
 		CPDDto dto = new CPDDto();
+		dto.setCreated(getCreated());
 		dto.setMemberId(memberId);
 		dto.setRefId(getRefId());
 		dto.setCategory(category);

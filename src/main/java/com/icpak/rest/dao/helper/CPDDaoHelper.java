@@ -39,6 +39,7 @@ public class CPDDaoHelper {
 		
 		CPD cpd = new CPD();
 		cpd.copyFrom(cpdDto);
+		cpd.setMemberId(memberId);
 		dao.save(cpd);
 		return cpd.toDTO();
 	}
@@ -46,6 +47,7 @@ public class CPDDaoHelper {
 	public CPDDto update(String memberId, String cpdId, CPDDto cpd) {
 		CPD poCPD = dao.findByCPDId(cpdId);
 		poCPD.copyFrom(cpd);		
+		poCPD.setMemberId(memberId);
 		dao.save(poCPD);
 		
 		return poCPD.toDTO();

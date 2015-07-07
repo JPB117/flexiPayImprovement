@@ -55,10 +55,6 @@ public class UsersDaoHelper {
 	
 	public void create(User user){
 		user.setRefId(IDUtils.generateId());
-//		if(user.getUserData()!=null){
-//			user.getUserData().setUser(user);
-//		}
-		
 		dao.createUser(user);
 		createDefaultMemberForUser(user);
 		assert user.getId()!=null;
@@ -234,6 +230,7 @@ public class UsersDaoHelper {
         if (isLoggedIn) {
             loggedInCookie = loginCookieDao.createSessionCookie(action.getLoggedInCookie(),userDto);
             userDto.setApplicationRefId(getApplicationRefId(userDto.getRefId()));
+            userDto.setMemberId(dao.getMemberId(userDto.getRefId()));
         }
 
         CurrentUserDto currentUserDto = new CurrentUserDto(isLoggedIn, userDto);

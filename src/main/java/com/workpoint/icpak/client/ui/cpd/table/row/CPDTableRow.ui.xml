@@ -18,7 +18,7 @@
 		<g:HTMLPanel styleName="td" ui:field="divCPD">
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divCPDStatus">
-			<span ui:field="spnStatus" class="label label-success">Confirmed</span>
+			<span ui:field="spnStatus" class="label label-success"></span>
 		</g:HTMLPanel>
 
 		<g:HTMLPanel styleName="td" ui:field="divAction">

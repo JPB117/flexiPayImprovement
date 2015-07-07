@@ -11,6 +11,7 @@ import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.RowWidget;
 import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.shared.model.CPDDto;
+import com.workpoint.icpak.shared.model.CPDStatus;
 
 public class CPDTableRow extends RowWidget {
 
@@ -35,32 +36,40 @@ public class CPDTableRow extends RowWidget {
 	HTMLPanel divCPD;
 	@UiField
 	SpanElement spnStatus;
+
+	@UiField
 	ActionLink aMember;
 
 	public CPDTableRow() {
 		initWidget(uiBinder.createAndBindUi(this));
-		String url="#cpd;cpdId=254";
+		String url = "#cpd;cpdId=254";
 		aMember.setHref(url);
 	}
-	
 
 	public CPDTableRow(CPDDto dto) {
 		this();
 
-		divDate.add(new InlineLabel(DateUtils.DATEFORMAT.format(dto
-				.getCreated())));
-		
+		if (dto.getCreated() != null)
+			divDate.add(new InlineLabel(DateUtils.DATEFORMAT.format(dto
+					.getCreated())));
+
 		divCourseName.add(new InlineLabel(dto.getTitle()));
 		divOrganiser.add(new InlineLabel(dto.getOrganizer()));
 
 		if (dto.getCategory() != null)
 			divCategory
 					.add(new InlineLabel(dto.getCategory().getDisplayName()));
-		
+
 		divCPD.add(new InlineLabel(dto.getCpdHours() + " hrs"));
 
-		if (dto.getStatus() != null)
-			spnStatus.setInnerText(dto.getStatus().name());
+		CPDStatus status = dto.getStatus() == null ? CPDStatus.UNCONFIRMED
+				: dto.getStatus();
+
+		spnStatus.setInnerText(status.name());
+		if (status.equals(CPDStatus.UNCONFIRMED)) {
+			spnStatus.removeClassName("label-success");
+			spnStatus.addClassName("label-warning");
+		}
 	}
 
 }
