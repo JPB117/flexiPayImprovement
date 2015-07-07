@@ -33,6 +33,7 @@ public class AppManager {
 	public static void showPopUp(String header, Widget widget,
 			final String customPopupStyle,
 			final OnOptionSelected onOptionSelected, String... buttons) {
+		mainPagePresenter.removeFromPopupSlot(popupPresenter);
 		popupPresenter.setHeader(header);
 		popupPresenter.setInSlot(GenericPopupPresenter.BODY_SLOT, null);
 		popupPresenter.setInSlot(GenericPopupPresenter.BUTTON_SLOT, null);
@@ -47,18 +48,29 @@ public class AppManager {
 
 		for (final String text : buttons) {
 			final Anchor aLnk = new Anchor();
+			
+			//TODO:-TOM  REMOVE THESE CUSTOM BUTTON STYLES. - MAKES IT IMPOSSIBLE TO CREATE OTHER BUTTONS
+			//WORK ON A GENERIC PLACEMENT MECHANISM e.g Centered Buttons, 
+			//AS WELL AS DYNAMIC STYLING BY PASSING BUTTON STYLES TO THIS MECHANISM
+			
 			if (text.equals("Cancel")) {
 				aLnk.setHTML("&nbsp;<i class=\"icon-remove\"></i>" + text);
 				aLnk.setStyleName("btn btn-default btn-fill pull-right");
 			} else if (text.equals("Save")) {
 				aLnk.setHTML(text
 						+ "&nbsp;<i class=\"icon-double-angle-right\"></i>");
-				aLnk.setStyleName("btn btn-primary btn-fill pull-left");
+				//aLnk.setStyleName("btn btn-primary btn-fill pull-left");
+				aLnk.setStyleName("btn btn-primary btn-fill pull-right");
 			} else if (text.equals("Next")) {
 				aLnk.setHTML(text
 						+ "&nbsp;<i class=\"icon-double-angle-right\"></i>");
 				aLnk.setStyleName("btn btn-primary btn-fill pull-right");
+			}else if (text.equals("Previous")) {
+				aLnk.setHTML(text
+						+ "&nbsp;<i class=\"icon-double-angle-right\"></i>");
+				aLnk.setStyleName("btn btn-primary btn-fill pull-left");
 			}
+			
 
 			aLnk.addClickHandler(new ClickHandler() {
 
@@ -68,10 +80,10 @@ public class AppManager {
 						((OptionControl) onOptionSelected)
 								.setPopupView((PopupView) (popupPresenter
 										.getView()));
-						onOptionSelected.onSelect(text, aLnk);
+						onOptionSelected.onSelect(text);
 					} else {
 						popupPresenter.getView().hide();
-						onOptionSelected.onSelect(text, aLnk);
+						onOptionSelected.onSelect(text);
 					}
 
 					if (!popupPresenter.isVisible() && customPopupStyle != null) {
@@ -79,11 +91,11 @@ public class AppManager {
 								customPopupStyle);
 					}
 				}
+				
 			});
 			popupPresenter.getView().addToSlot(
 					GenericPopupPresenter.BUTTON_SLOT, aLnk);
 		}
-
 		mainPagePresenter.addToPopupSlot(popupPresenter, true);
 	}
 
@@ -95,6 +107,8 @@ public class AppManager {
 
 	/**
 	 * Returns positions of the modal/popover in Relative to the browser size
+	 * 
+	 * TODO: LET POSITIONING BE DONE THROUGH CSS AS OPPOSED TO THIS... CREATES MORE CHALLENGES AS THE APP GROWS
 	 * 
 	 * @param %top, %left
 	 * @return top(px),left(px)

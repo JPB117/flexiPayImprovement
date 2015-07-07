@@ -25,6 +25,7 @@ import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.workpoint.icpak.client.place.NameTokens;
 import com.workpoint.icpak.client.ui.AppManager;
 import com.workpoint.icpak.client.ui.OnOptionSelected;
+import com.workpoint.icpak.client.ui.OptionControl;
 import com.workpoint.icpak.client.ui.admin.TabDataExt;
 import com.workpoint.icpak.client.ui.cpd.record.RecordCPD;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
@@ -79,14 +80,40 @@ public class CPDPresenter extends
 	GenericPopupPresenter popup;
 
 	protected void showCreatePopup() {
-		RecordCPD cpdRecord = new RecordCPD();
-		AppManager.showPopUp("Record CPD Wizard", cpdRecord.asWidget(), cpdRecord.getOptionSelection()
-				, "Next");
-
-		// addToPopupSlot(popup);
+		showInstructions();
 	}
 
-	protected void save() {
+	private void showInstructions() {
+		final RecordCPD cpdRecord = new RecordCPD();
+		cpdRecord.showForm(false);
+		AppManager.showPopUp("Record CPD Wizard", cpdRecord.asWidget(), new OnOptionSelected() {
+			@Override
+			public void onSelect(String name) {
+				if (name.equals("Next")) {
+					showForm();
+				}
+			}
+		}, "Next");
+	}
+
+	protected void showForm() {
+		final RecordCPD cpdRecord = new RecordCPD();
+		cpdRecord.showForm(true);
+		AppManager.showPopUp("Record CPD Wizard", cpdRecord.asWidget(), new OnOptionSelected() {
+			@Override
+			public void onSelect(String name) {
+				if (name.equals("Save")) {
+					saveRecord();
+				}else{
+					
+					showInstructions();
+				}
+			}
+		}, "Previous","Save");
+	}
+
+	protected void saveRecord() {
+		
 	}
 
 	@Override

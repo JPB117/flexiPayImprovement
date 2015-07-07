@@ -97,7 +97,7 @@ public class RecordCPD extends Composite {
 		return isValid;
 	}
 
-	protected void showForm(boolean show) {
+	public void showForm(boolean show) {
 		if (show) {
 			panelForm.setVisible(true);
 			panelCategories.setVisible(false);
@@ -105,19 +105,6 @@ public class RecordCPD extends Composite {
 			panelForm.setVisible(false);
 			panelCategories.setVisible(true);
 		}
-	}
-
-	public OptionControl getOptionSelection() {
-		OptionControl selection = new OptionControl() {
-			@Override
-			public void onSelect(String name, Anchor aLnk) {
-				if (name.equals("Next")) {
-					showForm(true);
-					aLnk.setText("Save");
-				}
-			}
-		};
-		return selection;
 	}
 
 	public class Category implements Listable {
