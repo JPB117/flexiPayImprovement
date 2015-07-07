@@ -17,6 +17,7 @@ public class CPDDto extends SerializableObj{
 	private int cpdHours;
 	private CPDStatus status;
 	private String memberId;
+	private String fullNames;
 	
 	public CPDDto() {
 	}
@@ -91,5 +92,13 @@ public class CPDDto extends SerializableObj{
 
 	public void setCreated(Date created) {
 		this.created = created;
+	}
+
+	public String getFullNames() {
+		return fullNames;
+	}
+
+	public void setFullNames(String fullNames) {
+		this.fullNames = fullNames;
 	}
 }

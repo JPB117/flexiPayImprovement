@@ -30,6 +30,9 @@
 				</a>
 				<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
 					<li>
+						<d:ActionLink ui:field="aEdit">Edit</d:ActionLink>
+					</li>
+					<li>
 						<d:ActionLink ui:field="aAttended">Approved</d:ActionLink>
 					</li>
 					<li>

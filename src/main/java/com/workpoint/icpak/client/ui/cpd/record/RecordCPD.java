@@ -64,6 +64,8 @@ public class RecordCPD extends Composite {
 	@UiField
 	DropDownList<CPDCategory> lstCategory;
 
+	private CPDDto dto;
+
 	public RecordCPD() {
 		initWidget(uiBinder.createAndBindUi(this));
 		showForm(false);
@@ -82,7 +84,7 @@ public class RecordCPD extends Composite {
 			isValid = false;
 			issues.addError("Title is mandatory");
 		}
-		
+
 		if (isNullOrEmpty(txtOrganizer.getValue())) {
 			isValid = false;
 			issues.addError("Organizer is mandatory");
@@ -115,6 +117,10 @@ public class RecordCPD extends Composite {
 	public CPDDto getCPD() {
 
 		CPDDto dto = new CPDDto();
+		if(this.dto!=null){
+			dto = this.dto;
+		}
+		
 		dto.setCategory(lstCategory.getValue());
 		// dto.setCpdHours();
 		dto.setEndDate(dtEndDate.getValueDate());
@@ -125,6 +131,19 @@ public class RecordCPD extends Composite {
 		dto.setTitle(txtTitle.getValue());
 
 		return dto;
+	}
+
+	public void setCPD(CPDDto dto) {
+		this.dto = dto;
+		if (dto == null) {
+			return;
+		}
+		
+		lstCategory.setValue(dto.getCategory());
+		dtEndDate.setValue(dto.getEndDate());
+		dtStartDate.setValue(dto.getStartDate());
+		txtTitle.setValue(dto.getTitle());
+		txtOrganizer.setValue(dto.getOrganizer());
 	}
 
 }

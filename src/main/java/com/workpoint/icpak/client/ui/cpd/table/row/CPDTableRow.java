@@ -2,14 +2,19 @@ package com.workpoint.icpak.client.ui.cpd.table.row;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Widget;
+import com.sencha.gxt.legacy.client.mvc.AppEvent;
 import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.RowWidget;
+import com.workpoint.icpak.client.ui.events.EditModelEvent;
 import com.workpoint.icpak.client.ui.util.DateUtils;
+import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.shared.model.CPDStatus;
 
@@ -37,18 +42,30 @@ public class CPDTableRow extends RowWidget {
 	@UiField
 	SpanElement spnStatus;
 
+	@UiField ActionLink aEdit;
+	
 	@UiField
 	ActionLink aMember;
 
+	private CPDDto dto;
+
 	public CPDTableRow() {
 		initWidget(uiBinder.createAndBindUi(this));
-		String url = "#cpd;cpdId=254";
-		aMember.setHref(url);
+		aEdit.addClickHandler(new ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent event) {
+				AppContext.fireEvent(new EditModelEvent(dto));
+			}
+		});
 	}
 
 	public CPDTableRow(CPDDto dto) {
 		this();
+		this.dto = dto;
 
+		aMember.setText(dto.getFullNames());
+		
 		if (dto.getCreated() != null)
 			divDate.add(new InlineLabel(DateUtils.DATEFORMAT.format(dto
 					.getCreated())));

@@ -137,5 +137,13 @@ public class UsersDao extends BaseDao{
 		
 		return memberId;
 	}
+
+	public String getFullNames(String memberId) {
+		
+		return getSingleResultOrNull(getEntityManager()
+				.createNativeQuery("select concat(firstName,' ',lastName) from user u "
+						+ "inner join Member m on m.userRefId=u.refId where m.refId=:memberId")
+						.setParameter("memberId", memberId));
+	}
 	
 }

@@ -7,6 +7,7 @@ import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import com.icpak.rest.dao.CPDDao;
 import com.icpak.rest.dao.EventsDao;
+import com.icpak.rest.dao.UsersDao;
 import com.icpak.rest.models.cpd.CPD;
 import com.workpoint.icpak.shared.model.CPDDto;
 
@@ -15,6 +16,7 @@ public class CPDDaoHelper {
 
 	@Inject CPDDao dao;
 	@Inject EventsDao eventDao;
+	@Inject UsersDao userDao;
 	
 	public List<CPDDto> getAllCPD(String memberId, Integer offset,
 			Integer limit) {
@@ -24,6 +26,7 @@ public class CPDDaoHelper {
 		List<CPDDto> rtn = new ArrayList<>();
 		for(CPD cpd: cpds){
 			CPDDto dto = cpd.toDTO();
+			dto.setFullNames(userDao.getFullNames(memberId));
 			rtn.add(dto);
 		}
 		
@@ -32,7 +35,9 @@ public class CPDDaoHelper {
 
 	public CPDDto getCPD(String memberId, String cpdId) {
 		CPD cpd = dao.findByCPDId(cpdId);
-		return cpd.toDTO();
+		CPDDto rtn = cpd.toDTO();
+		rtn.setFullNames(userDao.getFullNames(memberId));
+		return rtn;
 	}
 
 	public CPDDto create(String memberId,CPDDto cpdDto) {
@@ -41,7 +46,10 @@ public class CPDDaoHelper {
 		cpd.copyFrom(cpdDto);
 		cpd.setMemberId(memberId);
 		dao.save(cpd);
-		return cpd.toDTO();
+		
+		CPDDto rtn = cpd.toDTO();
+		rtn.setFullNames(userDao.getFullNames(memberId));
+		return rtn;
 	}
 	
 	public CPDDto update(String memberId, String cpdId, CPDDto cpd) {
@@ -50,7 +58,9 @@ public class CPDDaoHelper {
 		poCPD.setMemberId(memberId);
 		dao.save(poCPD);
 		
-		return poCPD.toDTO();
+		CPDDto rtn = poCPD.toDTO();
+		rtn.setFullNames(userDao.getFullNames(memberId));
+		return rtn;
 	}
 
 	public void delete(String memberId, String cpdId) {
