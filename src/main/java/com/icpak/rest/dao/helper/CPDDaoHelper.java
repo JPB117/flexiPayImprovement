@@ -3,15 +3,12 @@ package com.icpak.rest.dao.helper;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.ws.rs.core.UriInfo;
-
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import com.icpak.rest.dao.CPDDao;
 import com.icpak.rest.dao.EventsDao;
-import com.icpak.rest.models.base.ResourceCollectionModel;
 import com.icpak.rest.models.cpd.CPD;
-import com.icpak.rest.models.event.Event;
+import com.workpoint.icpak.shared.model.CPDDto;
 
 @Transactional
 public class CPDDaoHelper {
@@ -19,49 +16,39 @@ public class CPDDaoHelper {
 	@Inject CPDDao dao;
 	@Inject EventsDao eventDao;
 	
-	public ResourceCollectionModel getAllCPD(String memberId, Integer offset,
-			Integer limit, UriInfo uriInfo) {
+	public List<CPDDto> getAllCPD(String memberId, Integer offset,
+			Integer limit) {
 		
-		int total = dao.getCPDCount(memberId);
+		List<CPD> cpds = dao.getAllCPDs(memberId,offset, limit);
 		
-		ResourceCollectionModel<CPD> collection = new ResourceCollectionModel<>(offset,limit,total, uriInfo);
-		List<CPD> members = dao.getAllCPDs(memberId,offset, limit);
-		
-		List<CPD> rtn = new ArrayList<>();
-		for(CPD cpd: members){
-			CPD clone = cpd.clone();
-			clone.setUri(uriInfo.getAbsolutePath().toString()+"/"+clone.getRefId());
-			rtn.add(clone);
+		List<CPDDto> rtn = new ArrayList<>();
+		for(CPD cpd: cpds){
+			CPDDto dto = cpd.toDTO();
+			rtn.add(dto);
 		}
 		
-		collection.setItems(rtn);
-		return collection;
+		return rtn;
 	}
 
-	public CPD getCPD(String memberId, String cpdId) {
+	public CPDDto getCPD(String memberId, String cpdId) {
 		CPD cpd = dao.findByCPDId(cpdId);
-		return cpd.clone();
+		return cpd.toDTO();
 	}
 
-	public void create(String memberId,CPD cpd) {
-//		Member member = memberDao.findByMemberId(memberId);
-//		Event event = eventDao.getByEventId(cpd.getEventId());
-//		cpd.setEvent(event);
-//		cpd.setMember(member);
+	public CPDDto create(String memberId,CPDDto cpdDto) {
 		
+		CPD cpd = new CPD();
+		cpd.copyFrom(cpdDto);
 		dao.save(cpd);
+		return cpd.toDTO();
 	}
 	
-	public void update(String memberId, String cpdId, CPD cpd) {
+	public CPDDto update(String memberId, String cpdId, CPDDto cpd) {
 		CPD poCPD = dao.findByCPDId(cpdId);
-		Event event = eventDao.getByEventId(cpd.getEventId());
-		//poCPD.setEvent(event);
-		poCPD.setCpdHours(cpd.getCpdHours());
-		poCPD.setStatus(cpd.getStatus());
-		poCPD.setStartDate(cpd.getStartDate());
-		poCPD.setEndDate(cpd.getEndDate());
+		poCPD.copyFrom(cpd);		
 		dao.save(poCPD);
 		
+		return poCPD.toDTO();
 	}
 
 	public void delete(String memberId, String cpdId) {

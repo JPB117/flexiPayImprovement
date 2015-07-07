@@ -111,4 +111,8 @@ public class RecordCPD extends Composite {
 		}
 	}
 
+	public Object getCPD() {
+		return null;
+	}
+
 }

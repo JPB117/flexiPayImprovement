@@ -3,21 +3,18 @@ package com.icpak.rest.models.cpd;
 import java.util.Date;
 
 import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
-import com.google.gwt.core.ext.soyc.Member;
 import com.icpak.rest.models.base.PO;
-import com.icpak.rest.models.event.Event;
 import com.wordnik.swagger.annotations.ApiModel;
+import com.workpoint.icpak.shared.model.CPDCategory;
+import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.shared.model.CPDStatus;
 
 /**
@@ -39,30 +36,16 @@ public class CPD extends PO{
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@ManyToOne
-	@XmlTransient
-	private Event event;
-	
 	private Date startDate; //Copied from Event details;
 	private Date endDate;
-	private String eventId;
-	
-	@Transient
-	private String eventName;
-	private String cpdHours;
-	private CPDStatus status;
-	@Transient
+	private String title;
+	private String organizer;
+	private CPDCategory category;
+	private int cpdHours;
+	private CPDStatus status = CPDStatus.UNCONFIRMED;
 	private String memberId;
 	
 	public CPD() {
-	}
-
-	public Event getEvent() {
-		return event;
-	}
-
-	public void setEvent(Event event) {
-		this.event = event;
 	}
 
 	public Date getStartDate() {
@@ -81,28 +64,63 @@ public class CPD extends PO{
 		this.endDate = endDate;
 	}
 
-	public String getEventId() {
-		return eventId;
-	}
-
-	public void setEventId(String eventId) {
-		this.eventId = eventId;
-	}
-
-	public String getCpdHours() {
-		return cpdHours;
-	}
-
-	public void setCpdHours(String cpdHours) {
-		this.cpdHours = cpdHours;
-	}
-
 	public CPDStatus getStatus() {
 		return status;
 	}
 
 	public void setStatus(CPDStatus status) {
 		this.status = status;
+	}
+	
+	public void copyFrom(CPDDto dto){
+		setCpdHours(dto.getCpdHours());
+		setEndDate(dto.getEndDate());
+		setStartDate(dto.getStartDate());
+		setStatus(dto.getStatus());
+		setCategory(dto.getCategory());
+		setMemberId(dto.getMemberId());
+		setOrganizer(dto.getOrganizer());
+		setTitle(dto.getTitle());
+	}
+
+	public CPDDto toDTO() {
+		
+		CPDDto dto = new CPDDto();
+		dto.setMemberId(memberId);
+		dto.setRefId(getRefId());
+		dto.setCategory(category);
+		dto.setCpdHours(cpdHours);
+		dto.setEndDate(endDate);
+		dto.setOrganizer(organizer);
+		dto.setStartDate(startDate);
+		dto.setStatus(status);
+		dto.setTitle(title);
+		
+		return dto;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getOrganizer() {
+		return organizer;
+	}
+
+	public void setOrganizer(String organizer) {
+		this.organizer = organizer;
+	}
+
+	public CPDCategory getCategory() {
+		return category;
+	}
+
+	public void setCategory(CPDCategory category) {
+		this.category = category;
 	}
 
 	public String getMemberId() {
@@ -112,30 +130,13 @@ public class CPD extends PO{
 	public void setMemberId(String memberId) {
 		this.memberId = memberId;
 	}
-	
-	public CPD clone(){
-		CPD cpd = new CPD();
-		cpd.setCpdHours(cpdHours);
-		cpd.setStartDate(startDate);
-		cpd.setEndDate(endDate);
-		cpd.setEventId(eventId);
-		
-		if(this.getEvent()!=null){
-			cpd.setEventName(this.event.getName());
-		}
-		
-		cpd.setRefId(refId);
-		cpd.setStatus(status);
-		cpd.setMemberId(memberId);
-		return cpd;
+
+	public int getCpdHours() {
+		return cpdHours;
 	}
 
-	public String getEventName() {
-		return eventName;
-	}
-
-	public void setEventName(String eventName) {
-		this.eventName = eventName;
+	public void setCpdHours(int cpdHours) {
+		this.cpdHours = cpdHours;
 	}
 	
 }
