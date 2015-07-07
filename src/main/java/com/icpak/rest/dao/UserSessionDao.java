@@ -13,79 +13,82 @@ import com.icpak.rest.models.auth.User;
 import com.icpak.rest.models.auth.UserSession;
 import com.workpoint.icpak.shared.model.UserDto;
 
-public class UserSessionDao  extends BaseDao {
-    private static final int TWO_WEEKS_AGO_IN_DAYS = -14;
+public class UserSessionDao extends BaseDao {
+	private static final int TWO_WEEKS_AGO_IN_DAYS = -14;
 
-    private final Logger logger;
-    private final UsersDao userDao;
+	private final Logger logger;
+	private final UsersDao userDao;
 
-    @Inject
-    UserSessionDao(
-            Logger logger,
-            UsersDao userDao) {
-        this.logger = logger;
-        this.userDao = userDao;
-    }
+	@Inject
+	UserSessionDao(Logger logger, UsersDao userDao) {
+		this.logger = logger;
+		this.userDao = userDao;
+	}
 
-    public String createSessionCookie(UserDto userDto) {
-        String cookie = UUID.randomUUID().toString();
-        UserSession userSession = new UserSession(userDto.getRefId(), cookie);
-        save(userSession);
+	public String createSessionCookie(String currentCookie, UserDto userDto) {
+		String cookie = UUID.randomUUID().toString();
+		UserSession userSession = new UserSession(userDto.getRefId(), cookie);
+		save(userSession);
+		logger.info("UserSessionDao.createLoggedInCookie(user) user=" + userDto
+				+ " userSessionCookie=" + userSession.getCookie());
 
-        logger.info("UserSessionDao.createLoggedInCookie(user) user=" + userDto + " userSessionCookie="
-                + userSession.getCookie());
+		return userSession.getCookie();
+	}
 
-        return userSession.getCookie();
-    }
+	public void removeLoggedInCookie(UserDto userDto) {
+		// List<UserSession> userSession = findUserSession(userDto.getRefId());
+		getEntityManager().createNativeQuery(
+				"delete from UserSession where userRefId=:userId")
+				.setParameter("userId", userDto.getRefId())
+				.executeUpdate();
 
-    public void removeLoggedInCookie(UserDto userDto) {
-        UserSession userSession = findUserSession(userDto.getRefId());
-        if (userSession != null) {
-            delete(userSession);
-        }
+		logger.info("UserSessionDao.removeLoggedInCookie(user): Cookie is removed from database.");
+	}
 
-        logger.info("UserSessionDao.removeLoggedInCookie(user): Cookie is removed from database.");
-    }
+	public UserDto getUserFromCookie(String loggedInCookie) {
 
-    public UserDto getUserFromCookie(String loggedInCookie) {
-        Date twoWeeksAgo = getTwoWeeksAgo();
+		UserSession userSession = getSessionFromCookie(loggedInCookie);
+		if (userSession == null) {
+			return null;
+		}
 
-        Query query = getEntityManager().createQuery("FROM UserSession where cookie=:cookie and "
-        				+ "dateCreated>:twoWeeksAgo")
-                .setParameter("cookie", loggedInCookie)
-                .setParameter("twoWeeksAgo", twoWeeksAgo);
-        				
-        UserSession userSession = getSingleResultOrNull(query);
+		String userRefId = userSession.getUserRefId();
 
-        if (userSession == null) {
-            return null;
-        }
+		UserDto userDto = null;
+		if (userRefId != null) {
+			User user = findByRefId(userRefId, User.class);
+			userDto = user.getDTO();
+		}
 
-        String userRefId = userSession.getUserRefId();
+		return userDto;
+	}
 
-        UserDto userDto = null;
-        if (userRefId != null) {
-        	User user = findByRefId(userRefId, User.class);
-        	userDto = user.getDTO();
-        }
+	private UserSession getSessionFromCookie(String loggedInCookie) {
+		Date twoWeeksAgo = getTwoWeeksAgo();
 
-        return userDto;
-    }
+		Query query = getEntityManager()
+				.createQuery(
+						"FROM UserSession where cookie=:cookie and "
+								+ "dateCreated>:twoWeeksAgo")
+				.setParameter("cookie", loggedInCookie)
+				.setParameter("twoWeeksAgo", twoWeeksAgo);
 
-    private Date getTwoWeeksAgo() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DATE, TWO_WEEKS_AGO_IN_DAYS);
+		UserSession userSession = getSingleResultOrNull(query);
 
-        return calendar.getTime();
-    }
+		return userSession;
+	}
 
-    private UserSession findUserSession(String userRefId) {
-    	Query query  = getEntityManager().
-    			createQuery("FROM UserSession where userRefId=:refId order by id desc")
-    			.setFirstResult(0)
-    			.setMaxResults(1);
-    	
-    		return getSingleResultOrNull(query);
-       }
-    }
-     
+	private Date getTwoWeeksAgo() {
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.DATE, TWO_WEEKS_AGO_IN_DAYS);
+
+		return calendar.getTime();
+	}
+
+	private List<UserSession> findUserSession(String userRefId) {
+		Query query = getEntityManager().createQuery(
+				"FROM UserSession where userRefId=:refId order by id desc");
+
+		return getResultList(query);
+	}
+}

@@ -16,6 +16,7 @@ import com.workpoint.icpak.client.ui.component.DateField;
 import com.workpoint.icpak.client.ui.component.DropDownList;
 import com.workpoint.icpak.client.ui.component.IssuesPanel;
 import com.workpoint.icpak.client.ui.component.TextField;
+import com.workpoint.icpak.client.ui.upload.custom.Uploader;
 import com.workpoint.icpak.shared.model.Listable;
 
 public class RecordCPD extends Composite {
@@ -48,7 +49,7 @@ public class RecordCPD extends Composite {
 	DateField txtEndDate;
 
 	@UiField
-	IssuesPanel uploader;
+	Uploader uploader;
 
 	@UiField
 	DropDownList<Category> lstCategory;
@@ -82,7 +83,7 @@ public class RecordCPD extends Composite {
 		return isValid;
 	}
 
-	protected void showForm(boolean show) {
+	public void showForm(boolean show) {
 		if (show) {
 			panelForm.setVisible(true);
 			panelCategories.setVisible(false);
@@ -90,19 +91,6 @@ public class RecordCPD extends Composite {
 			panelForm.setVisible(false);
 			panelCategories.setVisible(true);
 		}
-	}
-
-	public OptionControl getOptionSelection() {
-		OptionControl selection = new OptionControl() {
-			@Override
-			public void onSelect(String name, Anchor aLnk) {
-				if (name.equals("Next")) {
-					showForm(true);
-					aLnk.setText("Save");
-				}
-			}
-		};
-		return selection;
 	}
 
 	public class Category implements Listable {

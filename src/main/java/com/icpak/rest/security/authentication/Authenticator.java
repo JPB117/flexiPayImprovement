@@ -25,6 +25,7 @@ import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authc.credential.Sha256CredentialsMatcher;
 
+import com.google.inject.persist.Transactional;
 import com.icpak.rest.dao.UserSessionDao;
 import com.icpak.rest.dao.UsersDao;
 import com.icpak.rest.exceptions.ServiceException;
@@ -34,6 +35,7 @@ import com.icpak.rest.security.ICPAKAuthenticatingRealm;
 import com.workpoint.icpak.shared.model.UserDto;
 import com.workpoint.icpak.shared.model.auth.CurrentUserDto;
 
+@Transactional
 public class Authenticator {
 	private final UsersDao userDao;
 	private final Provider<HttpSession> sessionProvider;

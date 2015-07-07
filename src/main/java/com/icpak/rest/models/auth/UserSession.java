@@ -35,4 +35,8 @@ public class UserSession extends PO {
     public String getUserRefId() {
         return userRefId;
     }
+    
+    public void setDateCreated(Date date){
+    	this.dateCreated=date;
+    }
 }

@@ -232,7 +232,7 @@ public class UsersDaoHelper {
 
         String loggedInCookie = "";
         if (isLoggedIn) {
-            loggedInCookie = loginCookieDao.createSessionCookie(userDto);
+            loggedInCookie = loginCookieDao.createSessionCookie(action.getLoggedInCookie(),userDto);
             userDto.setApplicationRefId(getApplicationRefId(userDto.getRefId()));
         }
 
