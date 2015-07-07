@@ -82,11 +82,11 @@ public class CPDPresenter extends
 
 	private void showInstructions() {
 		final RecordCPD cpdRecord = new RecordCPD();
+		cpdRecord.showForm(false);
 		AppManager.showPopUp("Record CPD Wizard", cpdRecord.asWidget(), new OnOptionSelected() {
 			@Override
 			public void onSelect(String name) {
 				if (name.equals("Next")) {
-					cpdRecord.showForm(true);
 					showForm();
 				}
 			}
@@ -95,13 +95,14 @@ public class CPDPresenter extends
 
 	protected void showForm() {
 		final RecordCPD cpdRecord = new RecordCPD();
+		cpdRecord.showForm(true);
 		AppManager.showPopUp("Record CPD Wizard", cpdRecord.asWidget(), new OnOptionSelected() {
 			@Override
 			public void onSelect(String name) {
 				if (name.equals("Save")) {
 					saveRecord();
 				}else{
-					cpdRecord.showForm(false);
+					
 					showInstructions();
 				}
 			}

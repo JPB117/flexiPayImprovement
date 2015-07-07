@@ -33,6 +33,7 @@ public class AppManager {
 	public static void showPopUp(String header, Widget widget,
 			final String customPopupStyle,
 			final OnOptionSelected onOptionSelected, String... buttons) {
+		mainPagePresenter.removeFromPopupSlot(popupPresenter);
 		popupPresenter.setHeader(header);
 		popupPresenter.setInSlot(GenericPopupPresenter.BODY_SLOT, null);
 		popupPresenter.setInSlot(GenericPopupPresenter.BUTTON_SLOT, null);
@@ -90,11 +91,11 @@ public class AppManager {
 								customPopupStyle);
 					}
 				}
+				
 			});
 			popupPresenter.getView().addToSlot(
 					GenericPopupPresenter.BUTTON_SLOT, aLnk);
 		}
-
 		mainPagePresenter.addToPopupSlot(popupPresenter, true);
 	}
 
