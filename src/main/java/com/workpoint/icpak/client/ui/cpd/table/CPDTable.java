@@ -33,11 +33,13 @@ public class CPDTable extends Composite {
 	public void createHeader() {
 		List<TableHeader> th = new ArrayList<TableHeader>();
 		th.add(new TableHeader("#"));
+		th.add(new TableHeader("Member"));
 		th.add(new TableHeader("Course Name"));
 		th.add(new TableHeader("Organiser"));
 		th.add(new TableHeader("Category"));
 		th.add(new TableHeader("CPD Hours"));
 		th.add(new TableHeader("Status"));
+		th.add(new TableHeader("Action"));
 
 		tblView.setTableHeaders(th);
 	}

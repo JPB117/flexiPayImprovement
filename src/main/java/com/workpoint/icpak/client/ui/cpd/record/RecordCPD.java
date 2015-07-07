@@ -5,6 +5,8 @@ import static com.workpoint.icpak.client.ui.util.StringUtils.isNullOrEmpty;
 import java.util.Arrays;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Anchor;
@@ -12,6 +14,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.workpoint.icpak.client.ui.OptionControl;
+import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.DateField;
 import com.workpoint.icpak.client.ui.component.DropDownList;
 import com.workpoint.icpak.client.ui.component.IssuesPanel;
@@ -32,6 +35,9 @@ public class RecordCPD extends Composite {
 
 	@UiField
 	HTMLPanel panelCategories;
+
+	@UiField
+	ActionLink aPreviousForm;
 
 	@UiField
 	IssuesPanel issues;
@@ -62,6 +68,14 @@ public class RecordCPD extends Composite {
 				new Category("Category B", "B"),
 				new Category("Category C", "C"),
 				new Category("Category D", "D")));
+
+		aPreviousForm.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				showForm(false);
+			}
+		});
+
 	}
 
 	public boolean isValid() {
@@ -114,10 +128,12 @@ public class RecordCPD extends Composite {
 			this.name = name;
 			this.value = value;
 		}
+
 		@Override
 		public String getName() {
 			return value;
 		}
+
 		@Override
 		public String getDisplayName() {
 			return name;

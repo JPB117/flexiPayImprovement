@@ -4,7 +4,10 @@
 
 	<g:HTMLPanel styleName="tr" ui:field="row">
 		<g:HTMLPanel styleName="td" ui:field="divDate">
-			1
+			12th June 2015
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td" ui:field="divMember">
+			<d:ActionLink ui:field="aMember">Dan Mugo</d:ActionLink>
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divCourseName">
 			Mombasa Seminar
@@ -22,5 +25,24 @@
 		<g:HTMLPanel styleName="td" ui:field="divCPDStatus">
 			<span class="label label-success">Confirmed</span>
 		</g:HTMLPanel>
+
+		<g:HTMLPanel styleName="td" ui:field="divAction">
+			<div class="dropdown">
+				<a class="btn btn-primary btn-fill dropdown-toggle" id="dropdownMenu1"
+					data-toggle="dropdown" aria-expanded="true">
+					-Select-
+					<span class="caret"></span>
+				</a>
+				<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+					<li>
+						<d:ActionLink ui:field="aAttended">Approved</d:ActionLink>
+					</li>
+					<li>
+						<d:ActionLink ui:field="aNotAttended">Rejected</d:ActionLink>
+					</li>
+				</ul>
+			</div>
+		</g:HTMLPanel>
+
 	</g:HTMLPanel>
 </ui:UiBinder> 

@@ -112,7 +112,7 @@ public class CPDView extends ViewImpl implements CPDPresenter.ICPDView {
 				} else {
 					showDateFilter(true);
 				}
-				
+
 			}
 		});
 		showDateFilter(false);
@@ -120,7 +120,7 @@ public class CPDView extends ViewImpl implements CPDPresenter.ICPDView {
 		createRow(new CPDTableRow());
 	}
 
-	public HasClickHandlers getRecordButton(){
+	public HasClickHandlers getRecordButton() {
 		return aCreate;
 	}
 
@@ -163,6 +163,11 @@ public class CPDView extends ViewImpl implements CPDPresenter.ICPDView {
 		public String getDisplayName() {
 			return DateUtils.YEARFORMAT.format(pickDate);
 		}
+
+	}
+
+	@Override
+	public void showDetailedView() {
 
 	}
 

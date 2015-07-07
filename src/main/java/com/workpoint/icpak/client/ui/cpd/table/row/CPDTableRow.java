@@ -5,6 +5,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.RowWidget;
 
 public class CPDTableRow extends RowWidget {
@@ -12,14 +13,20 @@ public class CPDTableRow extends RowWidget {
 	private static ActivitiesTableRowUiBinder uiBinder = GWT
 			.create(ActivitiesTableRowUiBinder.class);
 
-	interface ActivitiesTableRowUiBinder extends
-			UiBinder<Widget, CPDTableRow> {
+	interface ActivitiesTableRowUiBinder extends UiBinder<Widget, CPDTableRow> {
 	}
 
 	@UiField
 	HTMLPanel row;
+
+	@UiField
+	ActionLink aMember;
+
 	public CPDTableRow() {
 		initWidget(uiBinder.createAndBindUi(this));
+		String url="#cpd;cpdId=254";
+		aMember.setHref(url);
 	}
+	
 
 }

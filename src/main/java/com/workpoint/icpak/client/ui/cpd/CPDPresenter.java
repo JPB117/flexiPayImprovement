@@ -21,6 +21,7 @@ import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.annotations.TabInfo;
 import com.gwtplatform.mvp.client.annotations.UseGatekeeper;
 import com.gwtplatform.mvp.client.proxy.TabContentProxyPlace;
+import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.workpoint.icpak.client.place.NameTokens;
 import com.workpoint.icpak.client.ui.AppManager;
 import com.workpoint.icpak.client.ui.OnOptionSelected;
@@ -36,6 +37,8 @@ public class CPDPresenter extends
 	public interface ICPDView extends View {
 
 		HasClickHandlers getRecordButton();
+
+		void showDetailedView();
 
 	}
 
@@ -89,6 +92,14 @@ public class CPDPresenter extends
 	@Override
 	protected void onReset() {
 		super.onReset();
+	}
+	
+	
+	@Override
+	public void prepareFromRequest(PlaceRequest request) {
+		super.prepareFromRequest(request);
+		
+		getView().showDetailedView();
 	}
 
 }
