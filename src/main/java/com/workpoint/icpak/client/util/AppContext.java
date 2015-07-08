@@ -209,4 +209,8 @@ public class AppContext {
 		return !Strings.isNullOrEmpty(getLoggedInCookie());
 	}
 
+	public static CurrentUser getCurrentUser() {
+		return user;
+	}
+
 }

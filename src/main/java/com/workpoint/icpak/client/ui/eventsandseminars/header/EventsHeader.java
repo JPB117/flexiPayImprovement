@@ -28,4 +28,10 @@ public class EventsHeader extends Composite {
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 
+	public void setCounts(int total, int done, int upcoming) {
+		spnTotalApplication.setInnerText(total+"");
+		spnTotalProcessed.setInnerText(done+"");
+		spnTotalPending.setInnerText(upcoming+"");
+	}
+
 }

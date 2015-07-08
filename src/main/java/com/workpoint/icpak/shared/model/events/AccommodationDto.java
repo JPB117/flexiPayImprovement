@@ -1,6 +1,10 @@
-package com.workpoint.icpak.shared.model;
+package com.workpoint.icpak.shared.model.events;
 
-public class AccommodationDto extends SerializableObj{
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.workpoint.icpak.shared.model.Listable;
+import com.workpoint.icpak.shared.model.SerializableObj;
+
+public class AccommodationDto extends SerializableObj implements Listable{
 
 
 	/**
@@ -36,6 +40,16 @@ public class AccommodationDto extends SerializableObj{
 
 	public void setFee(Double fee) {
 		this.fee = fee;
+	}
+
+	@JsonIgnore
+	public String getName() {
+		return getRefId();
+	}
+
+	@JsonIgnore
+	public String getDisplayName() {
+		return hotel+"- Ksh "+fee;
 	}
 	
 }

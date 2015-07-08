@@ -7,8 +7,11 @@ import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import com.icpak.rest.IDUtils;
 import com.icpak.rest.dao.EventsDao;
+import com.icpak.rest.models.event.Accommodation;
 import com.icpak.rest.models.event.Event;
-import com.workpoint.icpak.shared.model.EventDto;
+import com.workpoint.icpak.shared.model.PaymentStatus;
+import com.workpoint.icpak.shared.model.events.AccommodationDto;
+import com.workpoint.icpak.shared.model.events.EventDto;
 
 @Transactional
 public class EventsDaoHelper {
@@ -23,6 +26,10 @@ public class EventsDaoHelper {
 		
 		for(Event e : list){
 			EventDto event = e.toDto();
+			//int[] counts = dao.getEventCounts();
+			event.setDelegateCount(dao.getDelegateCount(e.getRefId()));
+			event.setTotalPaid(dao.getTotalEventAmount(e.getRefId(), PaymentStatus.PAID));
+			event.setTotalUnpaid(dao.getTotalEventAmount(e.getRefId(), PaymentStatus.NOTPAID));
 			event.setUri(uri+"/"+event.getRefId());
 			eventsList.add(event);
 		}
@@ -36,7 +43,7 @@ public class EventsDaoHelper {
 		return event.toDto();
 	}
 	
-	public void createEvent(EventDto dto) {
+	public EventDto createEvent(EventDto dto) {
 		
 		assert dto.getRefId()==null;
 		
@@ -44,9 +51,10 @@ public class EventsDaoHelper {
 		event.setRefId(IDUtils.generateId());
 		event.copyFrom(dto);
 		dao.save(event);
-		
 		dto.setRefId(event.getRefId());
 		assert event.getId()!=null;
+		
+		return event.toDto();
 	}
 
 	public void updateEvent(String eventId, EventDto dto) {

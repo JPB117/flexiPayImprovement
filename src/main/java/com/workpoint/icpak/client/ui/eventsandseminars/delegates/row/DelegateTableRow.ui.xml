@@ -4,32 +4,24 @@
 
 	<g:HTMLPanel styleName="tr" ui:field="row">
 		<g:HTMLPanel styleName="td" ui:field="divMemberNo">
-			12256
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divTitle">
-			Dr
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divSurName">
-			Kimani
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divOtherNames">
-			Tom Muriranja
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divEmail">
-			tomkim@wira.io
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divAccomodation">
-			NEW STANLEY HOTEL(2
-			Nights)
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divAmount">
-			5,500
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divPaymentStatus">
-			<span class="label label-success">Paid</span>
+			<span class="label label-success" ui:field="spnPaymentStatus">Paid</span>
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divAttendance">
-			<span class="label label-danger">Not-Attended</span>
+			<span class="label label-danger" ui:field="spnAttendance">Not-Attended</span>
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divAction">
 			<div class="dropdown">

@@ -4,25 +4,19 @@
 
 	<g:HTMLPanel styleName="tr" ui:field="row">
 		<g:HTMLPanel styleName="td" ui:field="divDate">
-			21st - 22nd January
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divEventName">
-			<g:Anchor ui:field="aEventName">C-Suite Seminar</g:Anchor>
+			<g:Anchor ui:field="aEventName"></g:Anchor>
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divEventLocation">
-			Nairobi
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divCPDHours">
-			24
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divDelegates">
-			1,500
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divPaidAmount">
-			120,500
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divUnPaidAmount">
-			10,500
 		</g:HTMLPanel>
 	</g:HTMLPanel>
 </ui:UiBinder> 

@@ -25,6 +25,7 @@ public class Invoice extends PO{
 	private String contactName;
 	private String phoneNumber;
 	private Double amount;
+	private String bookingRefId;
 	
 	@OneToMany(mappedBy="invoice", cascade={CascadeType.PERSIST, CascadeType.REMOVE})
 	private Set<InvoiceLine> lines = new HashSet<InvoiceLine>();
@@ -138,6 +139,7 @@ public class Invoice extends PO{
 		setDate(dto.getDate());
 		setPhoneNumber(dto.getPhoneNumber());
 		setDocumentNo(dto.getDocumentNo());
+		setBookingRefId(dto.getBookingRefId());
 	}
 
 	public String getDocumentNo() {
@@ -146,6 +148,14 @@ public class Invoice extends PO{
 
 	public void setDocumentNo(String documentNo) {
 		this.documentNo = documentNo;
+	}
+
+	public String getBookingRefId() {
+		return bookingRefId;
+	}
+
+	public void setBookingRefId(String bookingRefId) {
+		this.bookingRefId = bookingRefId;
 	}
 	
 	

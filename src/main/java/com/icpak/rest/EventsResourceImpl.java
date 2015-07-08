@@ -22,7 +22,7 @@ import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 import com.workpoint.icpak.shared.api.BookingsResource;
 import com.workpoint.icpak.shared.api.EventsResource;
-import com.workpoint.icpak.shared.model.EventDto;
+import com.workpoint.icpak.shared.model.events.EventDto;
 
 @Path("events")
 @Api(value="events", description="Handles CRUD for Events")
@@ -65,11 +65,7 @@ public class EventsResourceImpl implements EventsResource{
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value="Create a new event", response=Event.class, consumes=MediaType.APPLICATION_JSON)
 	public EventDto create(EventDto event) {
-		
-		helper.createEvent(event);
-		String uri = "";
-		event.setUri(uri+"/"+event.getRefId());
-		return event;
+		return helper.createEvent(event);
 	}
 
 	@PUT

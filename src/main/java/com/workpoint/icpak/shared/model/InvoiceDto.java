@@ -17,6 +17,7 @@ public class InvoiceDto extends SerializableObj{
 	private String contactName;
 	private String phoneNumber;
 	private Double amount;
+	private String bookingRefId;
 	private List<InvoiceLineDto> lines = new ArrayList<InvoiceLineDto>();
 	
 	public InvoiceDto() {
@@ -88,6 +89,14 @@ public class InvoiceDto extends SerializableObj{
 
 	public void setDocumentNo(String documentNo) {
 		this.documentNo = documentNo;
+	}
+
+	public String getBookingRefId() {
+		return bookingRefId;
+	}
+
+	public void setBookingRefId(String bookingRefId) {
+		this.bookingRefId = bookingRefId;
 	}
 	
 	

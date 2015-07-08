@@ -43,4 +43,11 @@ public class BookingsDao extends BaseDao {
 		return false;
 	}
 
+	public String getInvoiceRef(String bookingRefId) {
+		return getSingleResultOrNull(getEntityManager()
+				.createNativeQuery("select refId from Invoice where bookingRefId=:bookingRefId")
+				.setParameter("bookingRefId", bookingRefId));
+		
+	}
+
 }

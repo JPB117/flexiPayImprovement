@@ -5,8 +5,12 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Widget;
 import com.workpoint.icpak.client.ui.component.RowWidget;
+import com.workpoint.icpak.shared.model.events.EventDto;
+
+import static com.workpoint.icpak.client.ui.util.DateUtils.*;
 
 public class EventsTableRow extends RowWidget {
 
@@ -32,6 +36,8 @@ public class EventsTableRow extends RowWidget {
 	@UiField
 	HTMLPanel divUnPaidAmount;
 	@UiField
+	HTMLPanel divCPDHours;
+	@UiField
 	Anchor aEventName;
 	
 
@@ -40,6 +46,22 @@ public class EventsTableRow extends RowWidget {
 		
 		String url = "#events;eventId=254";
 		aEventName.setHref(url);
+	}
+
+
+	public EventsTableRow(EventDto event) {
+		this();
+		
+		String dates = event.getStartDate()==null? "" : DATEFORMAT.format(event.getStartDate())+"-"+
+				event.getEndDate()==null? "" : DATEFORMAT.format(event.getEndDate());
+		divDate.add(new InlineLabel(dates));
+		divDelegates.add(new InlineLabel(event.getDelegateCount()+""));
+		divEventLocation.add(new InlineLabel(event.getVenue()));
+		divPaidAmount.add(new InlineLabel(event.getTotalPaid()+""));
+		divUnPaidAmount.add(new InlineLabel(event.getTotalUnpaid()+""));
+		divCPDHours.add(new InlineLabel(event.getCpdHours()+""));
+		aEventName.setText(event.getName());
+		aEventName.setHref("#events;eventId="+event.getRefId());
 	}
 
 }

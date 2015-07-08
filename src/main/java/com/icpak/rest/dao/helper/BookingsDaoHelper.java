@@ -16,9 +16,11 @@ import com.google.inject.persist.Transactional;
 import com.icpak.rest.IDUtils;
 import com.icpak.rest.dao.BookingsDao;
 import com.icpak.rest.dao.EventsDao;
+import com.icpak.rest.dao.InvoiceDaoHelper;
 import com.icpak.rest.dao.UsersDao;
 import com.icpak.rest.exceptions.ServiceException;
 import com.icpak.rest.models.ErrorCodes;
+import com.icpak.rest.models.event.Accommodation;
 import com.icpak.rest.models.event.Booking;
 import com.icpak.rest.models.event.Delegate;
 import com.icpak.rest.models.event.Event;
@@ -47,6 +49,8 @@ public class BookingsDaoHelper {
 	@Inject
 	EventsDao eventDao;
 	
+	@Inject InvoiceDaoHelper invoiceHelper;
+	
 	@Inject TransactionDaoHelper trxHelper;
 
 	public List<BookingDto> getAllBookings(String uriInfo, String eventId,
@@ -68,15 +72,19 @@ public class BookingsDaoHelper {
 	public BookingDto getBookingById(String eventId, String bookingId) {
 
 		Booking booking = dao.getByBookingId(bookingId);
-		return booking.toDto();
+		BookingDto bookingDto = booking.toDto();
+		bookingDto.setInvoiceRef(dao.getInvoiceRef(bookingId));
+		
+		return bookingDto;
 	}
 
 	public BookingDto createBooking(String eventId, BookingDto dto) {
 		assert dto.getRefId() == null;
-
+		Event event = eventDao.getByEventId(eventId);
+		
 		Booking booking = new Booking();
 		booking.setRefId(IDUtils.generateId());
-		booking.setEvent(eventDao.getByEventId(eventId));
+		booking.setEvent(event);
 		if (dto.getContact() != null) {
 			Contact poContact = new Contact();
 			ContactDto contactDto = dto.getContact();
@@ -84,20 +92,46 @@ public class BookingsDaoHelper {
 			booking.setContact(poContact);
 		}
 		booking.copyFrom(dto);
-		dao.createBooking(booking);
 		
 		List<DelegateDto> dtos = dto.getDelegates();
 		Collection<Delegate> delegates = new ArrayList<>();
+		
+		double total = 0.0;
+		if(dtos!=null)
 		for (DelegateDto delegateDto : dtos) {
 			Delegate d = get(delegateDto);
+			if(delegateDto.getAccommodation()!=null){
+				Accommodation accommodation = 
+						dao.findByRefId(delegateDto.getAccommodation().getRefId(),Accommodation.class);
+				if(accommodation!=null){
+					d.setAccommodation(accommodation);
+				}
+			}
 			
-			d.setBooking(booking);
-			dao.save(d);
+			//Event Pricing
+			Double price = event.getNonMemberPrice();
+			if(delegateDto.getMemberRegistrationNo()!=null || d.isMember()){
+				price = event.getMemberPrice();
+			}
+			
+			//Add Accommodation Charge
+			if(d.getAccommodation()!=null){
+				price+=d.getAccommodation().getFee();
+			}
+			d.setAmount(price); //Charge for delegate
+			total+=price;
+			
+			//Set Booking
+			//d.setBooking(booking);
 			delegates.add(d);
+			//dao.save(d);
+			
 		}
-		
-		dao.getEntityManager().merge(booking);
-		
+		booking.setAmountDue(total);//Total
+		booking.setDelegates(delegates);
+		dao.createBooking(booking);
+		sendProInvoice(booking);
+				
 		//Copy into dto
 		dto.setRefId(booking.getRefId());
 		int i=0;
@@ -105,14 +139,17 @@ public class BookingsDaoHelper {
 			dto.getDelegates().get(i).setRefId(delegate.getRefId());
 		}
 		
-		sendProInvoice(booking);
-		
+		dao.getEntityManager().merge(booking);
+		dto.setInvoiceRef(dao.getInvoiceRef(booking.getRefId()));
 		return dto;
 	}
 
 	private void sendProInvoice(Booking booking) {
+		InvoiceDto invoice = generateInvoice(booking);
+		Event event = booking.getEvent();
+		String subject = booking.getEvent().getName()+"' Event Registration";
+		
 		try{
-			InvoiceDto invoice = generateInvoice(booking);
 			
 			Map<String,Object> values  = new HashMap<String, Object>();
 			values.put("companyName", invoice.getCompanyName());
@@ -125,11 +162,7 @@ public class BookingsDaoHelper {
 			values.put("eventId", booking.getEvent().getRefId());
 			values.put("bookingId", booking.getRefId());
 			Doc doc = new Doc(values);
-			
-			Event event = booking.getEvent();
-			
-			double amount = 0.0;
-			
+
 			for(InvoiceLineDto dto : invoice.getLines()){
 				Map<String,Object> line  = new HashMap<String, Object>();
 				line.put("description", dto.getDescription());
@@ -140,7 +173,7 @@ public class BookingsDaoHelper {
 			
 			values.put("totalAmount", invoice.getAmount());
 			
-			String subject = booking.getEvent().getName()+"' Event Registration";
+			
 			//PDF Invoice Generation
 			InputStream inv = EmailServiceHelper.class.getClassLoader().getResourceAsStream("proforma-invoice.html");
 			String invoiceHTML = IOUtils.toString(inv);
@@ -157,33 +190,29 @@ public class BookingsDaoHelper {
 					Arrays.asList(booking.getContact().getEmail()),
 					Arrays.asList(booking.getContact().getContactName()), attachment);	
 			
-			trxHelper.charge(booking.getUserId(),
-					booking.getBookingDate(), subject, event.getStartDate(), amount,
-					"Booking #"+booking.getId());
-			
 		}catch(Exception e){
 			e.printStackTrace();
 		}
+		
+
+		trxHelper.charge(booking.getUserId(),
+				booking.getBookingDate(), subject, event.getStartDate(), invoice.getAmount(),
+				"Booking #"+booking.getId());
 	}
 	
 	public InvoiceDto generateInvoice(Booking booking){
-		Event event = booking.getEvent();
 		InvoiceDto invoice   = new InvoiceDto();
 		
 		double amount = 0.0;
+		System.err.println("################Delegates>>>>>> "+booking.getDelegates().size()+"!!!!!!!!");
 		for(Delegate delegate : booking.getDelegates()){
 			InvoiceLineDto dto = new InvoiceLineDto();
 			dto.setDescription( delegate.getSurname()+" "+delegate.getOtherNames());
-			
-			Double price = event.getNonMemberPrice();
-			if(delegate.getMemberRegistrationNo()!=null || delegate.isMember()){
-				price = event.getMemberPrice();
-			}
-			dto.setUnitPrice(price);
-			amount+=price;
-			
-			dto.setTotalAmount(price);
+			dto.setUnitPrice(delegate.getAmount());
+			dto.setTotalAmount(delegate.getAmount());
 			invoice.addLine(dto);
+			
+			amount+=delegate.getAmount();
 		}
 		invoice.setAmount(amount);
 		invoice.setDocumentNo(booking.getId()+"");
@@ -192,6 +221,9 @@ public class BookingsDaoHelper {
 		invoice.setCompanyAddress(booking.getContact().getAddress());
 		invoice.setContactName(booking.getContact().getContactName());
 		invoice.setPhoneNumber(booking.getContact().getTelephoneNumbers());
+		invoice.setBookingRefId(booking.getRefId());
+		
+		invoiceHelper.save(invoice);
 		
 		return invoice;
 	}
@@ -227,7 +259,9 @@ public class BookingsDaoHelper {
 		
 		sendProInvoice(poBooking);
 
-		return poBooking.toDto();
+		BookingDto bookingDto = poBooking.toDto();
+		dto.setInvoiceRef(dao.getInvoiceRef(bookingId));
+		return bookingDto;
 	}
 
 	private Delegate get(DelegateDto delegateDto) {

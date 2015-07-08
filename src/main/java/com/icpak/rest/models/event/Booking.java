@@ -67,7 +67,6 @@ public class Booking extends PO{
 	private String paymentRef; //TrxNumber
 	private Date paymentDate;
 	private Double amountDue;
-	private Double amountPaid;
 	private PaymentStatus paymentStatus= PaymentStatus.NOTPAID;
 	
 	@OneToMany(mappedBy="booking",fetch=FetchType.LAZY,cascade={CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE})
@@ -192,9 +191,9 @@ public class Booking extends PO{
 	}
 
 	public void setDelegates(Collection<Delegate> delegates) {
-		delegates.clear();
+		this.delegates.clear();
 		for(Delegate delegate: delegates){
-			delegates.add(delegate);
+			this.delegates.add(delegate);
 			delegate.setBooking(this);
 		}
 		setDelegatesCount(delegates.size());
@@ -216,14 +215,6 @@ public class Booking extends PO{
 		this.amountDue = amountDue;
 	}
 
-	public Double getAmountPaid() {
-		return amountPaid;
-	}
-
-	public void setAmountPaid(Double amountPaid) {
-		this.amountPaid = amountPaid;
-	}
-
 	public PaymentStatus getPaymentStatus() {
 		return paymentStatus;
 	}
@@ -236,7 +227,6 @@ public class Booking extends PO{
 		
 		BookingDto dto = new BookingDto();
 		dto.setAmountDue(amountDue);
-		dto.setAmountPaid(amountPaid);
 		dto.setBookingDate(bookingDate);
 		dto.setContact(contact.toDto());
 		dto.setCurrency(currency);
@@ -268,6 +258,7 @@ public class Booking extends PO{
 		setPaymentMode(dto.getPaymentMode());
 		setPaymentDate(dto.getPaymentDate());
 		setStatus(dto.getStatus());
+		setCurrency(dto.getCurrency());
 	}
 
 	public Contact getContact() {
@@ -285,5 +276,4 @@ public class Booking extends PO{
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
-	
 }

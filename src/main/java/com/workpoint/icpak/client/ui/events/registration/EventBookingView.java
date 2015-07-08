@@ -25,6 +25,7 @@ import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.DropDownList;
 import com.workpoint.icpak.client.ui.component.IssuesPanel;
 import com.workpoint.icpak.client.ui.component.TextField;
+import com.workpoint.icpak.client.ui.events.registration.proforma.ProformaInvoice;
 import com.workpoint.icpak.client.ui.grid.AggregationGrid;
 import com.workpoint.icpak.client.ui.grid.ColumnConfig;
 import com.workpoint.icpak.client.ui.grid.DataMapper;
@@ -33,11 +34,14 @@ import com.workpoint.icpak.client.ui.registration.PageElement;
 import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.shared.model.Country;
 import com.workpoint.icpak.shared.model.DataType;
-import com.workpoint.icpak.shared.model.EventDto;
+import com.workpoint.icpak.shared.model.InvoiceDto;
+import com.workpoint.icpak.shared.model.Listable;
 import com.workpoint.icpak.shared.model.PaymentStatus;
+import com.workpoint.icpak.shared.model.events.AccommodationDto;
 import com.workpoint.icpak.shared.model.events.BookingDto;
 import com.workpoint.icpak.shared.model.events.ContactDto;
 import com.workpoint.icpak.shared.model.events.DelegateDto;
+import com.workpoint.icpak.shared.model.events.EventDto;
 
 public class EventBookingView extends ViewImpl implements
 		EventBookingPresenter.MyView {
@@ -134,6 +138,9 @@ public class EventBookingView extends ViewImpl implements
 
 	@UiField
 	SpanElement spnEventTitle;
+	
+	@UiField
+	ProformaInvoice proformaInv;
 
 	private List<LIElement> liElements = new ArrayList<LIElement>();
 	private List<PageElement> pageElements = new ArrayList<PageElement>();
@@ -152,7 +159,7 @@ public class EventBookingView extends ViewImpl implements
 				model.set("surname", dto.getSurname());
 				model.set("otherNames", dto.getOtherNames());
 				model.set("email", dto.getEmail());
-				// model.set("hotel", dto.get);
+				model.set("accomodation", dto.getAccommodation());
 				models.add(model);
 			}
 			return models;
@@ -176,17 +183,20 @@ public class EventBookingView extends ViewImpl implements
 					.get("otherNames").toString());
 			dto.setEmail(model.get("email") == null ? null : model.get("email")
 					.toString());
+			dto.setAccommodation(model.get("accommodation")==null ? null:
+				(AccommodationDto)model.get("accommodation"));
 
 			return dto;
 		}
 	};
 	
-	//int counter = 0;
-	int counter = 1;
+	int counter = 0;
 
 	public interface Binder extends UiBinder<Widget, EventBookingView> {
 	}
 
+	ColumnConfig accommodationConfig = new ColumnConfig("accommodation", "Accommodation",
+			DataType.SELECTBASIC);
 	@Inject
 	public EventBookingView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
@@ -204,8 +214,8 @@ public class EventBookingView extends ViewImpl implements
 		configs.add(config);
 		config = new ColumnConfig("email", "e-Mail", DataType.STRING);
 		configs.add(config);
-		config = new ColumnConfig("accomodation", "Accomodation",
-				DataType.SELECTBASIC);
+		configs.add(accommodationConfig);
+		
 		configs.add(config);
 		
 		tblDelegates.setColumnConfigs(configs);
@@ -468,7 +478,14 @@ public class EventBookingView extends ViewImpl implements
 			spnDays2Go.setInnerText(DateUtils.getTimeDifference(new Date(),
 					event.getStartDate()));
 		}
-
+		
+		List<Listable> accommodations = new ArrayList<Listable>();
+		if(accommodations!=null){
+			for(AccommodationDto acc: event.getAccommodation()){
+				accommodations.add(acc);
+			}
+			accommodationConfig.setDropDownItems(accommodations);
+		}
 	}
 
 	@Override
@@ -490,4 +507,9 @@ public class EventBookingView extends ViewImpl implements
 
 	}
 
+	@Override
+	public void bindInvoice(InvoiceDto invoice) {
+		proformaInv.clearRows();
+		proformaInv.setInvoice(invoice);
+	}
 }

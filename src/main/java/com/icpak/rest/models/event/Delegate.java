@@ -13,6 +13,8 @@ import javax.xml.bind.annotation.XmlTransient;
 
 import com.icpak.rest.models.base.PO;
 import com.wordnik.swagger.annotations.ApiModel;
+import com.workpoint.icpak.shared.model.events.AccommodationDto;
+import com.workpoint.icpak.shared.model.events.AttendanceStatus;
 import com.workpoint.icpak.shared.model.events.DelegateDto;
 
 @ApiModel(value="Event delegates", description="List of delegates sharing a single booking")
@@ -44,6 +46,14 @@ public class Delegate extends PO{
 	@JoinColumn(name="booking_id")
 	@XmlTransient
 	private Booking booking;
+	
+	@ManyToOne
+	@JoinColumn(name="accommodationId")
+	private Accommodation accommodation;
+	
+	private Double amount;
+	
+	private AttendanceStatus attendance = AttendanceStatus.NOTATTENDED;
 
 	public String getMemberRegistrationNo() {
 		return memberRegistrationNo;
@@ -109,7 +119,9 @@ public class Delegate extends PO{
 		setOtherNames(delegateDto.getOtherNames());
 		setSurname(delegateDto.getSurname());
 		setTitle(delegateDto.getTitle());
-		setRefId(delegateDto.getRefId());
+		
+		if(delegateDto.getAttendance()!=null)
+			setAttendance(delegateDto.getAttendance());
 	}
 
 	public DelegateDto toDto() {
@@ -120,6 +132,12 @@ public class Delegate extends PO{
 		dto.setRefId(bookingId);
 		dto.setSurname(surname);
 		dto.setTitle(title);
+		if(getAccommodation()!=null){
+			dto.setAccommodation(getAccommodation().toDto());
+		}
+		
+		dto.setAttendance(attendance);
+		dto.setAmount(amount);
 		
 		return dto;
 	}
@@ -130,6 +148,30 @@ public class Delegate extends PO{
 
 	public void setMember(boolean isMember) {
 		this.isMember = isMember;
+	}
+
+	public Accommodation getAccommodation() {
+		return accommodation;
+	}
+
+	public void setAccommodation(Accommodation accommodation) {
+		this.accommodation = accommodation;
+	}
+
+	public Double getAmount() {
+		return amount;
+	}
+
+	public void setAmount(Double amount) {
+		this.amount = amount;
+	}
+
+	public AttendanceStatus getAttendance() {
+		return attendance;
+	}
+
+	public void setAttendance(AttendanceStatus attendance) {
+		this.attendance = attendance;
 	}
 
 }

@@ -24,10 +24,12 @@ import com.workpoint.icpak.client.place.NameTokens;
 import com.workpoint.icpak.client.service.AbstractAsyncCallback;
 import com.workpoint.icpak.shared.api.CountriesResource;
 import com.workpoint.icpak.shared.api.EventsResource;
+import com.workpoint.icpak.shared.api.InvoiceResource;
 //import com.workpoint.icpak.shared.api.EventsResource;
 import com.workpoint.icpak.shared.model.Country;
-import com.workpoint.icpak.shared.model.EventDto;
+import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.events.BookingDto;
+import com.workpoint.icpak.shared.model.events.EventDto;
 
 //import com.workpoint.icpak.shared.model.events.BookingDto;
 
@@ -54,6 +56,8 @@ public class EventBookingPresenter extends
 		void bindBooking(BookingDto booking);
 
 		void setMiddleHeight();
+
+		void bindInvoice(InvoiceDto invoice);
 	}
 
 	@ProxyCodeSplit
@@ -72,14 +76,18 @@ public class EventBookingPresenter extends
 
 	private ResourceDelegate<EventsResource> eventsResource;
 
+	private ResourceDelegate<InvoiceResource> invoiceResource;
+
 	@Inject
 	public EventBookingPresenter(final EventBus eventBus, final MyView view,
 			final MyProxy proxy,
 			ResourceDelegate<CountriesResource> countriesResource,
-			ResourceDelegate<EventsResource> eventsResource) {
+			ResourceDelegate<EventsResource> eventsResource,
+			ResourceDelegate<InvoiceResource> invoiceResource) {
 		super(eventBus, view, proxy);
 		this.countriesResource = countriesResource;
 		this.eventsResource = eventsResource;
+		this.invoiceResource = invoiceResource;
 	}
 
 	@Override
@@ -126,9 +134,7 @@ public class EventBookingPresenter extends
 					.withCallback(new AbstractAsyncCallback<BookingDto>() {
 						@Override
 						public void onSuccess(BookingDto booking) {
-							bookingId = booking.getRefId();
-							getView().bindBooking(booking);
-							getView().next();
+							bindBooking(booking);							
 						}
 					}).bookings(eventId).update(bookingId, dto);
 
@@ -137,12 +143,16 @@ public class EventBookingPresenter extends
 					.withCallback(new AbstractAsyncCallback<BookingDto>() {
 						@Override
 						public void onSuccess(BookingDto booking) {
-							getView().bindBooking(booking);
-							getView().next();
-
+							bindBooking(booking);
 						}
 					}).bookings(eventId).create(dto);
 		}
+	}
+
+	protected void bindBooking(BookingDto booking) {
+		bookingId = booking.getRefId();
+		getView().bindBooking(booking);
+		getInvoice(booking.getInvoiceRef());
 	}
 
 	@Override
@@ -202,6 +212,18 @@ public class EventBookingPresenter extends
 						}
 					}).bookings(eventId).getById(bookingId);
 		}
+
+	}
+	
+	protected void getInvoice(String invoiceRef) {
+
+		invoiceResource.withCallback(new AbstractAsyncCallback<InvoiceDto>() {
+			@Override
+			public void onSuccess(InvoiceDto invoice) {
+				getView().bindInvoice(invoice);
+				getView().next();
+			}
+		}).getInvoice(invoiceRef);
 
 	}
 

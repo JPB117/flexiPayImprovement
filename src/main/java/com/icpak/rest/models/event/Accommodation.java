@@ -1,8 +1,12 @@
 package com.icpak.rest.models.event;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -11,7 +15,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 import com.icpak.rest.models.base.PO;
 import com.wordnik.swagger.annotations.ApiModel;
-import com.workpoint.icpak.shared.model.AccommodationDto;
+import com.workpoint.icpak.shared.model.events.AccommodationDto;
 
 /**
  * Event model 
@@ -40,6 +44,9 @@ public class Accommodation extends PO{
 	@ManyToOne
 	@JoinColumn(name="eventId")
 	private Event event;
+	
+	@OneToMany(mappedBy="accommodation")
+	private Set<Delegate> delegates = new HashSet<>();
 	
 	public Accommodation() {
 	}
@@ -73,8 +80,22 @@ public class Accommodation extends PO{
 		dto.setDescription(description);
 		dto.setFee(fee);
 		dto.setHotel(hotel);
-		dto.setRefId(description);
+		dto.setRefId(getRefId());
 		
 		return dto;
+	}
+
+	public void copyFrom(AccommodationDto dto) {
+		setDescription(dto.getDescription());
+		setFee(dto.getFee());
+		setHotel(dto.getHotel());
+	}
+
+	public Event getEvent() {
+		return event;
+	}
+
+	public void setEvent(Event event) {
+		this.event = event;
 	}
 }

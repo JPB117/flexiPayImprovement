@@ -1,11 +1,13 @@
 package com.icpak.rest.models.event;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
@@ -18,10 +20,10 @@ import javax.xml.bind.annotation.XmlTransient;
 
 import com.icpak.rest.models.base.PO;
 import com.wordnik.swagger.annotations.ApiModel;
-import com.workpoint.icpak.shared.model.AccommodationDto;
-import com.workpoint.icpak.shared.model.EventDto;
 import com.workpoint.icpak.shared.model.EventStatus;
 import com.workpoint.icpak.shared.model.EventType;
+import com.workpoint.icpak.shared.model.events.AccommodationDto;
+import com.workpoint.icpak.shared.model.events.EventDto;
 
 /**
  * Event model 
@@ -67,7 +69,7 @@ public class Event extends PO{
 	@OneToMany(mappedBy="event")
 	Set<Booking> bookings=new HashSet<>();
 	
-	@OneToMany(mappedBy="event")
+	@OneToMany(mappedBy="event", cascade={CascadeType.PERSIST, CascadeType.REMOVE})
 	Set<Accommodation> accommodation=new HashSet<>();
 	
 	
@@ -202,7 +204,7 @@ public class Event extends PO{
 		dto.setNonMemberPrice(nonMemberPrice);
 		dto.setStatus(status);
 		dto.setType(type);
-		dto.setVenue(dto.getVenue());
+		dto.setVenue(venue);
 		
 		if(getAccommodation()!=null){
 			List<AccommodationDto> accommodations  = new ArrayList<>();
@@ -227,14 +229,28 @@ public class Event extends PO{
 		setStatus(dto.getStatus());
 		setType(dto.getType());
 		setVenue(dto.getVenue());
+		
+		if(dto.getAccommodation()!=null){
+			List<Accommodation> accommodations  = new ArrayList<>();
+			for(AccommodationDto a: dto.getAccommodation()){
+				Accommodation d = new Accommodation();
+				d.copyFrom(a);
+				accommodations.add(d);
+			}
+			setAccommodation(accommodations);
+		}
 	}
 
 	public Set<Accommodation> getAccommodation() {
 		return accommodation;
 	}
 
-	public void setAccommodation(Set<Accommodation> accommodation) {
-		this.accommodation = accommodation;
+	public void setAccommodation(Collection<Accommodation> accommodation) {
+		this.accommodation.clear();
+		for(Accommodation a: accommodation){
+			a.setEvent(this);
+			this.accommodation.add(a);
+		}
 	}
 
 }

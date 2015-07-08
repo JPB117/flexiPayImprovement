@@ -35,7 +35,7 @@
 		<g:HTMLPanel styleName="row" ui:field="panelEventDrillDown">
 			<div class="col-sm-12">
 				<h4 class="info-text">
-					<span ui:field="spnEventTitle">P.A.C Event</span>
+					<span ui:field="spnEventTitle"></span>
 				</h4>
 				<hr />
 			</div>

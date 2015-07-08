@@ -1,8 +1,12 @@
-package com.workpoint.icpak.shared.model;
+package com.workpoint.icpak.shared.model.events;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import com.workpoint.icpak.shared.model.EventStatus;
+import com.workpoint.icpak.shared.model.EventType;
+import com.workpoint.icpak.shared.model.SerializableObj;
 
 public class EventDto extends SerializableObj{
 
@@ -22,6 +26,9 @@ public class EventDto extends SerializableObj{
 	private Double memberPrice;
 	private Double nonMemberPrice;
 	private List<AccommodationDto> accommodation = new ArrayList<AccommodationDto>();
+	private int delegateCount;
+	private double totalPaid;
+	private double totalUnpaid;
 	
 	public EventDto() {
 	}
@@ -113,6 +120,29 @@ public class EventDto extends SerializableObj{
 	public void setAccommodation(List<AccommodationDto> accommodation) {
 		this.accommodation = accommodation;
 	}
-	
+
+	public int getDelegateCount() {
+		return delegateCount;
+	}
+
+	public void setDelegateCount(int delegateCount) {
+		this.delegateCount = delegateCount;
+	}
+
+	public double getTotalPaid() {
+		return totalPaid;
+	}
+
+	public void setTotalPaid(double totalPaid) {
+		this.totalPaid = totalPaid;
+	}
+
+	public double getTotalUnpaid() {
+		return totalUnpaid;
+	}
+
+	public void setTotalUnpaid(double totalUnpaid) {
+		this.totalUnpaid = totalUnpaid;
+	}
 	
 }

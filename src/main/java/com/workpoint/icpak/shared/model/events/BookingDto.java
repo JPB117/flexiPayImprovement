@@ -1,6 +1,5 @@
 package com.workpoint.icpak.shared.model.events;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -22,6 +21,7 @@ public class BookingDto extends SerializableObj{
 	private Double amountDue;
 	private Double amountPaid;
 	private String eventRefId;
+	private String invoiceRef;
 	private String status; //DRAFT/ PAID
 	private PaymentStatus paymentStatus= PaymentStatus.NOTPAID;
 	private List<DelegateDto> delegates = null; 
@@ -123,6 +123,14 @@ public class BookingDto extends SerializableObj{
 
 	public void setContact(ContactDto contact) {
 		this.contact = contact;
+	}
+
+	public String getInvoiceRef() {
+		return invoiceRef;
+	}
+
+	public void setInvoiceRef(String invoiceRef) {
+		this.invoiceRef = invoiceRef;
 	}
 	
 }

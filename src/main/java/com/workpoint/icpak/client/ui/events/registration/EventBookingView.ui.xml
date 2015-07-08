@@ -267,7 +267,7 @@
 													</div>
 
 													<div class="row">
-														<proforma:ProformaInvoice></proforma:ProformaInvoice>
+														<proforma:ProformaInvoice ui:field="proformaInv"></proforma:ProformaInvoice>
 													</div>
 												</div>
 											</div>
