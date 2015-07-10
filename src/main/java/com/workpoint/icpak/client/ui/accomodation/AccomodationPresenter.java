@@ -60,9 +60,4 @@ public class AccomodationPresenter
 	protected void save() {
 	}
 
-	@Override
-	protected void onReset() {
-		super.onReset();
-	}
-
 }

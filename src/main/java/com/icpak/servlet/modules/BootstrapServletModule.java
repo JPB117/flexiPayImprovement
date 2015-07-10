@@ -56,7 +56,7 @@ public class BootstrapServletModule extends ServletModule{
         params.put(PackagesResourceConfig.PROPERTY_PACKAGES, propertyPackages);
         params.put("javax.ws.rs.container.ContainerRequestFilter", "com.icpak.rest.ResourceRequestFilter");
         params.put("com.sun.jersey.api.json.POJOMappingFeature","true");
-        serve("/api/*").with(GuiceContainer.class, params);
+        serve("icpakportal/api/*").with(GuiceContainer.class, params);
           
         Map<String, String> params2 = new HashMap<String, String>();
         params2.put("loadonstartup", "1");

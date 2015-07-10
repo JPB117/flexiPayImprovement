@@ -13,6 +13,7 @@ import com.google.inject.Provider;
 import com.icpak.rest.exceptions.ServiceException;
 import com.icpak.rest.models.ErrorCodes;
 import com.icpak.rest.models.base.PO;
+import com.icpak.rest.models.trx.Invoice;
 
 
 public class BaseDao {
@@ -25,6 +26,10 @@ public class BaseDao {
 	
 	public void save(PO po){
 		getEntityManager().persist(po);
+	}
+	
+	public void merge(PO po) {
+		getEntityManager().merge(po);
 	}
 	
 	public void delete(PO po){

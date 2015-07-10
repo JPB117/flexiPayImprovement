@@ -165,6 +165,7 @@ public class ApplicationFormDaoHelper {
 		String documentNo = "ProForma Invoice_"+application.getSurname();
 		
 		InvoiceDto dto   = new InvoiceDto();
+		dto.setDescription("Member Registration Invoice");
 		dto.setDocumentNo(documentNo);
 		dto.setAmount(category.getApplicationAmount());
 		dto.setCompanyName(application.getEmployer());

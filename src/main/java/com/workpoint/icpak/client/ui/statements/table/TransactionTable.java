@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.workpoint.icpak.client.ui.component.TableHeader;
 import com.workpoint.icpak.client.ui.component.TableView;
 import com.workpoint.icpak.client.ui.statements.row.StatementTableRow;
+import com.workpoint.icpak.shared.model.InvoiceDto;
 
 public class TransactionTable extends Composite {
 

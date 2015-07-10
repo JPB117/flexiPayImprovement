@@ -19,12 +19,6 @@ import com.workpoint.icpak.client.ui.accomodation.AccomodationView;
 import com.workpoint.icpak.client.ui.admin.AdminHomePresenter;
 import com.workpoint.icpak.client.ui.admin.AdminHomeView;
 import com.workpoint.icpak.client.ui.admin.TabPanel;
-import com.workpoint.icpak.client.ui.admin.dashboard.AdminDashboardPresenter;
-import com.workpoint.icpak.client.ui.admin.dashboard.AdminDashboardView;
-import com.workpoint.icpak.client.ui.admin.dashboard.charts.PieChartPresenter;
-import com.workpoint.icpak.client.ui.admin.dashboard.charts.PieChartView;
-import com.workpoint.icpak.client.ui.admin.dashboard.linegraph.LineGraphPresenter;
-import com.workpoint.icpak.client.ui.admin.dashboard.linegraph.LineGraphView;
 import com.workpoint.icpak.client.ui.admin.dashboard.table.TableDataPresenter;
 import com.workpoint.icpak.client.ui.admin.dashboard.table.TableDataView;
 import com.workpoint.icpak.client.ui.admin.reports.ReportsPresenter;
@@ -208,12 +202,7 @@ public class ClientModule extends AbstractPresenterModule {
 
 		bindPresenter(UserPresenter.class, UserPresenter.MyView.class,
 				UserView.class, UserPresenter.MyProxy.class);
-
-		bindPresenter(AdminDashboardPresenter.class,
-				AdminDashboardPresenter.IAdminDashboardView.class,
-				AdminDashboardView.class,
-				AdminDashboardPresenter.IAdminDashboardProxy.class);
-
+		
 		bindPresenterWidget(ReportsPresenter.class,
 				ReportsPresenter.MyView.class, ReportsView.class);
 
@@ -236,11 +225,11 @@ public class ClientModule extends AbstractPresenterModule {
 				ProfilePresenter.IProfileView.class, ProfileView.class,
 				ProfilePresenter.IProfileProxy.class);
 
-		bindPresenterWidget(PieChartPresenter.class,
+		/*bindPresenterWidget(PieChartPresenter.class,
 				PieChartPresenter.IPieChartView.class, PieChartView.class);
 
 		bindPresenterWidget(LineGraphPresenter.class,
-				LineGraphPresenter.ILineGraphView.class, LineGraphView.class);
+				LineGraphPresenter.ILineGraphView.class, LineGraphView.class);*/
 
 		bindPresenter(SettingsPresenter.class,
 				SettingsPresenter.ISettingsView.class, SettingsView.class,

@@ -1,5 +1,7 @@
 package com.workpoint.icpak.shared.api;
 
+import java.util.List;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -11,6 +13,10 @@ import com.workpoint.icpak.shared.model.InvoiceDto;
 @Path("invoices")
 public interface InvoiceResource {
 
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<InvoiceDto> getInvoices();
+	
 	@Path("/{invoiceref}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)

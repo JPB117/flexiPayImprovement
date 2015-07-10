@@ -30,7 +30,6 @@ public class EventsTable extends Composite {
 		initWidget(uiBinder.createAndBindUi(this));
 		tblView.setAutoNumber(false);
 		createHeader();
-		createRow(new EventsTableRow());
 	}
 
 	public void createHeader() {
