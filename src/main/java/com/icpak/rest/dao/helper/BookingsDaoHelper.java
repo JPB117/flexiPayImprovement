@@ -216,7 +216,7 @@ public class BookingsDaoHelper {
 		invoice.setAmount(amount);
 		invoice.setDocumentNo(booking.getId()+"");
 		invoice.setCompanyName(booking.getContact().getCompany());
-		invoice.setDate(booking.getBookingDate());
+		invoice.setDate(booking.getBookingDate().getTime());
 		invoice.setCompanyAddress(booking.getContact().getAddress());
 		invoice.setContactName(booking.getContact().getContactName());
 		invoice.setPhoneNumber(booking.getContact().getTelephoneNumbers());

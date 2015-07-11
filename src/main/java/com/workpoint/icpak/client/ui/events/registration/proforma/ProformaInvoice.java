@@ -1,6 +1,7 @@
 package com.workpoint.icpak.client.ui.events.registration.proforma;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
@@ -62,7 +63,7 @@ public class ProformaInvoice extends Composite {
 	public void setInvoice(InvoiceDto invoice) {
 		lblCompany.setText(invoice.getCompanyName());
 		lblAddress.setText(invoice.getCompanyAddress());
-		lblInvoiceDate.setText(DateUtils.DATEFORMAT.format(invoice.getDate()));
+		lblInvoiceDate.setText(DateUtils.DATEFORMAT.format(new Date(invoice.getDate())));
 		lblQuoteNo.setText(invoice.getDocumentNo());
 		
 		for(InvoiceLineDto line: invoice.getLines()){

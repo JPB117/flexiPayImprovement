@@ -1,7 +1,6 @@
 package com.workpoint.icpak.shared.model;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class InvoiceDto extends SerializableObj{
@@ -10,7 +9,7 @@ public class InvoiceDto extends SerializableObj{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private Date date;
+	private Long date;
 	private String documentNo;
 	private String companyName;
 	private String companyAddress;
@@ -48,11 +47,11 @@ public class InvoiceDto extends SerializableObj{
 		this.lines = lines;
 	}
 
-	public Date getDate() {
+	public Long getDate() {
 		return date;
 	}
 
-	public void setDate(Date date) {
+	public void setDate(Long date) {
 		this.date = date;
 	}
 

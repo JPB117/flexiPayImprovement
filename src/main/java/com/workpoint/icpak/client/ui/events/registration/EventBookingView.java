@@ -417,7 +417,7 @@ public class EventBookingView extends ViewImpl implements
 		// dto.setPaymentRef(paymentRef);
 		dto.setStatus("");
 		dto.setPaymentStatus(PaymentStatus.NOTPAID);
-		dto.setBookingDate(new Date());
+		dto.setBookingDate(new Date().getTime());
 		dto.setContact(getContact());
 		// dto.setCurrency(currency);
 		dto.setDelegates(getDelegates());
@@ -468,15 +468,17 @@ public class EventBookingView extends ViewImpl implements
 		spnEventName.setInnerText(event.getName());
 
 		if (event.getStartDate() != null) {
-			spnStartDate.setInnerText(DateUtils.DATEFORMAT.format(event
-					.getStartDate()));
+			
+			Date startDate = new Date(event.getStartDate());
+			spnStartDate.setInnerText(DateUtils.DATEFORMAT.format(startDate));
 			if (event.getEndDate() != null) {
+				Date endDate = new Date(event.getEndDate());
 				spnDuration.setInnerText(DateUtils.getTimeDifference(
-						event.getStartDate(), event.getEndDate()));
+						startDate, endDate));
 			}
 
 			spnDays2Go.setInnerText(DateUtils.getTimeDifference(new Date(),
-					event.getStartDate()));
+					startDate));
 		}
 		
 		List<Listable> accommodations = new ArrayList<Listable>();
