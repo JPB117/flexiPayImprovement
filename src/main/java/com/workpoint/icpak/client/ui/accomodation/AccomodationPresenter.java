@@ -105,9 +105,4 @@ public class AccomodationPresenter
 		t.schedule(5000);
 	}
 
-	@Override
-	protected void onReset() {
-		super.onReset();
-	}
-
 }

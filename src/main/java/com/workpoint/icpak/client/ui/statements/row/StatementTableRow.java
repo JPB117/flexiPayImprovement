@@ -4,8 +4,12 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Widget;
 import com.workpoint.icpak.client.ui.component.RowWidget;
+import com.workpoint.icpak.shared.model.InvoiceDto;
+import static com.workpoint.icpak.client.ui.util.DateUtils.*;
+import static com.workpoint.icpak.client.ui.util.NumberUtils.*;
 
 public class StatementTableRow extends RowWidget {
 
@@ -33,6 +37,19 @@ public class StatementTableRow extends RowWidget {
 
 	public StatementTableRow() {
 		initWidget(uiBinder.createAndBindUi(this));
+	}
+
+	public StatementTableRow(InvoiceDto invoice) {
+		this();
+		if (invoice.getDate() != null) {
+			divDate.add(new InlineLabel(DATEFORMAT.format(invoice.getDate())));
+			divDueDate.add(new InlineLabel(DATEFORMAT.format(invoice.getDate())));
+		}
+		divDocNum.add(new InlineLabel(invoice.getDocumentNo()));
+		divDescription.add(new InlineLabel(invoice.getDescription()));
+
+		divAmount.add(new InlineLabel(NUMBERFORMAT.format(invoice.getAmount())+""));
+		divBalance.add(new InlineLabel(NUMBERFORMAT.format(invoice.getAmount())+""));
 	}
 
 }

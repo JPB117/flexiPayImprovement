@@ -1,5 +1,8 @@
 package com.icpak.rest.dao;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import com.icpak.rest.models.trx.Invoice;
@@ -28,6 +31,7 @@ public class InvoiceDaoHelper {
 		}
 		
 		dao.save(invoice);
+		dao.merge(invoice);
 		
 		return invoice.toDto();
 	}
@@ -48,5 +52,29 @@ public class InvoiceDaoHelper {
 		dao.save(invoice);
 		
 		return invoice.toDto();
+	}
+
+	public List<InvoiceDto> getAllInvoices() {
+		
+		List<Invoice> invoices = dao.getAllInvoices();
+		List<InvoiceDto> dtos = new ArrayList<>();
+		
+		for(Invoice invoice: invoices){
+			dtos.add(invoice.toDto());
+		}
+		
+		return dtos;
+	}
+
+	public List<InvoiceDto> getAllInvoicesForMember(String memberId) {
+		
+		List<Invoice> invoices = dao.getAllInvoicesForMember(memberId);
+		List<InvoiceDto> dtos = new ArrayList<>();
+		
+		for(Invoice invoice: invoices){
+			dtos.add(invoice.toDto());
+		}
+		
+		return dtos;
 	}
 }

@@ -5,22 +5,16 @@
 
 	<g:HTMLPanel styleName="tr" ui:field="row">
 		<g:HTMLPanel styleName="td" ui:field="divDate">
-			2014-05-10
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divDocNum">
-			INV-25639
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divDescription">
-			Member Registration
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divDueDate">
-			2014-06-30
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divAmount">
-			Kes 10,000.00
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divBalance">
-			Kes 5
 		</g:HTMLPanel>
 	</g:HTMLPanel>
 </ui:UiBinder> 

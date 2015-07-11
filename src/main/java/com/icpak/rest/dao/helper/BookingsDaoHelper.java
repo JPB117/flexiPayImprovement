@@ -202,9 +202,8 @@ public class BookingsDaoHelper {
 	
 	public InvoiceDto generateInvoice(Booking booking){
 		InvoiceDto invoice   = new InvoiceDto();
-		
+		invoice.setDescription("Event Booking Invoice");
 		double amount = 0.0;
-		System.err.println("################Delegates>>>>>> "+booking.getDelegates().size()+"!!!!!!!!");
 		for(Delegate delegate : booking.getDelegates()){
 			InvoiceLineDto dto = new InvoiceLineDto();
 			dto.setDescription( delegate.getSurname()+" "+delegate.getOtherNames());

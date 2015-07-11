@@ -1,5 +1,7 @@
 package com.icpak.rest;
 
+import java.util.List;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -17,6 +19,12 @@ public class InvoiceResourceImpl implements InvoiceResource{
 	
 	@Inject
 	private InvoiceDaoHelper helper;
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<InvoiceDto> getInvoices(){
+		return helper.getAllInvoices();
+	}
 
 	@Path("/{invoiceref}")
 	@GET
@@ -24,6 +32,5 @@ public class InvoiceResourceImpl implements InvoiceResource{
 	public InvoiceDto getInvoice(@PathParam("invoiceref") String invoiceRef){
 		return helper.getInvoice(invoiceRef);
 	}
-
 	
 }

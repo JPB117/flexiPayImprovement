@@ -13,7 +13,7 @@
 						<div class="h2 mt0">
 							<span ui:field="spnTotalApplication"></span>
 						</div>
-						<div class="text-uppercase">Total Application</div>
+						<div class="text-uppercase">Total Applications</div>
 					</div>
 				</div>
 			</div>

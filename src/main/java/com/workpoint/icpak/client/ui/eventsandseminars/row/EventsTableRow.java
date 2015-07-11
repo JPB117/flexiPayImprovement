@@ -11,6 +11,7 @@ import com.workpoint.icpak.client.ui.component.RowWidget;
 import com.workpoint.icpak.shared.model.events.EventDto;
 
 import static com.workpoint.icpak.client.ui.util.DateUtils.*;
+import static com.workpoint.icpak.client.ui.util.NumberUtils.*;
 
 public class EventsTableRow extends RowWidget {
 
@@ -57,8 +58,8 @@ public class EventsTableRow extends RowWidget {
 		divDate.add(new InlineLabel(dates));
 		divDelegates.add(new InlineLabel(event.getDelegateCount()+""));
 		divEventLocation.add(new InlineLabel(event.getVenue()));
-		divPaidAmount.add(new InlineLabel(event.getTotalPaid()+""));
-		divUnPaidAmount.add(new InlineLabel(event.getTotalUnpaid()+""));
+		divPaidAmount.add(new InlineLabel(NUMBERFORMAT.format(event.getTotalPaid())+""));
+		divUnPaidAmount.add(new InlineLabel(NUMBERFORMAT.format(event.getTotalUnpaid())+""));
 		divCPDHours.add(new InlineLabel(event.getCpdHours()+""));
 		aEventName.setText(event.getName());
 		aEventName.setHref("#events;eventId="+event.getRefId());

@@ -7,6 +7,8 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 
+import static com.workpoint.icpak.client.ui.util.NumberUtils.*;
+
 public class TransactionsHeader extends Composite {
 
 	private static ActivityHeaderUiBinder uiBinder = GWT
@@ -27,6 +29,12 @@ public class TransactionsHeader extends Composite {
 
 	public TransactionsHeader() {
 		initWidget(uiBinder.createAndBindUi(this));
+	}
+
+	public void setValues(int trxCount,double totalPaid, double totalUnpaid) {
+		spnTransactions.setInnerText(trxCount+"");
+		spnAmount.setInnerText(NUMBERFORMAT.format(totalPaid+totalUnpaid)+"");
+		spnBalance.setInnerText(NUMBERFORMAT.format(totalUnpaid)+"");
 	}
 
 }
