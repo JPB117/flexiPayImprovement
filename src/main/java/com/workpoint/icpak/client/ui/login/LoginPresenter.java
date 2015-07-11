@@ -186,11 +186,11 @@ public class LoginPresenter extends
 
 					@Override
 					public void onFailure(Throwable caught) {
-						super.onFailure(caught);
 						getView().clearLoginProgress();
 						LOGGER.log(Level.SEVERE,
 								"Wrong username or password......");
 						getView().setError("Wrong username or password");
+						super.onFailure(caught);
 						// getView().setError("Could authenticate user. Please report this to your administrator");
 						// LOGGER.log(
 						// Level.SEVERE,

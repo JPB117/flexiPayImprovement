@@ -92,7 +92,7 @@ public class ClientModule extends AbstractPresenterModule {
 		install(dispatchBuilder.build());
 
 		// Bind RestApplicationPath To Server endpoint
-		bindConstant().annotatedWith(RestApplicationPath.class).to("/api");
+		bindConstant().annotatedWith(RestApplicationPath.class).to("api");
 
 		install(new DefaultModule.Builder().placeManager(
 				ClientPlaceManager.class).build());
