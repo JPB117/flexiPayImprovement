@@ -20,15 +20,9 @@
 					<span class="fa fa-plus"></span>
 					Create
 				</d:ActionLink>
-
-				<d:ActionLink ui:field="aEdit" styleName="btn btn-primary btn-fill">
-					<span class="fa fa-pencil"></span>
-				</d:ActionLink>
-
-				<d:ActionLink ui:field="aDelete" styleName="btn btn-warning btn-fill">
-					<span class="fa fa-trash"></span>
-				</d:ActionLink>
 			</div>
+
+			<br />
 
 			<div class="col-sm-12">
 				<div class="panel panel-default">

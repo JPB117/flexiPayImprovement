@@ -8,7 +8,9 @@
 			<g:HTMLPanel styleName="modal-header">
 				<h5>
 					<i class="icon-cogs"></i>
-					<span ui:field="spnHeader" />
+					<strong>
+						<span ui:field="spnHeader" />
+					</strong>
 					<g:Anchor ui:field="aClose">
 						<i class="fa fa-close pull-right" />
 					</g:Anchor>

@@ -172,16 +172,16 @@ public class CPDView extends ViewImpl implements CPDPresenter.ICPDView {
 
 	@Override
 	public void bindResults(List<CPDDto> result) {
-		headerContainer.setValues(result.size(), 0,result.size());
-		
+		headerContainer.setValues(result.size(), 0, result.size());
+
 		tblView.clearRows();
-		for(CPDDto dto: result){
+		for (CPDDto dto : result) {
 			tblView.createRow(new CPDTableRow(dto));
 		}
 	}
 
+	@Override
 	public void showDetailedView() {
-
+		
 	}
-
 }

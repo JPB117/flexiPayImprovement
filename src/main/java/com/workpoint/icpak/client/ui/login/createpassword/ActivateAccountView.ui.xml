@@ -20,7 +20,7 @@
 			</nav>
 		</g:HTMLPanel>
 
-		<div class="col-xs-10 col-xs-offset-1">
+		<div class="col-xs-8 col-xs-offset-2">
 			<password:PasswordWidget ui:field="panelPasswordWidget"></password:PasswordWidget>
 		</div>
 

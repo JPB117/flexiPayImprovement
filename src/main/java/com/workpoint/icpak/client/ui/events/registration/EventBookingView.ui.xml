@@ -13,8 +13,7 @@
 				<div class="container">
 					<div class="navbar-header" style="width: 100%; text-align: center;">
 						<a class="brand">
-							<img src="http://solutech.co.ke/icpak/assets/img/logo.png"
-								width="150px" />
+							<img src="img/icpak_logo.png" width="150px" />
 						</a>
 					</div>
 				</div>
@@ -108,7 +107,7 @@
 															</div>
 
 															<div class="col-xs-6">
-																<label for="phone">Office Telephone:</label>
+																<label for="phone">Office Line:</label>
 																<d:TextField ui:field="txtPhone" styleName="form-control"
 																	placeholder="Office Name" value="" required="true">
 																</d:TextField>
@@ -218,7 +217,6 @@
 
 												<br />
 												<div class="col-sm-12">
-													<input type="text" data-provide="typeahead"></input>
 													<grid:AggregationGrid ui:field="tblDelegates"></grid:AggregationGrid>
 												</div>
 
@@ -267,7 +265,8 @@
 													</div>
 
 													<div class="row">
-														<proforma:ProformaInvoice ui:field="proformaInv"></proforma:ProformaInvoice>
+														<proforma:ProformaInvoice
+															ui:field="proformaInv"></proforma:ProformaInvoice>
 													</div>
 												</div>
 											</div>

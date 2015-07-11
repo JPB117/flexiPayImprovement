@@ -138,7 +138,7 @@ public class EventBookingView extends ViewImpl implements
 
 	@UiField
 	SpanElement spnEventTitle;
-	
+
 	@UiField
 	ProformaInvoice proformaInv;
 
@@ -183,20 +183,21 @@ public class EventBookingView extends ViewImpl implements
 					.get("otherNames").toString());
 			dto.setEmail(model.get("email") == null ? null : model.get("email")
 					.toString());
-			dto.setAccommodation(model.get("accommodation")==null ? null:
-				(AccommodationDto)model.get("accommodation"));
+			dto.setAccommodation(model.get("accommodation") == null ? null
+					: (AccommodationDto) model.get("accommodation"));
 
 			return dto;
 		}
 	};
-	
+
 	int counter = 0;
 
 	public interface Binder extends UiBinder<Widget, EventBookingView> {
 	}
 
-	ColumnConfig accommodationConfig = new ColumnConfig("accommodation", "Accommodation",
-			DataType.SELECTBASIC);
+	ColumnConfig accommodationConfig = new ColumnConfig("accommodation",
+			"Accommodation", DataType.SELECTBASIC);
+
 	@Inject
 	public EventBookingView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
@@ -204,7 +205,7 @@ public class EventBookingView extends ViewImpl implements
 		tblDelegates.setAutoNumber(false);
 		List<ColumnConfig> configs = new ArrayList<ColumnConfig>();
 		ColumnConfig config = new ColumnConfig("memberNo", "Member No",
-				DataType.STRING,"","input-small");
+				DataType.STRING, "", "input-small");
 		configs.add(config);
 		config = new ColumnConfig("title", "Title", DataType.STRING);
 		configs.add(config);
@@ -215,9 +216,9 @@ public class EventBookingView extends ViewImpl implements
 		config = new ColumnConfig("email", "e-Mail", DataType.STRING);
 		configs.add(config);
 		configs.add(accommodationConfig);
-		
+
 		configs.add(config);
-		
+
 		tblDelegates.setColumnConfigs(configs);
 
 		aAddRow.addClickHandler(new ClickHandler() {
@@ -363,8 +364,7 @@ public class EventBookingView extends ViewImpl implements
 		} else {
 			issuesPanel.removeStyleName("hide");
 		}
-		// return isValid;
-		return true;
+		return isValid;
 
 	}
 
@@ -480,10 +480,10 @@ public class EventBookingView extends ViewImpl implements
 			spnDays2Go.setInnerText(DateUtils.getTimeDifference(new Date(),
 					startDate));
 		}
-		
+
 		List<Listable> accommodations = new ArrayList<Listable>();
-		if(accommodations!=null){
-			for(AccommodationDto acc: event.getAccommodation()){
+		if (accommodations != null) {
+			for (AccommodationDto acc : event.getAccommodation()) {
 				accommodations.add(acc);
 			}
 			accommodationConfig.setDropDownItems(accommodations);

@@ -8,6 +8,9 @@ package com.workpoint.icpak.client.ui.enquiries;
 //import com.workpoint.icpak.shared.responses.GetUserRequestResult;
 //import com.workpoint.icpak.shared.responses.SaveUserResponse;
 //import com.workpoint.icpak.shared.responses.UpdatePasswordResponse;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.Presenter;
@@ -19,7 +22,11 @@ import com.gwtplatform.mvp.client.annotations.TabInfo;
 import com.gwtplatform.mvp.client.annotations.UseGatekeeper;
 import com.gwtplatform.mvp.client.proxy.TabContentProxyPlace;
 import com.workpoint.icpak.client.place.NameTokens;
+import com.workpoint.icpak.client.ui.AppManager;
+import com.workpoint.icpak.client.ui.OptionControl;
 import com.workpoint.icpak.client.ui.admin.TabDataExt;
+import com.workpoint.icpak.client.ui.enquiries.form.CreateEnquiry;
+import com.workpoint.icpak.client.ui.events.ProcessingEvent;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
 import com.workpoint.icpak.client.ui.security.LoginGateKeeper;
 
@@ -28,8 +35,10 @@ public class EnquiriesPresenter
 		Presenter<EnquiriesPresenter.IEnquiriesView, EnquiriesPresenter.IEnquiriesProxy> {
 
 	public interface IEnquiriesView extends View {
-
+		HasClickHandlers getCreateButton();
 	}
+
+	final CreateEnquiry newEnquiry = new CreateEnquiry();
 
 	@ProxyCodeSplit
 	@NameToken(NameTokens.enquiries)
@@ -55,6 +64,31 @@ public class EnquiriesPresenter
 	protected void onBind() {
 		super.onBind();
 
+		getView().getCreateButton().addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				showPopUp(false);
+			}
+		});
+	}
+
+	protected void showPopUp(boolean edit) {
+		if (edit) {
+			// newEnquiry.setAccomodationDetails(newEnquiry);
+		}
+
+		AppManager.showPopUp("New Enquiry", newEnquiry.asWidget(),
+				new OptionControl() {
+					@Override
+					public void onSelect(String name) {
+						if (name.equals("Save")) {
+							if (newEnquiry.isValid()) {
+								fireEvent(new ProcessingEvent());
+								save();
+							}
+						}
+					}
+				}, "Save");
 	}
 
 	protected void save() {

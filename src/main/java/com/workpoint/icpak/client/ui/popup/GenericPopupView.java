@@ -2,6 +2,7 @@ package com.workpoint.icpak.client.ui.popup;
 
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style.Display;
+import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -48,6 +49,7 @@ public class GenericPopupView extends PopupViewImpl implements
 		});
 
 		popUpPanel.getElement().getStyle().setDisplay(Display.BLOCK);
+		popUpPanel.getElement().getStyle().setOverflowY(Overflow.AUTO);
 		popUpPanel.setGlassStyleName("modal-backdrop fade in");
 
 	}
@@ -65,7 +67,7 @@ public class GenericPopupView extends PopupViewImpl implements
 	public PopupPanel getPopUpPanel() {
 		return popUpPanel;
 	}
-	
+
 	@Override
 	public void setInSlot(Object slot, IsWidget content) {
 
@@ -106,7 +108,7 @@ public class GenericPopupView extends PopupViewImpl implements
 	public void removeStyleName(String customPopupStyle) {
 		popUpPanel.removeStyleName(customPopupStyle);
 	}
-	
+
 	@Override
 	protected void onAttach() {
 		super.onAttach();
