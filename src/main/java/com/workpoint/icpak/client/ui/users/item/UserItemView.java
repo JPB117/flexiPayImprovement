@@ -1,4 +1,4 @@
-package com.workpoint.icpak.client.ui.admin.users.item;
+package com.workpoint.icpak.client.ui.users.item;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -16,61 +16,61 @@ public class UserItemView extends ViewImpl implements UserItemPresenter.MyView {
 	public interface Binder extends UiBinder<Widget, UserItemView> {
 	}
 
-	@UiField HTMLPanel panelFirstName;
-	@UiField HTMLPanel panelLastName;
-	@UiField HTMLPanel panelEmail;
-	@UiField HTMLPanel panelGroups;
-	@UiField HTMLPanel panelUserName;
-	@UiField HTMLPanel panelParticipated;
-	@UiField HTMLPanel panelInbox;
-	@UiField HTMLPanel panelTotal;
-	
-	@UiField Anchor aEdit;
-	@UiField Anchor aDelete;
-	
+	@UiField
+	HTMLPanel panelFirstName;
+	@UiField
+	HTMLPanel panelLastName;
+	@UiField
+	HTMLPanel panelEmail;
+	@UiField
+	HTMLPanel panelGroups;
+	@UiField
+	HTMLPanel panelUserName;
+
+	@UiField
+	Anchor aEdit;
+	@UiField
+	Anchor aDelete;
+
 	@Inject
 	public UserItemView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
 	}
 
-	public void setValues(String firstName, String lastName, String username, String email, String groups,
-			int inbox,int participated, int total){
-		
-		if(firstName!=null){
+	public void setValues(String firstName, String lastName, String username,
+			String email, String groups, int inbox, int participated, int total) {
+
+		if (firstName != null) {
 			panelFirstName.getElement().setInnerText(firstName);
 		}
 
-		if(lastName!=null){
+		if (lastName != null) {
 			panelLastName.getElement().setInnerText(lastName);
 		}
-		
-		if(email!=null){
+
+		if (email != null) {
 			panelEmail.getElement().setInnerText(email);
 		}
-		
-		if(groups!=null){
+
+		if (groups != null) {
 			panelGroups.getElement().setInnerText(groups);
 		}
-		
-		if(username!=null){
+
+		if (username != null) {
 			panelUserName.getElement().setInnerText(username);
 		}
-		
-		panelInbox.getElement().setInnerText(""+inbox);
-		panelParticipated.getElement().setInnerText(""+participated);
-		panelTotal.getElement().setInnerText(""+total);
 	}
-	
+
 	@Override
 	public Widget asWidget() {
 		return widget;
 	}
-	
-	public HasClickHandlers getEdit(){
+
+	public HasClickHandlers getEdit() {
 		return aEdit;
 	}
-	
-	public HasClickHandlers getDelete(){
+
+	public HasClickHandlers getDelete() {
 		return aDelete;
 	}
 

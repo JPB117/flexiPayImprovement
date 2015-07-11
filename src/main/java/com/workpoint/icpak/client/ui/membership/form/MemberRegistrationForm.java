@@ -1,4 +1,4 @@
-package com.workpoint.icpak.client.ui.registration.form;
+package com.workpoint.icpak.client.ui.membership.form;
 
 import static com.workpoint.icpak.client.ui.util.StringUtils.isNullOrEmpty;
 

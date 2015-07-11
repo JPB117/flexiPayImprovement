@@ -3,7 +3,7 @@
 	xmlns:g='urn:import:com.google.gwt.user.client.ui' ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	xmlns:d='urn:import:com.workpoint.icpak.client.ui.component'
-	xmlns:form='urn:import:com.workpoint.icpak.client.ui.registration.form'
+	xmlns:form='urn:import:com.workpoint.icpak.client.ui.membership.form'
 	xmlns:proforma='urn:import:com.workpoint.icpak.client.ui.events.registration.proforma'
 	ui:generateLocales='default'>
 

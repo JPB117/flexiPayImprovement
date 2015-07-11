@@ -1,4 +1,4 @@
-package com.workpoint.icpak.client.ui.admin.users.save;
+package com.workpoint.icpak.client.ui.users.save;
 
 import java.util.List;
 

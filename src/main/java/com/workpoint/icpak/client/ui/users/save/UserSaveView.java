@@ -1,4 +1,4 @@
-package com.workpoint.icpak.client.ui.admin.users.save;
+package com.workpoint.icpak.client.ui.users.save;
 
 import java.util.List;
 
@@ -21,13 +21,13 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.PopupViewImpl;
 import com.workpoint.icpak.client.model.UploadContext;
 import com.workpoint.icpak.client.model.UploadContext.UPLOADACTION;
-import com.workpoint.icpak.client.ui.admin.users.save.UserSavePresenter.TYPE;
-import com.workpoint.icpak.client.ui.component.AutoCompleteField;
 import com.workpoint.icpak.client.ui.component.IssuesPanel;
 import com.workpoint.icpak.client.ui.component.PasswordField;
 import com.workpoint.icpak.client.ui.component.TextArea;
 import com.workpoint.icpak.client.ui.component.TextField;
+import com.workpoint.icpak.client.ui.component.autocomplete.AutoCompleteField;
 import com.workpoint.icpak.client.ui.upload.custom.Uploader;
+import com.workpoint.icpak.client.ui.users.save.UserSavePresenter.TYPE;
 import com.workpoint.icpak.shared.model.UserDto;
 import com.workpoint.icpak.shared.model.UserGroup;
 
@@ -35,35 +35,53 @@ public class UserSaveView extends PopupViewImpl implements
 		UserSavePresenter.IUserSaveView {
 
 	private final Widget widget;
-	@UiField HTMLPanel divUserDetails;
-	@UiField HTMLPanel divGroupDetails;
-	@UiField IssuesPanel issues;
-	@UiField Anchor aClose;
+	@UiField
+	HTMLPanel divUserDetails;
+	@UiField
+	HTMLPanel divGroupDetails;
+	@UiField
+	IssuesPanel issues;
+	@UiField
+	Anchor aClose;
 
-	@UiField TextField txtUserName;
-	@UiField TextField txtFirstname;
-	@UiField TextField txtLastname;
-	@UiField TextField txtEmail;
-	@UiField PasswordField txtPassword;
-	@UiField PasswordField txtConfirmPassword;
-	
-	@UiField TextField txtGroupname;
-	@UiField TextArea txtDescription;
-	//@UiField TextField txtUsers;
+	@UiField
+	TextField txtUserName;
+	@UiField
+	TextField txtFirstname;
+	@UiField
+	TextField txtLastname;
+	@UiField
+	TextField txtEmail;
+	@UiField
+	PasswordField txtPassword;
+	@UiField
+	PasswordField txtConfirmPassword;
 
-	@UiField PopupPanel AddUserDialog;
-	@UiField Anchor aSaveGroup;
-	@UiField Anchor aSaveUser;
+	@UiField
+	TextField txtGroupname;
+	@UiField
+	TextArea txtDescription;
+	// @UiField TextField txtUsers;
 
-	@UiField SpanElement header;
-	
-	@UiField DivElement divUserSave;
-	@UiField Uploader uploader;
-	//@UiField ListField<UserGroup> lstGroups;
-	@UiField AutoCompleteField<UserGroup> lstGroups;
-	
+	@UiField
+	PopupPanel AddUserDialog;
+	@UiField
+	Anchor aSaveGroup;
+	@UiField
+	Anchor aSaveUser;
+
+	@UiField
+	SpanElement header;
+
+	@UiField
+	DivElement divUserSave;
+	@UiField
+	Uploader uploader;
+	@UiField
+	AutoCompleteField<UserGroup> lstGroups;
+
 	TYPE type;
-	
+
 	public interface Binder extends UiBinder<Widget, UserSaveView> {
 	}
 
@@ -77,31 +95,31 @@ public class UserSaveView extends PopupViewImpl implements
 				hide();
 			}
 		});
-				
-		//----Calculate the Size of Screen; To be Centralized later -----
+
+		// ----Calculate the Size of Screen; To be Centralized later -----
 		int height = Window.getClientHeight();
 		int width = Window.getClientWidth();
-		
-		/*Percentage to the Height and Width*/
-		double height1=(5.0/100.0)*height;
-		double width1= (50.0/100.0)*width;
-		
-		AddUserDialog.setPopupPosition((int)width1,(int)height1);
-		
+
+		/* Percentage to the Height and Width */
+		double height1 = (5.0 / 100.0) * height;
+		double width1 = (50.0 / 100.0) * width;
+
+		AddUserDialog.setPopupPosition((int) width1, (int) height1);
+
 		txtUserName.addValueChangeHandler(new ValueChangeHandler<String>() {
-			
+
 			@Override
 			public void onValueChange(ValueChangeEvent<String> event) {
 				setContext(event.getValue());
 			}
 		});
-		
+
 	}
 
 	protected void setContext(String value) {
 		UploadContext context = new UploadContext();
 		context.setAction(UPLOADACTION.UPLOADUSERIMAGE);
-		context.setContext("userId", value+"");
+		context.setContext("userId", value + "");
 		context.setAccept("png,jpeg,jpg,gif");
 		uploader.setContext(context);
 	}
@@ -110,129 +128,128 @@ public class UserSaveView extends PopupViewImpl implements
 	public Widget asWidget() {
 		return widget;
 	}
-	
-	public boolean isValid(){
-		
-		boolean isValid=true;
-		
+
+	public boolean isValid() {
+
+		boolean isValid = true;
+
 		switch (type) {
 		case GROUP:
-			isValid =  isGroupValid();
+			isValid = isGroupValid();
 			break;
 
 		default:
-			isValid =  isUserValid();
+			isValid = isUserValid();
 			break;
 		}
-		
+
 		return isValid;
 	}
-	
-	public UserGroup getGroup(){
+
+	public UserGroup getGroup() {
 		UserGroup group = new UserGroup();
 		group.setFullName(txtDescription.getValue());
 		group.setName(txtGroupname.getValue());
-		
+
 		return group;
 	}
-	
-	public void setGroup(UserGroup group){
+
+	public void setGroup(UserGroup group) {
 		txtDescription.setValue(group.getFullName());
 		txtGroupname.setValue(group.getName());
 	}
-	
-	public UserDto getUser(){
+
+	public UserDto getUser() {
 		UserDto user = new UserDto();
 		user.setEmail(txtEmail.getValue());
 		user.setName(txtFirstname.getValue());
 		user.setPassword(txtPassword.getValue());
 		user.setSurname(txtLastname.getValue());
 		user.setUserId(txtUserName.getValue());
-		//user.setGroups(lstGroups.getSelectedItems());
-		
+		// user.setGroups(lstGroups.getSelectedItems());
+
 		return user;
 	}
-	
+
 	UserDto user;
-	public void setUser(UserDto user){
+
+	public void setUser(UserDto user) {
 		txtEmail.setValue(user.getEmail());
 		txtFirstname.setValue(user.getName());
 		txtPassword.setValue(user.getPassword());
 		txtConfirmPassword.setValue(user.getPassword());
 		txtLastname.setValue(user.getSurname());
 		txtUserName.setValue(user.getUserId());
-		//lstGroups.select(user.getGroups());
+		// lstGroups.select(user.getGroups());
 		setContext(user.getUserId());
 
 	}
 
 	private boolean isUserValid() {
 		issues.clear();
-		boolean valid=true;
-		
-		if(isNullOrEmpty(txtFirstname.getValue())){
+		boolean valid = true;
+
+		if (isNullOrEmpty(txtFirstname.getValue())) {
 			valid = false;
 			issues.addError("First Name is mandatory");
 		}
-		
-		if(isNullOrEmpty(txtLastname.getValue())){
+
+		if (isNullOrEmpty(txtLastname.getValue())) {
 			valid = false;
 			issues.addError("First Name is mandatory");
 		}
-		
-		if(isNullOrEmpty(txtEmail.getValue())){
+
+		if (isNullOrEmpty(txtEmail.getValue())) {
 			valid = false;
 			issues.addError("Email is mandatory");
 		}
-		
-		if(isNullOrEmpty(txtPassword.getText())){
-			valid=false;
+
+		if (isNullOrEmpty(txtPassword.getText())) {
+			valid = false;
 			issues.addError("Password is mandatory");
-		}else{
-			if(!txtPassword.getValue().equals(txtConfirmPassword.getValue())){
+		} else {
+			if (!txtPassword.getValue().equals(txtConfirmPassword.getValue())) {
 				issues.addError("Password and confirm password fields do not match");
 			}
 		}
-		
-		
-		
+
 		return valid;
 	}
 
 	private boolean isGroupValid() {
-		
+
 		issues.clear();
-		boolean valid=true;
-		
-		if(isNullOrEmpty(txtGroupname.getValue())){
+		boolean valid = true;
+
+		if (isNullOrEmpty(txtGroupname.getValue())) {
 			valid = false;
 			issues.addError("Group Name is mandatory");
 		}
-		
+
 		return valid;
 	}
-	
+
 	boolean isNullOrEmpty(String value) {
 		return value == null || value.trim().length() == 0;
 	}
 
-	public HasClickHandlers getSaveUser(){
+	public HasClickHandlers getSaveUser() {
 		return aSaveUser;
 	}
-	
-	public HasClickHandlers getSaveGroup(){
+
+	public HasClickHandlers getSaveGroup() {
 		return aSaveGroup;
 	}
-	
+
 	@Override
 	public void setType(TYPE type) {
-		this.type=type;
-		if(type==TYPE.GROUP){
+		this.type = type;
+		if (type == TYPE.GROUP) {
 			divGroupDetails.removeStyleName("hide");
 			divUserDetails.addStyleName("hide");
 			divUserSave.addClassName("hide");
 			header.setInnerText("New Group");
-		}else{
+		} else {
 			divUserDetails.removeStyleName("hide");
 			divGroupDetails.addStyleName("hide");
 			divUserSave.removeClassName("hide");

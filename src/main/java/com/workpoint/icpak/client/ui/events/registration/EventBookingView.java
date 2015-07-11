@@ -30,7 +30,7 @@ import com.workpoint.icpak.client.ui.grid.AggregationGrid;
 import com.workpoint.icpak.client.ui.grid.ColumnConfig;
 import com.workpoint.icpak.client.ui.grid.DataMapper;
 import com.workpoint.icpak.client.ui.grid.DataModel;
-import com.workpoint.icpak.client.ui.registration.PageElement;
+import com.workpoint.icpak.client.ui.membership.PageElement;
 import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.shared.model.Country;
 import com.workpoint.icpak.shared.model.DataType;

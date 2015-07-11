@@ -1,4 +1,4 @@
-package com.workpoint.icpak.client.ui.registration;
+package com.workpoint.icpak.client.ui.membership;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +22,7 @@ import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.IssuesPanel;
 import com.workpoint.icpak.client.ui.component.TextField;
 import com.workpoint.icpak.client.ui.events.registration.proforma.ProformaInvoice;
-import com.workpoint.icpak.client.ui.registration.form.MemberRegistrationForm;
+import com.workpoint.icpak.client.ui.membership.form.MemberRegistrationForm;
 import com.workpoint.icpak.shared.model.ApplicationCategoryDto;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 import com.workpoint.icpak.shared.model.ApplicationType;

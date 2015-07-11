@@ -1,4 +1,4 @@
-package com.workpoint.icpak.client.ui.registration;
+package com.workpoint.icpak.client.ui.membership;
 
 import com.google.gwt.dom.client.DivElement;
 

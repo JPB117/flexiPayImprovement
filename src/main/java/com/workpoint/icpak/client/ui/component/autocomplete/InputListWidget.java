@@ -1,9 +1,7 @@
-package com.workpoint.icpak.client.ui.component;
+package com.workpoint.icpak.client.ui.component.autocomplete;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -13,68 +11,24 @@ import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.SuggestOracle;
 import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.Widget;
-import com.workpoint.icpak.shared.model.Listable;
+import com.workpoint.icpak.client.ui.component.BulletListPanel;
+import com.workpoint.icpak.client.ui.component.BulletPanel;
 
-public class AutoCompleteField<T extends Listable> extends Composite {
+public class InputListWidget extends Composite {
 
-	public static AutoCompleteFieldUiBinder uiBinder = 
-			GWT.create(AutoCompleteFieldUiBinder.class);	
-	@SuppressWarnings("rawtypes")
-	interface AutoCompleteFieldUiBinder extends UiBinder<Widget, AutoCompleteField>{}
-	
-	@UiField HTMLPanel container;
-	@UiField BulletListPanel ulPanel;
-	@UiField BulletPanel liPanel;
-	final TextBox itemBox = new TextBox();
-	
 	List<String> itemsSelected = new ArrayList<String>();
-	Map<String,T> valuesMap = new HashMap<String, T>(); 
-	DataOracle<T> oracle = new DataOracle<T>();
-	SuggestBox box=null;
+	FlowPanel panel = new FlowPanel();
 	
-	static int x=0;//count to help generate unique ids
-	String id="suggestion_box"+(++x);
-	
-	public AutoCompleteField() {	
-		initWidget(uiBinder.createAndBindUi(this));
-		itemBox.getElement().setAttribute("style", "outline-color: -moz-use-text-color; outline-style: none; outline-width: medium;");
-		container.getElement().setAttribute("onclick", "document.getElementById('"+id+"').focus()");
-		box = new SuggestBox(oracle, itemBox);
-		box.getElement().setId(id);
-		box.setAnimationEnabled(true);		
-		liPanel.add(box);
-		box.addSelectionHandler(new SelectionHandler<SuggestOracle.Suggestion>() {
-            public void onSelection(SelectionEvent selectionEvent) {
-                deselectItem(itemBox, ulPanel);
-            }
-        });
-		
-		box.setFocus(true);
-	}
+    public InputListWidget() {    
+        initWidget(panel);
+    }
 
-	public void setValues(List<T> values){
-		valuesMap.clear();
-		if(values==null){
-			return;
-		}
-		
-		for(T t: values){
-			valuesMap.put(t.getDisplayName(), t);
-		}
-	
-		oracle.setValues(values);	
-		
-	}
-	
-	@Override
+    @Override
     protected void onLoad() {
     	super.onLoad();
     	 // 2. Show the following element structure and set the last <div> to display: block
@@ -86,6 +40,17 @@ public class AutoCompleteField<T extends Listable> extends Composite {
         </ul>
         <div class="token-input-dropdown-facebook" style="display: none;"/>
          */
+        final BulletListPanel list = new BulletListPanel();
+        list.setStyleName("token-input-list-facebook");
+        final BulletPanel item = new BulletPanel();
+        item.setStyleName("token-input-input-token-facebook");
+        final TextBox itemBox = new TextBox();
+        itemBox.getElement().setAttribute("style", "outline-color: -moz-use-text-color; outline-style: none; outline-width: medium;");
+        
+        final SuggestBox box = new SuggestBox(SuggestField.getSuggestions(), itemBox);        
+        box.getElement().setId("suggestion_box");
+        item.add(box);
+        list.add(item);
 
         // this needs to be on the itemBox rather than box, or backspace will get executed twice
         itemBox.addKeyDownHandler(new KeyDownHandler() {
@@ -93,25 +58,35 @@ public class AutoCompleteField<T extends Listable> extends Composite {
                 if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
                     // only allow manual entries with @ signs (assumed email addresses)
                     if (itemBox.getValue().contains("@"))
-                        deselectItem(itemBox, ulPanel);
+                        deselectItem(itemBox, list);
                 }
                 // handle backspace
                 if (event.getNativeKeyCode() == KeyCodes.KEY_BACKSPACE) {
                     if ("".equals(itemBox.getValue().trim())) {
-                        BulletPanel li = (BulletPanel) ulPanel.getWidget(ulPanel.getWidgetCount() - 2);
+                        BulletPanel li = (BulletPanel) list.getWidget(list.getWidgetCount() - 2);
                         Paragraph p = (Paragraph) li.getWidget(0);
                         if (itemsSelected.contains(p.getText())) {
                             itemsSelected.remove(p.getText());
                             GWT.log("Removing selected item '" + p.getText() + "'", null);
                             GWT.log("Remaining: " + itemsSelected, null);
                         }
-                        ulPanel.remove(li);
+                        list.remove(li);
                         itemBox.setFocus(true);
                     }
                 }
             }
         });
 
+        box.addSelectionHandler(new SelectionHandler<SuggestOracle.Suggestion>() {
+            public void onSelection(SelectionEvent selectionEvent) {
+                deselectItem(itemBox, list);
+            }
+        });
+
+        panel.add(list);
+
+        panel.getElement().setAttribute("onclick", "document.getElementById('suggestion_box').focus()");
+        box.setFocus(true);
         /* Div structure after a few elements have been added:
             <ul class="token-input-list-facebook">
                 <li class="token-input-token-facebook">
@@ -129,10 +104,8 @@ public class AutoCompleteField<T extends Listable> extends Composite {
          */
 
     }
-	
     private void deselectItem(final TextBox itemBox, final BulletListPanel list) {
         if (itemBox.getValue() != null && !"".equals(itemBox.getValue().trim())) {
-        	//System.err.println(":::::::: loaded");
             /** Change to the following structure:
              * <li class="token-input-token-facebook">
              * <p>What's New Scooby-Doo?</p>
@@ -191,50 +164,4 @@ public class AutoCompleteField<T extends Listable> extends Composite {
         itemsSelected.remove(displayItem.getWidget(0).getElement().getInnerHTML());
         list.remove(displayItem);
     }
-    
-    public void addItems(List<T> items){		
-    	//itemsSelected.clear();
-		//others
-		setValues(items);
-	}
-	
-	public void select(List<T> items){
-		clearSelection();
-		//others
-		if(items!=null)
-		for(T item: items){			
-			itemBox.setValue(item.getDisplayName());			
-			deselectItem(itemBox, ulPanel);
-		}
-	}
-	
-	public List<T> getSelectedItems(){
-		List<T> selectedVals = new ArrayList<T>();
-		for(String s: itemsSelected){
-			T val = valuesMap.get(s);
-			if(val==null){
-				val = createItem(s);
-			}
-			if(val!=null){
-				selectedVals.add(val);
-			}
-		}
-		return selectedVals;
-	}
-	
-	public T createItem(String s) {
-		return null;
-	}
-
-	public void clearSelection(){
-		itemsSelected.clear();
-		int count = ulPanel.getWidgetCount();
-		for(int i=count-1; i>=0; i--){
-			Widget w = ulPanel.getWidget(i);
-			if(w instanceof BulletPanel && !(liPanel.equals(w))){
-				removeBulletPanel((BulletPanel)w,ulPanel);
-			}
-		}
-	}
-
 }

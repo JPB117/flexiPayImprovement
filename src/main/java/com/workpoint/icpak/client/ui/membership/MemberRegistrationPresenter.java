@@ -1,4 +1,4 @@
-package com.workpoint.icpak.client.ui.registration;
+package com.workpoint.icpak.client.ui.membership;
 
 import java.util.List;
 import com.google.gwt.event.dom.client.ClickEvent;

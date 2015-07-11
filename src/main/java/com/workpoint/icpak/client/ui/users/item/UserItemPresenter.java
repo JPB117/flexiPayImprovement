@@ -1,4 +1,4 @@
-package com.workpoint.icpak.client.ui.admin.users.item;
+package com.workpoint.icpak.client.ui.users.item;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
