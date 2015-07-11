@@ -15,5 +15,27 @@
 		<g:HTMLPanel styleName="td" ui:field="divPrice">
 			10,000
 		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td" ui:field="divEventName">
+			Financial Workshop
+			2015
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td">
+			<div class="dropdown">
+				<a class="btn btn-default btn-fill dropdown-toggle" id="dropdownMenu1"
+					data-toggle="dropdown" aria-expanded="true">
+					-Select-
+					<span class="caret"></span>
+				</a>
+				<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+					<li>
+						<d:ActionLink ui:field="aEdit">Edit</d:ActionLink>
+					</li>
+					<li>
+						<d:ActionLink ui:field="aDelete">Delete
+						</d:ActionLink>
+					</li>
+				</ul>
+			</div>
+		</g:HTMLPanel>
 	</g:HTMLPanel>
 </ui:UiBinder> 

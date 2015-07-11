@@ -311,6 +311,7 @@ public class MemberRegistrationView extends ViewImpl implements
 		return memberRegistrationForm.getEmail();
 	}
 
+	@Override
 	public boolean isValid() {
 		return memberRegistrationForm.isValid();
 	}

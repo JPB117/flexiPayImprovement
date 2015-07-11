@@ -1,7 +1,6 @@
 package com.workpoint.icpak.client.ui.registration;
 
 import java.util.List;
-
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -29,7 +28,6 @@ import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.workpoint.icpak.client.place.NameTokens;
 import com.workpoint.icpak.client.service.AbstractAsyncCallback;
 import com.workpoint.icpak.client.service.ServiceCallback;
-import com.workpoint.icpak.client.ui.MainPagePresenter;
 import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.TextField;
 import com.workpoint.icpak.client.ui.error.ErrorPresenter;
@@ -145,7 +143,6 @@ implements ErrorHandler{
 
 			@Override
 			public void onClick(ClickEvent event) {
-
 				if (getView().isValid()) {
 					if (getView().getCounter() == 1) {
 						// User has selected a category and clicked submit
@@ -162,10 +159,8 @@ implements ErrorHandler{
 		});
 
 		getView().getABack().addClickHandler(new ClickHandler() {
-
 			@Override
 			public void onClick(ClickEvent event) {
-
 			}
 		});
 

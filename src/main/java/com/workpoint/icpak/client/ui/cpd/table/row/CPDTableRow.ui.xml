@@ -23,11 +23,12 @@
 
 		<g:HTMLPanel styleName="td" ui:field="divAction">
 			<div class="dropdown">
-				<a class="btn btn-primary btn-fill dropdown-toggle" id="dropdownMenu1"
+				<a class="btn btn-default btn-fill dropdown-toggle" id="dropdownMenu1"
 					data-toggle="dropdown" aria-expanded="true">
 					-Select-
 					<span class="caret"></span>
 				</a>
+				
 				<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
 					<li>
 						<d:ActionLink ui:field="aEdit">Edit</d:ActionLink>

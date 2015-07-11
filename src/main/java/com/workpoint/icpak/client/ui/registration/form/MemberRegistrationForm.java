@@ -58,17 +58,14 @@ public class MemberRegistrationForm extends Composite {
 				issuesPanel.addError("e-Mail " + txtEmailAddress.getValue()
 						+ " is already registered");
 			}
-
 			if (isNullOrEmpty(txtSurname.getValue())) {
 				isValid = false;
 				issuesPanel.addError("Surname is required");
 			}
-
 			if (isNullOrEmpty(txtOtherNames.getValue())) {
 				isValid = false;
 				issuesPanel.addError("Other Names is required");
 			}
-
 			if (isNullOrEmpty(txtEmailAddress.getValue())) {
 				isValid = false;
 				issuesPanel.addError("Email is required");
@@ -95,7 +92,7 @@ public class MemberRegistrationForm extends Composite {
 			}
 		} else if (counter == 1) {
 			if (type == null) {
-				Window.alert("Error.. category not selected");
+				Window.alert("Kindly select your category..");
 				isValid = false;
 			}
 		}
@@ -115,7 +112,6 @@ public class MemberRegistrationForm extends Composite {
 
 	public ApplicationFormHeaderDto getApplicationForm() {
 		ApplicationFormHeaderDto dto = new ApplicationFormHeaderDto();
-		// dto.setRefId(getRefId());
 		dto.setSurname(txtSurname.getValue());
 		dto.setOtherNames(txtOtherNames.getValue());
 		dto.setEmail(txtEmailAddress.getValue());
@@ -134,6 +130,7 @@ public class MemberRegistrationForm extends Composite {
 		if (!isEmailValid) {
 			issuesPanel.addError("e-Mail " + txtEmailAddress.getValue()
 					+ " is already registered");
+			issuesPanel.removeStyleName("hide");
 		}
 	}
 
@@ -156,7 +153,5 @@ public class MemberRegistrationForm extends Composite {
 		txtPostalCode.setValue(application.getPostCode());
 		type = application.getApplicationType();
 	}
-	
-	
 
 }
