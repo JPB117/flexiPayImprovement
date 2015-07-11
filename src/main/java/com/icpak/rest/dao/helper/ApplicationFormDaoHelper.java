@@ -172,7 +172,7 @@ public class ApplicationFormDaoHelper {
 		dto.setCompanyAddress(application.getContactAddress());
 		dto.setPhoneNumber(application.getContactTelephone());
 		dto.setContactName(application.getSurname()+" "+application.getOtherNames());
-		dto.setDate(new Date());
+		dto.setDate(new Date().getTime());
 		dto.addLine(new InvoiceLineDto(category.getDescription(),
 				category.getApplicationAmount(),
 				category.getApplicationAmount()));

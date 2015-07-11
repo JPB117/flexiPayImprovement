@@ -15,8 +15,8 @@
 		<!--gwt.version>2.5.1</gwt.version -->
 		<gwt.version>2.7.0</gwt.version>
 
-		<!--gwtp.version>1.4</gwtp.version -->
-		<gwtp.version>1.5-SNAPSHOT</gwtp.version>
+		<gwtp.version>1.4</gwtp.version>
+		<!-- gwtp.version>1.5-SNAPSHOT</gwtp.version -->
 		<gin.version>2.1.2</gin.version>
 
 		<!-- server -->
@@ -159,7 +159,6 @@
 					<copyWebapp>true</copyWebapp>
 					<hostedWebapp>${webappDirectory}</hostedWebapp>
 					<gwtSdkFirstInClasspath>true</gwtSdkFirstInClasspath>
-
 					<runTarget>icpakportal.html</runTarget>
 					<modules>
 						<module>com.workpoint.icpak.icpakportal</module>
@@ -285,12 +284,13 @@
 			<groupId>com.gwtplatform</groupId>
 			<artifactId>gwtp-dispatch-rpc-shared</artifactId>
 			<version>${gwtp.version}</version>
+			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.gwtplatform</groupId>
 			<artifactId>gwtp-dispatch-rest</artifactId>
 			<version>${gwtp.version}</version>
-			<!-- scope>provided</scope -->
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.gwtplatform</groupId>
@@ -387,7 +387,7 @@
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava-gwt</artifactId>
-			<version>17.0</version>
+			<version>18.0</version>
 		</dependency>
 
 		<!-- dependency> <groupId>com.google.gwt.inject</groupId> <artifactId>gin</artifactId> 

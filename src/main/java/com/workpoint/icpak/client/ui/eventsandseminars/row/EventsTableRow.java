@@ -53,9 +53,9 @@ public class EventsTableRow extends RowWidget {
 	public EventsTableRow(EventDto event) {
 		this();
 		
-		String dates = event.getStartDate()==null? "" : DATEFORMAT.format(event.getStartDate())+"-"+
-				event.getEndDate()==null? "" : DATEFORMAT.format(event.getEndDate());
-		divDate.add(new InlineLabel(dates));
+//		String dates = event.getStartDate()==null? "" : DATEFORMAT.format(event.getStartDate())+"-"+
+//				event.getEndDate()==null? "" : DATEFORMAT.format(event.getEndDate());
+//		divDate.add(new InlineLabel(dates));
 		divDelegates.add(new InlineLabel(event.getDelegateCount()+""));
 		divEventLocation.add(new InlineLabel(event.getVenue()));
 		divPaidAmount.add(new InlineLabel(NUMBERFORMAT.format(event.getTotalPaid())+""));

@@ -197,7 +197,7 @@ public class EventBookingPresenter extends
 							+ elem.getClassName() + ">>" + elem.getMethodName());
 				}
 
-				// Window.alert(buffer.toString());
+				Window.alert(caught+" "+caught.getMessage() +" "+caught.getStackTrace().toString());
 
 				super.onFailure(caught);
 			}

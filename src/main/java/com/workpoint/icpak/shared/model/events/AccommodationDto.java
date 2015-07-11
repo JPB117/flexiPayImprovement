@@ -6,11 +6,6 @@ import com.workpoint.icpak.shared.model.SerializableObj;
 
 public class AccommodationDto extends SerializableObj implements Listable{
 
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 	private String hotel;
 	private String description;
 	private Double fee;

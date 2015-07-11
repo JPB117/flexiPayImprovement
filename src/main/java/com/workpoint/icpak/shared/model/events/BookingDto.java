@@ -1,6 +1,5 @@
 package com.workpoint.icpak.shared.model.events;
 
-import java.util.Date;
 import java.util.List;
 
 import com.workpoint.icpak.shared.model.PaymentStatus;
@@ -15,9 +14,9 @@ public class BookingDto extends SerializableObj{
 	private ContactDto contact;
 	private String paymentMode;//MPesa, VISA etc
 	private String currency;
-	private Date bookingDate;
+	private Long bookingDate;
 	private String paymentRef; //TrxNumber
-	private Date paymentDate;
+	private Long paymentDate;
 	private Double amountDue;
 	private Double amountPaid;
 	private String eventRefId;
@@ -45,28 +44,12 @@ public class BookingDto extends SerializableObj{
 		this.currency = currency;
 	}
 
-	public Date getBookingDate() {
-		return bookingDate;
-	}
-
-	public void setBookingDate(Date bookingDate) {
-		this.bookingDate = bookingDate;
-	}
-
 	public String getPaymentRef() {
 		return paymentRef;
 	}
 
 	public void setPaymentRef(String paymentRef) {
 		this.paymentRef = paymentRef;
-	}
-
-	public Date getPaymentDate() {
-		return paymentDate;
-	}
-
-	public void setPaymentDate(Date paymentDate) {
-		this.paymentDate = paymentDate;
 	}
 
 	public Double getAmountDue() {
@@ -131,6 +114,22 @@ public class BookingDto extends SerializableObj{
 
 	public void setInvoiceRef(String invoiceRef) {
 		this.invoiceRef = invoiceRef;
+	}
+
+	public Long getBookingDate() {
+		return bookingDate;
+	}
+
+	public void setBookingDate(Long bookingDate) {
+		this.bookingDate = bookingDate;
+	}
+
+	public Long getPaymentDate() {
+		return paymentDate;
+	}
+
+	public void setPaymentDate(Long paymentDate) {
+		this.paymentDate = paymentDate;
 	}
 	
 }

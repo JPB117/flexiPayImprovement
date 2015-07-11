@@ -1,36 +1,31 @@
 package com.workpoint.icpak.shared.model.events;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import com.workpoint.icpak.shared.model.EventStatus;
 import com.workpoint.icpak.shared.model.EventType;
 import com.workpoint.icpak.shared.model.SerializableObj;
 
-public class EventDto extends SerializableObj{
+public class EventDto extends SerializableObj {
 
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 100L;
 	private String name;
 	private String description;
 	private Integer cpdHours;
 	private String venue;
-	private Date startDate;
-	private Date endDate;
+	private Long startDate;
+	private Long endDate;
 	private EventStatus status;
 	private EventType type;
 	private Double memberPrice;
 	private Double nonMemberPrice;
-	private List<AccommodationDto> accommodation = new ArrayList<AccommodationDto>();
+	private List<AccommodationDto> accommodation;
 	private int delegateCount;
-	private double totalPaid;
-	private double totalUnpaid;
-	
+	private Double totalPaid;
+	private Double totalUnpaid;
+
 	public EventDto() {
+		accommodation = new ArrayList<AccommodationDto>();
 	}
 
 	public String getName() {
@@ -63,22 +58,6 @@ public class EventDto extends SerializableObj{
 
 	public void setVenue(String venue) {
 		this.venue = venue;
-	}
-
-	public Date getStartDate() {
-		return startDate;
-	}
-
-	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
-	}
-
-	public Date getEndDate() {
-		return endDate;
-	}
-
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
 	}
 
 	public EventStatus getStatus() {
@@ -129,20 +108,36 @@ public class EventDto extends SerializableObj{
 		this.delegateCount = delegateCount;
 	}
 
-	public double getTotalPaid() {
+	public Double getTotalPaid() {
 		return totalPaid;
 	}
 
-	public void setTotalPaid(double totalPaid) {
+	public void setTotalPaid(Double totalPaid) {
 		this.totalPaid = totalPaid;
 	}
 
-	public double getTotalUnpaid() {
+	public Double getTotalUnpaid() {
 		return totalUnpaid;
 	}
 
-	public void setTotalUnpaid(double totalUnpaid) {
+	public void setTotalUnpaid(Double totalUnpaid) {
 		this.totalUnpaid = totalUnpaid;
 	}
-	
+
+	public Long getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(Long startDate) {
+		this.startDate = startDate;
+	}
+
+	public Long getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(Long endDate) {
+		this.endDate = endDate;
+	}
+
 }

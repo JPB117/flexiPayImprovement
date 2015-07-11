@@ -227,7 +227,10 @@ public class Booking extends PO{
 		
 		BookingDto dto = new BookingDto();
 		dto.setAmountDue(amountDue);
-		dto.setBookingDate(bookingDate);
+		
+		if(bookingDate!=null)
+			dto.setBookingDate(bookingDate.getTime());
+		
 		dto.setContact(contact.toDto());
 		dto.setCurrency(currency);
 		if(getDelegates()!=null){
@@ -242,8 +245,9 @@ public class Booking extends PO{
 		if(getEvent()!=null){
 			dto.setEventRefId(getEvent().getRefId());
 		}
-		dto.setPaymentDate(paymentDate);
-		dto.setPaymentDate(paymentDate);
+
+		if(paymentDate!=null)
+		dto.setPaymentDate(paymentDate.getTime());
 		dto.setPaymentMode(paymentMode);
 		dto.setPaymentRef(paymentRef);
 		dto.setPaymentStatus(paymentStatus);
@@ -254,9 +258,11 @@ public class Booking extends PO{
 	}
 
 	public void copyFrom(BookingDto dto) {
-		setBookingDate(dto.getBookingDate());
+		
+		
+		setBookingDate(dto.getBookingDate()==null? null : new Date(dto.getBookingDate()));
 		setPaymentMode(dto.getPaymentMode());
-		setPaymentDate(dto.getPaymentDate());
+		setPaymentDate(dto.getPaymentDate()==null? null: new Date(dto.getPaymentDate()));
 		setStatus(dto.getStatus());
 		setCurrency(dto.getCurrency());
 	}
