@@ -297,8 +297,8 @@
 												</g:Anchor>
 
 												<g:Anchor
-													styleName='btn btn-previous btn-fill btn-default btn-wd btn-sm hide'
-													ui:field="aAccount" href="#login">Go to my Account
+													styleName='btn hide btn-previous btn-fill btn-default btn-wd btn-sm hide'
+													ui:field="aAccount" href="#login">Back
 												</g:Anchor>
 											</div>
 

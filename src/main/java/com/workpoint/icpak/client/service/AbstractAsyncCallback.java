@@ -1,52 +1,100 @@
 package com.workpoint.icpak.client.service;
 
-import com.google.gwt.http.client.RequestTimeoutException;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.rpc.InvocationException;
-import com.gwtplatform.dispatch.rpc.shared.ServiceException;
+import com.google.gwt.http.client.Response;
+import com.gwtplatform.dispatch.rest.client.RestCallback;
 import com.workpoint.icpak.client.ui.events.ClientDisconnectionEvent;
 import com.workpoint.icpak.client.ui.events.ErrorEvent;
 import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
 import com.workpoint.icpak.client.util.AppContext;
 
-public abstract class AbstractAsyncCallback<T> implements AsyncCallback<T> {
+public abstract class AbstractAsyncCallback<T> implements RestCallback<T> {
+	
 	@Override
 	public void onFailure(Throwable caught) {
-		if(caught instanceof ServiceException){
-			String msg = "Cannot connect to server...";
-			if(caught.getMessage()!=null && caught.getMessage().length()>5){
-				msg = caught.getMessage();
-			}
-			AppContext.getEventBus().fireEvent(new ClientDisconnectionEvent(msg));
+		
+		
+		
+//		if(caught instanceof ServiceException){
+//			Window.alert("On Error SE >> "+caught.getClass());
+//			String msg = "Cannot connect to server...";
+//			if(caught.getMessage()!=null && caught.getMessage().length()>5){
+//				msg = caught.getMessage();
+//			}
+//			AppContext.getEventBus().fireEvent(new ClientDisconnectionEvent(msg));
+//			return;
+//		}
+//		
+//		if(caught instanceof InvocationException){
+//			Window.alert("On Error IE >> "+caught.getClass());
+//			String msg = "Cannot connect to server...";
+//			if(caught.getMessage()!=null && caught.getMessage().length()>5){
+//				msg = caught.getMessage();
+//			}
+//			AppContext.getEventBus().fireEvent(new ProcessingCompletedEvent());
+//			AppContext.getEventBus().fireEvent(new ClientDisconnectionEvent(msg));
+//			return;
+//		}
+//		
+//		if(caught instanceof RequestTimeoutException){
+//			Window.alert("On Error RT >> "+caught.getClass());
+//			//HTTP Request Timeout
+//			AppContext.getEventBus().fireEvent(new ProcessingCompletedEvent());
+//			AppContext.getEventBus().fireEvent(new ClientDisconnectionEvent("Cannot connect to server..."));
+//		}
+//		
+//		if(caught instanceof ActionException){
+//			ActionException ex = (ActionException)caught;
+//			Window.alert(ex.getMessage()+" : "+ ex.getLocalizedMessage()); 
+//		}
+//		
+//		//caught.printStackTrace();
+//		
+//		String message = caught.getMessage();
+//		Window.alert("On Error MSG >> "+caught.getClass());
+//		if(caught.getCause()!=null){
+//			message = caught.getClass()+"\n"+caught.getCause().getMessage();
+//		}
+//		
+//		AppContext.getEventBus().fireEvent(new ProcessingCompletedEvent());
+//		AppContext.getEventBus().fireEvent(new ErrorEvent(message, 0L));
+	}
+	
+	@Override
+	public void setResponse(Response aResponse) {
+		int code = aResponse.getStatusCode();
+		
+		if(code==200 || code==202 || code==203 || code==304){
 			return;
 		}
 		
-		if(caught instanceof InvocationException){
-			String msg = "Cannot connect to server...";
-			if(caught.getMessage()!=null && caught.getMessage().length()>5){
-				msg = caught.getMessage();
-			}
+		String message = aResponse.getStatusText();
+		if(code==500){
 			AppContext.getEventBus().fireEvent(new ProcessingCompletedEvent());
-			AppContext.getEventBus().fireEvent(new ClientDisconnectionEvent(msg));
+			AppContext.getEventBus().fireEvent(new ErrorEvent(message, 0L));
 			return;
 		}
 		
-		if(caught instanceof RequestTimeoutException){
+		if(code==401){
+			AppContext.getEventBus().fireEvent(new ProcessingCompletedEvent());
+			//AppContext.getEventBus().fireEvent(new ErrorEvent("Unauthorized Access", 0L));
+			return;
+		}
+		
+		
+		if(code == 404){
+			//Not Found
+			return;
+		}
+		
+		if(code == 408){
 			//HTTP Request Timeout
 			AppContext.getEventBus().fireEvent(new ProcessingCompletedEvent());
 			AppContext.getEventBus().fireEvent(new ClientDisconnectionEvent("Cannot connect to server..."));
+			return;
 		}
 		
-		//caught.printStackTrace();
-		
-		String message = caught.getMessage();
-		
-		if(caught.getCause()!=null){
-			message = caught.getCause().getMessage();
-		}
 		
 		AppContext.getEventBus().fireEvent(new ProcessingCompletedEvent());
-		AppContext.getEventBus().fireEvent(new ErrorEvent(message, 0L));
-
+		AppContext.getEventBus().fireEvent(new ErrorEvent(aResponse.getText(), 0L));
 	}
 }

@@ -174,7 +174,7 @@ implements ErrorHandler{
 			public void processResult(ErrorPresenter result) {
 				String message = event.getMessage();
 				
-				result.setMessage(message, event.getId());
+				result.setMessage(">>"+message, event.getId());
 				
 				MemberRegistrationPresenter.this.addToPopupSlot(result);
 				
