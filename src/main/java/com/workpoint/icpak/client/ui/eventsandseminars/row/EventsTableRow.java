@@ -1,5 +1,7 @@
 package com.workpoint.icpak.client.ui.eventsandseminars.row;
 
+import java.util.Date;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -53,9 +55,12 @@ public class EventsTableRow extends RowWidget {
 	public EventsTableRow(EventDto event) {
 		this();
 		
-//		String dates = event.getStartDate()==null? "" : DATEFORMAT.format(event.getStartDate())+"-"+
-//				event.getEndDate()==null? "" : DATEFORMAT.format(event.getEndDate());
-//		divDate.add(new InlineLabel(dates));
+		Date startDate = event.getStartDate()==null? null : new Date(event.getStartDate());
+		Date endDate = event.getEndDate()==null? null : new Date(event.getEndDate());
+		
+		String dates = startDate==null? "" : DATEFORMAT.format(startDate)+"-"+
+				endDate==null? "" : DATEFORMAT.format(endDate);
+		divDate.add(new InlineLabel(dates));
 		divDelegates.add(new InlineLabel(event.getDelegateCount()+""));
 		divEventLocation.add(new InlineLabel(event.getVenue()));
 		divPaidAmount.add(new InlineLabel(NUMBERFORMAT.format(event.getTotalPaid())+""));

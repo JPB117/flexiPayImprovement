@@ -1,7 +1,10 @@
 package com.workpoint.icpak.client.ui.login;
 
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.ws.rs.core.NewCookie;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -9,6 +12,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.inject.Inject;
@@ -20,6 +24,7 @@ import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.NoGatekeeper;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
+import com.gwtplatform.mvp.client.proxy.ManualRevealCallback;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealRootLayoutContentEvent;
@@ -29,7 +34,9 @@ import com.workpoint.icpak.client.place.NameTokens;
 import com.workpoint.icpak.client.place.ParameterTokens;
 import com.workpoint.icpak.client.security.CurrentUser;
 import com.workpoint.icpak.client.service.AbstractAsyncCallback;
+import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.client.util.AppContext;
+import com.workpoint.icpak.shared.api.ApiParameters;
 import com.workpoint.icpak.shared.api.SessionResource;
 import com.workpoint.icpak.shared.api.UsersResource;
 import com.workpoint.icpak.shared.model.auth.ActionType;
@@ -109,15 +116,13 @@ public class LoginPresenter extends
 	@Override
 	public void prepareFromRequest(PlaceRequest request) {
 		super.prepareFromRequest(request);
-		if (AppContext.hasLoggedInCookie()) {
-			tryLoggingInWithCookieFirst();
-		}
+		tryLoggingInWithCookieFirst();
 
 	}
 
 	@Override
 	public boolean useManualReveal() {
-		return false;
+		return true;
 	}
 
 	@Override
@@ -159,7 +164,7 @@ public class LoginPresenter extends
 		getView().showLoginProgress();
 
 		usersDelegate.withCallback(
-		// ManualRevealCallback.create(this,
+		ManualRevealCallback.create(this,
 				new AbstractAsyncCallback<LogInResult>() {
 					@Override
 					public void onSuccess(LogInResult result) {
@@ -191,7 +196,7 @@ public class LoginPresenter extends
 						// "callServerLoginAction(): Server failed to process login call.",
 						// caught);
 					}
-				}// )
+				})
 				).execLogin(logInAction);
 
 	}
@@ -235,8 +240,12 @@ public class LoginPresenter extends
 		String path = "/";
 		String domain = getDomain();
 		int maxAge = REMEMBER_ME_DAYS * 24 * 60 * 60 * 1000;
+		Date expires = DateUtils.addDays(new Date(), REMEMBER_ME_DAYS);
 		boolean secure = false;
 
+		Cookies.setCookie(ApiParameters.LOGIN_COOKIE, value,expires,
+		 domain, path, secure);
+		
 //		NewCookie newCookie = new NewCookie(ApiParameters.LOGIN_COOKIE, value,
 //				path, domain, "", maxAge, secure);
 //		sessionResource.withoutCallback().rememberMe(newCookie);

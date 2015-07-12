@@ -136,10 +136,6 @@ public class HomePresenter extends
 				placeManager.revealPlace(placeRequest);
 			}
 
-			@Override
-			public void onFailure(Throwable caught) {
-				super.onFailure(caught);
-			}
 		}).logout();
 
 	}
