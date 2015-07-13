@@ -56,7 +56,13 @@ public class BookingsDaoHelper {
 	public List<BookingDto> getAllBookings(String uriInfo, String eventId,
 			Integer offset, Integer limit) {
 
-		List<Booking> list = dao.getAllBookings(offset, limit);
+		List<Booking> list = null;
+		if(eventId!=null){
+			list = dao.getAllBookings(eventId, offset, limit);
+		}else{
+			list = dao.getAllBookings(offset, limit);
+		}
+		 
 
 		List<BookingDto> clones = new ArrayList<>();
 		for (Booking booking : list) {
@@ -296,6 +302,15 @@ public class BookingsDaoHelper {
 		dao.save(booking);
 		
 		return booking.toDto();
+	}
+
+	public DelegateDto updateDelegate(String bookingId, String delegateId,
+			DelegateDto delegateDto) {
+		
+		Delegate delegate = dao.findByRefId(delegateId, Delegate.class);
+		delegate.setAttendance(delegateDto.getAttendance());
+		dao.save(delegate);
+		return delegate.toDto();
 	}
 
 }

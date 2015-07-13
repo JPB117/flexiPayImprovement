@@ -38,6 +38,7 @@ import com.workpoint.icpak.client.ui.events.EditModelEvent.EditModelHandler;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
 import com.workpoint.icpak.client.ui.popup.GenericPopupPresenter;
 import com.workpoint.icpak.client.ui.security.LoginGateKeeper;
+import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.api.MemberResource;
 import com.workpoint.icpak.shared.model.CPDDto;
 
@@ -67,8 +68,8 @@ public class CPDPresenter extends
 		return data;
 	}
 
-	private final ResourceDelegate<MemberResource> memberDelegate;
-	private final CurrentUser currentUser;
+	protected final ResourceDelegate<MemberResource> memberDelegate;
+	protected final CurrentUser currentUser;
 
 	@Inject
 	public CPDPresenter(final EventBus eventBus, final ICPDView view,
@@ -182,7 +183,7 @@ public class CPDPresenter extends
 			public void onSuccess(List<CPDDto> result) {
 				getView().bindResults(result);
 			}
-		}).cpd(memberId).getAll(0, 100);
+		}).cpd(AppContext.isCurrentUserAdmin()? "ALL":memberId).getAll(0, 100);
 	}
 
 	String getApplicationRefId() {

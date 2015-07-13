@@ -129,7 +129,7 @@ public class Delegate extends PO{
 		dto.setEmail(email);
 		dto.setMemberRegistrationNo(memberRegistrationNo);
 		dto.setOtherNames(otherNames);
-		dto.setRefId(bookingId);
+		dto.setRefId(getRefId());
 		dto.setSurname(surname);
 		dto.setTitle(title);
 		if(getAccommodation()!=null){

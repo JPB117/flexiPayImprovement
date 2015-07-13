@@ -21,12 +21,18 @@ public class CPDDaoHelper {
 	public List<CPDDto> getAllCPD(String memberId, Integer offset,
 			Integer limit) {
 		
-		List<CPD> cpds = dao.getAllCPDs(memberId,offset, limit);
+		List<CPD> cpds = null;
+		
+		if(memberId!=null && memberId.equals("ALL")){
+			cpds = dao.getAllCPDs(offset, limit);
+		}else{
+			cpds = dao.getAllCPDs(memberId,offset, limit);
+		}
 		
 		List<CPDDto> rtn = new ArrayList<>();
 		for(CPD cpd: cpds){
 			CPDDto dto = cpd.toDTO();
-			dto.setFullNames(userDao.getFullNames(memberId));
+			dto.setFullNames(userDao.getFullNames(cpd.getMemberId()));
 			rtn.add(dto);
 		}
 		

@@ -27,6 +27,13 @@ public class BookingsDao extends BaseDao {
 		return getResultList(getEntityManager().createQuery("from Booking where isActive=1 order by created"),
 				offSet, limit);
 	}
+	
+	public List<Booking> getAllBookings(String eventId,Integer offSet, Integer limit) {
+		return getResultList(getEntityManager().createQuery("from Booking b where b.isActive=1 "
+				+ "and b.event.refId=:refId order by created")
+				.setParameter("refId", eventId),
+				offSet, limit);
+	}
 
 	public void updateBooking(Booking booking) {
 		createBooking(booking);

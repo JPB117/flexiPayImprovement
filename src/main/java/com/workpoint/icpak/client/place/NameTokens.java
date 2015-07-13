@@ -43,6 +43,8 @@ public class NameTokens {
 
 	public static final String accomodation = "accomodation";
 
+	public static final String cpdmanager = "cpdmanager";
+
 	public static String getHome() {
 		return home;
 	}

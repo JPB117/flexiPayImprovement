@@ -18,6 +18,8 @@ public class DelegateDto extends SerializableObj{
 	private Double amount;
 	private AttendanceStatus attendance;
 	private DelegateType delegateType;
+	private String bookingId;
+	private String eventId;
 	
 	public DelegateDto() {
 	}
@@ -97,6 +99,22 @@ public class DelegateDto extends SerializableObj{
 
 	public void setDelegateType(DelegateType delegateType) {
 		this.delegateType = delegateType;
+	}
+
+	public String getBookingId() {
+		return bookingId;
+	}
+
+	public void setBookingId(String bookingId) {
+		this.bookingId = bookingId;
+	}
+
+	public String getEventId() {
+		return eventId;
+	}
+
+	public void setEventId(String eventId) {
+		this.eventId = eventId;
 	}
 
 }

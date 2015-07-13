@@ -46,6 +46,12 @@ public class CPDTableRow extends RowWidget {
 	
 	@UiField
 	ActionLink aMember;
+	
+	@UiField
+	ActionLink aAttended;
+	
+	@UiField
+	ActionLink aNotAttended;
 
 	private CPDDto dto;
 
@@ -87,6 +93,12 @@ public class CPDTableRow extends RowWidget {
 			spnStatus.removeClassName("label-success");
 			spnStatus.addClassName("label-warning");
 		}
+		
+		if(!AppContext.isCurrentUserAdmin()){
+			aAttended.addStyleName("hide");
+			aNotAttended.addStyleName("hide");
+		}
+		
 	}
 
 }

@@ -17,14 +17,18 @@ import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.workpoint.icpak.client.place.NameTokens;
 import com.workpoint.icpak.client.service.AbstractAsyncCallback;
 import com.workpoint.icpak.client.ui.admin.TabDataExt;
+import com.workpoint.icpak.client.ui.events.EditModelEvent;
+import com.workpoint.icpak.client.ui.events.EditModelEvent.EditModelHandler;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
 import com.workpoint.icpak.client.ui.security.AdminGateKeeper;
 import com.workpoint.icpak.shared.api.EventsResource;
 import com.workpoint.icpak.shared.model.events.BookingDto;
+import com.workpoint.icpak.shared.model.events.DelegateDto;
 import com.workpoint.icpak.shared.model.events.EventDto;
 
 public class EventsPresenter extends
-		Presenter<EventsPresenter.IEventsView, EventsPresenter.IEventsProxy> {
+		Presenter<EventsPresenter.IEventsView, EventsPresenter.IEventsProxy> 
+implements EditModelHandler{
 
 	public interface IEventsView extends View {
 
@@ -64,12 +68,12 @@ public class EventsPresenter extends
 	@Override
 	protected void onBind() {
 		super.onBind();
+		addRegisteredHandler(EditModelEvent.TYPE, this);
 	}
 
 	@Override
 	public void prepareFromRequest(PlaceRequest request) {
 		super.prepareFromRequest(request);
-		clear();
 		final String eventId = request.getParameter("eventId", null);
 
 		// Load Event Details to View
@@ -80,11 +84,6 @@ public class EventsPresenter extends
 		}
 
 		loadData(eventId);
-	}
-
-	private void clear() {
-		// TODO Auto-generated method stub
-
 	}
 
 	private void loadData(String eventId) {
@@ -114,8 +113,8 @@ public class EventsPresenter extends
 		eventsDelegate.withCallback(
 				new AbstractAsyncCallback<List<BookingDto>>() {
 					@Override
-					public void onSuccess(List<BookingDto> events) {
-						getView().bindBookings(events);
+					public void onSuccess(List<BookingDto> bookings) {
+						getView().bindBookings(bookings);
 					}
 				}).bookings(eventId)
 				.getAll(0, 100);
@@ -127,6 +126,24 @@ public class EventsPresenter extends
 	@Override
 	protected void onReset() {
 		super.onReset();
+	}
+
+	@Override
+	public void onEditModel(EditModelEvent event) {
+		if(event.getModel() instanceof DelegateDto){
+			save((DelegateDto)event.getModel());
+		}
+	}
+
+	private void save(DelegateDto model) {
+		assert model.getBookingId()!=null && model.getEventId()!=null;
+		
+		eventsDelegate.withCallback(new AbstractAsyncCallback<DelegateDto>() {
+			@Override
+			public void onSuccess(DelegateDto result) {
+			}
+		}).bookings(model.getEventId())
+		.updateDelegate(model.getBookingId(), model.getRefId(), model);
 	}
 
 }
