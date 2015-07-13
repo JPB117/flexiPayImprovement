@@ -45,7 +45,7 @@ public class CurrentUserDtoProvider implements Provider<CurrentUserDto> {
 		UserDto userDto = null;
 		if (currentUserRefId != null) {
 			User user= userDao.findByRefId(currentUserRefId, User.class);
-			userDto = user.getDTO();
+			userDto = user.toDto();
 		}
 
 		boolean isLoggedIn = userDto != null;

@@ -7,15 +7,9 @@ import java.util.logging.Logger;
 
 import javax.ws.rs.core.UriInfo;
 
-import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.authc.IncorrectCredentialsException;
-import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.authc.credential.Sha256CredentialsMatcher;
-
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import com.icpak.rest.BaseResource;
-import com.icpak.rest.IDUtils;
 import com.icpak.rest.dao.RolesDao;
 import com.icpak.rest.dao.TransactionsDao;
 import com.icpak.rest.dao.UserSessionDao;
@@ -31,9 +25,9 @@ import com.icpak.rest.models.base.ResourceModel;
 import com.icpak.rest.models.membership.Member;
 import com.icpak.rest.models.trx.Transaction;
 import com.icpak.rest.models.util.Attachment;
-import com.icpak.rest.security.ICPAKAuthenticatingRealm;
 import com.icpak.rest.security.authentication.AuthenticationException;
 import com.icpak.rest.security.authentication.Authenticator;
+import com.workpoint.icpak.shared.model.RoleDto;
 import com.workpoint.icpak.shared.model.UserDto;
 import com.workpoint.icpak.shared.model.auth.AccountStatus;
 import com.workpoint.icpak.shared.model.auth.ActionType;
@@ -53,11 +47,64 @@ public class UsersDaoHelper {
 	
 	@Inject UserSessionDao loginCookieDao;
 	
-	public void create(User user){
-		user.setRefId(IDUtils.generateId());
+	/**
+	 * System User
+	 * @param dto
+	 * @return
+	 */
+	public UserDto create(UserDto dto){
+		User user = new User();
+		user.copyFrom(dto);
+		user.setPassword(dto.getPassword());
+		for(RoleDto role: dto.getGroups()){
+			Role r = dao.findByRefId(role.getRefId(), Role.class);
+			user.addRole(r);
+		}
+		dao.createUser(user);
+		//createDefaultMemberForUser(user);
+		return user.toDto();
+	}
+	
+	/**
+	 * Other user
+	 * @param user
+	 * @return
+	 */
+	public UserDto create(User user){
 		dao.createUser(user);
 		createDefaultMemberForUser(user);
-		assert user.getId()!=null;
+		return user.toDto();
+	}
+	
+	
+	/**
+	 * Internal Users - Creation
+	 * @param userId
+	 * @param dto
+	 * @return
+	 */
+	public UserDto update(String userId, UserDto dto){
+		User po = dao.findByUserId(userId);
+		
+		po.setEmail(dto.getEmail());
+		//po.setPassword(dto.getPassword());
+		
+		if(po.getUserData()==null){
+			po.setUserData(dto);
+		}else{
+			BioData data = po.getUserData();
+			data.setFirstName(dto.getName());
+			data.setLastName(dto.getSurname());
+		}
+		
+		for(RoleDto role: dto.getGroups()){
+			Role r = dao.findByRefId(role.getRefId(), Role.class);
+			po.addRole(r);
+		}
+		
+		dao.updateUser(po);
+
+		return po.toDto();
 	}
 	
 	public void update(String userId, User user){
@@ -106,13 +153,15 @@ public class UsersDaoHelper {
 		dao.delete(user);
 	}
 	
-	public ResourceCollectionModel<User> getAllUsers(Integer offset, Integer limit,
-			UriInfo uriInfo) {
-		ResourceCollectionModel<User> collection = getAllUsers(offset, limit, uriInfo, null);
-		for(User user: collection.getItems()){
-			user.setUri(uriInfo.getAbsolutePath()+"/"+user.getRefId());
+	public List<UserDto> getAllUsers(Integer offset, Integer limit,
+			String uriInfo) {
+		List<User> users  = dao.getAllUsers(offset, limit, null);
+		List<UserDto> dtos = new ArrayList<>();
+		
+		for(User user: users){
+			dtos.add(user.toDto());
 		}
-		return collection;
+		return dtos;
 	}
 	
 	public ResourceCollectionModel<User> getAllUsers(Integer offSet, Integer limit, UriInfo uriInfo, String roleId){

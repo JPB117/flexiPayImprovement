@@ -61,7 +61,7 @@ import com.workpoint.icpak.shared.trx.TransactionDto;
 //@RequiresAuthentication
 @Path("users")
 @Api(value = "users", description = "Handles CRUD on User data")
-public class UsersResourceImpl extends BaseResource<User> implements UsersResource {
+public class UsersResourceImpl implements UsersResource {
 
 	private final Logger logger = Logger.getLogger(UsersResourceImpl.class.getName());
 	
@@ -77,12 +77,11 @@ public class UsersResourceImpl extends BaseResource<User> implements UsersResour
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Get a list of all users", response = User.class, consumes = MediaType.APPLICATION_JSON)
-	public Response getAll(@Context UriInfo uriInfo,
+	public List<UserDto> getAll(
 			@QueryParam("offset") Integer offset,
 			@QueryParam("limit") Integer limit) {
 
-		return buildCollectionResponse(helper.getAllUsers(offset, limit,
-				uriInfo));
+		return helper.getAllUsers(offset, limit,"");
 	}
 
 	@GET
@@ -93,7 +92,7 @@ public class UsersResourceImpl extends BaseResource<User> implements UsersResour
 			@ApiParam(value = "User Id of the user to fetch", required = true) @PathParam("userId") String userId) {
 
 		User user = helper.getUser(userId);
-		return user.getDTO();
+		return user.toDto();
 	}
 	
 	@GET
@@ -116,13 +115,9 @@ public class UsersResourceImpl extends BaseResource<User> implements UsersResour
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	@ApiOperation(value = "Create a new user", response = User.class, consumes = MediaType.APPLICATION_JSON)
-	public Response create(@Context UriInfo uriInfo, User user) {
-
-		helper.create(user);
-		String uri = uriInfo.getAbsolutePath().toString() + "/"
-				+ user.getRefId();
-		return buildCreateEntityResponse(uri, user);
+	@ApiOperation(value = "Create a new user", response = UserDto.class, consumes = MediaType.APPLICATION_JSON)
+	public UserDto create(UserDto user) {
+		return helper.create(user);
 	}
 	
 	
@@ -142,7 +137,7 @@ public class UsersResourceImpl extends BaseResource<User> implements UsersResour
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Upload profile photo", consumes = MediaType.MULTIPART_FORM_DATA)
-	public Response create(
+	public void create(
 			@ApiParam(value = "User Id of the user", required = true) @PathParam("userId") String userId,
 			@FormDataParam("Filedata") FormDataBodyPart body,
 			@FormDataParam("Filedata") InputStream inputStream,
@@ -155,8 +150,6 @@ public class UsersResourceImpl extends BaseResource<User> implements UsersResour
 				bites.length, type).println();
 		
 		helper.setProfilePic(userId, bites, fileDisposition.getFileName(), type);
-		
-		return buildEmptySuccessResponse();
 	}
 
 	@GET
@@ -178,14 +171,11 @@ public class UsersResourceImpl extends BaseResource<User> implements UsersResour
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Update an existing user", response = User.class, consumes = MediaType.APPLICATION_JSON, produces = MediaType.APPLICATION_JSON)
-	public Response update(
-			@Context UriInfo uriInfo,
+	public UserDto update(
 			@ApiParam(value = "User Id of the user to fetch", required = true) @PathParam("userId") String userId,
-			User user) {
+			UserDto user) {
 
-		helper.update(userId, user);
-		String uri = uriInfo.getAbsolutePath().toString();
-		return buildUpdateEntityResponse(uri, user);
+		return helper.update(userId, user);
 	}
 	
 	@PUT
@@ -193,25 +183,22 @@ public class UsersResourceImpl extends BaseResource<User> implements UsersResour
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Update an existing user", consumes = MediaType.APPLICATION_JSON, produces = MediaType.APPLICATION_JSON)
-	public Response updatePassword(
+	public void updatePassword(
 			@Context UriInfo uriInfo,
 			@ApiParam(value = "New Password", required = true) @QueryParam("newpassword") String newPassword,
 			@ApiParam(value = "User Id of the user to fetch", required = true) @PathParam("userId") String userId) {
 
 		helper.updatePassword(userId, newPassword);
-		return buildEmptySuccessResponse();
 	}
 
 	@DELETE
 	@Path("/{userId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Delete an existing user")
-	public Response delete(
+	public void delete(
 			@ApiParam(value = "User Id of the user to fetch", required = true) @PathParam("userId") String userId) {
 
 		helper.delete(userId);
-
-		return buildDeleteEntityResponse();
 	}
 	
 	@GET
@@ -249,4 +236,25 @@ public class UsersResourceImpl extends BaseResource<User> implements UsersResour
 	public void changePassword(@PathParam("userId") String userId,@QueryParam("password") String newPassword){
 		helper.changePassword(userId, newPassword);
 	}
+
+	public Response buildFileResponse(String name, String contentType,
+			final byte[] attachment, long length) {
+		
+//		StreamingOutput stream = new StreamingOutput() {
+//		    @Override
+//		    public void write(OutputStream os) throws IOException,
+//		    WebApplicationException {
+//		      //Writer writer = new BufferedWriter(new OutputStreamWriter(os));
+//		      IOUtils.write(attachment, os);
+//		      //@TODO read the file here and write to the writer
+//
+//		      //writer.flush();
+//		    }
+//		  };
+		System.err.println("FileName= "+name);
+		return Response.ok(attachment, contentType)
+				.header("Content-Disposition", "attachment; filename="+name+"; Content-Length="+length)
+				.build();
+	}
+
 }

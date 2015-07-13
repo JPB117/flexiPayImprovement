@@ -61,13 +61,14 @@ public abstract class AbstractAsyncCallback<T> implements RestCallback<T> {
 		//
 		
 		AppContext.getEventBus().fireEvent(new ProcessingCompletedEvent());
-		// AppContext.getEventBus().fireEvent(new ErrorEvent(message, 0L));
+		//AppContext.getEventBus().fireEvent(new ErrorEvent(message, 0L));
 	}
 
 	@Override
 	public void setResponse(Response aResponse) {
 		int code = aResponse.getStatusCode();
-
+		AppContext.getEventBus().fireEvent(new ProcessingCompletedEvent());
+		
 		if (code == 200 || code == 202 || code == 203 || code == 204
 				|| code == 304) {
 			return;
@@ -75,7 +76,6 @@ public abstract class AbstractAsyncCallback<T> implements RestCallback<T> {
 
 		String message = aResponse.getStatusText();
 		if (code == 500) {
-			AppContext.getEventBus().fireEvent(new ProcessingCompletedEvent());
 			AppContext.getEventBus().fireEvent(new ErrorEvent(message, 0L));
 			return;
 		}
@@ -102,7 +102,6 @@ public abstract class AbstractAsyncCallback<T> implements RestCallback<T> {
 			return;
 		}
 
-		AppContext.getEventBus().fireEvent(new ProcessingCompletedEvent());
 		AppContext.getEventBus()
 				.fireEvent(
 						new ErrorEvent("Code=" + code + "; "

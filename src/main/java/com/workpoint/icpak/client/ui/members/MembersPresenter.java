@@ -26,6 +26,7 @@ import com.workpoint.icpak.client.security.CurrentUser;
 import com.workpoint.icpak.client.service.AbstractAsyncCallback;
 import com.workpoint.icpak.client.ui.admin.TabDataExt;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
+import com.workpoint.icpak.client.ui.security.AdminGateKeeper;
 import com.workpoint.icpak.client.ui.security.LoginGateKeeper;
 import com.workpoint.icpak.shared.api.ApplicationFormResource;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
@@ -42,13 +43,13 @@ public class MembersPresenter
 
 	@ProxyCodeSplit
 	@NameToken(NameTokens.members)
-	@UseGatekeeper(LoginGateKeeper.class)
+	@UseGatekeeper(AdminGateKeeper.class)
 	public interface IMembersProxy extends
 			TabContentProxyPlace<MembersPresenter> {
 	}
 
 	@TabInfo(container = HomePresenter.class)
-	static TabData getTabLabel(LoginGateKeeper adminGatekeeper) {
+	static TabData getTabLabel(AdminGateKeeper adminGatekeeper) {
 		TabDataExt data = new TabDataExt("Membership", "icon-users", 4,
 				adminGatekeeper, true);
 		return data;

@@ -6,15 +6,14 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.workpoint.icpak.shared.model.auth.AccountStatus;
 
 @XmlRootElement
-public class UserDto implements Listable,Serializable {
+public class UserDto extends SerializableObj implements Listable,Serializable {
 
 	private static final long serialVersionUID = -5249516544970187459L;
-	private Long id;
 	private String uri;
-	private String refId;
 	private String applicationRefId;
 	private String name;
 	private String userId;
@@ -22,7 +21,7 @@ public class UserDto implements Listable,Serializable {
 	private String email;
 	private String surname;
 	private String password;
-	private ArrayList<UserGroup> groups = new ArrayList<UserGroup>() ;
+	private ArrayList<RoleDto> groups = new ArrayList<RoleDto>() ;
 	private int participated;
 	private int inbox;
 	private AccountStatus status = AccountStatus.NEWACC;
@@ -33,7 +32,6 @@ public class UserDto implements Listable,Serializable {
 	public UserDto(String id) {
 		this.userId = id;
 	}
-	
 	
 	public void setName(String name) {
 		this.name = name;
@@ -75,27 +73,29 @@ public class UserDto implements Listable,Serializable {
 		this.password = password;
 	}
 	
+	@JsonIgnore
 	public String getFullName(){
 		return surname+" "+name;
 	}
 	
 	@Override
 	public String toString() {
-		return "{refId:"+refId+",userId:"+userId+",fullNames:"+getFullName()+"}";
+		return "{refId:"+getRefId()+",userId:"+userId+",fullNames:"+getFullName()+"}";
 	}
 
-	public List<UserGroup> getGroups() {
+	public List<RoleDto> getGroups() {
 		return groups;
 	}
 
-	public void setGroups(List<UserGroup> groups) {
+	public void setGroups(List<RoleDto> groups) {
 		this.groups.addAll(groups);
 	}
 	
+	@JsonIgnore
 	public String getGroupsAsString(){
 		StringBuffer out = new StringBuffer();
 		if(groups!=null){
-			for(UserGroup group: groups){
+			for(RoleDto group: groups){
 				out.append(group.getName()+",");
 			}
 		}
@@ -107,17 +107,9 @@ public class UserDto implements Listable,Serializable {
 		return "";
 	}
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
 	public boolean hasGroup(String groupName) {
 		if(groups!=null)
-		for(UserGroup group:groups){
+		for(RoleDto group:groups){
 			if(group.getName().equalsIgnoreCase(groupName)){
 				return true;
 			}
@@ -125,6 +117,7 @@ public class UserDto implements Listable,Serializable {
 		return false;
 	}
 
+	@JsonIgnore
 	public boolean isAdmin() {
 
 		return hasGroup("admin");
@@ -161,12 +154,13 @@ public class UserDto implements Listable,Serializable {
 		this.participated = participated;
 	}
 
+	@JsonIgnore
 	public int getTotal() {
 		
 		return participated+inbox;
 	}
 
-	@Override
+	@JsonIgnore
 	public String getDisplayName() {
 		return getFullName();
 	}
@@ -177,14 +171,6 @@ public class UserDto implements Listable,Serializable {
 
 	public void setUri(String uri) {
 		this.uri = uri;
-	}
-
-	public String getRefId() {
-		return refId;
-	}
-
-	public void setRefId(String refId) {
-		this.refId = refId;
 	}
 
 	public AccountStatus getStatus() {

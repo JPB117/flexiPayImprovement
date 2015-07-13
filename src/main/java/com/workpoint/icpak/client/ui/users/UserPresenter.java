@@ -10,6 +10,7 @@ import com.google.inject.Provider;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.common.client.IndirectProvider;
 import com.gwtplatform.common.client.StandardProvider;
+import com.gwtplatform.dispatch.rest.delegates.client.ResourceDelegate;
 import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.TabData;
 import com.gwtplatform.mvp.client.View;
@@ -20,8 +21,8 @@ import com.gwtplatform.mvp.client.annotations.UseGatekeeper;
 import com.gwtplatform.mvp.client.proxy.TabContentProxyPlace;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.workpoint.icpak.client.place.NameTokens;
+import com.workpoint.icpak.client.service.AbstractAsyncCallback;
 import com.workpoint.icpak.client.service.ServiceCallback;
-import com.workpoint.icpak.client.ui.admin.AdminHomePresenter;
 import com.workpoint.icpak.client.ui.admin.TabDataExt;
 import com.workpoint.icpak.client.ui.events.EditGroupEvent;
 import com.workpoint.icpak.client.ui.events.EditGroupEvent.EditGroupHandler;
@@ -31,6 +32,8 @@ import com.workpoint.icpak.client.ui.events.LoadGroupsEvent;
 import com.workpoint.icpak.client.ui.events.LoadGroupsEvent.LoadGroupsHandler;
 import com.workpoint.icpak.client.ui.events.LoadUsersEvent;
 import com.workpoint.icpak.client.ui.events.LoadUsersEvent.LoadUsersHandler;
+import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
+import com.workpoint.icpak.client.ui.events.ProcessingEvent;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
 import com.workpoint.icpak.client.ui.security.AdminGateKeeper;
 import com.workpoint.icpak.client.ui.security.LoginGateKeeper;
@@ -38,8 +41,10 @@ import com.workpoint.icpak.client.ui.users.groups.GroupPresenter;
 import com.workpoint.icpak.client.ui.users.item.UserItemPresenter;
 import com.workpoint.icpak.client.ui.users.save.UserSavePresenter;
 import com.workpoint.icpak.client.ui.users.save.UserSavePresenter.TYPE;
+import com.workpoint.icpak.shared.api.RoleResource;
+import com.workpoint.icpak.shared.api.UsersResource;
+import com.workpoint.icpak.shared.model.RoleDto;
 import com.workpoint.icpak.shared.model.UserDto;
-import com.workpoint.icpak.shared.model.UserGroup;
 
 public class UserPresenter extends
 		Presenter<UserPresenter.MyView, UserPresenter.MyProxy> implements
@@ -56,12 +61,12 @@ public class UserPresenter extends
 
 	@ProxyCodeSplit
 	@NameToken(NameTokens.usermgt)
-	@UseGatekeeper(LoginGateKeeper.class)
+	@UseGatekeeper(AdminGateKeeper.class)
 	public interface MyProxy extends TabContentProxyPlace<UserPresenter> {
 	}
 
 	@TabInfo(container = HomePresenter.class)
-	static TabData getTabLabel(LoginGateKeeper adminGatekeeper) {
+	static TabData getTabLabel(AdminGateKeeper adminGatekeeper) {
 		return new TabDataExt("Users and Groups", "fa fa-globe", 3,
 				adminGatekeeper,true);
 	}
@@ -74,13 +79,19 @@ public class UserPresenter extends
 	IndirectProvider<GroupPresenter> groupFactory;
 
 	TYPE type = TYPE.USER;
+	private ResourceDelegate<UsersResource> usersDelegate;
+	private ResourceDelegate<RoleResource> roleResource;
 
 	@Inject
 	public UserPresenter(final EventBus eventBus, final MyView view,
 			MyProxy proxy, Provider<UserSavePresenter> addUserProvider,
 			Provider<UserItemPresenter> itemProvider,
-			Provider<GroupPresenter> groupProvider) {
+			Provider<GroupPresenter> groupProvider,
+			ResourceDelegate<UsersResource> usersDelegate,
+			ResourceDelegate<RoleResource> roleResource) {
 		super(eventBus, view, proxy, HomePresenter.SLOT_SetTabContent);
+		this.usersDelegate = usersDelegate;
+		this.roleResource = roleResource;
 		userFactory = new StandardProvider<UserSavePresenter>(addUserProvider);
 		userItemFactory = new StandardProvider<UserItemPresenter>(itemProvider);
 		groupFactory = new StandardProvider<GroupPresenter>(groupProvider);
@@ -152,22 +163,20 @@ public class UserPresenter extends
 	}
 
 	private void loadGroups() {
-		// GetGroupsRequest request = new GetGroupsRequest();
-		// fireEvent(new ProcessingEvent());
-		// requestHelper.execute(request, new
-		// TaskServiceCallback<GetGroupsResponse>() {
-		// @Override
-		// public void processResult(GetGroupsResponse result) {
-		// List<UserGroup> groups = result.getGroups();
-		// loadGroups(groups);
-		// fireEvent(new ProcessingCompletedEvent());
-		// }
-		// });
+		
+		fireEvent(new ProcessingEvent());
+		roleResource.withCallback(new AbstractAsyncCallback<List<RoleDto>>() {
+			@Override
+			public void onSuccess(List<RoleDto> result) {
+				loadGroups(result);		
+				fireEvent(new ProcessingCompletedEvent());
+			}
+		}).getAll(0, 100);
 	}
 
-	protected void loadGroups(List<UserGroup> groups) {
+	protected void loadGroups(List<RoleDto> groups) {
 		setInSlot(GROUPSLOT, null);
-		for (final UserGroup group : groups) {
+		for (final RoleDto group : groups) {
 			groupFactory.get(new ServiceCallback<GroupPresenter>() {
 				@Override
 				public void processResult(GroupPresenter result) {
@@ -180,17 +189,15 @@ public class UserPresenter extends
 	}
 
 	private void loadUsers() {
-		// GetUsersRequest request = new GetUsersRequest();
-		// fireEvent(new ProcessingEvent());
-		// requestHelper.execute(request, new
-		// TaskServiceCallback<GetUsersResponse>() {
-		// @Override
-		// public void processResult(GetUsersResponse result) {
-		// List<User> users = result.getUsers();
-		// loadUsers(users);
-		// fireEvent(new ProcessingCompletedEvent());
-		// }
-		// });
+		fireEvent(new ProcessingEvent());
+		usersDelegate.withCallback(new AbstractAsyncCallback<List<UserDto>>() {
+			@Override
+			public void onSuccess(List<UserDto> result) {
+				loadUsers(result);
+				fireEvent(new ProcessingCompletedEvent());
+			}
+		}).getAll(0, 100);
+		
 	}
 
 	protected void loadUsers(List<UserDto> users) {

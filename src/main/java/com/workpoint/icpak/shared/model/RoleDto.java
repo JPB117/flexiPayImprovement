@@ -1,8 +1,9 @@
 package com.workpoint.icpak.shared.model;
 
-import java.io.Serializable;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-public class UserGroup  implements Serializable, Listable{
+
+public class RoleDto extends SerializableObj implements Listable{
 
 	/**
 	 * 
@@ -10,15 +11,13 @@ public class UserGroup  implements Serializable, Listable{
 	private static final long serialVersionUID = 1L;
 	
 	private Long id;
-	
 	private String name;
-	
 	private String fullName;
 	
-	public UserGroup(){
+	public RoleDto(){
 	}
 
-	public UserGroup(String name){
+	public RoleDto(String name){
 		this.name=name;
 	}
 	
@@ -48,11 +47,11 @@ public class UserGroup  implements Serializable, Listable{
 	
 	@Override
 	public boolean equals(Object obj) {
-		if(!(obj instanceof UserGroup)){
+		if(!(obj instanceof RoleDto)){
 			return false;
 		}
 		
-		UserGroup other = (UserGroup)obj;
+		RoleDto other = (RoleDto)obj;
 		
 		return other.name.equals(name);
 	}
@@ -68,7 +67,7 @@ public class UserGroup  implements Serializable, Listable{
 		return name;
 	}
 
-	@Override
+	@JsonIgnore
 	public String getDisplayName() {
 		
 		return fullName;

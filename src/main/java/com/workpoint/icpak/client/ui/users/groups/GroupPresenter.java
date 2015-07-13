@@ -11,7 +11,7 @@ import com.gwtplatform.mvp.client.View;
 import com.workpoint.icpak.client.ui.AppManager;
 import com.workpoint.icpak.client.ui.OnOptionSelected;
 import com.workpoint.icpak.client.ui.events.EditGroupEvent;
-import com.workpoint.icpak.shared.model.UserGroup;
+import com.workpoint.icpak.shared.model.RoleDto;
 
 public class GroupPresenter extends PresenterWidget<GroupPresenter.MyView>{
 
@@ -23,7 +23,7 @@ public class GroupPresenter extends PresenterWidget<GroupPresenter.MyView>{
 		HasClickHandlers getDelete();
 	}
 
-	UserGroup group;
+	RoleDto group;
 	
 	@Inject
 	public GroupPresenter(final EventBus eventBus, final MyView view) {
@@ -64,7 +64,7 @@ public class GroupPresenter extends PresenterWidget<GroupPresenter.MyView>{
 		});
 	}
 	
-	protected void delete(UserGroup group) {
+	protected void delete(RoleDto group) {
 //		SaveGroupRequest request = new SaveGroupRequest(group);
 //		request.setDelete(true);
 //		requestHelper.execute(request, new TaskServiceCallback<SaveGroupResponse>() {
@@ -75,7 +75,7 @@ public class GroupPresenter extends PresenterWidget<GroupPresenter.MyView>{
 //		});
 	}
 
-	public void setGroup(UserGroup group){
+	public void setGroup(RoleDto group){
 		this.group = group;
 		getView().setValues(group.getName(), group.getFullName());
 	}

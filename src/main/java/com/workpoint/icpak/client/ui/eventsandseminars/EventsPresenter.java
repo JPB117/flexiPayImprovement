@@ -15,12 +15,10 @@ import com.gwtplatform.mvp.client.annotations.UseGatekeeper;
 import com.gwtplatform.mvp.client.proxy.TabContentProxyPlace;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.workpoint.icpak.client.place.NameTokens;
-import com.workpoint.icpak.client.security.CurrentUser;
 import com.workpoint.icpak.client.service.AbstractAsyncCallback;
 import com.workpoint.icpak.client.ui.admin.TabDataExt;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
-import com.workpoint.icpak.client.ui.security.LoginGateKeeper;
-import com.workpoint.icpak.client.util.AppContext;
+import com.workpoint.icpak.client.ui.security.AdminGateKeeper;
 import com.workpoint.icpak.shared.api.EventsResource;
 import com.workpoint.icpak.shared.model.events.BookingDto;
 import com.workpoint.icpak.shared.model.events.EventDto;
@@ -42,12 +40,12 @@ public class EventsPresenter extends
 
 	@ProxyCodeSplit
 	@NameToken(NameTokens.events)
-	@UseGatekeeper(LoginGateKeeper.class)
+	@UseGatekeeper(AdminGateKeeper.class)
 	public interface IEventsProxy extends TabContentProxyPlace<EventsPresenter> {
 	}
 
 	@TabInfo(container = HomePresenter.class)
-	static TabData getTabLabel(LoginGateKeeper adminGatekeeper) {
+	static TabData getTabLabel(AdminGateKeeper adminGatekeeper) {
 		TabDataExt data = new TabDataExt("Events and Seminars", "fa fa-tags",
 				2, adminGatekeeper, true);
 		return data;

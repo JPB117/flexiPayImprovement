@@ -42,6 +42,7 @@ import org.hibernate.annotations.Index;
 
 import com.icpak.rest.models.base.PO;
 import com.wordnik.swagger.annotations.ApiModel;
+import com.workpoint.icpak.shared.model.RoleDto;
 
 /**
  * Model object that represents a security role.
@@ -163,6 +164,20 @@ public class Role extends PO{
 	
 	public Collection<User> getUsers(){
 		return users;
+	}
+
+	public RoleDto toDto() {
+		RoleDto dto = new RoleDto();
+		dto.setFullName(description);
+		dto.setRefId(getRefId());
+		dto.setName(name);
+		
+		return dto;
+	}
+
+	public void copyFrom(RoleDto dto) {
+		setDescription(dto.getFullName());
+		setName(dto.getName());
 	}
 
 }

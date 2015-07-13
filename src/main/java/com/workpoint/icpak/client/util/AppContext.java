@@ -155,11 +155,7 @@ public class AppContext {
 	}
 
 	public static boolean isCurrentUserAdmin() {
-		boolean isAdmin = CookieManager.isCurrentUserAdmin();
-		if (!isAdmin) {
-			// System.err.println("2) IsCurrentUserAdmin? NOOO :: on Refresh -- USER IS NOT AN ADMIN");
-		}
-
+		boolean isAdmin = user==null? false : user.getUser().isAdmin();
 		return isAdmin;
 	}
 

@@ -8,11 +8,18 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
+import com.gwtplatform.dispatch.rest.delegates.client.ResourceDelegate;
 import com.gwtplatform.mvp.client.PopupView;
 import com.gwtplatform.mvp.client.PresenterWidget;
+import com.workpoint.icpak.client.service.AbstractAsyncCallback;
 import com.workpoint.icpak.client.ui.AppManager;
+import com.workpoint.icpak.client.ui.events.LoadGroupsEvent;
+import com.workpoint.icpak.client.ui.events.LoadUsersEvent;
+import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
+import com.workpoint.icpak.shared.api.RoleResource;
+import com.workpoint.icpak.shared.api.UsersResource;
 import com.workpoint.icpak.shared.model.UserDto;
-import com.workpoint.icpak.shared.model.UserGroup;
+import com.workpoint.icpak.shared.model.RoleDto;
 
 public class UserSavePresenter extends
 		PresenterWidget<UserSavePresenter.IUserSaveView> {
@@ -31,11 +38,11 @@ public class UserSavePresenter extends
 
 		void setUser(UserDto user);
 
-		UserGroup getGroup();
+		RoleDto getGroup();
 
-		void setGroup(UserGroup group);
+		void setGroup(RoleDto group);
 
-		void setGroups(List<UserGroup> groups);
+		void setGroups(List<RoleDto> groups);
 
 		PopupPanel getPopUpPanel();
 
@@ -49,11 +56,19 @@ public class UserSavePresenter extends
 
 	UserDto user;
 
-	UserGroup group;
+	RoleDto group;
+
+	private ResourceDelegate<UsersResource> usersDelegate;
+
+	private ResourceDelegate<RoleResource> rolesDelegate;
 
 	@Inject
-	public UserSavePresenter(final EventBus eventBus, final IUserSaveView view) {
+	public UserSavePresenter(final EventBus eventBus, final IUserSaveView view,
+			final ResourceDelegate<UsersResource> usersDelegate,
+			final ResourceDelegate<RoleResource> rolesDelegate) {
 		super(eventBus, view);
+		this.usersDelegate = usersDelegate;
+		this.rolesDelegate = rolesDelegate;
 	}
 
 	@Override
@@ -65,21 +80,26 @@ public class UserSavePresenter extends
 			@Override
 			public void onClick(ClickEvent event) {
 				if (getView().isValid()) {
-					UserDto User = getView().getUser();
-					// if(user!=null){
-					// User.setId(user.getId());
-					// }
-					// SaveUserRequest request = new SaveUserRequest(User);
-					// requestHelper.execute(request, new
-					// TaskServiceCallback<SaveUserResponse>() {
-					// @Override
-					// public void processResult(SaveUserResponse result) {
-					// user = result.getUser();
-					// getView().setUser(user);
-					// getView().hide();
-					// fireEvent(new LoadUsersEvent());
-					// }
-					// });
+					UserDto userDto = getView().getUser();
+					if (user != null) {
+
+						usersDelegate.withCallback(
+								new AbstractAsyncCallback<UserDto>() {
+									@Override
+									public void onSuccess(UserDto dto) {
+										bindUser(dto);
+									}
+								}).update(user.getRefId(), userDto);
+					} else {
+						usersDelegate.withCallback(
+								new AbstractAsyncCallback<UserDto>() {
+									@Override
+									public void onSuccess(UserDto dto) {
+										bindUser(dto);
+									}
+
+								}).create(userDto);
+					}
 				}
 			}
 		});
@@ -89,38 +109,54 @@ public class UserSavePresenter extends
 			@Override
 			public void onClick(ClickEvent event) {
 				if (getView().isValid()) {
-					UserGroup userGroup = getView().getGroup();
+					RoleDto userGroup = getView().getGroup();
 
-					// SaveGroupRequest request = new
-					// SaveGroupRequest(userGroup);
-					//
-					// requestHelper.execute(request, new
-					// TaskServiceCallback<SaveGroupResponse>() {
-					// @Override
-					// public void processResult(SaveGroupResponse result) {
-					// group = result.getGroup();
-					// getView().setGroup(group);
-					// fireEvent(new LoadGroupsEvent());
-					// getView().hide();
-					// }
-					// });
+					if (group != null) {
+
+						rolesDelegate.withCallback(
+								new AbstractAsyncCallback<RoleDto>() {
+									public void onSuccess(RoleDto result) {
+										bindGroup(result);
+									}
+									
+								}).update(group.getRefId(), userGroup);
+					} else {
+						
+						rolesDelegate.withCallback(
+								new AbstractAsyncCallback<RoleDto>() {
+									public void onSuccess(RoleDto result) {
+										bindGroup(result);
+									};
+								}).create(userGroup);
+					}
 				}
 			}
 		});
 	}
 
+	private void bindUser(UserDto savedDto) {
+		user = savedDto;
+		getView().setUser(user);
+		getView().hide();
+		fireEvent(new LoadUsersEvent());
+	}
+	
+	private void bindGroup(RoleDto savedRole) {
+		group = savedRole;
+		getView().setGroup(group);
+		fireEvent(new LoadGroupsEvent());
+		getView().hide();
+	};
+
 	@Override
 	protected void onReveal() {
 		super.onReveal();
-		// GetGroupsRequest request = new GetGroupsRequest();
-		// requestHelper.execute(request, new
-		// TaskServiceCallback<GetGroupsResponse>() {
-		// @Override
-		// public void processResult(GetGroupsResponse result) {
-		// List<UserGroup> groups = result.getGroups();
-		// getView().setGroups(groups);
-		// }
-		// });
+		rolesDelegate.withCallback(new AbstractAsyncCallback<List<RoleDto>>() {
+			@Override
+			public void onSuccess(List<RoleDto> result) {
+				getView().setGroups(result);
+			}
+		}).getAll(0, 100);
 	}
 
 	public void center() {
@@ -136,7 +172,7 @@ public class UserSavePresenter extends
 				user = (UserDto) value;
 				getView().setUser(user);
 			} else {
-				group = (UserGroup) value;
+				group = (RoleDto) value;
 				getView().setGroup(group);
 			}
 		}

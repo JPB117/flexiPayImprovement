@@ -57,7 +57,7 @@ public class UserSessionDao extends BaseDao {
 		UserDto userDto = null;
 		if (userRefId != null) {
 			User user = findByRefId(userRefId, User.class);
-			userDto = user.getDTO();
+			userDto = user.toDto();
 		}
 
 		return userDto;
