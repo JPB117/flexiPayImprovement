@@ -16,8 +16,6 @@
 					</g:Anchor>
 				</h5>
 			</g:HTMLPanel>
-			<d:IssuesPanel ui:field="issues">
-			</d:IssuesPanel>
 			<g:HTMLPanel ui:field="panelBody" styleName="modal-body">
 			</g:HTMLPanel>
 
