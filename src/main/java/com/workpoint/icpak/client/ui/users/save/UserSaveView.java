@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.dom.client.Style.Display;
+import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -95,6 +97,10 @@ public class UserSaveView extends PopupViewImpl implements
 				hide();
 			}
 		});
+
+		AddUserDialog.getElement().getStyle().setDisplay(Display.BLOCK);
+		AddUserDialog.getElement().getStyle().setOverflowY(Overflow.AUTO);
+		AddUserDialog.setGlassStyleName("modal-backdrop fade in");
 
 		// ----Calculate the Size of Screen; To be Centralized later -----
 		int height = Window.getClientHeight();
@@ -260,5 +266,10 @@ public class UserSaveView extends PopupViewImpl implements
 	@Override
 	public void setGroups(List<UserGroup> groups) {
 		lstGroups.addItems(groups);
+	}
+	
+	@Override
+	public PopupPanel getPopUpPanel() {
+		return AddUserDialog;
 	}
 }

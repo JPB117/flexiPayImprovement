@@ -19,8 +19,8 @@ public class IssuesPanel extends Widget {
 
 		this.ulRoot = DOM.createElement("ul");
 		this.spanTitle = DOM.createSpan();
-
-		// this.spanTitle.setInnerText("Summary");
+		
+		setStyleName("alert alert-danger vld-Summary");
 
 		container.appendChild(this.spanTitle);
 		container.appendChild(ulRoot);

@@ -36,7 +36,7 @@ public class GenericPopupView extends PopupViewImpl implements
 	HTMLPanel panelButtons;
 	@UiField
 	HasClickHandlers aClose;
-
+	
 	@Inject
 	public GenericPopupView(final EventBus eventBus, final Binder binder) {
 		super(eventBus);
