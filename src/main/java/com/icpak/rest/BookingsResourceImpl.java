@@ -1,5 +1,6 @@
 package com.icpak.rest;
 
+import java.net.URI;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -11,12 +12,14 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.icpak.rest.dao.helper.BookingsDaoHelper;
 import com.icpak.rest.models.event.Booking;
+import com.sun.jersey.api.core.HttpContext;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
@@ -30,7 +33,8 @@ public class BookingsResourceImpl implements BookingsResource {
 	BookingsDaoHelper helper;
 
 	private final String eventId;
-
+	@Context HttpContext httpContext;
+	
 	@Inject
 	public BookingsResourceImpl(@Assisted String eventId) {
 		this.eventId = eventId;
@@ -70,6 +74,11 @@ public class BookingsResourceImpl implements BookingsResource {
 			BookingDto dto) {
 
 		String uri = "";
+//		URI requestUri = httpContext.getRequest().getRequestUri();
+//		String host = requestUri.getHost();
+//		int port = requestUri.getPort();
+//		uri = host+":"+port;
+		
 		helper.createBooking(eventId, dto);
 		uri = uri + "/" + dto.getRefId();
 		dto.setUri(uri);

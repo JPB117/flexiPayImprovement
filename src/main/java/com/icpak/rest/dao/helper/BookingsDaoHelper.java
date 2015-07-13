@@ -157,6 +157,7 @@ public class BookingsDaoHelper {
 			values.put("quoteNo", booking.getId());
 			values.put("date", invoice.getDate());
 			values.put("firstName", invoice.getContactName());
+			
 			values.put("DocumentURL", "http://127.0.0.1:8888/icpakportal.html");
 			values.put("email", booking.getContact().getEmail());
 			values.put("eventId", booking.getEvent().getRefId());
@@ -194,10 +195,9 @@ public class BookingsDaoHelper {
 			e.printStackTrace();
 		}
 		
-
-		trxHelper.charge(booking.getUserId(),
+		String trxRef = trxHelper.charge(booking.getUserId(),
 				booking.getBookingDate(), subject, event.getStartDate(), invoice.getAmount(),
-				"Booking #"+booking.getId());
+				"Booking #"+booking.getId(), invoice.getRefId());
 	}
 	
 	public InvoiceDto generateInvoice(Booking booking){
@@ -222,7 +222,7 @@ public class BookingsDaoHelper {
 		invoice.setPhoneNumber(booking.getContact().getTelephoneNumbers());
 		invoice.setBookingRefId(booking.getRefId());
 		
-		invoiceHelper.save(invoice);
+		invoice = invoiceHelper.save(invoice);
 		
 		return invoice;
 	}

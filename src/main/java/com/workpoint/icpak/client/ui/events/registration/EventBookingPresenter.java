@@ -58,6 +58,8 @@ public class EventBookingPresenter extends
 		void setMiddleHeight();
 
 		void bindInvoice(InvoiceDto invoice);
+
+		void setActivePage(int index);
 	}
 
 	@ProxyCodeSplit
@@ -160,7 +162,7 @@ public class EventBookingPresenter extends
 		super.prepareFromRequest(request);
 		eventId = request.getParameter("eventId", "9J4oKtW898RyOClP");
 		bookingId = request.getParameter("bookingId", null);
-
+		
 		countriesResource.withCallback(
 				new AbstractAsyncCallback<List<Country>>() {
 					public void onSuccess(List<Country> countries) {
@@ -204,11 +206,13 @@ public class EventBookingPresenter extends
 		}).getById(eventId);
 
 		if (bookingId != null) {
+			getView().setActivePage(2);
 			eventsResource
 					.withCallback(new AbstractAsyncCallback<BookingDto>() {
 						@Override
 						public void onSuccess(BookingDto booking) {
 							getView().bindBooking(booking);
+							getInvoice(booking.getInvoiceRef(),false);
 						}
 					}).bookings(eventId).getById(bookingId);
 		}
@@ -216,12 +220,18 @@ public class EventBookingPresenter extends
 	}
 	
 	protected void getInvoice(String invoiceRef) {
+		getInvoice(invoiceRef, true);
+	}
+	
+	protected void getInvoice(String invoiceRef, final boolean moveNext) {
 
 		invoiceResource.withCallback(new AbstractAsyncCallback<InvoiceDto>() {
 			@Override
 			public void onSuccess(InvoiceDto invoice) {
 				getView().bindInvoice(invoice);
-				getView().next();
+				
+				if(moveNext)
+					getView().next();
 			}
 		}).getInvoice(invoiceRef);
 

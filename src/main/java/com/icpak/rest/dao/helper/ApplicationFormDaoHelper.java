@@ -145,7 +145,7 @@ public class ApplicationFormDaoHelper {
 			
 			trxHelper.charge(user.getRefId(),
 					new Date(), subject,null ,invoice.getAmount(),
-					documentNo);
+					documentNo, invoice.getRefId());
 			
 		}catch(Exception e){
 			e.printStackTrace();

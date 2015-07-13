@@ -15,8 +15,16 @@ public class TransactionDto extends SerializableObj{
 	private String description;
 	private Date dueDate;
 	private Double amount;
-	private Double balance;
-	private TrxType type;
+	private String paymentMode;
+	private String status;
+	
+	//MPESA
+	private String businessNo;
+	private String accountNo;
+	
+	//MPESA, VISA, MasterCard
+	private String trxNumber;
+	
 	private String documentNo;
 	
 	public TransactionDto() {
@@ -62,20 +70,44 @@ public class TransactionDto extends SerializableObj{
 		this.amount = amount;
 	}
 
-	public Double getBalance() {
-		return balance;
+	public String getPaymentMode() {
+		return paymentMode;
 	}
 
-	public void setBalance(Double balance) {
-		this.balance = balance;
+	public void setPaymentMode(String paymentMode) {
+		this.paymentMode = paymentMode;
 	}
 
-	public TrxType getType() {
-		return type;
+	public String getStatus() {
+		return status;
 	}
 
-	public void setType(TrxType type) {
-		this.type = type;
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getBusinessNo() {
+		return businessNo;
+	}
+
+	public void setBusinessNo(String businessNo) {
+		this.businessNo = businessNo;
+	}
+
+	public String getAccountNo() {
+		return accountNo;
+	}
+
+	public void setAccountNo(String accountNo) {
+		this.accountNo = accountNo;
+	}
+
+	public String getTrxNumber() {
+		return trxNumber;
+	}
+
+	public void setTrxNumber(String trxNumber) {
+		this.trxNumber = trxNumber;
 	}
 
 	public String getDocumentNo() {
