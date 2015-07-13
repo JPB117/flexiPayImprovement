@@ -135,6 +135,7 @@ public class UserPresenter extends
 		userFactory.get(new ServiceCallback<UserSavePresenter>() {
 			@Override
 			public void processResult(UserSavePresenter result) {
+				result.center();
 				result.setType(type, obj);
 				addToPopupSlot(result, false);
 			}

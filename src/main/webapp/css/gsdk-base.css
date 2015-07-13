@@ -1,6 +1,22 @@
 html, body {
-	/* overflow-y:auto !important; */
-	
+	/* overflow-y:auto !important; */	
+}
+
+.modal{
+	overflow-y:auto !important;
+}
+
+.search-bar {
+	background: linear-gradient(rgb(248, 248, 248) 0px, rgb(236, 236, 236)
+		100%) repeat-x rgb(242, 242, 242);
+	border: 1px solid #E6E6E6;
+	margin-right: 0px;
+	border-radius: 0px 0px;
+}
+
+.search-bar .input-append {
+	margin-bottom: 0px;
+	margin: 5px 5px;
 }
 
 .set-full-height {
@@ -469,9 +485,13 @@ h1 .subtitle {
 
 .input-group
 
+
  
 
+
 .form-control
+
+
 
 
 :first-child
@@ -479,9 +499,13 @@ h1 .subtitle {
 .input-group-addon
 
 
+
+
 :first-child
 ,
 .input-group-btn
+
+
 
 
 :first-child
@@ -489,6 +513,8 @@ h1 .subtitle {
 .btn
 ,
 .input-group-btn
+
+
 
 
 :first-child
@@ -498,51 +524,73 @@ h1 .subtitle {
 .input-group-btn
 
 
+
+
 :last-child
 >
 .btn
 
 
+
+
 :not
 
+
  
+
 
 (
 :last-child
 
+
  
+
 
 )
 :not
 
+
  
+
 
 (
 .dropdown-toggle
 
 
+
 	
+
 
 )
 {
 border-right
 
 
+
+
 :
+
 
  
 
+
 0
 none
+
+
 
 
 ;
 }
 .input-group
 
+
  
 
+
 .form-control
+
+
 
 
 :last-child
@@ -550,9 +598,13 @@ none
 .input-group-addon
 
 
+
+
 :last-child
 ,
 .input-group-btn
+
+
 
 
 :last-child
@@ -560,6 +612,8 @@ none
 .btn
 ,
 .input-group-btn
+
+
 
 
 :last-child
@@ -569,31 +623,45 @@ none
 .input-group-btn
 
 
+
+
 :first-child
 >
 .btn
 
 
+
+
 :not
 
+
  
+
 
 (
 :first-child
 
+
  
+
 
 )
 {
 border-left
 
 
+
+
 :
+
 
  
 
+
 0
 none
+
+
 
 
 ;
@@ -820,6 +888,7 @@ none
 
 .modal-header {
 	/* border: 0 none; */
+	
 }
 
 .tooltip {
