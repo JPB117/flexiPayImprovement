@@ -25,7 +25,6 @@ public class ResourceRequestFilter implements ContainerRequestFilter{
 	}
 	
 	@Override
-	public void filter(ContainerRequestContext arg0) throws IOException {
-		
+	public void filter(ContainerRequestContext context) throws IOException {
 	}
 }

@@ -228,10 +228,6 @@ public class EventBookingView extends ViewImpl implements
 			}
 		});
 
-		// 197.248.4.221
-		String url = "http://197.248.4.221:8080/ewallet/#websiteClient";
-		framePayment.setUrl(url);
-
 		// Li Elements
 		liElements.add(liTab1);
 		liElements.add(liTab2);
@@ -250,11 +246,17 @@ public class EventBookingView extends ViewImpl implements
 			@Override
 			public void onClick(ClickEvent event) {
 				counter = counter - 1;
-				showMyAccountLink(counter);
-				removeActive(liElements.get(counter), pageElements.get(counter));
-				setActive(liElements.get(counter), pageElements.get(counter));
+				setActivePage(counter);
+				
 			}
 		});
+	}
+
+	public void setActivePage(int index) {
+		this.counter=index;
+		showMyAccountLink(counter);
+		removeActive(liElements.get(counter), pageElements.get(counter));
+		setActive(liElements.get(counter), pageElements.get(counter));
 	}
 
 	protected void showMyAccountLink(int counter) {
@@ -513,5 +515,21 @@ public class EventBookingView extends ViewImpl implements
 	public void bindInvoice(InvoiceDto invoice) {
 		proformaInv.clearRows();
 		proformaInv.setInvoice(invoice);
+		
+		bindTransaction(invoice);
 	}
+
+	private void bindTransaction(InvoiceDto invoice) {
+		// 197.248.4.221
+		String url = "http://192.168.43.190:8888/mWallet2.html#websiteClient;"
+		//String url = "http://197.248.4.221:8080/ewallet/#websiteClient;"
+				+ "businessNo=722722;"
+				+ "refId="+invoice.getRefId()+";"
+				+ "orgName=ICPAK;"
+				+ "amount="+invoice.getAmount()+";"
+				+ "accountNo=Use ID Number";
+		
+		framePayment.setUrl(url);
+	}
+	
 }

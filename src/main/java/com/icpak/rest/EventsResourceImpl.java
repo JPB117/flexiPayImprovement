@@ -20,6 +20,7 @@ import com.icpak.rest.models.event.Event;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
+import com.workpoint.icpak.shared.api.AccommodationsResource;
 import com.workpoint.icpak.shared.api.BookingsResource;
 import com.workpoint.icpak.shared.api.EventsResource;
 import com.workpoint.icpak.shared.model.events.EventDto;
@@ -47,6 +48,12 @@ public class EventsResourceImpl implements EventsResource{
 	public BookingsResource bookings(@PathParam("eventId") String eventId){
 		return factory.createBookingResource(eventId);
 	}
+	
+	@Path("/{eventId}/accommodations")
+	public AccommodationsResource accommodations(@PathParam("eventId") String eventId){
+		return factory.createAccommodationsResource(eventId);
+	}
+
 
 	@GET
 	@Path("/{eventId}")

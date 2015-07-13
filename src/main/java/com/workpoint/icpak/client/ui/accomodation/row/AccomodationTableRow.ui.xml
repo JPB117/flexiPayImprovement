@@ -3,21 +3,14 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.workpoint.icpak.client.ui.component">
 
 	<g:HTMLPanel styleName="tr" ui:field="row">
-		<g:HTMLPanel styleName="td" ui:field="divHotelId">
-			1
+		<g:HTMLPanel styleName="td" ui:field="divEventName">
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divHotelName">
-			<g:Anchor ui:field="aHotelName">Sarova Stanley</g:Anchor>
+			<g:Anchor ui:field="aHotelName"></g:Anchor>
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divNights">
-			1
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divPrice">
-			10,000
-		</g:HTMLPanel>
-		<g:HTMLPanel styleName="td" ui:field="divEventName">
-			Financial Workshop
-			2015
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td">
 			<div class="dropdown">

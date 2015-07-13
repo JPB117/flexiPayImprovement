@@ -192,6 +192,11 @@ public class Event extends PO {
 	}
 
 	public EventDto toDto() {
+		return toDto(true);
+	}
+
+	public EventDto toDto(boolean includeAccommodation) {
+
 		EventDto dto = new EventDto();
 		dto.setRefId(getRefId());
 		dto.setCpdHours(cpdHours);
@@ -209,15 +214,18 @@ public class Event extends PO {
 		dto.setType(type);
 		dto.setVenue(venue);
 
-		if (getAccommodation() != null) {
-			List<AccommodationDto> accommodations = new ArrayList<>();
-			for (Accommodation a : getAccommodation()) {
-				accommodations.add(a.toDto());
+		if (includeAccommodation) {
+			if (getAccommodation() != null) {
+				List<AccommodationDto> accommodations = new ArrayList<>();
+				for (Accommodation a : getAccommodation()) {
+					accommodations.add(a.toDto());
+				}
+				dto.setAccommodation(accommodations);
 			}
-			dto.setAccommodation(accommodations);
 		}
 
 		return dto;
+
 	}
 
 	public void copyFrom(EventDto dto) {

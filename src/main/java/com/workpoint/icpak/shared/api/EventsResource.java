@@ -26,6 +26,9 @@ public interface EventsResource {
 		
 		@Path("/{eventId}/bookings")
 		public BookingsResource bookings(@PathParam("eventId") String eventId);
+		
+		@Path("/{eventId}/accommodations")
+		public AccommodationsResource accommodations(@PathParam("eventId") String eventId);
 
 		@GET
 		@Path("/{eventId}")

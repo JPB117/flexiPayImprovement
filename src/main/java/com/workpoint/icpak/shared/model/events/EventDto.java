@@ -3,11 +3,13 @@ package com.workpoint.icpak.shared.model.events;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.workpoint.icpak.shared.model.EventStatus;
 import com.workpoint.icpak.shared.model.EventType;
+import com.workpoint.icpak.shared.model.Listable;
 import com.workpoint.icpak.shared.model.SerializableObj;
 
-public class EventDto extends SerializableObj {
+public class EventDto extends SerializableObj implements Listable{
 
 	private String name;
 	private String description;
@@ -138,6 +140,25 @@ public class EventDto extends SerializableObj {
 
 	public void setEndDate(Long endDate) {
 		this.endDate = endDate;
+	}
+
+	@JsonIgnore
+	public String getDisplayName() {
+		return name;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(!(obj instanceof EventDto)){
+			return false;
+		}
+		
+		EventDto other = (EventDto)obj;
+		if(other.getRefId()==null || getRefId()==null){
+			return false;
+		}
+		
+		return other.getRefId().equals(getRefId());
 	}
 
 }

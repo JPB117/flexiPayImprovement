@@ -12,6 +12,7 @@ import com.google.inject.servlet.ServletModule;
 import com.icpak.rest.BookingsResourceImpl;
 import com.icpak.rest.EducationResourceImpl;
 import com.icpak.rest.factory.ResourceFactory;
+import com.icpak.rest.filters.CORSFilter;
 import com.icpak.servlet.config.GenericBootstrapConstants;
 import com.icpak.servlet.swagger.SwaggerApiServlet;
 import com.sun.jersey.api.core.PackagesResourceConfig;
@@ -57,6 +58,7 @@ public class BootstrapServletModule extends ServletModule{
         params.put("javax.ws.rs.container.ContainerRequestFilter", "com.icpak.rest.ResourceRequestFilter");
         params.put("com.sun.jersey.api.json.POJOMappingFeature","true");
         serve("/api/*").with(GuiceContainer.class, params);
+        filter("/api/*").through(CORSFilter.class);
           
         Map<String, String> params2 = new HashMap<String, String>();
         params2.put("loadonstartup", "1");

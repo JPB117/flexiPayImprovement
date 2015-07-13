@@ -9,6 +9,8 @@ public class AccommodationDto extends SerializableObj implements Listable{
 	private String hotel;
 	private String description;
 	private Double fee;
+	private int nights;
+	private EventDto event;
 	
 	public AccommodationDto() {
 	}
@@ -45,6 +47,22 @@ public class AccommodationDto extends SerializableObj implements Listable{
 	@JsonIgnore
 	public String getDisplayName() {
 		return hotel+"- Ksh "+fee;
+	}
+
+	public EventDto getEvent() {
+		return event;
+	}
+
+	public void setEvent(EventDto event) {
+		this.event = event;
+	}
+
+	public int getNights() {
+		return nights;
+	}
+
+	public void setNights(int nights) {
+		this.nights = nights;
 	}
 	
 }

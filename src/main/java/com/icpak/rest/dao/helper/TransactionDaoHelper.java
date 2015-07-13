@@ -9,45 +9,37 @@ import com.google.inject.persist.Transactional;
 import com.icpak.rest.dao.TransactionsDao;
 import com.icpak.rest.models.trx.Transaction;
 import com.workpoint.icpak.shared.trx.TransactionDto;
-import com.workpoint.icpak.shared.trx.TrxType;
 
 @Transactional
 public class TransactionDaoHelper {
 
 	@Inject TransactionsDao dao;
 	
-	public void charge(String userId, Date chargeDate, String description,
-			Date dueDate, Double amount, String documentNo) {
+	public String charge(String userId, Date chargeDate, String description,
+			Date dueDate, Double amount, String documentNo, String invoiceRef) {
 		Transaction trx = new Transaction();
+		trx.setRefId(invoiceRef);
+		trx.setInvoiceRef(invoiceRef);
 		trx.setAmount(amount);
 		trx.setDate(chargeDate);
 		trx.setDescription(description);
 		trx.setDueDate(dueDate);
-		trx.setDocumentNo(documentNo);
 		trx.setUserId(userId);
-		trx.setType(TrxType.CR);
+		trx.setDocumentNo(documentNo);
 		dao.save(trx);
+		
+		return trx.getRefId();
 	}
 	
-	public void receivePayment(String referenceId, String paymentMode, String status){
+	public void receivePayment(String paymentRef,String businessNo,String accountNo,String paymentMode,String trxNumber){
 		
-		Transaction trx = dao.findByRefId(referenceId, Transaction.class, false);
-		
-		Transaction payment = new Transaction();
-		payment.setType(TrxType.DR);
-		payment.setPaymentMode(paymentMode);
-		payment.setStatus(status);
-		
-		if(trx!=null){
-			payment.setAmount(trx.getAmount());
-			payment.setDate(new Date());
-			payment.setDescription(trx.getDescription());
-			payment.setDueDate(trx.getDueDate());
-			payment.setDocumentNo(trx.getDocumentNo());
-			payment.setUserId(trx.getUserId());
-		}
-		
-		dao.save(payment);
+		Transaction trx = dao.findByRefId(paymentRef, Transaction.class);
+		trx.setAccountNo(accountNo);
+		trx.setPaymentMode(paymentMode);
+		trx.setTrxNumber(trxNumber);
+		trx.setBusinessNo(businessNo);
+		trx.setStatus("PAID");
+		dao.save(trx);
 	}
 
 	public List<TransactionDto> getTransactions(String userId) {
