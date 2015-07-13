@@ -73,7 +73,7 @@ public class DelegateTableRow extends RowWidget {
 				delegate.getSurname(), delegate.getOtherNames(), delegate.getEmail(),null);
 		
 		if(delegate.getAccommodation()!=null){
-			divAccomodation.add(new InlineLabel(delegate.getAccommodation().getName()+""));
+			divAccomodation.add(new InlineLabel(delegate.getAccommodation().getHotel()+""));
 		}
 		
 		if(dto.getPaymentStatus()!=null){

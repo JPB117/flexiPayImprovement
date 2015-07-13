@@ -203,6 +203,7 @@ public class AppContext {
 
 	public static void clear() {
 		user.fromCurrentUserDto(new CurrentUserDto());
+		CookieManager.clear();
 	}
 
 	public static boolean hasLoggedInCookie() {

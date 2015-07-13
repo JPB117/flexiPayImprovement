@@ -1,6 +1,7 @@
 package com.workpoint.icpak.client.util;
 
 import com.google.gwt.user.client.Cookies;
+import com.workpoint.icpak.shared.api.ApiParameters;
 
 public class CookieManager {
 
@@ -20,6 +21,7 @@ public class CookieManager {
 	public static void clear() {
 		Cookies.removeCookie(Definitions.AUTHENTICATIONCOOKIE);
 		Cookies.removeCookie(Definitions.AUTHENTICATIONTIMECOOKIE);
+		Cookies.removeCookie(ApiParameters.LOGIN_COOKIE);
 	}
 	
 	public static void setSessionValue(String name, String value){
