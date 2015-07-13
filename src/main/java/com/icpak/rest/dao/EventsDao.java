@@ -6,6 +6,7 @@ import javax.persistence.Query;
 
 import com.icpak.rest.exceptions.ServiceException;
 import com.icpak.rest.models.ErrorCodes;
+import com.icpak.rest.models.event.Accommodation;
 import com.icpak.rest.models.event.Event;
 import com.workpoint.icpak.shared.model.PaymentStatus;
 
@@ -81,6 +82,18 @@ public class EventsDao extends BaseDao {
 		
 		
 		return value.doubleValue();
+	}
+
+	public Accommodation getAccommodation(Event event, String accommodationId) {
+		
+		return getSingleResultOrNull(getEntityManager()
+				.createQuery("FROM Accommodation a where a.refId=:refId")
+				.setParameter("refId", accommodationId));
+	}
+
+	public List<Accommodation> getAllAccommodations() {
+		return getResultList(getEntityManager()
+				.createQuery("FROM Accommodation"));
 	}
 
 }

@@ -11,7 +11,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.workpoint.icpak.client.ui.component.DropDownList;
 import com.workpoint.icpak.client.ui.component.IssuesPanel;
 import com.workpoint.icpak.client.ui.component.TextField;
-import com.workpoint.icpak.shared.model.AccomodationDTO;
+import com.workpoint.icpak.shared.model.events.AccommodationDto;
 
 public class CreateEnquiry extends Composite {
 
@@ -76,11 +76,11 @@ public class CreateEnquiry extends Composite {
 		return isValid;
 	}
 
-	public void setEnquiryDetail(AccomodationDTO accomodation) {
+	public void setEnquiryDetail(AccommodationDto accomodation) {
 
 	}
 
-	public AccomodationDTO getAccomodationDetails() {
+	public AccommodationDto getAccomodationDetails() {
 		return null;
 	}
 }

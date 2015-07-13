@@ -37,11 +37,10 @@ public class AccomodationTable extends Composite {
 
 	public void createHeader() {
 		List<TableHeader> th = new ArrayList<TableHeader>();
-		th.add(new TableHeader("Hotel Id:"));
+		th.add(new TableHeader("Event Name:"));
 		th.add(new TableHeader("Hotel Name:"));
 		th.add(new TableHeader("Nights:"));
 		th.add(new TableHeader("Price:"));
-		th.add(new TableHeader("Event Name:"));
 		th.add(new TableHeader("Action:"));
 
 		tblView.setTableHeaders(th);

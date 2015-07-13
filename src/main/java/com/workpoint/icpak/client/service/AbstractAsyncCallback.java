@@ -8,93 +8,104 @@ import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
 import com.workpoint.icpak.client.util.AppContext;
 
 public abstract class AbstractAsyncCallback<T> implements RestCallback<T> {
-	
+
 	@Override
 	public void onFailure(Throwable caught) {
+
+		// if (caught instanceof ServiceException) {
+		// Window.alert("On Error SE >> " + caught.getClass());
+		// String msg = "Cannot connect to server...";
+		// if (caught.getMessage() != null && caught.getMessage().length() > 5)
+		// {
+		// msg = caught.getMessage();
+		// }
+		// AppContext.getEventBus().fireEvent(
+		// new ClientDisconnectionEvent(msg));
+		// return;
+		// }
+		//
+		// if (caught instanceof InvocationException) {
+		// Window.alert("On Error IE >> " + caught.getClass());
+		// String msg = "Cannot connect to server...";
+		// if (caught.getMessage() != null && caught.getMessage().length() > 5)
+		// {
+		// msg = caught.getMessage();
+		// }
+		// AppContext.getEventBus().fireEvent(new ProcessingCompletedEvent());
+		// AppContext.getEventBus().fireEvent(
+		// new ClientDisconnectionEvent(msg));
+		// return;
+		// }
+		//
+		// if (caught instanceof RequestTimeoutException) {
+		// Window.alert("On Error RT >> " + caught.getClass());
+		// // HTTP Request Timeout
+		// AppContext.getEventBus().fireEvent(new ProcessingCompletedEvent());
+		// AppContext.getEventBus()
+		// .fireEvent(
+		// new ClientDisconnectionEvent(
+		// "Cannot connect to server..."));
+		// }
+		//
+		// if (caught instanceof ActionException) {
+		// ActionException ex = (ActionException) caught;
+		// Window.alert(ex.getMessage() + " : " + ex.getLocalizedMessage());
+		// }
+		//
+		// // caught.printStackTrace();
+		//
+		// String message = caught.getMessage();
+		// if (caught.getCause() != null) {
+		// message = caught.getClass() + "\n" + caught.getCause().getMessage();
+		// }
+		//
 		
-		
-		
-//		if(caught instanceof ServiceException){
-//			Window.alert("On Error SE >> "+caught.getClass());
-//			String msg = "Cannot connect to server...";
-//			if(caught.getMessage()!=null && caught.getMessage().length()>5){
-//				msg = caught.getMessage();
-//			}
-//			AppContext.getEventBus().fireEvent(new ClientDisconnectionEvent(msg));
-//			return;
-//		}
-//		
-//		if(caught instanceof InvocationException){
-//			Window.alert("On Error IE >> "+caught.getClass());
-//			String msg = "Cannot connect to server...";
-//			if(caught.getMessage()!=null && caught.getMessage().length()>5){
-//				msg = caught.getMessage();
-//			}
-//			AppContext.getEventBus().fireEvent(new ProcessingCompletedEvent());
-//			AppContext.getEventBus().fireEvent(new ClientDisconnectionEvent(msg));
-//			return;
-//		}
-//		
-//		if(caught instanceof RequestTimeoutException){
-//			Window.alert("On Error RT >> "+caught.getClass());
-//			//HTTP Request Timeout
-//			AppContext.getEventBus().fireEvent(new ProcessingCompletedEvent());
-//			AppContext.getEventBus().fireEvent(new ClientDisconnectionEvent("Cannot connect to server..."));
-//		}
-//		
-//		if(caught instanceof ActionException){
-//			ActionException ex = (ActionException)caught;
-//			Window.alert(ex.getMessage()+" : "+ ex.getLocalizedMessage()); 
-//		}
-//		
-//		//caught.printStackTrace();
-//		
-//		String message = caught.getMessage();
-//		Window.alert("On Error MSG >> "+caught.getClass());
-//		if(caught.getCause()!=null){
-//			message = caught.getClass()+"\n"+caught.getCause().getMessage();
-//		}
-//		
-//		AppContext.getEventBus().fireEvent(new ProcessingCompletedEvent());
-//		AppContext.getEventBus().fireEvent(new ErrorEvent(message, 0L));
+		AppContext.getEventBus().fireEvent(new ProcessingCompletedEvent());
+		// AppContext.getEventBus().fireEvent(new ErrorEvent(message, 0L));
 	}
-	
+
 	@Override
 	public void setResponse(Response aResponse) {
 		int code = aResponse.getStatusCode();
-		
-		if(code==200 || code==202 || code==203 || code==204 || code==304){
+
+		if (code == 200 || code == 202 || code == 203 || code == 204
+				|| code == 304) {
 			return;
 		}
-		
+
 		String message = aResponse.getStatusText();
-		if(code==500){
+		if (code == 500) {
 			AppContext.getEventBus().fireEvent(new ProcessingCompletedEvent());
 			AppContext.getEventBus().fireEvent(new ErrorEvent(message, 0L));
 			return;
 		}
-		
-		if(code==401){
+
+		if (code == 401) {
 			AppContext.getEventBus().fireEvent(new ProcessingCompletedEvent());
-			//AppContext.getEventBus().fireEvent(new ErrorEvent("Unauthorized Access", 0L));
+			// AppContext.getEventBus().fireEvent(new
+			// ErrorEvent("Unauthorized Access", 0L));
 			return;
 		}
-		
-		
-		if(code == 404){
-			//Not Found
+
+		if (code == 404) {
+			// Not Found
 			return;
 		}
-		
-		if(code == 408){
-			//HTTP Request Timeout
+
+		if (code == 408) {
+			// HTTP Request Timeout
 			AppContext.getEventBus().fireEvent(new ProcessingCompletedEvent());
-			AppContext.getEventBus().fireEvent(new ClientDisconnectionEvent("Cannot connect to server..."));
+			AppContext.getEventBus()
+					.fireEvent(
+							new ClientDisconnectionEvent(
+									"Cannot connect to server..."));
 			return;
 		}
-		
-		
+
 		AppContext.getEventBus().fireEvent(new ProcessingCompletedEvent());
-		AppContext.getEventBus().fireEvent(new ErrorEvent("Code="+code+"; "+aResponse.getText(), 0L));
+		AppContext.getEventBus()
+				.fireEvent(
+						new ErrorEvent("Code=" + code + "; "
+								+ aResponse.getText(), 0L));
 	}
 }

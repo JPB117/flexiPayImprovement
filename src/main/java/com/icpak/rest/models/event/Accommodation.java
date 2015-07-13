@@ -39,6 +39,7 @@ public class Accommodation extends PO{
 	private String hotel;
 	private String description;
 	private Double fee;
+	private int nights=0;
 	
 	@XmlTransient
 	@ManyToOne
@@ -76,12 +77,23 @@ public class Accommodation extends PO{
 	}
 
 	public AccommodationDto toDto() {
+		return toDto(false);
+	}
+	
+	public AccommodationDto toDto(boolean isIncludeEvent) {
 		AccommodationDto dto  = new AccommodationDto();
 		dto.setDescription(description);
 		dto.setFee(fee);
 		dto.setHotel(hotel);
+		dto.setNights(nights);
 		dto.setRefId(getRefId());
 		
+		if(isIncludeEvent){
+			if(getEvent()!=null){
+				Event e = getEvent();
+				dto.setEvent(e.toDto(false));
+			}
+		}
 		return dto;
 	}
 
@@ -89,6 +101,7 @@ public class Accommodation extends PO{
 		setDescription(dto.getDescription());
 		setFee(dto.getFee());
 		setHotel(dto.getHotel());
+		setNights(dto.getNights());
 	}
 
 	public Event getEvent() {
@@ -97,5 +110,13 @@ public class Accommodation extends PO{
 
 	public void setEvent(Event event) {
 		this.event = event;
+	}
+
+	public int getNights() {
+		return nights;
+	}
+
+	public void setNights(int nights) {
+		this.nights = nights;
 	}
 }
