@@ -15,16 +15,14 @@ public class IssuesPanel extends Widget {
 	public IssuesPanel() {
 
 		container = Document.get().createDivElement();
-		
 
 		this.ulRoot = DOM.createElement("ul");
 		this.spanTitle = DOM.createSpan();
-		
-		setStyleName("alert alert-danger vld-Summary");
+
+		container.setClassName("alert alert-danger vld-Summary");
 
 		container.appendChild(this.spanTitle);
 		container.appendChild(ulRoot);
-		
 
 		setElement(container);
 
@@ -46,8 +44,8 @@ public class IssuesPanel extends Widget {
 		this.ulRoot.appendChild(liElement);
 
 		this.addStyleDependentName("show");
-		
-		//Added scroll into view
+
+		// Added scroll into view
 		getElement().scrollIntoView();
 	}
 

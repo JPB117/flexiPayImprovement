@@ -22,10 +22,10 @@
 						</g:Anchor>
 					</h5>
 				</g:HTMLPanel>
-				<d:IssuesPanel ui:field="issues">
-				</d:IssuesPanel>
-
 				<g:HTMLPanel styleName="modal-body">
+					<d:IssuesPanel ui:field="issues" styleName="hide">
+					</d:IssuesPanel>
+					
 					<g:HTMLPanel styleName="hide" ui:field="divUserDetails">
 						<div class="form-group">
 							<div class="row">

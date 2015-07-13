@@ -136,9 +136,7 @@ public class UserSaveView extends PopupViewImpl implements
 	}
 
 	public boolean isValid() {
-
 		boolean isValid = true;
-
 		switch (type) {
 		case GROUP:
 			isValid = isGroupValid();
@@ -147,6 +145,12 @@ public class UserSaveView extends PopupViewImpl implements
 		default:
 			isValid = isUserValid();
 			break;
+		}
+
+		if (!isValid) {
+			issues.removeStyleName("hide");
+		} else {
+			issues.addStyleName("hide");
 		}
 
 		return isValid;
@@ -173,7 +177,6 @@ public class UserSaveView extends PopupViewImpl implements
 		user.setSurname(txtLastname.getValue());
 		user.setUserId(txtUserName.getValue());
 		// user.setGroups(lstGroups.getSelectedItems());
-
 		return user;
 	}
 
@@ -267,7 +270,7 @@ public class UserSaveView extends PopupViewImpl implements
 	public void setGroups(List<UserGroup> groups) {
 		lstGroups.addItems(groups);
 	}
-	
+
 	@Override
 	public PopupPanel getPopUpPanel() {
 		return AddUserDialog;
