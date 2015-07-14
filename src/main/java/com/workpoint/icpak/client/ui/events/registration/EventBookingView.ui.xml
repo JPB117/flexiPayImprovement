@@ -201,10 +201,10 @@
 														</a>
 														<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
 															<li>
-																<d:ActionLink ui:field="aAddRow">Member</d:ActionLink>
+																<d:ActionLink ui:field="aAddMember">Member</d:ActionLink>
 															</li>
 															<li>
-																<a href="#">Non-Member</a>
+																<d:ActionLink ui:field="aAddNonMember">Non-Member</d:ActionLink>
 															</li>
 														</ul>
 													</div>

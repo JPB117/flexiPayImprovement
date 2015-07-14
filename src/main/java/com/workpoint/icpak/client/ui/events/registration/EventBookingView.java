@@ -134,7 +134,10 @@ public class EventBookingView extends ViewImpl implements
 	SpanElement spnNames;
 
 	@UiField
-	ActionLink aAddRow;
+	ActionLink aAddMember;
+
+	@UiField
+	ActionLink aAddNonMember;
 
 	@UiField
 	SpanElement spnEventTitle;
@@ -213,15 +216,14 @@ public class EventBookingView extends ViewImpl implements
 		configs.add(config);
 		config = new ColumnConfig("otherNames", "Other Names", DataType.STRING);
 		configs.add(config);
-		config = new ColumnConfig("email", "e-Mail", DataType.STRING);
+		config = new ColumnConfig("email", "e-Mail", DataType.STRING, "",
+				"form-control");
 		configs.add(config);
 		configs.add(accommodationConfig);
 
-		configs.add(config);
-
 		tblDelegates.setColumnConfigs(configs);
 
-		aAddRow.addClickHandler(new ClickHandler() {
+		aAddMember.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				tblDelegates.addRowData(new DataModel());
@@ -247,13 +249,13 @@ public class EventBookingView extends ViewImpl implements
 			public void onClick(ClickEvent event) {
 				counter = counter - 1;
 				setActivePage(counter);
-				
+
 			}
 		});
 	}
 
 	public void setActivePage(int index) {
-		this.counter=index;
+		this.counter = index;
 		showMyAccountLink(counter);
 		removeActive(liElements.get(counter), pageElements.get(counter));
 		setActive(liElements.get(counter), pageElements.get(counter));
@@ -470,13 +472,13 @@ public class EventBookingView extends ViewImpl implements
 		spnEventName.setInnerText(event.getName());
 
 		if (event.getStartDate() != null) {
-			
+
 			Date startDate = new Date(event.getStartDate());
 			spnStartDate.setInnerText(DateUtils.DATEFORMAT.format(startDate));
 			if (event.getEndDate() != null) {
 				Date endDate = new Date(event.getEndDate());
-				spnDuration.setInnerText(DateUtils.getTimeDifference(
-						startDate, endDate));
+				spnDuration.setInnerText(DateUtils.getTimeDifference(startDate,
+						endDate));
 			}
 
 			spnDays2Go.setInnerText(DateUtils.getTimeDifference(new Date(),
@@ -515,21 +517,20 @@ public class EventBookingView extends ViewImpl implements
 	public void bindInvoice(InvoiceDto invoice) {
 		proformaInv.clearRows();
 		proformaInv.setInvoice(invoice);
-		
+
 		bindTransaction(invoice);
 	}
 
 	private void bindTransaction(InvoiceDto invoice) {
 		// 197.248.4.221
-		String url = "http://192.168.43.190:8888/mWallet2.html#websiteClient;"
-		//String url = "http://197.248.4.221:8080/ewallet/#websiteClient;"
-				+ "businessNo=722722;"
-				+ "refId="+invoice.getRefId()+";"
-				+ "orgName=ICPAK;"
-				+ "amount="+invoice.getAmount()+";"
+		String url = "http://localhost:8080/flexipay#websiteClient;"
+				// String url =
+				// "http://197.248.4.221:8080/ewallet/#websiteClient;"
+				+ "businessNo=722722;" + "refId=" + invoice.getRefId() + ";"
+				+ "orgName=ICPAK;" + "amount=" + invoice.getAmount() + ";"
 				+ "accountNo=Use ID Number";
-		
+
 		framePayment.setUrl(url);
 	}
-	
+
 }
