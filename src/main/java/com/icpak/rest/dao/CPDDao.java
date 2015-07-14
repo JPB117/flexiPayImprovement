@@ -17,12 +17,24 @@ public class CPDDao extends BaseDao {
 		save(cpd);
 	}
 
+	public List<CPD> getAllCPDs(Integer offSet, Integer limit) {
+		return getAllCPDs(null, offSet, limit);
+	}
+
 	public List<CPD> getAllCPDs(String memberId, Integer offSet, Integer limit) {
-		return getResultList(getEntityManager().createQuery(
-				"select u from CPD u where u.isActive=1 and u.memberId=:memberId")
-				.setParameter("memberId", memberId),
-				offSet,
-				limit);
+
+		if (memberId != null) {
+			return getResultList(
+					getEntityManager()
+							.createQuery(
+									"select u from CPD u where u.isActive=1 and u.memberId=:memberId")
+							.setParameter("memberId", memberId), offSet, limit);
+		} else {
+			return getResultList(
+					getEntityManager().createQuery(
+							"select u from CPD u where u.isActive=1"), offSet,
+					limit);
+		}
 	}
 
 	public void updateCPD(CPD cpd) {
@@ -36,12 +48,13 @@ public class CPDDao extends BaseDao {
 			number = getSingleResultOrNull(getEntityManager()
 					.createNativeQuery(
 							"select count(*) from cpd c inner join member m on (c.memberId=m.refId) "
-							+ "where c.isactive=1 and m.refId=:refId")
-							.setParameter("refId", memberId));
-		}else{
-			throw new ServiceException(ErrorCodes.ILLEGAL_ARGUMENT, "CPD", "'MemberId'");
+									+ "where c.isactive=1 and m.refId=:refId")
+					.setParameter("refId", memberId));
+		} else {
+			throw new ServiceException(ErrorCodes.ILLEGAL_ARGUMENT, "CPD",
+					"'MemberId'");
 		}
-		
+
 		return number.intValue();
 	}
 
@@ -51,12 +64,11 @@ public class CPDDao extends BaseDao {
 
 	public CPD findByCPDId(String refId, boolean throwExceptionIfNull) {
 		CPD cpd = getSingleResultOrNull(getEntityManager().createQuery(
-				"from CPD u where u.refId=:refId").setParameter("refId",
-				refId));
+				"from CPD u where u.refId=:refId").setParameter("refId", refId));
 
 		if (cpd == null && throwExceptionIfNull) {
-			throw new ServiceException(ErrorCodes.NOTFOUND, "CPD", "'"
-					+ refId + "'");
+			throw new ServiceException(ErrorCodes.NOTFOUND, "CPD", "'" + refId
+					+ "'");
 		}
 
 		return cpd;

@@ -94,7 +94,7 @@ public class ApplicationFormDaoHelper {
 		
 		usersDaoHelper.create(po);
 		
-		userDao.createUser(po);
+		//userDao.createUser(po);
 		User u = po.clone();
 		u.setPassword(password);
 		

@@ -6,11 +6,13 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
+import com.gwtplatform.dispatch.rest.delegates.client.ResourceDelegate;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.View;
 import com.workpoint.icpak.client.ui.AppManager;
 import com.workpoint.icpak.client.ui.OnOptionSelected;
 import com.workpoint.icpak.client.ui.events.EditUserEvent;
+import com.workpoint.icpak.shared.api.UsersResource;
 import com.workpoint.icpak.shared.model.UserDto;
 
 public class UserItemPresenter extends PresenterWidget<UserItemPresenter.MyView> {
@@ -25,10 +27,13 @@ public class UserItemPresenter extends PresenterWidget<UserItemPresenter.MyView>
 	}
 
 	UserDto user;
+	private ResourceDelegate<UsersResource> usersDelegate;
 	
 	@Inject
-	public UserItemPresenter(final EventBus eventBus, final MyView view) {
+	public UserItemPresenter(final EventBus eventBus, final MyView view,
+			final ResourceDelegate<UsersResource> usersDelegate) {
 		super(eventBus, view);
+		this.usersDelegate = usersDelegate;
 	}
 
 	@Override
@@ -66,6 +71,9 @@ public class UserItemPresenter extends PresenterWidget<UserItemPresenter.MyView>
 
 	private void delete(UserDto user) {
 
+		usersDelegate.withoutCallback().delete(user.getRefId());
+		getView().asWidget().removeFromParent();
+		
 //		SaveUserRequest request = new SaveUserRequest(user);
 //		request.setDelete(true);
 //		requestHelper.execute(request, new TaskServiceCallback<SaveUserResponse>() {
@@ -79,7 +87,7 @@ public class UserItemPresenter extends PresenterWidget<UserItemPresenter.MyView>
 	
 	public void setUser(UserDto user){
 		this.user = user;
-		getView().setValues(user.getName(), user.getSurname(), user.getUserId(),
+		getView().setValues(user.getName(), user.getSurname(), user.getEmail(),
 				user.getEmail(), user.getGroupsAsString(), 
 				user.getInbox(), user.getParticipated(), user.getTotal());
 	}

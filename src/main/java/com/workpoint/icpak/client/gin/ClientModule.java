@@ -156,6 +156,9 @@ public class ClientModule extends AbstractPresenterModule {
 
 		bindPresenter(CPDPresenter.class, CPDPresenter.ICPDView.class,
 				CPDView.class, CPDPresenter.ICPDProxy.class);
+		
+//		bindPresenter(CPDManagementPresenter.class, CPDManagementPresenter.ICPDManagementView.class,
+//				CPDView.class, CPDManagementPresenter.ICPDManagementProxy.class);
 
 		bindPresenter(MembersPresenter.class,
 				MembersPresenter.IMembersView.class, MembersView.class,

@@ -2,16 +2,28 @@ package com.icpak.rest.dao;
 
 import java.util.List;
 
+import com.icpak.rest.exceptions.ServiceException;
+import com.icpak.rest.models.ErrorCodes;
 import com.icpak.rest.models.auth.Permission;
 import com.icpak.rest.models.auth.Role;
 import com.icpak.rest.models.auth.User;
 
 public class RolesDao extends BaseDao {
 	
-	public Role getByRoleId(String refId) {
-		return getSingleResultOrNull(getEntityManager().createQuery(
+	public Role getByRoleId(String roleId) {
+		return getByRoleId(roleId, true);
+	}
+	
+	public Role getByRoleId(String roleId, boolean isThrowExceptionIfNull) {
+		Role role = getSingleResultOrNull(getEntityManager().createQuery(
 				"from Role u where u.refId=:refId").setParameter("refId",
-				refId));
+						roleId));
+		
+		if(role==null && isThrowExceptionIfNull){
+			throw new ServiceException(ErrorCodes.NOTFOUND, "Role", "'"+roleId+"'");
+		}
+		
+		return role;
 	}
 
 	public void createRole(Role role) {

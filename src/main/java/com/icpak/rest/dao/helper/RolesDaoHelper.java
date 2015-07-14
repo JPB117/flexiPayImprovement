@@ -1,10 +1,10 @@
 package com.icpak.rest.dao.helper;
 
-import javax.ws.rs.core.UriInfo;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
-import com.icpak.rest.IDUtils;
 import com.icpak.rest.dao.PermissionDao;
 import com.icpak.rest.dao.RolesDao;
 import com.icpak.rest.dao.UsersDao;
@@ -13,8 +13,8 @@ import com.icpak.rest.models.ErrorCodes;
 import com.icpak.rest.models.auth.Permission;
 import com.icpak.rest.models.auth.Role;
 import com.icpak.rest.models.auth.User;
-import com.icpak.rest.models.base.ResourceCollectionModel;
 import com.icpak.rest.models.base.RoleUser;
+import com.workpoint.icpak.shared.model.RoleDto;
 
 @Transactional
 public class RolesDaoHelper {
@@ -24,62 +24,61 @@ public class RolesDaoHelper {
 	@Inject UsersDao userDao;
 	@Inject PermissionDao permissionDao;
 	
-	public ResourceCollectionModel<Role> getAllRoles(UriInfo uriInfo, Integer offset,
+	public List<RoleDto> getAllRoles(String uriInfo, Integer offset,
 			Integer limit) {
 
-		int count = dao.getRoleCount();
-		ResourceCollectionModel<Role> roles = new ResourceCollectionModel<>(offset,limit,count ,uriInfo);
-		roles.setItems(dao.getAllRoles(offset, limit));
-		
-		return roles;
+		List<Role> roles = dao.getAllRoles(offset, limit);
+		List<RoleDto> dtos = new ArrayList<>();
+		for(Role role : roles){
+			dtos.add(role.toDto());
+		}
+		return dtos;
 	}
 
-	public Role getRoleById(String roleId) {
+	public RoleDto getRoleById(String roleId) {
+
+		Role role = dao.getByRoleId(roleId);
+		
+		return role.toDto();
+	}
+	
+	public Role getRoleById(String roleId, String...expand) {
 
 		Role role = dao.getByRoleId(roleId);
 		if(role==null){
 			throw new ServiceException(ErrorCodes.NOTFOUND, "Role", "'"+roleId+"'");
 		}
-		return role;
-	}
-	
-	public Role getRoleById(String roleId, String...expand) {
-
-		Role role = getRoleById(roleId);
 		
 		return role.clone(expand);
 	}
 
 	
-	public void createRole(Role role) {
-		assert role.getRefId()==null;
+	public RoleDto createRole(RoleDto dto) {
 		
-		role.setRefId(IDUtils.generateId());
+		Role role = new Role(dto.getName());
+		role.copyFrom(dto);
 		dao.save(role);
 		
 		assert role.getId()!=null;
+		return role.toDto();
 	}
 
-	public Role updateRole(String roleId, Role role) {
-		assert role.getRefId()!=null;
+	public RoleDto updateRole(String roleId, RoleDto dto) {
 		
-		Role poRole = getRoleById(roleId);
-		
-		poRole.setDescription(role.getDescription());
-		poRole.setName(role.getName());
-		poRole.setRefId(roleId);
-		
+		Role poRole = dao.getByRoleId(roleId);
+		poRole.copyFrom(dto);
 		dao.save(poRole);
-		return poRole;
+		
+		return poRole.toDto();
 	}
 
 	public void deleteRole(String roleId) {
-		Role role = getRoleById(roleId);
+		Role role = dao.getByRoleId(roleId);
 		dao.delete(role);
 	}
 
 	public RoleUser assign(String roleId, String userId) {
-		Role role = getRoleById(roleId);
+		Role role = dao.getByRoleId(roleId);
 		User user = userDaoHelper.getUser(userId); 
 		user.addRole(role);
 		userDao.save(user);
@@ -89,7 +88,7 @@ public class RolesDaoHelper {
 	}
 	
 	public RoleUser getRoleUser(String roleId, String userId) {
-		Role role = getRoleById(roleId);
+		Role role = dao.getByRoleId(roleId);
 		User user = userDaoHelper.getUser(userId); 
 		boolean isAssigned = dao.checkAssigned(role, user);
 		
@@ -103,7 +102,7 @@ public class RolesDaoHelper {
 	}
 
 	public void deleteAssignment(String roleId, String userId) {
-		Role role = getRoleById(roleId);
+		Role role = dao.getByRoleId(roleId);
 		User user = userDaoHelper.getUser(userId);
 		
 		user.removeRole(role);

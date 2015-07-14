@@ -31,7 +31,7 @@ import com.workpoint.icpak.client.ui.component.autocomplete.AutoCompleteField;
 import com.workpoint.icpak.client.ui.upload.custom.Uploader;
 import com.workpoint.icpak.client.ui.users.save.UserSavePresenter.TYPE;
 import com.workpoint.icpak.shared.model.UserDto;
-import com.workpoint.icpak.shared.model.UserGroup;
+import com.workpoint.icpak.shared.model.RoleDto;
 
 public class UserSaveView extends PopupViewImpl implements
 		UserSavePresenter.IUserSaveView {
@@ -80,7 +80,7 @@ public class UserSaveView extends PopupViewImpl implements
 	@UiField
 	Uploader uploader;
 	@UiField
-	AutoCompleteField<UserGroup> lstGroups;
+	AutoCompleteField<RoleDto> lstGroups;
 
 	TYPE type;
 
@@ -156,15 +156,15 @@ public class UserSaveView extends PopupViewImpl implements
 		return isValid;
 	}
 
-	public UserGroup getGroup() {
-		UserGroup group = new UserGroup();
+	public RoleDto getGroup() {
+		RoleDto group = new RoleDto();
 		group.setFullName(txtDescription.getValue());
 		group.setName(txtGroupname.getValue());
 
 		return group;
 	}
 
-	public void setGroup(UserGroup group) {
+	public void setGroup(RoleDto group) {
 		txtDescription.setValue(group.getFullName());
 		txtGroupname.setValue(group.getName());
 	}
@@ -176,7 +176,7 @@ public class UserSaveView extends PopupViewImpl implements
 		user.setPassword(txtPassword.getValue());
 		user.setSurname(txtLastname.getValue());
 		user.setUserId(txtUserName.getValue());
-		// user.setGroups(lstGroups.getSelectedItems());
+		user.setGroups(lstGroups.getSelectedItems());
 		return user;
 	}
 
@@ -188,8 +188,8 @@ public class UserSaveView extends PopupViewImpl implements
 		txtPassword.setValue(user.getPassword());
 		txtConfirmPassword.setValue(user.getPassword());
 		txtLastname.setValue(user.getSurname());
-		txtUserName.setValue(user.getUserId());
-		// lstGroups.select(user.getGroups());
+		txtUserName.setValue(user.getEmail());
+		lstGroups.select(user.getGroups());
 		setContext(user.getUserId());
 
 	}
@@ -267,7 +267,7 @@ public class UserSaveView extends PopupViewImpl implements
 	}
 
 	@Override
-	public void setGroups(List<UserGroup> groups) {
+	public void setGroups(List<RoleDto> groups) {
 		lstGroups.addItems(groups);
 	}
 

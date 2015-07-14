@@ -251,7 +251,7 @@ public class Booking extends PO{
 		dto.setPaymentMode(paymentMode);
 		dto.setPaymentRef(paymentRef);
 		dto.setPaymentStatus(paymentStatus);
-		dto.setRefId(paymentRef);
+		dto.setRefId(getRefId());
 		dto.setStatus(status);
 		
 		return dto;

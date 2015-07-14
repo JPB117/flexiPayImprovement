@@ -25,6 +25,7 @@ import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 import com.workpoint.icpak.shared.api.BookingsResource;
 import com.workpoint.icpak.shared.model.events.BookingDto;
+import com.workpoint.icpak.shared.model.events.DelegateDto;
 
 @Api(value = "", description = "Handles CRUD for event Bookings")
 public class BookingsResourceImpl implements BookingsResource {
@@ -131,6 +132,17 @@ public class BookingsResourceImpl implements BookingsResource {
 	// @PathParam("eventId") String eventId,
 			@ApiParam(value = "Booking Id of the booking to delete", required = true) @PathParam("bookingId") String bookingId) {
 		helper.deleteBooking(eventId, bookingId);
+	}
+	
+	@PUT
+	@Path("/{bookingId}/delegates/{delegateId}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public DelegateDto updateDelegate(@PathParam("bookingId") String bookingId,
+			@PathParam("delegateId") String delegateId,
+			DelegateDto delegate){
+		
+		return helper.updateDelegate(bookingId, delegateId, delegate);
 	}
 
 }

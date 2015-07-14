@@ -30,7 +30,7 @@ import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.shared.model.Listable;
 
-public class CPDView extends ViewImpl implements CPDPresenter.ICPDView {
+public class CPDView extends ViewImpl implements CPDPresenter.ICPDView{
 
 	private final Widget widget;
 

@@ -4,20 +4,20 @@ import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HasHandlers;
 import com.workpoint.icpak.shared.model.UserDto;
-import com.workpoint.icpak.shared.model.UserGroup;
+import com.workpoint.icpak.shared.model.RoleDto;
 
 public class PresentUserEvent extends
 		GwtEvent<PresentUserEvent.PresentUserHandler> {
 
 	public static Type<PresentUserHandler> TYPE = new Type<PresentUserHandler>();
 	private UserDto user;
-	private UserGroup group;
+	private RoleDto group;
 	
 	public static Type<PresentUserHandler> getTYPE() {
 		return TYPE;
 	}
 
-	public UserGroup getGroup() {
+	public RoleDto getGroup() {
 		return group;
 	}
 
@@ -25,7 +25,7 @@ public class PresentUserEvent extends
 		void onPresentUser(PresentUserEvent event);
 	}
 
-	public PresentUserEvent(UserDto user, UserGroup group) {
+	public PresentUserEvent(UserDto user, RoleDto group) {
 		this.user = user;
 		this.group = group;
 	}
@@ -48,7 +48,7 @@ public class PresentUserEvent extends
 		return TYPE;
 	}
 
-	public static void fire(HasHandlers source, UserDto user, UserGroup group) {
+	public static void fire(HasHandlers source, UserDto user, RoleDto group) {
 		source.fireEvent(new PresentUserEvent(user,group));
 	}
 }

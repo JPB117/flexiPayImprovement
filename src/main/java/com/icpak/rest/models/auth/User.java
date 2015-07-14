@@ -18,7 +18,9 @@
  */
 package com.icpak.rest.models.auth;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Basic;
@@ -51,6 +53,7 @@ import com.icpak.rest.models.base.ExpandTokens;
 import com.icpak.rest.models.base.PO;
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
+import com.workpoint.icpak.shared.model.RoleDto;
 import com.workpoint.icpak.shared.model.UserDto;
 import com.workpoint.icpak.shared.model.auth.AccountStatus;
 
@@ -197,10 +200,13 @@ public class User extends PO{
 		this.userData = userData;
 	}
 	
-	public void copy(User user) {
-		setEmail(user.getEmail());
-		setPassword(user.getHashedPassword());
-		//setUsername(user.getUsername());
+	public void copyFrom(UserDto dto) {
+		setEmail(dto.getEmail());
+		BioData bio = new BioData();
+		bio.setFirstName(dto.getName());
+		bio.setLastName(dto.getSurname());
+		//bio.setGender(dto.get);
+		setUserData(bio);
 	}
 
 	public String getEmail() {
@@ -268,7 +274,7 @@ public class User extends PO{
 		this.nationality = nationality;
 	}
 
-	public UserDto getDTO() {
+	public UserDto toDto() {
 		UserDto dto = new UserDto();
 		
 		dto.setEmail(email);
@@ -279,6 +285,15 @@ public class User extends PO{
 		dto.setRefId(refId);
 		dto.setStatus(status);
 		//dto.setName(name);
+		
+		List<RoleDto> dtos = new ArrayList<>();
+		if(getRoles()!=null){
+			for(Role r: getRoles()){
+				dtos.add(r.toDto());
+			}
+		}
+		dto.setGroups(dtos);
+		
 		return dto;
 	}
 
@@ -288,6 +303,13 @@ public class User extends PO{
 
 	public void setStatus(AccountStatus status) {
 		this.status = status;
+	}
+
+	public void setUserData(UserDto dto) {
+		BioData bio = new BioData();
+		bio.setFirstName(dto.getName());
+		bio.setLastName(dto.getSurname());
+		this.userData = bio;
 	}
 
 }

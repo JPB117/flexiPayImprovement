@@ -59,7 +59,7 @@ public class Authenticator {
 		User user = userDao.findUserByUsername(username);
 
 		if (authenticate(username, password) != null) {
-			UserDto userDto = user.getDTO();
+			UserDto userDto = user.toDto();
 			persistHttpSessionCookie(userDto);
 
 			return userDto;
@@ -94,7 +94,7 @@ public class Authenticator {
 			throw new ServiceException(ErrorCodes.UNAUTHORIZEDACCESS);
 		}
 
-		return user.getDTO();
+		return user.toDto();
 	}
 
 	public UserDto authenticatCookie(String loggedInCookie)
