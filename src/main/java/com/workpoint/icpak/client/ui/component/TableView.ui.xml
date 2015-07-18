@@ -3,11 +3,6 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.workpoint.icpak.client.ui.component">
 
 	<g:HTMLPanel ui:field="overalContainer">
-		<div class="search-bar">
-			<div class="input-append">
-				<d:TextField placeholder="Search here" ui:field="txtSearch"></d:TextField>
-			</div>
-		</div>
 		<g:HTMLPanel styleName="table table-striped table-hover table-bordered"
 			ui:field="tblContainer">
 			<div class='thead'>

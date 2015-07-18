@@ -27,7 +27,7 @@
 					<div class="col-sm-11 col-md-offset-1">
 						<g:HTMLPanel>
 							<!-- Wizard container -->
-							<div class="wizard-container">
+							<div class="wizard-container" ui:field="divContainer">
 								<div class="card wizard-card ct-wizard-green">
 									<div class="wizard-header">
 										<h3>
@@ -214,12 +214,36 @@
 													<d:IssuesPanel ui:field="issuesPanelDelegate"
 														styleName="hide alert alert-danger"></d:IssuesPanel>
 												</div>
-
 												<br />
+
+												<div class="col-sm-12">
+													<div class="dropdown">
+														<d:TextField ui:field="txtAutoComplete"
+															styleName="dropdown-toggle form-control" dataToggle="dropdown"
+															ariaHaspopup="true" ariaExpanded="false"></d:TextField>
+														<ul class="dropdown-menu" aria-labelledby="drop2">
+															<li>
+																<a href="#">11245 - Tom Kimani Muriranja</a>
+															</li>
+															<li>
+																<a href="#">1314321 - Wilson K Njoroge</a>
+															</li>
+															<li>
+																<a href="#">321432 - Paul Wakimani Ogutu</a>
+															</li>
+															<li>
+																<a href="#">452354 - William Njoroge</a>
+															</li>
+														</ul>
+													</div>
+												</div>
+
+
 												<div class="col-sm-12">
 													<grid:AggregationGrid ui:field="tblDelegates"></grid:AggregationGrid>
 												</div>
 
+												<br />
 											</g:HTMLPanel>
 										</div>
 

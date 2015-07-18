@@ -77,6 +77,8 @@ implements ErrorHandler{
 		void setMiddleHeight();
 
 		void bindInvoice(InvoiceDto invoice);
+
+		void showmask(boolean processing);
 	}
 
 	@ProxyCodeSplit
@@ -184,11 +186,14 @@ implements ErrorHandler{
 
 	protected void submit(ApplicationFormHeaderDto applicationForm) {
 		getView().setLoadingState((ActionLink) getView().getANext(), true);
-
+		
+		getView().showmask(true);
+		
 		applicationDelegate.withCallback(
 				new AbstractAsyncCallback<ApplicationFormHeaderDto>() {
 					@Override
 					public void onSuccess(ApplicationFormHeaderDto result) {
+						getView().showmask(false);
 						removeError();
 						// result;
 						getView().bindForm(result);
@@ -206,6 +211,7 @@ implements ErrorHandler{
 
 					@Override
 					public void onFailure(Throwable caught) {
+						getView().showmask(false);
 						removeError();
 						super.onFailure(caught);
 					}

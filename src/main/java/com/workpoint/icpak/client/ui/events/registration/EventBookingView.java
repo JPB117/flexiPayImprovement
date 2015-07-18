@@ -141,9 +141,13 @@ public class EventBookingView extends ViewImpl implements
 
 	@UiField
 	SpanElement spnEventTitle;
-
 	@UiField
 	ProformaInvoice proformaInv;
+	@UiField
+	DivElement divContainer;
+
+	@UiField
+	TextField txtAutoComplete;
 
 	private List<LIElement> liElements = new ArrayList<LIElement>();
 	private List<PageElement> pageElements = new ArrayList<PageElement>();
@@ -427,7 +431,6 @@ public class EventBookingView extends ViewImpl implements
 		dto.setDelegates(getDelegates());
 
 		return dto;
-
 	}
 
 	private List<DelegateDto> getDelegates() {
@@ -519,6 +522,20 @@ public class EventBookingView extends ViewImpl implements
 		proformaInv.setInvoice(invoice);
 
 		bindTransaction(invoice);
+	}
+
+	@Override
+	public void setLoadingState(ActionLink anchor, boolean isLoading) {
+		anchor.setLoadingState(anchor, isLoading);
+	}
+
+	@Override
+	public void showmask(boolean processing) {
+		if (processing) {
+			divContainer.addClassName("whirl traditional");
+		} else {
+			divContainer.removeClassName("whirl traditional");
+		}
 	}
 
 	private void bindTransaction(InvoiceDto invoice) {

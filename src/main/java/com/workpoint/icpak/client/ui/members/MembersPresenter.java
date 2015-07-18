@@ -50,14 +50,14 @@ public class MembersPresenter
 
 	@TabInfo(container = HomePresenter.class)
 	static TabData getTabLabel(AdminGateKeeper adminGatekeeper) {
-		TabDataExt data = new TabDataExt("Membership", "icon-users", 4,
+		TabDataExt data = new TabDataExt("Applications", "icon-users", 4,
 				adminGatekeeper, true);
 		return data;
 	}
 
 	private final CurrentUser currentUser;
 	private ResourceDelegate<ApplicationFormResource> applicationDelegate;
-	
+
 	@Inject
 	public MembersPresenter(final EventBus eventBus, final IMembersView view,
 			final IMembersProxy proxy,
@@ -73,7 +73,7 @@ public class MembersPresenter
 		super.onBind();
 
 	}
-	
+
 	@Override
 	protected void onReveal() {
 		super.onReveal();
@@ -81,12 +81,13 @@ public class MembersPresenter
 	}
 
 	private void loadData() {
-		applicationDelegate.withCallback(new AbstractAsyncCallback<List<ApplicationFormHeaderDto>>() {
-			@Override
-			public void onSuccess(List<ApplicationFormHeaderDto> result) {
-				getView().bindApplications(result);
-			}
-		}).getAll(0, 100);
+		applicationDelegate.withCallback(
+				new AbstractAsyncCallback<List<ApplicationFormHeaderDto>>() {
+					@Override
+					public void onSuccess(List<ApplicationFormHeaderDto> result) {
+						getView().bindApplications(result);
+					}
+				}).getAll(0, 100);
 	}
 
 	protected void save() {

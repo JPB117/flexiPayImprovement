@@ -77,6 +77,9 @@ public class MemberRegistrationView extends ViewImpl implements
 	DivElement divNonPracticing;
 
 	@UiField
+	DivElement divContainer;
+
+	@UiField
 	DivElement divAssociate;
 	@UiField
 	DivElement divOverseas;
@@ -224,7 +227,6 @@ public class MemberRegistrationView extends ViewImpl implements
 
 	protected void removeActiveSelection(Anchor selected) {
 		divNonPracticing.removeClassName("active");
-		// divPractising.removeClassName("active");
 		divOverseas.removeClassName("active");
 		divAssociate.removeClassName("active");
 	}
@@ -281,7 +283,6 @@ public class MemberRegistrationView extends ViewImpl implements
 
 	@Override
 	public HasClickHandlers getANext() {
-
 		return aNext;
 	}
 
@@ -372,6 +373,15 @@ public class MemberRegistrationView extends ViewImpl implements
 	@Override
 	public int getCounter() {
 		return counter;
+	}
+
+	@Override
+	public void showmask(boolean processing) {
+		if (processing) {
+			divContainer.addClassName("whirl traditional");
+		} else {
+			divContainer.removeClassName("whirl traditional");
+		}
 	}
 
 	@Override

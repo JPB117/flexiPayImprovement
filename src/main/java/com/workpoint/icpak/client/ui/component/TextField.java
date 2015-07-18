@@ -16,6 +16,17 @@ public class TextField extends TextBox {
 		getElement().setAttribute("type", type);
 	}
 
+	public void setDataToggle(String dataToggle) {
+		getElement().setAttribute("data-toggle", dataToggle);
+	}
+
+	public void setAriaHaspopup(String ariaHasPopup) {
+		getElement().setAttribute("aria-haspopup", ariaHasPopup);
+	}
+
+	public void setAriaExpanded(String ariaExpanded) {
+		getElement().setAttribute("aria-expanded", ariaExpanded);
+	}
 	public void setDisabled(Boolean isDisabled) {
 		if (isDisabled) {
 			getElement().setAttribute("disabled", "disabled");

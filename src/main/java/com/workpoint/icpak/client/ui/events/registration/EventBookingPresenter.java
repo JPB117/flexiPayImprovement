@@ -22,6 +22,7 @@ import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.workpoint.icpak.client.place.NameTokens;
 import com.workpoint.icpak.client.service.AbstractAsyncCallback;
+import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.shared.api.CountriesResource;
 import com.workpoint.icpak.shared.api.EventsResource;
 import com.workpoint.icpak.shared.api.InvoiceResource;
@@ -60,6 +61,10 @@ public class EventBookingPresenter extends
 		void bindInvoice(InvoiceDto invoice);
 
 		void setActivePage(int index);
+
+		void setLoadingState(ActionLink anchor, boolean isLoading);
+
+		void showmask(boolean processing);
 	}
 
 	@ProxyCodeSplit
@@ -130,13 +135,15 @@ public class EventBookingPresenter extends
 	}
 
 	protected void submit(BookingDto dto) {
+		getView().showmask(true);
 		if (bookingId != null) {
 
 			eventsResource
 					.withCallback(new AbstractAsyncCallback<BookingDto>() {
 						@Override
 						public void onSuccess(BookingDto booking) {
-							bindBooking(booking);							
+							getView().showmask(false);
+							bindBooking(booking);
 						}
 					}).bookings(eventId).update(bookingId, dto);
 
@@ -145,6 +152,7 @@ public class EventBookingPresenter extends
 					.withCallback(new AbstractAsyncCallback<BookingDto>() {
 						@Override
 						public void onSuccess(BookingDto booking) {
+							getView().showmask(false);
 							bindBooking(booking);
 						}
 					}).bookings(eventId).create(dto);
@@ -162,7 +170,7 @@ public class EventBookingPresenter extends
 		super.prepareFromRequest(request);
 		eventId = request.getParameter("eventId", "9J4oKtW898RyOClP");
 		bookingId = request.getParameter("bookingId", null);
-		
+
 		countriesResource.withCallback(
 				new AbstractAsyncCallback<List<Country>>() {
 					public void onSuccess(List<Country> countries) {
@@ -199,7 +207,8 @@ public class EventBookingPresenter extends
 							+ elem.getClassName() + ">>" + elem.getMethodName());
 				}
 
-				Window.alert(caught+" "+caught.getMessage() +" "+caught.getStackTrace().toString());
+				Window.alert(caught + " " + caught.getMessage() + " "
+						+ caught.getStackTrace().toString());
 
 				super.onFailure(caught);
 			}
@@ -212,25 +221,25 @@ public class EventBookingPresenter extends
 						@Override
 						public void onSuccess(BookingDto booking) {
 							getView().bindBooking(booking);
-							getInvoice(booking.getInvoiceRef(),false);
+							getInvoice(booking.getInvoiceRef(), false);
 						}
 					}).bookings(eventId).getById(bookingId);
 		}
 
 	}
-	
+
 	protected void getInvoice(String invoiceRef) {
 		getInvoice(invoiceRef, true);
 	}
-	
+
 	protected void getInvoice(String invoiceRef, final boolean moveNext) {
 
 		invoiceResource.withCallback(new AbstractAsyncCallback<InvoiceDto>() {
 			@Override
 			public void onSuccess(InvoiceDto invoice) {
 				getView().bindInvoice(invoice);
-				
-				if(moveNext)
+
+				if (moveNext)
 					getView().next();
 			}
 		}).getInvoice(invoiceRef);
