@@ -96,7 +96,7 @@
 									<label class="control-label">
 										<b>Group:</b>
 									</label>
-									<a:AutoCompleteField ui:field="lstGroups" />
+									<a:MultiSelectField ui:field="lstGroups" />
 								</div>
 							</div>
 						</div>

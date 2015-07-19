@@ -40,4 +40,12 @@ public class BulletListPanel extends ComplexPanel {
     public void setRole(String role){
     	getElement().setAttribute("role", role);
     }
+    
+    public void setClass(String className){
+    	setStyleName(className);
+    }
+    
+    public void setAriaLabelledBy(String aria_labelledby){
+    	getElement().setAttribute("aria-labelledby", aria_labelledby);
+    }
 }

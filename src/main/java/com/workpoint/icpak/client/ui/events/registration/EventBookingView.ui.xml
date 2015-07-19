@@ -217,7 +217,8 @@
 												<br />
 
 												<div class="col-sm-12">
-													<div class="dropdown">
+													<d:AutoCompleteField ui:field="autoMembers"></d:AutoCompleteField>
+													<!-- div class="dropdown">
 														<d:TextField ui:field="txtAutoComplete"
 															styleName="dropdown-toggle form-control" dataToggle="dropdown"
 															ariaHaspopup="true" ariaExpanded="false"></d:TextField>
@@ -235,7 +236,7 @@
 																<a href="#">452354 - William Njoroge</a>
 															</li>
 														</ul>
-													</div>
+													</div-->
 												</div>
 
 
@@ -304,7 +305,6 @@
 												</div>
 											</div>
 										</div>
-
 
 										<div class="wizard-footer">
 											<div class="pull-right">

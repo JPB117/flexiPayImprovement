@@ -27,7 +27,7 @@ import com.workpoint.icpak.client.ui.component.IssuesPanel;
 import com.workpoint.icpak.client.ui.component.PasswordField;
 import com.workpoint.icpak.client.ui.component.TextArea;
 import com.workpoint.icpak.client.ui.component.TextField;
-import com.workpoint.icpak.client.ui.component.autocomplete.AutoCompleteField;
+import com.workpoint.icpak.client.ui.component.autocomplete.MultiSelectField;
 import com.workpoint.icpak.client.ui.upload.custom.Uploader;
 import com.workpoint.icpak.client.ui.users.save.UserSavePresenter.TYPE;
 import com.workpoint.icpak.shared.model.UserDto;
@@ -80,7 +80,7 @@ public class UserSaveView extends PopupViewImpl implements
 	@UiField
 	Uploader uploader;
 	@UiField
-	AutoCompleteField<RoleDto> lstGroups;
+	MultiSelectField<RoleDto> lstGroups;
 
 	TYPE type;
 

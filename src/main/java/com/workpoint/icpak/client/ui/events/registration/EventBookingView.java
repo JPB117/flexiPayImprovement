@@ -22,6 +22,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
 import com.workpoint.icpak.client.ui.component.ActionLink;
+import com.workpoint.icpak.client.ui.component.AutoCompleteField;
 import com.workpoint.icpak.client.ui.component.DropDownList;
 import com.workpoint.icpak.client.ui.component.IssuesPanel;
 import com.workpoint.icpak.client.ui.component.TextField;
@@ -36,6 +37,7 @@ import com.workpoint.icpak.shared.model.Country;
 import com.workpoint.icpak.shared.model.DataType;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.Listable;
+import com.workpoint.icpak.shared.model.MemberDto;
 import com.workpoint.icpak.shared.model.PaymentStatus;
 import com.workpoint.icpak.shared.model.events.AccommodationDto;
 import com.workpoint.icpak.shared.model.events.BookingDto;
@@ -146,8 +148,7 @@ public class EventBookingView extends ViewImpl implements
 	@UiField
 	DivElement divContainer;
 
-	@UiField
-	TextField txtAutoComplete;
+	@UiField AutoCompleteField<Country> autoMembers;
 
 	private List<LIElement> liElements = new ArrayList<LIElement>();
 	private List<PageElement> pageElements = new ArrayList<PageElement>();
@@ -197,7 +198,8 @@ public class EventBookingView extends ViewImpl implements
 		}
 	};
 
-	int counter = 0;
+	//int counter = 0;
+	int counter = 1;
 
 	public interface Binder extends UiBinder<Widget, EventBookingView> {
 	}
@@ -384,6 +386,7 @@ public class EventBookingView extends ViewImpl implements
 	@Override
 	public void setCountries(List<Country> countries) {
 		lstCountry.setItems(countries);
+		autoMembers.setValues(countries);
 		for (Country c : countries) {
 			if (c.getName().equals("KE")) {
 				lstCountry.setValue(c);

@@ -25,13 +25,13 @@ import com.workpoint.icpak.client.ui.component.BulletListPanel;
 import com.workpoint.icpak.client.ui.component.BulletPanel;
 import com.workpoint.icpak.shared.model.Listable;
 
-public class AutoCompleteField<T extends Listable> extends Composite {
+public class MultiSelectField<T extends Listable> extends Composite {
 
 	public static AutoCompleteFieldUiBinder uiBinder = 
 			GWT.create(AutoCompleteFieldUiBinder.class);
 	
 	@SuppressWarnings("rawtypes")
-	interface AutoCompleteFieldUiBinder extends UiBinder<Widget, AutoCompleteField>{}
+	interface AutoCompleteFieldUiBinder extends UiBinder<Widget, MultiSelectField>{}
 	
 	@UiField HTMLPanel container;
 	@UiField BulletListPanel ulPanel;
@@ -47,7 +47,7 @@ public class AutoCompleteField<T extends Listable> extends Composite {
 	static int x=0;//count to help generate unique ids
 	String id="suggestion_box"+(++x);
 	
-	public AutoCompleteField() {	
+	public MultiSelectField() {	
 		initWidget(uiBinder.createAndBindUi(this));
 		itemBox.getElement().setAttribute("style", "outline-color: -moz-use-text-color; outline-style: none; outline-width: medium;");
 		container.getElement().setAttribute("onclick", "document.getElementById('"+id+"').focus()");
