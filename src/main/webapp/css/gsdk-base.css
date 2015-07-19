@@ -1473,6 +1473,7 @@ label {
 		-o-filter: none;
 		filter: none;
 	}
+	/*
 	.dropdown-menu:before {
 		border-bottom: 11px solid rgba(0, 0, 0, 0.2);
 		border-left: 11px solid rgba(0, 0, 0, 0);
@@ -1495,6 +1496,7 @@ label {
 		margin-left: -60%;
 		top: -10px;
 	}
+	*/
 	.btn-wd {
 		min-width: 140px;
 	}
