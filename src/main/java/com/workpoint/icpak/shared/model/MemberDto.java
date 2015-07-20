@@ -14,11 +14,15 @@ public class MemberDto extends SerializableObj implements Listable{
 	private String email;
 	private String lastName;
 	private String firstName;
+	private String title;
 	
 
 	public MemberDto() {
 	}
 
+	public MemberDto(String memberId) {
+		this.memberId = memberId;
+	}
 
 	public String getUserId() {
 		return userId;
@@ -81,6 +85,30 @@ public class MemberDto extends SerializableObj implements Listable{
 	public String getName() {
 		return (lastName==null? "": lastName)+" "+
 				(firstName==null? "": firstName);
+	}
+
+
+	public String getTitle() {
+		return title;
+	}
+
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(!(obj instanceof MemberDto)){
+			return false;
+		}
+		
+		MemberDto other = (MemberDto)obj;
+		if(other.getRefId()==null || getRefId()==null){
+			return false;
+		}
+		
+		return other.getRefId().equals(getRefId());
 	}
 	
 }

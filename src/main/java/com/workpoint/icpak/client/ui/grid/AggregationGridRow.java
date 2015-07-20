@@ -14,6 +14,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
+import com.workpoint.icpak.client.ui.component.AutoCompleteField;
 import com.workpoint.icpak.client.ui.component.RowWidget;
 
 public class AggregationGridRow extends RowWidget {
@@ -58,6 +59,9 @@ public class AggregationGridRow extends RowWidget {
 		if (configs != null)
 			for (ColumnConfig config : configs) {
 				Widget widget = config.createWidget(model.get(config.getKey()));
+				if(widget instanceof AutoCompleteField){
+					((AutoCompleteField)widget).setParentRow(this);
+				}
 				columnWigetMap.put(config, (HasValue) widget);
 				if (config.isAggregationColumn()) {
 					grid.addValueChangeHandler(config, widget);
@@ -95,9 +99,18 @@ public class AggregationGridRow extends RowWidget {
 		return model;
 	}
 
-	public void setModel(DataModel model) {
-
+	public void setModel(DataModel model){
+		setModel(model, false);
+	}
+	
+	public void setModel(DataModel model, boolean mergeNow) {
 		this.model = model;
+		if(mergeNow){
+			for (ColumnConfig column : columnWigetMap.keySet()) {
+				String key = column.getKey();
+				columnWigetMap.get(column).setValue(model.get(key));
+			}
+		}
 	}
 
 	public DataModel getData() {

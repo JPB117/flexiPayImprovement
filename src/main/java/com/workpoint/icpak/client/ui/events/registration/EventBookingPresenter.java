@@ -1,5 +1,6 @@
 package com.workpoint.icpak.client.ui.events.registration;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -8,6 +9,8 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.SuggestOracle.Response;
+import com.google.gwt.user.client.ui.SuggestOracle.Suggestion;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rest.delegates.client.ResourceDelegate;
@@ -23,12 +26,17 @@ import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.workpoint.icpak.client.place.NameTokens;
 import com.workpoint.icpak.client.service.AbstractAsyncCallback;
 import com.workpoint.icpak.client.ui.component.ActionLink;
+import com.workpoint.icpak.client.ui.component.autocomplete.DataOracle;
+import com.workpoint.icpak.client.ui.component.autocomplete.ServerOracle;
+import com.workpoint.icpak.client.ui.grid.ColumnConfig;
 import com.workpoint.icpak.shared.api.CountriesResource;
 import com.workpoint.icpak.shared.api.EventsResource;
 import com.workpoint.icpak.shared.api.InvoiceResource;
+import com.workpoint.icpak.shared.api.MemberResource;
 //import com.workpoint.icpak.shared.api.EventsResource;
 import com.workpoint.icpak.shared.model.Country;
 import com.workpoint.icpak.shared.model.InvoiceDto;
+import com.workpoint.icpak.shared.model.MemberDto;
 import com.workpoint.icpak.shared.model.events.BookingDto;
 import com.workpoint.icpak.shared.model.events.EventDto;
 
@@ -65,6 +73,8 @@ public class EventBookingPresenter extends
 		void setLoadingState(ActionLink anchor, boolean isLoading);
 
 		void showmask(boolean processing);
+
+		ColumnConfig getMemberColumnConfig();
 	}
 
 	@ProxyCodeSplit
@@ -85,16 +95,20 @@ public class EventBookingPresenter extends
 
 	private ResourceDelegate<InvoiceResource> invoiceResource;
 
+	private ResourceDelegate<MemberResource> membersDelegate;
+
 	@Inject
 	public EventBookingPresenter(final EventBus eventBus, final MyView view,
 			final MyProxy proxy,
 			ResourceDelegate<CountriesResource> countriesResource,
 			ResourceDelegate<EventsResource> eventsResource,
-			ResourceDelegate<InvoiceResource> invoiceResource) {
+			ResourceDelegate<InvoiceResource> invoiceResource,
+			ResourceDelegate<MemberResource> membersDelegate) {
 		super(eventBus, view, proxy);
 		this.countriesResource = countriesResource;
 		this.eventsResource = eventsResource;
 		this.invoiceResource = invoiceResource;
+		this.membersDelegate = membersDelegate;
 	}
 
 	@Override
@@ -106,6 +120,23 @@ public class EventBookingPresenter extends
 	protected void onBind() {
 		super.onBind();
 
+		getView().getMemberColumnConfig().setOracle(new ServerOracle<MemberDto>(){
+			
+			@Override
+			public void onLoad(final String query) {
+				final ServerOracle<MemberDto> instance = this;
+				
+				membersDelegate.withCallback(new AbstractAsyncCallback<List<MemberDto>>() {
+					@Override
+					public void onSuccess(List<MemberDto> members) {
+						instance.setValues(members);
+					}
+					
+				}).search(query);
+			}
+		});
+		
+		
 		getView().getANext().addClickHandler(new ClickHandler() {
 
 			@Override

@@ -1,6 +1,5 @@
 package com.workpoint.icpak.shared.model;
 
-import java.io.Serializable;
 
 public enum DataType {
 	STRING,
@@ -12,6 +11,7 @@ public enum DataType {
 	CHECKBOX,
 	MULTIBUTTON,
 	SELECTBASIC,
+	SELECTAUTOCOMPLETE,
 	SELECTMULTIPLE,
 	LABEL,
 	BUTTON,
@@ -26,6 +26,6 @@ public enum DataType {
 	//GRID;
 	
 	public boolean isLookup(){
-		return this.equals(SELECTBASIC) || this.equals(SELECTMULTIPLE) || this.equals(BOOLEAN);
+		return this.equals(SELECTBASIC) || this.equals(SELECTMULTIPLE) || this.equals(BOOLEAN) || this.equals(SELECTAUTOCOMPLETE);
 	}
 }

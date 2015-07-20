@@ -13,6 +13,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.PrePersist;
 import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -226,5 +227,15 @@ public class BioData {
 
 		return lastName + " " + firstName;
 	}
+	
+	@PrePersist
+	public void fullNames(){
+		setFullNames(getFullNames());
+	}
+
+	public void setFullNames(String fullNames) {
+		this.fullNames = fullNames;
+	}
+
 
 }

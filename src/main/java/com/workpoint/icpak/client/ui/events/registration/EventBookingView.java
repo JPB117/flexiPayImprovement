@@ -12,6 +12,8 @@ import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
@@ -28,6 +30,7 @@ import com.workpoint.icpak.client.ui.component.IssuesPanel;
 import com.workpoint.icpak.client.ui.component.TextField;
 import com.workpoint.icpak.client.ui.events.registration.proforma.ProformaInvoice;
 import com.workpoint.icpak.client.ui.grid.AggregationGrid;
+import com.workpoint.icpak.client.ui.grid.AggregationGridRow;
 import com.workpoint.icpak.client.ui.grid.ColumnConfig;
 import com.workpoint.icpak.client.ui.grid.DataMapper;
 import com.workpoint.icpak.client.ui.grid.DataModel;
@@ -148,8 +151,6 @@ public class EventBookingView extends ViewImpl implements
 	@UiField
 	DivElement divContainer;
 
-	@UiField AutoCompleteField<Country> autoMembers;
-
 	private List<LIElement> liElements = new ArrayList<LIElement>();
 	private List<PageElement> pageElements = new ArrayList<PageElement>();
 
@@ -159,18 +160,24 @@ public class EventBookingView extends ViewImpl implements
 		public List<DataModel> getDataModels(List objs) {
 			List<DataModel> models = new ArrayList<DataModel>();
 			for (Object o : objs) {
-				DelegateDto dto = (DelegateDto) o;
-
-				DataModel model = new DataModel();
-				model.set("memberNo", dto.getMemberRegistrationNo());
-				model.set("title", dto.getTitle());
-				model.set("surname", dto.getSurname());
-				model.set("otherNames", dto.getOtherNames());
-				model.set("email", dto.getEmail());
-				model.set("accomodation", dto.getAccommodation());
-				models.add(model);
+				models.add(getModel(o));
 			}
 			return models;
+		}
+		
+		@Override
+		public DataModel getModel(Object obj) {
+			DelegateDto dto = (DelegateDto) obj;
+
+			DataModel model = new DataModel();
+			model.set("memberNo", dto.getMember());
+			
+			model.set("title", dto.getTitle());
+			model.set("surname", dto.getSurname());
+			model.set("otherNames", dto.getOtherNames());
+			model.set("email", dto.getEmail());
+			model.set("accomodation", dto.getAccommodation());
+			return model;
 		}
 
 		@Override
@@ -181,8 +188,8 @@ public class EventBookingView extends ViewImpl implements
 				return null;
 			}
 
-			dto.setMemberRegistrationNo(model.get("memberNo") == null ? null
-					: model.get("memberNo").toString());
+			dto.setMember(model.get("memberNo") == null ? null
+					: ((MemberDto)model.get("memberNo")));
 			dto.setTitle(model.get("title") == null ? null : model.get("title")
 					.toString());
 			dto.setSurname(model.get("surname") == null ? null : model.get(
@@ -198,12 +205,14 @@ public class EventBookingView extends ViewImpl implements
 		}
 	};
 
-	//int counter = 0;
-	int counter = 1;
+	int counter = 0;
+	//int counter = 1;
 
 	public interface Binder extends UiBinder<Widget, EventBookingView> {
 	}
 
+	ColumnConfig memberColumn = new ColumnConfig("memberNo", "Member No",
+			DataType.SELECTAUTOCOMPLETE, "", "input-small");
 	ColumnConfig accommodationConfig = new ColumnConfig("accommodation",
 			"Accommodation", DataType.SELECTBASIC);
 
@@ -213,10 +222,9 @@ public class EventBookingView extends ViewImpl implements
 
 		tblDelegates.setAutoNumber(false);
 		List<ColumnConfig> configs = new ArrayList<ColumnConfig>();
-		ColumnConfig config = new ColumnConfig("memberNo", "Member No",
-				DataType.STRING, "", "input-small");
-		configs.add(config);
-		config = new ColumnConfig("title", "Title", DataType.STRING);
+		
+		configs.add(memberColumn);
+		ColumnConfig config = new ColumnConfig("title", "Title", DataType.STRING);
 		configs.add(config);
 		config = new ColumnConfig("surname", "Surname", DataType.STRING);
 		configs.add(config);
@@ -228,6 +236,29 @@ public class EventBookingView extends ViewImpl implements
 		configs.add(accommodationConfig);
 
 		tblDelegates.setColumnConfigs(configs);
+		memberColumn.addValueChangeHandler(new ValueChangeHandler<Listable>() {
+			@Override
+			public void onValueChange(ValueChangeEvent<Listable> event) {
+				Widget source = (Widget)event.getSource();
+				AutoCompleteField<MemberDto> field = (AutoCompleteField)source;
+				AggregationGridRow row = field.getParentRow();
+				
+				if(event.getValue()!=null){
+					MemberDto dto = (MemberDto)event.getValue();
+					DelegateDto delegate = mapper.getData(row.getData());
+					
+					delegate.setMember(dto);
+					delegate.setSurname(dto.getLastName());
+					delegate.setOtherNames(dto.getFirstName());
+					delegate.setEmail(dto.getEmail());
+					delegate.setTitle(dto.getTitle());
+					
+					DataModel model = mapper.getModel(delegate);
+					row.setModel(model,true);
+				}
+				
+			}
+		});
 
 		aAddMember.addClickHandler(new ClickHandler() {
 			@Override
@@ -386,7 +417,6 @@ public class EventBookingView extends ViewImpl implements
 	@Override
 	public void setCountries(List<Country> countries) {
 		lstCountry.setItems(countries);
-		autoMembers.setValues(countries);
 		for (Country c : countries) {
 			if (c.getName().equals("KE")) {
 				lstCountry.setValue(c);
@@ -551,6 +581,11 @@ public class EventBookingView extends ViewImpl implements
 				+ "accountNo=Use ID Number";
 
 		framePayment.setUrl(url);
+	}
+
+	@Override
+	public ColumnConfig getMemberColumnConfig() {
+		return memberColumn;
 	}
 
 }

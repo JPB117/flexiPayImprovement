@@ -4,15 +4,19 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Widget;
+import com.workpoint.icpak.client.ui.component.AutoCompleteField;
 import com.workpoint.icpak.client.ui.component.DoubleField;
 import com.workpoint.icpak.client.ui.component.DropDownList;
 import com.workpoint.icpak.client.ui.component.IntegerField;
 import com.workpoint.icpak.client.ui.component.TextArea;
 import com.workpoint.icpak.client.ui.component.TextField;
+import com.workpoint.icpak.client.ui.component.autocomplete.DataOracle;
+import com.workpoint.icpak.client.ui.component.autocomplete.SimpleOracle;
 import com.workpoint.icpak.shared.model.BooleanValue;
 import com.workpoint.icpak.shared.model.DataType;
 import com.workpoint.icpak.shared.model.DateValue;
@@ -31,21 +35,25 @@ public class ColumnConfig {
 	private boolean isAggregationColumn;
 	private boolean isMandatory;
 	private DataType type;
+	private SimpleOracle oracle;
 	private List<Listable> dropDownItems = new ArrayList<Listable>();
-	
-	public ColumnConfig(String key, String displayName, DataType type){
+	private List<ValueChangeHandler> valueChangeHandlers = new ArrayList<ValueChangeHandler>();
+
+	public ColumnConfig(String key, String displayName, DataType type) {
 		this.key = key;
 		this.displayName = displayName;
 		this.type = type;
 	}
-	
-	public ColumnConfig(String key, String displayName, DataType type, String placeHolder){
-		this(key,displayName,type);
+
+	public ColumnConfig(String key, String displayName, DataType type,
+			String placeHolder) {
+		this(key, displayName, type);
 		this.placeHolder = placeHolder;
 	}
-	
-	public ColumnConfig(String key, String displayName, DataType type, String placeHolder, String styleName){
-		this(key,displayName,type);
+
+	public ColumnConfig(String key, String displayName, DataType type,
+			String placeHolder, String styleName) {
+		this(key, displayName, type);
 		this.placeHolder = placeHolder;
 		this.styleName = styleName;
 	}
@@ -65,107 +73,114 @@ public class ColumnConfig {
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
 	}
-	
+
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public Widget createWidget(Object value){
-	
+	public Widget createWidget(Object value) {
+
 		HasValue widget = null;
-		if(type==DataType.INTEGER){
-			IntegerField field= new IntegerField();
-			field.setPlaceholder(placeHolder==null?"": placeHolder);
-			 //field.setStyleName("input-medium");
-			 widget = field;
-		}else if(type==DataType.DOUBLE){
-			 DoubleField field= new DoubleField();
-			 field.setPlaceholder(placeHolder==null?"": placeHolder);
-			 //field.setStyleName("input-medium");
-			 widget = field;
-		}else if(type==DataType.SELECTBASIC){
+		if (type == DataType.INTEGER) {
+			IntegerField field = new IntegerField();
+			field.setPlaceholder(placeHolder == null ? "" : placeHolder);
+			// field.setStyleName("input-medium");
+			widget = field;
+		} else if (type == DataType.DOUBLE) {
+			DoubleField field = new DoubleField();
+			field.setPlaceholder(placeHolder == null ? "" : placeHolder);
+			// field.setStyleName("input-medium");
+			widget = field;
+		} else if (type == DataType.SELECTBASIC) {
 			DropDownList dropDown = new DropDownList();
 			dropDown.setItems(dropDownItems);
-			widget=dropDown;
-		}else if(type==DataType.STRINGLONG){
-			TextArea field= new TextArea();
-			field.setPlaceholder(placeHolder==null?"": placeHolder);
+			widget = dropDown;
+		} else if (type == DataType.SELECTAUTOCOMPLETE) {
+			AutoCompleteField auto = new AutoCompleteField(oracle);
+			// auto.setValues(dropDownItems);
+			widget = auto;
+		} else if (type == DataType.STRINGLONG) {
+			TextArea field = new TextArea();
+			field.setPlaceholder(placeHolder == null ? "" : placeHolder);
 			widget = field;
-		}else if(type==DataType.BOOLEAN){
-			CheckBox field= new CheckBox();
+		} else if (type == DataType.BOOLEAN) {
+			CheckBox field = new CheckBox();
 			widget = field;
-		}
-		else{
+		} else {
 			TextField field = new TextField();
-			field.setPlaceholder(placeHolder==null?"": placeHolder);
+			field.setPlaceholder(placeHolder == null ? "" : placeHolder);
 			widget = field;
 		}
-		if(styleName!=null){
-			((Widget)widget).addStyleName(styleName);
+		if (styleName != null) {
+			((Widget) widget).addStyleName(styleName);
 		}
-		
-		widget.setValue(value);		
-		return (Widget)widget;
+
+		for (ValueChangeHandler handler : valueChangeHandlers){
+			widget.addValueChangeHandler(handler);
+		}
+
+		widget.setValue(value);
+		return (Widget) widget;
 	}
-	
-	public static Value getValue(Long id, String key, Object obj, DataType type){
-		if(obj==null){
+
+	public void addValueChangeHandler(ValueChangeHandler<Listable> handler) {
+		valueChangeHandlers.add(handler);
+	}
+
+	public static Value getValue(Long id, String key, Object obj, DataType type) {
+		if (obj == null) {
 			return null;
 		}
-		
+
 		Value value = null;
 		switch (type) {
 		case BOOLEAN:
-			value = new BooleanValue(id, key, (Boolean)obj);
+			value = new BooleanValue(id, key, (Boolean) obj);
 			break;
-			
+
 		case DATE:
-			value = new DateValue(id, key, (Date)obj);
+			value = new DateValue(id, key, (Date) obj);
 			break;
-			
+
 		case DOUBLE:
-			value =new DoubleValue(id, key, ((Number)obj).doubleValue());
+			value = new DoubleValue(id, key, ((Number) obj).doubleValue());
 			break;
-			
+
 		case INTEGER:
-			value = new LongValue(id, key, ((Number)obj).longValue());
+			value = new LongValue(id, key, ((Number) obj).longValue());
 			break;
-			
+
 		case STRING:
 			value = new StringValue(id, key, obj.toString());
 			break;
 
 		case CHECKBOX:
-			value = new BooleanValue(id, key, (Boolean)obj);
+			value = new BooleanValue(id, key, (Boolean) obj);
 			break;
 
-			
 		case MULTIBUTTON:
 			value = new StringValue(id, key, obj.toString());
 			break;
 
-			
 		case SELECTBASIC:
 			value = new StringValue(id, key, obj.toString());
 			break;
 
-			
 		case SELECTMULTIPLE:
 			value = new StringValue(id, key, obj.toString());
 			break;
 
-			
 		case STRINGLONG:
 			value = new StringValue(id, key, obj.toString());
 			break;
 		}
-		
+
 		return value;
 	}
-	
-	public void setDropDownItems(List<Listable> items){
+
+	public void setDropDownItems(List<Listable> items) {
 		this.dropDownItems.clear();
 		this.dropDownItems.addAll(items);
 	}
 
-	public Widget createHeaderWidget() {		
+	public Widget createHeaderWidget() {
 		return new InlineLabel(displayName);
 	}
 
@@ -208,5 +223,13 @@ public class ColumnConfig {
 	public void setStyleName(String styleName) {
 		this.styleName = styleName;
 	}
-	
+
+	public SimpleOracle getOracle() {
+		return oracle;
+	}
+
+	public void setOracle(SimpleOracle oracle) {
+		this.oracle = oracle;
+	}
+
 }

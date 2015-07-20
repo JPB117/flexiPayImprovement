@@ -97,7 +97,8 @@ public class DelegateTableRow extends RowWidget {
 	}
 
 	public DelegateTableRow(BookingDto dto, DelegateDto delegate) {
-		this(delegate.getMemberRegistrationNo(), delegate.getTitle(),
+		this(delegate.getMember()==null? "": delegate.getMember().getMemberId() ,
+				delegate.getTitle(),
 				delegate.getSurname(), delegate.getOtherNames(), delegate.getEmail(),null);
 		delegate.setBookingId(dto.getRefId());
 		delegate.setEventId(dto.getEventRefId());

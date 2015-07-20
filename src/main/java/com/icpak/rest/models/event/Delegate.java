@@ -13,6 +13,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 import com.icpak.rest.models.base.PO;
 import com.wordnik.swagger.annotations.ApiModel;
+import com.workpoint.icpak.shared.model.MemberDto;
 import com.workpoint.icpak.shared.model.events.AccommodationDto;
 import com.workpoint.icpak.shared.model.events.AttendanceStatus;
 import com.workpoint.icpak.shared.model.events.DelegateDto;
@@ -115,7 +116,8 @@ public class Delegate extends PO{
 
 	public void copyFrom(DelegateDto delegateDto) {
 		setEmail(delegateDto.getEmail());
-		setMemberRegistrationNo(delegateDto.getMemberRegistrationNo());
+		
+		setMemberRegistrationNo(delegateDto.getMember()==null? null: delegateDto.getMember().getMemberId());
 		setOtherNames(delegateDto.getOtherNames());
 		setSurname(delegateDto.getSurname());
 		setTitle(delegateDto.getTitle());
@@ -127,7 +129,7 @@ public class Delegate extends PO{
 	public DelegateDto toDto() {
 		DelegateDto dto  = new DelegateDto();
 		dto.setEmail(email);
-		dto.setMemberRegistrationNo(memberRegistrationNo);
+		dto.setMember(new MemberDto(memberRegistrationNo));
 		dto.setOtherNames(otherNames);
 		dto.setRefId(getRefId());
 		dto.setSurname(surname);

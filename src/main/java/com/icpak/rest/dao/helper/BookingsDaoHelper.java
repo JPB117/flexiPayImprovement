@@ -116,7 +116,7 @@ public class BookingsDaoHelper {
 			
 			//Event Pricing
 			Double price = event.getNonMemberPrice();
-			if(delegateDto.getMemberRegistrationNo()!=null || d.isMember()){
+			if(delegateDto.getMember()!=null || d.isMember()){
 				price = event.getMemberPrice();
 			}
 			

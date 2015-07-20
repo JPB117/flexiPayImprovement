@@ -35,6 +35,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -51,6 +52,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.icpak.rest.models.base.ExpandTokens;
 import com.icpak.rest.models.base.PO;
+import com.icpak.rest.models.membership.Member;
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 import com.workpoint.icpak.shared.model.RoleDto;
@@ -107,6 +109,9 @@ public class User extends PO{
     
     @Embedded
     private BioData userData=null;
+    
+    @OneToOne(mappedBy="user",cascade={CascadeType.PERSIST, CascadeType.REMOVE})
+    private Member member;
     
     private String memberId;
     
@@ -310,6 +315,15 @@ public class User extends PO{
 		bio.setFirstName(dto.getName());
 		bio.setLastName(dto.getSurname());
 		this.userData = bio;
+	}
+
+	public Member getMember() {
+		return member;
+	}
+
+	public void setMember(Member member) {
+		this.member = member;
+		member.setUser(this);
 	}
 
 }

@@ -1,6 +1,8 @@
 package com.icpak.rest.models.membership;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -9,6 +11,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
+import com.icpak.rest.models.auth.User;
 import com.icpak.rest.models.base.PO;
 import com.wordnik.swagger.annotations.ApiModel;
 import com.workpoint.icpak.shared.model.MemberDto;
@@ -29,6 +32,10 @@ public class Member extends PO{
 	private static final long serialVersionUID = 1L;
 	private String userRefId;
 	private String memberId;
+	
+	@OneToOne
+	@JoinColumn(name="userId")
+	private User user;
 
 	public Member() {
 	}
@@ -64,5 +71,13 @@ public class Member extends PO{
 
 	public void setMemberId(String memberId) {
 		this.memberId = memberId;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 }
