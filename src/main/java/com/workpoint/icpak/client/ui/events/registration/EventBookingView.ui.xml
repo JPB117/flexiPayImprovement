@@ -217,7 +217,7 @@
 												<br />
 
 												<div class="col-sm-12">
-													<d:AutoCompleteField ui:field="autoMembers"></d:AutoCompleteField>
+													<!-- d:AutoCompleteField ui:field="autoMembers"></d:AutoCompleteField-->
 													<!-- div class="dropdown">
 														<d:TextField ui:field="txtAutoComplete"
 															styleName="dropdown-toggle form-control" dataToggle="dropdown"

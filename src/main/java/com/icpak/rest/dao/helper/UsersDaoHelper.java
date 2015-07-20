@@ -145,6 +145,7 @@ public class UsersDaoHelper {
 		//create and empty member a/c
 		Member member = new Member(user.getRefId());
 		member.setRefId(user.getRefId());
+		member.setUser(user);
 		dao.save(member);
 	}
 
