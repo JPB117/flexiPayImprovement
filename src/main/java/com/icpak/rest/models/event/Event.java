@@ -23,6 +23,7 @@ import com.wordnik.swagger.annotations.ApiModel;
 import com.workpoint.icpak.shared.model.EventStatus;
 import com.workpoint.icpak.shared.model.EventType;
 import com.workpoint.icpak.shared.model.events.AccommodationDto;
+import com.workpoint.icpak.shared.model.events.CourseDto;
 import com.workpoint.icpak.shared.model.events.EventDto;
 
 /**
@@ -63,6 +64,10 @@ public class Event extends PO {
 
 	@Column(nullable = false)
 	private Double nonMemberPrice;
+	
+	private String code;
+	
+	private Date registrationDate;
 
 	@XmlTransient
 	@OneToMany(mappedBy = "event")
@@ -266,6 +271,62 @@ public class Event extends PO {
 			a.setEvent(this);
 			this.accommodation.add(a);
 		}
+	}
+
+	public CourseDto toCourseDto() {
+		CourseDto dto = new CourseDto();
+		dto.setRefId(getRefId());
+		dto.setCpdHours(cpdHours);
+		dto.setDescription(description);
+
+		if (endDate != null)
+			dto.setEndDate(endDate.getTime());
+
+		if (startDate != null)
+			dto.setStartDate(startDate.getTime());
+		dto.setMemberPrice(memberPrice);
+		dto.setName(name);
+		dto.setNonMemberPrice(nonMemberPrice);
+		dto.setStatus(status);
+		dto.setType(type);
+		dto.setVenue(venue);
+
+		return dto;
+	}
+
+	public void copyFromCourse(CourseDto dto) {
+		setCpdHours(dto.getCpdHours());
+		setDescription(dto.getDescription());
+
+		if (dto.getEndDate() != null)
+			setEndDate(new Date(dto.getEndDate()));
+
+		if (dto.getStartDate() != null)
+			setStartDate(new Date(dto.getStartDate()));
+
+		setMemberPrice(dto.getMemberPrice());
+		setName(dto.getName());
+		setNonMemberPrice(dto.getNonMemberPrice());
+		setStatus(dto.getStatus());
+		setType(dto.getType());
+		setVenue(dto.getVenue());
+		setCode(dto.getCode());
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public Date getRegistrationDate() {
+		return registrationDate;
+	}
+
+	public void setRegistrationDate(Date registrationDate) {
+		this.registrationDate = registrationDate;
 	}
 
 }

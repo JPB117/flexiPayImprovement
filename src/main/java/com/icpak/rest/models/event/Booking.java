@@ -27,6 +27,7 @@ import com.wordnik.swagger.annotations.ApiModel;
 import com.workpoint.icpak.shared.model.PaymentStatus;
 import com.workpoint.icpak.shared.model.events.BookingDto;
 import com.workpoint.icpak.shared.model.events.DelegateDto;
+import com.workpoint.icpak.shared.model.events.EnrollmentDto;
 
 /**
  * Booking Model 
@@ -53,7 +54,7 @@ public class Booking extends PO{
 	
 	private String paymentMode;//MPesa, VISA etc
 	private String currency;
-	private Date bookingDate;
+	private Date bookingDate=new Date();
 	private String userId; //Member who made the booking
 	
 	@Transient
@@ -74,7 +75,9 @@ public class Booking extends PO{
 	
 	@ManyToOne
 	private Event event;
-	
+	private Date registrationDate= new Date();
+	private String memberId; //For Courses, may not have delegates
+		
 	public Date getBookingDate() {
 		return bookingDate;
 	}
@@ -281,5 +284,57 @@ public class Booking extends PO{
 
 	public void setUserId(String userId) {
 		this.userId = userId;
+	}
+
+	public EnrollmentDto toEnrollmentDto() {
+		EnrollmentDto dto = new EnrollmentDto();
+		dto.setAmountDue(amountDue);
+		dto.setRegistrationDate(registrationDate);
+		
+		if(bookingDate!=null)
+			dto.setBookingDate(bookingDate.getTime());
+		
+		dto.setContact(contact.toDto());
+		dto.setCurrency(currency);
+		
+		if(getEvent()!=null){
+			dto.setEventRefId(getEvent().getRefId());
+		}
+
+		if(paymentDate!=null)
+		dto.setPaymentDate(paymentDate.getTime());
+		dto.setPaymentMode(paymentMode);
+		dto.setPaymentRef(paymentRef);
+		dto.setPaymentStatus(paymentStatus);
+		dto.setRefId(getRefId());
+		dto.setStatus(status);
+		dto.setMemberId(memberId);
+		return dto;
+	}
+
+	public void copyFrom(EnrollmentDto dto) {
+		setBookingDate(dto.getBookingDate()==null? null : new Date(dto.getBookingDate()));
+		setPaymentMode(dto.getPaymentMode());
+		setPaymentDate(dto.getPaymentDate()==null? null: new Date(dto.getPaymentDate()));
+		setStatus(dto.getStatus());
+		setCurrency(dto.getCurrency());
+		setMemberId(dto.getMemberId());
+		setRegistrationDate(dto.getRegistrationDate());
+	}
+
+	public String getMemberId() {
+		return memberId;
+	}
+
+	public void setMemberId(String memberId) {
+		this.memberId = memberId;
+	}
+
+	public Date getRegistrationDate() {
+		return registrationDate;
+	}
+
+	public void setRegistrationDate(Date registrationDate) {
+		this.registrationDate = registrationDate;
 	}
 }

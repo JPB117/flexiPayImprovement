@@ -8,6 +8,7 @@ import com.icpak.rest.exceptions.ServiceException;
 import com.icpak.rest.models.ErrorCodes;
 import com.icpak.rest.models.event.Accommodation;
 import com.icpak.rest.models.event.Event;
+import com.workpoint.icpak.shared.model.EventType;
 import com.workpoint.icpak.shared.model.PaymentStatus;
 
 public class EventsDao extends BaseDao {
@@ -33,8 +34,15 @@ public class EventsDao extends BaseDao {
 		save(event);
 	}
 
-	public List<Event> getAllEvents(Integer offSet, Integer limit) {
+	public List<Event> getAllEvents(Integer offSet, Integer limit,EventType type) {
+		
+		if(type==null)
 		return getResultList(getEntityManager().createQuery("from Event where isActive=1 order by name"),
+				offSet, limit);
+		
+		
+		return getResultList(getEntityManager().createQuery("from Event where type=:type "
+				+ "and isActive=1 order by name").setParameter("type", type),
 				offSet, limit);
 	}
 
