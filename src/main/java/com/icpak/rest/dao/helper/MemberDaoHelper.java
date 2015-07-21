@@ -55,7 +55,7 @@ public class MemberDaoHelper {
 			MemberDto dto = member.toDto(); 
 			
 			if(member.getUserRefId()!=null){
-				User user = userDao.findByUserId(member.getUserRefId());
+				User user = userDao.findByUserId(member.getUserRefId(),false);
 				setMemberValues(dto, user);
 			}
 			rtn.add(dto);
@@ -65,19 +65,23 @@ public class MemberDaoHelper {
 	}
 	
 	private void setMemberValues(MemberDto dto, User user) {
+		if(user==null){
+			return;
+		}
+		
 		dto.setEmail(user.getEmail());
 		dto.setFirstName(user.getUserData().getFirstName());
 		dto.setLastName(user.getUserData().getLastName());
 	}
 
-	public Member getMemberById(String memberId) {
+	public MemberDto getMemberById(String memberId) {
 		Member member = memberDao.findByRefId(memberId, Member.class);
 		
 		if(member==null){
 			throw new ServiceException(ErrorCodes.NOTFOUND,"'"+memberId+"'");
 		}
 		
-		return member;
+		return member.toDto();
 	}
 	
 }

@@ -20,8 +20,6 @@ import com.icpak.rest.models.event.Event;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
-import com.workpoint.icpak.shared.api.AccommodationsResource;
-import com.workpoint.icpak.shared.api.BookingsResource;
 import com.workpoint.icpak.shared.api.EventsResource;
 import com.workpoint.icpak.shared.model.events.EventDto;
 
@@ -37,20 +35,33 @@ public class EventsResourceImpl implements EventsResource{
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value="Retrieve all active Events")
 	public List<EventDto> getAll(
-			@QueryParam("offset") Integer offset,
-			@QueryParam("limit") Integer limit) {
+			@ApiParam(value="Starting index", required=true) @QueryParam("offset") Integer offset,
+			@ApiParam(value="Number of items to retrieve", required=true) @QueryParam("limit") Integer limit) {
 		
 		List<EventDto> dtos = helper.getAllEvents("", offset, limit);
 		return dtos;
 	}
 	
+	@Path("/type/{eventType}")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(value="Retrieve all active Events by Event Type")
+	public List<EventDto> getAllByType(
+			@ApiParam(value="Event Type", required=true) @QueryParam("eventType") String eventType,
+			@ApiParam(value="Starting index", required=true) @QueryParam("offset") Integer offset,
+			@ApiParam(value="Number of items to retrieve", required=true) @QueryParam("limit") Integer limit) {
+		
+		List<EventDto> dtos = helper.getAllEvents("", offset, limit, eventType);
+		return dtos;
+	}
+	
 	@Path("/{eventId}/bookings")
-	public BookingsResource bookings(@PathParam("eventId") String eventId){
+	public BookingsResourceImpl bookings(@PathParam("eventId") String eventId){
 		return factory.createBookingResource(eventId);
 	}
 	
 	@Path("/{eventId}/accommodations")
-	public AccommodationsResource accommodations(@PathParam("eventId") String eventId){
+	public AccommodationsResourceImpl accommodations(@PathParam("eventId") String eventId){
 		return factory.createAccommodationsResource(eventId);
 	}
 
