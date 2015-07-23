@@ -49,8 +49,8 @@ public class EnquiriesPresenter
 
 	@TabInfo(container = HomePresenter.class)
 	static TabData getTabLabel(LoginGateKeeper adminGatekeeper) {
-		TabDataExt data = new TabDataExt("Make an Enquiry", "fa fa-bullhorn",
-				8, adminGatekeeper, true);
+		TabDataExt data = new TabDataExt("Enquiries", "fa fa-bullhorn", 8,
+				adminGatekeeper, true);
 		return data;
 	}
 
