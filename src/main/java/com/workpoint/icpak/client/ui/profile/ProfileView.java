@@ -14,7 +14,6 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Random;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -51,7 +50,10 @@ public class ProfileView extends ViewImpl implements
 
 	@UiField
 	ActionLink aEdit;
-	
+
+	@UiField
+	ActionLink aPayNow;
+
 	@UiField
 	ActionLink aSaveChanges;
 
@@ -74,16 +76,19 @@ public class ProfileView extends ViewImpl implements
 
 	@UiField
 	Uploader uploader;
-	
+
 	@UiField
 	FocusPanel panelPicture;
 
 	@UiField
 	Image imgUser;
-	
-	@UiField Element spnNames;
-	@UiField Element spnApplicationType;
-	@UiField Element spnCompletion;
+
+	@UiField
+	Element spnNames;
+	@UiField
+	Element spnApplicationType;
+	@UiField
+	Element spnCompletion;
 
 	@UiField
 	PasswordWidget panelPasswordWidget;
@@ -100,13 +105,13 @@ public class ProfileView extends ViewImpl implements
 	public ProfileView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
 
-		//Forms
+		// Forms
 		basicDetail = new BasicDetails();
 		educationDetail = new EducationDetails();
 		specializationDetail = new SpecializationDetails();
 		trainingDetail = new TrainingDetails();
-		
-		//Uploader
+
+		// Uploader
 		showChangePassword(false);
 		setEditMode(false);
 
@@ -174,7 +179,7 @@ public class ProfileView extends ViewImpl implements
 		educationDetail.setEditMode(editMode);
 		specializationDetail.setEditMode(editMode);
 		trainingDetail.setEditMode(editMode);
-		
+
 		if (editMode) {
 			PanelProfileDisplay.setVisible(false);
 			panelProfile.setVisible(true);
@@ -206,25 +211,27 @@ public class ProfileView extends ViewImpl implements
 	@Override
 	public void bindBasicDetails(ApplicationFormHeaderDto result) {
 		basicDetail.bindDetails(result);
-		spnNames.setInnerText(result.getSurname()+" "+result.getOtherNames());
-		spnApplicationType.setInnerText(result.getApplicationType().getDisplayName());
+		spnNames.setInnerText(result.getSurname() + " "
+				+ result.getOtherNames());
+		spnApplicationType.setInnerText(result.getApplicationType()
+				.getDisplayName());
 		spnCompletion.setInnerText("80% Complete");
-		
+
 	}
 
-	public void bindCurrentUser(CurrentUser user){
+	public void bindCurrentUser(CurrentUser user) {
 		String refId = user.getUser().getRefId();
-		uploader.setContext(new UploadContext("api/users/"+refId+"/profile"));
-		
-		url = "api/users/"+refId+"/profile";
+		uploader.setContext(new UploadContext("api/users/" + refId + "/profile"));
+
+		url = "api/users/" + refId + "/profile";
 		imgUser.setUrl(url);
 	}
 
-	public HasClickHandlers getSaveButton(){
+	public HasClickHandlers getSaveButton() {
 		return aSaveChanges;
 	}
-	
-	public int getActiveTab(){
+
+	public int getActiveTab() {
 		return divTabs.getActiveTab();
 	}
 
@@ -232,45 +239,45 @@ public class ProfileView extends ViewImpl implements
 	public ApplicationFormHeaderDto getBasicDetails() {
 		return basicDetail.getApplicationForm();
 	}
-	
-	public HasClickHandlers getSaveBasicDetailsButton(){
+
+	public HasClickHandlers getSaveBasicDetailsButton() {
 		return basicDetail.getSaveButton();
 	}
-	
-	public HasClickHandlers getCancelDetailButton(){
+
+	public HasClickHandlers getCancelDetailButton() {
 		return basicDetail.getCancelButton();
 	}
-	
+
 	@Override
 	public boolean isValid() {
-
-		if(getActiveTab()==0){
-			//BasicDetails
+		if (getActiveTab() == 0) {
+			// BasicDetails
 			return basicDetail.isValid();
-		}else if(getActiveTab()==1){
-			return educationDetail.isValid();
 		}
-		
-		return false;
-	}
+		// else if (getActiveTab() == 1) {
+		// return educationDetail.isValid();
+		// }
 
-	@Override
-	public ApplicationFormEducationalDto getEducationDetails() {
-		
-		return educationDetail.getEducationDto();
+		return false;
 	}
 
 	@Override
 	public void bindEducationDetails(List<ApplicationFormEducationalDto> result) {
 		educationDetail.bindDetails(result);
 	}
-	
-	public HasClickHandlers getEducationDetailSaveButton(){
+
+	public HasClickHandlers getEducationDetailSaveButton() {
 		return educationDetail.getSaveButton();
 	}
 
+
 	@Override
-	public void bindEducationDetail(ApplicationFormEducationalDto dto) {
-		educationDetail.bindDetail(dto);
+	public HasClickHandlers getProfileEditButton() {
+		return basicDetail.getEditButton();
+	}
+
+	@Override
+	public HasClickHandlers getEducationAddButton() {
+		return educationDetail.getAddButton();
 	}
 }

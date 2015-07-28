@@ -5,6 +5,17 @@
 	<g:HTMLPanel>
 
 		<div class="row">
+			<div class="col-sm-12">
+				<d:ActionLink
+					styleName="btn btn-next btn-fill btn-default btn-wd btn-sm pull-right"
+					ui:field="aEdit">
+					<i class="fa fa-pencil"></i>
+					Edit Details
+				</d:ActionLink>
+			</div>
+
+			<br />
+
 			<g:HTMLPanel styleName="col-xs-12" ui:field="panelDisplay">
 				<table class="table table-bordered table-striped">
 					<tbody>

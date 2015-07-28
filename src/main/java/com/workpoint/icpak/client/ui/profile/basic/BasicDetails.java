@@ -2,6 +2,8 @@ package com.workpoint.icpak.client.ui.profile.basic;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -9,6 +11,8 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.workpoint.icpak.client.ui.AppManager;
+import com.workpoint.icpak.client.ui.OnOptionSelected;
 import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.membership.form.MemberRegistrationForm;
 import com.workpoint.icpak.client.ui.util.DateUtils;
@@ -26,25 +30,43 @@ public class BasicDetails extends Composite {
 	HTMLPanel panelDisplay;
 	@UiField
 	HTMLPanel panelEditMode;
-	
-	@UiField Element elPhone;
-	@UiField Element elEmail;
-	@UiField Element elDob;
-	@UiField Element elSex;
-	@UiField Element elEmployer;
-	@UiField Element elResidence;
-	@UiField Element elAddress;
-	@UiField Element elPostalCode;
-	@UiField Element elCountry;
-	@UiField Element elCity;
-	@UiField Anchor aSave;
-	@UiField Anchor aCancel;
-	@UiField MemberRegistrationForm panelRegistration;
+
+	@UiField
+	Element elPhone;
+	@UiField
+	Element elEmail;
+	@UiField
+	Element elDob;
+	@UiField
+	Element elSex;
+	@UiField
+	Element elEmployer;
+	@UiField
+	Element elResidence;
+	@UiField
+	Element elAddress;
+	@UiField
+	Element elPostalCode;
+	@UiField
+	Element elCountry;
+	@UiField
+	Element elCity;
+	@UiField
+	Anchor aSave;
+	@UiField
+	Anchor aCancel;
+
+	@UiField
+	ActionLink aEdit;
+
+	@UiField
+	MemberRegistrationForm panelRegistration;
 
 	public BasicDetails() {
 		initWidget(uiBinder.createAndBindUi(this));
-		
+
 		setEditMode(false);
+
 	}
 
 	public void setEditMode(boolean editMode) {
@@ -60,31 +82,35 @@ public class BasicDetails extends Composite {
 	public void bindDetails(ApplicationFormHeaderDto result) {
 		elPhone.setInnerText(result.getTelephone1());
 		elEmail.setInnerText(result.getEmail());
-		
-		if(result.getDob()!=null){
+
+		if (result.getDob() != null) {
 			elDob.setInnerText(DateUtils.DATEFORMAT.format(result.getDate()));
 		}
-		
-		if(result.getGender()!=null){
+
+		if (result.getGender() != null) {
 			elSex.setInnerText(result.getGender().name());
 		}
-		
+
 		elEmployer.setInnerText(result.getEmployer());
 		elResidence.setInnerText(result.getResidence());
 		elAddress.setInnerText(result.getAddress1());
 		elPostalCode.setInnerText(result.getPostCode());
 		elCountry.setInnerText(result.getCountry());
 		elCity.setInnerText(result.getCity1());
-		
+
 		panelRegistration.bind(result);
 	}
-	
-	public ApplicationFormHeaderDto getApplicationForm(){
+
+	public ApplicationFormHeaderDto getApplicationForm() {
 		return panelRegistration.getApplicationForm();
 	}
 
-	public HasClickHandlers getSaveButton(){
+	public HasClickHandlers getSaveButton() {
 		return aSave;
+	}
+
+	public HasClickHandlers getEditButton() {
+		return aEdit;
 	}
 
 	public boolean isValid() {

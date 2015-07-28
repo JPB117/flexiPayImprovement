@@ -15,15 +15,17 @@
 
 			<g:HTMLPanel ui:field="panelFooter" styleName='tbody'>
 			</g:HTMLPanel>
+		</g:HTMLPanel>
 
-			<nav>
-				<ul class="pagination pull-left">
+		<div class="col-lg-12">
+			<div class="col-lg-12">
+				<ul class="pagination text-center">
 					<li>
 						<a href="#" aria-label="Previous">
 							<span aria-hidden="true">&laquo;</span>
 						</a>
 					</li>
-					<li>
+					<li class="active">
 						<a href="#">1</a>
 					</li>
 					<li>
@@ -44,11 +46,14 @@
 						</a>
 					</li>
 				</ul>
+			</div>
 
-				<p class="pull-right">
+			<div class="col-lg-4 hide">
+				<p class="text-muted">
 					Displaying 151 - 200 of 2004
 				</p>
-			</nav>
-		</g:HTMLPanel>
+			</div>
+		</div>
+
 	</g:HTMLPanel>
 </ui:UiBinder>

@@ -17,7 +17,7 @@
 				ui:field="aShowFilter"></d:ActionLink>
 		</h3>
 
-		<g:HTMLPanel styleName="row" ui:field="panelDates">
+		<g:HTMLPanel styleName="row hide" ui:field="panelDates">
 			<div class="col-lg-12">
 				<form class="form-inline">
 					<div class="form-group">
