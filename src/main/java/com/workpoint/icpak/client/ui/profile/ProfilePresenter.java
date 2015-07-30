@@ -8,12 +8,14 @@ package com.workpoint.icpak.client.ui.profile;
 //import com.workpoint.icpak.shared.responses.GetUserRequestResult;
 //import com.workpoint.icpak.shared.responses.SaveUserResponse;
 //import com.workpoint.icpak.shared.responses.UpdatePasswordResponse;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rest.delegates.client.ResourceDelegate;
@@ -38,10 +40,13 @@ import com.workpoint.icpak.client.ui.events.ProcessingEvent;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
 import com.workpoint.icpak.client.ui.membership.form.MemberRegistrationForm;
 import com.workpoint.icpak.client.ui.profile.education.form.EducationRegistrationForm;
+import com.workpoint.icpak.client.ui.profile.specialization.form.SpecializationRegistrationForm;
+import com.workpoint.icpak.client.ui.profile.training.form.TrainingRegistrationForm;
 import com.workpoint.icpak.client.ui.security.LoginGateKeeper;
 import com.workpoint.icpak.shared.api.ApplicationFormResource;
 import com.workpoint.icpak.shared.model.ApplicationFormEducationalDto;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
+import com.workpoint.icpak.shared.model.ApplicationFormTrainingDto;
 
 public class ProfilePresenter
 		extends
@@ -75,6 +80,12 @@ public class ProfilePresenter
 		HasClickHandlers getProfileEditButton();
 
 		HasClickHandlers getEducationAddButton();
+
+		HasClickHandlers getTrainingAddButton();
+
+		HasClickHandlers getSpecializationAddButton();
+
+		void bindTrainingDetails(List<ApplicationFormTrainingDto> arrayList);
 	}
 
 	private final CurrentUser currentUser;
@@ -107,6 +118,8 @@ public class ProfilePresenter
 
 	final MemberRegistrationForm memberForm = new MemberRegistrationForm();
 	EducationRegistrationForm educationForm = new EducationRegistrationForm();
+	TrainingRegistrationForm trainingForm = new TrainingRegistrationForm();
+	SpecializationRegistrationForm specializationForm = new SpecializationRegistrationForm();
 
 	@Override
 	protected void onBind() {
@@ -135,74 +148,80 @@ public class ProfilePresenter
 			@Override
 			public void onClick(ClickEvent event) {
 				educationForm.clear();
-				showEducationPopUp();
+				showPopUp(educationForm);
 			}
 		});
 
-		getView().getSaveButton().addClickHandler(new ClickHandler() {
+		getView().getTrainingAddButton().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				int currentTab = getView().getActiveTab();
-				if (currentTab == 0) {
-					// Basic Details
-					saveBasicDetails();
-				} else if (currentTab == 1) {
-					// Education Information
-					saveEducationInformation();
-				} else if (currentTab == 2) {
-
-				}
+				trainingForm.clear();
+				showPopUp(trainingForm);
 			}
 		});
 
-		getView().getSaveBasicDetailsButton().addClickHandler(
+		getView().getSpecializationAddButton().addClickHandler(
 				new ClickHandler() {
-
 					@Override
 					public void onClick(ClickEvent event) {
-						saveBasicDetails();
+						specializationForm.clear();
+						showPopUp(specializationForm);
 					}
 				});
 
-		getView().getEducationDetailSaveButton().addClickHandler(
-				new ClickHandler() {
-
-					@Override
-					public void onClick(ClickEvent event) {
-						saveEducationInformation();
-					}
-				});
-
-		getView().getCancelDetailButton().addClickHandler(new ClickHandler() {
-
-			@Override
-			public void onClick(ClickEvent event) {
-				getView().setEditMode(false);
-			}
-		});
 	}
 
-	public void showEducationPopUp() {
-
-		AppManager.showPopUp("Edit Education Details", educationForm,
+	public void showPopUp(final Widget passedForm) {
+		AppManager.showPopUp("Create/Edit PopUp", passedForm,
 				new OptionControl() {
 					@Override
 					public void onSelect(String name) {
 						if (name.equals("Save")) {
-							if (educationForm.isValid()) {
-								saveEducationInformation();
-								hide();
+							if (passedForm instanceof EducationRegistrationForm) {
+								if (saveEducationInformation()) {
+									hide();
+								}
+							} else if (passedForm instanceof TrainingRegistrationForm) {
+								if (saveTrainingInformation()) {
+									hide();
+								}
+							} else if (passedForm instanceof SpecializationRegistrationForm) {
+								if (saveSpecializationInformation()) {
+									hide();
+								}
 							}
 						}
 					}
 				}, "Save");
 	}
 
-	protected void saveEducationInformation() {
+	protected boolean saveSpecializationInformation() {
+		if (specializationForm.isValid()) {
+			// Save Specialization Here
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	protected boolean saveTrainingInformation() {
+		if (trainingForm.isValid()) {
+			// Save Training Here
+			fireEvent(new ProcessingEvent());
+			ApplicationFormTrainingDto dto = trainingForm.getTrainingDto();
+
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	protected boolean saveEducationInformation() {
 		if (educationForm.isValid()) {
 			fireEvent(new ProcessingEvent());
-
 			ApplicationFormEducationalDto dto = educationForm.getEducationDto();
+
+			// Updating
 			if (dto.getRefId() != null) {
 				applicationDelegate
 						.withCallback(
@@ -231,6 +250,9 @@ public class ProfilePresenter
 								}).education(getApplicationRefId()).create(dto);
 			}
 
+			return true;
+		} else {
+			return false;
 		}
 	}
 
@@ -290,6 +312,11 @@ public class ProfilePresenter
 								}
 							}).education(applicationRefId).getAll(0, 100);
 
+			// bind Training details
+			getView().bindTrainingDetails(
+					new ArrayList<ApplicationFormTrainingDto>());
+			// bind Specialization details
+
 		}
 	}
 
@@ -308,9 +335,8 @@ public class ProfilePresenter
 			if (event.isDelete()) {
 				delete(dto);
 			} else {
-				showEducationPopUp();
+				showPopUp(educationForm);
 				educationForm.bindDetail(dto);
-				// getView().setEditMode(true);
 			}
 		}
 

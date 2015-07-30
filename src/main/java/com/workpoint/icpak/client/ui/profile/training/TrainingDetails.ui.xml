@@ -19,111 +19,15 @@
 				<div class="col-sm-12">
 					<div class="row">
 						<br />
-						<d:TableView ui:field="tblBeforeCPA">
+						<d:TableView ui:field="tblTrainingDetails">
 						</d:TableView>
 					</div>
 				</div>
 			</g:HTMLPanel>
 
 			<g:HTMLPanel ui:field="panelForm" styleName="hide">
-				<div class="col-sm-12" style="background:#FFFFFF">
-					<div class="row">
-						<div class="col-sm-12">
-							<h4 class="info-text">Complete below Form:</h4>
-							<hr />
-						</div>
-
-						<div class="col-sm-12">
-							<d:IssuesPanel ui:field="issuesPanel" styleName="hide alert alert-danger"></d:IssuesPanel>
-						</div>
-
-
-						<div class="col-sm-12">
-							<div class="row">
-								<div class="col-xs-6">
-									<label for="firstname">Organization</label>
-									<d:TextField ui:field="txtOrganization" styleName="form-control"
-										placeholder="Organization Name" value="" required="true">
-									</d:TextField>
-								</div>
-								<div class="col-xs-6">
-									<label for="lastname">Position</label>
-									<d:TextField ui:field="txtOtherNames" styleName="form-control"
-										placeholder="Enter Position" value="" required="true">
-									</d:TextField>
-								</div>
-							</div>
-
-							<div class="form-group">
-								<div class="row">
-									<div class="col-xs-6">
-										<label for="emailaddress">Start Date:</label>
-										<d:TextField ui:field="txtEmailAddress" styleName="form-control"
-											placeholder="Start Date" value="" required="true">
-										</d:TextField>
-									</div>
-
-									<div class="col-xs-6">
-										<label for="phone">End Date:</label>
-										<d:TextField ui:field="txtPhone" styleName="form-control"
-											placeholder="End Date" value="" required="true">
-										</d:TextField>
-									</div>
-								</div>
-							</div>
-
-
-							<div class="form-group">
-								<div class="row">
-									<div class="col-xs-6">
-										<label for="emailaddress">Task Nature:</label>
-										<d:TextField ui:field="txtEmployer" styleName="form-control"
-											placeholder="Task Nature" value="" required="true">
-										</d:TextField>
-									</div>
-
-									<div class="col-xs-6">
-										<label for="applicationCategory">Responsibilities:</label>
-
-										<d:TextField ui:field="txtCity" styleName="form-control"
-											placeholder="Responsibility" value="" required="true">
-										</d:TextField>
-									</div>
-								</div>
-							</div>
-
-							<div class="form-group">
-								<div class="row">
-									<div class="col-xs-6">
-										<label for="emailaddress">Clients:</label>
-										<d:TextField ui:field="txtAddress" styleName="form-control"
-											placeholder="Clients" value="" required="true">
-										</d:TextField>
-									</div>
-
-									<div class="col-xs-6">
-										<label for="applicationCategory">Date passed:</label>
-
-										<d:TextField ui:field="txtPostalCode" styleName="form-control"
-											placeholder="Enter Date passed" value="" required="true">
-										</d:TextField>
-									</div>
-								</div>
-							</div>
-						</div>
-
-						<div class="col-sm-12">
-							<d:ActionLink
-								styleName="btn btn-next btn-fill btn-primary btn-wd btn-sm pull-right"
-								ui:field="aSave">
-								Save
-							</d:ActionLink>
-						</div>
-					</div>
-				</div>
 
 			</g:HTMLPanel>
-
 
 			<!-- <div class="tab-content hide"> -->
 			<!-- <div role="tabpanel" class="tab-pane active" id="beforeCPA"> -->

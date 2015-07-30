@@ -27,144 +27,148 @@ public class AggregationGrid extends Composite {
 
 	interface AggregationGridUiBinder extends UiBinder<Widget, AggregationGrid> {
 	}
-	
-	@UiField TableView tblView;
-	@UiField SpanElement spnAggregate;
-	
+
+	@UiField
+	TableView tblView;
+	@UiField
+	SpanElement spnAggregate;
+
 	Map<String, Number> summaries = new HashMap<String, Number>();
 
 	List<ColumnConfig> columnConfigs = null;
-	
+
 	public AggregationGrid() {
 		initWidget(uiBinder.createAndBindUi(this));
 		setData(new ArrayList<DataModel>());
 	}
-	
-	public AggregationGrid(List<ColumnConfig> configs){
+
+	public AggregationGrid(List<ColumnConfig> configs) {
 		this();
 		setColumnConfigs(configs);
-	}	
+	}
 
 	private void createHeaders(List<ColumnConfig> configs) {
 		this.columnConfigs = configs;
 		List<Widget> widgets = new ArrayList<Widget>();
-		
+
 		List<String> headers = new ArrayList<String>();
-		if(configs!=null)
-		for(ColumnConfig config: configs){
-			headers.add("generic-header");
-			widgets.add(config.createHeaderWidget());
-		}	
-		tblView.setHeaderWidgets(headers,widgets);
+		if (configs != null)
+			for (ColumnConfig config : configs) {
+				headers.add("generic-header");
+				widgets.add(config.createHeaderWidget());
+			}
+		tblView.setHeaderWidgets(headers, widgets);
 		createFooter();
 	}
 
-	public void setData(List<DataModel> models){
+	public void setData(List<DataModel> models) {
 		tblView.clearRows();
 		summaries.clear();
-		
-		if(models!=null)
-		for(DataModel row: models){
-			addRowData(row);
-		}
-		
-		//addRowData(new DataModel());
+
+		if (models != null)
+			for (DataModel row : models) {
+				addRowData(row);
+			}
+
 		createFooter();
 	}
-	
-	public void addRowData(DataModel data){
-		AggregationGridRow row = new AggregationGridRow(this, data, columnConfigs);	
+
+	public void addRowData(DataModel data) {
+		AggregationGridRow row = new AggregationGridRow(this, data,
+				columnConfigs);
 		tblView.addRow(row);
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void addValueChangeHandler(ColumnConfig config, Widget widget) {
-		Object value = ((HasValue)widget).getValue();
-		Number initial= 0.0;
-		if(value!=null){
-			initial = (Number)value;
+		Object value = ((HasValue) widget).getValue();
+		Number initial = 0.0;
+		if (value != null) {
+			initial = (Number) value;
 		}
-		HasValueChangeHandlers hasValueChangeHandlers = (HasValueChangeHandlers)widget;
-		hasValueChangeHandlers.addValueChangeHandler(
-				new OnAggregationFieldChangedHandler(this,config,initial){
+		HasValueChangeHandlers hasValueChangeHandlers = (HasValueChangeHandlers) widget;
+		hasValueChangeHandlers
+				.addValueChangeHandler(new OnAggregationFieldChangedHandler(
+						this, config, initial) {
 					@Override
 					public void onValueChange(ValueChangeEvent<Number> event) {
 						super.onValueChange(event);
-						//check need change
-						//createRowLast();
+
 					}
 				});
 	}
-	
-	
 
 	protected void createRowLast() {
-				
+
 		int count = tblView.getRowCount();
-		if(count==0){
+		if (count == 0) {
 			addRowData(new DataModel());
-		}else{
-			//addRowData(new DataModel());
-			Widget w = tblView.getRow(count-1);
-			DataModel lastRowData=null;
-			
-			assert w!=null;
-			
-			if(w instanceof AggregationGridRow){
-				AggregationGridRow row = (AggregationGridRow)w;
+		} else {
+			// addRowData(new DataModel());
+			Widget w = tblView.getRow(count - 1);
+			DataModel lastRowData = null;
+
+			assert w != null;
+
+			if (w instanceof AggregationGridRow) {
+				AggregationGridRow row = (AggregationGridRow) w;
 				lastRowData = row.getData();
 			}
-			//System.err.println(lastRowData);
-			if(lastRowData!=null && !lastRowData.isEmpty() && columnConfigs!=null && !columnConfigs.isEmpty()){
-				//ColumnConfig config = columnConfigs.get(columnConfigs.size()-1);
-				//Any column
+			// System.err.println(lastRowData);
+			if (lastRowData != null && !lastRowData.isEmpty()
+					&& columnConfigs != null && !columnConfigs.isEmpty()) {
+				// ColumnConfig config =
+				// columnConfigs.get(columnConfigs.size()-1);
+				// Any column
 				boolean add = true;
-				boolean hasValue=false;
-				for(ColumnConfig config: columnConfigs){
-					if(config.isMandatory() && lastRowData.get(config.getKey())==null){
-						add=false;
+				boolean hasValue = false;
+				for (ColumnConfig config : columnConfigs) {
+					if (config.isMandatory()
+							&& lastRowData.get(config.getKey()) == null) {
+						add = false;
 					}
-					
-					if(lastRowData.get(config.getKey())!=null){
-						hasValue=true;
+
+					if (lastRowData.get(config.getKey()) != null) {
+						hasValue = true;
 					}
 				}
-				
-				if(add && hasValue){
+
+				if (add && hasValue) {
 					addRowData(new DataModel());
 				}
 			}
-			
+
 		}
 	}
 
 	public void aggregate(ColumnConfig column, Number previous, Number newValue) {
 		String key = column.getKey();
 		Number sum = summaries.get(key);
-		if(sum==null){
-			sum=0.0;
-		}		
-		
-		sum = sum.doubleValue()-previous.doubleValue()+newValue.doubleValue();
+		if (sum == null) {
+			sum = 0.0;
+		}
+
+		sum = sum.doubleValue() - previous.doubleValue()
+				+ newValue.doubleValue();
 		summaries.put(key, sum);
-		createFooter();		
+		createFooter();
 	}
 
 	public void createFooter() {
 		List<Widget> widgets = new ArrayList<Widget>();
-		
-		if(columnConfigs!=null)
-		for(ColumnConfig config: columnConfigs){
-			if(config.isAggregationColumn()){
-				
-				Number value = summaries.get(config.getKey());
-				widgets.add(new SummaryRenderer(value));
-				
-			}else{
-				widgets.add(new InlineLabel());
+
+		if (columnConfigs != null)
+			for (ColumnConfig config : columnConfigs) {
+				if (config.isAggregationColumn()) {
+
+					Number value = summaries.get(config.getKey());
+					widgets.add(new SummaryRenderer(value));
+
+				} else {
+					widgets.add(new InlineLabel());
+				}
+
 			}
-			
-		}	
 		tblView.setFooter(widgets);
 	}
 
@@ -173,73 +177,74 @@ public class AggregationGrid extends Composite {
 		super.onLoad();
 		createHeaders(columnConfigs);
 	}
-	
+
 	public List<ColumnConfig> getColumnConfigs() {
 		return columnConfigs;
 	}
 
 	public void setColumnConfigs(List<ColumnConfig> columnConfigs) {
-		this.columnConfigs= columnConfigs;
+		this.columnConfigs = columnConfigs;
 	}
-	
-	public void setAutoNumber(boolean enable){
+
+	public void setAutoNumber(boolean enable) {
 		tblView.setAutoNumber(enable);
 	}
-	
-	public List<DataModel> getData(){
+
+	public List<DataModel> getData() {
 		List<DataModel> models = new ArrayList<DataModel>();
 		int rows = tblView.getRowCount();
-		if(rows>0){
-			for(int row=0; row<rows; row++){
+		if (rows > 0) {
+			for (int row = 0; row < rows; row++) {
 				Widget rowWidget = tblView.getRow(row);
-				if(rowWidget instanceof AggregationGridRow){
-					AggregationGridRow r = (AggregationGridRow)rowWidget;
-					models.add(r.getData());	
+				if (rowWidget instanceof AggregationGridRow) {
+					AggregationGridRow r = (AggregationGridRow) rowWidget;
+					models.add(r.getData());
 				}
 			}
 		}
-		
+
 		return models;
 	}
-	
-	public <T> List<T> getData(DataMapper mapper){
-		List<T> vals = new ArrayList<T>();		
-		
+
+	public <T> List<T> getData(DataMapper mapper) {
+		List<T> vals = new ArrayList<T>();
+
 		int rows = tblView.getRowCount();
-		if(rows>0){
-			for(int row=0; row<rows; row++){
+		if (rows > 0) {
+			for (int row = 0; row < rows; row++) {
 				Widget rowWidget = tblView.getRow(row);
-				if(rowWidget instanceof AggregationGridRow){
-					AggregationGridRow r = (AggregationGridRow)rowWidget;
-					T value = mapper.getData(r.getData()); 
-					
-					if(value!=null)
-						vals.add(value);	
+				if (rowWidget instanceof AggregationGridRow) {
+					AggregationGridRow r = (AggregationGridRow) rowWidget;
+					T value = mapper.getData(r.getData());
+
+					if (value != null)
+						vals.add(value);
 				}
 			}
 		}
-				
+
 		return vals;
 	}
-	
-	class SummaryRenderer extends HTMLPanel{
+
+	class SummaryRenderer extends HTMLPanel {
 
 		InlineLabel label = new InlineLabel();
+
 		public SummaryRenderer(Object value) {
 			super("");
 			this.add(label);
-			
+
 			String text = "";
-			if(value instanceof Number){
+			if (value instanceof Number) {
 				text = NumberUtils.CURRENCYFORMAT.format((Number) value);
-			}else if(value!=null){
+			} else if (value != null) {
 				text = value.toString();
 			}
-			
+
 			label.setText(text);
 			this.getElement().getStyle().setTextAlign(TextAlign.RIGHT);
 		}
-				
+
 	}
 
 	public void refresh() {
@@ -247,20 +252,20 @@ public class AggregationGrid extends Composite {
 		tblView.clearRows();
 		setData(new ArrayList<DataModel>());
 	}
-	
-	public List<String> getErrors(){
+
+	public List<String> getErrors() {
 		int rowCount = tblView.getRowCount();
-		for(int i=0; i<rowCount; i++){
+		for (int i = 0; i < rowCount; i++) {
 			Widget rowWidget = tblView.getRow(i);
-			AggregationGridRow gridRow = (AggregationGridRow)rowWidget;
-			
-			List<String> err = gridRow.getErrors(); 
-			if(err!=null){
+			AggregationGridRow gridRow = (AggregationGridRow) rowWidget;
+
+			List<String> err = gridRow.getErrors();
+			if (err != null) {
 				return err;
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 }

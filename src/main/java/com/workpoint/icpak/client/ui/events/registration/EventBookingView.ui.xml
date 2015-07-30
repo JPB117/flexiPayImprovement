@@ -28,7 +28,7 @@
 						<g:HTMLPanel>
 							<!-- Wizard container -->
 							<div class="wizard-container" ui:field="divContainer">
-								<div class="card wizard-card ct-wizard-green">
+								<div class="card wizard-card ct-wizard-gold">
 									<div class="wizard-header">
 										<h3>
 											Event Registration Centre
@@ -38,16 +38,28 @@
 
 									<ul class="nav nav-pills" ui:field="divHeaderTopics">
 										<li class="active" style="width: 25%;" ui:field="liTab1">
-											<a>1 - Event Details</a>
+											<a>
+												<span class="fa fa-check-circle hide"></span>
+												1 - Event Details
+											</a>
 										</li>
 										<li style="width: 25%;" ui:field="liTab2">
-											<a>2 - Delegates Attending</a>
+											<a>
+												<span class="fa fa-check-circle hide"></span>
+												2 - Delegates Attending
+											</a>
 										</li>
 										<li style="width: 25%;" ui:field="liTab3">
-											<a>3 - Proforma Invoice</a>
+											<a>
+												<span class="fa fa-check-circle hide"></span>
+												3 - Proforma Invoice
+											</a>
 										</li>
 										<li style="width:25%;" ui:field="liTab4">
-											<a>4 - Make Payment</a>
+											<a>
+												<span class="fa fa-check-circle hide"></span>
+												4 - Make Payment
+											</a>
 										</li>
 									</ul>
 
@@ -58,19 +70,15 @@
 
 												<div class="col-sm-12">
 													<h4 class="info-text">
-														<span ui:field="spnEventTitle">P.A.C Event</span>
+														<span ui:field="spnEventName">P.A.C Event</span>
 													</h4>
 													<hr />
 												</div>
 
 												<div class="col-sm-12">
-													<strong>
-														<span ui:field="spnEventName"></span>
-													</strong>
 													<a data-toggle="collapse" data-target="#eventInfo"
 														aria-expanded="false" aria-controls="#eventInfo">
-														(show/hide event
-														information)
+														show event information
 													</a>
 
 													<div class="collapse" id="eventInfo">
@@ -217,30 +225,6 @@
 												<br />
 
 												<div class="col-sm-12">
-													<!-- d:AutoCompleteField ui:field="autoMembers"></d:AutoCompleteField-->
-													<!-- div class="dropdown">
-														<d:TextField ui:field="txtAutoComplete"
-															styleName="dropdown-toggle form-control" dataToggle="dropdown"
-															ariaHaspopup="true" ariaExpanded="false"></d:TextField>
-														<ul class="dropdown-menu" aria-labelledby="drop2">
-															<li>
-																<a href="#">11245 - Tom Kimani Muriranja</a>
-															</li>
-															<li>
-																<a href="#">1314321 - Wilson K Njoroge</a>
-															</li>
-															<li>
-																<a href="#">321432 - Paul Wakimani Ogutu</a>
-															</li>
-															<li>
-																<a href="#">452354 - William Njoroge</a>
-															</li>
-														</ul>
-													</div-->
-												</div>
-
-
-												<div class="col-sm-12">
 													<grid:AggregationGrid ui:field="tblDelegates"></grid:AggregationGrid>
 												</div>
 
@@ -309,7 +293,7 @@
 										<div class="wizard-footer">
 											<div class="pull-right">
 												<g:Anchor
-													styleName='btn btn-next btn-fill btn-success btn-wd
+													styleName='btn btn-next btn-fill btn-gold btn-wd
 										btn-sm hide'
 													ui:field="aNext">Proceed
 												</g:Anchor>

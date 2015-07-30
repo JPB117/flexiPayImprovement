@@ -15,7 +15,6 @@ import com.workpoint.icpak.client.ui.component.DropDownList;
 import com.workpoint.icpak.client.ui.component.IntegerField;
 import com.workpoint.icpak.client.ui.component.TextArea;
 import com.workpoint.icpak.client.ui.component.TextField;
-import com.workpoint.icpak.client.ui.component.autocomplete.DataOracle;
 import com.workpoint.icpak.client.ui.component.autocomplete.SimpleOracle;
 import com.workpoint.icpak.shared.model.BooleanValue;
 import com.workpoint.icpak.shared.model.DataType;
@@ -76,7 +75,6 @@ public class ColumnConfig {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Widget createWidget(Object value) {
-
 		HasValue widget = null;
 		if (type == DataType.INTEGER) {
 			IntegerField field = new IntegerField();
@@ -94,6 +92,10 @@ public class ColumnConfig {
 			widget = dropDown;
 		} else if (type == DataType.SELECTAUTOCOMPLETE) {
 			AutoCompleteField auto = new AutoCompleteField(oracle);
+
+			// ((Widget) widget).getElement().getFirstChildElement()
+			// .addClassName(styleName);
+
 			// auto.setValues(dropDownItems);
 			widget = auto;
 		} else if (type == DataType.STRINGLONG) {
@@ -112,7 +114,7 @@ public class ColumnConfig {
 			((Widget) widget).addStyleName(styleName);
 		}
 
-		for (ValueChangeHandler handler : valueChangeHandlers){
+		for (ValueChangeHandler handler : valueChangeHandlers) {
 			widget.addValueChangeHandler(handler);
 		}
 
@@ -180,8 +182,14 @@ public class ColumnConfig {
 		this.dropDownItems.addAll(items);
 	}
 
-	public Widget createHeaderWidget() {
-		return new InlineLabel(displayName);
+	public Widget createHeaderWidget(String styleName) {
+		InlineLabel label = new InlineLabel(displayName);
+		if (styleName.isEmpty()) {
+			label.addStyleName("center");
+		} else {
+			label.removeStyleName("left");
+		}
+		return label;
 	}
 
 	public boolean isAggregationColumn() {
@@ -230,6 +238,10 @@ public class ColumnConfig {
 
 	public void setOracle(SimpleOracle oracle) {
 		this.oracle = oracle;
+	}
+
+	public Widget createHeaderWidget() {
+		return createHeaderWidget("");
 	}
 
 }

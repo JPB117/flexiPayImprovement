@@ -129,6 +129,7 @@ public class MemberRegistrationView extends ViewImpl implements
 	@UiField
 	ProformaInvoice proformaInv;
 
+	// List of Items
 	private List<LIElement> liElements = new ArrayList<LIElement>();
 	private List<PageElement> pageElements = new ArrayList<PageElement>();
 	private String selectedName;
@@ -195,10 +196,12 @@ public class MemberRegistrationView extends ViewImpl implements
 		aOverseas.addClickHandler(selectHandler);
 		aAssociate.addClickHandler(selectHandler);
 
-		pageElements.add(new PageElement(divPackage, "Proceed"));
-		pageElements.add(new PageElement(divCategories, "Submit", "Back"));
-		pageElements.add(new PageElement(divProforma, "Proceed to Pay"));
-		pageElements.add(new PageElement(divPayment, "Finish", "Back"));
+		pageElements.add(new PageElement(divPackage, "Proceed", liTab1));
+		pageElements.add(new PageElement(divCategories, "Submit", "Back",
+				liTab2));
+		pageElements
+				.add(new PageElement(divProforma, "Proceed to Pay", liTab3));
+		pageElements.add(new PageElement(divPayment, "Finish", "Back", liTab4));
 
 		setActive(liElements.get(counter), pageElements.get(counter));
 
@@ -265,10 +268,14 @@ public class MemberRegistrationView extends ViewImpl implements
 	}
 
 	private void clearAll() {
-		liTab1.removeClassName("active");
-		liTab2.removeClassName("active");
-		liTab3.removeClassName("active");
-		liTab4.removeClassName("active");
+		for (PageElement pageElement : pageElements) {
+			if (pageElement.isComplete()) {
+				pageElement.getLiElement().getFirstChildElement()
+						.getFirstChildElement().removeClassName("hide");
+			} else {
+				pageElement.getLiElement().removeClassName("active");
+			}
+		}
 
 		divPackage.removeClassName("active");
 		divPayment.removeClassName("active");
@@ -365,6 +372,7 @@ public class MemberRegistrationView extends ViewImpl implements
 
 	@Override
 	public void next() {
+		pageElements.get(counter).setCompletion(true);
 		counter = counter + 1;
 		showMyAccountLink(counter);
 		setActive(liElements.get(counter), pageElements.get(counter));

@@ -35,6 +35,7 @@ import com.workpoint.icpak.client.ui.profile.training.TrainingDetails;
 import com.workpoint.icpak.client.ui.upload.custom.Uploader;
 import com.workpoint.icpak.shared.model.ApplicationFormEducationalDto;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
+import com.workpoint.icpak.shared.model.ApplicationFormTrainingDto;
 
 public class ProfileView extends ViewImpl implements
 		ProfilePresenter.IProfileView {
@@ -113,6 +114,7 @@ public class ProfileView extends ViewImpl implements
 
 		// Uploader
 		showChangePassword(false);
+
 		setEditMode(false);
 
 		divTabs.setHeaders(Arrays.asList(new TabHeader("Basic Information",
@@ -175,10 +177,10 @@ public class ProfileView extends ViewImpl implements
 
 	public void setEditMode(boolean editMode) {
 
-		basicDetail.setEditMode(editMode);
-		educationDetail.setEditMode(editMode);
-		specializationDetail.setEditMode(editMode);
-		trainingDetail.setEditMode(editMode);
+		// basicDetail.setEditMode(editMode);
+		// educationDetail.setEditMode(editMode);
+		// specializationDetail.setEditMode(editMode);
+		// trainingDetail.setEditMode(editMode);
 
 		if (editMode) {
 			PanelProfileDisplay.setVisible(false);
@@ -265,11 +267,15 @@ public class ProfileView extends ViewImpl implements
 	public void bindEducationDetails(List<ApplicationFormEducationalDto> result) {
 		educationDetail.bindDetails(result);
 	}
+	
+	@Override
+	public void bindTrainingDetails(List<ApplicationFormTrainingDto> result) {
+		trainingDetail.bindDetails(result);
+	}
 
 	public HasClickHandlers getEducationDetailSaveButton() {
 		return educationDetail.getSaveButton();
 	}
-
 
 	@Override
 	public HasClickHandlers getProfileEditButton() {
@@ -279,5 +285,15 @@ public class ProfileView extends ViewImpl implements
 	@Override
 	public HasClickHandlers getEducationAddButton() {
 		return educationDetail.getAddButton();
+	}
+
+	@Override
+	public HasClickHandlers getTrainingAddButton() {
+		return trainingDetail.getAddButton();
+	}
+
+	@Override
+	public HasClickHandlers getSpecializationAddButton() {
+		return specializationDetail.getAddButton();
 	}
 }

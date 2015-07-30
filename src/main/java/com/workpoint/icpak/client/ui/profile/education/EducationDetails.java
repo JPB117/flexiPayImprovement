@@ -54,23 +54,6 @@ public class EducationDetails extends Composite {
 		createTableHeader();
 
 		createRows();
-
-		// setEditMode(false);
-		//
-		// aAdd.addClickHandler(new ClickHandler() {
-		// @Override
-		// public void onClick(ClickEvent event) {
-		// showForm(true);
-		// }
-		// });
-
-		// aSave.addClickHandler(new ClickHandler() {
-		// @Override
-		// public void onClick(ClickEvent event) {
-		// showForm(false);
-		// }
-		// });
-
 	}
 
 	private void createTableHeader() {

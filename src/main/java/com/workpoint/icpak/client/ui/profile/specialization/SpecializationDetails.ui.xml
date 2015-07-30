@@ -6,7 +6,7 @@
 			<d:ActionLink styleName="btn btn-next btn-fill btn-primary btn-wd btn-sm"
 				ui:field="aAdd">
 				<i class="fa fa-plus"></i>
-				Add Record
+				Add Specialization
 			</d:ActionLink>
 		</div>
 		<br />

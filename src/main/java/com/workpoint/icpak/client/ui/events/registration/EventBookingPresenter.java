@@ -141,11 +141,8 @@ public class EventBookingPresenter extends
 
 			@Override
 			public void onClick(ClickEvent event) {
-
 				if (getView().isValid()) {
-
 					if (getView().getCounter() == 1) {
-
 						// User has selected a category and clicked submit
 						BookingDto dto = getView().getBooking();
 						dto.setEventRefId(eventId);

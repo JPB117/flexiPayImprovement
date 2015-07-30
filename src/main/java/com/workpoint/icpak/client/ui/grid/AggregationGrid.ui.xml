@@ -3,7 +3,7 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui"
 	xmlns:d='urn:import:com.workpoint.icpak.client.ui.component'>
 	<g:HTMLPanel>
-		<d:TableView ui:field="tblView" striped="true" isGrid="true" 
+		<d:TableView ui:field="tblView" striped="false" isGrid="true" 
 		bordered="false"></d:TableView>
 		<span ui:field="spnAggregate"></span>
 	</g:HTMLPanel>

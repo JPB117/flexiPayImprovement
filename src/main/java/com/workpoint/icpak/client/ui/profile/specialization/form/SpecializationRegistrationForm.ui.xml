@@ -1,0 +1,129 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d='urn:import:com.workpoint.icpak.client.ui.component'>
+	<g:HTMLPanel styleName="col-md-12">
+
+		<div class="row">
+			<div class="col-sm-12">
+				<d:IssuesPanel ui:field="issues"></d:IssuesPanel>
+
+				<h4 class="info-text">Check your specialization below</h4>
+				<hr />
+
+				<div class="row">
+					<div class="col-sm-3">
+						<h5>Practice</h5>
+						<div class="checkbox">
+							<label>
+								<g:CheckBox> Auditing</g:CheckBox>
+							</label>
+						</div>
+
+						<div class="checkbox">
+							<label>
+								<g:CheckBox> Taxation</g:CheckBox>
+							</label>
+						</div>
+
+						<div class="checkbox">
+							<label>
+								<g:CheckBox> Financial Consulting</g:CheckBox>
+							</label>
+						</div>
+
+						<div class="checkbox">
+							<label>
+								<g:CheckBox> HR Consultancy</g:CheckBox>
+							</label>
+						</div>
+					</div>
+
+					<div class="col-sm-3">
+						<h5>Commerce and Industry</h5>
+						<div class="checkbox">
+							<label>
+								<g:CheckBox> Banking</g:CheckBox>
+							</label>
+						</div>
+
+						<div class="checkbox">
+							<label>
+								<g:CheckBox> Finance</g:CheckBox>
+							</label>
+						</div>
+
+						<div class="checkbox">
+							<label>
+								<g:CheckBox> Insurance</g:CheckBox>
+							</label>
+						</div>
+
+						<div class="checkbox">
+							<label>
+								<g:CheckBox> Manufacturing</g:CheckBox>
+							</label>
+						</div>
+
+						<div class="checkbox">
+							<label>
+								<g:CheckBox> Hotel</g:CheckBox>
+							</label>
+						</div>
+
+						<div class="checkbox">
+							<label>
+								<g:CheckBox> Other service industry</g:CheckBox>
+							</label>
+						</div>
+					</div>
+
+					<div class="col-sm-3">
+						<h5>Public Sector</h5>
+						<div class="checkbox">
+							<label>
+								<g:CheckBox> Central Government</g:CheckBox>
+							</label>
+						</div>
+
+						<div class="checkbox">
+							<label>
+								<g:CheckBox> Local Government</g:CheckBox>
+							</label>
+						</div>
+
+						<div class="checkbox">
+							<label>
+								<g:CheckBox> State Corporation</g:CheckBox>
+							</label>
+						</div>
+
+						<div class="checkbox">
+							<label>
+								<g:CheckBox> Co-operative</g:CheckBox>
+							</label>
+						</div>
+					</div>
+
+					<div class="col-sm-3">
+						<h5>Training</h5>
+						<div class="checkbox">
+							<label>
+								<g:CheckBox> Education or Academia</g:CheckBox>
+							</label>
+						</div>
+
+						<div class="checkbox">
+							<label>
+								<g:CheckBox> NGOs</g:CheckBox>
+							</label>
+						</div>
+					</div>
+
+				</div>
+
+			</div>
+
+		</div>
+	</g:HTMLPanel>
+
+</ui:UiBinder> 

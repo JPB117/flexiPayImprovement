@@ -14,8 +14,7 @@
 				<div class="container">
 					<div class="navbar-header" style="width: 100%; text-align: center;">
 						<a class="brand">
-							<img src="img/icpak_logo.png"
-								width="150px" />
+							<img src="img/icpak_logo.png" width="150px" />
 						</a>
 					</div>
 				</div>
@@ -28,8 +27,8 @@
 				<div class="row">
 					<div class="col-sm-11 col-md-offset-1">
 						<!-- Wizard container -->
-						<div class="wizard-container" ui:field="divContainer" >
-							<div class="card wizard-card ct-wizard-green">
+						<div class="wizard-container" ui:field="divContainer">
+							<div class="card wizard-card ct-wizard-gold">
 								<div class="wizard-header">
 									<h3>
 										Member Registration Center
@@ -39,16 +38,24 @@
 
 								<ul class="nav nav-pills">
 									<li class="active" style="width: 25%;" ui:field="liTab1">
-										<a>1 - Personal Information</a>
+										<a>
+										<span class="fa fa-check-circle hide"></span>
+										1 - Personal Information</a>
 									</li>
 									<li style="width: 25%;" ui:field="liTab2">
-										<a>2 - Membership Category</a>
+										<a>
+										<span class="fa fa-check-circle hide"></span>
+										2 - Membership Category</a>
 									</li>
 									<li style="width: 25%;" ui:field="liTab3">
-										<a>3 - Proforma Invoice</a>
+										<a>
+										<span class="fa fa-check-circle hide"></span>
+										3 - Proforma Invoice</a>
 									</li>
 									<li style="width:25%;" ui:field="liTab4">
-										<a>4 - Make Payment</a>
+										<a>
+										<span class="fa fa-check-circle hide"></span>
+										4 - Make Payment</a>
 									</li>
 								</ul>
 
@@ -294,7 +301,8 @@
 												</div>
 
 												<div class="row">
-													<div class="alert alert-success">Below is your proforma Invoice. The same invoice has also been submitted to your email address.</div>
+													<div class="alert alert-success">Below is your proforma Invoice. The same
+														invoice has also been submitted to your email address.</div>
 													<proforma:ProformaInvoice
 														ui:field="proformaInv"></proforma:ProformaInvoice>
 												</div>
@@ -316,7 +324,7 @@
 									<div class="wizard-footer">
 										<div class="pull-right">
 											<d:ActionLink
-												styleName='btn btn-next btn-fill btn-success btn-wd
+												styleName='btn btn-next btn-fill btn-gold btn-wd
 										btn-sm hide'
 												ui:field="aNext">
 												Proceed

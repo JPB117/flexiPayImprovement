@@ -250,6 +250,7 @@ implements ErrorHandler{
 	@Override
 	public void prepareFromRequest(PlaceRequest request) {
 		super.prepareFromRequest(request);
+		
 		categoriesDelegate.withCallback(
 				new AbstractAsyncCallback<List<ApplicationCategoryDto>>() {
 					@Override

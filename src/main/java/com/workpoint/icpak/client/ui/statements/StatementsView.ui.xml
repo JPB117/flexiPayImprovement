@@ -11,7 +11,7 @@
 		<g:HTMLPanel styleName="content-wrapper ng-scope ng-fadeInUp"
 			ui:field="divMainContainer">
 			<h3 class="ng-scope">
-				My Statement
+				Payment Summary
 			</h3>
 
 			<g:HTMLPanel styleName="content-top" ui:field="divContentTop">

@@ -2,16 +2,20 @@ package com.workpoint.icpak.client.ui.membership.form;
 
 import static com.workpoint.icpak.client.ui.util.StringUtils.isNullOrEmpty;
 
+import java.util.Arrays;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
+import com.workpoint.icpak.client.ui.component.DropDownList;
 import com.workpoint.icpak.client.ui.component.IssuesPanel;
 import com.workpoint.icpak.client.ui.component.TextField;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 import com.workpoint.icpak.shared.model.ApplicationType;
+import com.workpoint.icpak.shared.model.Listable;
 
 public class MemberRegistrationForm extends Composite {
 
@@ -34,6 +38,9 @@ public class MemberRegistrationForm extends Composite {
 	@UiField
 	TextField txtPostalCode;
 
+	@UiField
+	DropDownList<Gender> lstGender;
+
 	private boolean isEmailValid = true;
 
 	private static MemberRegistrationFormUiBinder uiBinder = GWT
@@ -47,6 +54,8 @@ public class MemberRegistrationForm extends Composite {
 
 	public MemberRegistrationForm() {
 		initWidget(uiBinder.createAndBindUi(this));
+
+		lstGender.setItems(Arrays.asList(Gender.values()));
 	}
 
 	public boolean isValid() {
@@ -152,6 +161,28 @@ public class MemberRegistrationForm extends Composite {
 		txtAddress.setValue(application.getAddress1());
 		txtPostalCode.setValue(application.getPostCode());
 		type = application.getApplicationType();
+	}
+
+	public enum Gender implements Listable {
+		MALE("Male"), FEMALE("Female");
+
+		private String gender;
+
+		Gender(String name) {
+			gender = name;
+
+		}
+
+		@Override
+		public String getName() {
+			return gender;
+		}
+
+		@Override
+		public String getDisplayName() {
+			return gender;
+		}
+
 	}
 
 }

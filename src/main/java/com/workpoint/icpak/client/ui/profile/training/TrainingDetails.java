@@ -6,14 +6,20 @@ import java.util.List;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Widget;
 import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.TableHeader;
 import com.workpoint.icpak.client.ui.component.TableView;
+import com.workpoint.icpak.client.ui.events.EditModelEvent;
+import com.workpoint.icpak.client.ui.util.DateUtils;
+import com.workpoint.icpak.client.util.AppContext;
+import com.workpoint.icpak.shared.model.ApplicationFormTrainingDto;
 
 public class TrainingDetails extends Composite {
 
@@ -21,19 +27,17 @@ public class TrainingDetails extends Composite {
 			.create(TrainingDetailsUiBinder.class);
 
 	@UiField
-	TableView tblBeforeCPA;
+	TableView tblTrainingDetails;
 
 	@UiField
 	HTMLPanel panelForm;
 
 	@UiField
 	HTMLPanel panelTable;
-
+	
 	@UiField
 	ActionLink aAdd;
-
-	@UiField
-	ActionLink aSave;
+	
 
 	List<TableHeader> tblBeforeHeaders = new ArrayList<TableHeader>();
 
@@ -44,40 +48,10 @@ public class TrainingDetails extends Composite {
 
 	public TrainingDetails() {
 		initWidget(uiBinder.createAndBindUi(this));
-
 		createBeforeHeader();
-
-		createRows();
-
-		aAdd.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				showForm(true);
-			}
-		});
-
-		aSave.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				showForm(false);
-			}
-		});
-	}
-
-	protected void showForm(boolean show) {
-		if (show) {
-			aAdd.setVisible(false);
-			panelForm.removeStyleName("hide");
-			panelTable.addStyleName("hide");
-		} else {
-			aAdd.setVisible(true);
-			panelTable.removeStyleName("hide");
-			panelForm.addStyleName("hide");
-		}
 	}
 
 	private void createBeforeHeader() {
-
 		tblBeforeHeaders.add(new TableHeader("Organization"));
 		tblBeforeHeaders.add(new TableHeader("Start Date"));
 		tblBeforeHeaders.add(new TableHeader("End Date"));
@@ -89,21 +63,68 @@ public class TrainingDetails extends Composite {
 		tblBeforeHeaders.add(new TableHeader("Type"));
 		tblBeforeHeaders.add(new TableHeader("Action"));
 
-		tblBeforeCPA.setTableHeaders(tblBeforeHeaders);
+		tblTrainingDetails.setTableHeaders(tblBeforeHeaders);
 	}
 
 	private void createRows() {
 		for (int i = 0; i < 10; i++) {
 			TrainingTableRow row = new TrainingTableRow();
-			tblBeforeCPA.addRow(row);
+			tblTrainingDetails.addRow(row);
 		}
 	}
 
 	public void setEditMode(boolean editMode) {
 		if (editMode) {
-			aAdd.setVisible(true);
+			// aAdd.setVisible(true);
 		} else {
-			aAdd.setVisible(false);
+			// aAdd.setVisible(false);
+		}
+	}
+
+	public HasClickHandlers getAddButton() {
+		return aAdd;
+	}
+
+	public void bindDetails(List<ApplicationFormTrainingDto> result) {
+		tblTrainingDetails.clearRows();
+		for (ApplicationFormTrainingDto training : result) {
+
+			final ActionLink edit = new ActionLink(training);
+			edit.setStyleName("fa fa-pencil btn btn-primary");
+			edit.addClickHandler(new ClickHandler() {
+
+				@Override
+				public void onClick(ClickEvent event) {
+					AppContext.fireEvent(new EditModelEvent(edit.getModel()));
+				}
+			});
+
+			final ActionLink delete = new ActionLink(training);
+			delete.setStyleName("fa fa-trash-o btn btn-danger");
+			delete.addClickHandler(new ClickHandler() {
+
+				@Override
+				public void onClick(ClickEvent event) {
+					AppContext.fireEvent(new EditModelEvent(edit.getModel(),
+							true));
+				}
+			});
+
+			HTMLPanel panel = new HTMLPanel("");
+			panel.add(edit);
+			panel.add(delete);
+			tblTrainingDetails.addRow(
+					new InlineLabel(training.getOrganisationName()),
+					new InlineLabel(DateUtils.DATEFORMAT.format(training
+							.getFromDate())),
+					new InlineLabel(DateUtils.DATEFORMAT.format(training
+							.getToDate())),
+					new InlineLabel(training.getPosition()),
+					new InlineLabel(training.getTaskNature()),
+					new InlineLabel(training.getResponsibility()),
+					new InlineLabel(training.getClients()),
+					new InlineLabel(DateUtils.DATEFORMAT.format(training
+							.getDatePassed())), panel);
 		}
 	}
 }

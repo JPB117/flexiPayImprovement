@@ -6,6 +6,7 @@ import java.util.List;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
@@ -45,21 +46,8 @@ public class SpecializationDetails extends Composite {
 	public SpecializationDetails() {
 		initWidget(uiBinder.createAndBindUi(this));
 		createHeader();
-		createRows();
+		// createRows();
 
-		aAdd.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				showForm(true);
-			}
-		});
-
-		aSave.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				showForm(false);
-			}
-		});
 	}
 
 	private void createHeader() {
@@ -91,11 +79,15 @@ public class SpecializationDetails extends Composite {
 	}
 
 	public void setEditMode(boolean editMode) {
-		if(editMode){
+		if (editMode) {
 			aAdd.setVisible(true);
-		}else{
+		} else {
 			aAdd.setVisible(false);
 		}
+	}
+
+	public HasClickHandlers getAddButton() {
+		return aAdd;
 	}
 
 }

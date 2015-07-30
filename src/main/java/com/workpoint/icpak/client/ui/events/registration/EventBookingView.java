@@ -145,8 +145,6 @@ public class EventBookingView extends ViewImpl implements
 	ActionLink aAddNonMember;
 
 	@UiField
-	SpanElement spnEventTitle;
-	@UiField
 	ProformaInvoice proformaInv;
 	@UiField
 	DivElement divContainer;
@@ -164,14 +162,12 @@ public class EventBookingView extends ViewImpl implements
 			}
 			return models;
 		}
-		
+
 		@Override
 		public DataModel getModel(Object obj) {
 			DelegateDto dto = (DelegateDto) obj;
-
 			DataModel model = new DataModel();
 			model.set("memberNo", dto.getMember());
-			
 			model.set("title", dto.getTitle());
 			model.set("surname", dto.getSurname());
 			model.set("otherNames", dto.getOtherNames());
@@ -189,7 +185,7 @@ public class EventBookingView extends ViewImpl implements
 			}
 
 			dto.setMember(model.get("memberNo") == null ? null
-					: ((MemberDto)model.get("memberNo")));
+					: ((MemberDto) model.get("memberNo")));
 			dto.setTitle(model.get("title") == null ? null : model.get("title")
 					.toString());
 			dto.setSurname(model.get("surname") == null ? null : model.get(
@@ -206,13 +202,12 @@ public class EventBookingView extends ViewImpl implements
 	};
 
 	int counter = 0;
-	//int counter = 1;
 
 	public interface Binder extends UiBinder<Widget, EventBookingView> {
 	}
 
 	ColumnConfig memberColumn = new ColumnConfig("memberNo", "Member No",
-			DataType.SELECTAUTOCOMPLETE, "", "input-small");
+			DataType.SELECTAUTOCOMPLETE, "", "form-control");
 	ColumnConfig accommodationConfig = new ColumnConfig("accommodation",
 			"Accommodation", DataType.SELECTBASIC);
 
@@ -222,41 +217,45 @@ public class EventBookingView extends ViewImpl implements
 
 		tblDelegates.setAutoNumber(false);
 		List<ColumnConfig> configs = new ArrayList<ColumnConfig>();
-		
+
 		configs.add(memberColumn);
-		ColumnConfig config = new ColumnConfig("title", "Title", DataType.STRING);
+		ColumnConfig config = new ColumnConfig("title", "Title",
+				DataType.STRING, "", "form-control");
 		configs.add(config);
-		config = new ColumnConfig("surname", "Surname", DataType.STRING);
-		configs.add(config);
-		config = new ColumnConfig("otherNames", "Other Names", DataType.STRING);
-		configs.add(config);
-		config = new ColumnConfig("email", "e-Mail", DataType.STRING, "",
+		config = new ColumnConfig("surname", "Surname", DataType.STRING, "",
 				"form-control");
 		configs.add(config);
+		config = new ColumnConfig("otherNames", "Other Names", DataType.STRING,
+				"", "form-control");
+		configs.add(config);
+		config = new ColumnConfig("email", "Email Address", DataType.STRING,
+				"", "form-control");
+		configs.add(config);
+
 		configs.add(accommodationConfig);
 
 		tblDelegates.setColumnConfigs(configs);
 		memberColumn.addValueChangeHandler(new ValueChangeHandler<Listable>() {
 			@Override
 			public void onValueChange(ValueChangeEvent<Listable> event) {
-				Widget source = (Widget)event.getSource();
-				AutoCompleteField<MemberDto> field = (AutoCompleteField)source;
+				Widget source = (Widget) event.getSource();
+				AutoCompleteField<MemberDto> field = (AutoCompleteField) source;
 				AggregationGridRow row = field.getParentRow();
-				
-				if(event.getValue()!=null){
-					MemberDto dto = (MemberDto)event.getValue();
+
+				if (event.getValue() != null) {
+					MemberDto dto = (MemberDto) event.getValue();
 					DelegateDto delegate = mapper.getData(row.getData());
-					
+
 					delegate.setMember(dto);
 					delegate.setSurname(dto.getLastName());
 					delegate.setOtherNames(dto.getFirstName());
 					delegate.setEmail(dto.getEmail());
 					delegate.setTitle(dto.getTitle());
-					
+
 					DataModel model = mapper.getModel(delegate);
-					row.setModel(model,true);
+					row.setModel(model, true);
 				}
-				
+
 			}
 		});
 
@@ -274,10 +273,12 @@ public class EventBookingView extends ViewImpl implements
 		liElements.add(liTab4);
 
 		// Div Elements
-		pageElements.add(new PageElement(divPackage, "Proceed"));
-		pageElements.add(new PageElement(divCategories, "Submit", "Back"));
-		pageElements.add(new PageElement(divProforma, "Proceed to Pay"));
-		pageElements.add(new PageElement(divPayment, "Finish", "Back"));
+		pageElements.add(new PageElement(divPackage, "Proceed", liTab1));
+		pageElements.add(new PageElement(divCategories, "Submit", "Back",
+				liTab2));
+		pageElements
+				.add(new PageElement(divProforma, "Proceed to Pay", liTab3));
+		pageElements.add(new PageElement(divPayment, "Finish", "Back", liTab4));
 
 		setActive(liElements.get(counter), pageElements.get(counter));
 
@@ -333,14 +334,17 @@ public class EventBookingView extends ViewImpl implements
 		setButtons(page);
 		liElement.addClassName("active");
 		page.getElement().addClassName("active");
-		// System.err.println("Added:" + counter);
 	}
 
 	private void clearAll() {
-		liTab1.removeClassName("active");
-		liTab2.removeClassName("active");
-		liTab3.removeClassName("active");
-		liTab4.removeClassName("active");
+		for (PageElement pageElement : pageElements) {
+			if (pageElement.isComplete()) {
+				pageElement.getLiElement().getFirstChildElement()
+						.getFirstChildElement().removeClassName("hide");
+			} else {
+				pageElement.getLiElement().removeClassName("active");
+			}
+		}
 
 		divPackage.removeClassName("active");
 		divPayment.removeClassName("active");
@@ -352,6 +356,8 @@ public class EventBookingView extends ViewImpl implements
 		boolean isValid = true;
 		issuesPanel.clear();
 		issuesPanelDelegate.clear();
+
+		// Window.alert("Counter:"+counter);
 
 		if (counter == 0) {
 			if (isNullOrEmpty(txtCompanyName.getValue())) {
@@ -395,6 +401,8 @@ public class EventBookingView extends ViewImpl implements
 			}
 		} else if (counter == 1) {
 			if (getDelegates().size() == 0) {
+				issuesPanel
+						.addError("You must enter at least 1 delegate for this event");
 				isValid = false;
 			}
 		}
@@ -436,6 +444,7 @@ public class EventBookingView extends ViewImpl implements
 
 	@Override
 	public void next() {
+		pageElements.get(counter).setCompletion(true);
 		counter = counter + 1;
 		showMyAccountLink(counter);
 		setActive(liElements.get(counter), pageElements.get(counter));
