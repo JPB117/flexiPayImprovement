@@ -14,7 +14,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.TableHeader;
 import com.workpoint.icpak.client.ui.component.TableView;
-import com.workpoint.icpak.client.ui.profile.education.EducationTableRow;
+import com.workpoint.icpak.client.ui.profile.education.row.EducationTableRow;
 
 public class SpecializationDetails extends Composite {
 

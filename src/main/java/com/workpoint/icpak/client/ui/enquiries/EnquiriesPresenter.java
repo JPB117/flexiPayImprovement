@@ -1,13 +1,5 @@
 package com.workpoint.icpak.client.ui.enquiries;
 
-//import com.workpoint.icpak.shared.requests.CheckPasswordRequest;
-//import com.workpoint.icpak.shared.requests.GetUserRequest;
-//import com.workpoint.icpak.shared.requests.SaveUserRequest;
-//import com.workpoint.icpak.shared.requests.UpdatePasswordRequest;
-//import com.workpoint.icpak.shared.responses.CheckPasswordRequestResult;
-//import com.workpoint.icpak.shared.responses.GetUserRequestResult;
-//import com.workpoint.icpak.shared.responses.SaveUserResponse;
-//import com.workpoint.icpak.shared.responses.UpdatePasswordResponse;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -49,8 +41,8 @@ public class EnquiriesPresenter
 
 	@TabInfo(container = HomePresenter.class)
 	static TabData getTabLabel(LoginGateKeeper adminGatekeeper) {
-		TabDataExt data = new TabDataExt("Make an Enquiry", "fa fa-bullhorn",
-				8, adminGatekeeper, true);
+		TabDataExt data = new TabDataExt("Enquiries", "fa fa-bullhorn", 8,
+				adminGatekeeper, true);
 		return data;
 	}
 
@@ -89,6 +81,7 @@ public class EnquiriesPresenter
 						}
 					}
 				}, "Save");
+		
 	}
 
 	protected void save() {

@@ -1,4 +1,4 @@
-package com.workpoint.icpak.client.ui.profile.education;
+package com.workpoint.icpak.client.ui.profile.education.row;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;

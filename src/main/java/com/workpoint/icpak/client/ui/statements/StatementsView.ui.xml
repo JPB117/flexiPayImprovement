@@ -30,25 +30,17 @@
 			</g:HTMLPanel>
 
 
-			<div class="row-fluid full-page content-body">
-				<g:HTMLPanel ui:field="divMiddleContent" styleName="tabbable tabs-below full-page">
-					<g:HTMLPanel styleName="search-bar hide" ui:field="divSearchBox">
-						<div class="input-append">
-							<d:TextField ui:field="txtSearchBox" placeholder="Search here"></d:TextField>
+			<div class="col-lg-12">
+				<div class="panel widget">
+					<g:HTMLPanel ui:field="divMiddleContent" styleName="tabbable tabs-below full-page">
+						<div ui:field="divTab1Content" class="tab-pane fade in active">
+							<table:TransactionTable ui:field="tblView">
+							</table:TransactionTable>
 						</div>
 					</g:HTMLPanel>
-
-					<d:MyHTMLPanel styleName="tab-content" ui:field="divProgramsTable">
-						<g:HTMLPanel>
-							<div ui:field="divTab1Content" class="tab-pane fade in active">
-								<table:TransactionTable ui:field="tblView">
-								</table:TransactionTable>
-							</div>
-						</g:HTMLPanel>
-					</d:MyHTMLPanel>
-
-				</g:HTMLPanel>
+				</div>
 			</div>
+
 
 		</g:HTMLPanel>
 	</g:HTMLPanel>

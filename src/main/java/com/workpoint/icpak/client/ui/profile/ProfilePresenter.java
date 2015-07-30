@@ -28,12 +28,16 @@ import com.gwtplatform.mvp.client.proxy.TabContentProxyPlace;
 import com.workpoint.icpak.client.place.NameTokens;
 import com.workpoint.icpak.client.security.CurrentUser;
 import com.workpoint.icpak.client.service.AbstractAsyncCallback;
+import com.workpoint.icpak.client.ui.AppManager;
+import com.workpoint.icpak.client.ui.OptionControl;
 import com.workpoint.icpak.client.ui.admin.TabDataExt;
 import com.workpoint.icpak.client.ui.events.EditModelEvent;
 import com.workpoint.icpak.client.ui.events.EditModelEvent.EditModelHandler;
 import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
 import com.workpoint.icpak.client.ui.events.ProcessingEvent;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
+import com.workpoint.icpak.client.ui.membership.form.MemberRegistrationForm;
+import com.workpoint.icpak.client.ui.profile.education.form.EducationRegistrationForm;
 import com.workpoint.icpak.client.ui.security.LoginGateKeeper;
 import com.workpoint.icpak.shared.api.ApplicationFormResource;
 import com.workpoint.icpak.shared.model.ApplicationFormEducationalDto;
@@ -64,13 +68,13 @@ public class ProfilePresenter
 
 		void setEditMode(boolean editMode);
 
-		ApplicationFormEducationalDto getEducationDetails();
-
 		void bindEducationDetails(List<ApplicationFormEducationalDto> result);
 
 		HasClickHandlers getEducationDetailSaveButton();
 
-		void bindEducationDetail(ApplicationFormEducationalDto dto);
+		HasClickHandlers getProfileEditButton();
+
+		HasClickHandlers getEducationAddButton();
 	}
 
 	private final CurrentUser currentUser;
@@ -101,10 +105,40 @@ public class ProfilePresenter
 		this.currentUser = currentUser;
 	}
 
+	final MemberRegistrationForm memberForm = new MemberRegistrationForm();
+	EducationRegistrationForm educationForm = new EducationRegistrationForm();
+
 	@Override
 	protected void onBind() {
 		super.onBind();
 		addRegisteredHandler(EditModelEvent.TYPE, this);
+
+		getView().getProfileEditButton().addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				AppManager.showPopUp("Edit Basic Details", memberForm,
+						new OptionControl() {
+							@Override
+							public void onSelect(String name) {
+								if (name.equals("Save")) {
+									if (memberForm.isValid()) {
+										saveBasicDetails();
+										hide();
+									}
+								}
+							}
+						}, "Save");
+			}
+		});
+
+		getView().getEducationAddButton().addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				educationForm.clear();
+				showEducationPopUp();
+			}
+		});
+
 		getView().getSaveButton().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -113,12 +147,11 @@ public class ProfilePresenter
 					// Basic Details
 					saveBasicDetails();
 				} else if (currentTab == 1) {
-					// Education Infor
+					// Education Information
 					saveEducationInformation();
 				} else if (currentTab == 2) {
 
 				}
-
 			}
 		});
 
@@ -149,10 +182,27 @@ public class ProfilePresenter
 		});
 	}
 
+	public void showEducationPopUp() {
+
+		AppManager.showPopUp("Edit Education Details", educationForm,
+				new OptionControl() {
+					@Override
+					public void onSelect(String name) {
+						if (name.equals("Save")) {
+							if (educationForm.isValid()) {
+								saveEducationInformation();
+								hide();
+							}
+						}
+					}
+				}, "Save");
+	}
+
 	protected void saveEducationInformation() {
-		if (getView().isValid()) {
+		if (educationForm.isValid()) {
 			fireEvent(new ProcessingEvent());
-			ApplicationFormEducationalDto dto = getView().getEducationDetails();
+
+			ApplicationFormEducationalDto dto = educationForm.getEducationDto();
 			if (dto.getRefId() != null) {
 				applicationDelegate
 						.withCallback(
@@ -166,6 +216,7 @@ public class ProfilePresenter
 									}
 								}).education(getApplicationRefId())
 						.update(dto.getRefId(), dto);
+
 			} else {
 				applicationDelegate
 						.withCallback(
@@ -179,11 +230,12 @@ public class ProfilePresenter
 									}
 								}).education(getApplicationRefId()).create(dto);
 			}
+
 		}
 	}
 
 	protected void saveBasicDetails() {
-		if (getView().isValid()) {
+		if (memberForm.isValid()) {
 			fireEvent(new ProcessingEvent());
 			ApplicationFormHeaderDto applicationForm = getView()
 					.getBasicDetails();
@@ -224,6 +276,7 @@ public class ProfilePresenter
 						@Override
 						public void onSuccess(ApplicationFormHeaderDto result) {
 							getView().bindBasicDetails(result);
+							memberForm.bind(result);
 						}
 					}).getById(applicationRefId);
 
@@ -255,8 +308,9 @@ public class ProfilePresenter
 			if (event.isDelete()) {
 				delete(dto);
 			} else {
-				getView().bindEducationDetail(dto);
-				getView().setEditMode(true);
+				showEducationPopUp();
+				educationForm.bindDetail(dto);
+				// getView().setEditMode(true);
 			}
 		}
 
