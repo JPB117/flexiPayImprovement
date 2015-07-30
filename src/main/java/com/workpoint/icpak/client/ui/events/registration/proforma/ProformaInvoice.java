@@ -8,6 +8,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Widget;
 import com.workpoint.icpak.client.ui.component.TableHeader;
@@ -43,6 +44,7 @@ public class ProformaInvoice extends Composite {
 	public void createHeader() {
 		List<TableHeader> th = new ArrayList<TableHeader>();
 		th.add(new TableHeader("Description"));
+		th.add(new TableHeader("Accommodation"));
 		th.add(new TableHeader("Unit Price"));
 		th.add(new TableHeader("Amount"));
 		tblProforma.setTableHeaders(th);
@@ -67,7 +69,10 @@ public class ProformaInvoice extends Composite {
 		lblQuoteNo.setText(invoice.getDocumentNo());
 		
 		for(InvoiceLineDto line: invoice.getLines()){
-			tblProforma.addRow(new InlineLabel(line.getDescription()),
+			tblProforma.addRow(new InlineLabel(line.getDescription()+" ("
+		+(line.getMemberId()==null?"Non Member" : line.getMemberId())+ 
+		" ERN: "+(line.getDelegateCode()==null? "" : line.getDelegateCode())+")"),
+					new InlineLabel(line.getAccommodation()==null?"NONE" : line.getAccommodation().getName()),
 					new InlineLabel(line.getUnitPrice()+""),
 					new InlineLabel(line.getTotalAmount()+""));
 		}

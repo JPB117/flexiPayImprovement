@@ -1,11 +1,16 @@
 package com.workpoint.icpak.shared.model;
 
+import com.workpoint.icpak.shared.model.events.AccommodationDto;
+
 public class InvoiceLineDto extends SerializableObj{
 
 	private String description;
 	private double unitPrice;
 	private int quantity = 1;
 	private double totalAmount;
+	private AccommodationDto accommodation;
+	private String memberId;
+	private String delegateCode;
 
 	public InvoiceLineDto() {
 	}
@@ -47,5 +52,29 @@ public class InvoiceLineDto extends SerializableObj{
 
 	public void setTotalAmount(double totalAmount) {
 		this.totalAmount = totalAmount;
+	}
+
+	public AccommodationDto getAccommodation() {
+		return accommodation;
+	}
+
+	public void setAccommodation(AccommodationDto accommodation) {
+		this.accommodation = accommodation;
+	}
+
+	public String getMemberId() {
+		return memberId;
+	}
+
+	public void setMemberId(String memberId) {
+		this.memberId = memberId;
+	}
+
+	public String getDelegateCode() {
+		return delegateCode;
+	}
+
+	public void setDelegateCode(String delegateCode) {
+		this.delegateCode = delegateCode;
 	}
 }

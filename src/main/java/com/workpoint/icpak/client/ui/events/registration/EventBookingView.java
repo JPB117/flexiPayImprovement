@@ -168,9 +168,18 @@ public class EventBookingView extends ViewImpl implements
 		@Override
 		public DataModel getModel(Object obj) {
 			DelegateDto dto = (DelegateDto) obj;
-
+			MemberDto member = new MemberDto();
+			if(dto.getMemberRefId()==null){
+				member=null;
+			}else{
+				member.setRefId(dto.getMemberRefId());
+				member.setMemberId(dto.getMemberId());
+				member.setFirstName(dto.getOtherNames());
+				member.setLastName(dto.getSurname());
+			}
+			
 			DataModel model = new DataModel();
-			model.set("memberNo", dto.getMember());
+			model.set("memberNo", member);
 			
 			model.set("title", dto.getTitle());
 			model.set("surname", dto.getSurname());
@@ -397,6 +406,13 @@ public class EventBookingView extends ViewImpl implements
 			if (getDelegates().size() == 0) {
 				isValid = false;
 			}
+			
+//			for(DelegateDto dto: getDelegates()){
+//				if(dto.getMember()==null){
+//					isValid = false;
+//					issuesPanel.addError("Member cannot be null!!");
+//				}
+//			}
 		}
 
 		// show/hide isValid Panel

@@ -2,9 +2,13 @@ package com.workpoint.icpak.shared.model.events;
 
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlSeeAlso;
+
+import com.workpoint.icpak.shared.model.MemberDto;
 import com.workpoint.icpak.shared.model.PaymentStatus;
 import com.workpoint.icpak.shared.model.SerializableObj;
 
+@XmlSeeAlso({DelegateDto.class,ContactDto.class, MemberDto.class,AccommodationDto.class})
 public class BookingDto extends SerializableObj{
 
 	/**
