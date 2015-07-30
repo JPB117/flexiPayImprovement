@@ -92,7 +92,7 @@ public abstract class AbstractAsyncCallback<T> implements RestCallback<T> {
 			return;
 		}
 
-		if (code == 408) {
+		if (code == 408 || code==0) {
 			// HTTP Request Timeout
 			AppContext.getEventBus().fireEvent(new ProcessingCompletedEvent());
 			AppContext.getEventBus()

@@ -3,6 +3,8 @@ package com.workpoint.icpak.shared.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.workpoint.icpak.shared.model.events.AccommodationDto;
+
 public class InvoiceDto extends SerializableObj{
 	
 	/**
@@ -19,7 +21,7 @@ public class InvoiceDto extends SerializableObj{
 	private String bookingRefId;
 	private String description;
 	private List<InvoiceLineDto> lines = new ArrayList<InvoiceLineDto>();
-	
+
 	public InvoiceDto() {
 	}
 
@@ -106,6 +108,5 @@ public class InvoiceDto extends SerializableObj{
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
-	
+
 }

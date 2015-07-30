@@ -34,6 +34,7 @@ public class Delegate extends PO{
 	private static final long serialVersionUID = 1L;
 	
 	private String memberRegistrationNo;
+	private String memberRefId;
 	private String title;
 	private String surname;
 	private String otherNames;
@@ -117,7 +118,8 @@ public class Delegate extends PO{
 	public void copyFrom(DelegateDto delegateDto) {
 		setEmail(delegateDto.getEmail());
 		
-		setMemberRegistrationNo(delegateDto.getMember()==null? null: delegateDto.getMember().getMemberId());
+		setMemberRegistrationNo(delegateDto.getMemberId());
+		setMemberRefId(delegateDto.getMemberRefId());
 		setOtherNames(delegateDto.getOtherNames());
 		setSurname(delegateDto.getSurname());
 		setTitle(delegateDto.getTitle());
@@ -129,7 +131,7 @@ public class Delegate extends PO{
 	public DelegateDto toDto() {
 		DelegateDto dto  = new DelegateDto();
 		dto.setEmail(email);
-		dto.setMember(new MemberDto(memberRegistrationNo));
+		dto.setMember(new MemberDto(memberRefId, memberRegistrationNo));
 		dto.setOtherNames(otherNames);
 		dto.setRefId(getRefId());
 		dto.setSurname(surname);
@@ -174,6 +176,14 @@ public class Delegate extends PO{
 
 	public void setAttendance(AttendanceStatus attendance) {
 		this.attendance = attendance;
+	}
+
+	public String getMemberRefId() {
+		return memberRefId;
+	}
+
+	public void setMemberRefId(String memberRefId) {
+		this.memberRefId = memberRefId;
 	}
 
 }

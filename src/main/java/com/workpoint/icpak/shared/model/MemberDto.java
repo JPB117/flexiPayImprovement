@@ -23,6 +23,11 @@ public class MemberDto extends SerializableObj implements Listable{
 	public MemberDto(String memberId) {
 		this.memberId = memberId;
 	}
+	
+	public MemberDto(String memberRefId,String memberId) {
+		setRefId(memberRefId);
+		this.memberId = memberId;
+	}
 
 	public String getUserId() {
 		return userId;

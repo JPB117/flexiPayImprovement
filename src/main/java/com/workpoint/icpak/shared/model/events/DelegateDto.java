@@ -10,7 +10,8 @@ public class DelegateDto extends SerializableObj{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private MemberDto member;
+	private String memberId;
+	private String memberRefId;
 	private String title;
 	private String surname;
 	private String otherNames;
@@ -110,12 +111,28 @@ public class DelegateDto extends SerializableObj{
 		this.eventId = eventId;
 	}
 
-	public MemberDto getMember() {
-		return member;
+	public String getMemberId() {
+		return memberId;
 	}
 
-	public void setMember(MemberDto member) {
-		this.member = member;
+	public void setMemberId(String memberId) {
+		this.memberId = memberId;
+	}
+
+	public String getMemberRefId() {
+		return memberRefId;
+	}
+
+	public void setMemberRefId(String memberRefId) {
+		this.memberRefId = memberRefId;
+	}
+
+	@JsonIgnore
+	public void setMember(MemberDto memberDto) {
+		if(memberDto!=null){
+			memberId = memberDto.getMemberId();
+			memberRefId = memberDto.getRefId();
+		}
 	}
 
 }
