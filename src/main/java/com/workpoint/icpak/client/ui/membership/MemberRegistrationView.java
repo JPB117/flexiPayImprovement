@@ -46,6 +46,9 @@ public class MemberRegistrationView extends ViewImpl implements
 	MemberRegistrationForm memberRegistrationForm;
 
 	@UiField
+	DivElement divPasswordConfiguration;
+
+	@UiField
 	HTMLPanel divContent;
 
 	@UiField

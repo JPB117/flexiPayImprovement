@@ -117,23 +117,25 @@ public class EventBookingPresenter extends
 	protected void onBind() {
 		super.onBind();
 
-		getView().getMemberColumnConfig().setOracle(new ServerOracle<MemberDto>(){
-			
-			@Override
-			public void onLoad(final String query) {
-				final ServerOracle<MemberDto> instance = this;
-				
-				membersDelegate.withCallback(new AbstractAsyncCallback<List<MemberDto>>() {
+		getView().getMemberColumnConfig().setOracle(
+				new ServerOracle<MemberDto>() {
+
 					@Override
-					public void onSuccess(List<MemberDto> members) {
-						instance.setValues(members);
+					public void onLoad(final String query) {
+						final ServerOracle<MemberDto> instance = this;
+
+						membersDelegate.withCallback(
+								new AbstractAsyncCallback<List<MemberDto>>() {
+									@Override
+									public void onSuccess(
+											List<MemberDto> members) {
+										instance.setValues(members);
+									}
+
+								}).search(query);
 					}
-					
-				}).search(query);
-			}
-		});
-		
-		
+				});
+
 		getView().getANext().addClickHandler(new ClickHandler() {
 
 			@Override
@@ -161,8 +163,8 @@ public class EventBookingPresenter extends
 
 	protected void submit(BookingDto dto) {
 		getView().showmask(true);
+		
 		if (bookingId != null) {
-
 			eventsResource
 					.withCallback(new AbstractAsyncCallback<BookingDto>() {
 						@Override

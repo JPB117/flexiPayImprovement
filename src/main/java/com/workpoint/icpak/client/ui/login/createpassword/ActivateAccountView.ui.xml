@@ -8,7 +8,7 @@
 
 	ui:generateLocales='default'>
 	<g:HTMLPanel>
-		<g:HTMLPanel ui:field="divHeaderContainer" styleName="top-header">
+		<div>
 			<nav class="navbar">
 				<div class="container">
 					<div class="navbar-header" style="width: 100%; text-align: center;">
@@ -18,11 +18,19 @@
 					</div>
 				</div>
 			</nav>
-		</g:HTMLPanel>
-
-		<div class="col-xs-8 col-xs-offset-2">
-			<password:PasswordWidget ui:field="panelPasswordWidget"></password:PasswordWidget>
 		</div>
+
+		<g:HTMLPanel styleName="image-container set-full-height">
+			<g:HTMLPanel styleName="login-bg">
+				<g:HTMLPanel styleName="row-fluid login-wrapper">
+					<g:HTMLPanel styleName="span4 box" ui:field="loadingbox">
+						<div class="content-wrap">
+							<password:PasswordWidget ui:field="panelPasswordWidget"></password:PasswordWidget>
+						</div>
+					</g:HTMLPanel>
+				</g:HTMLPanel>
+			</g:HTMLPanel>
+		</g:HTMLPanel>
 
 	</g:HTMLPanel>
 </ui:UiBinder>

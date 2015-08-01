@@ -5,6 +5,7 @@
 	xmlns:d='urn:import:com.workpoint.icpak.client.ui.component'
 	xmlns:form='urn:import:com.workpoint.icpak.client.ui.membership.form'
 	xmlns:proforma='urn:import:com.workpoint.icpak.client.ui.events.registration.proforma'
+	xmlns:password='urn:import:com.workpoint.icpak.client.ui.profile.password'
 	ui:generateLocales='default'>
 
 	<g:HTMLPanel ui:field="divMainContainer">
@@ -39,32 +40,55 @@
 								<ul class="nav nav-pills">
 									<li class="active" style="width: 25%;" ui:field="liTab1">
 										<a>
-										<span class="fa fa-check-circle hide"></span>
-										1 - Personal Information</a>
+											<span class="fa fa-check-circle hide"></span>
+											1 - Personal Information
+										</a>
 									</li>
 									<li style="width: 25%;" ui:field="liTab2">
 										<a>
-										<span class="fa fa-check-circle hide"></span>
-										2 - Membership Category</a>
+											<span class="fa fa-check-circle hide"></span>
+											2 - Membership Category
+										</a>
 									</li>
+
+									<!-- <li style="width: 20%;" ui:field="liTab3"> -->
+									<!-- <a> -->
+									<!-- <span class="fa fa-check-circle hide"></span> -->
+									<!-- 3 - Password Configuration -->
+									<!-- </a> -->
+									<!-- </li> -->
+
 									<li style="width: 25%;" ui:field="liTab3">
 										<a>
-										<span class="fa fa-check-circle hide"></span>
-										3 - Proforma Invoice</a>
+											<span class="fa fa-check-circle hide"></span>
+											3 - Proforma Invoice
+										</a>
 									</li>
 									<li style="width:25%;" ui:field="liTab4">
 										<a>
-										<span class="fa fa-check-circle hide"></span>
-										4 - Make Payment</a>
+											<span class="fa fa-check-circle hide"></span>
+											4 - Make Payment
+										</a>
 									</li>
 								</ul>
 
 								<!-- Tab Content 1 -->
+								<div class="">
+
+								</div>
+
+
 								<div class="tab-content">
 									<div class="tab-pane active" ui:field="divPackage">
 										<div class="row">
 											<form:MemberRegistrationForm
 												ui:field="memberRegistrationForm"></form:MemberRegistrationForm>
+										</div>
+									</div>
+
+									<div class="tab-pane" ui:field="divPasswordConfiguration">
+										<div class="row">
+											<password:PasswordWidget></password:PasswordWidget>
 										</div>
 									</div>
 
