@@ -101,7 +101,6 @@ public class StatementsPresenter extends
 			}
 		}).getCount();
 		
-		
 	}
 
 	protected void loadInvoices(int offset, int limit) {

@@ -19,7 +19,7 @@ import com.workpoint.icpak.shared.model.auth.LogInResult;
 
 @Path("users")
 @Produces(MediaType.APPLICATION_JSON)
-public interface UsersResource{
+public interface UsersResource extends BaseResource{
 
 		@GET
 		@Consumes(MediaType.APPLICATION_JSON)

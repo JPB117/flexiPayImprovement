@@ -14,7 +14,7 @@ import com.workpoint.icpak.shared.model.MemberDto;
 
 @Path("members")
 @Produces(MediaType.APPLICATION_JSON)
-public interface MemberResource {
+public interface MemberResource extends BaseResource{
 	
 	
 	@GET

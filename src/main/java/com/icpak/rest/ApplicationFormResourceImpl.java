@@ -49,6 +49,12 @@ public class ApplicationFormResourceImpl implements ApplicationFormResource{
 	}
 	
 	@GET
+	@Path("/count")
+	public Integer getCount() {
+		return helper.getApplicationCount();
+	}
+	
+	@GET
 	@Path("/{applicationId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value="Get a application by applicationId", response=ApplicationFormHeader.class, consumes=MediaType.APPLICATION_JSON)

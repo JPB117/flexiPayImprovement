@@ -45,11 +45,18 @@ public class CPDDao extends BaseDao {
 
 		Number number = null;
 		if (memberId != null) {
-			number = getSingleResultOrNull(getEntityManager()
-					.createNativeQuery(
-							"select count(*) from cpd c inner join member m on (c.memberId=m.refId) "
-									+ "where c.isactive=1 and m.refId=:refId")
-					.setParameter("refId", memberId));
+			if (memberId.equals("ALL")) {
+				number = getSingleResultOrNull(getEntityManager()
+						.createNativeQuery(
+								"select count(*) from cpd c "
+										+ "where c.isactive=1"));
+			} else {
+				number = getSingleResultOrNull(getEntityManager()
+						.createNativeQuery(
+								"select count(*) from cpd c inner join Member m on (c.memberId=m.refId) "
+										+ "where c.isactive=1 and m.refId=:refId")
+						.setParameter("refId", memberId));
+			}
 		} else {
 			throw new ServiceException(ErrorCodes.ILLEGAL_ARGUMENT, "CPD",
 					"'MemberId'");

@@ -17,6 +17,9 @@ import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.workpoint.icpak.client.place.NameTokens;
 import com.workpoint.icpak.client.service.AbstractAsyncCallback;
 import com.workpoint.icpak.client.ui.admin.TabDataExt;
+import com.workpoint.icpak.client.ui.component.PagingConfig;
+import com.workpoint.icpak.client.ui.component.PagingLoader;
+import com.workpoint.icpak.client.ui.component.PagingPanel;
 import com.workpoint.icpak.client.ui.events.EditModelEvent;
 import com.workpoint.icpak.client.ui.events.EditModelEvent.EditModelHandler;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
@@ -33,13 +36,11 @@ implements EditModelHandler{
 	public interface IEventsView extends View {
 
 		void showAdvancedView(boolean show);
-
 		void bindEvents(List<EventDto> events);
-
 		void bindEvent(EventDto event);
-
 		void bindBookings(List<BookingDto> events);
-
+		PagingPanel getEventsPagingPanel();
+		PagingPanel getBookingsPagingPanel();
 	}
 
 	@ProxyCodeSplit
@@ -56,6 +57,7 @@ implements EditModelHandler{
 	}
 
 	private ResourceDelegate<EventsResource> eventsDelegate;
+	private String eventId;
 
 	@Inject
 	public EventsPresenter(final EventBus eventBus, final IEventsView view,
@@ -69,12 +71,27 @@ implements EditModelHandler{
 	protected void onBind() {
 		super.onBind();
 		addRegisteredHandler(EditModelEvent.TYPE, this);
+		getView().getEventsPagingPanel().setLoader(new PagingLoader() {
+			
+			@Override
+			public void load(int offset, int limit) {
+				loadEvents(offset, limit);
+			}
+		});
+		
+		getView().getBookingsPagingPanel().setLoader(new PagingLoader() {
+			
+			@Override
+			public void load(int offset, int limit) {
+				loadBookings(offset, limit);
+			}
+		});
 	}
 
 	@Override
 	public void prepareFromRequest(PlaceRequest request) {
 		super.prepareFromRequest(request);
-		final String eventId = request.getParameter("eventId", null);
+		eventId = request.getParameter("eventId", null);
 
 		// Load Event Details to View
 		if (eventId!=null) {
@@ -83,13 +100,23 @@ implements EditModelHandler{
 			getView().showAdvancedView(false);
 		}
 
-		loadData(eventId);
+		loadData();
 	}
 
-	private void loadData(String eventId) {
+	private void loadData() {
 
 		if (eventId != null) {
-
+			//Load Bookings
+			eventsDelegate.withCallback(new AbstractAsyncCallback<Integer>() {
+				@Override
+				public void onSuccess(Integer aCount) {
+					PagingPanel panel=getView().getBookingsPagingPanel();
+					panel.setTotal(aCount);
+					PagingConfig config = panel.getConfig();
+					loadBookings(config.getOffset(), config.getLimit());
+				}
+			}).bookings(eventId).getCount();
+			
 			eventsDelegate.withCallback(new AbstractAsyncCallback<EventDto>() {
 				@Override
 				public void onSuccess(EventDto event) {
@@ -97,19 +124,23 @@ implements EditModelHandler{
 				}
 			}).getById(eventId);
 			
-			loadBookings(eventId);
 		} else {
-			eventsDelegate.withCallback(
-					new AbstractAsyncCallback<List<EventDto>>() {
-						@Override
-						public void onSuccess(List<EventDto> events) {
-							getView().bindEvents(events);
-						}
-					}).getAll(0, 100);
+
+			//Load Events
+			
+			eventsDelegate.withCallback(new AbstractAsyncCallback<Integer>() {
+				@Override
+				public void onSuccess(Integer aCount) {
+					PagingPanel panel=getView().getEventsPagingPanel();
+					panel.setTotal(aCount);
+					PagingConfig config = panel.getConfig();
+					loadEvents(config.getOffset(), config.getLimit());
+				}
+			}).getCount();
 		}
 	}
-
-	private void loadBookings(String eventId) {
+	
+	protected void loadBookings(int offset, int limit) {
 		eventsDelegate.withCallback(
 				new AbstractAsyncCallback<List<BookingDto>>() {
 					@Override
@@ -117,17 +148,19 @@ implements EditModelHandler{
 						getView().bindBookings(bookings);
 					}
 				}).bookings(eventId)
-				.getAll(0, 100);
+				.getAll(offset, limit);
 	}
 
-	protected void save() {
+	protected void loadEvents(int offset, int limit) {
+		eventsDelegate.withCallback(
+				new AbstractAsyncCallback<List<EventDto>>() {
+					@Override
+					public void onSuccess(List<EventDto> events) {
+						getView().bindEvents(events);
+					}
+				}).getAll(offset, limit);
 	}
-
-	@Override
-	protected void onReset() {
-		super.onReset();
-	}
-
+	
 	@Override
 	public void onEditModel(EditModelEvent event) {
 		if(event.getModel() instanceof DelegateDto){

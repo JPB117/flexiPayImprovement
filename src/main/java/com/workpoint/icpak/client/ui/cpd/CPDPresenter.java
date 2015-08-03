@@ -32,6 +32,9 @@ import com.workpoint.icpak.client.ui.AppManager;
 import com.workpoint.icpak.client.ui.OnOptionSelected;
 import com.workpoint.icpak.client.ui.OptionControl;
 import com.workpoint.icpak.client.ui.admin.TabDataExt;
+import com.workpoint.icpak.client.ui.component.PagingConfig;
+import com.workpoint.icpak.client.ui.component.PagingLoader;
+import com.workpoint.icpak.client.ui.component.PagingPanel;
 import com.workpoint.icpak.client.ui.cpd.record.RecordCPD;
 import com.workpoint.icpak.client.ui.events.EditModelEvent;
 import com.workpoint.icpak.client.ui.events.EditModelEvent.EditModelHandler;
@@ -48,11 +51,10 @@ public class CPDPresenter extends
 
 	public interface ICPDView extends View {
 		HasClickHandlers getRecordButton();
-
 		void bindResults(List<CPDDto> result);
-
 		void showDetailedView();
-
+		PagingPanel getPagingPanel();
+		
 	}
 
 	@ProxyCodeSplit
@@ -90,6 +92,14 @@ public class CPDPresenter extends
 			@Override
 			public void onClick(ClickEvent event) {
 				showCreatePopup();
+			}
+		});
+		
+		getView().getPagingPanel().setLoader(new PagingLoader() {
+			
+			@Override
+			public void load(int offset, int limit) {
+				load(offset, limit);
 			}
 		});
 
@@ -178,12 +188,31 @@ public class CPDPresenter extends
 	protected void loadData() {
 		String memberId = currentUser.getUser().getRefId();
 
+		memberDelegate.withCallback(new AbstractAsyncCallback<Integer>() {
+			
+			@Override
+			public void onSuccess(Integer aCount) {
+				
+				PagingPanel panel=getView().getPagingPanel();
+				panel.setTotal(aCount);
+				PagingConfig config = panel.getConfig();
+				
+				loadCPD(config.getOffset(), config.getLimit());
+			}
+		}).cpd(AppContext.isCurrentUserAdmin()? "ALL":memberId)
+		.getCount();
+		
+	}
+
+	protected void loadCPD(int offset, int limit) {
+		String memberId = currentUser.getUser().getRefId();
 		memberDelegate.withCallback(new AbstractAsyncCallback<List<CPDDto>>() {
 			@Override
 			public void onSuccess(List<CPDDto> result) {
 				getView().bindResults(result);
 			}
-		}).cpd(AppContext.isCurrentUserAdmin()? "ALL":memberId).getAll(0, 100);
+		}).cpd(AppContext.isCurrentUserAdmin()? "ALL":memberId)
+		.getAll(offset, limit);
 	}
 
 	String getApplicationRefId() {

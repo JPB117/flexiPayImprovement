@@ -17,6 +17,7 @@ import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
 import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.DropDownList;
+import com.workpoint.icpak.client.ui.component.PagingPanel;
 import com.workpoint.icpak.client.ui.component.tabs.TabContent;
 import com.workpoint.icpak.client.ui.component.tabs.TabHeader;
 import com.workpoint.icpak.client.ui.component.tabs.TabPanel;
@@ -183,5 +184,10 @@ public class CPDView extends ViewImpl implements CPDPresenter.ICPDView{
 	@Override
 	public void showDetailedView() {
 		
+	}
+
+	@Override
+	public PagingPanel getPagingPanel() {
+		return tblView.getPagingPanel();
 	}
 }

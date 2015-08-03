@@ -48,7 +48,8 @@ public class PagingPanel extends Composite {
 
 	private void init() {
 		setPageDetails();
-
+		ankaPanel.clear();
+		
 		if (config.getPages() > 0) {
 			BulletPanel previous = getPanel(-2, "Previous");
 			Anchor prevLink = (Anchor) previous.getWidget(0);

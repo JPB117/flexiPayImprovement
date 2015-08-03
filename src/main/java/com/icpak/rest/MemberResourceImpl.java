@@ -41,6 +41,12 @@ public class MemberResourceImpl implements MemberResource{
 		return membersHelper.getAllMembers(offset, limit, "", null);
 	}
 	
+	@GET
+	@Path("/count")
+	public Integer getCount() {
+		return membersHelper.getCount();
+	}
+	
 	@Path("/{memberId}")
 	@GET
 	@ApiOperation(value="Retrieve a member")

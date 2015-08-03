@@ -9,6 +9,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
+import com.workpoint.icpak.client.ui.component.PagingPanel;
 import com.workpoint.icpak.client.ui.eventsandseminars.delegates.row.DelegateTableRow;
 import com.workpoint.icpak.client.ui.eventsandseminars.delegates.table.DelegatesTable;
 import com.workpoint.icpak.client.ui.eventsandseminars.header.EventsHeader;
@@ -84,6 +85,16 @@ public class EventsView extends ViewImpl implements EventsPresenter.IEventsView 
 				tblDelegates.createRow(new DelegateTableRow(dto, delegate));
 			}
 		}
+	}
+
+	@Override
+	public PagingPanel getEventsPagingPanel() {
+		return tblView.getPagingPanel();
+	}
+
+	@Override
+	public PagingPanel getBookingsPagingPanel() {
+		return tblDelegates.getPagingPanel();
 	}
 
 }

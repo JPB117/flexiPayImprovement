@@ -108,6 +108,7 @@ public class HomePresenter extends
 	protected void onReset() {
 		super.onReset();
 		getView().setMiddleHeight();
+		getView().refreshTabs();
 	}
 
 	public void onProcessingCompleted(ProcessingCompletedEvent event) {

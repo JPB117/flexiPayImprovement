@@ -1,6 +1,5 @@
 package com.workpoint.icpak.client.ui.component;
 
-import com.google.gwt.user.client.Window;
 
 
 public class PagingConfig {

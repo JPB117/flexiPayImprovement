@@ -16,6 +16,8 @@
 			<g:HTMLPanel ui:field="panelFooter" styleName='tbody'>
 			</g:HTMLPanel>
 		</g:HTMLPanel>
-
+		
+		<g:HTMLPanel ui:field="panelPaging">
+		</g:HTMLPanel>
 	</g:HTMLPanel>
 </ui:UiBinder>

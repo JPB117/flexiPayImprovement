@@ -18,6 +18,7 @@ import com.gwtplatform.mvp.client.ViewImpl;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.workpoint.icpak.client.place.NameTokens;
+import com.workpoint.icpak.client.ui.component.PagingPanel;
 import com.workpoint.icpak.client.ui.users.save.UserSavePresenter.TYPE;
 
 public class UserView extends ViewImpl implements UserPresenter.MyView {
@@ -45,6 +46,8 @@ public class UserView extends ViewImpl implements UserPresenter.MyView {
 	Element liGroup;
 	@UiField
 	Element liUser;
+	
+	@UiField PagingPanel pagingPanel;
 
 	public interface Binder extends UiBinder<Widget, UserView> {
 	}
@@ -162,6 +165,11 @@ public class UserView extends ViewImpl implements UserPresenter.MyView {
 			divGroupContent.removeClassName("in");
 			divGroupContent.removeClassName("active");
 		}
+	}
+
+	@Override
+	public PagingPanel getPagingPanel() {
+		return pagingPanel;
 	}
 
 }

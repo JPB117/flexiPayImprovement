@@ -17,7 +17,7 @@ import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 
 @Path("applications")
-public interface ApplicationFormResource{
+public interface ApplicationFormResource extends BaseResource{
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)

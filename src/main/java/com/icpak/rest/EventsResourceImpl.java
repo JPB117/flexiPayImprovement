@@ -42,6 +42,12 @@ public class EventsResourceImpl implements EventsResource{
 		return dtos;
 	}
 	
+	@GET
+	@Path("/count")
+	public Integer getCount() {
+		return helper.getCount();
+	}
+	
 	@Path("/type/{eventType}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)

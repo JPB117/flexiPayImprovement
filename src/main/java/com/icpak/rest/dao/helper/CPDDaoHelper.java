@@ -38,6 +38,10 @@ public class CPDDaoHelper {
 		
 		return rtn;
 	}
+	
+	public Integer getCount(String memberId) {
+		return dao.getCPDCount(memberId);
+	}
 
 	public CPDDto getCPD(String memberId, String cpdId) {
 		CPD cpd = dao.findByCPDId(cpdId);

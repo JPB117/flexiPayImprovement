@@ -74,6 +74,10 @@ public class BookingsDaoHelper {
 
 		return clones;
 	}
+	
+	public Integer getCount(String eventId) {
+		return dao.getBookingCount(eventId);
+	}
 
 	public BookingDto getBookingById(String eventId, String bookingId) {
 

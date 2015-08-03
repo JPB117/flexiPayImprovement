@@ -8,6 +8,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
+import com.workpoint.icpak.client.ui.component.PagingPanel;
 import com.workpoint.icpak.client.ui.members.header.MembersHeader;
 import com.workpoint.icpak.client.ui.members.row.MembersTableRow;
 import com.workpoint.icpak.client.ui.members.table.MembersTable;
@@ -48,6 +49,16 @@ public class MembersView extends ViewImpl implements
 			MembersTableRow row = new MembersTableRow(dto);
 			tblView.createRow(row);
 		}
+	}
+
+	@Override
+	public void setCount(Integer aCount) {
+		tblView.getPagingPanel().setTotal(aCount);
+	}
+
+	@Override
+	public PagingPanel getPagingPanel() {
+		return tblView.getPagingPanel();
 	}
 
 }

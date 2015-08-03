@@ -52,6 +52,12 @@ public class BookingsResourceImpl implements BookingsResource {
 				limit);
 		return dtos;
 	}
+	
+	@GET
+	@Path("/count")
+	public Integer getCount() {
+		return helper.getCount(eventId);
+	}
 
 	@GET
 	@Path("/{bookingId}")

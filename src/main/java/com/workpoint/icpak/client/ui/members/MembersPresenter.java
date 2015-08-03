@@ -10,6 +10,7 @@ package com.workpoint.icpak.client.ui.members;
 //import com.workpoint.icpak.shared.responses.UpdatePasswordResponse;
 import java.util.List;
 
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rest.delegates.client.ResourceDelegate;
@@ -25,6 +26,9 @@ import com.workpoint.icpak.client.place.NameTokens;
 import com.workpoint.icpak.client.security.CurrentUser;
 import com.workpoint.icpak.client.service.AbstractAsyncCallback;
 import com.workpoint.icpak.client.ui.admin.TabDataExt;
+import com.workpoint.icpak.client.ui.component.PagingConfig;
+import com.workpoint.icpak.client.ui.component.PagingLoader;
+import com.workpoint.icpak.client.ui.component.PagingPanel;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
 import com.workpoint.icpak.client.ui.security.AdminGateKeeper;
 import com.workpoint.icpak.shared.api.ApplicationFormResource;
@@ -37,6 +41,8 @@ public class MembersPresenter
 	public interface IMembersView extends View {
 
 		void bindApplications(List<ApplicationFormHeaderDto> result);
+		void setCount(Integer aCount);
+		PagingPanel getPagingPanel();
 
 	}
 
@@ -70,6 +76,13 @@ public class MembersPresenter
 	@Override
 	protected void onBind() {
 		super.onBind();
+		getView().getPagingPanel().setLoader(new PagingLoader() {
+			
+			@Override
+			public void load(int offset, int limit) {
+				loadApplications(offset, limit);
+			}
+		});
 
 	}
 
@@ -80,13 +93,25 @@ public class MembersPresenter
 	}
 
 	private void loadData() {
+		applicationDelegate.withCallback(new AbstractAsyncCallback<Integer>() {
+			@Override
+			public void onSuccess(Integer aCount) {
+				getView().setCount(aCount);
+				PagingConfig config = getView().getPagingPanel().getConfig();
+				loadApplications(config.getOffset(),config.getLimit());
+			}
+		}).getCount();
+		
+	}
+
+	protected void loadApplications(int offset, int limit) {
 		applicationDelegate.withCallback(
 				new AbstractAsyncCallback<List<ApplicationFormHeaderDto>>() {
 					@Override
 					public void onSuccess(List<ApplicationFormHeaderDto> result) {
 						getView().bindApplications(result);
 					}
-				}).getAll(0, 100);
+				}).getAll(offset, limit);
 	}
 
 	protected void save() {

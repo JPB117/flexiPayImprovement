@@ -24,6 +24,9 @@ import com.workpoint.icpak.client.place.NameTokens;
 import com.workpoint.icpak.client.service.AbstractAsyncCallback;
 import com.workpoint.icpak.client.service.ServiceCallback;
 import com.workpoint.icpak.client.ui.admin.TabDataExt;
+import com.workpoint.icpak.client.ui.component.PagingConfig;
+import com.workpoint.icpak.client.ui.component.PagingLoader;
+import com.workpoint.icpak.client.ui.component.PagingPanel;
 import com.workpoint.icpak.client.ui.events.EditGroupEvent;
 import com.workpoint.icpak.client.ui.events.EditGroupEvent.EditGroupHandler;
 import com.workpoint.icpak.client.ui.events.EditUserEvent;
@@ -53,10 +56,9 @@ public class UserPresenter extends
 	public interface MyView extends View {
 
 		HasClickHandlers getaNewUser();
-
 		HasClickHandlers getaNewGroup();
-
 		void setType(TYPE type);
+		PagingPanel getPagingPanel();
 	}
 
 	@ProxyCodeSplit
@@ -116,6 +118,14 @@ public class UserPresenter extends
 			@Override
 			public void onClick(ClickEvent event) {
 				showPopup(UserSavePresenter.TYPE.GROUP);
+			}
+		});
+		
+		getView().getPagingPanel().setLoader(new PagingLoader() {
+			
+			@Override
+			public void load(int offset, int limit) {
+				loadUsers(offset, limit);
 			}
 		});
 	}
@@ -190,14 +200,27 @@ public class UserPresenter extends
 
 	private void loadUsers() {
 		fireEvent(new ProcessingEvent());
+		usersDelegate.withCallback(new AbstractAsyncCallback<Integer>() {
+			@Override
+			public void onSuccess(Integer aCount) {
+				PagingPanel panel=getView().getPagingPanel();
+				panel.setTotal(aCount);
+				PagingConfig config = panel.getConfig();
+				fireEvent(new ProcessingCompletedEvent());
+				loadUsers(config.getOffset(), config.getLimit());
+			}
+		}).getCount();
+	}
+
+	protected void loadUsers(int offset, int limit) {
+		fireEvent(new ProcessingEvent());
 		usersDelegate.withCallback(new AbstractAsyncCallback<List<UserDto>>() {
 			@Override
 			public void onSuccess(List<UserDto> result) {
 				loadUsers(result);
 				fireEvent(new ProcessingCompletedEvent());
 			}
-		}).getAll(0, 100);
-		
+		}).getAll(offset, limit);
 	}
 
 	protected void loadUsers(List<UserDto> users) {

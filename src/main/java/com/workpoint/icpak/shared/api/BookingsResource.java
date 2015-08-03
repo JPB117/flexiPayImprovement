@@ -16,7 +16,7 @@ import javax.ws.rs.core.MediaType;
 import com.workpoint.icpak.shared.model.events.BookingDto;
 import com.workpoint.icpak.shared.model.events.DelegateDto;
 
-public interface BookingsResource {
+public interface BookingsResource extends BaseResource{
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)

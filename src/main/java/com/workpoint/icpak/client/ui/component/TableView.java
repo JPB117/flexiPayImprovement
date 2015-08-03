@@ -32,6 +32,8 @@ public class TableView extends Composite {
 	FlowPanel panelBody;
 	@UiField
 	HTMLPanel panelFooter;
+	
+	@UiField HTMLPanel panelPaging;
 
 	private boolean isAutoNumber = true;
 	private int count = 0;
