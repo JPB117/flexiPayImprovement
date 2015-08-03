@@ -83,6 +83,12 @@ public class UsersResourceImpl implements UsersResource {
 
 		return helper.getAllUsers(offset, limit,"");
 	}
+	
+	@GET
+	@Path("/count")
+	public Integer getCount() {
+		return helper.getCount();
+	}
 
 	@GET
 	@Path("/{userId}")

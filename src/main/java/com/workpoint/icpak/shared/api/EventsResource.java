@@ -17,7 +17,7 @@ import com.workpoint.icpak.shared.model.events.EventDto;
 
 
 @Path("events")
-public interface EventsResource {
+public interface EventsResource extends BaseResource{
 
 		@GET
 		@Produces(MediaType.APPLICATION_JSON)

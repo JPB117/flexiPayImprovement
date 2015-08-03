@@ -64,6 +64,11 @@ public class MemberDaoHelper {
 		return rtn;
 	}
 	
+	public Integer getCount() {
+		
+		return memberDao.getMemberCount();
+	}
+	
 	private void setMemberValues(MemberDto dto, User user) {
 		if(user==null){
 			return;

@@ -18,7 +18,7 @@ public class MemberDao extends BaseDao {
 	public List<Member> getAllMembers(Integer offSet, Integer limit,
 			String searchTerm) {
 
-		if (searchTerm != null) {
+		if (searchTerm != null && !searchTerm.isEmpty()) {
 			return getResultList(
 					getEntityManager().createQuery(
 							"select m from Member m inner join m.user u "

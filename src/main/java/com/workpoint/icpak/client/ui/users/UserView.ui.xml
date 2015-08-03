@@ -1,7 +1,8 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-	xmlns:g='urn:import:com.google.gwt.user.client.ui' ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui' xmlns:d='urn:import:com.workpoint.icpak.client.ui.component'
+	ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
 
@@ -66,9 +67,7 @@
 
 									<g:HTMLPanel ui:field="panelUsers" styleName="tbody"><!-- div 
 											class="tbody" -->
-
 									</g:HTMLPanel><!--End Tbody -->
-
 								</div><!--End Table -->
 
 								<div class="row-fluid hidden">
@@ -103,6 +102,7 @@
 										</div>
 									</div>
 								</div>
+								<d:PagingPanel ui:field="pagingPanel"></d:PagingPanel>
 							</div>
 
 							<!-- Group's Table -->

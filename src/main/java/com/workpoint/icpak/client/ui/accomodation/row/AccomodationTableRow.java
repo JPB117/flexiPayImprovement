@@ -76,8 +76,9 @@ public class AccomodationTableRow extends RowWidget {
 		EventDto event = accommodation.getEvent();
 		divEventName.add(new InlineLabel(event.getName()));
 		aHotelName.setText(accommodation.getHotel());
-		divNights.add(new InlineLabel(DateUtils.getTimeDifference(
-				new Date(event.getStartDate()), new Date(event.getEndDate()))));
+		divNights.add(new InlineLabel(accommodation.getNights()+""));
+//		divNights.add(new InlineLabel(DateUtils.getTimeDifference(
+//				new Date(event.getStartDate()), new Date(event.getEndDate()))));
 		divPrice.add(new InlineLabel(NUMBERFORMAT.format(accommodation.getFee())));
 		
 	}

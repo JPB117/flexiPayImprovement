@@ -45,14 +45,20 @@ public class StatementTableRow extends RowWidget {
 	public StatementTableRow(InvoiceDto invoice) {
 		this();
 		if (invoice.getDate() != null) {
-			divDate.add(new InlineLabel(DATEFORMAT.format(new Date(invoice.getDate()))));
-			divDueDate.add(new InlineLabel(DATEFORMAT.format(new Date(invoice.getDate()))));
+			divDate.add(new InlineLabel(DATEFORMAT.format(new Date(invoice
+					.getDate()))));
+			divDueDate.add(new InlineLabel(DATEFORMAT.format(new Date(invoice
+					.getDate()))));
 		}
 		divDocNum.add(new InlineLabel(invoice.getDocumentNo()));
 		divDescription.add(new InlineLabel(invoice.getDescription()));
 
-		divAmount.add(new InlineLabel(NUMBERFORMAT.format(invoice.getAmount())+""));
-		divBalance.add(new InlineLabel(NUMBERFORMAT.format(invoice.getAmount())+""));
+		if (invoice.getAmount() != null) {
+			divAmount.add(new InlineLabel(NUMBERFORMAT.format(invoice
+					.getAmount()) + ""));
+			divBalance.add(new InlineLabel(NUMBERFORMAT.format(invoice
+					.getAmount()) + ""));
+		}
 	}
 
 }

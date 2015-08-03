@@ -39,9 +39,19 @@ public class BookingsDao extends BaseDao {
 		createBooking(booking);
 	}
 
-	public int getBookingCount() {
-		Number number = getSingleResultOrNull(getEntityManager()
-				.createNativeQuery("select count(*) from booking where isactive=1"));
+	public int getBookingCount(String eventId) {
+		
+		Number number = null;
+		
+		if(eventId!=null){
+			number = getSingleResultOrNull(getEntityManager()
+					.createQuery("select count(*) from Booking b where b.isActive=1 "
+				+ "and b.event.refId=:refId")
+				.setParameter("refId", eventId));
+		}else{
+			number = getSingleResultOrNull(getEntityManager()
+					.createQuery("select count(*) from booking where isactive=1"));
+		}
 
 		return number.intValue();
 	}

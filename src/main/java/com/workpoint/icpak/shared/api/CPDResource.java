@@ -16,7 +16,7 @@ import javax.ws.rs.core.MediaType;
 import com.workpoint.icpak.shared.model.CPDDto;
 
 @Produces(MediaType.APPLICATION_JSON)
-public interface CPDResource {
+public interface CPDResource extends BaseResource{
 
 	@GET
 	@Consumes(MediaType.APPLICATION_JSON)

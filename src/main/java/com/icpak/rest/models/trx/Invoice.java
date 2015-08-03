@@ -154,7 +154,7 @@ public class Invoice extends PO {
 		return documentNo;
 	}
 
-	public void setDocumentNo(String documentNo) {
+	private void setDocumentNo(String documentNo) {
 		this.documentNo = documentNo;
 	}
 

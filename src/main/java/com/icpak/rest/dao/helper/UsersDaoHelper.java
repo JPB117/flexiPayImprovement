@@ -165,6 +165,12 @@ public class UsersDaoHelper {
 		return dtos;
 	}
 	
+
+	public Integer getCount() {
+		return dao.getUserCount();
+	}
+
+	
 	public ResourceCollectionModel<User> getAllUsers(Integer offSet, Integer limit, UriInfo uriInfo, String roleId){
 		int total = dao.getUserCount(roleId);
 		Role role = null;
@@ -330,6 +336,5 @@ public class UsersDaoHelper {
 		
 		public String getApplicationRefId(String userRef){
 			return dao.getApplicationRefId(userRef);
-		}
-		
+		}		
 }

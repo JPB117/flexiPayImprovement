@@ -74,6 +74,10 @@ public class BookingsDaoHelper {
 
 		return clones;
 	}
+	
+	public Integer getCount(String eventId) {
+		return dao.getBookingCount(eventId);
+	}
 
 	public BookingDto getBookingById(String eventId, String bookingId) {
 
@@ -212,6 +216,7 @@ public class BookingsDaoHelper {
 		double amount = 0.0;
 		for(Delegate delegate : booking.getDelegates()){
 			InvoiceLineDto dto = new InvoiceLineDto();
+			dto.setEventDelegateRefId(delegate.getRefId());
 			dto.setDescription( delegate.getSurname()+" "+delegate.getOtherNames());
 			dto.setUnitPrice(delegate.getAmount());
 			dto.setTotalAmount(delegate.getAmount());

@@ -10,7 +10,8 @@ public class InvoiceLineDto extends SerializableObj{
 	private double totalAmount;
 	private AccommodationDto accommodation;
 	private String memberId;
-	private String delegateCode;
+	private String eventDelegateRefId;
+	private String delegateERN;
 
 	public InvoiceLineDto() {
 	}
@@ -70,11 +71,20 @@ public class InvoiceLineDto extends SerializableObj{
 		this.memberId = memberId;
 	}
 
-	public String getDelegateCode() {
-		return delegateCode;
+	public String getEventDelegateRefId() {
+		return eventDelegateRefId;
 	}
 
-	public void setDelegateCode(String delegateCode) {
-		this.delegateCode = delegateCode;
+	public void setEventDelegateRefId(String eventDelegateRefId) {
+		this.eventDelegateRefId = eventDelegateRefId;
 	}
+
+	public String getDelegateERN() {
+		return delegateERN;
+	}
+
+	public void setDelegateERN(String delegateERN) {
+		this.delegateERN = delegateERN;
+	}
+
 }

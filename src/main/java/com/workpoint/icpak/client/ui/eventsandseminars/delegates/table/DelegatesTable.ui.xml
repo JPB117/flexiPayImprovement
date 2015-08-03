@@ -8,8 +8,8 @@
 			</div>
 		</g:HTMLPanel>
 
-		<d:TableView ui:field="tblView" striped="false" isGrid="false"
+		<d:PagingTable ui:field="tblView" striped="false" isGrid="false"
 			bordered="true" autoNumber="true" styleName="table-programs">
-		</d:TableView>
+		</d:PagingTable>
 	</g:HTMLPanel>
 </ui:UiBinder>

@@ -18,6 +18,7 @@ import com.workpoint.icpak.client.ui.events.registration.proforma.last.ProformaL
 import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.InvoiceLineDto;
+import com.workpoint.icpak.shared.model.events.AccommodationDto;
 
 public class ProformaInvoice extends Composite {
 
@@ -69,14 +70,17 @@ public class ProformaInvoice extends Composite {
 		lblQuoteNo.setText(invoice.getDocumentNo());
 		
 		for(InvoiceLineDto line: invoice.getLines()){
+			AccommodationDto accommodation = line.getAccommodation();
 			tblProforma.addRow(new InlineLabel(line.getDescription()+" ("
-		+(line.getMemberId()==null?"Non Member" : line.getMemberId())+ 
-		" ERN: "+(line.getDelegateCode()==null? "" : line.getDelegateCode())+")"),
-					new InlineLabel(line.getAccommodation()==null?"NONE" : line.getAccommodation().getName()),
+		+(line.getMemberId()==null?"Non Member" : "Member "+line.getMemberId())+ 
+		" ERN: "+(line.getDelegateERN()==null? "" : line.getDelegateERN())+")"),
+					new InlineLabel(accommodation==null?"NONE" :
+						(accommodation.getHotel()+" "+accommodation.getNights()+" nights "+ accommodation.getType())),
 					new InlineLabel(line.getUnitPrice()+""),
 					new InlineLabel(line.getTotalAmount()+""));
 		}
 		tblProforma.addRow(new InlineLabel(),
+				new InlineLabel(),	
 				new InlineLabel("Grand Total"),
 				new InlineLabel(invoice.getAmount()+""));
 	}

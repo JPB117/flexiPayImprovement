@@ -46,6 +46,11 @@ public class EventsDaoHelper {
 		
 		return eventsList;
 	}
+	
+
+	public Integer getCount() {
+		return dao.getEventCount();
+	}
 
 	public EventDto getEventById(String eventId) {
 
@@ -78,4 +83,5 @@ public class EventsDaoHelper {
 		Event event = dao.getByEventId(eventId);
 		dao.delete(event);
 	}
+
 }

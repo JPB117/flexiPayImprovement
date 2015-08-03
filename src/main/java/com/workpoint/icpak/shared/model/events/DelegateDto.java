@@ -22,6 +22,7 @@ public class DelegateDto extends SerializableObj{
 	private DelegateType delegateType;
 	private String bookingId;
 	private String eventId;
+	private transient MemberDto member;
 	
 	public DelegateDto() {
 	}
@@ -129,6 +130,7 @@ public class DelegateDto extends SerializableObj{
 
 	@JsonIgnore
 	public void setMember(MemberDto memberDto) {
+		this.member = memberDto;
 		if(memberDto!=null){
 			memberId = memberDto.getMemberId();
 			memberRefId = memberDto.getRefId();

@@ -9,6 +9,8 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
+import com.workpoint.icpak.client.ui.component.PagingPanel;
+import com.workpoint.icpak.client.ui.component.PagingTable;
 import com.workpoint.icpak.client.ui.component.TableHeader;
 import com.workpoint.icpak.client.ui.component.TableView;
 import com.workpoint.icpak.client.ui.eventsandseminars.delegates.row.DelegateTableRow;
@@ -22,7 +24,7 @@ public class DelegatesTable extends Composite {
 	}
 
 	@UiField
-	TableView tblView;
+	PagingTable tblView;
 	CheckBox selected = null;
 	boolean isSalesTable = false;
 
@@ -65,6 +67,10 @@ public class DelegatesTable extends Composite {
 
 	public void setAutoNumber(boolean autoNumber) {
 		tblView.setAutoNumber(false);
+	}
+	
+	public PagingPanel getPagingPanel(){
+		return tblView.getPagingPanel();
 	}
 
 }

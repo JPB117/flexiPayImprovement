@@ -8,6 +8,7 @@ public class AccommodationDto extends SerializableObj implements Listable{
 
 	private String hotel;
 	private String description;
+	private AccommodationType type = AccommodationType.HB;
 	private Double fee;
 	private int nights;
 	private EventDto event;
@@ -63,6 +64,14 @@ public class AccommodationDto extends SerializableObj implements Listable{
 
 	public void setNights(int nights) {
 		this.nights = nights;
+	}
+
+	public AccommodationType getType() {
+		return type;
+	}
+
+	public void setType(AccommodationType type) {
+		this.type = type;
 	}
 	
 }

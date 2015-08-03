@@ -44,6 +44,12 @@ public class CPDResourceImpl implements CPDResource{
 
 			return helper.getAllCPD(memberId,offset, limit);
 		}
+		
+		@GET
+		@Path("/count")
+		public Integer getCount() {
+			return helper.getCount(memberId);
+		}
 
 		@GET
 		@Path("/{cpdId}")

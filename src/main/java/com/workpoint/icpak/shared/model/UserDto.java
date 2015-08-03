@@ -13,7 +13,6 @@ import com.workpoint.icpak.shared.model.auth.AccountStatus;
 public class UserDto extends SerializableObj implements Listable,Serializable {
 
 	private static final long serialVersionUID = -5249516544970187459L;
-	private String uri;
 	private String applicationRefId;
 	private String name;
 	private String userId;
@@ -163,14 +162,6 @@ public class UserDto extends SerializableObj implements Listable,Serializable {
 	@JsonIgnore
 	public String getDisplayName() {
 		return getFullName();
-	}
-
-	public String getUri() {
-		return uri;
-	}
-
-	public void setUri(String uri) {
-		this.uri = uri;
 	}
 
 	public AccountStatus getStatus() {

@@ -6,19 +6,20 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import com.workpoint.icpak.shared.model.InvoiceDto;
 
 @Path("invoices")
-public interface InvoiceResource {
+@Produces(MediaType.APPLICATION_JSON)
+public interface InvoiceResource extends BaseResource{
 
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public List<InvoiceDto> getInvoices();
+	public List<InvoiceDto> getInvoices(@QueryParam("offset") Integer offset,
+			@QueryParam("limit") Integer limit);
 	
 	@Path("/{invoiceref}")
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
 	public InvoiceDto getInvoice(@PathParam("invoiceref") String invoiceRef);
 }

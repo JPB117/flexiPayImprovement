@@ -212,6 +212,10 @@ public class ApplicationFormDaoHelper {
 		return rtn;
 	}
 	
+	public Integer getApplicationCount() {
+		return applicationDao.getApplicationCount();
+	}
+	
 	public ApplicationFormHeader getApplicationById(String applicationId) {
 		ApplicationFormHeader application = applicationDao.findByApplicationId(applicationId);
 		if(application==null){
@@ -264,6 +268,5 @@ public class ApplicationFormDaoHelper {
 		
 		return generateInvoice(getApplicationById(applicationId));
 	}
-
 
 }

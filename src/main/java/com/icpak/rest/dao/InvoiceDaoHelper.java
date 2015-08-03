@@ -3,8 +3,11 @@ package com.icpak.rest.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.ws.rs.QueryParam;
+
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
+import com.icpak.rest.models.event.Delegate;
 import com.icpak.rest.models.trx.Invoice;
 import com.icpak.rest.models.trx.InvoiceLine;
 import com.workpoint.icpak.shared.model.InvoiceDto;
@@ -14,10 +17,24 @@ import com.workpoint.icpak.shared.model.InvoiceLineDto;
 public class InvoiceDaoHelper {
 
 	@Inject InvoiceDao dao;
+	@Inject BookingsDao bookingsDao;
 	
 	public InvoiceDto getInvoice(String invoiceRef){
 		Invoice invoice = dao.findByRefId(invoiceRef, Invoice.class);
-		return invoice.toDto();
+		InvoiceDto dto = invoice.toDto();
+		
+		for(InvoiceLineDto line: dto.getLines()){
+			String eventDelegateRefId = line.getEventDelegateRefId();
+			if(eventDelegateRefId!=null){
+				Delegate delegate = bookingsDao.findByRefId(eventDelegateRefId, Delegate.class);
+				line.setMemberId(delegate.getMemberRegistrationNo());
+				
+				line.setDelegateERN(delegate.getErn());
+				line.setAccommodation(delegate.getAccommodation()==null? null: delegate.getAccommodation().toDto());
+			}
+		}
+		
+		return dto;
 	}
 	
 	public InvoiceDto save(InvoiceDto dto){
@@ -54,9 +71,9 @@ public class InvoiceDaoHelper {
 		return invoice.toDto();
 	}
 
-	public List<InvoiceDto> getAllInvoices() {
+	public List<InvoiceDto> getAllInvoices(Integer offset,Integer limit) {
 		
-		List<Invoice> invoices = dao.getAllInvoices();
+		List<Invoice> invoices = dao.getAllInvoices(offset, limit);
 		List<InvoiceDto> dtos = new ArrayList<>();
 		
 		for(Invoice invoice: invoices){
@@ -64,6 +81,11 @@ public class InvoiceDaoHelper {
 		}
 		
 		return dtos;
+	}
+	
+
+	public int getInvoiceCount() {
+		return dao.getInvoiceCount();
 	}
 
 	public List<InvoiceDto> getAllInvoicesForMember(String memberId) {

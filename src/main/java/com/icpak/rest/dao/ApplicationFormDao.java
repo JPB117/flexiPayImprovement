@@ -19,7 +19,7 @@ public class ApplicationFormDao extends BaseDao{
 
 	    public List<ApplicationFormHeader> getAllApplications(Integer offSet, Integer limit) {
 	    	return getResultList(getEntityManager().createQuery("select u from ApplicationFormHeader u"
-	    			+ " where u.isActive=1")
+	    			+ " where u.isActive=1 order by id desc")
 	    			, offSet, limit);
 	    }
 
