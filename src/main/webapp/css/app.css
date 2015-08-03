@@ -15025,8 +15025,7 @@ body .whirl.ringed:after {
     border-color: #7266ba #23b7e5 #7266ba #7266ba
 }
 body .whirl.traditional:after {
-    border-color: #23b7e5 #23b7e5 #fad732 #7266ba
-}
+    border-color: #deb509 #000000 #deb509 #000000;}
 body .whirl.line:after {
     box-shadow: inset -10px 0 0 rgba(93, 156, 236, .5)
 }

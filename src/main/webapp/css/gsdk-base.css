@@ -45,8 +45,8 @@ html, body {
 /*     General overwrite     */
 a {
 	color: #2CA8FF;
+	cursor: pointer;
 }
-
 a:hover, a:focus {
 	color: #109CFF;
 }
@@ -332,6 +332,12 @@ h1 .subtitle {
 .btn-success.btn-fill {
 	background-color: #05AE0E;
 	border-color: #05AE0E;
+}
+
+.btn-gold.btn-fill {
+  color: #fff;
+  background-color:#deb509;
+  border-color:#deb509;
 }
 
 .btn-warning.btn-fill {
@@ -1160,8 +1166,10 @@ label {
 }
 
 .wizard-card .wizard-header h3 {
-	font-weight: 200;
+	font-weight: 600;
 	text-align: center;
+	color: #deb509;
+	padding-bottom: 8px;
 }
 
 .wizard-card>ul>li {
@@ -1182,6 +1190,9 @@ label {
 	background-color: #05ae0e;
 }
 
+.wizard-card.ct-wizard-gold>ul>li.active a {
+    background-color:#deb509;
+}
 .wizard-card.ct-wizard-blue>ul>li.active a {
 	background-color: #3472f7;
 }
