@@ -3,7 +3,10 @@ package com.icpak.rest.models.event;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -16,6 +19,7 @@ import javax.xml.bind.annotation.XmlTransient;
 import com.icpak.rest.models.base.PO;
 import com.wordnik.swagger.annotations.ApiModel;
 import com.workpoint.icpak.shared.model.events.AccommodationDto;
+import com.workpoint.icpak.shared.model.events.AccommodationType;
 
 /**
  * Event model 
@@ -39,6 +43,10 @@ public class Accommodation extends PO{
 	private String hotel;
 	private String description;
 	private Double fee;
+	
+	@Column(name="accommodationType")
+	@Enumerated(EnumType.STRING)
+	private AccommodationType type = AccommodationType.HB;
 	private int nights=0;
 	
 	@XmlTransient
@@ -87,7 +95,7 @@ public class Accommodation extends PO{
 		dto.setHotel(hotel);
 		dto.setNights(nights);
 		dto.setRefId(getRefId());
-		
+		dto.setType(type);
 		if(isIncludeEvent){
 			if(getEvent()!=null){
 				Event e = getEvent();
@@ -102,6 +110,9 @@ public class Accommodation extends PO{
 		setFee(dto.getFee());
 		setHotel(dto.getHotel());
 		setNights(dto.getNights());
+		
+		if(type!=null)
+		setType(dto.getType());
 	}
 
 	public Event getEvent() {
@@ -118,5 +129,13 @@ public class Accommodation extends PO{
 
 	public void setNights(int nights) {
 		this.nights = nights;
+	}
+
+	public AccommodationType getType() {
+		return type;
+	}
+
+	public void setType(AccommodationType type) {
+		this.type = type;
 	}
 }

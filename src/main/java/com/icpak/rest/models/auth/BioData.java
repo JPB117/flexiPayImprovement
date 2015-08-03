@@ -74,10 +74,10 @@ public class BioData {
 	private BloodGroup bloodGroup;
 
 	@Column(name = "`Weight`", columnDefinition = "decimal(38, 20)")
-	private double weight;
+	private Double weight;
 
 	@Column(name = "`Height`", columnDefinition = "decimal(38, 20)")
-	private double height;
+	private Double height;
 
 	@Column(name = "`Religion`", columnDefinition = "varchar(50)")
 	private String religion;
@@ -120,6 +120,7 @@ public class BioData {
 
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
+		fullNames = getFullNames();
 	}
 
 	public String getLastName() {
@@ -128,6 +129,7 @@ public class BioData {
 
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
+		fullNames = getFullNames();
 	}
 
 	public Set<String> getSalutation() {
@@ -228,11 +230,6 @@ public class BioData {
 		return lastName + " " + firstName;
 	}
 	
-	@PrePersist
-	public void fullNames(){
-		setFullNames(getFullNames());
-	}
-
 	public void setFullNames(String fullNames) {
 		this.fullNames = fullNames;
 	}

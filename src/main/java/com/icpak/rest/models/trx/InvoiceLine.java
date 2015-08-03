@@ -18,6 +18,7 @@ public class InvoiceLine extends PO{
 	private double unitPrice;
 	private int quantity = 1;
 	private double totalAmount;
+	private String eventDelegateRefId;
 	
 	@ManyToOne
 	@JoinColumn(name="invoiceId")
@@ -67,11 +68,12 @@ public class InvoiceLine extends PO{
 
 	public InvoiceLineDto toDto() {
 		InvoiceLineDto dto = new InvoiceLineDto();
-		
+		dto.setRefId(getRefId());
 		dto.setDescription(description);
 		dto.setQuantity(quantity);
 		dto.setTotalAmount(totalAmount);
 		dto.setUnitPrice(unitPrice);
+		dto.setEventDelegateRefId(eventDelegateRefId);
 		
 		return dto;
 	}
@@ -81,6 +83,9 @@ public class InvoiceLine extends PO{
 		setQuantity(lineDto.getQuantity());
 		setUnitPrice(lineDto.getUnitPrice());
 		setTotalAmount(lineDto.getTotalAmount());
+		
+		if(lineDto.getEventDelegateRefId()!=null)
+			setEventDelegateRefId(lineDto.getEventDelegateRefId());
 	}
 
 	public Invoice getInvoice() {
@@ -89,5 +94,13 @@ public class InvoiceLine extends PO{
 
 	public void setInvoice(Invoice invoice) {
 		this.invoice = invoice;
+	}
+
+	public String getEventDelegateRefId() {
+		return eventDelegateRefId;
+	}
+
+	public void setEventDelegateRefId(String eventDelegateRefId) {
+		this.eventDelegateRefId = eventDelegateRefId;
 	}
 }

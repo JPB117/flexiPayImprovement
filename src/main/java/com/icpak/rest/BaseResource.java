@@ -17,7 +17,7 @@ import com.icpak.rest.models.base.ResourceModel;
  */
 public abstract class BaseResource<T extends ResourceModel> {
 
-	public static int PAGE_LIMIT=3;
+	public static int PAGE_LIMIT=30;
 	
 	public Response buildCollectionResponse(@SuppressWarnings("rawtypes") ResourceCollectionModel entities){
 		return Response.ok().entity(entities).build();

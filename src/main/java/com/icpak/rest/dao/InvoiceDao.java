@@ -6,14 +6,24 @@ import com.icpak.rest.models.trx.Invoice;
 
 public class InvoiceDao extends BaseDao{
 
-	public List<Invoice> getAllInvoices() {
-		return getResultList(getEntityManager().createQuery("FROM Invoice where isActive=1"));
+	public List<Invoice> getAllInvoices(Integer offset,Integer limit) {
+		return getResultList(getEntityManager()
+				.createQuery("FROM Invoice where isActive=1 "
+						+ "order by id desc"),offset, limit);
 	}
 
 	public List<Invoice> getAllInvoicesForMember(String memberId) {
 		
-		return getResultList(getEntityManager().createQuery("FROM Invoice where isActive=1 and memberId=:memberId")
+		return getResultList(getEntityManager().createQuery("FROM Invoice where isActive=1 "
+				+ "and memberId=:memberId "
+				+ "order by id desc")
 				.setParameter("memberId", memberId));
+	}
+
+	public int getInvoiceCount() {
+		Number number = getSingleResultOrNull(getEntityManager()
+				.createQuery("SELECT count(i) from Invoice i where i.isActive=1"));
+		return number.intValue();
 	}
 	
 }

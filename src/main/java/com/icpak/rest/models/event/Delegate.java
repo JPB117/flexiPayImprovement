@@ -34,6 +34,7 @@ public class Delegate extends PO{
 	private static final long serialVersionUID = 1L;
 	
 	private String memberRegistrationNo;
+	private String ern;//ERN Number - see trigger generate_booking_ern_no
 	private String memberRefId;
 	private String title;
 	private String surname;
@@ -184,6 +185,14 @@ public class Delegate extends PO{
 
 	public void setMemberRefId(String memberRefId) {
 		this.memberRefId = memberRefId;
+	}
+
+	public String getErn() {
+		return ern;
+	}
+
+	private void setErn(String ern) {
+		this.ern = ern;
 	}
 
 }

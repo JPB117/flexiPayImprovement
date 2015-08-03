@@ -58,6 +58,12 @@ DROP TRIGGER IF EXISTS generate_docnum;
 CREATE TRIGGER generate_docnum
 BEFORE INSERT ON Invoice
 FOR EACH ROW
-SET NEW.documentNo= proc_generatedocnum('INV', concat('INV-',ifnull(NEW.id,'XXXX')));
+SET NEW.documentNo= proc_generatedocnum('INV', concat('INV-',NEW.refId));
+
+DROP TRIGGER IF EXISTS generate_booking_ern_no;
+CREATE TRIGGER generate_booking_ern_no
+BEFORE INSERT ON delegate
+FOR EACH ROW
+SET NEW.ern= proc_generatedocnum('ERN', concat('BookingDelegate-',NEW.refId));
 
 
