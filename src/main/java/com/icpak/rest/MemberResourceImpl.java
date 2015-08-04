@@ -16,6 +16,7 @@ import com.icpak.rest.factory.ResourceFactory;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
+import com.workpoint.icpak.shared.api.EnquiriesResource;
 import com.workpoint.icpak.shared.api.MemberResource;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.MemberDto;
@@ -73,10 +74,6 @@ public class MemberResourceImpl implements MemberResource{
 //		return membersHelper.getAllMembers(offset, limit, "", searchTerm);
 //	}
 //	
-	@Path("/{memberId}/cpd")
-	public CPDResourceImpl cpd(@PathParam("memberId") String memberId){
-		return resourceFactory.createCPDResource(memberId);
-	}
 
 	@Path("/{memberId}/invoice")
 	@GET
@@ -85,6 +82,16 @@ public class MemberResourceImpl implements MemberResource{
 			@ApiParam(value="Member Id", required=true) @PathParam("memberId") String memberId) {
 		
 		return helper.getAllInvoicesForMember(memberId);
+	}
+	
+	@Path("/{memberId}/cpd")
+	public CPDResourceImpl cpd(@PathParam("memberId") String memberId){
+		return resourceFactory.createCPDResource(memberId);
+	}
+	
+	@Path("/{memberId}/enquiries")
+	public EnquiriesResourceImpl enquiries(@PathParam("memberId") String memberId){
+		return resourceFactory.createEnquiriesResource(memberId);
 	}
 	
 }

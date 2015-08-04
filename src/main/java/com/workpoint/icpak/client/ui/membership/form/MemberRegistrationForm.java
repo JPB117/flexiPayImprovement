@@ -15,6 +15,7 @@ import com.workpoint.icpak.client.ui.component.IssuesPanel;
 import com.workpoint.icpak.client.ui.component.TextField;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 import com.workpoint.icpak.shared.model.ApplicationType;
+import com.workpoint.icpak.shared.model.Gender;
 import com.workpoint.icpak.shared.model.Listable;
 
 public class MemberRegistrationForm extends Composite {
@@ -99,6 +100,11 @@ public class MemberRegistrationForm extends Composite {
 				isValid = false;
 				issuesPanel.addError("Address is required");
 			}
+			
+			if (lstGender.getValue()==null) {
+				isValid = false;
+				issuesPanel.addError("Gender is required");
+			}
 		} else if (counter == 1) {
 			if (type == null) {
 				Window.alert("Kindly select your category..");
@@ -130,6 +136,7 @@ public class MemberRegistrationForm extends Composite {
 		dto.setTelephone1(txtPhone.getValue());
 		dto.setPostCode(txtPostalCode.getValue());
 		dto.setApplicationType(type);
+		dto.setGender(lstGender.getValue());
 		return dto;
 	}
 
@@ -161,28 +168,6 @@ public class MemberRegistrationForm extends Composite {
 		txtAddress.setValue(application.getAddress1());
 		txtPostalCode.setValue(application.getPostCode());
 		type = application.getApplicationType();
-	}
-
-	public enum Gender implements Listable {
-		MALE("Male"), FEMALE("Female");
-
-		private String gender;
-
-		Gender(String name) {
-			gender = name;
-
-		}
-
-		@Override
-		public String getName() {
-			return gender;
-		}
-
-		@Override
-		public String getDisplayName() {
-			return gender;
-		}
-
 	}
 
 }

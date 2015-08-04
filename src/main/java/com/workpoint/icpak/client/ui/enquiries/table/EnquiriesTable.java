@@ -8,8 +8,9 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
+import com.workpoint.icpak.client.ui.component.PagingPanel;
+import com.workpoint.icpak.client.ui.component.PagingTable;
 import com.workpoint.icpak.client.ui.component.TableHeader;
-import com.workpoint.icpak.client.ui.component.TableView;
 import com.workpoint.icpak.client.ui.enquiries.table.row.EnquiriesTableRow;
 
 public class EnquiriesTable extends Composite {
@@ -21,7 +22,7 @@ public class EnquiriesTable extends Composite {
 	}
 
 	@UiField
-	TableView tblView;
+	PagingTable tblView;
 
 	public EnquiriesTable() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -61,6 +62,10 @@ public class EnquiriesTable extends Composite {
 
 	public void setAutoNumber(boolean autoNumber) {
 		tblView.setAutoNumber(false);
+	}
+
+	public PagingPanel getPagingPanel() {
+		return tblView.getPagingPanel();
 	}
 
 }

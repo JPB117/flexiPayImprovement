@@ -16,7 +16,7 @@ public class UserDto extends SerializableObj implements Listable,Serializable {
 	private String applicationRefId;
 	private String name;
 	private String userId;
-	private String memberId;
+	private String memberRefId;
 	private String email;
 	private String surname;
 	private String password;
@@ -180,11 +180,11 @@ public class UserDto extends SerializableObj implements Listable,Serializable {
 		this.applicationRefId = applicationRefId;
 	}
 
-	public String getMemberId() {
-		return memberId;
+	public String getMemberRefId() {
+		return memberRefId;
 	}
 
-	public void setMemberId(String memberId) {
-		this.memberId = memberId;
+	public void setMemberRefId(String memberId) {
+		this.memberRefId = memberId;
 	}
 }
