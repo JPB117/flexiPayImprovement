@@ -39,19 +39,4 @@ public class TrainingTableRow extends RowWidget {
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 
-	public TrainingTableRow(String institution, String from, String to,
-			String examBody, String division, String awarded, String regNo,
-			String sectionPassed) {
-/*		
-		divInstitution.getElement().setInnerHTML(transaction.getCustomerName());
-		divFrom.getElement().setInnerHTML(transaction.getCustomerName());
-		divTo.getElement().setInnerHTML(transaction.getCustomerName());
-		divExamBody.getElement().setInnerHTML(transaction.getCustomerName());
-		divDivision.getElement().setInnerHTML(transaction.getCustomerName());
-		divAwarded.getElement().setInnerHTML(transaction.getCustomerName());
-		divRegNo.getElement().setInnerHTML(transaction.getCustomerName());
-		divRegNo.getElement().setInnerHTML(transaction.getCustomerName());*/
-		
-	}
-
 }

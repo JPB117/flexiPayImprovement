@@ -2,6 +2,8 @@ package com.workpoint.icpak.client.ui.profile.training.form;
 
 import static com.workpoint.icpak.client.ui.util.StringUtils.isNullOrEmpty;
 
+import java.util.Arrays;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -9,10 +11,11 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.Widget;
 import com.workpoint.icpak.client.ui.component.DateField;
+import com.workpoint.icpak.client.ui.component.DropDownList;
 import com.workpoint.icpak.client.ui.component.IssuesPanel;
 import com.workpoint.icpak.client.ui.component.TextField;
-import com.workpoint.icpak.shared.model.ApplicationFormEducationalDto;
 import com.workpoint.icpak.shared.model.ApplicationFormTrainingDto;
+import com.workpoint.icpak.shared.model.ApplicationFormTrainingDto.TrainingType;
 
 public class TrainingRegistrationForm extends Composite {
 
@@ -32,7 +35,8 @@ public class TrainingRegistrationForm extends Composite {
 	@UiField
 	TextArea txtResponsibility;
 	@UiField
-	TextField txtClients;
+	DropDownList<TrainingType> lstTrainingType;
+
 	@UiField
 	DateField dtDatePassed;
 
@@ -47,6 +51,7 @@ public class TrainingRegistrationForm extends Composite {
 
 	public TrainingRegistrationForm() {
 		initWidget(uiBinder.createAndBindUi(this));
+		lstTrainingType.setItems(Arrays.asList(TrainingType.values()));
 	}
 
 	public TrainingRegistrationForm(String firstName) {
@@ -61,7 +66,6 @@ public class TrainingRegistrationForm extends Composite {
 			isValid = false;
 			issues.addError("Organization is mandatory");
 		}
-
 		if (isNullOrEmpty(txtPosition.getValue())) {
 			isValid = false;
 			issues.addError("Position is mandatory");
@@ -74,17 +78,15 @@ public class TrainingRegistrationForm extends Composite {
 			isValid = false;
 			issues.addError("Date Completed is mandatory");
 		}
-
 		if (isNullOrEmpty(txtTaskNature.getValue())) {
 			isValid = false;
 			issues.addError("Task Nature is mandatory");
 		}
-
 		if (isNullOrEmpty(txtResponsibility.getValue())) {
 			isValid = false;
 			issues.addError("Responsibility is mandatory");
 		}
-		if (isNullOrEmpty(txtClients.getValue())) {
+		if (isNullOrEmpty(lstTrainingType.getValue())) {
 			isValid = false;
 			issues.addError("Clients is mandatory");
 		}
@@ -93,6 +95,11 @@ public class TrainingRegistrationForm extends Composite {
 			issues.addError("Date Passed is mandatory");
 		}
 
+		if (isValid != true) {
+			issues.removeStyleName("hide");
+		} else {
+			issues.addStyleName("hide");
+		}
 		return isValid;
 	}
 
@@ -103,7 +110,7 @@ public class TrainingRegistrationForm extends Composite {
 		dtDateCompleted.setValue("");
 		txtTaskNature.setValue("");
 		txtResponsibility.setValue("");
-		txtClients.setValue("");
+		// lstTrainingType.setValue("");
 		dtDatePassed.setValue("");
 	}
 
@@ -118,7 +125,7 @@ public class TrainingRegistrationForm extends Composite {
 		dto.setToDate(dtDateCompleted.getValueDate());
 		dto.setTaskNature(txtTaskNature.getText());
 		dto.setResponsibility(txtResponsibility.getText());
-		dto.setClients(txtClients.getText());
+		dto.setTrainingType(lstTrainingType.getValue());
 		dto.setDatePassed(dtDatePassed.getValueDate());
 		return dto;
 	}
@@ -130,7 +137,7 @@ public class TrainingRegistrationForm extends Composite {
 		dtDateCompleted.setValue(trainingDto.getToDate());
 		txtTaskNature.setValue(trainingDto.getTaskNature());
 		txtResponsibility.setValue(trainingDto.getResponsibility());
-		txtClients.setValue(trainingDto.getClients());
+		lstTrainingType.setValue(trainingDto.getTrainingType());
 		dtDatePassed.setValue(trainingDto.getDatePassed());
 	}
 

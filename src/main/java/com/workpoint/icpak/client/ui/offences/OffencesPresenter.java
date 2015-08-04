@@ -23,36 +23,40 @@ import com.workpoint.icpak.client.ui.admin.TabDataExt;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
 import com.workpoint.icpak.client.ui.security.LoginGateKeeper;
 
-public class OffencesPresenter extends
-		Presenter<OffencesPresenter.IOffencesView, OffencesPresenter.IOffencesProxy>{
+public class OffencesPresenter
+		extends
+		Presenter<OffencesPresenter.IOffencesView, OffencesPresenter.IOffencesProxy> {
 
 	public interface IOffencesView extends View {
-		
+
 	}
-	
+
 	@ProxyCodeSplit
 	@NameToken(NameTokens.offences)
 	@UseGatekeeper(LoginGateKeeper.class)
-	public interface IOffencesProxy extends TabContentProxyPlace<OffencesPresenter> {
+	public interface IOffencesProxy extends
+			TabContentProxyPlace<OffencesPresenter> {
 	}
-	
+
 	@TabInfo(container = HomePresenter.class)
-    static TabData getTabLabel(LoginGateKeeper adminGatekeeper) {
-		TabDataExt data = new TabDataExt("My Offences","fa fa-user-secret",6,adminGatekeeper, true);
-        return data;
-    }
+	static TabData getTabLabel(LoginGateKeeper adminGatekeeper) {
+		TabDataExt data = new TabDataExt("My Offences", "fa fa-user-secret", 6,
+				adminGatekeeper, false);
+		return data;
+	}
 
 	@Inject
-	public OffencesPresenter(final EventBus eventBus, final IOffencesView view,final IOffencesProxy proxy) {
+	public OffencesPresenter(final EventBus eventBus, final IOffencesView view,
+			final IOffencesProxy proxy) {
 		super(eventBus, view, proxy, HomePresenter.SLOT_SetTabContent);
 	}
 
 	@Override
 	protected void onBind() {
 		super.onBind();
-		
+
 	}
-	
+
 	protected void save() {
 	}
 

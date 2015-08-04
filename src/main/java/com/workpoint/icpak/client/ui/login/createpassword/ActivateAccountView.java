@@ -17,11 +17,13 @@ public class ActivateAccountView extends ViewImpl implements
 	public interface Binder extends UiBinder<Widget, ActivateAccountView> {
 	}
 
-	@UiField PasswordWidget panelPasswordWidget;
-	
+	@UiField
+	PasswordWidget panelPasswordWidget;
+
 	@Inject
 	public ActivateAccountView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
+		panelPasswordWidget.setCreatePassword(true);
 	}
 
 	@Override

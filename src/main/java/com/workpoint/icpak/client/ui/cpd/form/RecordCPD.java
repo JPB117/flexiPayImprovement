@@ -1,4 +1,4 @@
-package com.workpoint.icpak.client.ui.cpd.record;
+package com.workpoint.icpak.client.ui.cpd.form;
 
 import static com.workpoint.icpak.client.ui.util.StringUtils.isNullOrEmpty;
 

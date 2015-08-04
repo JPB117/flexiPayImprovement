@@ -34,10 +34,9 @@ public class TrainingDetails extends Composite {
 
 	@UiField
 	HTMLPanel panelTable;
-	
+
 	@UiField
 	ActionLink aAdd;
-	
 
 	List<TableHeader> tblBeforeHeaders = new ArrayList<TableHeader>();
 
@@ -52,26 +51,17 @@ public class TrainingDetails extends Composite {
 	}
 
 	private void createBeforeHeader() {
-		tblBeforeHeaders.add(new TableHeader("Organization"));
-		tblBeforeHeaders.add(new TableHeader("Start Date"));
-		tblBeforeHeaders.add(new TableHeader("End Date"));
-		tblBeforeHeaders.add(new TableHeader("Position"));
-		tblBeforeHeaders.add(new TableHeader("Task Nature"));
-		tblBeforeHeaders.add(new TableHeader("Responsibilities"));
-		tblBeforeHeaders.add(new TableHeader("Clients"));
-		tblBeforeHeaders.add(new TableHeader("Date Passed"));
-		tblBeforeHeaders.add(new TableHeader("Type"));
+		tblBeforeHeaders.add(new TableHeader("Name of Organization"));
+		tblBeforeHeaders.add(new TableHeader("From"));
+		tblBeforeHeaders.add(new TableHeader("To"));
+		tblBeforeHeaders.add(new TableHeader("Position Held"));
+		tblBeforeHeaders.add(new TableHeader("Training Type"));
+		tblBeforeHeaders
+				.add(new TableHeader("Description of Responsibilities"));
 		tblBeforeHeaders.add(new TableHeader("Action"));
-
 		tblTrainingDetails.setTableHeaders(tblBeforeHeaders);
 	}
 
-	private void createRows() {
-		for (int i = 0; i < 10; i++) {
-			TrainingTableRow row = new TrainingTableRow();
-			tblTrainingDetails.addRow(row);
-		}
-	}
 
 	public void setEditMode(boolean editMode) {
 		if (editMode) {
@@ -113,18 +103,19 @@ public class TrainingDetails extends Composite {
 			HTMLPanel panel = new HTMLPanel("");
 			panel.add(edit);
 			panel.add(delete);
-			tblTrainingDetails.addRow(
-					new InlineLabel(training.getOrganisationName()),
-					new InlineLabel(DateUtils.DATEFORMAT.format(training
-							.getFromDate())),
-					new InlineLabel(DateUtils.DATEFORMAT.format(training
-							.getToDate())),
-					new InlineLabel(training.getPosition()),
-					new InlineLabel(training.getTaskNature()),
-					new InlineLabel(training.getResponsibility()),
-					new InlineLabel(training.getClients()),
-					new InlineLabel(DateUtils.DATEFORMAT.format(training
-							.getDatePassed())), panel);
+			tblTrainingDetails
+					.addRow(new InlineLabel(training.getOrganisationName()),
+							new InlineLabel(DateUtils.DATEFORMAT
+									.format(training.getFromDate())),
+							new InlineLabel(DateUtils.DATEFORMAT
+									.format(training.getToDate())),
+							new InlineLabel(training.getPosition()),
+							new InlineLabel(training.getTaskNature()),
+							new InlineLabel(training.getTrainingType()
+									.getDisplayName()),
+							new InlineLabel(training.getResponsibility()),
+							new InlineLabel(DateUtils.DATEFORMAT
+									.format(training.getDatePassed())), panel);
 		}
 	}
 }

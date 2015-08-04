@@ -26,7 +26,6 @@
 			</g:HTMLPanel>
 
 			<g:HTMLPanel ui:field="panelForm" styleName="hide">
-
 			</g:HTMLPanel>
 
 			<!-- <div class="tab-content hide"> -->

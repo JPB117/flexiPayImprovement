@@ -12,6 +12,28 @@ public class ApplicationFormTrainingDto extends SerializableObj {
 	/**
 	 * 
 	 */
+	public enum TrainingType implements Listable {
+		BEFOREQUALIFYING("Before Qualifying"), AFTERQUALIFYING(
+				"After Qualifying");
+
+		private String displayName;
+
+		TrainingType(String displayName) {
+			this.displayName = displayName;
+		}
+
+		@Override
+		public String getName() {
+			return displayName;
+		}
+
+		@Override
+		public String getDisplayName() {
+			return displayName;
+		}
+
+	}
+
 	private static final long serialVersionUID = 1L;
 	private String organisationName;
 	private String position;
@@ -19,6 +41,7 @@ public class ApplicationFormTrainingDto extends SerializableObj {
 	private Date toDate;
 	private Date fromDate;
 	private String responsibility;
+	private TrainingType trainingType;
 	private String clients;
 	private Date datePassed;
 
@@ -87,6 +110,14 @@ public class ApplicationFormTrainingDto extends SerializableObj {
 
 	public Date getToDate() {
 		return toDate;
+	}
+
+	public TrainingType getTrainingType() {
+		return trainingType;
+	}
+
+	public void setTrainingType(TrainingType trainingType) {
+		this.trainingType = trainingType;
 	}
 
 }

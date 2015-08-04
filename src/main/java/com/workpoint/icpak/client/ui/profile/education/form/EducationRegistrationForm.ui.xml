@@ -1,6 +1,7 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d='urn:import:com.workpoint.icpak.client.ui.component'>
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d='urn:import:com.workpoint.icpak.client.ui.component'
+	xmlns:up='urn:import:com.workpoint.icpak.client.ui.upload.custom'>
 	<g:HTMLPanel styleName="col-md-12">
 
 		<div class="row">
@@ -88,6 +89,38 @@
 							placeholder="Enter Education Type" value="" required="true">
 						</d:TextField>
 					</div>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="row">
+					<div class="col-xs-12">
+						<label for="enddate">Attachments:</label>
+						<p class="text-small text-muted">Provide copies of all parts of the local (KASNEB) CPA
+							examination
+							certificates. Where an applicant has not received a
+							certificate,
+							he/she should provide a copy of the congratulatory
+							letter from
+							KASNEB and all the result notification slips. Holders
+							of foreign
+							accountancy qualifications will be required to submit
+							copies of
+							their membership certificates from their foreign
+							institutes and a
+							copy of the letter from KASNEB confirming that
+							they have sat and
+							passed the recommended local examination papers.
+							Certification of
+							copies may be done at the ICPAK offices (free of
+							charge) upon
+							presentation of the originals.
+						</p>
+					</div>
+					
+					<br />
+					
+					<up:Uploader ui:field="uploader" styleName="custom-file-input"></up:Uploader>
 				</div>
 			</div>
 		</div>

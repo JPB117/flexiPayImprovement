@@ -37,7 +37,7 @@ public class DashboardPresenter extends
 	
 	@TabInfo(container = HomePresenter.class)
     static TabData getTabLabel(LoginGateKeeper adminGatekeeper) {
-		TabDataExt data = new TabDataExt("Home","icon-speedometer",1,adminGatekeeper, true);
+		TabDataExt data = new TabDataExt("Home","icon-speedometer",1,adminGatekeeper, false);
         return data;
     }
 

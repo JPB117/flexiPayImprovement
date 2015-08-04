@@ -22,9 +22,10 @@
 
 		<g:HTMLPanel styleName="image-container set-full-height">
 			<g:HTMLPanel styleName="login-bg">
-				<g:HTMLPanel styleName="row-fluid login-wrapper">
-					<g:HTMLPanel styleName="span4 box" ui:field="loadingbox">
-						<div class="content-wrap">
+				<g:HTMLPanel styleName="wizard-container col-md-6 col-md-offset-3">
+					<g:HTMLPanel styleName="card wizard-card ct-wizard-gold"
+						ui:field="loadingbox">
+						<div class="">
 							<password:PasswordWidget ui:field="panelPasswordWidget"></password:PasswordWidget>
 						</div>
 					</g:HTMLPanel>

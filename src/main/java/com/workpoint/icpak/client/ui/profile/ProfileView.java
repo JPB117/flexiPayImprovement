@@ -118,11 +118,12 @@ public class ProfileView extends ViewImpl implements
 		setEditMode(false);
 
 		divTabs.setHeaders(Arrays.asList(new TabHeader("Basic Information",
-				true, "basic_details"), new TabHeader("Education Information",
-				false, "education_details"), new TabHeader("Trainings", false,
-				"training_details"), new TabHeader("Specialization", false,
-				"specialisation_details")));
-
+				true, "basic_details"), new TabHeader(
+				"Education Background(From O-Levels)", false,
+				"education_details"), new TabHeader("Practical Training",
+				false, "training_details"), new TabHeader(
+				"Specialization Detail", false, "specialisation_details")));
+		
 		divTabs.setPosition(TabPosition.PILLS);
 
 		divTabs.setContent(Arrays.asList(new TabContent(basicDetail,
@@ -267,7 +268,7 @@ public class ProfileView extends ViewImpl implements
 	public void bindEducationDetails(List<ApplicationFormEducationalDto> result) {
 		educationDetail.bindDetails(result);
 	}
-	
+
 	@Override
 	public void bindTrainingDetails(List<ApplicationFormTrainingDto> result) {
 		trainingDetail.bindDetails(result);
