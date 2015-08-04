@@ -31,4 +31,7 @@ public interface MemberResource extends BaseResource{
 	@Path("/{memberId}/invoice")
 	@GET
 	public List<InvoiceDto> getAllInvoicesForMember(@PathParam("memberId") String memberId);
+	
+	@Path("/{memberId}/enquiries")
+	public EnquiriesResource enquiries(@PathParam("memberId") String memberId);
 }

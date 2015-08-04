@@ -286,7 +286,7 @@ public class UsersDaoHelper {
         if (isLoggedIn) {
             loggedInCookie = loginCookieDao.createSessionCookie(action.getLoggedInCookie(),userDto);
             userDto.setApplicationRefId(getApplicationRefId(userDto.getRefId()));
-            userDto.setMemberId(dao.getMemberId(userDto.getRefId()));
+            userDto.setMemberRefId(dao.getMemberRefId(userDto.getRefId()));
         }
 
         CurrentUserDto currentUserDto = new CurrentUserDto(isLoggedIn, userDto);

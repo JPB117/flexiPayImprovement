@@ -4,33 +4,26 @@
 
 	<g:HTMLPanel styleName="tr" ui:field="row">
 		<g:HTMLPanel styleName="td" ui:field="divDate">
-			12-June-2015
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divMemberNo">
-			<d:ActionLink ui:field="aMemberNo">1526</d:ActionLink>
+			<d:ActionLink ui:field="aMemberNo"></d:ActionLink>
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divMemberName">
-			<d:ActionLink ui:field="aMember">CPA Dennis Milgo</d:ActionLink>
+			<d:ActionLink ui:field="aMember"></d:ActionLink>
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divEmail">
-			tomkim@wira.io
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divPhone">
-			0729472421
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divSubject">
-			<d:ActionLink ui:field="aSubject">Problems with CPD</d:ActionLink>
+			<d:ActionLink ui:field="aSubject"></d:ActionLink>
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divCategory">
-			Training and
-			Development
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divEnquiryDetails">
-			I attended the
-			Financial forum and my CPD was not reflected into my account.
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divEnquiriesStatus">
-			<span ui:field="spnStatus" class="label label-default">Drafted</span>
+			<span ui:field="spnStatus" class="label label-default"></span>
 		</g:HTMLPanel>
 
 		<g:HTMLPanel styleName="td" ui:field="divAction">
@@ -43,10 +36,10 @@
 
 				<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
 					<li>
-						<d:ActionLink ui:field="aAttended">Reply</d:ActionLink>
+						<d:ActionLink ui:field="aReply">Reply</d:ActionLink>
 					</li>
 					<li>
-						<d:ActionLink ui:field="aEdit">Mark as Complete</d:ActionLink>
+						<d:ActionLink ui:field="aMarkComplete">Mark as Complete</d:ActionLink>
 					</li>
 				</ul>
 			</div>

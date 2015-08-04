@@ -2,6 +2,9 @@ package com.workpoint.icpak.client.ui.enquiries.form;
 
 import static com.workpoint.icpak.client.ui.util.StringUtils.isNullOrEmpty;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -11,7 +14,8 @@ import com.google.gwt.user.client.ui.Widget;
 import com.workpoint.icpak.client.ui.component.DropDownList;
 import com.workpoint.icpak.client.ui.component.IssuesPanel;
 import com.workpoint.icpak.client.ui.component.TextField;
-import com.workpoint.icpak.shared.model.events.AccommodationDto;
+import com.workpoint.icpak.shared.model.EnquiriesCategory;
+import com.workpoint.icpak.shared.model.EnquiriesDto;
 
 public class CreateEnquiry extends Composite {
 
@@ -34,12 +38,18 @@ public class CreateEnquiry extends Composite {
 	@UiField
 	TextField txtSubject;
 	@UiField
-	DropDownList lstCategory;
+	DropDownList<EnquiriesCategory> lstCategory;
 	@UiField
 	TextArea txtMessage;
 
 	public CreateEnquiry() {
 		initWidget(uiBinder.createAndBindUi(this));
+		List<EnquiriesCategory> cats  = new ArrayList<EnquiriesCategory>();
+		for(EnquiriesCategory c: EnquiriesCategory.values()){
+			cats.add(c);
+		}
+		
+		lstCategory.setItems(cats);
 	}
 
 	public boolean isValid() {
@@ -76,11 +86,17 @@ public class CreateEnquiry extends Composite {
 		return isValid;
 	}
 
-	public void setEnquiryDetail(AccommodationDto accomodation) {
-
-	}
-
-	public AccommodationDto getAccomodationDetails() {
-		return null;
+	public EnquiriesDto getEnquiry() {
+		
+		EnquiriesDto dto = new EnquiriesDto();
+		dto.setCategory(lstCategory.getValue());
+		dto.setEmailAddress(txtEmail.getValue());
+		dto.setFullNames(txtFullNames.getValue());
+		dto.setMembershipNo(txtMemberNo.getValue());
+		dto.setMessage(txtMemberNo.getValue());
+		dto.setPhone(txtMobile.getValue());
+		dto.setSubject(txtSubject.getValue());
+		
+		return dto;
 	}
 }
