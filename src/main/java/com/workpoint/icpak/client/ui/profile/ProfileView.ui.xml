@@ -3,8 +3,8 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
 	xmlns:g='urn:import:com.google.gwt.user.client.ui' ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
 	xmlns:d='urn:import:com.workpoint.icpak.client.ui.component' xmlns:up='urn:import:com.workpoint.icpak.client.ui.upload.custom'
+	xmlns:profile='urn:import:com.workpoint.icpak.client.ui.profile.widget'
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
-	xmlns:t='urn:import:com.workpoint.icpak.client.ui.component.tabs'
 	xmlns:password='urn:import:com.workpoint.icpak.client.ui.profile.password'
 	ui:generateLocales='default'>
 
@@ -14,135 +14,7 @@
 			User Profile
 		</h3>
 
-		<g:HTMLPanel ui:field="divProfileContent" styleName="col-xs-12">
-			<g:HTMLPanel styleName="row">
-				<div class="col-xs-12">
-					<div class="panel widget">
-						<div class="ember-view popovercontainer ribbon" disabled="false"
-							data-original-title="" title="">
-							<div class="ribbon-inner ribbon-draft">
-								Pending
-							</div>
-						</div>
-						<div class="panel-header">
-							<g:HTMLPanel styleName="dropdown pull-right"
-								ui:field="divEditDropDown">
-								<a class="btn btn-default dropdown-toggle" id="dropdownMenu1"
-									data-toggle="dropdown" aria-expanded="true">
-									Edit
-									<span class="caret"></span>
-								</a>
-								<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-									<li>
-										<d:ActionLink ui:field="aEdit">
-											Edit Profile
-										</d:ActionLink>
-									</li>
-									<li>
-										<d:ActionLink ui:field="aChangePassword">
-											Change Password
-										</d:ActionLink>
-									</li>
-								</ul>
-							</g:HTMLPanel>
-
-							<g:HTMLPanel ui:field="divSavePanel">
-								<d:ActionLink ui:field="aSaveChanges"
-									styleName="btn btn-primary btn-fill pull-right">Save
-									Changes</d:ActionLink>
-							</g:HTMLPanel>
-						</div>
-						
-						<div class="panel-body">
-							<g:HTMLPanel ui:field="profileViewMode" styleName="row">
-								<div class="col-lg-2">
-									<br />
-									<g:HTMLPanel ui:field="profileViewEditMode">
-										<div class="profile-page">
-											<g:FocusPanel ui:field="panelPicture">
-												<g:Image ui:field="imgUser" styleName="thumbnail col-sm-offset-1" />
-											</g:FocusPanel>
-										</div>
-									</g:HTMLPanel>
-								</div>
-
-								<div class="col-lg-10">
-									<g:HTMLPanel ui:field="panelProfile" styleName="col-md-12">
-										<up:Uploader ui:field="uploader" styleName="custom-file-input"></up:Uploader>
-									</g:HTMLPanel>
-
-									<g:HTMLPanel ui:field="PanelProfileDisplay"
-										styleName="col-md-12">
-										<div class="row">
-											<h3 class="m0">
-												<span ui:field="spnNames">Tom Kimani Muriranja</span>
-											</h3>
-										</div>
-
-										<div class="row">
-											<p class="text-muted">
-												<br />
-												<span ui:field="spnApplicationType">Non-Practising</span>
-											</p>
-										</div>
-
-										<div class="row">
-											<div class="col-md-4 p0">
-												<div class="progress progress-striped progress-xs">
-													<div role="progressbar" aria-valuenow="80"
-														aria-valuemin="0" aria-valuemax="100"
-														class="progress-bar progress-bar-green progress-80">
-														<span ui:field="spnCompletion" class="text-muted small">80% Complete</span>
-													</div>
-												</div>
-											</div>
-										</div>
-
-										<div class="row">
-											Payment Status:
-											<span ui:field="spnPaymentStatus" class="label label-warning">Not Paid</span>
-										</div>
-
-										<div class="row">
-											<br />
-											<d:ActionLink ui:field="aPayNow"
-												styleName="btn btn-fill btn-success">Pay
-												Now</d:ActionLink>
-										</div>
-
-									</g:HTMLPanel>
-								</div>
-							</g:HTMLPanel>
-
-							<br />
-
-							<!-- Tabs -->
-							<div class="row">
-								<div class="col-xs-12">
-									<t:TabPanel ui:field="divTabs">
-									</t:TabPanel>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</g:HTMLPanel>
-
-			<div class="row hide">
-				<div class="col-xs-12">
-					<div class="panel widget">
-						<div class="panel-heading">Profile Information</div>
-						<div class="panel-body">
-							<div class="col-xs-12">
-								<!-- Tabs -->
-								<t:TabPanel ui:field="divTabs2">
-								</t:TabPanel>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</g:HTMLPanel>
+		<profile:ProfileWidget ui:field="divProfileContent"></profile:ProfileWidget>
 
 		<g:HTMLPanel ui:field="divPasswordContent">
 			<password:PasswordWidget ui:field="panelPasswordWidget"></password:PasswordWidget>

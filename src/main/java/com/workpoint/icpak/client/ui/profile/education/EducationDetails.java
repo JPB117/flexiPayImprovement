@@ -91,8 +91,11 @@ public class EducationDetails extends Composite {
 	}
 
 	public void setEditMode(boolean editMode) {
-		// showForm(editMode);
-		// aAdd.setVisible(editMode);
+		if (editMode) {
+			aAdd.setVisible(true);
+		} else {
+			aAdd.setVisible(false);
+		}
 	}
 
 	public void bindDetails(List<ApplicationFormEducationalDto> result) {

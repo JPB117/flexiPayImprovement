@@ -34,6 +34,7 @@ import com.workpoint.icpak.client.ui.membership.form.MemberRegistrationForm;
 import com.workpoint.icpak.client.ui.profile.education.form.EducationRegistrationForm;
 import com.workpoint.icpak.client.ui.profile.specialization.form.SpecializationRegistrationForm;
 import com.workpoint.icpak.client.ui.profile.training.form.TrainingRegistrationForm;
+import com.workpoint.icpak.client.ui.profile.widget.ProfileWidget;
 import com.workpoint.icpak.client.ui.security.LoginGateKeeper;
 import com.workpoint.icpak.shared.api.ApplicationFormResource;
 import com.workpoint.icpak.shared.model.ApplicationFormEducationalDto;
@@ -287,7 +288,6 @@ public class ProfilePresenter
 	}
 
 	private void loadData(String applicationRefId) {
-		// Window.alert("ApplicationID = "+applicationRefId+" >> User = "+currentUser.getUser());
 		if (applicationRefId != null) {
 			applicationDelegate.withCallback(
 					new AbstractAsyncCallback<ApplicationFormHeaderDto>() {
@@ -295,6 +295,7 @@ public class ProfilePresenter
 						public void onSuccess(ApplicationFormHeaderDto result) {
 							getView().bindBasicDetails(result);
 							memberForm.bind(result);
+							// Window.alert("Binded Basic data");
 						}
 					}).getById(applicationRefId);
 
@@ -305,6 +306,7 @@ public class ProfilePresenter
 								public void onSuccess(
 										List<ApplicationFormEducationalDto> result) {
 									getView().bindEducationDetails(result);
+									// Window.alert("Binded Education Form data");
 								}
 							}).education(applicationRefId).getAll(0, 100);
 
@@ -314,6 +316,8 @@ public class ProfilePresenter
 
 			// bind Specialization details
 
+		} else {
+			Window.alert("User refId not sent in this request!");
 		}
 
 	}
@@ -321,7 +325,6 @@ public class ProfilePresenter
 	String getApplicationRefId() {
 		String applicationRefId = currentUser.getUser() == null ? null
 				: currentUser.getUser().getApplicationRefId();
-
 		return applicationRefId;
 	}
 
@@ -340,12 +343,9 @@ public class ProfilePresenter
 			ApplicationFormHeaderDto headerDto = (ApplicationFormHeaderDto) event
 					.getModel();
 
-			Window.alert("Clicked" + headerDto.getUserRefId());
-
 			loadData(headerDto.getUserRefId());
-			//
-			AppManager.showPopUp("View Profile Info", this.asWidget(), null,
-					"Done");
+			AppManager.showPopUp("View Profile Info", new ProfileWidget(),
+					null, "Done");
 		}
 
 	}
