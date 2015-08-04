@@ -1,13 +1,5 @@
 package com.workpoint.icpak.client.ui.profile;
 
-//import com.workpoint.icpak.shared.requests.CheckPasswordRequest;
-//import com.workpoint.icpak.shared.requests.GetUserRequest;
-//import com.workpoint.icpak.shared.requests.SaveUserRequest;
-//import com.workpoint.icpak.shared.requests.UpdatePasswordRequest;
-//import com.workpoint.icpak.shared.responses.CheckPasswordRequestResult;
-//import com.workpoint.icpak.shared.responses.GetUserRequestResult;
-//import com.workpoint.icpak.shared.responses.SaveUserResponse;
-//import com.workpoint.icpak.shared.responses.UpdatePasswordResponse;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -291,6 +283,10 @@ public class ProfilePresenter
 		getView().bindCurrentUser(currentUser);
 		String applicationRefId = getApplicationRefId();
 
+		loadData(applicationRefId);
+	}
+
+	private void loadData(String applicationRefId) {
 		// Window.alert("ApplicationID = "+applicationRefId+" >> User = "+currentUser.getUser());
 		if (applicationRefId != null) {
 			applicationDelegate.withCallback(
@@ -315,9 +311,11 @@ public class ProfilePresenter
 			// bind Training details
 			getView().bindTrainingDetails(
 					new ArrayList<ApplicationFormTrainingDto>());
+
 			// bind Specialization details
 
 		}
+
 	}
 
 	String getApplicationRefId() {
@@ -338,6 +336,16 @@ public class ProfilePresenter
 				showPopUp(educationForm);
 				educationForm.bindDetail(dto);
 			}
+		} else if (event.getModel() instanceof ApplicationFormHeaderDto) {
+			ApplicationFormHeaderDto headerDto = (ApplicationFormHeaderDto) event
+					.getModel();
+
+			Window.alert("Clicked" + headerDto.getUserRefId());
+
+			loadData(headerDto.getUserRefId());
+			//
+			AppManager.showPopUp("View Profile Info", this.asWidget(), null,
+					"Done");
 		}
 
 	}

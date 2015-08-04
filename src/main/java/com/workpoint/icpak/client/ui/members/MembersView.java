@@ -8,6 +8,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
+import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.PagingPanel;
 import com.workpoint.icpak.client.ui.members.header.MembersHeader;
 import com.workpoint.icpak.client.ui.members.row.MembersTableRow;
@@ -23,7 +24,7 @@ public class MembersView extends ViewImpl implements
 
 	@UiField
 	MembersTable tblView;
-	
+
 	@UiField
 	MembersHeader headerContainer;
 
@@ -43,9 +44,9 @@ public class MembersView extends ViewImpl implements
 	@Override
 	public void bindApplications(List<ApplicationFormHeaderDto> list) {
 		headerContainer.setValues(list.size(), 0, list.size());
-		
+
 		tblView.clearRows();
-		for(ApplicationFormHeaderDto dto: list){
+		for (ApplicationFormHeaderDto dto : list) {
 			MembersTableRow row = new MembersTableRow(dto);
 			tblView.createRow(row);
 		}

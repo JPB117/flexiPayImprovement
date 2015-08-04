@@ -1,6 +1,6 @@
 package com.workpoint.icpak.client.ui.accomodation.row;
 
-import java.util.Date;
+import static com.workpoint.icpak.client.ui.util.NumberUtils.NUMBERFORMAT;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -14,12 +14,9 @@ import com.google.gwt.user.client.ui.Widget;
 import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.RowWidget;
 import com.workpoint.icpak.client.ui.events.EditModelEvent;
-import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.model.events.AccommodationDto;
 import com.workpoint.icpak.shared.model.events.EventDto;
-
-import static com.workpoint.icpak.client.ui.util.NumberUtils.*;
 
 public class AccomodationTableRow extends RowWidget {
 

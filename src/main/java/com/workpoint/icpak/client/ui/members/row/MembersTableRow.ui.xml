@@ -8,11 +8,13 @@
 		<g:HTMLPanel styleName="td" ui:field="divMemberNo">
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divMemberName">
+			<d:ActionLink ui:field="aMemberName"></d:ActionLink>
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divEmail">
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td text-center" ui:field="divProfile">
-			<div ui:field="divCompletion" class="radial-bar radial-bar-xs" data-label="50%"></div>
+			<div ui:field="divCompletion" class="radial-bar radial-bar-xs"
+				data-label="50%"></div>
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divStatus">
 			<span ui:field="spnStatus" class="label label-warning"></span>
