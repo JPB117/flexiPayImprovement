@@ -2,8 +2,6 @@ package com.workpoint.icpak.client.ui.enquiries;
 
 import java.util.List;
 
-import org.apache.bcel.generic.ALOAD;
-
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -144,8 +142,7 @@ public class EnquiriesPresenter
 
 	protected void save(EnquiriesDto dto) {
 		fireEvent(new ProcessingEvent());
-		
-		
+		dto.setMemberRefId(getMemberId());
 		membersDelegate.withCallback(new AbstractAsyncCallback<EnquiriesDto>() {
 			@Override
 			public void onSuccess(EnquiriesDto result) {

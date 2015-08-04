@@ -16,15 +16,15 @@ public class EnquiriesDaoHelper {
 
 	@Inject EnquiriesDao dao;
 	
-	public List<EnquiriesDto> getAll(String memberId,Integer offset,
+	public List<EnquiriesDto> getAll(String memberRefId,Integer offset,
 			Integer limit){
 		
 		List<Enquiries> list = null;
-		if(memberId.equals("ALL")){
+		if(memberRefId.equals("ALL")){
 			list = dao.getAllEnquiries(null,offset, limit);
 		}
 		else{
-			list = dao.getAllEnquiries(memberId, offset, limit);
+			list = dao.getAllEnquiries(memberRefId, offset, limit);
 		}
 		
 		List<EnquiriesDto> dtos = new ArrayList<>();
@@ -34,10 +34,11 @@ public class EnquiriesDaoHelper {
 		return dtos;
 	}
 	
-	public EnquiriesDto create(String memberId,EnquiriesDto dto){
+	public EnquiriesDto create(String memberRefId,EnquiriesDto dto){
+		dto.setMemberRefId(memberRefId);
 		Enquiries enquiries = new Enquiries();
 		enquiries.copyFrom(dto);
-		if(memberId.equals("ALL")){
+		if(memberRefId.equals("ALL")){
 			dto.setMemberRefId(null);
 		}
 		dao.save(enquiries);
@@ -45,7 +46,8 @@ public class EnquiriesDaoHelper {
 		return enquiries.toDto();
 	}
 	
-	public EnquiriesDto update(String memberId,String enquiriesRefId, EnquiriesDto dto){
+	public EnquiriesDto update(String memberRefId,String enquiriesRefId, EnquiriesDto dto){
+		dto.setMemberRefId(memberRefId);
 		Enquiries enquiries = dao.findByRefId(enquiriesRefId, Enquiries.class);
 		enquiries.copyFrom(dto);
 		dao.save(enquiries);
@@ -53,12 +55,12 @@ public class EnquiriesDaoHelper {
 		return enquiries.toDto();
 	}
 
-	public Integer getCount(String memberId) {
-		if(memberId.equals("ALL")){
+	public Integer getCount(String memberRefId) {
+		if(memberRefId.equals("ALL")){
 			return dao.getCount(null);
 		}
 		
-		return dao.getCount(memberId);
+		return dao.getCount(memberRefId);
 	}
 
 	public void delete(String memberId, String enquiryId) {
