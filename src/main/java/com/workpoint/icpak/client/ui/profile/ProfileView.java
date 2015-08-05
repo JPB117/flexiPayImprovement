@@ -23,6 +23,7 @@ import com.gwtplatform.mvp.client.ViewImpl;
 import com.workpoint.icpak.client.model.UploadContext;
 import com.workpoint.icpak.client.security.CurrentUser;
 import com.workpoint.icpak.client.ui.component.ActionLink;
+import com.workpoint.icpak.client.ui.component.ProgressBar;
 import com.workpoint.icpak.client.ui.component.tabs.TabContent;
 import com.workpoint.icpak.client.ui.component.tabs.TabHeader;
 import com.workpoint.icpak.client.ui.component.tabs.TabPanel;
@@ -88,8 +89,8 @@ public class ProfileView extends ViewImpl implements
 	Element spnNames;
 	@UiField
 	Element spnApplicationType;
-	@UiField
-	Element spnCompletion;
+	
+	@UiField ProgressBar progressBar;
 
 	@UiField
 	PasswordWidget panelPasswordWidget;
@@ -123,7 +124,7 @@ public class ProfileView extends ViewImpl implements
 				"education_details"), new TabHeader("Practical Training",
 				false, "training_details"), new TabHeader(
 				"Specialization Detail", false, "specialisation_details")));
-		
+
 		divTabs.setPosition(TabPosition.PILLS);
 
 		divTabs.setContent(Arrays.asList(new TabContent(basicDetail,
@@ -178,11 +179,6 @@ public class ProfileView extends ViewImpl implements
 
 	public void setEditMode(boolean editMode) {
 
-		// basicDetail.setEditMode(editMode);
-		// educationDetail.setEditMode(editMode);
-		// specializationDetail.setEditMode(editMode);
-		// trainingDetail.setEditMode(editMode);
-
 		if (editMode) {
 			PanelProfileDisplay.setVisible(false);
 			panelProfile.setVisible(true);
@@ -214,11 +210,18 @@ public class ProfileView extends ViewImpl implements
 	@Override
 	public void bindBasicDetails(ApplicationFormHeaderDto result) {
 		basicDetail.bindDetails(result);
-		spnNames.setInnerText(result.getSurname() + " "
-				+ result.getOtherNames());
-		spnApplicationType.setInnerText(result.getApplicationType()
-				.getDisplayName());
-		spnCompletion.setInnerText("80% Complete");
+		
+		//test
+		
+		if (result.getRefId() != null) {
+			spnNames.setInnerText(result.getSurname() + " "
+					+ result.getOtherNames());
+			spnApplicationType.setInnerText(result.getApplicationType()
+					.getDisplayName());
+			
+			result.setPercCompletion(50);
+			progressBar.setProgress(result.getPercCompletion());
+		}
 
 	}
 
@@ -296,5 +299,31 @@ public class ProfileView extends ViewImpl implements
 	@Override
 	public HasClickHandlers getSpecializationAddButton() {
 		return specializationDetail.getAddButton();
+	}
+
+	@Override
+	public void setApplicationId(String applicationRefId) {
+		if (applicationRefId == null) {
+			aPayNow.removeStyleName("btn-success");
+			aPayNow.addStyleName("btn-warning");
+			aPayNow.setText("No Application Found");
+		} else {
+			aPayNow.addStyleName("btn-success");
+			aPayNow.removeStyleName("btn-warning");
+			aPayNow.setText("Pay Now");
+			aPayNow.setHref("#signup;applicationId=" + applicationRefId);
+		}
+
+	}
+
+	@Override
+	public void clear() {
+		spnNames.setInnerText("");
+		spnApplicationType.setInnerText("");
+		progressBar.clear();
+		basicDetail.clear();
+		educationDetail.clear();
+		specializationDetail.clear();
+		trainingDetail.clear();
 	}
 }

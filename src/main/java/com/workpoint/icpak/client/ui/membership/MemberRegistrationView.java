@@ -150,34 +150,7 @@ public class MemberRegistrationView extends ViewImpl implements
 			Anchor selected = (Anchor) event.getSource();
 			selectedName = selected.getName();
 
-			if (selectedName.equals("NonPractising")) {
-				removeActiveSelection(selected);
-				spnSelected.setInnerText("You have selected: "
-						+ "Non Practising Member");
-				divNonPracticing.addClassName("active");
-				type = ApplicationType.NON_PRACTISING;
-			} else if (selectedName.equals("Practising")) {
-				spnSelected.setInnerText("You have selected: "
-						+ "Practising Member");
-				removeActiveSelection(selected);
-				// divPractising.addClassName("active");
-				type = ApplicationType.PRACTISING;
-			} else if (selectedName.equals("Overseas")) {
-				spnSelected.setInnerText("You have selected: "
-						+ "Overseas Member");
-				removeActiveSelection(selected);
-				divOverseas.addClassName("active");
-				type = ApplicationType.OVERSEAS;
-			} else if (selectedName.equals("Associate")) {
-				spnSelected.setInnerText("You have selected: "
-						+ "Associate Member");
-				removeActiveSelection(selected);
-				divAssociate.addClassName("active");
-				type = ApplicationType.ASSOCIATE;
-			}
-
-			memberRegistrationForm.setType(type);
-
+			selectCategory(selected);
 		}
 	};
 
@@ -207,7 +180,6 @@ public class MemberRegistrationView extends ViewImpl implements
 		pageElements.add(new PageElement(divPayment, "Finish", "Back", liTab4));
 
 		setActive(liElements.get(counter), pageElements.get(counter));
-
 		aBack.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -223,6 +195,55 @@ public class MemberRegistrationView extends ViewImpl implements
 		memberRegistrationForm.setCounter(counter);
 	}
 
+	protected void selectCategory(Anchor selected) {
+		if (selectedName.equals("NonPractising")) {
+			removeActiveSelection();
+			selectCategory(ApplicationType.NON_PRACTISING);
+		} else if (selectedName.equals("Practising")) {
+			removeActiveSelection();
+			selectCategory(ApplicationType.PRACTISING);
+		} else if (selectedName.equals("Overseas")) {
+			removeActiveSelection();
+			selectCategory(ApplicationType.OVERSEAS);
+		} else if (selectedName.equals("Associate")) {
+			removeActiveSelection();
+			selectCategory(ApplicationType.ASSOCIATE);
+		}
+
+		memberRegistrationForm.setType(type);
+	}
+
+	private void selectCategory(ApplicationType type2) {
+		type = type2;
+		switch (type2) {
+		case NON_PRACTISING:
+			spnSelected.setInnerText("You have selected: "
+					+ "Non Practising Member");
+			divNonPracticing.addClassName("active");
+			break;
+
+		case PRACTISING:
+			//Deactivated
+			spnSelected.setInnerText("You have selected: "
+					+ "Practising Member");
+//			spnSelected.addClassName("active");
+			break;
+
+		case OVERSEAS:
+			spnSelected.setInnerText("You have selected: " + "Overseas Member");
+			divOverseas.addClassName("active");
+			break;
+
+		case ASSOCIATE:
+			spnSelected
+					.setInnerText("You have selected: " + "Associate Member");
+			divAssociate.addClassName("active");
+			break;
+		default:
+			break;
+		}
+	}
+
 	protected void showMyAccountLink(int counter) {
 		if (counter == 2) {
 			aAccount.removeStyleName("hide");
@@ -231,7 +252,7 @@ public class MemberRegistrationView extends ViewImpl implements
 		}
 	}
 
-	protected void removeActiveSelection(Anchor selected) {
+	protected void removeActiveSelection() {
 		divNonPracticing.removeClassName("active");
 		divOverseas.removeClassName("active");
 		divAssociate.removeClassName("active");
@@ -371,6 +392,8 @@ public class MemberRegistrationView extends ViewImpl implements
 	public void bindForm(ApplicationFormHeaderDto result) {
 		spnNames.setInnerText(result.getSurname() + " "
 				+ result.getOtherNames());
+		memberRegistrationForm.bind(result);
+		selectCategory(result.getApplicationType());
 	}
 
 	@Override
@@ -414,6 +437,18 @@ public class MemberRegistrationView extends ViewImpl implements
 
 	public Anchor getActivateAccLink() {
 		return aAccount;
+	}
+
+	@Override
+	public void setCounter(int counter) {
+		this.counter=counter;
+		
+		for(int i=0; i<counter; i++){
+			setActive(liElements.get(i), pageElements.get(i));
+			pageElements.get(i).setCompletion(true);
+		}
+		setActive(liElements.get(counter), pageElements.get(counter));
+		
 	}
 
 }

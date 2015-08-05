@@ -144,4 +144,8 @@ public class EducationDetails extends Composite {
 	public HasClickHandlers getAddButton() {
 		return aAdd;
 	}
+
+	public void clear() {
+		tblEducationalDetail.clearRows();
+	}
 }

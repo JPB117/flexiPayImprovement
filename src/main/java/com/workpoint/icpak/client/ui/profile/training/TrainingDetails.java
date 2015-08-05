@@ -118,4 +118,8 @@ public class TrainingDetails extends Composite {
 									.format(training.getDatePassed())), panel);
 		}
 	}
+
+	public void clear() {
+		tblTrainingDetails.clearRows();
+	}
 }

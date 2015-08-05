@@ -77,10 +77,10 @@ public class MembersTableRow extends RowWidget {
 		divMemberNo.add(new InlineLabel(application.getMemberNo()));
 		aMemberName.setText(application.fullNames());
 		divEmail.add(new InlineLabel(application.getEmail()));
-		divCompletion.setAttribute("data-label", application.percCompletion()
+		divCompletion.setAttribute("data-label", application.getPercCompletion()+""
 				+ "%");
 		divCompletion
-				.addClassName("radial-bar-" + application.percCompletion());
+				.addClassName("radial-bar-" + application.getPercCompletion()+"");
 		spnStatus.setInnerText("Pending");
 	}
 }
