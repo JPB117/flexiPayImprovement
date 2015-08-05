@@ -61,7 +61,6 @@ public class MembersTableRow extends RowWidget {
 			@Override
 			public void onClick(ClickEvent event) {
 				AppContext.fireEvent(new EditModelEvent(application));
-
 			}
 		});
 

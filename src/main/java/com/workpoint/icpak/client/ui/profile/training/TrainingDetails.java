@@ -62,12 +62,11 @@ public class TrainingDetails extends Composite {
 		tblTrainingDetails.setTableHeaders(tblBeforeHeaders);
 	}
 
-
 	public void setEditMode(boolean editMode) {
 		if (editMode) {
-			// aAdd.setVisible(true);
+			aAdd.setVisible(true);
 		} else {
-			// aAdd.setVisible(false);
+			aAdd.setVisible(false);
 		}
 	}
 

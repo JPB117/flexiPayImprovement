@@ -100,4 +100,8 @@ public class PasswordWidget extends Composite {
 
 	}
 
+	public HasClickHandlers getChangePasswordButton() {
+		return null;
+	}
+
 }

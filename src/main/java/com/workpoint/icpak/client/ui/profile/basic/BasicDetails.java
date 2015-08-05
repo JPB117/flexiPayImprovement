@@ -71,11 +71,9 @@ public class BasicDetails extends Composite {
 
 	public void setEditMode(boolean editMode) {
 		if (editMode) {
-			panelDisplay.setVisible(false);
-			panelEditMode.setVisible(true);
+			aEdit.setVisible(true);
 		} else {
-			panelDisplay.setVisible(true);
-			panelEditMode.setVisible(false);
+			aEdit.setVisible(false);
 		}
 	}
 

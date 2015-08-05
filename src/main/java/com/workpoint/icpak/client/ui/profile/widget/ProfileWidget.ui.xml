@@ -1,21 +1,10 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-
-<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-	xmlns:g='urn:import:com.google.gwt.user.client.ui' ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
-	xmlns:d='urn:import:com.workpoint.icpak.client.ui.component' xmlns:up='urn:import:com.workpoint.icpak.client.ui.upload.custom'
-	xmlns:profile='urn:import:com.workpoint.icpak.client.ui.profile.widget'
-	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
-	xmlns:password='urn:import:com.workpoint.icpak.client.ui.profile.password'
-	ui:generateLocales='default'>
-
-	<g:HTMLPanel ui:field="container"
-		styleName="content-wrapper ng-scope ng-fadeInUp">
-		<h3 class="ng-scope">
-			User Profile
-		</h3>
-
-
-		<!-- g:HTMLPanel ui:field="divProfileContent" styleName="col-xs-12">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:t='urn:import:com.workpoint.icpak.client.ui.component.tabs'
+	xmlns:d='urn:import:com.workpoint.icpak.client.ui.component' xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:up='urn:import:com.workpoint.icpak.client.ui.upload.custom'>
+	<g:HTMLPanel>
+		<g:HTMLPanel ui:field="divProfileContent" styleName="col-xs-12">
 			<g:HTMLPanel styleName="row">
 				<div class="col-xs-12">
 					<div class="panel widget">
@@ -35,7 +24,7 @@
 								</a>
 								<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
 									<li>
-										<d:ActionLink ui:field="aEdit">
+										<d:ActionLink ui:field="aEdit" styleName="hide">
 											Edit Profile
 										</d:ActionLink>
 									</li>
@@ -53,7 +42,7 @@
 									Changes</d:ActionLink>
 							</g:HTMLPanel>
 						</div>
-						
+
 						<div class="panel-body">
 							<g:HTMLPanel ui:field="profileViewMode" styleName="row">
 								<div class="col-lg-2">
@@ -95,7 +84,7 @@
 
 										<div class="row">
 											Payment Status:
-											<span ui:field="spnPaymentStatus" class="label label-primary"></span>
+											<span ui:field="spnPaymentStatus" class="label label-warning"></span>
 										</div>
 
 										<div class="row">
@@ -111,6 +100,7 @@
 
 							<br />
 
+							<!-- Tabs -->
 							<div class="row">
 								<div class="col-xs-12">
 									<t:TabPanel ui:field="divTabs">
@@ -121,26 +111,6 @@
 					</div>
 				</div>
 			</g:HTMLPanel>
-
-			<div class="row hide">
-				<div class="col-xs-12">
-					<div class="panel widget">
-						<div class="panel-heading">Profile Information</div>
-						<div class="panel-body">
-							<div class="col-xs-12">
-								<t:TabPanel ui:field="divTabs2">
-								</t:TabPanel>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</g:HTMLPanel-->
-
-		<profile:ProfileWidget ui:field="divProfileContent"></profile:ProfileWidget>
-
-		<g:HTMLPanel ui:field="divPasswordContent">
-			<password:PasswordWidget ui:field="panelPasswordWidget"></password:PasswordWidget>
 		</g:HTMLPanel>
 	</g:HTMLPanel>
-</ui:UiBinder>
+</ui:UiBinder> 
