@@ -170,4 +170,16 @@ public class MemberRegistrationForm extends Composite {
 		type = application.getApplicationType();
 	}
 
+	public void clear() {
+		txtSurname.setValue(null);
+		txtOtherNames.setValue(null);
+		txtEmailAddress.setValue(null);
+		txtEmployer.setValue(null);
+		txtCity.setValue(null);
+		txtPhone.setValue(null);
+		txtAddress.setValue(null);
+		txtPostalCode.setValue(null);
+		type = null;
+	}
+
 }

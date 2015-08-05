@@ -118,4 +118,20 @@ public class BasicDetails extends Composite {
 	public HasClickHandlers getCancelButton() {
 		return aCancel;
 	}
+
+	public void clear() {
+		elPhone.setInnerText(null);
+		elEmail.setInnerText(null);
+		elDob.setInnerText(null);
+		elSex.setInnerText(null);
+		elEmployer.setInnerText(null);
+		elResidence.setInnerText(null);
+		elAddress.setInnerText(null);
+		elPostalCode.setInnerText(null);
+		elCountry.setInnerText(null);
+		elCity.setInnerText(null);
+
+		panelRegistration.clear();
+				
+	}
 }

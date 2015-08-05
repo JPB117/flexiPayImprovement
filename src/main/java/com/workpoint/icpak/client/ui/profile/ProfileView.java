@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
 import com.workpoint.icpak.client.security.CurrentUser;
+
 import com.workpoint.icpak.client.ui.profile.password.PasswordWidget;
 import com.workpoint.icpak.client.ui.profile.widget.ProfileWidget;
 import com.workpoint.icpak.shared.model.ApplicationFormEducationalDto;
@@ -82,6 +83,7 @@ public class ProfileView extends ViewImpl implements
 
 	@Override
 	public void bindBasicDetails(ApplicationFormHeaderDto result) {
+
 		divProfileContent.bindBasicDetails(result);
 	}
 
@@ -157,6 +159,15 @@ public class ProfileView extends ViewImpl implements
 	}
 
 	@Override
+	public void setApplicationId(String applicationRefId) {
+		divProfileContent.setApplicationId(applicationRefId);
+	}
+
+	@Override
+	public void clear() {
+		divProfileContent.clear();
+	}
+	
 	public void bindTrainingDetails(
 			List<ApplicationFormTrainingDto> trainingDetails) {
 		divProfileContent.bindTrainingDetails(trainingDetails);

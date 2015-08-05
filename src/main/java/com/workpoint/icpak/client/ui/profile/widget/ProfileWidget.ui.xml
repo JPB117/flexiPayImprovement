@@ -78,19 +78,13 @@
 
 										<div class="row">
 											<div class="col-md-4 p0">
-												<div class="progress progress-striped progress-xs">
-													<div role="progressbar" aria-valuenow="80"
-														aria-valuemin="0" aria-valuemax="100"
-														class="progress-bar progress-bar-green progress-80">
-														<span ui:field="spnCompletion" class="text-muted small">80% Complete</span>
-													</div>
-												</div>
+												<d:ProgressBar ui:field="progressBar"></d:ProgressBar>
 											</div>
 										</div>
 
 										<div class="row">
 											Payment Status:
-											<span ui:field="spnPaymentStatus" class="label label-warning">Not Paid</span>
+											<span ui:field="spnPaymentStatus" class="label label-warning"></span>
 										</div>
 
 										<div class="row">

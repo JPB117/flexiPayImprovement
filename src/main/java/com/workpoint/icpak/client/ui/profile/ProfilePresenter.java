@@ -79,6 +79,10 @@ public class ProfilePresenter
 		HasClickHandlers getSpecializationAddButton();
 
 		void bindTrainingDetails(List<ApplicationFormTrainingDto> arrayList);
+
+		void setApplicationId(String applicationRefId);
+
+		void clear();
 	}
 
 	private final CurrentUser currentUser;
@@ -285,9 +289,14 @@ public class ProfilePresenter
 		String applicationRefId = getApplicationRefId();
 
 		loadData(applicationRefId);
+		getView().setApplicationId(applicationRefId);
+		
 	}
 
 	private void loadData(String applicationRefId) {
+
+		getView().clear();
+
 		if (applicationRefId != null) {
 			applicationDelegate.withCallback(
 					new AbstractAsyncCallback<ApplicationFormHeaderDto>() {

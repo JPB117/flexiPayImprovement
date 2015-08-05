@@ -107,6 +107,7 @@ public class ApplicationFormHeaderDto extends SerializableObj{
 	private String invoiceRef;
 	private String userRefId;
 	private String memberNo;
+	private Integer percCompletion; //Percentage completion
 	
 	public ApplicationFormHeaderDto() {
 	}
@@ -786,10 +787,6 @@ public class ApplicationFormHeaderDto extends SerializableObj{
 		return surname+" "+otherNames;
 	}
 
-	public String percCompletion() {
-		return "45";
-	}
-
 	public Date getCreated() {
 		return created;
 	}
@@ -805,6 +802,14 @@ public class ApplicationFormHeaderDto extends SerializableObj{
 
 	public void setApplicationDate(Date applicationDate) {
 		this.applicationDate = applicationDate;
+	}
+
+	public Integer getPercCompletion() {
+		return percCompletion;
+	}
+
+	public void setPercCompletion(Integer percCompletion) {
+		this.percCompletion = percCompletion;
 	}
 	
 }

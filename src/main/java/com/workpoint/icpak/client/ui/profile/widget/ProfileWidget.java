@@ -23,6 +23,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.workpoint.icpak.client.model.UploadContext;
 import com.workpoint.icpak.client.security.CurrentUser;
 import com.workpoint.icpak.client.ui.component.ActionLink;
+import com.workpoint.icpak.client.ui.component.ProgressBar;
 import com.workpoint.icpak.client.ui.component.tabs.TabContent;
 import com.workpoint.icpak.client.ui.component.tabs.TabHeader;
 import com.workpoint.icpak.client.ui.component.tabs.TabPanel;
@@ -83,8 +84,8 @@ public class ProfileWidget extends Composite {
 	Element spnNames;
 	@UiField
 	Element spnApplicationType;
-	@UiField
-	Element spnCompletion;
+	
+	@UiField ProgressBar progressBar;
 
 	private BasicDetails basicDetail;
 	private EducationDetails educationDetail;
@@ -163,11 +164,18 @@ public class ProfileWidget extends Composite {
 
 	public void bindBasicDetails(ApplicationFormHeaderDto result) {
 		basicDetail.bindDetails(result);
-		spnNames.setInnerText(result.getSurname() + " "
-				+ result.getOtherNames());
-		spnApplicationType.setInnerText(result.getApplicationType()
-				.getDisplayName());
-		spnCompletion.setInnerText("80% Complete");
+		
+		//test
+		
+		if (result.getRefId() != null) {
+			spnNames.setInnerText(result.getSurname() + " "
+					+ result.getOtherNames());
+			spnApplicationType.setInnerText(result.getApplicationType()
+					.getDisplayName());
+			
+			result.setPercCompletion(50);
+			progressBar.setProgress(result.getPercCompletion());
+		}
 	}
 
 	public void bindCurrentUser(CurrentUser user) {
@@ -176,6 +184,24 @@ public class ProfileWidget extends Composite {
 
 		url = "api/users/" + refId + "/profile";
 		imgUser.setUrl(url);
+	}
+	
+	public void setApplicationId(String applicationRefId) {
+		if (applicationRefId == null) {
+			aPayNow.removeStyleName("btn-success");
+			aPayNow.addStyleName("btn-warning");
+			aPayNow.setText("No Application Found");
+		} else {
+			aPayNow.addStyleName("btn-success");
+			aPayNow.removeStyleName("btn-warning");
+			aPayNow.setText("Pay Now");
+			aPayNow.setHref("#signup;applicationId=" + applicationRefId);
+		}
+
+	}
+
+	public void clear() {
+		progressBar.clear();
 	}
 
 	public HasClickHandlers getSaveButton() {

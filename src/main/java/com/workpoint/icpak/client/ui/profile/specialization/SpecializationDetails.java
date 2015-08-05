@@ -79,4 +79,8 @@ public class SpecializationDetails extends Composite {
 		return aAdd;
 	}
 
+	public void clear() {
+		tblSpecialization.clearRows();
+	}
+
 }
