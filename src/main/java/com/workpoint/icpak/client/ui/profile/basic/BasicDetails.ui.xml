@@ -107,7 +107,7 @@
 				</table>
 			</g:HTMLPanel>
 
-			<g:HTMLPanel styleName="col-xs-12" ui:field="panelEditMode">
+			<g:HTMLPanel styleName="col-xs-12 hide" ui:field="panelEditMode">
 				<form:MemberRegistrationForm ui:field="panelRegistration"></form:MemberRegistrationForm>
 				<div class="fieldset">
 					<d:ActionLink ui:field="aSave"
