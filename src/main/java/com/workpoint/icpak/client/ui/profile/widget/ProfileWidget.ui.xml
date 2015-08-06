@@ -24,8 +24,8 @@
 								</a>
 								<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
 									<li>
-										<d:ActionLink ui:field="aEdit" styleName="hide">
-											Edit Profile
+										<d:ActionLink ui:field="aEditPicture">
+											Change Profile Picture
 										</d:ActionLink>
 									</li>
 									<li>
@@ -82,16 +82,18 @@
 											</div>
 										</div>
 
-										<div class="row">
-											Payment Status:
-											<span ui:field="spnPaymentStatus" class="label label-warning"></span>
-										</div>
+										<div ui:field="divPayNow">
+											<div class="row">
+												Payment Status:
+												<span ui:field="spnPaymentStatus" class="label label-warning"></span>
+											</div>
 
-										<div class="row">
-											<br />
-											<d:ActionLink ui:field="aPayNow"
-												styleName="btn btn-fill btn-success">Pay
-												Now</d:ActionLink>
+											<div class="row">
+												<br />
+												<d:ActionLink ui:field="aPayNow"
+													styleName="btn btn-fill btn-success">Pay
+													Now</d:ActionLink>
+											</div>
 										</div>
 
 									</g:HTMLPanel>

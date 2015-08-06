@@ -294,7 +294,6 @@ public class ProfilePresenter
 	}
 
 	private void loadData(String applicationRefId) {
-
 		getView().clear();
 
 		if (applicationRefId != null) {
@@ -326,7 +325,7 @@ public class ProfilePresenter
 			// bind Specialization details
 
 		} else {
-			Window.alert("User refId not sent in this request!");
+			//Window.alert("User refId not sent in this request!");
 		}
 
 	}
@@ -348,14 +347,7 @@ public class ProfilePresenter
 				showPopUp(educationForm);
 				educationForm.bindDetail(dto);
 			}
-		} else if (event.getModel() instanceof ApplicationFormHeaderDto) {
-			ApplicationFormHeaderDto headerDto = (ApplicationFormHeaderDto) event
-					.getModel();
-
-			loadData(headerDto.getUserRefId());
-			AppManager.showPopUp("View Profile Info", new ProfileWidget(),
-					null, "Done");
-		}
+		} 
 
 	}
 

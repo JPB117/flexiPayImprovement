@@ -68,7 +68,6 @@ public class EventsDao extends BaseDao {
 	}
 
 	public Double getTotalEventAmount(String eventId,PaymentStatus paymentStatus) {
-		
 		String sql = "select sum(b.amountDue) from booking b "
 				+ "inner join event e on (b.event_id=e.id) "
 				+ "where e.refId=:eventId";

@@ -21,8 +21,8 @@ public class SpecializationDetails extends Composite {
 
 	List<TableHeader> tblHeaders = new ArrayList<TableHeader>();
 
-	@UiField
-	TableView tblSpecialization;
+	// @UiField
+	// TableView tblSpecialization;
 
 	@UiField
 	ActionLink aAdd;
@@ -46,15 +46,7 @@ public class SpecializationDetails extends Composite {
 		tblHeaders.add(new TableHeader("Date Added"));
 		tblHeaders.add(new TableHeader("Action"));
 
-		tblSpecialization.setTableHeaders(tblHeaders);
-	}
-
-	private void createRows() {
-		for (int i = 0; i < 10; i++) {
-			SpecializationTableRow row = new SpecializationTableRow();
-			tblSpecialization.addRow(row);
-		}
-
+		// tblSpecialization.setTableHeaders(tblHeaders);
 	}
 
 	protected void showForm(boolean show) {
@@ -74,13 +66,13 @@ public class SpecializationDetails extends Composite {
 			aAdd.setVisible(false);
 		}
 	}
-	
+
 	public HasClickHandlers getAddButton() {
 		return aAdd;
 	}
 
 	public void clear() {
-		tblSpecialization.clearRows();
+		// tblSpecialization.clearRows();
 	}
 
 }

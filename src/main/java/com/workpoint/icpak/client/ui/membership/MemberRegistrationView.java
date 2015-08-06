@@ -158,7 +158,7 @@ public class MemberRegistrationView extends ViewImpl implements
 	public MemberRegistrationView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
 
-		String url = "http://197.248.4.221:8080/ewallet/#websiteClient";
+		String url = "http://197.248.4.221:8080/flexiPay/#websiteClient";
 		framePayment.setUrl(url);
 
 		// Li Elements
@@ -223,10 +223,10 @@ public class MemberRegistrationView extends ViewImpl implements
 			break;
 
 		case PRACTISING:
-			//Deactivated
+			// Deactivated
 			spnSelected.setInnerText("You have selected: "
 					+ "Practising Member");
-//			spnSelected.addClassName("active");
+			// spnSelected.addClassName("active");
 			break;
 
 		case OVERSEAS:
@@ -384,6 +384,17 @@ public class MemberRegistrationView extends ViewImpl implements
 	}
 
 	@Override
+	public void bindTransaction(InvoiceDto invoice) {
+		// 197.248.4.221
+		String url = "http://197.248.4.221:8080/flexipay#websiteClient;"
+				+ "businessNo=722722;" + "refId=" + invoice.getRefId() + ";"
+				+ "orgName=ICPAK;" + "amount=" + invoice.getAmount() + ";"
+				+ "accountNo=Use ID Number";
+
+		framePayment.setUrl(url);
+	}
+
+	@Override
 	public void setEmailValid(boolean isEmailValid) {
 		memberRegistrationForm.setEmailValid(isEmailValid);
 	}
@@ -441,14 +452,14 @@ public class MemberRegistrationView extends ViewImpl implements
 
 	@Override
 	public void setCounter(int counter) {
-		this.counter=counter;
-		
-		for(int i=0; i<counter; i++){
+		this.counter = counter;
+
+		for (int i = 0; i < counter; i++) {
 			setActive(liElements.get(i), pageElements.get(i));
 			pageElements.get(i).setCompletion(true);
 		}
 		setActive(liElements.get(counter), pageElements.get(counter));
-		
+
 	}
 
 }

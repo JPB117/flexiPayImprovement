@@ -7,8 +7,10 @@
 			<div class="col-sm-12">
 				<d:IssuesPanel ui:field="issues"></d:IssuesPanel>
 
-				<h4 class="info-text">Check your specialization below</h4>
-				<hr />
+				<div ui:field="divHeader">
+					<h4 class="info-text">Check your specialization below</h4>
+					<hr />
+				</div>
 
 				<div class="row">
 					<div class="col-sm-3">

@@ -476,12 +476,6 @@ public class EventBookingView extends ViewImpl implements
 
 	public BookingDto getBooking() {
 		BookingDto dto = new BookingDto();
-		// dto.setAmountDue(amountDue);
-		// dto.setAmountPaid(amountPaid);
-		// dto.setPaymentDate(paymentDate);
-		// dto.setPaymentDate(paymentDate);
-		// dto.setPaymentMode(paymentMode);
-		// dto.setPaymentRef(paymentRef);
 		dto.setStatus("");
 		dto.setPaymentStatus(PaymentStatus.NOTPAID);
 		dto.setBookingDate(new Date().getTime());

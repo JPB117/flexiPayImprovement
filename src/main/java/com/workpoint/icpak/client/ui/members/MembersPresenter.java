@@ -10,7 +10,7 @@ package com.workpoint.icpak.client.ui.members;
 //import com.workpoint.icpak.shared.responses.UpdatePasswordResponse;
 import java.util.List;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rest.delegates.client.ResourceDelegate;
@@ -25,23 +25,31 @@ import com.gwtplatform.mvp.client.proxy.TabContentProxyPlace;
 import com.workpoint.icpak.client.place.NameTokens;
 import com.workpoint.icpak.client.security.CurrentUser;
 import com.workpoint.icpak.client.service.AbstractAsyncCallback;
+import com.workpoint.icpak.client.ui.AppManager;
 import com.workpoint.icpak.client.ui.admin.TabDataExt;
 import com.workpoint.icpak.client.ui.component.PagingConfig;
 import com.workpoint.icpak.client.ui.component.PagingLoader;
 import com.workpoint.icpak.client.ui.component.PagingPanel;
+import com.workpoint.icpak.client.ui.events.EditModelEvent;
+import com.workpoint.icpak.client.ui.events.EditModelEvent.EditModelHandler;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
+import com.workpoint.icpak.client.ui.profile.widget.ProfileWidget;
 import com.workpoint.icpak.client.ui.security.AdminGateKeeper;
 import com.workpoint.icpak.shared.api.ApplicationFormResource;
+import com.workpoint.icpak.shared.model.ApplicationFormEducationalDto;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 
 public class MembersPresenter
 		extends
-		Presenter<MembersPresenter.IMembersView, MembersPresenter.IMembersProxy> {
+		Presenter<MembersPresenter.IMembersView, MembersPresenter.IMembersProxy>
+		implements EditModelHandler {
 
 	public interface IMembersView extends View {
 
 		void bindApplications(List<ApplicationFormHeaderDto> result);
+
 		void setCount(Integer aCount);
+
 		PagingPanel getPagingPanel();
 
 	}
@@ -76,8 +84,10 @@ public class MembersPresenter
 	@Override
 	protected void onBind() {
 		super.onBind();
+		addRegisteredHandler(EditModelEvent.TYPE, this);
+
 		getView().getPagingPanel().setLoader(new PagingLoader() {
-			
+
 			@Override
 			public void load(int offset, int limit) {
 				loadApplications(offset, limit);
@@ -98,10 +108,35 @@ public class MembersPresenter
 			public void onSuccess(Integer aCount) {
 				getView().setCount(aCount);
 				PagingConfig config = getView().getPagingPanel().getConfig();
-				loadApplications(config.getOffset(),config.getLimit());
+				loadApplications(config.getOffset(), config.getLimit());
 			}
 		}).getCount();
-		
+
+	}
+
+	ProfileWidget profileWidget = new ProfileWidget();
+
+	private void loadProfileDetails(String applicationRefId) {
+		profileWidget.setUserImage(applicationRefId);
+
+		applicationDelegate.withCallback(
+				new AbstractAsyncCallback<ApplicationFormHeaderDto>() {
+					@Override
+					public void onSuccess(ApplicationFormHeaderDto result) {
+						profileWidget.bindBasicDetails(result);
+					}
+				}).getById(applicationRefId);
+
+		applicationDelegate
+				.withCallback(
+						new AbstractAsyncCallback<List<ApplicationFormEducationalDto>>() {
+							@Override
+							public void onSuccess(
+									List<ApplicationFormEducationalDto> result) {
+								profileWidget.bindEducationDetails(result);
+							}
+						}).education(applicationRefId).getAll(0, 100);
+
 	}
 
 	protected void loadApplications(int offset, int limit) {
@@ -127,5 +162,20 @@ public class MembersPresenter
 				: currentUser.getUser().getApplicationRefId();
 
 		return applicationRefId;
+	}
+
+	@Override
+	public void onEditModel(EditModelEvent event) {
+		if (event.getModel() instanceof ApplicationFormHeaderDto) {
+			ApplicationFormHeaderDto headerDto = (ApplicationFormHeaderDto) event
+					.getModel();
+
+			loadProfileDetails(headerDto.getRefId());
+
+			profileWidget.setEditMode(false);
+			
+			AppManager.showPopUp("View Profile Info", profileWidget, null,
+					"Done");
+		}
 	}
 }

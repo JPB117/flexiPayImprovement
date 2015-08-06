@@ -8,7 +8,6 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.GwtEvent.Type;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -46,8 +45,8 @@ import com.workpoint.icpak.shared.model.UserDto;
 
 public class MemberRegistrationPresenter
 		extends
-		Presenter<MemberRegistrationPresenter.MyView, MemberRegistrationPresenter.MyProxy> 
-implements ErrorHandler{
+		Presenter<MemberRegistrationPresenter.MyView, MemberRegistrationPresenter.MyProxy>
+		implements ErrorHandler {
 
 	public interface MyView extends View {
 		ApplicationFormHeaderDto getApplicationForm();
@@ -83,6 +82,8 @@ implements ErrorHandler{
 		void showmask(boolean processing);
 
 		void setCounter(int counter);
+
+		void bindTransaction(InvoiceDto invoice);
 	}
 
 	@ProxyCodeSplit
@@ -96,7 +97,7 @@ implements ErrorHandler{
 
 	@Inject
 	PlaceManager placeManager;
-	
+
 	IndirectProvider<ErrorPresenter> errorFactory;
 
 	private String applicationRefId;
@@ -108,6 +109,8 @@ implements ErrorHandler{
 	private ResourceDelegate<CategoriesResource> categoriesDelegate;
 
 	private ResourceDelegate<InvoiceResource> invoiceResource;
+
+	private InvoiceDto invoice;
 
 	@Inject
 	public MemberRegistrationPresenter(final EventBus eventBus,
@@ -134,7 +137,7 @@ implements ErrorHandler{
 	protected void onBind() {
 		super.onBind();
 		addRegisteredHandler(ErrorEvent.TYPE, this);
-		
+
 		getView().getEmail().addValueChangeHandler(
 				new ValueChangeHandler<String>() {
 
@@ -149,10 +152,14 @@ implements ErrorHandler{
 
 			@Override
 			public void onClick(ClickEvent event) {
-				if (getView().isValid() || applicationRefId!=null) {
+				if (getView().isValid() || applicationRefId != null) {
 					if (getView().getCounter() == 1) {
 						// User has selected a category and clicked submit
 						submit(getView().getApplicationForm());
+					} else if (getView().getCounter() == 3) {
+						if (invoice != null) {
+							getView().bindInvoice(invoice);
+						}
 					} else {
 						getView().next();
 					}
@@ -171,7 +178,7 @@ implements ErrorHandler{
 		});
 
 	}
-	
+
 	@Override
 	public void onError(final ErrorEvent event) {
 		addToPopupSlot(null);
@@ -179,22 +186,21 @@ implements ErrorHandler{
 			@Override
 			public void processResult(ErrorPresenter result) {
 				String message = event.getMessage();
-				
+
 				result.setMessage(message, event.getId());
-				
+
 				MemberRegistrationPresenter.this.addToPopupSlot(result);
-				
+
 			}
 		});
 	}
 
 	protected void submit(ApplicationFormHeaderDto applicationForm) {
 		getView().setLoadingState((ActionLink) getView().getANext(), true);
-		
+
 		getView().showmask(true);
-		
-		AbstractAsyncCallback<ApplicationFormHeaderDto> callback = 
-				new AbstractAsyncCallback<ApplicationFormHeaderDto>() {
+
+		AbstractAsyncCallback<ApplicationFormHeaderDto> callback = new AbstractAsyncCallback<ApplicationFormHeaderDto>() {
 			@Override
 			public void onSuccess(ApplicationFormHeaderDto result) {
 				getView().showmask(false);
@@ -209,8 +215,8 @@ implements ErrorHandler{
 			}
 
 			private void removeError() {
-				getView().setLoadingState(
-						(ActionLink) getView().getANext(), false);
+				getView().setLoadingState((ActionLink) getView().getANext(),
+						false);
 			}
 
 			@Override
@@ -220,15 +226,15 @@ implements ErrorHandler{
 				super.onFailure(caught);
 			}
 		};
-		
-		if(applicationRefId==null){
-			//update
+
+		if (applicationRefId == null) {
+			// update
 			applicationDelegate.withCallback(callback).create(applicationForm);
-		}else{
-			applicationDelegate.withCallback(callback)
-			.update(applicationRefId, applicationForm);
+		} else {
+			applicationDelegate.withCallback(callback).update(applicationRefId,
+					applicationForm);
 		}
-		
+
 	}
 
 	protected void getInvoice(String invoiceRef) {
@@ -236,6 +242,7 @@ implements ErrorHandler{
 		invoiceResource.withCallback(new AbstractAsyncCallback<InvoiceDto>() {
 			@Override
 			public void onSuccess(InvoiceDto invoice) {
+				MemberRegistrationPresenter.this.invoice = invoice;
 				getView().bindInvoice(invoice);
 			}
 		}).getInvoice(invoiceRef);
@@ -261,14 +268,14 @@ implements ErrorHandler{
 	@Override
 	public void prepareFromRequest(PlaceRequest request) {
 		super.prepareFromRequest(request);
-		
+
 		applicationRefId = request.getParameter("applicationId", null);
-		
-		if(applicationRefId!=null){
+
+		if (applicationRefId != null) {
 			getView().setCounter(2);
 			loadApplication(applicationRefId);
 		}
-		
+
 		categoriesDelegate.withCallback(
 				new AbstractAsyncCallback<List<ApplicationCategoryDto>>() {
 					@Override
@@ -279,14 +286,15 @@ implements ErrorHandler{
 	}
 
 	private void loadApplication(String applicationId) {
-		//this.re
-		applicationDelegate.withCallback(new AbstractAsyncCallback<ApplicationFormHeaderDto>() {
-			@Override
-			public void onSuccess(ApplicationFormHeaderDto dto) {
-				getView().bindForm(dto);
-				getInvoice(dto.getInvoiceRef());
-			}
-		}).getById(applicationId);
+		// this.re
+		applicationDelegate.withCallback(
+				new AbstractAsyncCallback<ApplicationFormHeaderDto>() {
+					@Override
+					public void onSuccess(ApplicationFormHeaderDto dto) {
+						getView().bindForm(dto);
+						getInvoice(dto.getInvoiceRef());
+					}
+				}).getById(applicationId);
 	}
 
 	@Override

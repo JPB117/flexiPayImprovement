@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -49,10 +50,13 @@ public class ProfileWidget extends Composite {
 	ActionLink aChangePassword;
 
 	@UiField
-	ActionLink aEdit;
+	ActionLink aEditPicture;
 
 	@UiField
 	ActionLink aPayNow;
+
+	@UiField
+	DivElement divPayNow;
 
 	@UiField
 	ActionLink aSaveChanges;
@@ -84,8 +88,9 @@ public class ProfileWidget extends Composite {
 	Element spnNames;
 	@UiField
 	Element spnApplicationType;
-	
-	@UiField ProgressBar progressBar;
+
+	@UiField
+	ProgressBar progressBar;
 
 	private BasicDetails basicDetail;
 	private EducationDetails educationDetail;
@@ -105,8 +110,8 @@ public class ProfileWidget extends Composite {
 		specializationDetail = new SpecializationDetails();
 		trainingDetail = new TrainingDetails();
 
-		// Uploader
-		setEditMode(false);
+		setEditMode(true);
+		setChangeProfilePicture(false);
 
 		divTabs.setHeaders(Arrays.asList(new TabHeader("Basic Information",
 				true, "basic_details"), new TabHeader(
@@ -126,10 +131,17 @@ public class ProfileWidget extends Composite {
 		imgUser.setUrl("img/james.jpg");
 
 		/* Set Edit Mode */
-		aEdit.addClickHandler(new ClickHandler() {
+		aEditPicture.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				setEditMode(true);
+				setChangeProfilePicture(true);
+			}
+		});
+
+		aSaveChanges.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				setChangeProfilePicture(false);
 			}
 		});
 
@@ -149,30 +161,47 @@ public class ProfileWidget extends Composite {
 	}
 
 	public void setEditMode(boolean editMode) {
+		basicDetail.setEditMode(editMode);
+		educationDetail.setEditMode(editMode);
+		trainingDetail.setEditMode(editMode);
+		specializationDetail.setEditMode(editMode);
+
 		if (editMode) {
+			divEditDropDown.setVisible(true);
+			divSavePanel.setVisible(true);
+			divPayNow.removeClassName("hide");
+			// divProfileContent.setVisible(false);
+		} else {
+			divEditDropDown.setVisible(false);
+			divSavePanel.setVisible(false);
+			divPayNow.addClassName("hide");
+		}
+	}
+
+	public void setChangeProfilePicture(boolean change) {
+		if (change) {
 			PanelProfileDisplay.setVisible(false);
 			panelProfile.setVisible(true);
-			divEditDropDown.setVisible(false);
 			divSavePanel.setVisible(true);
+			divEditDropDown.setVisible(false);
 		} else {
 			PanelProfileDisplay.setVisible(true);
 			panelProfile.setVisible(false);
-			divEditDropDown.setVisible(true);
 			divSavePanel.setVisible(false);
+			divEditDropDown.setVisible(true);
 		}
+
 	}
 
 	public void bindBasicDetails(ApplicationFormHeaderDto result) {
 		basicDetail.bindDetails(result);
-		
-		//test
-		
+		// test
 		if (result.getRefId() != null) {
 			spnNames.setInnerText(result.getSurname() + " "
 					+ result.getOtherNames());
 			spnApplicationType.setInnerText(result.getApplicationType()
 					.getDisplayName());
-			
+
 			result.setPercCompletion(50);
 			progressBar.setProgress(result.getPercCompletion());
 		}
@@ -185,7 +214,12 @@ public class ProfileWidget extends Composite {
 		url = "api/users/" + refId + "/profile";
 		imgUser.setUrl(url);
 	}
-	
+
+	public void setUserImage(String refId) {
+		url = "api/users/" + refId + "/profile";
+		imgUser.setUrl(url);
+	}
+
 	public void setApplicationId(String applicationRefId) {
 		if (applicationRefId == null) {
 			aPayNow.removeStyleName("btn-success");
