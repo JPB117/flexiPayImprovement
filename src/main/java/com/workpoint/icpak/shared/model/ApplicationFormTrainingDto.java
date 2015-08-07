@@ -9,30 +9,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ApplicationFormTrainingDto extends SerializableObj {
-	/**
-	 * 
-	 */
-	public enum TrainingType implements Listable {
-		BEFOREQUALIFYING("Before Qualifying"), AFTERQUALIFYING(
-				"After Qualifying");
-
-		private String displayName;
-
-		TrainingType(String displayName) {
-			this.displayName = displayName;
-		}
-
-		@Override
-		public String getName() {
-			return displayName;
-		}
-
-		@Override
-		public String getDisplayName() {
-			return displayName;
-		}
-
-	}
 
 	private static final long serialVersionUID = 1L;
 	private String organisationName;

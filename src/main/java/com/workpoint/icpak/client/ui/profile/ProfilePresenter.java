@@ -1,6 +1,8 @@
 package com.workpoint.icpak.client.ui.profile;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -37,9 +39,12 @@ import com.workpoint.icpak.client.ui.profile.training.form.TrainingRegistrationF
 import com.workpoint.icpak.client.ui.profile.widget.ProfileWidget;
 import com.workpoint.icpak.client.ui.security.LoginGateKeeper;
 import com.workpoint.icpak.shared.api.ApplicationFormResource;
+import com.workpoint.icpak.shared.api.CountriesResource;
 import com.workpoint.icpak.shared.model.ApplicationFormEducationalDto;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
+import com.workpoint.icpak.shared.model.ApplicationFormSpecializationDto;
 import com.workpoint.icpak.shared.model.ApplicationFormTrainingDto;
+import com.workpoint.icpak.shared.model.Country;
 
 public class ProfilePresenter
 		extends
@@ -60,7 +65,7 @@ public class ProfilePresenter
 
 		int getActiveTab();
 
-		ApplicationFormHeaderDto getBasicDetails();
+		// ApplicationFormHeaderDto getBasicDetails();
 
 		boolean isValid();
 
@@ -83,6 +88,10 @@ public class ProfilePresenter
 		void setApplicationId(String applicationRefId);
 
 		void clear();
+
+		void setCountries(List<Country> countries);
+
+		void bindSpecializations(List<ApplicationFormSpecializationDto> result);
 	}
 
 	private final CurrentUser currentUser;
@@ -102,13 +111,16 @@ public class ProfilePresenter
 	}
 
 	private ResourceDelegate<ApplicationFormResource> applicationDelegate;
+	private ResourceDelegate<CountriesResource> countriesResource;
 
 	@Inject
 	public ProfilePresenter(final EventBus eventBus, final IProfileView view,
 			final IProfileProxy proxy,
+			ResourceDelegate<CountriesResource> countriesResource,
 			ResourceDelegate<ApplicationFormResource> applicationDelegate,
 			final CurrentUser currentUser) {
 		super(eventBus, view, proxy, HomePresenter.SLOT_SetTabContent);
+		this.countriesResource = countriesResource;
 		this.applicationDelegate = applicationDelegate;
 		this.currentUser = currentUser;
 	}
@@ -202,15 +214,65 @@ public class ProfilePresenter
 	}
 
 	protected boolean saveTrainingInformation() {
+		String applicationId = getApplicationRefId();
+
+		if (applicationId == null) {
+			Window.alert("Current user has no active application");
+			return true;
+		}
+
 		if (trainingForm.isValid()) {
 			// Save Training Here
 			fireEvent(new ProcessingEvent());
 			ApplicationFormTrainingDto dto = trainingForm.getTrainingDto();
 
+			if (dto.getRefId() == null) {
+				applicationDelegate
+						.withCallback(
+								new AbstractAsyncCallback<ApplicationFormTrainingDto>() {
+									@Override
+									public void onSuccess(
+											ApplicationFormTrainingDto result) {
+										loadTrainings();
+									}
+								}).training(applicationId).create(dto);
+			} else {
+				applicationDelegate
+						.withCallback(
+								new AbstractAsyncCallback<ApplicationFormTrainingDto>() {
+									@Override
+									public void onSuccess(
+											ApplicationFormTrainingDto trainingDto) {
+										loadTrainings();
+										trainingForm.bindDetail(trainingDto);
+									}
+								}).training(applicationId)
+						.update(dto.getRefId(), dto);
+			}
+
 			return true;
 		} else {
 			return false;
 		}
+	}
+
+	protected void loadTrainings() {
+		String applicationId = getApplicationRefId();
+		if (applicationId == null) {
+			return;
+		}
+		applicationDelegate
+				.withCallback(
+						new AbstractAsyncCallback<List<ApplicationFormTrainingDto>>() {
+							@Override
+							public void onSuccess(
+									List<ApplicationFormTrainingDto> result) {
+								// bind Training details
+								getView().bindTrainingDetails(result);
+							}
+						}).training(applicationId)
+						.getAll(0, 50);
+
 	}
 
 	protected boolean saveEducationInformation() {
@@ -256,8 +318,14 @@ public class ProfilePresenter
 	protected void saveBasicDetails() {
 		if (memberForm.isValid()) {
 			fireEvent(new ProcessingEvent());
-			ApplicationFormHeaderDto applicationForm = getView()
-					.getBasicDetails();
+
+			// TODO: Tom, you have two instances of MemberRegistrationForm,
+			// one is ProfileView & the one in Profile Presenter - memberForm;
+			// this is confusing
+			// ApplicationFormHeaderDto applicationForm = getView()
+			// .getBasicDetails();
+			ApplicationFormHeaderDto applicationForm = memberForm
+					.getApplicationForm();
 			applicationDelegate.withCallback(
 					new AbstractAsyncCallback<ApplicationFormHeaderDto>() {
 						@Override
@@ -290,44 +358,89 @@ public class ProfilePresenter
 
 		loadData(applicationRefId);
 		getView().setApplicationId(applicationRefId);
-		
+
 	}
 
 	private void loadData(String applicationRefId) {
 		getView().clear();
 
+		countriesResource.withCallback(
+				new AbstractAsyncCallback<List<Country>>() {
+					public void onSuccess(List<Country> countries) {
+						Collections.sort(countries, new Comparator<Country>() {
+							@Override
+							public int compare(Country o1, Country o2) {
+								return o1.getDisplayName().compareTo(
+										o2.getDisplayName());
+							}
+						});
+
+						memberForm.setCountries(countries);
+						// getView().setCountries(countries);
+					};
+				}).getAll();
+
 		if (applicationRefId != null) {
-			applicationDelegate.withCallback(
-					new AbstractAsyncCallback<ApplicationFormHeaderDto>() {
-						@Override
-						public void onSuccess(ApplicationFormHeaderDto result) {
-							getView().bindBasicDetails(result);
-							memberForm.bind(result);
-							// Window.alert("Binded Basic data");
-						}
-					}).getById(applicationRefId);
-
-			applicationDelegate
-					.withCallback(
-							new AbstractAsyncCallback<List<ApplicationFormEducationalDto>>() {
-								@Override
-								public void onSuccess(
-										List<ApplicationFormEducationalDto> result) {
-									getView().bindEducationDetails(result);
-									// Window.alert("Binded Education Form data");
-								}
-							}).education(applicationRefId).getAll(0, 100);
-
-			// bind Training details
-			getView().bindTrainingDetails(
-					new ArrayList<ApplicationFormTrainingDto>());
-
-			// bind Specialization details
+			loadMemberDetails();
+			loadEducation();
+			loadTrainings();
+			loadSpecializations();
 
 		} else {
-			//Window.alert("User refId not sent in this request!");
+			// Window.alert("User refId not sent in this request!");
 		}
 
+	}
+
+	private void loadMemberDetails() {
+		String applicationRefId = getApplicationRefId();
+		if (applicationRefId == null) {
+			return;
+		}
+		applicationDelegate.withCallback(
+				new AbstractAsyncCallback<ApplicationFormHeaderDto>() {
+					@Override
+					public void onSuccess(ApplicationFormHeaderDto result) {
+						memberForm.bind(result);
+						getView().bindBasicDetails(result);
+
+						// Window.alert("Binded Basic data");
+					}
+				}).getById(applicationRefId);
+	}
+
+	private void loadEducation() {
+		String applicationRefId = getApplicationRefId();
+		if (applicationRefId == null) {
+			return;
+		}
+		applicationDelegate
+				.withCallback(
+						new AbstractAsyncCallback<List<ApplicationFormEducationalDto>>() {
+							@Override
+							public void onSuccess(
+									List<ApplicationFormEducationalDto> result) {
+								getView().bindEducationDetails(result);
+								// Window.alert("Binded Education Form data");
+							}
+						}).education(applicationRefId).getAll(0, 100);
+	}
+
+	private void loadSpecializations() {
+		String applicationId = getApplicationRefId();
+		if (applicationId == null) {
+			return;
+		}
+		applicationDelegate
+				.withCallback(
+						new AbstractAsyncCallback<List<ApplicationFormSpecializationDto>>() {
+							@Override
+							public void onSuccess(
+									List<ApplicationFormSpecializationDto> result) {
+								// bind Training details
+								getView().bindSpecializations(result);
+							}
+						}).specialization(applicationId).getAll(0, 50);
 	}
 
 	String getApplicationRefId() {
@@ -347,7 +460,7 @@ public class ProfilePresenter
 				showPopUp(educationForm);
 				educationForm.bindDetail(dto);
 			}
-		} 
+		}
 
 	}
 

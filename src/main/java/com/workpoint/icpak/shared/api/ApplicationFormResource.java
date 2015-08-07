@@ -27,6 +27,12 @@ public interface ApplicationFormResource extends BaseResource{
 	@Path("/{applicationId}/education")
 	public EducationResource education(@PathParam("applicationId") String applicationId);
 	
+	@Path("/{applicationId}/trainings")
+	public TrainingsResource training(@PathParam("applicationId") String applicationId);
+	
+	@Path("/{applicationId}/specializations")
+	public SpecializationsResource specialization(@PathParam("applicationId") String applicationId);
+	
 	@GET
 	@Path("/{applicationId}")
 	@Produces(MediaType.APPLICATION_JSON)

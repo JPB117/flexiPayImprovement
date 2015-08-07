@@ -15,7 +15,7 @@ import com.workpoint.icpak.client.ui.component.DropDownList;
 import com.workpoint.icpak.client.ui.component.IssuesPanel;
 import com.workpoint.icpak.client.ui.component.TextField;
 import com.workpoint.icpak.shared.model.ApplicationFormTrainingDto;
-import com.workpoint.icpak.shared.model.ApplicationFormTrainingDto.TrainingType;
+import com.workpoint.icpak.shared.model.TrainingType;
 
 public class TrainingRegistrationForm extends Composite {
 

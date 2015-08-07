@@ -3,6 +3,7 @@ package com.workpoint.icpak.client.ui.membership.form;
 import static com.workpoint.icpak.client.ui.util.StringUtils.isNullOrEmpty;
 
 import java.util.Arrays;
+import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -10,11 +11,13 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
+import com.workpoint.icpak.client.ui.component.DateField;
 import com.workpoint.icpak.client.ui.component.DropDownList;
 import com.workpoint.icpak.client.ui.component.IssuesPanel;
 import com.workpoint.icpak.client.ui.component.TextField;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 import com.workpoint.icpak.shared.model.ApplicationType;
+import com.workpoint.icpak.shared.model.Country;
 import com.workpoint.icpak.shared.model.Gender;
 import com.workpoint.icpak.shared.model.Listable;
 
@@ -38,9 +41,14 @@ public class MemberRegistrationForm extends Composite {
 	TextField txtAddress;
 	@UiField
 	TextField txtPostalCode;
+	
+	@UiField DateField dtDOB;
 
 	@UiField
 	DropDownList<Gender> lstGender;
+	
+	@UiField
+	DropDownList<Country> lstCountry;
 
 	private boolean isEmailValid = true;
 
@@ -132,10 +140,12 @@ public class MemberRegistrationForm extends Composite {
 		dto.setEmail(txtEmailAddress.getValue());
 		dto.setEmployer(txtEmployer.getValue());
 		dto.setCity1(txtCity.getValue());
+		dto.setCountry(lstCountry.getValue()==null? "": lstCountry.getValue().getDisplayName());
 		dto.setAddress1(txtAddress.getValue());
 		dto.setTelephone1(txtPhone.getValue());
 		dto.setPostCode(txtPostalCode.getValue());
 		dto.setApplicationType(type);
+		dto.setDob(dtDOB.getValueDate());
 		dto.setGender(lstGender.getValue());
 		return dto;
 	}
@@ -164,6 +174,9 @@ public class MemberRegistrationForm extends Composite {
 		txtEmailAddress.setValue(application.getEmail());
 		txtEmployer.setValue(application.getEmployer());
 		txtCity.setValue(application.getCity1());
+		//lstCountry.setValue(application.getCountry());
+		dtDOB.setValue(application.getDob());
+		lstGender.setValue(application.getGender());
 		txtPhone.setValue(application.getTelephone1());
 		txtAddress.setValue(application.getAddress1());
 		txtPostalCode.setValue(application.getPostCode());
@@ -180,6 +193,16 @@ public class MemberRegistrationForm extends Composite {
 		txtAddress.setValue(null);
 		txtPostalCode.setValue(null);
 		type = null;
+	}
+	
+	public void setCountries(List<Country> countries) {
+		lstCountry.setItems(countries);
+		for (Country c : countries) {
+			if (c.getName().equals("KE")) {
+				lstCountry.setValue(c);
+				break;
+			}
+		}
 	}
 
 }

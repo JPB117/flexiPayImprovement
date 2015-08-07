@@ -26,6 +26,7 @@ import com.workpoint.icpak.client.ui.membership.form.MemberRegistrationForm;
 import com.workpoint.icpak.shared.model.ApplicationCategoryDto;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 import com.workpoint.icpak.shared.model.ApplicationType;
+import com.workpoint.icpak.shared.model.Country;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 
 public class MemberRegistrationView extends ViewImpl implements
@@ -460,6 +461,11 @@ public class MemberRegistrationView extends ViewImpl implements
 		}
 		setActive(liElements.get(counter), pageElements.get(counter));
 
+	}
+
+	@Override
+	public void setCountries(List<Country> countries) {
+		memberRegistrationForm.setCountries(countries);
 	}
 
 }
