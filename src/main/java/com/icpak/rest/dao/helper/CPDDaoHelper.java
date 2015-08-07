@@ -9,7 +9,12 @@ import com.icpak.rest.dao.CPDDao;
 import com.icpak.rest.dao.EventsDao;
 import com.icpak.rest.dao.UsersDao;
 import com.icpak.rest.models.cpd.CPD;
+import com.icpak.rest.models.event.Delegate;
+import com.icpak.rest.models.event.Event;
+import com.icpak.rest.models.membership.Member;
 import com.workpoint.icpak.shared.model.CPDDto;
+import com.workpoint.icpak.shared.model.CPDStatus;
+import com.workpoint.icpak.shared.model.events.AttendanceStatus;
 
 @Transactional
 public class CPDDaoHelper {
@@ -75,6 +80,48 @@ public class CPDDaoHelper {
 
 	public void delete(String memberId, String cpdId) {
 		dao.delete(dao.findByCPDId(cpdId));
+	}
+
+	public void updateCPDFromAttendance(Delegate delegate,
+			AttendanceStatus attendance) {
+		if(delegate.getMemberRefId()==null){
+			return;
+		}
+		
+		Member member = dao.findByRefId(delegate.getMemberRefId(), Member.class);
+		Event event = delegate.getBooking().getEvent();
+		String memberId = delegate.getMemberRefId();
+		
+		if(attendance==null || attendance == AttendanceStatus.NOTATTENDED){
+			dao.deleteCPDByMemberAndEvent(memberId, event.getRefId());
+			return;
+		}
+		
+		
+		CPDDto cpd = new CPDDto();
+		CPD po = dao.getCPDByMemberAndEvent(memberId, event.getRefId());
+		if(po!=null){
+			cpd = po.toDTO();
+		}
+		
+		cpd.setCpdHours(event.getCpdHours());
+		cpd.setEndDate(event.getEndDate());
+		cpd.setStartDate(event.getStartDate());
+		cpd.setFullNames(delegate.getSurname()+" "+delegate.getOtherNames());
+		cpd.setMemberId(memberId);
+		cpd.setEventId(event.getRefId());
+		cpd.setOrganizer("ICPAK");
+		cpd.setStatus(CPDStatus.CONFIRMED);
+		cpd.setEventId(event.getRefId());
+		cpd.setTitle(event.getName());
+		
+		if(cpd.getRefId()!=null){
+			update(memberId, cpd.getRefId(), cpd);
+		}else{
+			create(memberId, cpd);
+		}
+		
+		
 	}
 
 }

@@ -36,7 +36,9 @@ import com.workpoint.icpak.client.ui.profile.training.TrainingDetails;
 import com.workpoint.icpak.client.ui.upload.custom.Uploader;
 import com.workpoint.icpak.shared.model.ApplicationFormEducationalDto;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
+import com.workpoint.icpak.shared.model.ApplicationFormSpecializationDto;
 import com.workpoint.icpak.shared.model.ApplicationFormTrainingDto;
+import com.workpoint.icpak.shared.model.Country;
 
 public class ProfileWidget extends Composite {
 
@@ -246,9 +248,9 @@ public class ProfileWidget extends Composite {
 		return divTabs.getActiveTab();
 	}
 
-	public ApplicationFormHeaderDto getBasicDetails() {
-		return basicDetail.getApplicationForm();
-	}
+//	public ApplicationFormHeaderDto getBasicDetails() {
+//		return basicDetail.getApplicationForm();
+//	}
 
 	public HasClickHandlers getSaveBasicDetailsButton() {
 		return basicDetail.getSaveButton();
@@ -296,6 +298,15 @@ public class ProfileWidget extends Composite {
 
 	public HasClickHandlers getChangePasswordButton() {
 		return aChangePassword;
+	}
+
+	public void setCountries(List<Country> countries) {
+		basicDetail.setCountries(countries);
+	}
+
+	public void bindSpecializations(
+			List<ApplicationFormSpecializationDto> result) {
+		specializationDetail.bindSpecializations(result);
 	}
 
 }

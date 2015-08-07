@@ -1,5 +1,7 @@
 package com.workpoint.icpak.client.ui.profile.basic;
 
+import java.util.List;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -17,6 +19,7 @@ import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.membership.form.MemberRegistrationForm;
 import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
+import com.workpoint.icpak.shared.model.Country;
 
 public class BasicDetails extends Composite {
 
@@ -80,27 +83,29 @@ public class BasicDetails extends Composite {
 		elPhone.setInnerText(result.getTelephone1());
 		elEmail.setInnerText(result.getEmail());
 
-		if (result.getDob() != null) {
-			elDob.setInnerText(DateUtils.DATEFORMAT.format(result.getDate()));
-		}
-
-		if (result.getGender() != null) {
-			elSex.setInnerText(result.getGender().name());
-		}
-
 		elEmployer.setInnerText(result.getEmployer());
 		elResidence.setInnerText(result.getResidence());
 		elAddress.setInnerText(result.getAddress1());
 		elPostalCode.setInnerText(result.getPostCode());
 		elCountry.setInnerText(result.getCountry());
 		elCity.setInnerText(result.getCity1());
+		
+		if (result.getGender() != null) {
+			elSex.setInnerText(result.getGender().name());
+		}
+		
+		if (result.getDob() != null) {
+			elDob.setInnerText(DateUtils.DATEFORMAT.format(result.getDob()));
+		}
 
-		panelRegistration.bind(result);
+		
+
+		//panelRegistration.bind(result);
 	}
 
-	public ApplicationFormHeaderDto getApplicationForm() {
-		return panelRegistration.getApplicationForm();
-	}
+//	public ApplicationFormHeaderDto getApplicationForm() {
+//		return panelRegistration.getApplicationForm();
+//	}
 
 	public HasClickHandlers getSaveButton() {
 		return aSave;
@@ -132,5 +137,9 @@ public class BasicDetails extends Composite {
 
 		panelRegistration.clear();
 				
+	}
+
+	public void setCountries(List<Country> countries) {
+		panelRegistration.setCountries(countries);
 	}
 }

@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 import com.icpak.rest.models.base.PO;
+import com.workpoint.icpak.shared.model.ApplicationFormSpecializationDto;
+import com.workpoint.icpak.shared.model.SpecializationCategory;
 
 @Entity
 @Table(name="`Application form Specialization`")
@@ -65,6 +67,13 @@ public class ApplicationFormSpecialization extends PO{
 	
 	@Column(nullable=false, name="`Up To Date`", columnDefinition="datetime")
 	private Date upToDate;
+	
+	private String specializationName;
+	private SpecializationCategory category;
+	
+	@Column( name = "`ApplicationRefId`", length = 20)
+	private String applicationRefId;
+
 	
 	public ApplicationFormSpecialization() {
 	}
@@ -195,6 +204,44 @@ public class ApplicationFormSpecialization extends PO{
 
 	public void setUpToDate(Date upToDate) {
 		this.upToDate = upToDate;
+	}
+
+	public ApplicationFormSpecializationDto toDto() {
+		ApplicationFormSpecializationDto dto = new ApplicationFormSpecializationDto();
+		dto.setRefId(getRefId());
+		dto.setCategory(category);
+		dto.setSpecializationName(specializationName);
+		
+		return dto;
+	}
+
+	public void copyFrom(ApplicationFormSpecializationDto eduEntry) {
+		setCategory(eduEntry.getCategory());
+		setSpecializationName(eduEntry.getSpecializationName());
+	}
+
+	public String getSpecializationName() {
+		return specializationName;
+	}
+
+	public void setSpecializationName(String specializationName) {
+		this.specializationName = specializationName;
+	}
+
+	public SpecializationCategory getCategory() {
+		return category;
+	}
+
+	public void setCategory(SpecializationCategory category) {
+		this.category = category;
+	}
+
+	public String getApplicationRefId() {
+		return applicationRefId;
+	}
+
+	public void setApplicationRefId(String applicationRefId) {
+		this.applicationRefId = applicationRefId;
 	}
 	
 }

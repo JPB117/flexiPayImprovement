@@ -1,5 +1,7 @@
 package com.workpoint.icpak.client.ui.membership;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -37,10 +39,12 @@ import com.workpoint.icpak.client.ui.events.ErrorEvent;
 import com.workpoint.icpak.client.ui.events.ErrorEvent.ErrorHandler;
 import com.workpoint.icpak.shared.api.ApplicationFormResource;
 import com.workpoint.icpak.shared.api.CategoriesResource;
+import com.workpoint.icpak.shared.api.CountriesResource;
 import com.workpoint.icpak.shared.api.InvoiceResource;
 import com.workpoint.icpak.shared.api.UsersResource;
 import com.workpoint.icpak.shared.model.ApplicationCategoryDto;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
+import com.workpoint.icpak.shared.model.Country;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.UserDto;
 
@@ -85,6 +89,8 @@ public class MemberRegistrationPresenter
 		void setCounter(int counter);
 
 		void bindTransaction(InvoiceDto invoice);
+
+		void setCountries(List<Country> countries);
 	}
 
 	@ProxyCodeSplit
@@ -113,6 +119,8 @@ public class MemberRegistrationPresenter
 
 	private InvoiceDto invoice;
 
+	private ResourceDelegate<CountriesResource> countriesResource;
+
 	@Inject
 	public MemberRegistrationPresenter(final EventBus eventBus,
 			final MyView view, final MyProxy proxy,
@@ -120,12 +128,14 @@ public class MemberRegistrationPresenter
 			ResourceDelegate<ApplicationFormResource> applicationDelegate,
 			ResourceDelegate<UsersResource> usersDelegate,
 			ResourceDelegate<CategoriesResource> categoriesDelegate,
-			ResourceDelegate<InvoiceResource> invoiceResource) {
+			ResourceDelegate<InvoiceResource> invoiceResource,
+			ResourceDelegate<CountriesResource> countriesResource) {
 		super(eventBus, view, proxy);
 		this.applicationDelegate = applicationDelegate;
 		this.usersDelegate = usersDelegate;
 		this.categoriesDelegate = categoriesDelegate;
 		this.invoiceResource = invoiceResource;
+		this.countriesResource = countriesResource;
 		this.errorFactory = new StandardProvider<ErrorPresenter>(provider);
 	}
 
@@ -274,6 +284,22 @@ public class MemberRegistrationPresenter
 
 		applicationRefId = request.getParameter("applicationId", null);
 
+		//Countries
+		countriesResource.withCallback(
+				new AbstractAsyncCallback<List<Country>>() {
+					public void onSuccess(List<Country> countries) {
+						Collections.sort(countries, new Comparator<Country>() {
+							@Override
+							public int compare(Country o1, Country o2) {
+								return o1.getDisplayName().compareTo(
+										o2.getDisplayName());
+							}
+						});
+
+						getView().setCountries(countries);
+					};
+				}).getAll();
+		
 		if (applicationRefId != null) {
 			getView().setCounter(2);
 			loadApplication(applicationRefId);
@@ -289,6 +315,7 @@ public class MemberRegistrationPresenter
 	}
 
 	private void loadApplication(String applicationId) {
+		
 		// this.re
 		applicationDelegate.withCallback(
 				new AbstractAsyncCallback<ApplicationFormHeaderDto>() {

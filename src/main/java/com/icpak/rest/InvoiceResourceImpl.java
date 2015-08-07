@@ -23,16 +23,23 @@ public class InvoiceResourceImpl implements InvoiceResource{
 	private InvoiceDaoHelper helper;
 	
 	@GET
+	@Path("/count/{memberId}")
+	public Integer getCount(@PathParam("memberId") String memberId) {
+		return helper.getInvoiceCount(memberId);
+	}
+	
+	@GET
 	@Path("/count")
 	public Integer getCount() {
 		return helper.getInvoiceCount();
 	}
 	
 	@GET
+	@Path("/{memberId}/list")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<InvoiceDto> getInvoices(@QueryParam("offset") Integer offset,
+	public List<InvoiceDto> getInvoices(@PathParam("memberId") String memberId, @QueryParam("offset") Integer offset,
 			@QueryParam("limit") Integer limit){
-		return helper.getAllInvoices(offset,limit);
+		return helper.getAllInvoices(memberId,offset,limit);
 	}
 
 	@Path("/{invoiceref}")

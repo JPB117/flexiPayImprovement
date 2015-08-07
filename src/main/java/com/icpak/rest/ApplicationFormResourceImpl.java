@@ -22,6 +22,8 @@ import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 import com.workpoint.icpak.shared.api.ApplicationFormResource;
 import com.workpoint.icpak.shared.api.EducationResource;
+import com.workpoint.icpak.shared.api.SpecializationsResource;
+import com.workpoint.icpak.shared.api.TrainingsResource;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 
@@ -113,6 +115,16 @@ public class ApplicationFormResourceImpl implements ApplicationFormResource{
 		return factory.createEducationResource(applicationId);
 	}
 	
+	@Path("/{applicationId}/trainings")
+	public TrainingsResource training(@PathParam("applicationId") String applicationId){
+		return factory.createTrainingsResource(applicationId);
+	}
+	
+	@Path("/{applicationId}/specializations")
+	public SpecializationsResource specialization(@PathParam("applicationId") String applicationId) {
+		return factory.createSpecializationResource(applicationId);
+	}
+	
 //	/**
 //	 * Member CPD
 //	 * 
@@ -176,4 +188,5 @@ public class ApplicationFormResourceImpl implements ApplicationFormResource{
 			@QueryParam("download") String download){
 		return helper.getInvoice(applicationId);
 	}
+
 }

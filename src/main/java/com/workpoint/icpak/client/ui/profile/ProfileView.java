@@ -12,12 +12,13 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
 import com.workpoint.icpak.client.security.CurrentUser;
-
 import com.workpoint.icpak.client.ui.profile.password.PasswordWidget;
 import com.workpoint.icpak.client.ui.profile.widget.ProfileWidget;
 import com.workpoint.icpak.shared.model.ApplicationFormEducationalDto;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
+import com.workpoint.icpak.shared.model.ApplicationFormSpecializationDto;
 import com.workpoint.icpak.shared.model.ApplicationFormTrainingDto;
+import com.workpoint.icpak.shared.model.Country;
 
 public class ProfileView extends ViewImpl implements
 		ProfilePresenter.IProfileView {
@@ -112,10 +113,10 @@ public class ProfileView extends ViewImpl implements
 		return divProfileContent.getActiveTab();
 	}
 
-	@Override
-	public ApplicationFormHeaderDto getBasicDetails() {
-		return divProfileContent.getBasicDetails();
-	}
+//	@Override
+//	public ApplicationFormHeaderDto getBasicDetails() {
+//		return divProfileContent.getBasicDetails();
+//	}
 
 	@Override
 	public boolean isValid() {
@@ -171,6 +172,17 @@ public class ProfileView extends ViewImpl implements
 	public void bindTrainingDetails(
 			List<ApplicationFormTrainingDto> trainingDetails) {
 		divProfileContent.bindTrainingDetails(trainingDetails);
+	}
+
+	@Override
+	public void setCountries(List<Country> countries) {
+		//divProfileContent.setCountries(countries);
+	}
+
+	@Override
+	public void bindSpecializations(
+			List<ApplicationFormSpecializationDto> result) {
+		divProfileContent.bindSpecializations(result);
 	}
 
 }

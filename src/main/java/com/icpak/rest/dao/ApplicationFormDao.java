@@ -8,6 +8,8 @@ import com.icpak.rest.models.ErrorCodes;
 import com.icpak.rest.models.membership.ApplicationFormEducational;
 import com.icpak.rest.models.membership.ApplicationFormHeader;
 import com.icpak.rest.models.membership.ApplicationCategory;
+import com.icpak.rest.models.membership.ApplicationFormSpecialization;
+import com.icpak.rest.models.membership.ApplicationFormTraining;
 import com.workpoint.icpak.shared.model.ApplicationType;
 import com.workpoint.icpak.shared.model.EduType;
 
@@ -109,6 +111,22 @@ public class ApplicationFormDao extends BaseDao{
 			return getSingleResultOrNull(getEntityManager()
 					.createQuery("FROM ApplicationCategory c where c.refId=:refId")
 					.setParameter("refId", categoryId));
+		}
+
+		public Collection<ApplicationFormTraining> getTraining(
+				String applicationId) {
+			
+			return getResultList(getEntityManager().createQuery(
+					"from ApplicationFormTraining "
+					+ "where ApplicationRefId=:refId and isactive=1").setParameter("refId", applicationId));
+		}
+
+		public Collection<ApplicationFormSpecialization> getSpecialization(
+				String applicationId) {
+			
+			return getResultList(getEntityManager().createQuery(
+					"from ApplicationFormSpecialization "
+					+ "where ApplicationRefId=:refId and isactive=1").setParameter("refId", applicationId));
 		}
 
 }

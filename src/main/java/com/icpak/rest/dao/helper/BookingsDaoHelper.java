@@ -49,6 +49,8 @@ public class BookingsDaoHelper {
 	@Inject
 	EventsDao eventDao;
 	
+	@Inject CPDDaoHelper cpdDao;
+	
 	@Inject InvoiceDaoHelper invoiceHelper;
 	
 	@Inject TransactionDaoHelper trxHelper;
@@ -317,6 +319,9 @@ public class BookingsDaoHelper {
 		Delegate delegate = dao.findByRefId(delegateId, Delegate.class);
 		delegate.setAttendance(delegateDto.getAttendance());
 		dao.save(delegate);
+		
+		cpdDao.updateCPDFromAttendance(delegate,delegate.getAttendance());
+		
 		return delegate.toDto();
 	}
 

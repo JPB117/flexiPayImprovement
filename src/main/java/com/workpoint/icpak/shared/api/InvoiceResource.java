@@ -16,7 +16,8 @@ import com.workpoint.icpak.shared.model.InvoiceDto;
 public interface InvoiceResource extends BaseResource{
 
 	@GET
-	public List<InvoiceDto> getInvoices(@QueryParam("offset") Integer offset,
+	@Path("/{memberId}/list")
+	public List<InvoiceDto> getInvoices(@PathParam("memberId") String memberId,@QueryParam("offset") Integer offset,
 			@QueryParam("limit") Integer limit);
 	
 	@Path("/{invoiceref}")

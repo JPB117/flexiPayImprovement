@@ -13,6 +13,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.TableHeader;
 import com.workpoint.icpak.client.ui.component.TableView;
+import com.workpoint.icpak.shared.model.ApplicationFormSpecializationDto;
 
 public class SpecializationDetails extends Composite {
 
@@ -73,6 +74,11 @@ public class SpecializationDetails extends Composite {
 
 	public void clear() {
 		// tblSpecialization.clearRows();
+	}
+
+	public void bindSpecializations(
+			List<ApplicationFormSpecializationDto> result) {
+		
 	}
 
 }

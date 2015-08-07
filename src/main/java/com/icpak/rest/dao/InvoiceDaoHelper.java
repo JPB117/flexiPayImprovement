@@ -71,9 +71,9 @@ public class InvoiceDaoHelper {
 		return invoice.toDto();
 	}
 
-	public List<InvoiceDto> getAllInvoices(Integer offset,Integer limit) {
+	public List<InvoiceDto> getAllInvoices(String memberId, Integer offset,Integer limit) {
 		
-		List<Invoice> invoices = dao.getAllInvoices(offset, limit);
+		List<Invoice> invoices = dao.getAllInvoices(memberId, offset, limit);
 		List<InvoiceDto> dtos = new ArrayList<>();
 		
 		for(Invoice invoice: invoices){
@@ -85,7 +85,7 @@ public class InvoiceDaoHelper {
 	
 
 	public int getInvoiceCount() {
-		return dao.getInvoiceCount();
+		return getInvoiceCount(null);
 	}
 
 	public List<InvoiceDto> getAllInvoicesForMember(String memberId) {
@@ -98,5 +98,14 @@ public class InvoiceDaoHelper {
 		}
 		
 		return dtos;
+	}
+
+	public Integer getInvoiceCount(String memberId) {
+		
+		if(memberId==null || memberId.equals("ALL")){
+			return dao.getInvoiceCount();
+		}
+		
+		return dao.getInvoiceCount(memberId);
 	}
 }

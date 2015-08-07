@@ -8,24 +8,15 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ApplicationFormSpecializationDto extends SerializableObj {
 
-	private enum SpecializationCategory {
-		PRACTISE("Practise"), COMMERCEANDINDUSTRY("Commerce and Industry"), PUBLICSECTOR(
-				"Public Sector"), TRAINING("Training");
-
-		private String category;
-
-		SpecializationCategory(String category) {
-			this.category = category;
-		}
-
-		public String getCategory() {
-			return category;
-		}
-
-	}
-
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String specializationName;
 	private SpecializationCategory category;
+	
+	public ApplicationFormSpecializationDto() {
+	}
 
 	public String getSpecializationName() {
 		return specializationName;
