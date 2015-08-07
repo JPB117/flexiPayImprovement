@@ -44,6 +44,7 @@ public class CPD extends PO{
 	private int cpdHours;
 	private CPDStatus status = CPDStatus.UNCONFIRMED;
 	private String memberId;
+	private String eventId;
 	
 	public CPD() {
 	}
@@ -84,6 +85,7 @@ public class CPD extends PO{
 		setMemberId(dto.getMemberId());
 		setOrganizer(dto.getOrganizer());
 		setTitle(dto.getTitle());
+		setEventId(dto.getEventId());
 	}
 
 	public CPDDto toDTO() {
@@ -99,6 +101,7 @@ public class CPD extends PO{
 		dto.setStartDate(startDate);
 		dto.setStatus(status);
 		dto.setTitle(title);
+		dto.setEventId(eventId);
 		
 		return dto;
 	}
@@ -141,6 +144,14 @@ public class CPD extends PO{
 
 	public void setCpdHours(int cpdHours) {
 		this.cpdHours = cpdHours;
+	}
+
+	public String getEventId() {
+		return eventId;
+	}
+
+	public void setEventId(String eventId) {
+		this.eventId = eventId;
 	}
 	
 }

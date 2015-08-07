@@ -81,4 +81,18 @@ public class CPDDao extends BaseDao {
 		return cpd;
 	}
 
+	public void deleteCPDByMemberAndEvent(String memberId, String eventId) {
+		
+		delete(getCPDByMemberAndEvent(memberId, eventId));
+	}
+
+	public CPD getCPDByMemberAndEvent(String memberId, String eventId) {
+		CPD cpd = getSingleResultOrNull(getEntityManager()
+				.createQuery("from CPD u where u.memberId=:memberId and u.eventId=:eventId")
+		.setParameter("memberId", memberId)
+		.setParameter("eventId", eventId));
+		
+		return cpd;
+	}
+
 }

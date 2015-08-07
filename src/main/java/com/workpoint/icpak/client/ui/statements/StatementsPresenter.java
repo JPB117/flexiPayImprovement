@@ -32,6 +32,7 @@ import com.workpoint.icpak.client.ui.component.PagingLoader;
 import com.workpoint.icpak.client.ui.component.PagingPanel;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
 import com.workpoint.icpak.client.ui.security.LoginGateKeeper;
+import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.api.InvoiceResource;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 
@@ -109,7 +110,7 @@ public class StatementsPresenter extends
 			public void onSuccess(List<InvoiceDto> result) {
 				getView().bindInvoices(result);
 			}
-		}).getInvoices(offset, limit);
+		}).getInvoices(AppContext.getContextUser().getMemberRefId(), offset, limit);
 	}
 
 }
