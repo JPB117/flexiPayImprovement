@@ -593,7 +593,7 @@ public class EventBookingView extends ViewImpl implements
 
 	private void bindTransaction(InvoiceDto invoice) {
 		// 197.248.4.221
-		String url = "http://localhost:8080/flexipay#websiteClient;"
+		String url = "http://197.248.4.221:8080/flexiPay#websiteClient;"
 				// String url =
 				// "http://197.248.4.221:8080/ewallet/#websiteClient;"
 				+ "businessNo=722722;" + "refId=" + invoice.getRefId() + ";"

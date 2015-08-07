@@ -8,6 +8,7 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.GwtEvent.Type;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -158,7 +159,9 @@ public class MemberRegistrationPresenter
 						submit(getView().getApplicationForm());
 					} else if (getView().getCounter() == 3) {
 						if (invoice != null) {
-							getView().bindInvoice(invoice);
+							getView().bindTransaction(invoice);
+						}else{
+							Window.alert("Invoice details are null!");
 						}
 					} else {
 						getView().next();

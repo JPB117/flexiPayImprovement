@@ -158,9 +158,6 @@ public class MemberRegistrationView extends ViewImpl implements
 	public MemberRegistrationView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
 
-		String url = "http://197.248.4.221:8080/flexiPay/#websiteClient";
-		framePayment.setUrl(url);
-
 		// Li Elements
 		liElements.add(liTab1);
 		liElements.add(liTab2);
