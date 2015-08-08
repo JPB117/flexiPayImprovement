@@ -8,10 +8,13 @@ import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import com.icpak.rest.dao.ApplicationFormDao;
 import com.icpak.rest.dao.UsersDao;
+import com.icpak.rest.exceptions.ServiceException;
+import com.icpak.rest.models.ErrorCodes;
 import com.icpak.rest.models.membership.ApplicationFormHeader;
 import com.icpak.rest.models.membership.ApplicationFormSpecialization;
 import com.workpoint.icpak.shared.model.ApplicationFormSpecializationDto;
 import com.workpoint.icpak.shared.model.EduType;
+import com.workpoint.icpak.shared.model.Specializations;
 
 @Transactional
 public class SpecializationDaoHelper {
@@ -60,8 +63,16 @@ public class SpecializationDaoHelper {
 		return poSpecializationEntry.toDto();
 	}
 
-	public void deleteSpecializationEntry(String applicationId, String eduEntryId) {
-		ApplicationFormSpecialization eduEntry = dao.findByRefId(eduEntryId, ApplicationFormSpecialization.class);
+	public void deleteSpecializationEntry(String applicationId, String specializationName) {
+		Specializations spec = null;
+		
+		try{
+			spec = Specializations.valueOf(specializationName);
+		}catch(Exception e){
+			throw new ServiceException(ErrorCodes.NOTFOUND,"Specialization ", "'"+specializationName+"'");
+		}
+				
+		ApplicationFormSpecialization eduEntry = dao.getSpecializationByName(applicationId,spec);
 		dao.delete(eduEntry);
 	}
 

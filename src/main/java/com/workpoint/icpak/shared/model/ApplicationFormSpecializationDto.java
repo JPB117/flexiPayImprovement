@@ -12,26 +12,22 @@ public class ApplicationFormSpecializationDto extends SerializableObj {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private String specializationName;
-	private SpecializationCategory category;
+	
+	private Specializations specialization;
 	
 	public ApplicationFormSpecializationDto() {
 	}
 
-	public String getSpecializationName() {
-		return specializationName;
+	public ApplicationFormSpecializationDto(Specializations specialization) {
+		this.specialization = specialization;
 	}
 
-	public void setSpecializationName(String specializationName) {
-		this.specializationName = specializationName;
+	public Specializations getSpecialization() {
+		return specialization;
 	}
 
-	public SpecializationCategory getCategory() {
-		return category;
+	public void setSpecialization(Specializations specialization) {
+		this.specialization = specialization;
 	}
-
-	public void setCategory(SpecializationCategory category) {
-		this.category = category;
-	}
-
+	
 }

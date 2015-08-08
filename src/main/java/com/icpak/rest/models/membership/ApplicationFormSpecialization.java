@@ -5,11 +5,14 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Table;
 
 import com.icpak.rest.models.base.PO;
 import com.workpoint.icpak.shared.model.ApplicationFormSpecializationDto;
 import com.workpoint.icpak.shared.model.SpecializationCategory;
+import com.workpoint.icpak.shared.model.Specializations;
 
 @Entity
 @Table(name="`Application form Specialization`")
@@ -68,7 +71,9 @@ public class ApplicationFormSpecialization extends PO{
 	@Column(nullable=true, name="`Up To Date`", columnDefinition="datetime")
 	private Date upToDate;
 	
-	private String specializationName;
+	@Enumerated(EnumType.STRING)
+	private Specializations specialization;
+	
 	private SpecializationCategory category;
 	
 	@Column( name = "`ApplicationRefId`", length = 20)
@@ -209,23 +214,14 @@ public class ApplicationFormSpecialization extends PO{
 	public ApplicationFormSpecializationDto toDto() {
 		ApplicationFormSpecializationDto dto = new ApplicationFormSpecializationDto();
 		dto.setRefId(getRefId());
-		dto.setCategory(category);
-		dto.setSpecializationName(specializationName);
+		dto.setSpecialization(specialization);
 		
 		return dto;
 	}
 
 	public void copyFrom(ApplicationFormSpecializationDto eduEntry) {
-		setCategory(eduEntry.getCategory());
-		setSpecializationName(eduEntry.getSpecializationName());
-	}
-
-	public String getSpecializationName() {
-		return specializationName;
-	}
-
-	public void setSpecializationName(String specializationName) {
-		this.specializationName = specializationName;
+		setCategory(eduEntry.getSpecialization().getCategory());
+		setSpecialization(eduEntry.getSpecialization());
 	}
 
 	public SpecializationCategory getCategory() {
@@ -242,6 +238,14 @@ public class ApplicationFormSpecialization extends PO{
 
 	public void setApplicationRefId(String applicationRefId) {
 		this.applicationRefId = applicationRefId;
+	}
+
+	public Specializations getSpecialization() {
+		return specialization;
+	}
+
+	public void setSpecialization(Specializations specialization) {
+		this.specialization = specialization;
 	}
 	
 }
