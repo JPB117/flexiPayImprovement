@@ -12,6 +12,7 @@ import com.icpak.rest.models.membership.ApplicationFormSpecialization;
 import com.icpak.rest.models.membership.ApplicationFormTraining;
 import com.workpoint.icpak.shared.model.ApplicationType;
 import com.workpoint.icpak.shared.model.EduType;
+import com.workpoint.icpak.shared.model.Specializations;
 
 public class ApplicationFormDao extends BaseDao{
 
@@ -118,7 +119,7 @@ public class ApplicationFormDao extends BaseDao{
 			
 			return getResultList(getEntityManager().createQuery(
 					"from ApplicationFormTraining "
-					+ "where ApplicationRefId=:refId and isactive=1").setParameter("refId", applicationId));
+					+ "where applicationRefId=:refId and isactive=1").setParameter("refId", applicationId));
 		}
 
 		public Collection<ApplicationFormSpecialization> getSpecialization(
@@ -126,7 +127,19 @@ public class ApplicationFormDao extends BaseDao{
 			
 			return getResultList(getEntityManager().createQuery(
 					"from ApplicationFormSpecialization "
-					+ "where ApplicationRefId=:refId and isactive=1").setParameter("refId", applicationId));
+					+ "where applicationRefId=:refId and isactive=1").setParameter("refId", applicationId));
+		}
+
+		public ApplicationFormSpecialization getSpecializationByName(String applicationRefId,
+				Specializations specialization) {
+			
+			return getSingleResultOrNull(getEntityManager().createQuery(
+					"from ApplicationFormSpecialization "
+					+ "where specialization=:specialization "
+					+ "and applicationRefId=:refId and isactive=1")
+					.setParameter("specialization", specialization)
+					.setParameter("refId", applicationRefId)
+					);
 		}
 
 }

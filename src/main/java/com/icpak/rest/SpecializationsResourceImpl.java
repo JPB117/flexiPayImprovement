@@ -81,12 +81,12 @@ public class SpecializationsResourceImpl implements SpecializationsResource{
 	}
 
 	@DELETE
-	@Path("/{specializationId}")
+	@Path("/{specializationName}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value="Delete an existing specialization")
 	public void delete(
-			@ApiParam(value="Entry Id of the specialization to delete", required=true) @PathParam("specializationId") String specializationId) {
-		helper.deleteSpecializationEntry(applicationId,specializationId);
+			@ApiParam(value="Specialization Name of the specialization to delete", required=true) @PathParam("specializationName") String specializationName) {
+		helper.deleteSpecializationEntry(applicationId,specializationName);
 	}
 
 }

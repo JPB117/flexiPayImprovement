@@ -43,10 +43,10 @@ public interface SpecializationsResource {
 			ApplicationFormSpecializationDto specialization);
 	
 	@DELETE
-	@Path("/{specializationId}")
+	@Path("/{specializationName}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public void delete(
-			@PathParam("specializationId") String specializationId);
+			@PathParam("specializationName") String specializationName);
 	
 	
 }

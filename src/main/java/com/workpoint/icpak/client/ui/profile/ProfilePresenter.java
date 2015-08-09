@@ -1,6 +1,5 @@
 package com.workpoint.icpak.client.ui.profile;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -36,7 +35,6 @@ import com.workpoint.icpak.client.ui.membership.form.MemberRegistrationForm;
 import com.workpoint.icpak.client.ui.profile.education.form.EducationRegistrationForm;
 import com.workpoint.icpak.client.ui.profile.specialization.form.SpecializationRegistrationForm;
 import com.workpoint.icpak.client.ui.profile.training.form.TrainingRegistrationForm;
-import com.workpoint.icpak.client.ui.profile.widget.ProfileWidget;
 import com.workpoint.icpak.client.ui.security.LoginGateKeeper;
 import com.workpoint.icpak.shared.api.ApplicationFormResource;
 import com.workpoint.icpak.shared.api.CountriesResource;
@@ -174,6 +172,7 @@ public class ProfilePresenter
 					@Override
 					public void onClick(ClickEvent event) {
 						specializationForm.clear();
+						loadSpecializations();
 						showPopUp(specializationForm);
 					}
 				});
@@ -206,7 +205,7 @@ public class ProfilePresenter
 
 	protected boolean saveSpecializationInformation() {
 		if (specializationForm.isValid()) {
-			// Save Specialization Here
+			loadSpecializations();
 			return true;
 		} else {
 			return false;
@@ -439,6 +438,7 @@ public class ProfilePresenter
 									List<ApplicationFormSpecializationDto> result) {
 								// bind Training details
 								getView().bindSpecializations(result);
+								specializationForm.bindDetails(result);
 							}
 						}).specialization(applicationId).getAll(0, 50);
 	}
@@ -460,8 +460,32 @@ public class ProfilePresenter
 				showPopUp(educationForm);
 				educationForm.bindDetail(dto);
 			}
+		}else if ((event.getModel() instanceof ApplicationFormSpecializationDto)) {
+			ApplicationFormSpecializationDto dto = (ApplicationFormSpecializationDto) event
+					.getModel();
+			if (event.isDelete()) {
+				delete(dto);
+			} else {
+				saveSpecialization(dto);
+			}
 		}
 
+	}
+
+	private void saveSpecialization(ApplicationFormSpecializationDto dto) {
+		applicationDelegate.withCallback(new AbstractAsyncCallback<ApplicationFormSpecializationDto>() {
+			@Override
+			public void onSuccess(ApplicationFormSpecializationDto result) {
+			}
+		}).specialization(getApplicationRefId()).create(dto);
+	}
+
+	private void delete(ApplicationFormSpecializationDto dto) {
+		applicationDelegate.withCallback(new AbstractAsyncCallback<Void>() {
+			@Override
+			public void onSuccess(Void result) {
+			}
+		}).specialization(getApplicationRefId()).delete(dto.getSpecialization().name());
 	}
 
 	private void delete(ApplicationFormEducationalDto dto) {

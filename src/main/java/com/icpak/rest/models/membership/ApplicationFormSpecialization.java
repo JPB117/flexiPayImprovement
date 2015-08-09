@@ -5,11 +5,14 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Table;
 
 import com.icpak.rest.models.base.PO;
 import com.workpoint.icpak.shared.model.ApplicationFormSpecializationDto;
 import com.workpoint.icpak.shared.model.SpecializationCategory;
+import com.workpoint.icpak.shared.model.Specializations;
 
 @Entity
 @Table(name="`Application form Specialization`")
@@ -23,52 +26,54 @@ public class ApplicationFormSpecialization extends PO{
 	@Column(name="`timestamp`",columnDefinition="timestamp NOT NULL default current_timestamp")
 	private Timestamp timestamp;
 	
-	@Column(nullable=false, name="`Line No_`")
+	@Column(nullable=true, name="`Line No_`")
 	private int lineNo;
 	
-	@Column(nullable=false, name="`Application No_`", length=20)
+	@Column(nullable=true, name="`Application No_`", length=20)
 	private String applicationNo;
 	
-	@Column(nullable=false, name="`Code`", length=20)
+	@Column(nullable=true, name="`Code`", length=20)
 	private String code;
 	
-	@Column(nullable=false, name="`Description`", length=50)
+	@Column(nullable=true, name="`Description`", length=50)
 	private String description;
 	
-	@Column(nullable=false, name="`Sector`", length=10)
+	@Column(nullable=true, name="`Sector`", length=10)
 	private String sector;
 
-	@Column(nullable=false, name="`Sector Desc_`", length=50)
+	@Column(nullable=true, name="`Sector Desc_`", length=50)
 	private String sectorDesc;
 	
-	@Column(nullable=false, name="`Name of Firm`", length=50)
+	@Column(nullable=true, name="`Name of Firm`", length=50)
 	private String nameOfFirm;
 	 
-	@Column(nullable=false, name="`From`", columnDefinition="datetime")
+	@Column(nullable=true, name="`From`", columnDefinition="datetime")
 	private Date from;
 
-	@Column(nullable=false, name="`to`", columnDefinition="datetime")
+	@Column(nullable=true, name="`to`", columnDefinition="datetime")
 	private String to;
 	
-	@Column(nullable=false, name="`Position Held`", length=30)
+	@Column(nullable=true, name="`Position Held`", length=30)
 	private String positionHeld;
 
-	@Column(nullable=false, name="`Main clients Handled`", length=50)
+	@Column(nullable=true, name="`Main clients Handled`", length=50)
 	private String mainClientsHandled;
 	
-	@Column(nullable=false, name="`Address of Firm`", length=50)
+	@Column(nullable=true, name="`Address of Firm`", length=50)
 	private String addressOfFirm;
 	
-	@Column(nullable=false, name="`Profesional Function`", length=100)
+	@Column(nullable=true, name="`Profesional Function`", length=100)
 	private String professionalFunction;
 	
-	@Column(nullable=false, name="`Customer Name`", length=50)
+	@Column(nullable=true, name="`Customer Name`", length=50)
 	private String customerName;
 	
-	@Column(nullable=false, name="`Up To Date`", columnDefinition="datetime")
+	@Column(nullable=true, name="`Up To Date`", columnDefinition="datetime")
 	private Date upToDate;
 	
-	private String specializationName;
+	@Enumerated(EnumType.STRING)
+	private Specializations specialization;
+	
 	private SpecializationCategory category;
 	
 	@Column( name = "`ApplicationRefId`", length = 20)
@@ -209,23 +214,14 @@ public class ApplicationFormSpecialization extends PO{
 	public ApplicationFormSpecializationDto toDto() {
 		ApplicationFormSpecializationDto dto = new ApplicationFormSpecializationDto();
 		dto.setRefId(getRefId());
-		dto.setCategory(category);
-		dto.setSpecializationName(specializationName);
+		dto.setSpecialization(specialization);
 		
 		return dto;
 	}
 
 	public void copyFrom(ApplicationFormSpecializationDto eduEntry) {
-		setCategory(eduEntry.getCategory());
-		setSpecializationName(eduEntry.getSpecializationName());
-	}
-
-	public String getSpecializationName() {
-		return specializationName;
-	}
-
-	public void setSpecializationName(String specializationName) {
-		this.specializationName = specializationName;
+		setCategory(eduEntry.getSpecialization().getCategory());
+		setSpecialization(eduEntry.getSpecialization());
 	}
 
 	public SpecializationCategory getCategory() {
@@ -242,6 +238,14 @@ public class ApplicationFormSpecialization extends PO{
 
 	public void setApplicationRefId(String applicationRefId) {
 		this.applicationRefId = applicationRefId;
+	}
+
+	public Specializations getSpecialization() {
+		return specialization;
+	}
+
+	public void setSpecialization(Specializations specialization) {
+		this.specialization = specialization;
 	}
 	
 }

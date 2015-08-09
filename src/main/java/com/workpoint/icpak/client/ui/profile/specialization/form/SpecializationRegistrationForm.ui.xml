@@ -17,19 +17,19 @@
 						<h5>Practice</h5>
 						<div class="checkbox">
 							<label>
-								<g:CheckBox> Auditing</g:CheckBox>
+								<g:CheckBox ui:field="aAudit"> Auditing</g:CheckBox>
 							</label>
 						</div>
 
 						<div class="checkbox">
 							<label>
-								<g:CheckBox> Taxation</g:CheckBox>
+								<g:CheckBox ui:field="aTaxation"> Taxation</g:CheckBox>
 							</label>
 						</div>
 
 						<div class="checkbox">
 							<label>
-								<g:CheckBox> Financial Consulting</g:CheckBox>
+								<g:CheckBox ui:field="aFinancial"> Financial Consulting</g:CheckBox>
 							</label>
 						</div>
 
