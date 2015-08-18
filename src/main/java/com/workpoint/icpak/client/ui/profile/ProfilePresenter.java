@@ -269,8 +269,7 @@ public class ProfilePresenter
 								// bind Training details
 								getView().bindTrainingDetails(result);
 							}
-						}).training(applicationId)
-						.getAll(0, 50);
+						}).training(applicationId).getAll(0, 50);
 
 	}
 
@@ -288,7 +287,7 @@ public class ProfilePresenter
 									public void onSuccess(
 											ApplicationFormEducationalDto result) {
 										fireEvent(new ProcessingCompletedEvent());
-										getView().setEditMode(false);
+										// getView().setEditMode(false);
 										loadData();
 									}
 								}).education(getApplicationRefId())
@@ -302,7 +301,7 @@ public class ProfilePresenter
 									public void onSuccess(
 											ApplicationFormEducationalDto result) {
 										fireEvent(new ProcessingCompletedEvent());
-										getView().setEditMode(false);
+										// getView().setEditMode(false);
 										loadData();
 									}
 								}).education(getApplicationRefId()).create(dto);
@@ -460,7 +459,16 @@ public class ProfilePresenter
 				showPopUp(educationForm);
 				educationForm.bindDetail(dto);
 			}
-		}else if ((event.getModel() instanceof ApplicationFormSpecializationDto)) {
+		} else if ((event.getModel() instanceof ApplicationFormTrainingDto)) {
+			ApplicationFormTrainingDto dto = (ApplicationFormTrainingDto) event
+					.getModel();
+			if (event.isDelete()) {
+				delete(dto);
+			} else {
+				showPopUp(trainingForm);
+				trainingForm.bindDetail(dto);
+			}
+		} else if ((event.getModel() instanceof ApplicationFormSpecializationDto)) {
 			ApplicationFormSpecializationDto dto = (ApplicationFormSpecializationDto) event
 					.getModel();
 			if (event.isDelete()) {
@@ -473,11 +481,14 @@ public class ProfilePresenter
 	}
 
 	private void saveSpecialization(ApplicationFormSpecializationDto dto) {
-		applicationDelegate.withCallback(new AbstractAsyncCallback<ApplicationFormSpecializationDto>() {
-			@Override
-			public void onSuccess(ApplicationFormSpecializationDto result) {
-			}
-		}).specialization(getApplicationRefId()).create(dto);
+		applicationDelegate
+				.withCallback(
+						new AbstractAsyncCallback<ApplicationFormSpecializationDto>() {
+							@Override
+							public void onSuccess(
+									ApplicationFormSpecializationDto result) {
+							}
+						}).specialization(getApplicationRefId()).create(dto);
 	}
 
 	private void delete(ApplicationFormSpecializationDto dto) {
@@ -485,10 +496,20 @@ public class ProfilePresenter
 			@Override
 			public void onSuccess(Void result) {
 			}
-		}).specialization(getApplicationRefId()).delete(dto.getSpecialization().name());
+		}).specialization(getApplicationRefId())
+				.delete(dto.getSpecialization().name());
 	}
 
 	private void delete(ApplicationFormEducationalDto dto) {
+		applicationDelegate.withCallback(new AbstractAsyncCallback<Void>() {
+			@Override
+			public void onSuccess(Void result) {
+				loadData();
+			}
+		}).education(getApplicationRefId()).delete(dto.getRefId());
+	}
+
+	private void delete(ApplicationFormTrainingDto dto) {
 		applicationDelegate.withCallback(new AbstractAsyncCallback<Void>() {
 			@Override
 			public void onSuccess(Void result) {

@@ -56,7 +56,7 @@ public class MemberRegistrationView extends ViewImpl implements
 	Frame framePayment;
 
 	@UiField
-	Anchor aNext;
+	ActionLink aNext;
 	@UiField
 	Anchor aBack;
 
@@ -311,7 +311,7 @@ public class MemberRegistrationView extends ViewImpl implements
 	}
 
 	@Override
-	public HasClickHandlers getANext() {
+	public ActionLink getANext() {
 		return aNext;
 	}
 
@@ -384,7 +384,7 @@ public class MemberRegistrationView extends ViewImpl implements
 	@Override
 	public void bindTransaction(InvoiceDto invoice) {
 		// 197.248.4.221
-		String url = "http://197.248.4.221:8080/flexipay#websiteClient;"
+		String url = "http://197.248.4.221:8080/flexiPay#websiteClient;"
 				+ "businessNo=722722;" + "refId=" + invoice.getRefId() + ";"
 				+ "orgName=ICPAK;" + "amount=" + invoice.getAmount() + ";"
 				+ "accountNo=Use ID Number";

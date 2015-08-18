@@ -811,5 +811,5 @@ public class ApplicationFormHeaderDto extends SerializableObj{
 	public void setPercCompletion(Integer percCompletion) {
 		this.percCompletion = percCompletion;
 	}
-	
+
 }

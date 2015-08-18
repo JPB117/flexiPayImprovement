@@ -30,7 +30,6 @@ public class CPDHeader extends Composite {
 
 	public CPDHeader() {
 		initWidget(uiBinder.createAndBindUi(this));
-
 	}
 
 

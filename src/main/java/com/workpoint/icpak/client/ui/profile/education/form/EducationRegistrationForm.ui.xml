@@ -96,25 +96,41 @@
 				<div class="row">
 					<div class="col-xs-12">
 						<label for="enddate">Attachments:</label>
-						<p class="text-small text-muted">Provide copies of all parts of the local (KASNEB) CPA
+						<p class="text-small text-muted">
+							Provide copies of all parts of the local (KASNEB) CPA
 							examination
-							certificates. Where an applicant has not received a
-							certificate,
-							he/she should provide a copy of the congratulatory
-							letter from
-							KASNEB and all the result notification slips. Holders
-							of foreign
-							accountancy qualifications will be required to submit
-							copies of
-							their membership certificates from their foreign
-							institutes and a
-							copy of the letter from KASNEB confirming that
-							they have sat and
-							passed the recommended local examination papers.
-							Certification of
-							copies may be done at the ICPAK offices (free of
-							charge) upon
-							presentation of the originals.
+							certificates.
+							<a data-toggle="collapse" data-target="#eventInfo"
+								aria-expanded="false" aria-controls="#eventInfo">
+								read more>>
+							</a>
+
+							<div class="collapse" id="eventInfo">
+								<div class="col-sm-12">
+									Where an applicant has not received a
+									certificate,
+									he/she should provide a copy of the congratulatory
+									letter from
+									KASNEB and all the result notification slips.
+									Holders
+									of foreign
+									accountancy qualifications will be required to
+									submit
+									copies of
+									their membership certificates from their foreign
+									institutes and a
+									copy of the letter from KASNEB confirming that
+									they have sat and
+									passed the recommended local examination
+									papers.
+									Certification of
+									copies may be done at the ICPAK offices
+									(free of
+									charge) upon
+									presentation of the originals.
+								</div>
+							</div>
+
 						</p>
 					</div>
 

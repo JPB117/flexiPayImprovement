@@ -45,7 +45,6 @@ public class ApplicationFormResourceImpl implements ApplicationFormResource{
 	public List<ApplicationFormHeaderDto> getAll(
 			@QueryParam("offset") Integer offset,
 			@QueryParam("limit") Integer limit) {
-		
 		List<ApplicationFormHeaderDto> dtos = helper.getAllApplications(offset, limit,"");
 		return dtos;
 	}

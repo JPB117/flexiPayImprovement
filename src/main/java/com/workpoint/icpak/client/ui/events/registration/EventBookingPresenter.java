@@ -149,6 +149,7 @@ public class EventBookingPresenter extends
 
 						// We navigate next after server side has generated an
 						// account and submitted an email to user.
+					} else if (getView().getCounter() == 3) {
 					} else {
 						getView().next();
 					}
@@ -163,7 +164,7 @@ public class EventBookingPresenter extends
 
 	protected void submit(BookingDto dto) {
 		getView().showmask(true);
-		
+
 		if (bookingId != null) {
 			eventsResource
 					.withCallback(new AbstractAsyncCallback<BookingDto>() {

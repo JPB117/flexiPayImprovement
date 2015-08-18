@@ -56,7 +56,7 @@ public class MemberRegistrationPresenter
 	public interface MyView extends View {
 		ApplicationFormHeaderDto getApplicationForm();
 
-		HasClickHandlers getANext();
+		ActionLink getANext();
 
 		HasClickHandlers getABack();
 
@@ -160,20 +160,27 @@ public class MemberRegistrationPresenter
 				});
 
 		getView().getANext().addClickHandler(new ClickHandler() {
-
 			@Override
 			public void onClick(ClickEvent event) {
+				// Window.alert("Next:" + getView().getCounter());
 				if (getView().isValid() || applicationRefId != null) {
 					if (getView().getCounter() == 1) {
 						// User has selected a category and clicked submit
 						submit(getView().getApplicationForm());
-					} else if (getView().getCounter() == 3) {
+					} else if (getView().getCounter() == 2) {
 						if (invoice != null) {
 							getView().bindTransaction(invoice);
-						}else{
+							getView().next();
+						} else {
 							Window.alert("Invoice details are null!");
 						}
-					} else {
+					} else if (getView().getCounter() == 3) {
+						getView().getANext().setHref(
+								"#activateacc;uid="
+										+ applicationDetails.getUserRefId());
+					}
+
+					else {
 						getView().next();
 					}
 
@@ -208,6 +215,8 @@ public class MemberRegistrationPresenter
 		});
 	}
 
+	private ApplicationFormHeaderDto applicationDetails;
+
 	protected void submit(ApplicationFormHeaderDto applicationForm) {
 		getView().setLoadingState((ActionLink) getView().getANext(), true);
 
@@ -216,6 +225,7 @@ public class MemberRegistrationPresenter
 		AbstractAsyncCallback<ApplicationFormHeaderDto> callback = new AbstractAsyncCallback<ApplicationFormHeaderDto>() {
 			@Override
 			public void onSuccess(ApplicationFormHeaderDto result) {
+				MemberRegistrationPresenter.this.applicationDetails = result;
 				getView().showmask(false);
 				removeError();
 				// result;
@@ -284,7 +294,7 @@ public class MemberRegistrationPresenter
 
 		applicationRefId = request.getParameter("applicationId", null);
 
-		//Countries
+		// Countries
 		countriesResource.withCallback(
 				new AbstractAsyncCallback<List<Country>>() {
 					public void onSuccess(List<Country> countries) {
@@ -299,7 +309,7 @@ public class MemberRegistrationPresenter
 						getView().setCountries(countries);
 					};
 				}).getAll();
-		
+
 		if (applicationRefId != null) {
 			getView().setCounter(2);
 			loadApplication(applicationRefId);
@@ -315,7 +325,7 @@ public class MemberRegistrationPresenter
 	}
 
 	private void loadApplication(String applicationId) {
-		
+
 		// this.re
 		applicationDelegate.withCallback(
 				new AbstractAsyncCallback<ApplicationFormHeaderDto>() {

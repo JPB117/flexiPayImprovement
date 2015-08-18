@@ -35,7 +35,7 @@
 
 						<div class="checkbox">
 							<label>
-								<g:CheckBox> HR Consultancy</g:CheckBox>
+								<g:CheckBox  ui:field="aHRConsultancy"> HR Consultancy</g:CheckBox>
 							</label>
 						</div>
 					</div>
@@ -44,37 +44,37 @@
 						<h5>Commerce and Industry</h5>
 						<div class="checkbox">
 							<label>
-								<g:CheckBox> Banking</g:CheckBox>
+								<g:CheckBox  ui:field="aBanking"> Banking</g:CheckBox>
 							</label>
 						</div>
 
 						<div class="checkbox">
 							<label>
-								<g:CheckBox> Finance</g:CheckBox>
+								<g:CheckBox  ui:field="aFinance"> Finance</g:CheckBox>
 							</label>
 						</div>
 
 						<div class="checkbox">
 							<label>
-								<g:CheckBox> Insurance</g:CheckBox>
+								<g:CheckBox  ui:field="aInsurance"> Insurance</g:CheckBox>
 							</label>
 						</div>
 
 						<div class="checkbox">
 							<label>
-								<g:CheckBox> Manufacturing</g:CheckBox>
+								<g:CheckBox  ui:field="aManufacturing"> Manufacturing</g:CheckBox>
 							</label>
 						</div>
 
 						<div class="checkbox">
 							<label>
-								<g:CheckBox> Hotel</g:CheckBox>
+								<g:CheckBox  ui:field="aHotel"> Hotel</g:CheckBox>
 							</label>
 						</div>
 
 						<div class="checkbox">
 							<label>
-								<g:CheckBox> Other service industry</g:CheckBox>
+								<g:CheckBox  ui:field="aOther"> Other service industry</g:CheckBox>
 							</label>
 						</div>
 					</div>
@@ -83,25 +83,25 @@
 						<h5>Public Sector</h5>
 						<div class="checkbox">
 							<label>
-								<g:CheckBox> Central Government</g:CheckBox>
+								<g:CheckBox  ui:field="aCentral"> Central Government</g:CheckBox>
 							</label>
 						</div>
 
 						<div class="checkbox">
 							<label>
-								<g:CheckBox> Local Government</g:CheckBox>
+								<g:CheckBox  ui:field="aLocal"> Local Government</g:CheckBox>
 							</label>
 						</div>
 
 						<div class="checkbox">
 							<label>
-								<g:CheckBox> State Corporation</g:CheckBox>
+								<g:CheckBox  ui:field="aState"> State Corporation</g:CheckBox>
 							</label>
 						</div>
 
 						<div class="checkbox">
 							<label>
-								<g:CheckBox> Co-operative</g:CheckBox>
+								<g:CheckBox  ui:field="aCooperative"> Co-operative</g:CheckBox>
 							</label>
 						</div>
 					</div>
@@ -110,13 +110,13 @@
 						<h5>Training</h5>
 						<div class="checkbox">
 							<label>
-								<g:CheckBox> Education or Academia</g:CheckBox>
+								<g:CheckBox  ui:field="aEducation"> Education or Academia</g:CheckBox>
 							</label>
 						</div>
 
 						<div class="checkbox">
 							<label>
-								<g:CheckBox> NGOs</g:CheckBox>
+								<g:CheckBox  ui:field="aNGOs"> NGOs</g:CheckBox>
 							</label>
 						</div>
 					</div>

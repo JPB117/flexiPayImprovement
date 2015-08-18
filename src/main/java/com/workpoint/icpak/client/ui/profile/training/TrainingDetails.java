@@ -55,9 +55,11 @@ public class TrainingDetails extends Composite {
 		tblBeforeHeaders.add(new TableHeader("From"));
 		tblBeforeHeaders.add(new TableHeader("To"));
 		tblBeforeHeaders.add(new TableHeader("Position Held"));
+		tblBeforeHeaders.add(new TableHeader("Task Nature"));
 		tblBeforeHeaders.add(new TableHeader("Training Type"));
 		tblBeforeHeaders
 				.add(new TableHeader("Description of Responsibilities"));
+		tblBeforeHeaders.add(new TableHeader("Date Awarded"));
 		tblBeforeHeaders.add(new TableHeader("Action"));
 		tblTrainingDetails.setTableHeaders(tblBeforeHeaders);
 	}

@@ -29,9 +29,10 @@ import com.workpoint.icpak.client.ui.cpd.table.row.CPDTableRow;
 import com.workpoint.icpak.client.ui.cpd.unconfirmed.UnconfirmedCPD;
 import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.shared.model.CPDDto;
+import com.workpoint.icpak.shared.model.CPDStatus;
 import com.workpoint.icpak.shared.model.Listable;
 
-public class CPDView extends ViewImpl implements CPDPresenter.ICPDView{
+public class CPDView extends ViewImpl implements CPDPresenter.ICPDView {
 
 	private final Widget widget;
 
@@ -173,7 +174,19 @@ public class CPDView extends ViewImpl implements CPDPresenter.ICPDView{
 
 	@Override
 	public void bindResults(List<CPDDto> result) {
-		headerContainer.setValues(result.size(), 0, result.size());
+		int totalHrs = 0;
+		int confirmed = 0;
+		int unconfirmed = 0;
+
+		for (CPDDto cpd : result) {
+			totalHrs = totalHrs + cpd.getCpdHours();
+			if (cpd.getStatus().equals(CPDStatus.CONFIRMED)) {
+				confirmed = confirmed + cpd.getCpdHours();
+			} else {
+				unconfirmed = unconfirmed + cpd.getCpdHours();
+			}
+		}
+		headerContainer.setValues(totalHrs, confirmed, unconfirmed);
 
 		tblView.clearRows();
 		for (CPDDto dto : result) {
@@ -183,7 +196,7 @@ public class CPDView extends ViewImpl implements CPDPresenter.ICPDView{
 
 	@Override
 	public void showDetailedView() {
-		
+
 	}
 
 	@Override
