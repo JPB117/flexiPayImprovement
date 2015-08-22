@@ -13,14 +13,14 @@ import com.workpoint.icpak.client.ui.component.PagingTable;
 import com.workpoint.icpak.client.ui.component.TableHeader;
 import com.workpoint.icpak.client.ui.component.TableView;
 import com.workpoint.icpak.client.ui.cpd.table.row.CPDTableRow;
+import com.workpoint.icpak.client.util.AppContext;
 
 public class CPDTable extends Composite {
 
 	private static TransactionTableUiBinder uiBinder = GWT
 			.create(TransactionTableUiBinder.class);
 
-	interface TransactionTableUiBinder extends
-			UiBinder<Widget, CPDTable> {
+	interface TransactionTableUiBinder extends UiBinder<Widget, CPDTable> {
 	}
 
 	@UiField
@@ -29,14 +29,16 @@ public class CPDTable extends Composite {
 	public CPDTable() {
 		initWidget(uiBinder.createAndBindUi(this));
 		tblView.setAutoNumber(false);
-		createHeader();
+		createHeader(AppContext.isCurrentUserAdmin());
 	}
 
-	public void createHeader() {
+	public void createHeader(boolean isAdmin) {
 		List<TableHeader> th = new ArrayList<TableHeader>();
 		th.add(new TableHeader("#"));
-		th.add(new TableHeader("Member Name"));
-		th.add(new TableHeader("Course Name"));
+		if (isAdmin) {
+			th.add(new TableHeader("Member Name"));
+		}
+		th.add(new TableHeader("Course/Event Name"));
 		th.add(new TableHeader("Organiser"));
 		th.add(new TableHeader("Category"));
 		th.add(new TableHeader("CPD Hours"));

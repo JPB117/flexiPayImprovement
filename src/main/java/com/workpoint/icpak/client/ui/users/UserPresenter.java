@@ -1,10 +1,16 @@
 package com.workpoint.icpak.client.ui.users;
 
+import static com.workpoint.icpak.client.ui.util.StringUtils.isNullOrEmpty;
+
 import java.util.List;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.HasKeyDownHandlers;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.web.bindery.event.shared.EventBus;
@@ -39,7 +45,6 @@ import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
 import com.workpoint.icpak.client.ui.events.ProcessingEvent;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
 import com.workpoint.icpak.client.ui.security.AdminGateKeeper;
-import com.workpoint.icpak.client.ui.security.LoginGateKeeper;
 import com.workpoint.icpak.client.ui.users.groups.GroupPresenter;
 import com.workpoint.icpak.client.ui.users.item.UserItemPresenter;
 import com.workpoint.icpak.client.ui.users.save.UserSavePresenter;
@@ -56,9 +61,16 @@ public class UserPresenter extends
 	public interface MyView extends View {
 
 		HasClickHandlers getaNewUser();
+
 		HasClickHandlers getaNewGroup();
+
 		void setType(TYPE type);
+
 		PagingPanel getPagingPanel();
+
+		HasKeyDownHandlers getTxtSearch();
+
+		String getSearchText();
 	}
 
 	@ProxyCodeSplit
@@ -70,7 +82,7 @@ public class UserPresenter extends
 	@TabInfo(container = HomePresenter.class)
 	static TabData getTabLabel(AdminGateKeeper adminGatekeeper) {
 		return new TabDataExt("Users and Groups", "fa fa-globe", 3,
-				adminGatekeeper,true);
+				adminGatekeeper, true);
 	}
 
 	public static final Object ITEMSLOT = new Object();
@@ -99,6 +111,17 @@ public class UserPresenter extends
 		groupFactory = new StandardProvider<GroupPresenter>(groupProvider);
 	}
 
+	KeyDownHandler keyHandler = new KeyDownHandler() {
+		@Override
+		public void onKeyDown(KeyDownEvent event) {
+			if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+				if (!isNullOrEmpty(getView().getSearchText())) {
+					loadUsers(getView().getSearchText());
+				}
+			}
+		}
+	};
+
 	@Override
 	protected void onBind() {
 		super.onBind();
@@ -106,6 +129,8 @@ public class UserPresenter extends
 		addRegisteredHandler(LoadUsersEvent.TYPE, this);
 		addRegisteredHandler(LoadGroupsEvent.TYPE, this);
 		addRegisteredHandler(EditGroupEvent.TYPE, this);
+
+		getView().getTxtSearch().addKeyDownHandler(keyHandler);
 
 		getView().getaNewUser().addClickHandler(new ClickHandler() {
 			@Override
@@ -120,12 +145,12 @@ public class UserPresenter extends
 				showPopup(UserSavePresenter.TYPE.GROUP);
 			}
 		});
-		
+
 		getView().getPagingPanel().setLoader(new PagingLoader() {
-			
+
 			@Override
 			public void load(int offset, int limit) {
-				loadUsers(offset, limit);
+				loadUsers(offset, limit, "");
 			}
 		});
 	}
@@ -166,19 +191,19 @@ public class UserPresenter extends
 
 	void loadData() {
 		if (type == TYPE.USER) {
-			loadUsers();
+			loadUsers("");
 		} else {
 			loadGroups();
 		}
 	}
 
 	private void loadGroups() {
-		
+
 		fireEvent(new ProcessingEvent());
 		roleResource.withCallback(new AbstractAsyncCallback<List<RoleDto>>() {
 			@Override
 			public void onSuccess(List<RoleDto> result) {
-				loadGroups(result);		
+				loadGroups(result);
 				fireEvent(new ProcessingCompletedEvent());
 			}
 		}).getAll(0, 100);
@@ -198,21 +223,23 @@ public class UserPresenter extends
 
 	}
 
-	private void loadUsers() {
+	private void loadUsers(final String searchTerm) {
 		fireEvent(new ProcessingEvent());
 		usersDelegate.withCallback(new AbstractAsyncCallback<Integer>() {
 			@Override
 			public void onSuccess(Integer aCount) {
-				PagingPanel panel=getView().getPagingPanel();
+				fireEvent(new ProcessingCompletedEvent());
+				PagingPanel panel = getView().getPagingPanel();
 				panel.setTotal(aCount);
 				PagingConfig config = panel.getConfig();
+
+				loadUsers(config.getOffset(), config.getLimit(), searchTerm);
 				fireEvent(new ProcessingCompletedEvent());
-				loadUsers(config.getOffset(), config.getLimit());
 			}
 		}).getCount();
 	}
 
-	protected void loadUsers(int offset, int limit) {
+	protected void loadUsers(int offset, int limit, String searchTerm) {
 		fireEvent(new ProcessingEvent());
 		usersDelegate.withCallback(new AbstractAsyncCallback<List<UserDto>>() {
 			@Override
@@ -220,7 +247,7 @@ public class UserPresenter extends
 				loadUsers(result);
 				fireEvent(new ProcessingCompletedEvent());
 			}
-		}).getAll(offset, limit);
+		}).getAll(offset, limit, searchTerm);
 	}
 
 	protected void loadUsers(List<UserDto> users) {

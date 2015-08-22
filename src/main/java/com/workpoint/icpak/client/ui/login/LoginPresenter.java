@@ -190,11 +190,6 @@ public class LoginPresenter extends
 								"Wrong username or password......");
 						getView().setError("Wrong username or password");
 						super.onFailure(caught);
-						// getView().setError("Could authenticate user. Please report this to your administrator");
-						// LOGGER.log(
-						// Level.SEVERE,
-						// "callServerLoginAction(): Server failed to process login call.",
-						// caught);
 					}
 				})
 				).execLogin(logInAction);

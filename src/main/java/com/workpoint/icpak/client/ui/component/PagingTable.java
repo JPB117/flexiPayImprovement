@@ -6,7 +6,6 @@ public class PagingTable extends TableView{
 	PagingPanel panel = null;
 	public PagingTable() {
 		super();
-		
 		panel = new PagingPanel();
 		panelPaging.clear();
 		panelPaging.add(panel);

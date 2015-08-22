@@ -8,6 +8,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.RowWidget;
+import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.model.EnquiriesDto;
 
 public class EnquiriesTableRow extends RowWidget {
@@ -38,6 +39,8 @@ public class EnquiriesTableRow extends RowWidget {
 	@UiField
 	HTMLPanel divEnquiryDetails;
 	@UiField
+	HTMLPanel divAction;
+	@UiField
 	SpanElement spnStatus;
 	@UiField
 	ActionLink aReply;
@@ -46,6 +49,12 @@ public class EnquiriesTableRow extends RowWidget {
 
 	public EnquiriesTableRow() {
 		initWidget(uiBinder.createAndBindUi(this));
+
+		if (!AppContext.isCurrentUserAdmin()) {
+			showAdminView(false);
+		} else {
+			showAdminView(true);
+		}
 	}
 
 	public EnquiriesTableRow(EnquiriesDto dto) {
@@ -56,11 +65,19 @@ public class EnquiriesTableRow extends RowWidget {
 		divEmail.getElement().setInnerText(dto.getEmailAddress());
 		divPhone.getElement().setInnerText(dto.getPhone());
 		aSubject.setText(dto.getSubject());
-		divCategory.getElement().setInnerText(dto.getCategory().getDisplayName());
+		divCategory.getElement().setInnerText(
+				dto.getCategory().getDisplayName());
 		divEnquiryDetails.getElement().setInnerText(dto.getMessage());
-		spnStatus.setInnerText(dto.getStatus()==null? "DRAFT" : dto.getStatus().name());
-		//aReply.setText(dto.getReply());
-		//aMarkComplete
+		spnStatus.setInnerText(dto.getStatus() == null ? "DRAFT" : dto
+				.getStatus().name());
+	}
+
+	public void showAdminView(boolean show) {
+		if (show) {
+			divAction.setVisible(true);
+		} else {
+			divAction.setVisible(false);
+		}
 	}
 
 }

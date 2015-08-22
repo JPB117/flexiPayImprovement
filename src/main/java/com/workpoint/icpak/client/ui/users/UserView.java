@@ -7,6 +7,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.HasKeyDownHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Anchor;
@@ -19,6 +20,7 @@ import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.workpoint.icpak.client.place.NameTokens;
 import com.workpoint.icpak.client.ui.component.PagingPanel;
+import com.workpoint.icpak.client.ui.component.TextField;
 import com.workpoint.icpak.client.ui.users.save.UserSavePresenter.TYPE;
 
 public class UserView extends ViewImpl implements UserPresenter.MyView {
@@ -46,8 +48,12 @@ public class UserView extends ViewImpl implements UserPresenter.MyView {
 	Element liGroup;
 	@UiField
 	Element liUser;
-	
-	@UiField PagingPanel pagingPanel;
+
+	@UiField
+	public TextField txtSearch;
+
+	@UiField
+	PagingPanel pagingPanel;
 
 	public interface Binder extends UiBinder<Widget, UserView> {
 	}
@@ -170,6 +176,16 @@ public class UserView extends ViewImpl implements UserPresenter.MyView {
 	@Override
 	public PagingPanel getPagingPanel() {
 		return pagingPanel;
+	}
+
+	@Override
+	public HasKeyDownHandlers getTxtSearch() {
+		return txtSearch;
+	}
+
+	@Override
+	public String getSearchText() {
+		return txtSearch.getValue();
 	}
 
 }

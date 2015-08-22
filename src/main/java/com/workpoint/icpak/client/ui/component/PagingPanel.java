@@ -88,7 +88,6 @@ public class PagingPanel extends Composite {
 		BulletPanel panel = new BulletPanel();
 		ActionLink a = new ActionLink(idx, text);
 		a.addClickHandler(new ClickHandler() {
-
 			@Override
 			public void onClick(ClickEvent event) {
 				int idx = (Integer) ((ActionLink) event.getSource()).getModel();

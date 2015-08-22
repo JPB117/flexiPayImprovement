@@ -59,9 +59,7 @@ public class EventsDaoHelper {
 	}
 	
 	public EventDto createEvent(EventDto dto) {
-		
 		assert dto.getRefId()==null;
-		
 		Event event = new Event();
 		event.setRefId(IDUtils.generateId());
 		event.copyFrom(dto);

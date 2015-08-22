@@ -21,6 +21,7 @@ public class EventDto extends SerializableObj implements Listable{
 	private EventType type;
 	private Double memberPrice;
 	private Double nonMemberPrice;
+	private String categoryName;
 	private List<AccommodationDto> accommodation;
 	private int delegateCount;
 	private Double totalPaid;
@@ -159,6 +160,14 @@ public class EventDto extends SerializableObj implements Listable{
 		}
 		
 		return other.getRefId().equals(getRefId());
+	}
+
+	public String getCategoryName() {
+		return categoryName;
+	}
+
+	public void setCategoryName(String categoryName) {
+		this.categoryName = categoryName;
 	}
 
 }

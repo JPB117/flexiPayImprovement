@@ -53,6 +53,7 @@ public class Event extends PO {
 	@Column(length = 255)
 	private Integer cpdHours;
 	private String venue;
+	private String categoryName;
 
 	private Date startDate;
 	private Date endDate;
@@ -61,12 +62,11 @@ public class Event extends PO {
 
 	@Column(nullable = false)
 	private Double memberPrice;
-
 	@Column(nullable = false)
 	private Double nonMemberPrice;
-	
+
 	private String code;
-	
+
 	private Date registrationDate;
 
 	@XmlTransient
@@ -206,6 +206,7 @@ public class Event extends PO {
 		dto.setRefId(getRefId());
 		dto.setCpdHours(cpdHours);
 		dto.setDescription(description);
+		dto.setCategoryName(categoryName);
 
 		if (endDate != null)
 			dto.setEndDate(endDate.getTime());
@@ -249,6 +250,7 @@ public class Event extends PO {
 		setStatus(dto.getStatus());
 		setType(dto.getType());
 		setVenue(dto.getVenue());
+		setCategoryName(dto.getCategoryName());
 
 		if (dto.getAccommodation() != null) {
 			List<Accommodation> accommodations = new ArrayList<>();
@@ -327,6 +329,14 @@ public class Event extends PO {
 
 	public void setRegistrationDate(Date registrationDate) {
 		this.registrationDate = registrationDate;
+	}
+
+	public String getCategoryName() {
+		return categoryName;
+	}
+
+	public void setCategoryName(String categoryName) {
+		this.categoryName = categoryName;
 	}
 
 }

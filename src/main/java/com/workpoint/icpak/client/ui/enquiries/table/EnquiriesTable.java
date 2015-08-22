@@ -12,6 +12,7 @@ import com.workpoint.icpak.client.ui.component.PagingPanel;
 import com.workpoint.icpak.client.ui.component.PagingTable;
 import com.workpoint.icpak.client.ui.component.TableHeader;
 import com.workpoint.icpak.client.ui.enquiries.table.row.EnquiriesTableRow;
+import com.workpoint.icpak.client.util.AppContext;
 
 public class EnquiriesTable extends Composite {
 
@@ -27,11 +28,11 @@ public class EnquiriesTable extends Composite {
 	public EnquiriesTable() {
 		initWidget(uiBinder.createAndBindUi(this));
 		tblView.setAutoNumber(false);
-		createHeader();
+		createHeader(AppContext.isCurrentUserAdmin());
 		createRow(new EnquiriesTableRow());
 	}
 
-	public void createHeader() {
+	public void createHeader(boolean isAdmin) {
 		List<TableHeader> th = new ArrayList<TableHeader>();
 		th.add(new TableHeader("#"));
 		th.add(new TableHeader("Member No"));
@@ -42,7 +43,9 @@ public class EnquiriesTable extends Composite {
 		th.add(new TableHeader("Subject"));
 		th.add(new TableHeader("Message"));
 		th.add(new TableHeader("Status"));
-		th.add(new TableHeader("Action"));
+		if (isAdmin) {
+			th.add(new TableHeader("Action"));
+		}
 
 		tblView.setTableHeaders(th);
 	}

@@ -21,6 +21,8 @@ import com.workpoint.icpak.client.ui.component.PagingConfig;
 import com.workpoint.icpak.client.ui.component.PagingLoader;
 import com.workpoint.icpak.client.ui.component.PagingPanel;
 import com.workpoint.icpak.client.ui.events.EditModelEvent;
+import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
+import com.workpoint.icpak.client.ui.events.ProcessingEvent;
 import com.workpoint.icpak.client.ui.events.EditModelEvent.EditModelHandler;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
 import com.workpoint.icpak.client.ui.security.AdminGateKeeper;
@@ -30,16 +32,21 @@ import com.workpoint.icpak.shared.model.events.DelegateDto;
 import com.workpoint.icpak.shared.model.events.EventDto;
 
 public class EventsPresenter extends
-		Presenter<EventsPresenter.IEventsView, EventsPresenter.IEventsProxy> 
-implements EditModelHandler{
+		Presenter<EventsPresenter.IEventsView, EventsPresenter.IEventsProxy>
+		implements EditModelHandler {
 
 	public interface IEventsView extends View {
 
 		void showAdvancedView(boolean show);
+
 		void bindEvents(List<EventDto> events);
+
 		void bindEvent(EventDto event);
+
 		void bindBookings(List<BookingDto> events);
+
 		PagingPanel getEventsPagingPanel();
+
 		PagingPanel getBookingsPagingPanel();
 	}
 
@@ -72,15 +79,15 @@ implements EditModelHandler{
 		super.onBind();
 		addRegisteredHandler(EditModelEvent.TYPE, this);
 		getView().getEventsPagingPanel().setLoader(new PagingLoader() {
-			
+
 			@Override
 			public void load(int offset, int limit) {
 				loadEvents(offset, limit);
 			}
 		});
-		
+
 		getView().getBookingsPagingPanel().setLoader(new PagingLoader() {
-			
+
 			@Override
 			public void load(int offset, int limit) {
 				loadBookings(offset, limit);
@@ -94,7 +101,7 @@ implements EditModelHandler{
 		eventId = request.getParameter("eventId", null);
 
 		// Load Event Details to View
-		if (eventId!=null) {
+		if (eventId != null) {
 			getView().showAdvancedView(true);
 		} else {
 			getView().showAdvancedView(false);
@@ -104,34 +111,37 @@ implements EditModelHandler{
 	}
 
 	private void loadData() {
+		fireEvent(new ProcessingEvent());
 
 		if (eventId != null) {
-			//Load Bookings
+			// Load Bookings
 			eventsDelegate.withCallback(new AbstractAsyncCallback<Integer>() {
 				@Override
 				public void onSuccess(Integer aCount) {
-					PagingPanel panel=getView().getBookingsPagingPanel();
+					fireEvent(new ProcessingCompletedEvent());
+					PagingPanel panel = getView().getBookingsPagingPanel();
 					panel.setTotal(aCount);
 					PagingConfig config = panel.getConfig();
 					loadBookings(config.getOffset(), config.getLimit());
 				}
 			}).bookings(eventId).getCount();
-			
+
 			eventsDelegate.withCallback(new AbstractAsyncCallback<EventDto>() {
 				@Override
 				public void onSuccess(EventDto event) {
-					getView().bindEvent(event);					
+					fireEvent(new ProcessingCompletedEvent());
+					getView().bindEvent(event);
 				}
 			}).getById(eventId);
-			
+
 		} else {
 
-			//Load Events
-			
+			// Load Events
 			eventsDelegate.withCallback(new AbstractAsyncCallback<Integer>() {
 				@Override
 				public void onSuccess(Integer aCount) {
-					PagingPanel panel=getView().getEventsPagingPanel();
+					fireEvent(new ProcessingCompletedEvent());
+					PagingPanel panel = getView().getEventsPagingPanel();
 					panel.setTotal(aCount);
 					PagingConfig config = panel.getConfig();
 					loadEvents(config.getOffset(), config.getLimit());
@@ -139,44 +149,49 @@ implements EditModelHandler{
 			}).getCount();
 		}
 	}
-	
+
 	protected void loadBookings(int offset, int limit) {
-		eventsDelegate.withCallback(
-				new AbstractAsyncCallback<List<BookingDto>>() {
+		fireEvent(new ProcessingEvent());
+
+		eventsDelegate
+				.withCallback(new AbstractAsyncCallback<List<BookingDto>>() {
 					@Override
 					public void onSuccess(List<BookingDto> bookings) {
+						fireEvent(new ProcessingCompletedEvent());
 						getView().bindBookings(bookings);
 					}
-				}).bookings(eventId)
-				.getAll(offset, limit);
+				}).bookings(eventId).getAll(offset, limit);
 	}
 
 	protected void loadEvents(int offset, int limit) {
+		fireEvent(new ProcessingEvent());
 		eventsDelegate.withCallback(
 				new AbstractAsyncCallback<List<EventDto>>() {
 					@Override
 					public void onSuccess(List<EventDto> events) {
+						fireEvent(new ProcessingCompletedEvent());
 						getView().bindEvents(events);
 					}
 				}).getAll(offset, limit);
 	}
-	
+
 	@Override
 	public void onEditModel(EditModelEvent event) {
-		if(event.getModel() instanceof DelegateDto){
-			save((DelegateDto)event.getModel());
+		if (event.getModel() instanceof DelegateDto) {
+			save((DelegateDto) event.getModel());
 		}
 	}
 
 	private void save(DelegateDto model) {
-		assert model.getBookingId()!=null && model.getEventId()!=null;
-		
+		assert model.getBookingId() != null && model.getEventId() != null;
+		fireEvent(new ProcessingEvent());
 		eventsDelegate.withCallback(new AbstractAsyncCallback<DelegateDto>() {
 			@Override
 			public void onSuccess(DelegateDto result) {
+				fireEvent(new ProcessingCompletedEvent());
 			}
 		}).bookings(model.getEventId())
-		.updateDelegate(model.getBookingId(), model.getRefId(), model);
+				.updateDelegate(model.getBookingId(), model.getRefId(), model);
 	}
 
 }

@@ -227,8 +227,8 @@ public class EventBookingView extends ViewImpl implements
 
 		tblDelegates.setAutoNumber(false);
 		List<ColumnConfig> configs = new ArrayList<ColumnConfig>();
-
 		configs.add(memberColumn);
+		
 		ColumnConfig config = new ColumnConfig("title", "Title",
 				DataType.STRING, "", "form-control");
 		configs.add(config);
@@ -238,13 +238,15 @@ public class EventBookingView extends ViewImpl implements
 		config = new ColumnConfig("otherNames", "Other Names", DataType.STRING,
 				"", "form-control");
 		configs.add(config);
-		config = new ColumnConfig("email", "Email Address", DataType.STRING,
-				"", "form-control");
-		configs.add(config);
+		
+		// config = new ColumnConfig("email", "Email Address", DataType.STRING,
+		// "", "form-control");
+		// configs.add(config);
 
 		configs.add(accommodationConfig);
 
 		tblDelegates.setColumnConfigs(configs);
+		
 		memberColumn.addValueChangeHandler(new ValueChangeHandler<Listable>() {
 			@Override
 			public void onValueChange(ValueChangeEvent<Listable> event) {

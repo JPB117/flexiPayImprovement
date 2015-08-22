@@ -2,12 +2,6 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.workpoint.icpak.client.ui.component">
 	<g:HTMLPanel>
-		<div class="search-bar">
-			<div class="input-append">
-				<d:TextField placeholder="Search here" ui:field="txtSearch"></d:TextField>
-			</div>
-		</div>
-		
 		<d:PagingTable ui:field="tblView" striped="false" isGrid="false"
 			bordered="true" autoNumber="true" styleName="table-programs">
 		</d:PagingTable>

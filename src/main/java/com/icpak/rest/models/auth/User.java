@@ -63,77 +63,73 @@ import com.workpoint.icpak.shared.model.auth.AccountStatus;
  * Simple class that represents any User domain entity in any application.
  */
 
-@ApiModel(value="User Model", description="A User represents any person who may have access to the system including "
+@ApiModel(value = "User Model", description = "A User represents any person who may have access to the system including "
 		+ "members, administrators, icpak staff and stakeholders")
-
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlSeeAlso({BioData.class})
-@JsonSerialize(include=Inclusion.NON_NULL)
-
+@XmlSeeAlso({ BioData.class })
+@JsonSerialize(include = Inclusion.NON_NULL)
 @Entity
-@Table(name="user",indexes={
-		@Index(columnList="username",name="idx_users_username"),
-		@Index(columnList="email",name="idx_users_email")})
-@Cache(usage= CacheConcurrencyStrategy.READ_WRITE)
-public class User extends PO{
+@Table(name = "user", indexes = {
+		@Index(columnList = "username", name = "idx_users_username")
+		//,@Index(columnList = "email", name = "idx_users_email")
+		})
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+public class User extends PO {
 
-    /**
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-         
-	@ApiModelProperty(value="username", required=true)
-    @Basic(optional=false)
-    @Column(length=100, unique=true)
-    //@Index(name="idx_users_username")
-    private String username;
 
-	@ApiModelProperty(value="user email", required=true)
-    @Basic(optional=false)
-    //@Index(name="idx_users_email")    
-    private String email;
-	
-    @Basic(optional=false)
-    @Column(length=255)
-    private String password;
-    
-    @JsonIgnore
-    @XmlTransient
-    @ManyToMany(cascade={CascadeType.PERSIST, CascadeType.REMOVE})
-    @JoinTable(name="user_role",
-    joinColumns=@JoinColumn(name="userid"),
-    inverseJoinColumns=@JoinColumn(name="roleid"))
-    @Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
-    private Set<Role> roles = new HashSet<Role>();
-    
-    @Embedded
-    private BioData userData=null;
-    
-    @OneToOne(mappedBy="user",cascade={CascadeType.PERSIST, CascadeType.REMOVE})
-    private Member member;
-    
-    private String memberId;
-    
-    private String phoneNumber;
-    private String residence;
-    private String address;
-    private String city;
-    private String nationality; 
-    
-    @Enumerated(EnumType.STRING)
-    private AccountStatus status = AccountStatus.NEWACC;
-    
-    public User() {
+	@ApiModelProperty(value = "username", required = true)
+	@Basic(optional = false)
+	@Column(length = 100, unique = true)
+	// @Index(name="idx_users_username")
+	private String username;
+
+	@ApiModelProperty(value = "user email")
+	// @Basic(optional=false)
+	// @Index(name="idx_users_email")
+	private String email;
+
+	@Basic(optional = false)
+	@Column(length = 255)
+	private String password;
+
+	@JsonIgnore
+	@XmlTransient
+	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
+	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = @JoinColumn(name = "roleid"))
+	@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+	private Set<Role> roles = new HashSet<Role>();
+
+	@Embedded
+	private BioData userData = null;
+
+	@OneToOne(mappedBy = "user", cascade = { CascadeType.PERSIST,
+			CascadeType.REMOVE })
+	private Member member;
+	private String memberId;
+	private String phoneNumber;
+	private String residence;
+	private String address;
+	private String city;
+	private String nationality;
+
+	@Enumerated(EnumType.STRING)
+	private AccountStatus status = AccountStatus.NEWACC;
+
+	public User() {
 	}
 
-    public Set<Role> getRoles() {
-        return roles;
-    }
+	public Set<Role> getRoles() {
+		return roles;
+	}
 
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
-    }
+	public void setRoles(Set<Role> roles) {
+		this.roles = roles;
+	}
 
 	public void addRole(Role role) {
 		roles.add(role);
@@ -142,53 +138,53 @@ public class User extends PO{
 	public void removeRole(Role role) {
 		roles.remove(role);
 	}
-	
-	public User clone(String...expand){
-		
+
+	public User clone(String... expand) {
+
 		User user = new User();
 		user.setRefId(refId);
-		//user.setUsername(getUsername());
+		// user.setUsername(getUsername());
 		user.setEmail(email);
 		user.setAddress(address);
 		user.setCity(city);
 		user.setNationality(nationality);
 		user.setPhoneNumber(phoneNumber);
 		user.setResidence(residence);
-		
-		if(roles!=null){
-			Set<Role> cloneRoles  = new HashSet<>();
-			for(Role role:roles){
-				Role clone  = role.clone();
+
+		if (roles != null) {
+			Set<Role> cloneRoles = new HashSet<>();
+			for (Role role : roles) {
+				Role clone = role.clone();
 				cloneRoles.add(clone);
 			}
 			user.setRoles(cloneRoles);
 		}
-		
-		if(userData!=null)
-		user.setUserData(userData.clone());
+
+		if (userData != null)
+			user.setUserData(userData.clone());
 		user.setCreated(getCreated());
 		user.setUpdated(getUpdated());
-		
-		if(expand!=null){
-			for(String token: expand){
-//				if(token.equals("bookings")){
-//					for(Booking booking: bookings){
-//						user.addBooking(booking.clone());
-//					}
-//				}
-				
-				if(token.toUpperCase().equals(ExpandTokens.DETAIL.name())){
-//					user.setLastName(getLastName());
-//					user.setFirstName(getFirstName());
+
+		if (expand != null) {
+			for (String token : expand) {
+				// if(token.equals("bookings")){
+				// for(Booking booking: bookings){
+				// user.addBooking(booking.clone());
+				// }
+				// }
+
+				if (token.toUpperCase().equals(ExpandTokens.DETAIL.name())) {
+					// user.setLastName(getLastName());
+					// user.setFirstName(getFirstName());
 					user.setEmail(getEmail());
 				}
-				
-				if(token.equals("member")){
-					//user.setMember(member);
+
+				if (token.equals("member")) {
+					// user.setMember(member);
 				}
-				
-				if(token.equals("roles")){
-					for(Role role: roles){
+
+				if (token.equals("roles")) {
+					for (Role role : roles) {
 						user.addRole(role.clone());
 					}
 				}
@@ -204,13 +200,13 @@ public class User extends PO{
 	public void setUserData(BioData userData) {
 		this.userData = userData;
 	}
-	
+
 	public void copyFrom(UserDto dto) {
 		setEmail(dto.getEmail());
 		BioData bio = new BioData();
 		bio.setFirstName(dto.getName());
 		bio.setLastName(dto.getSurname());
-		//bio.setGender(dto.get);
+		// bio.setGender(dto.get);
 		setUserData(bio);
 	}
 
@@ -281,24 +277,22 @@ public class User extends PO{
 
 	public UserDto toDto() {
 		UserDto dto = new UserDto();
-		
+
 		dto.setEmail(email);
 		dto.setUserId(refId);
 		dto.setName(userData.getFirstName());
 		dto.setSurname(userData.getLastName());
-		//dto.setName(getFullName());
 		dto.setRefId(refId);
 		dto.setStatus(status);
-		//dto.setName(name);
-		
+
 		List<RoleDto> dtos = new ArrayList<>();
-		if(getRoles()!=null){
-			for(Role r: getRoles()){
+		if (getRoles() != null) {
+			for (Role r : getRoles()) {
 				dtos.add(r.toDto());
 			}
 		}
 		dto.setGroups(dtos);
-		
+
 		return dto;
 	}
 
@@ -327,5 +321,3 @@ public class User extends PO{
 	}
 
 }
-
-

@@ -59,7 +59,7 @@ public class ApplicationFormDaoHelper {
 		// Copy into PO
 		ApplicationFormHeader po = new ApplicationFormHeader();
 		po.copyFrom(application);
-
+		
 		// Create Temp User
 		User user = createTempUser(po);
 		po.setUserRefId(user.getRefId());
@@ -88,6 +88,7 @@ public class ApplicationFormDaoHelper {
 		po.setAddress(application.getAddress1());
 		po.setCity(application.getCity1());
 		po.setNationality(application.getNationality());
+		po.setMemberId(application.getMemberNo());
 
 		BioData bioData = new BioData();
 		bioData.setFirstName(application.getOtherNames());
@@ -96,7 +97,7 @@ public class ApplicationFormDaoHelper {
 
 		String password = IDUtils.generateTempPassword();
 		po.setPassword(password);
-
+		
 		usersDaoHelper.create(po);
 
 		// userDao.createUser(po);
@@ -108,7 +109,6 @@ public class ApplicationFormDaoHelper {
 
 	private void sendEmail(ApplicationFormHeader application,
 			InvoiceDto invoice, User user) {
-
 		try {
 			Map<String, Object> values = new HashMap<String, Object>();
 			values.put("companyName", application.getEmployerCode());
@@ -237,7 +237,6 @@ public class ApplicationFormDaoHelper {
 				limit);
 		List<ApplicationFormHeaderDto> rtn = new ArrayList<>();
 
-		
 		for (MemberImport member : applications) {
 			ApplicationFormHeaderDto dto = member.toDTO();
 			rtn.add(dto);

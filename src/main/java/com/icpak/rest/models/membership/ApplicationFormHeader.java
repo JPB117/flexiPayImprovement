@@ -172,6 +172,8 @@ public class ApplicationFormHeader extends PO{
 	@Column(name="`E-mail`", length=120)
 	private String email;
 	
+	private String memberNo;
+	
 	@Column(name="`Honorific`")
 	private int honorific;
 	
@@ -932,6 +934,7 @@ public class ApplicationFormHeader extends PO{
 		setCity1(dto.getCity1());
 		setPostCode(dto.getPostCode());
 		setEmployer(dto.getEmployer());
+		setMemberNo(dto.getMemberNo());
 		
 		setDob(dto.getDob());
 		setCountry(dto.getCountry());
@@ -992,6 +995,14 @@ public class ApplicationFormHeader extends PO{
 
 	public void setResidence(String residence) {
 		this.residence = residence;
+	}
+
+	public String getMemberNo() {
+		return memberNo;
+	}
+
+	public void setMemberNo(String memberNo) {
+		this.memberNo = memberNo;
 	}
 	
 }

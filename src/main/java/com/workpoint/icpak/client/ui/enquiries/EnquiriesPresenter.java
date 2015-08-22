@@ -26,6 +26,7 @@ import com.workpoint.icpak.client.ui.component.PagingConfig;
 import com.workpoint.icpak.client.ui.component.PagingLoader;
 import com.workpoint.icpak.client.ui.component.PagingPanel;
 import com.workpoint.icpak.client.ui.enquiries.form.CreateEnquiry;
+import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
 import com.workpoint.icpak.client.ui.events.ProcessingEvent;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
 import com.workpoint.icpak.client.ui.security.LoginGateKeeper;
@@ -41,7 +42,9 @@ public class EnquiriesPresenter
 
 	public interface IEnquiriesView extends View {
 		HasClickHandlers getCreateButton();
+
 		PagingPanel getPagingPanel();
+
 		void bindEnquiries(List<EnquiriesDto> list);
 	}
 
@@ -77,46 +80,49 @@ public class EnquiriesPresenter
 				showPopUp(false);
 			}
 		});
-		
+
 		getView().getPagingPanel().setLoader(new PagingLoader() {
-			
+
 			@Override
 			public void load(int offset, int limit) {
 				loadEnquiries(offset, limit);
 			}
 		});
 	}
-	
+
 	@Override
 	public void prepareFromRequest(PlaceRequest request) {
 		super.prepareFromRequest(request);
 		loadData();
-		
+
 	}
 
 	private void loadData() {
+		fireEvent(new ProcessingEvent());
 		membersDelegate.withCallback(new AbstractAsyncCallback<Integer>() {
 			@Override
 			public void onSuccess(Integer aCount) {
+				fireEvent(new ProcessingCompletedEvent());
 				PagingPanel panel = getView().getPagingPanel();
 				panel.setTotal(aCount);
 				PagingConfig config = panel.getConfig();
-				loadEnquiries(config.getOffset(),config.getLimit());
+				loadEnquiries(config.getOffset(), config.getLimit());
 			}
-			
-		}).enquiries(getMemberId())
-		.getCount();
+
+		}).enquiries(getMemberId()).getCount();
 	}
 
 	protected void loadEnquiries(int offset, int limit) {
-		membersDelegate.withCallback(new AbstractAsyncCallback<List<EnquiriesDto>>() {
-			@Override
-			public void onSuccess(List<EnquiriesDto> list) {
-				getView().bindEnquiries(list);
-			}
-			
-		}).enquiries(getMemberId())
-		.getAll(offset, limit);
+		fireEvent(new ProcessingEvent());
+		membersDelegate
+				.withCallback(new AbstractAsyncCallback<List<EnquiriesDto>>() {
+					@Override
+					public void onSuccess(List<EnquiriesDto> list) {
+						fireEvent(new ProcessingCompletedEvent());
+						getView().bindEnquiries(list);
+					}
+
+				}).enquiries(getMemberId()).getAll(offset, limit);
 	}
 
 	protected void showPopUp(boolean edit) {
@@ -137,7 +143,7 @@ public class EnquiriesPresenter
 						}
 					}
 				}, "Save");
-		
+
 	}
 
 	protected void save(EnquiriesDto dto) {
@@ -150,16 +156,15 @@ public class EnquiriesPresenter
 				PagingConfig config = panel.getConfig();
 				loadEnquiries(config.getOffset(), config.getLimit());
 			}
-			
-		}).enquiries(getMemberId())
-		.create(dto);
-		
+
+		}).enquiries(getMemberId()).create(dto);
+
 	}
-	
-	private String getMemberId(){
-		String memberId = AppContext.isCurrentUserAdmin()? "ALL":
-			AppContext.getCurrentUser().getUser().getMemberRefId();
-		
+
+	private String getMemberId() {
+		String memberId = AppContext.isCurrentUserAdmin() ? "ALL" : AppContext
+				.getCurrentUser().getUser().getMemberRefId();
+
 		return memberId;
 	}
 

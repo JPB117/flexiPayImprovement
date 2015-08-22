@@ -14,11 +14,12 @@ import com.workpoint.icpak.shared.model.Gender;
 public class MemberImport {
 
 	@Id
-	private Short ID;
-	private String NO;
+	private Short id;
+	@Column(name = "`No_`")
+	private String memberNo;
 	private String Name;
 	@Column(name = "`E-mail`")
-	private String Email;
+	private String email;
 	private Short status;
 	@Column(name = "`Customer Type`")
 	private String customerType;
@@ -29,19 +30,19 @@ public class MemberImport {
 	private Short paidUp;
 
 	public Short getID() {
-		return ID;
+		return id;
 	}
 
 	public void setID(Short iD) {
-		ID = iD;
+		id = iD;
 	}
 
 	public String getNO() {
-		return NO;
+		return memberNo;
 	}
 
 	public void setNO(String nO) {
-		NO = nO;
+		memberNo = nO;
 	}
 
 	public String getName() {
@@ -53,11 +54,11 @@ public class MemberImport {
 	}
 
 	public String getEmail() {
-		return Email;
+		return email;
 	}
 
 	public void setEmail(String email) {
-		Email = email;
+		email = email;
 	}
 
 	public Short getStatus() {
@@ -129,7 +130,16 @@ public class MemberImport {
 		if (allNames.length > 2) {
 			dto.setOtherNames(allNames[2]);
 		}
-		dto.setEmail(Email);
+
+		dto.setMemberNo(memberNo);
+
+		dto.setUserId(memberNo);
+
+		if (email == null || email.isEmpty()) {
+			dto.setEmail(memberNo);
+		} else {
+			dto.setEmail(email);
+		}
 
 		if (customerType.equals("MEMBER")) {
 			dto.setApplicationType(ApplicationType.NON_PRACTISING);
@@ -141,8 +151,9 @@ public class MemberImport {
 			dto.setApplicationType(ApplicationType.OVERSEAS);
 		} else if (customerType.equals("RETIRED")) {
 			dto.setApplicationType(ApplicationType.RETIRED);
+		} else {
+			dto.setApplicationType(ApplicationType.NON_PRACTISING);
 		}
-
 		// Gender
 		if (gender.equals(1)) {
 			dto.setGender(Gender.MALE);

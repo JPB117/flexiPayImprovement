@@ -13,43 +13,16 @@
 				<div class="navbar-header">
 					<a href="#/" class="navbar-brand">
 						<div class="brand-logo">
-							<img src="img/icpak_logo.png"
-								width="30px" class="img-responsive" />
+							<img src="img/icpak_logo.png" width="30px" class="img-responsive" />
 						</div>
 						<div class="brand-logo-collapsed">
-							<img src="img/icpak_logo.png"
-								class="img-responsive" />
+							<img src="img/icpak_logo.png" class="img-responsive" />
 						</div>
 					</a>
 				</div>
 
 
 				<div class="nav-wrapper">
-					<!-- START Left navbar -->
-					<ul class="nav navbar-nav">
-						<li>
-							<!-- Button used to collapse the left sidebar. Only visible on tablet 
-								and desktops -->
-							<a href="#" ng-click="app.layout.isCollapsed = !app.layout.isCollapsed"
-								class="hidden-xs">
-								<em class="fa fa-navicon"></em>
-							</a> <!-- Button to show/hide the sidebar on mobile. Visible on mobile only. -->
-							<a href="#" toggle-state="aside-toggled" no-persist="no-persist"
-								class="visible-xs sidebar-toggle">
-								<em class="fa fa-navicon"></em>
-							</a>
-						</li>
-						<!-- START User avatar toggle -->
-						<li>
-							<!-- Button used to collapse the left sidebar. Only visible on tablet 
-								and desktops -->
-							<a href="#" ng-click="toggleUserBlock()">
-								<em class="icon-user"></em>
-							</a>
-						</li>
-						<!-- END User avatar toggle -->
-					</ul>
-					<!-- END Left navbar -->
 					<!-- START Right Navbar -->
 					<ul class="nav navbar-nav navbar-right">
 						<!-- Search icon -->
@@ -71,7 +44,7 @@
 								<em class="icon-bell"></em>
 								<div class="label label-danger">11</div>
 							</a>
-							 <!-- START Dropdown menu -->
+							<!-- START Dropdown menu -->
 						</li>
 						<!-- END Alert menu -->
 						<!-- START Contacts button -->

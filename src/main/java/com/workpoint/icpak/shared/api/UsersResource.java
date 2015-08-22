@@ -19,64 +19,58 @@ import com.workpoint.icpak.shared.model.auth.LogInResult;
 
 @Path("users")
 @Produces(MediaType.APPLICATION_JSON)
-public interface UsersResource extends BaseResource{
+public interface UsersResource extends BaseResource {
 
-		@GET
-		@Consumes(MediaType.APPLICATION_JSON)
-		public List<UserDto> getAll(@QueryParam("offset") Integer offset,
-				@QueryParam("limit") Integer limit);
-		
-		@GET
-		@Path("/{userId}")
-		public UserDto getById(
-				@PathParam("userId") String userId);
-		
-		@GET
-		@Path("/auth")
-		public UserDto login(
-				@QueryParam("username") String username,
-				@QueryParam("password") String password);
-		
-		@POST
-		@Path("/auth2")
-		@Consumes(MediaType.APPLICATION_JSON)
-		public LogInResult execLogin(LogInAction loginData);
-		
-		@POST
-		@Path("/{userId}/account-status/activate")
-		public void activateAccount(@PathParam("userId") String userId);
-		
-		@POST
-		@Path("/{userId}/password")
-		@Consumes(MediaType.APPLICATION_JSON)
-		public void changePassword(@PathParam("userId") String userId,
-				@QueryParam("password") String newPassword);
-		
-		
-		@POST
-		@Consumes(MediaType.APPLICATION_JSON)
-		public UserDto create(UserDto user);
-		
+	@GET
+	@Consumes(MediaType.APPLICATION_JSON)
+	public List<UserDto> getAll(@QueryParam("offset") Integer offset,
+			@QueryParam("limit") Integer limit,
+			@QueryParam("searchTerm") String searchTerm);
 
-		@PUT
-		@Path("/{userId}")
-		@Consumes(MediaType.APPLICATION_JSON)
-		public UserDto update(
-				@PathParam("userId") String userId,UserDto user);
-		
-		@DELETE
-		@Path("/{userId}")
-		public void delete(
-				@PathParam("userId") String userId);
+	@GET
+	@Path("/{userId}")
+	public UserDto getById(@PathParam("userId") String userId);
 
+	@GET
+	@Path("/auth")
+	public UserDto login(@QueryParam("username") String username,
+			@QueryParam("password") String password);
 
-		//		@PUT
-//		@Path("/{userId}/password")
-//		@Consumes(MediaType.APPLICATION_JSON)
-//		@Produces(MediaType.APPLICATION_JSON)
-//		public RestAction<Void> updatePassword(
-//				@QueryParam("newpassword") String newPassword,
-//				@PathParam("userId") String userId);
-//
+	@POST
+	@Path("/auth2")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public LogInResult execLogin(LogInAction loginData);
+
+	@POST
+	@Path("/{userId}/account-status/activate")
+	public void activateAccount(@PathParam("userId") String userId);
+
+	@POST
+	@Path("/{userId}/password")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public void changePassword(@PathParam("userId") String userId,
+			@QueryParam("password") String newPassword);
+
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	public UserDto create(UserDto user);
+
+	@PUT
+	@Path("/{userId}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public UserDto update(@PathParam("userId") String userId, UserDto user);
+
+	@DELETE
+	@Path("/{userId}")
+	public void delete(@PathParam("userId") String userId);
+
+	// @PUT
+	// @Path("/{userId}/password")
+	// @Consumes(MediaType.APPLICATION_JSON)
+	// @Produces(MediaType.APPLICATION_JSON)
+	// public RestAction<Void> updatePassword(
+	// @QueryParam("newpassword") String newPassword,
+	// @PathParam("userId") String userId);
+	//
 
 }

@@ -16,6 +16,7 @@ import com.icpak.rest.dao.UserSessionDao;
 import com.icpak.rest.dao.UsersDao;
 import com.icpak.rest.exceptions.ServiceException;
 import com.icpak.rest.models.ErrorCodes;
+import com.icpak.rest.models.SearchFilter;
 import com.icpak.rest.models.auth.BioData;
 import com.icpak.rest.models.auth.Role;
 import com.icpak.rest.models.auth.User;
@@ -40,87 +41,94 @@ import com.workpoint.icpak.shared.trx.TransactionDto;
 public class UsersDaoHelper {
 
 	Logger logger = Logger.getLogger(UsersDaoHelper.class.getName());
-	@Inject UsersDao dao;
-	@Inject RolesDao roleDao;
-	@Inject TransactionsDao trxDao;
-	@Inject Authenticator authenticator;
-	
-	@Inject UserSessionDao loginCookieDao;
-	
+	@Inject
+	UsersDao dao;
+	@Inject
+	RolesDao roleDao;
+	@Inject
+	TransactionsDao trxDao;
+	@Inject
+	Authenticator authenticator;
+
+	@Inject
+	UserSessionDao loginCookieDao;
+
 	/**
 	 * System User
+	 * 
 	 * @param dto
 	 * @return
 	 */
-	public UserDto create(UserDto dto){
+	public UserDto create(UserDto dto) {
 		User user = new User();
 		user.copyFrom(dto);
 		user.setPassword(dto.getPassword());
-		for(RoleDto role: dto.getGroups()){
+		for (RoleDto role : dto.getGroups()) {
 			Role r = dao.findByRefId(role.getRefId(), Role.class);
 			user.addRole(r);
 		}
 		dao.createUser(user);
-		//createDefaultMemberForUser(user);
+		// createDefaultMemberForUser(user);
 		return user.toDto();
 	}
-	
+
 	/**
 	 * Other user
+	 * 
 	 * @param user
 	 * @return
 	 */
-	public UserDto create(User user){
+	public UserDto create(User user) {
 		dao.createUser(user);
 		createDefaultMemberForUser(user);
 		return user.toDto();
 	}
-	
-	
+
 	/**
 	 * Internal Users - Creation
+	 * 
 	 * @param userId
 	 * @param dto
 	 * @return
 	 */
-	public UserDto update(String userId, UserDto dto){
+	public UserDto update(String userId, UserDto dto) {
 		User po = dao.findByUserId(userId);
-		
+
 		po.setEmail(dto.getEmail());
-		//po.setPassword(dto.getPassword());
-		
-		if(po.getUserData()==null){
+		// po.setPassword(dto.getPassword());
+
+		if (po.getUserData() == null) {
 			po.setUserData(dto);
-		}else{
+		} else {
 			BioData data = po.getUserData();
 			data.setFirstName(dto.getName());
 			data.setLastName(dto.getSurname());
 		}
-		
-		for(RoleDto role: dto.getGroups()){
+
+		for (RoleDto role : dto.getGroups()) {
 			Role r = dao.findByRefId(role.getRefId(), Role.class);
 			po.addRole(r);
 		}
-		
+
 		dao.updateUser(po);
 
 		return po.toDto();
 	}
-	
-	public void update(String userId, User user){
+
+	public void update(String userId, User user) {
 		User po = dao.findByUserId(userId);
-		
+
 		po.setEmail(user.getEmail());
-		//po.setUsername(user.getUsername());
+		// po.setUsername(user.getUsername());
 		po.setAddress(user.getAddress());
 		po.setCity(user.getCity());
 		po.setNationality(user.getNationality());
 		po.setPhoneNumber(user.getPhoneNumber());
 		po.setResidence(user.getResidence());
-		
-		if(po.getUserData()==null){
+
+		if (po.getUserData() == null) {
 			po.setUserData(user.getUserData());
-		}else{
+		} else {
 			BioData data = po.getUserData();
 			data.setAgeGroup(user.getUserData().getAgeGroup());
 			data.setDob(user.getUserData().getDob());
@@ -131,98 +139,108 @@ public class UsersDaoHelper {
 			data.setOverseas(user.getUserData().isOverseas());
 			data.setSalutation(user.getUserData().getSalutation());
 			data.setTitle(user.getUserData().getTitle());
-			//data.setResidence(user.getUserData().getResidence());
+			// data.setResidence(user.getUserData().getResidence());
 		}
-		
+
 		dao.updateUser(po);
 
-		if(!dao.hasMember(po)){
+		if (!dao.hasMember(po)) {
 			createDefaultMemberForUser(po);
 		}
 	}
-	
+
 	private void createDefaultMemberForUser(User user) {
-		//create and empty member a/c
+		// create and empty member a/c
 		Member member = new Member(user.getRefId());
 		member.setRefId(user.getRefId());
 		member.setUser(user);
 		dao.save(member);
 	}
 
-	public void delete(String userId){
+	public void delete(String userId) {
 		User user = dao.findByUserId(userId);
 		dao.delete(user);
 	}
-	
+
 	public List<UserDto> getAllUsers(Integer offset, Integer limit,
 			String uriInfo) {
-		List<User> users  = dao.getAllUsers(offset, limit, null);
+		return getAllUsers(offset, limit, uriInfo, null);
+	}
+
+	public List<UserDto> getAllUsers(Integer offset, Integer limit,
+			String uriInfo, String searchTerm) {
+		List<User> users = dao.getAllUsers(offset, limit, null, searchTerm);
 		List<UserDto> dtos = new ArrayList<>();
-		
-		for(User user: users){
+
+		for (User user : users) {
 			dtos.add(user.toDto());
 		}
 		return dtos;
 	}
-	
 
 	public Integer getCount() {
 		return dao.getUserCount();
 	}
 
-	
-	public ResourceCollectionModel<User> getAllUsers(Integer offSet, Integer limit, UriInfo uriInfo, String roleId){
+	public ResourceCollectionModel<User> getAllUsers(Integer offSet,
+			Integer limit, UriInfo uriInfo, String roleId) {
 		int total = dao.getUserCount(roleId);
 		Role role = null;
-		if(roleId!=null){
+		if (roleId != null) {
 			role = roleDao.getByRoleId(roleId);
 		}
-		
-		ResourceCollectionModel<User> collection = new ResourceCollectionModel<>(offSet,limit,total, uriInfo);
-		List<User> members = dao.getAllUsers(offSet, limit, role);
-		
+
+		ResourceCollectionModel<User> collection = new ResourceCollectionModel<>(
+				offSet, limit, total, uriInfo);
+		List<User> members = dao.getAllUsers(offSet, limit, role, null);
+
 		List<User> rtn = new ArrayList<>();
-		for(User user: members){
-			user.setUri(uriInfo.getAbsolutePath().toString()+"/"+user.getRefId());
+		for (User user : members) {
+			user.setUri(uriInfo.getAbsolutePath().toString() + "/"
+					+ user.getRefId());
 			rtn.add(user.clone(ExpandTokens.DETAIL.toString()));
 		}
-		
+
 		collection.setItems(rtn);
 		return collection;
 	}
-	
-	public ResourceModel getAllUsersByRoleId(Integer offSet, Integer limit, UriInfo uriInfo, String roleId,
-			String...expand){
-		if(offSet==null) offSet=0;
-		if(limit==null) limit = BaseResource.PAGE_LIMIT;
-		
+
+	public ResourceModel getAllUsersByRoleId(Integer offSet, Integer limit,
+			UriInfo uriInfo, String roleId, String... expand) {
+		if (offSet == null)
+			offSet = 0;
+		if (limit == null)
+			limit = BaseResource.PAGE_LIMIT;
+
 		Role role = roleDao.getByRoleId(roleId);
-		if(role==null){
-			throw new ServiceException(ErrorCodes.NOTFOUND, "Role", "'"+roleId+"'");
+		if (role == null) {
+			throw new ServiceException(ErrorCodes.NOTFOUND, "Role", "'"
+					+ roleId + "'");
 		}
-		
-		//int total = dao.getUserCount(roleId);
-		//ResourceCollectionModel<User> collection = new ResourceCollectionModel<>(offSet,limit,total, uriInfo);
+
+		// int total = dao.getUserCount(roleId);
+		// ResourceCollectionModel<User> collection = new
+		// ResourceCollectionModel<>(offSet,limit,total, uriInfo);
 		Role clone = role.clone(expand);
-		clone.setUri(uriInfo.getBaseUri().toString()+"/roles/"+roleId);
+		clone.setUri(uriInfo.getBaseUri().toString() + "/roles/" + roleId);
 		Collection<User> members = clone.getUsers();
-		
-		for(User user: members){
-			user.setUri(uriInfo.getBaseUri()+"/users/"+user.getRefId());
+
+		for (User user : members) {
+			user.setUri(uriInfo.getBaseUri() + "/users/" + user.getRefId());
 		}
-		//clone.setUsers(members);
-		
-		//collection.setItems(members);
+		// clone.setUsers(members);
+
+		// collection.setItems(members);
 		return clone;
 	}
 
 	public User getUser(String userId) {
 		User user = dao.findByUserId(userId);
-		
-		if(user==null){
-			throw new ServiceException(ErrorCodes.NOTFOUND,"'"+userId+"'");
+
+		if (user == null) {
+			throw new ServiceException(ErrorCodes.NOTFOUND, "'" + userId + "'");
 		}
-		
+
 		return user.clone();
 	}
 
@@ -234,39 +252,42 @@ public class UsersDaoHelper {
 		attachment.setContentType(contentType);
 		attachment.setName(fileName);
 		attachment.setProfilePicUserId(userId);
-		
+
 		dao.save(attachment);
 	}
 
 	public Attachment getProfilePic(String userId) {
 		Attachment a = dao.getProfilePic(userId);
-		
-		if(a==null){
-			throw new ServiceException(ErrorCodes.NOTFOUND, "Profile Picture ","for user "+userId);
+
+		if (a == null) {
+			throw new ServiceException(ErrorCodes.NOTFOUND, "Profile Picture ",
+					"for user " + userId);
 		}
-		
+
 		return a.clone("all");
 	}
 
 	public void updatePassword(String userId, String newPassword) {
 		User user = dao.findByUserId(userId);
-		if(user.getHashedPassword()==null || user.getHashedPassword().isEmpty()){
-			throw new ServiceException(ErrorCodes.ILLEGAL_ARGUMENT, "'New Password'", "'NULL'");
+		if (user.getHashedPassword() == null
+				|| user.getHashedPassword().isEmpty()) {
+			throw new ServiceException(ErrorCodes.ILLEGAL_ARGUMENT,
+					"'New Password'", "'NULL'");
 		}
-		
+
 		user.setPassword(dao.encrypt(user.getHashedPassword()));
 		dao.save(user);
 	}
 
 	public List<TransactionDto> getTransactions(String userId) {
-		
-		List<Transaction> trxs= trxDao.getTransactions(userId);
+
+		List<Transaction> trxs = trxDao.getTransactions(userId);
 		List<TransactionDto> trxDtos = new ArrayList<>();
-		for(Transaction trx: trxs){
+		for (Transaction trx : trxs) {
 			TransactionDto dto = trx.toDto();
 			trxDtos.add(dto);
 		}
-		
+
 		return trxDtos;
 	}
 
@@ -274,67 +295,71 @@ public class UsersDaoHelper {
 		UserDto userDto;
 		boolean isLoggedIn = true;
 
-        if (action.getActionType() == ActionType.VIA_COOKIE) {
-            userDto = getUserFromCookie(action.getLoggedInCookie());
-        } else {
-            userDto = getUserFromCredentials(action.getUsername(), action.getPassword());
-        }
-        
-        isLoggedIn = userDto!=null;
+		if (action.getActionType() == ActionType.VIA_COOKIE) {
+			userDto = getUserFromCookie(action.getLoggedInCookie());
+		} else {
+			userDto = getUserFromCredentials(action.getUsername(),
+					action.getPassword());
+		}
 
-        String loggedInCookie = "";
-        if (isLoggedIn) {
-            loggedInCookie = loginCookieDao.createSessionCookie(action.getLoggedInCookie(),userDto);
-            userDto.setApplicationRefId(getApplicationRefId(userDto.getRefId()));
-            userDto.setMemberRefId(dao.getMemberRefId(userDto.getRefId()));
-        }
+		isLoggedIn = userDto != null;
 
-        CurrentUserDto currentUserDto = new CurrentUserDto(isLoggedIn, userDto);
+		String loggedInCookie = "";
+		if (isLoggedIn) {
+			loggedInCookie = loginCookieDao.createSessionCookie(
+					action.getLoggedInCookie(), userDto);
+			userDto.setApplicationRefId(getApplicationRefId(userDto.getRefId()));
+			userDto.setMemberRefId(dao.getMemberRefId(userDto.getRefId()));
+		}
 
-        logger.info("LogInHandlerexecut(): actiontype=" + action.getActionType());
-        logger.info("LogInHandlerexecut(): currentUserDto=" + currentUserDto);
-        logger.info("LogInHandlerexecut(): loggedInCookie=" + loggedInCookie);
+		CurrentUserDto currentUserDto = new CurrentUserDto(isLoggedIn, userDto);
 
-        assert action.getActionType()==null;
-        return new LogInResult(action.getActionType(), currentUserDto, loggedInCookie);
+		logger.info("LogInHandlerexecut(): actiontype="
+				+ action.getActionType());
+		logger.info("LogInHandlerexecut(): currentUserDto=" + currentUserDto);
+		logger.info("LogInHandlerexecut(): loggedInCookie=" + loggedInCookie);
+
+		assert action.getActionType() == null;
+		return new LogInResult(action.getActionType(), currentUserDto,
+				loggedInCookie);
 	}
 
-	 private UserDto getUserFromCookie(String loggedInCookie) {
-	        UserDto userDto = null;
-	        try {
-	            userDto = authenticator.authenticatCookie(loggedInCookie);
-	            userDto.setApplicationRefId(getApplicationRefId(userDto.getRefId()));
-	        } catch (AuthenticationException e) {
-	            //isLoggedIn = false;
-	        }
-
-	        return userDto;
-	    }
-
-	    private UserDto getUserFromCredentials(String username, String password) {
-	        UserDto userDto = null;
-	        try {
-	            userDto = authenticator.authenticateCredentials(username, password);
-	            userDto.setApplicationRefId(getApplicationRefId(userDto.getRefId()));
-	        } catch (AuthenticationException e) {
-	            //isLoggedIn = false;
-	        }
-
-	        return userDto;
-	    }
-
-		public void changePassword(String userId,String newPassword) {
-			User user = dao.findByUserId(userId);
-			user.setPassword(newPassword);
-			dao.changePassword(user);
+	private UserDto getUserFromCookie(String loggedInCookie) {
+		UserDto userDto = null;
+		try {
+			userDto = authenticator.authenticatCookie(loggedInCookie);
+			userDto.setApplicationRefId(getApplicationRefId(userDto.getRefId()));
+		} catch (AuthenticationException e) {
+			// isLoggedIn = false;
 		}
 
-		public void activateAccount(String userId, AccountStatus activated) {
-			User user = dao.findByUserId(userId);
-			user.setStatus(activated);
+		return userDto;
+	}
+
+	private UserDto getUserFromCredentials(String username, String password) {
+		UserDto userDto = null;
+		try {
+			userDto = authenticator.authenticateCredentials(username, password);
+			userDto.setApplicationRefId(getApplicationRefId(userDto.getRefId()));
+		} catch (AuthenticationException e) {
+			// isLoggedIn = false;
 		}
-		
-		public String getApplicationRefId(String userRef){
-			return dao.getApplicationRefId(userRef);
-		}		
+
+		return userDto;
+	}
+
+	public void changePassword(String userId, String newPassword) {
+		User user = dao.findByUserId(userId);
+		user.setPassword(newPassword);
+		dao.changePassword(user);
+	}
+
+	public void activateAccount(String userId, AccountStatus activated) {
+		User user = dao.findByUserId(userId);
+		user.setStatus(activated);
+	}
+
+	public String getApplicationRefId(String userRef) {
+		return dao.getApplicationRefId(userRef);
+	}
 }

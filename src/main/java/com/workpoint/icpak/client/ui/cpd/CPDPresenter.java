@@ -37,6 +37,8 @@ import com.workpoint.icpak.client.ui.component.PagingLoader;
 import com.workpoint.icpak.client.ui.component.PagingPanel;
 import com.workpoint.icpak.client.ui.cpd.form.RecordCPD;
 import com.workpoint.icpak.client.ui.events.EditModelEvent;
+import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
+import com.workpoint.icpak.client.ui.events.ProcessingEvent;
 import com.workpoint.icpak.client.ui.events.EditModelEvent.EditModelHandler;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
 import com.workpoint.icpak.client.ui.popup.GenericPopupPresenter;
@@ -187,12 +189,11 @@ public class CPDPresenter extends
 
 	protected void loadData() {
 		String memberId = currentUser.getUser().getRefId();
-
+		fireEvent(new ProcessingEvent());
 		memberDelegate.withCallback(new AbstractAsyncCallback<Integer>() {
-			
 			@Override
 			public void onSuccess(Integer aCount) {
-				
+				fireEvent(new ProcessingCompletedEvent());
 				PagingPanel panel=getView().getPagingPanel();
 				panel.setTotal(aCount);
 				PagingConfig config = panel.getConfig();
@@ -206,9 +207,11 @@ public class CPDPresenter extends
 
 	protected void loadCPD(int offset, int limit) {
 		String memberId = currentUser.getUser().getRefId();
+		fireEvent(new ProcessingEvent());
 		memberDelegate.withCallback(new AbstractAsyncCallback<List<CPDDto>>() {
 			@Override
 			public void onSuccess(List<CPDDto> result) {
+				fireEvent(new ProcessingCompletedEvent());
 				getView().bindResults(result);
 			}
 		}).cpd(AppContext.isCurrentUserAdmin()? "ALL":memberId)

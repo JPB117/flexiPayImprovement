@@ -9,7 +9,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Widget;
-import com.sencha.gxt.legacy.client.mvc.AppEvent;
 import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.RowWidget;
 import com.workpoint.icpak.client.ui.events.EditModelEvent;
@@ -42,14 +41,18 @@ public class CPDTableRow extends RowWidget {
 	@UiField
 	SpanElement spnStatus;
 
-	@UiField ActionLink aEdit;
-	
+	@UiField
+	ActionLink aEdit;
+
 	@UiField
 	ActionLink aMember;
-	
+
+	@UiField
+	HTMLPanel divMember;
+
 	@UiField
 	ActionLink aAttended;
-	
+
 	@UiField
 	ActionLink aNotAttended;
 
@@ -58,7 +61,7 @@ public class CPDTableRow extends RowWidget {
 	public CPDTableRow() {
 		initWidget(uiBinder.createAndBindUi(this));
 		aEdit.addClickHandler(new ClickHandler() {
-			
+
 			@Override
 			public void onClick(ClickEvent event) {
 				AppContext.fireEvent(new EditModelEvent(dto));
@@ -70,8 +73,13 @@ public class CPDTableRow extends RowWidget {
 		this();
 		this.dto = dto;
 
-		aMember.setText(dto.getFullNames());
-		
+		if (AppContext.isCurrentUserAdmin()) {
+			divMember.setVisible(true);
+			aMember.setText(dto.getFullNames());
+		} else {
+			divMember.setVisible(false);
+		}
+
 		if (dto.getCreated() != null)
 			divDate.add(new InlineLabel(DateUtils.DATEFORMAT.format(dto
 					.getCreated())));
@@ -93,12 +101,12 @@ public class CPDTableRow extends RowWidget {
 			spnStatus.removeClassName("label-success");
 			spnStatus.addClassName("label-warning");
 		}
-		
-		if(!AppContext.isCurrentUserAdmin()){
+
+		if (!AppContext.isCurrentUserAdmin()) {
 			aAttended.addStyleName("hide");
 			aNotAttended.addStyleName("hide");
 		}
-		
+
 	}
 
 }

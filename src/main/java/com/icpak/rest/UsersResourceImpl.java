@@ -48,9 +48,8 @@ import com.workpoint.icpak.shared.trx.TransactionDto;
  * <b>1 Big Gotcha</b> <br>
  * Resource Classes are managed by Jersey and not Guice. This is a problem if
  * you need to annotate methods with @Transactional amongst other functionality.
- *  i.e. Putting @Transactional
- * in this class (MemberResource) has no effect. Guice will not begin a
- * transaction for your request. <br>
+ * i.e. Putting @Transactional in this class (MemberResource) has no effect.
+ * Guice will not begin a transaction for your request. <br>
  * A workaround is to delegate execution to a guice managed class, then inject
  * such classes to the resource class.
  * <p>
@@ -58,32 +57,33 @@ import com.workpoint.icpak.shared.trx.TransactionDto;
  * @author duggan
  *
  */
-//@RequiresAuthentication
+// @RequiresAuthentication
 @Path("users")
 @Api(value = "users", description = "Handles CRUD on User data")
 public class UsersResourceImpl implements UsersResource {
 
-	private final Logger logger = Logger.getLogger(UsersResourceImpl.class.getName());
-	
-	@Inject UsersDaoHelper helper;
+	private final Logger logger = Logger.getLogger(UsersResourceImpl.class
+			.getName());
+
+	@Inject
+	UsersDaoHelper helper;
 
 	private HttpContext httpContext;
-	
+
 	public UsersResourceImpl(@Context HttpContext httpContext) {
 		this.httpContext = httpContext;
 	}
-	
+
 	@GET
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Get a list of all users", response = User.class, consumes = MediaType.APPLICATION_JSON)
-	public List<UserDto> getAll(
-			@QueryParam("offset") Integer offset,
-			@QueryParam("limit") Integer limit) {
-
-		return helper.getAllUsers(offset, limit,"");
+	public List<UserDto> getAll(@QueryParam("offset") Integer offset,
+			@QueryParam("limit") Integer limit,
+			@QueryParam("searchTerm") String searchTerm) {
+		return helper.getAllUsers(offset, limit, "", searchTerm);
 	}
-	
+
 	@GET
 	@Path("/count")
 	public Integer getCount() {
@@ -100,24 +100,26 @@ public class UsersResourceImpl implements UsersResource {
 		User user = helper.getUser(userId);
 		return user.toDto();
 	}
-	
+
 	@GET
 	@Path("/auth")
 	@Produces(MediaType.APPLICATION_JSON)
-	@ApiOperation(value = "Authenticate a user", 
-	response = User.class, consumes = MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "Authenticate a user", response = User.class, consumes = MediaType.APPLICATION_JSON)
 	public UserDto login(
 			@ApiParam(value = "Username of the user to authenticate", required = true) @QueryParam("username") String username,
-			@ApiParam(value = "Password of the user", required = true) @QueryParam("password") String password){
-		
-		UserDto loggedIn = helper.execLogin(new LogInAction(username, password)).getCurrentUserDto().getUser();
+			@ApiParam(value = "Password of the user", required = true) @QueryParam("password") String password) {
+
+		UserDto loggedIn = helper
+				.execLogin(new LogInAction(username, password))
+				.getCurrentUserDto().getUser();
 		String uri = httpContext.getRequest().getPath();
-		//String uri = uriInfo.getAbsolutePath().toString().replace("auth", loggedIn.getRefId());
+		// String uri = uriInfo.getAbsolutePath().toString().replace("auth",
+		// loggedIn.getRefId());
 		loggedIn.setUri(uri);
-		
+
 		return loggedIn;
 	}
-	
+
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -125,13 +127,15 @@ public class UsersResourceImpl implements UsersResource {
 	public UserDto create(UserDto user) {
 		return helper.create(user);
 	}
-	
-	
+
 	/**
 	 * To test use this uri:
 	 * <p/>
-	 * curl -v -F 'filename=POvBCBE-PO-NRB-1_1.pdf' -F 'file=@/home/duggan/Downloads/PO_BCBE-PO-NRB-1_1.pdf;type=application/pdf' http://localhost:8080/icpak/api/users/xIXcSQNcXmqMDrth/profile
+	 * curl -v -F 'filename=POvBCBE-PO-NRB-1_1.pdf' -F
+	 * 'file=@/home/duggan/Downloads/PO_BCBE-PO-NRB-1_1.pdf;type=application/pdf'
+	 * http://localhost:8080/icpak/api/users/xIXcSQNcXmqMDrth/profile
 	 * <p/>
+	 * 
 	 * @param userId
 	 * @param inputStream
 	 * @param fileDisposition
@@ -147,14 +151,16 @@ public class UsersResourceImpl implements UsersResource {
 			@ApiParam(value = "User Id of the user", required = true) @PathParam("userId") String userId,
 			@FormDataParam("Filedata") FormDataBodyPart body,
 			@FormDataParam("Filedata") InputStream inputStream,
-		    @FormDataParam("Filedata") FormDataContentDisposition fileDisposition) throws IOException {
-		
+			@FormDataParam("Filedata") FormDataContentDisposition fileDisposition)
+			throws IOException {
+
 		byte[] bites = IOUtils.toByteArray(inputStream);
-		
+
 		String type = body.getMediaType().toString();
-		System.err.format("{userId:%s, fileName:%s, size:%d, type:%s }",userId, fileDisposition.getFileName(),
-				bites.length, type).println();
-		
+		System.err.format("{userId:%s, fileName:%s, size:%d, type:%s }",
+				userId, fileDisposition.getFileName(), bites.length, type)
+				.println();
+
 		helper.setProfilePic(userId, bites, fileDisposition.getFileName(), type);
 	}
 
@@ -164,12 +170,13 @@ public class UsersResourceImpl implements UsersResource {
 	@Produces(MediaType.APPLICATION_OCTET_STREAM)
 	@ApiOperation(value = "Upload profile photo", produces = MediaType.APPLICATION_OCTET_STREAM)
 	public Response getProfile(
-			@ApiParam(value = "User Id of the user", required = true) @PathParam("userId") String userId
-			) throws IOException {
-		
+			@ApiParam(value = "User Id of the user", required = true) @PathParam("userId") String userId)
+			throws IOException {
+
 		Attachment attachment = helper.getProfilePic(userId);
-		return buildFileResponse(attachment.getName(), attachment.getContentType(),
-				attachment.getAttachment(),attachment.getSize());
+		return buildFileResponse(attachment.getName(),
+				attachment.getContentType(), attachment.getAttachment(),
+				attachment.getSize());
 	}
 
 	@PUT
@@ -183,7 +190,7 @@ public class UsersResourceImpl implements UsersResource {
 
 		return helper.update(userId, user);
 	}
-	
+
 	@PUT
 	@Path("/{userId}/password")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -206,7 +213,7 @@ public class UsersResourceImpl implements UsersResource {
 
 		helper.delete(userId);
 	}
-	
+
 	@GET
 	@Path("/{userId}/transactions")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -215,7 +222,7 @@ public class UsersResourceImpl implements UsersResource {
 			@ApiParam(value = "User Id of the user to fetch", required = true) @PathParam("userId") String userId) {
 
 		List<TransactionDto> trxs = helper.getTransactions(userId);
-		
+
 		return trxs;
 	}
 
@@ -227,40 +234,43 @@ public class UsersResourceImpl implements UsersResource {
 
 		return helper.execLogin(loginData);
 	}
-	
+
 	@POST
 	@Path("/{userId}/account-status/activate")
 	@Produces(MediaType.APPLICATION_JSON)
-	public void activateAccount(@PathParam("userId") String userId){
+	public void activateAccount(@PathParam("userId") String userId) {
 		helper.activateAccount(userId, AccountStatus.ACTIVATED);
 	}
-	
+
 	@POST
 	@Path("/{userId}/password")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public void changePassword(@PathParam("userId") String userId,@QueryParam("password") String newPassword){
+	public void changePassword(@PathParam("userId") String userId,
+			@QueryParam("password") String newPassword) {
 		helper.changePassword(userId, newPassword);
 	}
 
 	public Response buildFileResponse(String name, String contentType,
 			final byte[] attachment, long length) {
-		
-//		StreamingOutput stream = new StreamingOutput() {
-//		    @Override
-//		    public void write(OutputStream os) throws IOException,
-//		    WebApplicationException {
-//		      //Writer writer = new BufferedWriter(new OutputStreamWriter(os));
-//		      IOUtils.write(attachment, os);
-//		      //@TODO read the file here and write to the writer
-//
-//		      //writer.flush();
-//		    }
-//		  };
-		System.err.println("FileName= "+name);
-		return Response.ok(attachment, contentType)
-				.header("Content-Disposition", "attachment; filename="+name+"; Content-Length="+length)
-				.build();
+
+		// StreamingOutput stream = new StreamingOutput() {
+		// @Override
+		// public void write(OutputStream os) throws IOException,
+		// WebApplicationException {
+		// //Writer writer = new BufferedWriter(new OutputStreamWriter(os));
+		// IOUtils.write(attachment, os);
+		// //@TODO read the file here and write to the writer
+		//
+		// //writer.flush();
+		// }
+		// };
+		System.err.println("FileName= " + name);
+		return Response
+				.ok(attachment, contentType)
+				.header("Content-Disposition",
+						"attachment; filename=" + name + "; Content-Length="
+								+ length).build();
 	}
 
 }

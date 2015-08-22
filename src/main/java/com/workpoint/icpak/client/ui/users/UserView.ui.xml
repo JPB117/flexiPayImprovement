@@ -47,14 +47,15 @@
 						<div id="usercontent" class="tab-content">
 							<!-- User's Information Tab -->
 							<div ui:field="divUserContent" class="tab-pane fade in active">
+								<div class="search-bar">
+									<div class="col-md-3">
+										<d:TextField placeholder="Search here" ui:field="txtSearch"
+											styleName="form-control"></d:TextField>
+									</div>
+								</div>
 								<div class="table table-hover table-striped table-bordered">
 									<div class="thead">
 										<div class="tr">
-											<!-- <div class="th"> -->
-											<!-- <label> -->
-											<!-- <input type="checkbox" class="ace" /> -->
-											<!-- </label> -->
-											<!-- </div> -->
 											<div class="th">First Name</div>
 											<div class="th">Last Name</div>
 											<div class="th">Username</div>
