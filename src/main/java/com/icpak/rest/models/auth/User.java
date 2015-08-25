@@ -35,9 +35,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.PrePersist;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -52,6 +50,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.icpak.rest.models.base.ExpandTokens;
 import com.icpak.rest.models.base.PO;
+import com.icpak.rest.models.membership.ApplicationFormHeader;
 import com.icpak.rest.models.membership.Member;
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
@@ -70,10 +69,9 @@ import com.workpoint.icpak.shared.model.auth.AccountStatus;
 @XmlSeeAlso({ BioData.class })
 @JsonSerialize(include = Inclusion.NON_NULL)
 @Entity
-@Table(name = "user", indexes = {
-		@Index(columnList = "username", name = "idx_users_username")
-		//,@Index(columnList = "email", name = "idx_users_email")
-		})
+@Table(name = "user", indexes = { @Index(columnList = "username", name = "idx_users_username")
+// ,@Index(columnList = "email", name = "idx_users_email")
+})
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class User extends PO {
 
@@ -110,7 +108,8 @@ public class User extends PO {
 	@OneToOne(mappedBy = "user", cascade = { CascadeType.PERSIST,
 			CascadeType.REMOVE })
 	private Member member;
-	private String memberId;
+
+	private String memberNo;
 	private String phoneNumber;
 	private String residence;
 	private String address;
@@ -227,12 +226,12 @@ public class User extends PO {
 		this.password = password;
 	}
 
-	public String getMemberId() {
-		return memberId;
+	public String getMemberNo() {
+		return memberNo;
 	}
 
-	public void setMemberId(String memberId) {
-		this.memberId = memberId;
+	public void setMemberNo(String memberId) {
+		this.memberNo = memberId;
 	}
 
 	public String getPhoneNumber() {
@@ -277,7 +276,7 @@ public class User extends PO {
 
 	public UserDto toDto() {
 		UserDto dto = new UserDto();
-
+		dto.setMemberNo(memberNo);
 		dto.setEmail(email);
 		dto.setUserId(refId);
 		dto.setName(userData.getFirstName());

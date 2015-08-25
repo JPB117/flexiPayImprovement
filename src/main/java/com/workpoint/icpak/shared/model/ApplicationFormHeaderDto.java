@@ -8,14 +8,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
 
 import com.icpak.rest.models.membership.ApplicationCategory;
-import com.wordnik.swagger.annotations.ApiModel;
-
-@ApiModel(description="Application Forms Filled by a member")
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlSeeAlso(ApplicationCategory.class)
-public class ApplicationFormHeaderDto extends SerializableObj{
+public class ApplicationFormHeaderDto extends SerializableObj {
 
 	/**
 	 * 
@@ -81,8 +78,6 @@ public class ApplicationFormHeaderDto extends SerializableObj{
 	private String contactTelephone;
 	private String contactEmail;
 	private String residence;
-	//private String KASNEBFAQNo;
-	//private String CPAFAQ;
 	private String examinationBody;
 	private String postCode;
 	private int paymentMode;
@@ -107,8 +102,8 @@ public class ApplicationFormHeaderDto extends SerializableObj{
 	private String invoiceRef;
 	private String userRefId;
 	private String memberNo;
-	private Integer percCompletion; //Percentage completion
-	
+	private Integer percCompletion; // Percentage completion
+
 	public ApplicationFormHeaderDto() {
 	}
 
@@ -560,22 +555,6 @@ public class ApplicationFormHeaderDto extends SerializableObj{
 		this.contactEmail = contactEmail;
 	}
 
-//	public String getKASNEBFAQNo() {
-//		return KASNEBFAQNo;
-//	}
-//
-//	public void setKASNEBFAQNo(String kASNEBFAQNo) {
-//		KASNEBFAQNo = kASNEBFAQNo;
-//	}
-
-//	public String getCPAFAQ() {
-//		return CPAFAQ;
-//	}
-//
-//	public void setCPAFAQ(String cPAFAQ) {
-//		CPAFAQ = cPAFAQ;
-//	}
-
 	public String getExaminationBody() {
 		return examinationBody;
 	}
@@ -743,11 +722,11 @@ public class ApplicationFormHeaderDto extends SerializableObj{
 	public void setEmployer(String employer) {
 		this.employer = employer;
 	}
-	
+
 	@Override
 	public String toString() {
-		
-		return "{email:"+email+",address1:"+address1+"}";
+
+		return "{email:" + email + ",address1:" + address1 + "}";
 	}
 
 	public String getInvoiceRef() {
@@ -783,8 +762,7 @@ public class ApplicationFormHeaderDto extends SerializableObj{
 	}
 
 	public String fullNames() {
-		
-		return surname+" "+otherNames;
+		return surname + " " + otherNames;
 	}
 
 	public Date getCreated() {
@@ -794,7 +772,6 @@ public class ApplicationFormHeaderDto extends SerializableObj{
 	public void setCreated(Date created) {
 		this.created = created;
 	}
-
 
 	public Date getApplicationDate() {
 		return applicationDate;

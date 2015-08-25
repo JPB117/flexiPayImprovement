@@ -26,6 +26,8 @@ public class UserItemView extends ViewImpl implements UserItemPresenter.MyView {
 	HTMLPanel panelGroups;
 	@UiField
 	HTMLPanel panelUserName;
+	@UiField
+	HTMLPanel panelMemberNo;
 
 	@UiField
 	Anchor aEdit;
@@ -38,7 +40,8 @@ public class UserItemView extends ViewImpl implements UserItemPresenter.MyView {
 	}
 
 	public void setValues(String firstName, String lastName, String username,
-			String email, String groups, int inbox, int participated, int total) {
+			String email, String groups, int inbox, int participated,
+			int total, String memberNo) {
 
 		if (firstName != null) {
 			panelFirstName.getElement().setInnerText(firstName);
@@ -59,6 +62,11 @@ public class UserItemView extends ViewImpl implements UserItemPresenter.MyView {
 		if (username != null) {
 			panelUserName.getElement().setInnerText(username);
 		}
+
+		if (memberNo != null) {
+			panelMemberNo.getElement().setInnerText(memberNo);
+		}
+
 	}
 
 	@Override

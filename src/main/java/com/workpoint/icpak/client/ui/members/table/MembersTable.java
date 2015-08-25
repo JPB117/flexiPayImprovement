@@ -42,10 +42,10 @@ public class MembersTable extends Composite {
 	public void createHeader() {
 		List<TableHeader> th = new ArrayList<TableHeader>();
 		th.add(new TableHeader("Registration Date"));
-		th.add(new TableHeader("Member No"));
-		th.add(new TableHeader("Member Name"));
+		// th.add(new TableHeader("Member No"));
+		th.add(new TableHeader("Applicant Name"));
 		th.add(new TableHeader("Email"));
-		th.add(new TableHeader("Profile"));
+		th.add(new TableHeader("Profile Completion"));
 		th.add(new TableHeader("Status"));
 
 		tblView.setTableHeaders(th);

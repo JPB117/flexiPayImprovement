@@ -59,7 +59,7 @@ public class ApplicationFormDaoHelper {
 		// Copy into PO
 		ApplicationFormHeader po = new ApplicationFormHeader();
 		po.copyFrom(application);
-		
+
 		// Create Temp User
 		User user = createTempUser(po);
 		po.setUserRefId(user.getRefId());
@@ -88,7 +88,7 @@ public class ApplicationFormDaoHelper {
 		po.setAddress(application.getAddress1());
 		po.setCity(application.getCity1());
 		po.setNationality(application.getNationality());
-		po.setMemberId(application.getMemberNo());
+		po.setMemberNo(application.getMemberNo());
 
 		BioData bioData = new BioData();
 		bioData.setFirstName(application.getOtherNames());
@@ -97,7 +97,7 @@ public class ApplicationFormDaoHelper {
 
 		String password = IDUtils.generateTempPassword();
 		po.setPassword(password);
-		
+
 		usersDaoHelper.create(po);
 
 		// userDao.createUser(po);
@@ -116,7 +116,7 @@ public class ApplicationFormDaoHelper {
 			values.put("quoteNo", application.getId());
 			values.put("date", application.getDate());
 			values.put("firstName", application.getOtherNames());
-			values.put("DocumentURL", "http://www.solutech.co.ke/icpak/");
+			values.put("DocumentURL", "http://www2.icpak.com/icpak/");
 			values.put("email", application.getEmail());
 			values.put("password", user.getHashedPassword());
 			Doc doc = new Doc(values);
