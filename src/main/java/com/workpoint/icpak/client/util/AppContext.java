@@ -165,7 +165,7 @@ public class AppContext {
 			return false;
 		}
 
-		return getContextUser().getUserId().equals(userId);
+		return getContextUser().getRefId().equals(userId);
 	}
 
 	public static String getOrganizationName() {
@@ -185,7 +185,7 @@ public class AppContext {
 	public static String getUserImageUrl() {
 		String moduleUrl = getBaseUrl();
 		String url = moduleUrl + "/getreport?ACTION=GetUser&userId="
-				+ user.getUser().getUserId();
+				+ user.getUser().getRefId();
 		return url;
 	}
 
