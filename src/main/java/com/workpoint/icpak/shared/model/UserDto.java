@@ -36,18 +36,10 @@ public class UserDto extends SerializableObj implements Listable,Serializable {
 		this.name = name;
 	}
 
-	public void setUserId(String id) {
-		this.userId = id;
-	}
-
 	public String getName() {
 		return name;
 	}
-
-	public String getUserId() {
-		return userId;
-	}
-
+	
 	public String getEmail() {
 		return email;
 	}

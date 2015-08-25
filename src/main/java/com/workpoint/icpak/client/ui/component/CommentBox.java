@@ -115,7 +115,7 @@ public class CommentBox extends Composite {
 		if(moduleUrl.endsWith("/")){
 			moduleUrl = moduleUrl.substring(0, moduleUrl.length()-1);
 		}
-		moduleUrl =moduleUrl+"/getreport?ACTION=GetUser&width=45&height=45&userId="+user.getUserId();
+		moduleUrl =moduleUrl+"/getreport?ACTION=GetUser&width=45&height=45&userId="+user.getRefId();
 		img.setUrl(moduleUrl);
 	}
 
