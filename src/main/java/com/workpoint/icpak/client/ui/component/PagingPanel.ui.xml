@@ -13,9 +13,11 @@
 						styleName="btn btn-default btn-fill fa fa-chevron-circle-left"></d:ActionLink>
 				</div>
 				<div class="col-lg-1"
-					style="width: 90px;margin-top: 5px;padding: 0px !important;">
+					style="width: 110px;margin-top: 5px;padding: 0px !important;">
 					Page
-					<d:TextField ui:field="txtPageNo" width="30px"></d:TextField>
+					<d:IntegerField ui:field="txtPageNo" width="30px"></d:IntegerField>
+					of 
+					<span ui:field="spnTotalPages"></span>
 				</div>
 
 				<div class="col-lg-2" style="width: 103px;padding:0px !important">

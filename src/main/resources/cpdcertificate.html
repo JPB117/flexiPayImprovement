@@ -1,62 +1,65 @@
-<!DOCTYPE html>
 <html>
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-		<style>
-		html{
-			width:100%;
-			height:100%;
-		}
-		body {
-			  background:url("cpdcertificate.jpg") no-repeat center center fixed; 
- 			 background-size:842px 595px;
-		}
-		.gold{
-			color: #CCAE0F;
-			font-weight: 200;
-		}
-		.names{
-			position: absolute;
-			left: 410px;
-			top: 320px;
-			width: 645px;
-			height: 29px;
-			text-align: center;
-		}
-		.event-details{
-			position: absolute;
-			left: 520px;
-			top: 375px;
-			width: 422px;
-			height: 117px;
-			text-align: center;
-		}
-		
-		.approver{
-			 position: absolute;
-			 left: 397px;
-			 top: 467px;
-			 width: 260px;
-			 font-size: 14px;
-		}
-		</style>
-		<title>CPD Certificate</title>
-	</head>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+html {
+	width: 100%;
+	height: 100%;
+}
 
-	<body>	
-		<p class="gold event-details">For attending the Annual Internal Audit Conference held on 20th-22nd August 2014 Continental Hotel, Mombasa.</p>
-		
-		<h2 class="names">CPA Tom Kimani Muriranja <h2>
-		
-		<div class="approver" >
-			<div class="gold">
-				<span>CPA Michael Njoroge</span><br/>
-				<span>Manager, Training and Development</span><br/>
-				<span>Date Issued: 18-Aug-2015</span><br/>
-				<span>Earned CPD Hours: 20 hours</span><br/>
-			</div>
-			<br/>
-			<img src="certificate_signature.png" style="width: 200px;"/>
+body {
+	background: url("http://127.0.0.1:8888/images/cpdcertificate.jpg")
+		no-repeat left top fixed;
+	background-size: 842px 595px;
+}
+
+.gold {
+	color: #CCAE0F;
+	font-weight: 200;
+}
+
+.names {
+	position: absolute;
+	left: 410px;
+	top: 320px;
+	width: 645px;
+	height: 29px;
+	text-align: center;
+}
+
+.event-details {
+	position: absolute;
+	left: 520px;
+	top: 375px;
+	width: 422px;
+	height: 117px;
+	text-align: center;
+}
+
+.approver {
+	position: absolute;
+	left: 397px;
+	top: 467px;
+	width: 260px;
+	font-size: 14px;
+}
+</style>
+<title>CPD Certificate</title>
+</head>
+
+<body>
+	<p class="gold event-details">For attending the @@eventName held on
+		@@eventDates @@eventVenue</p>
+
+	<h2 class="names">CPA @@memberName</h2>
+
+	<div class="approver">
+		<div class="gold">
+			<span>CPA Michael Njoroge</span><br /> <span>Manager, Training
+				and Development</span><br /> <span>Date Issued: @@dateIssued</span><br /> <span>Earned
+				CPD Hours: @@cpdHours</span><br />
 		</div>
-	</body>
-</html>	
+		<br /> <img src="certificate_signature.png" style="width: 200px;" />
+	</div>
+</body>
+</html>

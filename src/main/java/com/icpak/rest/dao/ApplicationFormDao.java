@@ -49,7 +49,8 @@ public class ApplicationFormDao extends BaseDao {
 
 		number = getSingleResultOrNull(getEntityManager().createNativeQuery(
 				"select count(*) from `Application Form Header` "
-						+ "where isactive=1"));
+						+ "where isactive=1 and applicationStatus=:status order by id desc")
+						.setParameter("status", ApplicationStatus.PENDING));
 
 		return number.intValue();
 	}
