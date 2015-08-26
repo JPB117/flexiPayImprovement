@@ -10,28 +10,29 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.workpoint.icpak.shared.model.auth.AccountStatus;
 
 @XmlRootElement
-public class UserDto extends SerializableObj implements Listable,Serializable {
+public class UserDto extends SerializableObj implements Listable, Serializable {
 
 	private static final long serialVersionUID = -5249516544970187459L;
 	private String applicationRefId;
 	private String name;
 	private String userId;
 	private String memberRefId;
+	private String memberNo;
 	private String email;
 	private String surname;
 	private String password;
-	private ArrayList<RoleDto> groups = new ArrayList<RoleDto>() ;
+	private ArrayList<RoleDto> groups = new ArrayList<RoleDto>();
 	private int participated;
 	private int inbox;
 	private AccountStatus status = AccountStatus.NEWACC;
-	
+
 	public UserDto() {
 	}
 
 	public UserDto(String id) {
 		this.userId = id;
 	}
-	
+
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -63,15 +64,16 @@ public class UserDto extends SerializableObj implements Listable,Serializable {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
+
 	@JsonIgnore
-	public String getFullName(){
-		return surname+" "+name;
+	public String getFullName() {
+		return surname + " " + name;
 	}
-	
+
 	@Override
 	public String toString() {
-		return "{refId:"+getRefId()+",userId:"+userId+",fullNames:"+getFullName()+"}";
+		return "{refId:" + getRefId() + ",userId:" + userId + ",fullNames:"
+				+ getFullName() + "}";
 	}
 
 	public List<RoleDto> getGroups() {
@@ -81,30 +83,30 @@ public class UserDto extends SerializableObj implements Listable,Serializable {
 	public void setGroups(List<RoleDto> groups) {
 		this.groups.addAll(groups);
 	}
-	
+
 	@JsonIgnore
-	public String getGroupsAsString(){
+	public String getGroupsAsString() {
 		StringBuffer out = new StringBuffer();
-		if(groups!=null){
-			for(RoleDto group: groups){
-				out.append(group.getName()+",");
+		if (groups != null) {
+			for (RoleDto group : groups) {
+				out.append(group.getName() + ",");
 			}
 		}
-		
-		if(out.length()>0){
-			return out.substring(0, out.length()-1);
+
+		if (out.length() > 0) {
+			return out.substring(0, out.length() - 1);
 		}
-		
+
 		return "";
 	}
 
 	public boolean hasGroup(String groupName) {
-		if(groups!=null)
-		for(RoleDto group:groups){
-			if(group.getName().equalsIgnoreCase(groupName)){
-				return true;
+		if (groups != null)
+			for (RoleDto group : groups) {
+				if (group.getName().equalsIgnoreCase(groupName)) {
+					return true;
+				}
 			}
-		}
 		return false;
 	}
 
@@ -113,19 +115,19 @@ public class UserDto extends SerializableObj implements Listable,Serializable {
 
 		return hasGroup("admin");
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
-		if(obj==null || !(obj instanceof UserDto)){
+		if (obj == null || !(obj instanceof UserDto)) {
 			return false;
 		}
-		
-		UserDto other =  (UserDto)obj;
-		
-		if(name==null){
+
+		UserDto other = (UserDto) obj;
+
+		if (name == null) {
 			return false;
 		}
-		
+
 		return name.equals(other.name);
 	}
 
@@ -147,8 +149,8 @@ public class UserDto extends SerializableObj implements Listable,Serializable {
 
 	@JsonIgnore
 	public int getTotal() {
-		
-		return participated+inbox;
+
+		return participated + inbox;
 	}
 
 	@JsonIgnore
@@ -178,5 +180,13 @@ public class UserDto extends SerializableObj implements Listable,Serializable {
 
 	public void setMemberRefId(String memberId) {
 		this.memberRefId = memberId;
+	}
+
+	public String getMemberNo() {
+		return memberNo;
+	}
+
+	public void setMemberNo(String memberNo) {
+		this.memberNo = memberNo;
 	}
 }

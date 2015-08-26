@@ -8,7 +8,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Widget;
@@ -32,8 +31,8 @@ public class MembersTableRow extends RowWidget {
 	HTMLPanel row;
 	@UiField
 	HTMLPanel divDate;
-	@UiField
-	HTMLPanel divMemberNo;
+//	@UiField
+//	HTMLPanel divMemberNo;
 	@UiField
 	HTMLPanel divMemberName;
 	@UiField
@@ -73,7 +72,7 @@ public class MembersTableRow extends RowWidget {
 						: application.getCreated();
 
 		divDate.add(new InlineLabel(DateUtils.DATEFORMAT.format(regDate)));
-		divMemberNo.add(new InlineLabel(application.getMemberNo()));
+//		divMemberNo.add(new InlineLabel(application.getMemberNo()));
 		aMemberName.setText(application.fullNames());
 		divEmail.add(new InlineLabel(application.getEmail()));
 		divCompletion.setAttribute("data-label", application.getPercCompletion()+""

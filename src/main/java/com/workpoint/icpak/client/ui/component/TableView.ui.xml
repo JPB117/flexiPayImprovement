@@ -4,7 +4,7 @@
 
 	<g:HTMLPanel ui:field="overalContainer">
 
-		<div class="search-bar">
+		<div class="search-bar" ui:field="divSearch">
 			<div class="col-md-3">
 				<d:TextField placeholder="Search here" ui:field="txtSearch"
 					styleName="form-control"></d:TextField>

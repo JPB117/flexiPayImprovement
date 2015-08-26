@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -32,20 +33,25 @@ public class TableView extends Composite {
 	FlowPanel panelBody;
 	@UiField
 	HTMLPanel panelFooter;
-	
-	@UiField HTMLPanel panelPaging;
+	@UiField
+	DivElement divSearch;
+
+	@UiField
+	HTMLPanel panelPaging;
 
 	private boolean isAutoNumber = true;
 	private int count = 0;
 
 	public TableView() {
 		initWidget(uiBinder.createAndBindUi(this));
+		setSearchSection(false);
 	}
 
 	public void setHeaders(List<String> names) {
-		setHeaders(null,names);
+		setHeaders(null, names);
 	}
-	public void setHeaders(List<String> tdStyles,List<String> names) {
+
+	public void setHeaders(List<String> tdStyles, List<String> names) {
 		List<Widget> widgets = new ArrayList<Widget>();
 
 		for (String name : names) {
@@ -53,7 +59,7 @@ public class TableView extends Composite {
 			widgets.add(label);
 		}
 
-		setHeaderWidgets(tdStyles,widgets);
+		setHeaderWidgets(tdStyles, widgets);
 	}
 
 	public void setTableHeaders(List<TableHeader> headers) {
@@ -61,7 +67,7 @@ public class TableView extends Composite {
 		if (isAutoNumber) {
 			headers.add(0, new TableHeader("#", 1.0));
 		}
-		
+
 		// InlineLabel label = new InlineLabel(header.getTitleName());
 		for (TableHeader header : headers) {
 			// th
@@ -91,20 +97,20 @@ public class TableView extends Composite {
 		return super.asWidget();
 	}
 
-	public void setHeaderWidgets(List<String> tdStyles,List<Widget> widgets) {
+	public void setHeaderWidgets(List<String> tdStyles, List<Widget> widgets) {
 		panelHeader.clear();
 		if (isAutoNumber) {
 			InlineLabel label = new InlineLabel("#");
 			widgets.add(0, label);
 		}
 
-		int i= isAutoNumber? -1: 0;
+		int i = isAutoNumber ? -1 : 0;
 		for (Widget widget : widgets) {
 			HTMLPanel th = new HTMLPanel("");
 			th.addStyleName("th");
-			if(i!=-1 && tdStyles!=null && i<tdStyles.size()){
+			if (i != -1 && tdStyles != null && i < tdStyles.size()) {
 				String style = tdStyles.get(i);
-				if(style!=null && !style.trim().isEmpty())
+				if (style != null && !style.trim().isEmpty())
 					th.addStyleName(style);
 			}
 			th.add(widget);
@@ -178,7 +184,14 @@ public class TableView extends Composite {
 		}
 	}
 
-	
+	public void setSearchSection(Boolean status) {
+		if (status) {
+			divSearch.removeClassName("hide");
+		} else {
+			divSearch.addClassName("hide");
+		}
+	}
+
 	public void setBordered(Boolean status) {
 		tblContainer.removeStyleName("table-bordered");
 		if (status) {

@@ -40,8 +40,10 @@ public class UsersDao extends BaseDao {
 		if (role == null) {
 			String query = "from User u where isActive=1 and "
 					+ "(u.memberId like :searchTerm or "
-					+ "u.userData.fullNames like :searchTerm)"
-					+ "order by username";
+					+ "u.userData.fullNames like :searchTerm or"
+					+ "u.email like :searchTerm or "
+					+ "u.memberId like :searchTerm" + ")" + "order by username";
+			
 			return getResultList(getEntityManager().createQuery(query)
 					.setParameter("searchTerm", "%" + searchTerm + "%"),
 					offSet, limit);

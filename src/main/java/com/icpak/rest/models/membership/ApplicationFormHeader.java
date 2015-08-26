@@ -3,278 +3,283 @@ package com.icpak.rest.models.membership;
 import java.sql.Timestamp;
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.icpak.rest.models.auth.User;
 import com.icpak.rest.models.base.PO;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 import com.workpoint.icpak.shared.model.ApplicationType;
 import com.workpoint.icpak.shared.model.Gender;
+import com.workpoint.icpak.shared.model.auth.AccountStatus;
+import com.workpoint.icpak.shared.model.auth.ApplicationStatus;
 
 @Entity
-@Table(name="`Application Form Header`")
-public class ApplicationFormHeader extends PO{
+@Table(name = "`Application Form Header`")
+public class ApplicationFormHeader extends PO {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@Column(name="`timestamp`",columnDefinition="timestamp  default current_timestamp")
+	@Column(name = "`timestamp`", columnDefinition = "timestamp  default current_timestamp")
 	private Timestamp timestamp;
 
-	@Column(name="`Application No_`")
+	@Column(name = "`Application No_`")
 	private String applicationNo;
-	
-	@Column(name="`Date`", columnDefinition="datetime")
+
+	@Column(name = "`Date`", columnDefinition = "datetime")
 	private Date date;
-	
-	@Column(name="`Application Date`", columnDefinition="datetime")
+
+	@Column(name = "`Application Date`", columnDefinition = "datetime")
 	private Date applicationDate;
-	
-	@Column(name="`Surname`", length=30)
+
+	@Column(name = "`Surname`", length = 30)
 	private String surname;
-	
-	@Column(name="`Other Names`", length=30)
+
+	@Column(name = "`Other Names`", length = 30)
 	private String otherNames;
-	
-	@Column(name="`Date Of Birth`", columnDefinition="datetime")
+
+	@Column(name = "`Date Of Birth`", columnDefinition = "datetime")
 	private Date dob;
-	
-	@Column(name="`Gender`")
+
+	@Column(name = "`Gender`")
 	@Enumerated(EnumType.ORDINAL)
 	private Gender gender;
-	
-	@Column(name="`Marital Status`")
+
+	@Column(name = "`Marital Status`")
 	private int maritalStatus;
-	
-	@Column(name="`Nationality`", columnDefinition="varchar(20) ")
+
+	@Column(name = "`Nationality`", columnDefinition = "varchar(20) ")
 	private String nationality;
-	
-	@Column(name="`Country of Origin`", columnDefinition="varchar(20) ")
+
+	@Column(name = "`Country of Origin`", columnDefinition = "varchar(20) ")
 	private String country;
-	
-	@Column(name="`Address for Correspondence1`", columnDefinition="varchar(100) ")
+
+	@Column(name = "`Address for Correspondence1`", columnDefinition = "varchar(100) ")
 	private String address1;
-	
-	@Column(name="`Address for Correspondence2`", columnDefinition="varchar(100) ")
+
+	@Column(name = "`Address for Correspondence2`", columnDefinition = "varchar(100) ")
 	private String address2;
 
-	@Column(name="`Address for Correspondence3`", columnDefinition="varchar(100) ")
+	@Column(name = "`Address for Correspondence3`", columnDefinition = "varchar(100) ")
 	private String address3;
-			
-	@Column(name="`Telephone No_ 1`", columnDefinition="varchar(50) ")
+
+	@Column(name = "`Telephone No_ 1`", columnDefinition = "varchar(50) ")
 	private String telephone1;
-	
-	@Column(name="`Telephone No_ 2`", columnDefinition="varchar(50) ")
+
+	@Column(name = "`Telephone No_ 2`", columnDefinition = "varchar(50) ")
 	private String telephone2;
 
-	@Column(name="`Application Type`", columnDefinition="varchar(20) ")
+	@Column(name = "`Application Type`", columnDefinition = "varchar(20) ")
 	@Enumerated(EnumType.STRING)
 	private ApplicationType applicationType;
-	
-	@Column(name="`Receipt No_`", columnDefinition="varchar(20)")
+
+	@Column(name = "`Receipt No_`", columnDefinition = "varchar(20)")
 	private String receiptNo;
-	
-	@Column(name="`Date of Receipt`", columnDefinition="datetime")
+
+	@Column(name = "`Date of Receipt`", columnDefinition = "datetime")
 	private Date receiptDate;
-	
-	@Column(name="`User ID`", columnDefinition="varchar(20)")
-	private String userId;
-	
-	@Column(name="`Region`", columnDefinition="varchar(20)")
+
+	@Column(name = "`Region`", columnDefinition = "varchar(20)")
 	private String region;
-	
-	@Column(name="`No_ Series`", columnDefinition="varchar(20)")
+
+	@Column(name = "`No_ Series`", columnDefinition = "varchar(20)")
 	private String series;
-	
-	@Column(name="`HOD User ID`", columnDefinition="varchar(20)")
+
+	@Column(name = "`HOD User ID`", columnDefinition = "varchar(20)")
 	private String hodUserId;
-	
-	@Column(name="`HOD Date`", columnDefinition="datetime")
+
+	@Column(name = "`HOD Date`", columnDefinition = "datetime")
 	private Date hodDate;
-	
-	@Column(name="`HOD Time`", columnDefinition="datetime")
+
+	@Column(name = "`HOD Time`", columnDefinition = "datetime")
 	private Date hodTime;
-	
-	@Column(name="`HOD Recommendations`", columnDefinition="varchar(200)")
+
+	@Column(name = "`HOD Recommendations`", columnDefinition = "varchar(200)")
 	private String hodRecommendations;
-	
-	@Column(name="`Dean User ID`", columnDefinition="varchar(20)")
+
+	@Column(name = "`Dean User ID`", columnDefinition = "varchar(20)")
 	private String deanUserId;
-	
-	@Column(name="`Dean Date`", columnDefinition="datetime")
+
+	@Column(name = "`Dean Date`", columnDefinition = "datetime")
 	private Date deanDate;
-	
-	@Column(name="`Dean Time`", columnDefinition="datetime")
+
+	@Column(name = "`Dean Time`", columnDefinition = "datetime")
 	private Date deanTime;
-	
-	@Column(name="`Dean Recommendations`", length=200)
+
+	@Column(name = "`Dean Recommendations`", length = 200)
 	private String deanRecommendations;
-	
-	@Column(name="`Status`")
+
+	@Column(name = "`Status`")
 	private int status;
-	
-	@Column(name="`Select`", columnDefinition="tinyint")
+
+	@Column(name = "`Select`", columnDefinition = "tinyint")
 	private int select;
-	
-	@Column(name="`Batch No_`", length=20)
+
+	@Column(name = "`Batch No_`", length = 20)
 	private String batchNo;
-	
-	@Column(name="`Batch Date`", columnDefinition="datetime")
+
+	@Column(name = "`Batch Date`", columnDefinition = "datetime")
 	private Date batchDate;
-	
-	@Column(name="`Batch Time`", columnDefinition="datetime")
+
+	@Column(name = "`Batch Time`", columnDefinition = "datetime")
 	private Date batchTime;
-	
-	@Column(name="`Admission Board Recommendation`", length=200)
+
+	@Column(name = "`Admission Board Recommendation`", length = 200)
 	private String boardRecommendation;
-	
-	@Column(name="`Admission Board Date`", columnDefinition="datetime")
+
+	@Column(name = "`Admission Board Date`", columnDefinition = "datetime")
 	private Date boardDate;
-	
-	@Column(name="`Admission Board Time`", columnDefinition="datetime")
+
+	@Column(name = "`Admission Board Time`", columnDefinition = "datetime")
 	private Date boardTime;
-	
-	@Column(name="`Date Of Meeting`", columnDefinition="datetime")
+
+	@Column(name = "`Date Of Meeting`", columnDefinition = "datetime")
 	private Date meetingDate;
-	
-	@Column(name="`Date Of Receipt Slip`", columnDefinition="datetime")
+
+	@Column(name = "`Date Of Receipt Slip`", columnDefinition = "datetime")
 	private Date receiptSlipDate;
-	
-	@Column(name="`Transaction No_`", length=20)
+
+	@Column(name = "`Transaction No_`", length = 20)
 	private String transactionNo;
-	
-	@Column(name="`Academic Year`", length=20)
+
+	@Column(name = "`Academic Year`", length = 20)
 	private String academicYear;
-	
-	@Column(name="`Intake Code`", length=20)
+
+	@Column(name = "`Intake Code`", length = 20)
 	private String intakeCode;
-	
-	@Column(name="`Settlement Type`", length=20)
+
+	@Column(name = "`Settlement Type`", length = 20)
 	private String settlementType;
-	
-	@Column(name="`ID Number`", length=8)
+
+	@Column(name = "`ID Number`", length = 8)
 	private String idNumber;
-	
-	@Column(name="`Date Sent for Approval`", columnDefinition="datetime")
+
+	@Column(name = "`Date Sent for Approval`", columnDefinition = "datetime")
 	private Date dateSentForApproval;
-	
-	@Column(name="`Issued Date`", columnDefinition="datetime")
+
+	@Column(name = "`Issued Date`", columnDefinition = "datetime")
 	private String issuedDate;
-	
-	@Column(name="`Campus`", length=50)
+
+	@Column(name = "`Campus`", length = 50)
 	private String campus;
-	
-	@Column(name="`E-mail`", length=120)
+
+	@Column(name = "`E-mail`", length = 120)
 	private String email;
-	
+
 	private String memberNo;
-	
-	@Column(name="`Honorific`")
+
+	@Column(name = "`Honorific`")
 	private int honorific;
-	
-	@Column(name="`Conviction`", columnDefinition="tinyint  default 0")
+
+	@Column(name = "`Conviction`", columnDefinition = "tinyint  default 0")
 	private int conviction;
-	
-	@Column(name="`Offence`", length=250)
+
+	@Column(name = "`Offence`", length = 250)
 	private String offence;
-	
-	@Column(name="`Date and Place`", length=250)
+
+	@Column(name = "`Date and Place`", length = 250)
 	private String convictionDateAndPlace;
-	
-	@Column(name="`Sentence`", length=250)
+
+	@Column(name = "`Sentence`", length = 250)
 	private String sentence;
-	
-	@Column(name="`Contact Name`", length=50)
+
+	@Column(name = "`Contact Name`", length = 50)
 	private String contactName;
-	
-	@Column(name="`Contact Address`", length=60)
+
+	@Column(name = "`Contact Address`", length = 60)
 	private String contactAddress;
-	
-	@Column(name="`Contact Telephone`", length=40)
+
+	@Column(name = "`Contact Telephone`", length = 40)
 	private String contactTelephone;
-	
-	@Column(name="`Contact Email`", length=150)
+
+	@Column(name = "`Contact Email`", length = 150)
 	private String contactEmail;
-	
-	@Column(name="`KASNEB_FAQ No_`", length=50)
+
+	@Column(name = "`KASNEB_FAQ No_`", length = 50)
 	private String KASNEBFAQNo;
-	
-	@Column(name="`CPA_F_A_Q_`")
+
+	@Column(name = "`CPA_F_A_Q_`")
 	private String CPAFAQ;
-	
-	@Column(name="`Examination Body`", length=20)
+
+	@Column(name = "`Examination Body`", length = 20)
 	private String examinationBody;
-	
-	@Column(name="`Payment Mode`")
+
+	@Column(name = "`Payment Mode`")
 	private int paymentMode;
-	
-	@Column(name="`Post Code`", length=10)
+
+	@Column(name = "`Post Code`", length = 10)
 	private String postCode;
-	
-	@Column(name="`Foreign _ Local Applicant`", nullable=false)
+
+	@Column(name = "`Foreign _ Local Applicant`", nullable = false)
 	private int applicantType;
-	
-	@Column(name="`Responsibility Center`", length=20)
+
+	@Column(name = "`Responsibility Center`", length = 20)
 	private String responsibilityCenter;
-	
-	@Column(name="`Document Type`", nullable=false)
+
+	@Column(name = "`Document Type`", nullable = false)
 	private int documentType;
-	
-	@Column(name="`Customer Type`", length=20)
+
+	@Column(name = "`Customer Type`", length = 20)
 	private String customerType;
-	
-	@Column(name="`Fax No_`", length=30)
+
+	@Column(name = "`Fax No_`", length = 30)
 	private String faxNo;
-	
-	@Column(name="`Age`", columnDefinition="datetime")
+
+	@Column(name = "`Age`", columnDefinition = "datetime")
 	private Date age;
-	
-	@Column(name="`City1`", length=30)
+
+	@Column(name = "`City1`", length = 30)
 	private String city1;
-	
-	@Column(name="`Designation`", length=70)
+
+	@Column(name = "`Designation`", length = 70)
 	private String designation;
-	
-	@Column(name="`Position`", length=70)
+
+	@Column(name = "`Position`", length = 70)
 	private String position;
-	
-	@Column(name="`Employer Code`", length=20)
+
+	@Column(name = "`Employer Code`", length = 20)
 	private String employerCode;
-	
+
 	private String employer;
-	
-	@Column(name="`Qualification`", length=100)
+
+	@Column(name = "`Qualification`", length = 100)
 	private String qualification;
-	
-	@Column(name="`Contact person`", length=50)
+
+	@Column(name = "`Contact person`", length = 50)
 	private String contactPerson;
-	
-	@Column(name="`District`", length=20)
+
+	@Column(name = "`District`", length = 20)
 	private String district;
-	
-	@Column(name="`Gen_ Bus_ Posting Group`", length=10)
+
+	@Column(name = "`Gen_ Bus_ Posting Group`", length = 10)
 	private String genBusPostingGroup;
-	
-	@Column(name="`VAT Bus_ Posting Group`", length=10)
+
+	@Column(name = "`VAT Bus_ Posting Group`", length = 10)
 	private String vatBusPostingGroup;
-	
-	@Column(name="`Application Method`", length=10)
+
+	@Column(name = "`Application Method`", length = 10)
 	private int applicationMethod;
-	
+
+	@Enumerated(EnumType.STRING)
+	private ApplicationStatus applicationStatus = ApplicationStatus.PENDING;
+
 	private String invoiceRef;
-	
 	private String userRefId;
 
 	private String residence;
-	
-//	@Transient
-//	private ApplicationCategory category;
-//	
+
+	// @Transient
+	// private ApplicationCategory category;
+	//
 	public ApplicationFormHeader() {
 	}
 
@@ -420,14 +425,6 @@ public class ApplicationFormHeader extends PO{
 
 	public void setReceiptDate(Date receiptDate) {
 		this.receiptDate = receiptDate;
-	}
-
-	public String getUserId() {
-		return userId;
-	}
-
-	public void setUserId(String userId) {
-		this.userId = userId;
 	}
 
 	public String getRegion() {
@@ -902,13 +899,13 @@ public class ApplicationFormHeader extends PO{
 		this.applicationMethod = applicationMethod;
 	}
 
-//	public ApplicationCategory getCategory() {
-//		return category;
-//	}
-//
-//	public void setCategory(ApplicationCategory category) {
-//		this.category = category;
-//	}
+	// public ApplicationCategory getCategory() {
+	// return category;
+	// }
+	//
+	// public void setCategory(ApplicationCategory category) {
+	// this.category = category;
+	// }
 
 	public String getEmployer() {
 		return employer;
@@ -917,8 +914,8 @@ public class ApplicationFormHeader extends PO{
 	public void setEmployer(String employer) {
 		this.employer = employer;
 	}
-	
-	public ApplicationFormHeaderDto toDto(){
+
+	public ApplicationFormHeaderDto toDto() {
 		ApplicationFormHeaderDto dto = new ApplicationFormHeaderDto();
 		copyInto(dto);
 		return dto;
@@ -935,7 +932,7 @@ public class ApplicationFormHeader extends PO{
 		setPostCode(dto.getPostCode());
 		setEmployer(dto.getEmployer());
 		setMemberNo(dto.getMemberNo());
-		
+
 		setDob(dto.getDob());
 		setCountry(dto.getCountry());
 		setGender(dto.getGender());
@@ -962,7 +959,6 @@ public class ApplicationFormHeader extends PO{
 		dto.setCountry(country);
 		dto.setGender(gender);
 		dto.setResidence(residence);
-		
 	}
 
 	public String getInvoiceRef() {
@@ -1004,5 +1000,5 @@ public class ApplicationFormHeader extends PO{
 	public void setMemberNo(String memberNo) {
 		this.memberNo = memberNo;
 	}
-	
+
 }

@@ -5,15 +5,16 @@ import java.util.List;
 
 import com.icpak.rest.exceptions.ServiceException;
 import com.icpak.rest.models.ErrorCodes;
+import com.icpak.rest.models.membership.ApplicationCategory;
 import com.icpak.rest.models.membership.ApplicationFormEducational;
 import com.icpak.rest.models.membership.ApplicationFormHeader;
-import com.icpak.rest.models.membership.ApplicationCategory;
 import com.icpak.rest.models.membership.ApplicationFormSpecialization;
 import com.icpak.rest.models.membership.ApplicationFormTraining;
 import com.icpak.rest.models.membership.MemberImport;
 import com.workpoint.icpak.shared.model.ApplicationType;
 import com.workpoint.icpak.shared.model.EduType;
 import com.workpoint.icpak.shared.model.Specializations;
+import com.workpoint.icpak.shared.model.auth.ApplicationStatus;
 
 public class ApplicationFormDao extends BaseDao {
 
@@ -23,10 +24,13 @@ public class ApplicationFormDao extends BaseDao {
 
 	public List<ApplicationFormHeader> getAllApplications(Integer offSet,
 			Integer limit) {
-		return getResultList(getEntityManager().createQuery(
-				"select u from ApplicationFormHeader u"
-						+ " where u.isActive=1 order by id desc"), offSet,
-				limit);
+		return getResultList(
+				getEntityManager()
+						.createQuery(
+								"select u from ApplicationFormHeader u"
+										+ " where u.isActive=1 and applicationStatus=:status order by id desc")
+						.setParameter("status", ApplicationStatus.PENDING),
+				offSet, limit);
 	}
 
 	public List<MemberImport> importMembers(Integer offSet, Integer limit) {
@@ -77,7 +81,6 @@ public class ApplicationFormDao extends BaseDao {
 	}
 
 	public int getEducationCount(String applicationId) {
-
 		Number number = null;
 		number = getSingleResultOrNull(getEntityManager().createNativeQuery(
 				"select count(*) from `Application Form Educational` "

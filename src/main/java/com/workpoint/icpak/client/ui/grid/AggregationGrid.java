@@ -32,7 +32,7 @@ public class AggregationGrid extends Composite {
 	TableView tblView;
 	@UiField
 	SpanElement spnAggregate;
-
+	
 	Map<String, Number> summaries = new HashMap<String, Number>();
 
 	List<ColumnConfig> columnConfigs = null;
