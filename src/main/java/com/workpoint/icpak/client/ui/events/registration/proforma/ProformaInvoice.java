@@ -27,11 +27,16 @@ public class ProformaInvoice extends Composite {
 	interface ProformaInvoiceUiBinder extends UiBinder<Widget, ProformaInvoice> {
 	}
 
-	@UiField TableView tblProforma;
-	@UiField InlineLabel lblCompany;
-	@UiField InlineLabel lblAddress;
-	@UiField InlineLabel lblQuoteNo;
-	@UiField InlineLabel lblInvoiceDate;
+	@UiField
+	TableView tblProforma;
+	@UiField
+	InlineLabel lblCompany;
+	@UiField
+	InlineLabel lblAddress;
+	@UiField
+	InlineLabel lblQuoteNo;
+	@UiField
+	InlineLabel lblInvoiceDate;
 
 	public ProformaInvoice() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -44,7 +49,7 @@ public class ProformaInvoice extends Composite {
 	public void createHeader() {
 		List<TableHeader> th = new ArrayList<TableHeader>();
 		th.add(new TableHeader("Description"));
-		th.add(new TableHeader("Accommodation"));
+		th.add(new TableHeader("Quantity"));
 		th.add(new TableHeader("Unit Price"));
 		th.add(new TableHeader("Amount"));
 		tblProforma.setTableHeaders(th);
@@ -65,23 +70,32 @@ public class ProformaInvoice extends Composite {
 	public void setInvoice(InvoiceDto invoice) {
 		lblCompany.setText(invoice.getCompanyName());
 		lblAddress.setText(invoice.getCompanyAddress());
-		lblInvoiceDate.setText(DateUtils.DATEFORMAT.format(new Date(invoice.getDate())));
+		lblInvoiceDate.setText(DateUtils.DATEFORMAT.format(new Date(invoice
+				.getDate())));
 		lblQuoteNo.setText(invoice.getDocumentNo());
-		
-		for(InvoiceLineDto line: invoice.getLines()){
+
+		for (InvoiceLineDto line : invoice.getLines()) {
 			AccommodationDto accommodation = line.getAccommodation();
-			tblProforma.addRow(new InlineLabel(line.getDescription()+" ("
-		+(line.getMemberId()==null?"Non Member" : "Member "+line.getMemberId())+ 
-		" ERN: "+(line.getDelegateERN()==null? "" : line.getDelegateERN())+")"),
-					new InlineLabel(accommodation==null?"NONE" :
-						(accommodation.getHotel()+" "+accommodation.getNights()+" nights "+ accommodation.getType())),
-					new InlineLabel(line.getUnitPrice()+""),
-					new InlineLabel(line.getTotalAmount()+""));
+			tblProforma.addRow(
+					new InlineLabel(line.getDescription()
+							+ " ("
+							+ (line.getMemberId() == null ? "Non Member"
+									: "Member " + line.getMemberId())
+							+ " ERN: "
+							+ (line.getDelegateERN() == null ? "" : line
+									.getDelegateERN()) + ")"),
+					new InlineLabel(
+							accommodation == null ? "NONE"
+									: (accommodation.getHotel() + " "
+											+ accommodation.getNights()
+											+ " nights " + accommodation
+											.getType())),
+					new InlineLabel(line.getUnitPrice() + ""), new InlineLabel(
+							line.getTotalAmount() + ""));
 		}
-		tblProforma.addRow(new InlineLabel(),
-				new InlineLabel(),	
+		tblProforma.addRow(new InlineLabel(), new InlineLabel(),
 				new InlineLabel("Grand Total"),
-				new InlineLabel(invoice.getAmount()+""));
+				new InlineLabel(invoice.getAmount() + ""));
 	}
 
 }

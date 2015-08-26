@@ -1,14 +1,43 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-	xmlns:g="urn:import:com.google.gwt.user.client.ui"
-	xmlns:d="urn:import:com.workpoint.icpak.client.ui.component">
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.workpoint.icpak.client.ui.component">
 
 	<g:HTMLPanel ui:field="container" styleName="col-lg-12">
-		<div class="col-lg-12">
-			<d:BulletListPanel ui:field="ankaPanel" styleName="pagination text-center"/>
+		<br />
+		<div class="col-lg-8">
+			<div class="text-center">
+				<div class="col-lg-2" style="width: 103px;padding:0px !important">
+					<d:ActionLink ui:field="aFirstPage"
+						styleName="btn btn-default btn-fill fa fa-fast-backward"></d:ActionLink>
+					<d:ActionLink ui:field="aPrevous"
+						styleName="btn btn-default btn-fill fa fa-chevron-circle-left"></d:ActionLink>
+				</div>
+				<div class="col-lg-1"
+					style="width: 90px;margin-top: 5px;padding: 0px !important;">
+					Page
+					<d:TextField ui:field="txtPageNo" width="30px"></d:TextField>
+				</div>
+
+				<div class="col-lg-2" style="width: 103px;padding:0px !important">
+					<d:ActionLink ui:field="aNext"
+						styleName="btn btn-default btn-fill fa fa-chevron-circle-right"></d:ActionLink>
+					<d:ActionLink ui:field="aLastPage"
+						styleName="btn btn-default btn-fill fa fa-fast-forward"></d:ActionLink>
+				</div>
+				<div class="col-lg-2" style="width:30px;"></div>
+
+				<div class="col-lg-2" style="width:50px;padding:0px !important">
+					<d:ActionLink ui:field="aRefresh"
+						styleName="btn btn-default btn-fill fa fa-refresh"></d:ActionLink>
+				</div>
+			</div>
 		</div>
 
-		<div class="col-lg-4">
+		<div class="hide">
+			<d:BulletListPanel ui:field="ankaPanel"
+				styleName="pagination text-center" />
+		</div>
+		<div class="col-lg-4 pull-right">
 			<p class="text-muted">
 				Displaying
 				<span ui:field="spnOffset" />

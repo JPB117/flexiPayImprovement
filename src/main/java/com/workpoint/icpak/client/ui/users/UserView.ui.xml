@@ -56,9 +56,9 @@
 								<div class="table table-hover table-striped table-bordered">
 									<div class="thead">
 										<div class="tr">
-											<div class="th">First Name</div>
-											<div class="th">Last Name</div>
-											<div class="th">Username</div>
+											<div class="th">Member No:</div>
+											<div class="th">First Name:</div>
+											<div class="th">Other Names:</div>
 											<div class="th">Email</div>
 											<div class="th">Group</div>
 											<div class="th">Action</div>

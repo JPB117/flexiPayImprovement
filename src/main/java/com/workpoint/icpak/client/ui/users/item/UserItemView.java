@@ -8,6 +8,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
+import com.workpoint.icpak.shared.model.UserDto;
 
 public class UserItemView extends ViewImpl implements UserItemPresenter.MyView {
 
@@ -25,8 +26,6 @@ public class UserItemView extends ViewImpl implements UserItemPresenter.MyView {
 	@UiField
 	HTMLPanel panelGroups;
 	@UiField
-	HTMLPanel panelUserName;
-	@UiField
 	HTMLPanel panelMemberNo;
 
 	@UiField
@@ -39,32 +38,26 @@ public class UserItemView extends ViewImpl implements UserItemPresenter.MyView {
 		widget = binder.createAndBindUi(this);
 	}
 
-	public void setValues(String firstName, String lastName, String username,
-			String email, String groups, int inbox, int participated,
-			int total, String memberNo) {
-
-		if (firstName != null) {
-			panelFirstName.getElement().setInnerText(firstName);
+	@Override
+	public void setValues(UserDto user) {
+		if (user.getMemberNo() != null) {
+			panelMemberNo.getElement().setInnerText(user.getMemberNo());
 		}
 
-		if (lastName != null) {
-			panelLastName.getElement().setInnerText(lastName);
+		if (user.getSurname() != null) {
+			panelFirstName.getElement().setInnerText(user.getSurname());
 		}
 
-		if (email != null) {
-			panelEmail.getElement().setInnerText(email);
+		if (user.getName() != null) {
+			panelLastName.getElement().setInnerText(user.getName());
 		}
 
-		if (groups != null) {
-			panelGroups.getElement().setInnerText(groups);
+		if (user.getEmail() != null) {
+			panelEmail.getElement().setInnerText(user.getEmail());
 		}
 
-		if (username != null) {
-			panelUserName.getElement().setInnerText(username);
-		}
-
-		if (memberNo != null) {
-			panelMemberNo.getElement().setInnerText(memberNo);
+		if (user.getGroups() != null) {
+			panelGroups.getElement().setInnerText(user.getGroupsAsString());
 		}
 
 	}

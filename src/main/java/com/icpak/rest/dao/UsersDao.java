@@ -39,11 +39,11 @@ public class UsersDao extends BaseDao {
 			String searchTerm) {
 		if (role == null) {
 			String query = "from User u where isActive=1 and "
-					+ "(u.memberId like :searchTerm or "
-					+ "u.userData.fullNames like :searchTerm or"
+					+ "(u.memberNo like :searchTerm or "
+					+ "u.userData.fullNames like :searchTerm or "
 					+ "u.email like :searchTerm or "
-					+ "u.memberId like :searchTerm" + ")" + "order by username";
-			
+					+ "u.memberNo like :searchTerm" + ")" + "order by username";
+
 			return getResultList(getEntityManager().createQuery(query)
 					.setParameter("searchTerm", "%" + searchTerm + "%"),
 					offSet, limit);
@@ -142,20 +142,20 @@ public class UsersDao extends BaseDao {
 
 	public String getMemberRefId(String userRefId) {
 
-		String memberId = getSingleResultOrNull(getEntityManager().createQuery(
+		String memberNo = getSingleResultOrNull(getEntityManager().createQuery(
 				"select refId from Member where userRefId=:userId")
 				.setParameter("userId", userRefId));
 
-		return memberId;
+		return memberNo;
 	}
 
-	public String getFullNames(String memberId) {
+	public String getFullNames(String memberNo) {
 
 		return getSingleResultOrNull(getEntityManager()
 				.createNativeQuery(
 						"select concat(firstName,' ',lastName) from user u "
-								+ "inner join Member m on m.userRefId=u.refId where m.refId=:memberId")
-				.setParameter("memberId", memberId));
+								+ "inner join Member m on m.userRefId=u.refId where m.refId=:memberNo")
+				.setParameter("memberNo", memberNo));
 	}
 
 }

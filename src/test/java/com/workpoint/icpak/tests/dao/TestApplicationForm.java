@@ -8,8 +8,10 @@ import org.junit.Test;
 import com.google.inject.Inject;
 import com.icpak.rest.dao.helper.ApplicationFormDaoHelper;
 import com.icpak.rest.dao.helper.UsersDaoHelper;
+import com.icpak.rest.models.auth.User;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 import com.workpoint.icpak.shared.model.ApplicationType;
+import com.workpoint.icpak.shared.model.UserDto;
 import com.workpoint.icpak.tests.base.AbstractDaoTest;
 
 public class TestApplicationForm extends AbstractDaoTest {
@@ -49,6 +51,16 @@ public class TestApplicationForm extends AbstractDaoTest {
 
 		for (ApplicationFormHeaderDto dto : members) {
 			System.out.println("Application:" + dto.getUserRefId());
+		}
+	}
+
+	@Test
+	public void getUser() {
+
+		List<UserDto> users = usersDaoHelper.getAllUsers(0, 20, "");
+
+		for (UserDto user : users) {
+			System.err.println("Names:" + user.getMemberNo());
 		}
 	}
 }
