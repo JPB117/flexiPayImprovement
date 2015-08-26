@@ -127,8 +127,8 @@ public class MemberRegistrationView extends ViewImpl implements
 	@UiField
 	SpanElement spnSelected;
 
-	@UiField
-	SpanElement spnNames;
+	// @UiField
+	// SpanElement spnNames;
 
 	@UiField
 	ProformaInvoice proformaInv;
@@ -387,7 +387,7 @@ public class MemberRegistrationView extends ViewImpl implements
 		String url = "http://197.248.4.221:8080/flexiPay#websiteClient;"
 				+ "businessNo=722722;" + "refId=" + invoice.getRefId() + ";"
 				+ "orgName=ICPAK;" + "amount=" + invoice.getAmount() + ";"
-				+ "accountNo=Use ID Number";
+				+ "accountNo=" + invoice.getDocumentNo();
 
 		framePayment.setUrl(url);
 	}
@@ -399,8 +399,8 @@ public class MemberRegistrationView extends ViewImpl implements
 
 	@Override
 	public void bindForm(ApplicationFormHeaderDto result) {
-		spnNames.setInnerText(result.getSurname() + " "
-				+ result.getOtherNames());
+		// spnNames.setInnerText(result.getSurname() + " "
+		// + result.getOtherNames());
 		memberRegistrationForm.bind(result);
 		selectCategory(result.getApplicationType());
 	}

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<link href="css/bootstrap.css" rel="stylesheet"/>
+<link href="css/bootstrap.css" rel="stylesheet" />
 <title></title>
 <style type="text/css">
 .container {
@@ -361,56 +361,70 @@ div.footer {
 <body>
 	<div class="container">
 		<div class="row-fluid">
-			<div class="span4">
-				<img src="/home/duggan/Projects/icpak/src/test/resources/logo.png" width="250px" height="150px"></img>
+			<div class="span12">
+				<img src="/home/duggan/Projects/icpak/src/test/resources/logo.png"
+					width="250px" height="150px"></img>
 			</div>
-			<div class="span8">
-				<br />
-				<p>Institute of Certified Public Accountants of Kenya</p>
-				<p>P.O. BOX 59963 00200 (City Square), CPA Center,
-					Ruaraka,</p>
-				<p>Thika Rd. Website: www.icpak.com | E-mail:icpak@icpak.com</p>
-				<p>Mobile:0727-531006/0733-856262 | Wireless:020 2304226/7</p>
+			<div class="row-fluid">
+				<div class="span6">
+					<br />
+					<p>Institute of Certified Public Accountants of Kenya</p>
+					<p>P.O. BOX 59963 00200 (City Square), CPA Center, Ruaraka,</p>
+					<p>Thika Rd. Website: www.icpak.com | E-mail:icpak@icpak.com</p>
+					<p>Mobile:0727-531006/0733-856262 | Wireless:020 2304226/7</p>
+				</div>
+				<div class="span6">
+					<p>V.A.T Registration No: 0122347L</p>
+					<p>Drop In Box No. 164</p>
+					<p>Revlon Professional Plaza, 2nd Floor,</p>
+					<p>Biashara Street/Tubman Road</p>
+					<p>Bank: Barclays Bank of Kenya</p>
+					<p>Branch: Moi Avenue</p>
+					<p>Bank Account No. 03-075-1597134</p>
+					<p>Swift Code: BARCKENX</p>
+					<p>PIN NO: P000607239Y</p>
+				</div>
 			</div>
-		</div>
 
-		<div class="row-fluid">
-			<h2>PROFORMA INVOICE</h2>
+			<div class="row-fluid">
+				<h2>PROFORMA INVOICE</h2>
+				<hr />
+				<div class="span6">
+					@#companyName<br /> @#companyAddress <br /> @#companyAddress <br />
+				</div>
+				<div class="span6">
+					<b>Proforma No:</b>@#quoteNo<br /> @#date <br />
+				</div>
+			</div>
+			<h4>Invoice Details</h4>
 			<hr />
-			<div class="span6">
-				@#companyName<br /> @#companyAddress <br/>
-			</div>
-			<div class="span6">
-				<b>Quote No:</b>@#quoteNo<br /> @#date <br />
-			</div>
-		</div>
-		<h4>Invoice Details</h4>
-		<hr />
 
-		<table class="table table-bordered table-condensed">
-			<thead>
-				<tr>
-					<th>Description</th>
-					<th>Unit Price(Ksh)</th>
-					<th>Amount(Ksh)</th>
-				</tr>
-			</thead>
-			<tbody>
-				<!--@>invoiceDetails-->
-				<tr>
-					<td>@#description</td>
-					<td>@#unitPrice</td>
-					<td class="num">@#amount</td>
-				</tr>
-				<!--@<invoiceDetails-->
-				<tr>
-					<td></td>
-					<td class="num"><b>Grand Total</b></td>
-					<td class="num"><b style="border-bottom: 3px double;">KES
-							@#totalAmount</b></td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
+			<table class="table table-bordered table-condensed">
+				<thead>
+					<tr>
+						<th>Description</th>
+						<th>Quantity</th>
+						<th>Unit Price(Ksh)</th>
+						<th>Amount(Ksh)</th>
+					</tr>
+				</thead>
+				<tbody>
+					<!--@>invoiceDetails-->
+					<tr>
+						<td>@#description</td>
+						<td>@#quantity</td>
+						<td>@#unitPrice</td>
+						<td class="num">@#amount</td>
+					</tr>
+					<!--@<invoiceDetails-->
+					<tr>
+						<td></td>
+						<td class="num"><b>Grand Total</b></td>
+						<td class="num"><b style="border-bottom: 3px double;">KES
+								@#totalAmount</b></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 </body>
 </html>

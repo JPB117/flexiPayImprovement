@@ -70,7 +70,6 @@ public class MemberRegistrationForm extends Composite {
 	public boolean isValid() {
 		boolean isValid = true;
 		issuesPanel.clear();
-
 		if (counter == 0) {
 			if (!isEmailValid) {
 				issuesPanel.addError("e-Mail " + txtEmailAddress.getValue()
