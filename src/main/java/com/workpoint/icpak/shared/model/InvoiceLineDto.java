@@ -6,18 +6,20 @@ public class InvoiceLineDto extends SerializableObj{
 
 	private String description;
 	private double unitPrice;
-	private int quantity = 1;
+	private int quantity = 0;
 	private double totalAmount;
 	private AccommodationDto accommodation;
 	private String memberId;
 	private String eventDelegateRefId;
 	private String delegateERN;
+	private transient String memberNames; 
 
 	public InvoiceLineDto() {
 	}
 
 	public InvoiceLineDto(String description, double unitPrice,
 			double totalAmount) {
+		quantity=1;
 		this.description = description;
 		this.totalAmount = totalAmount;
 		this.unitPrice = unitPrice;
@@ -85,6 +87,14 @@ public class InvoiceLineDto extends SerializableObj{
 
 	public void setDelegateERN(String delegateERN) {
 		this.delegateERN = delegateERN;
+	}
+
+	public String getMemberNames() {
+		return memberNames;
+	}
+
+	public void setMemberNames(String memberNames) {
+		this.memberNames = memberNames;
 	}
 
 }

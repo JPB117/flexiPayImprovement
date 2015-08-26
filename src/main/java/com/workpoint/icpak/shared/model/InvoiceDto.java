@@ -1,6 +1,7 @@
 package com.workpoint.icpak.shared.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import com.workpoint.icpak.shared.model.events.AccommodationDto;
@@ -107,6 +108,10 @@ public class InvoiceDto extends SerializableObj{
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public void addLines(Collection<InvoiceLineDto> values) {
+		lines.addAll(values);
 	}
 
 }

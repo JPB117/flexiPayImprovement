@@ -37,13 +37,11 @@ public class NameTokens {
 	public static final String cpd = "cpd";
 	public static final String createpassword = "createpassword";
 	public static final String activateacc = "activateacc";
-
 	public static final String unauthorized = "unauthorized";
 	public static final String members = "members";
-
 	public static final String accomodation = "accomodation";
-
 	public static final String cpdmanager = "cpdmanager";
+	public static final String bookings = "bookings";
 
 	public static String getHome() {
 		return home;

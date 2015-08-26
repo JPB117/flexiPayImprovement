@@ -39,6 +39,8 @@ import com.workpoint.icpak.client.ui.error.NotfoundPresenter;
 import com.workpoint.icpak.client.ui.error.NotfoundView;
 import com.workpoint.icpak.client.ui.error.UnauthorizedPagePresenter;
 import com.workpoint.icpak.client.ui.error.UnauthorizedPageView;
+import com.workpoint.icpak.client.ui.events.bookings.BookingsPresenter;
+import com.workpoint.icpak.client.ui.events.bookings.BookingsView;
 import com.workpoint.icpak.client.ui.events.registration.EventBookingPresenter;
 import com.workpoint.icpak.client.ui.events.registration.EventBookingView;
 import com.workpoint.icpak.client.ui.eventsandseminars.EventsPresenter;
@@ -145,6 +147,9 @@ public class ClientModule extends AbstractPresenterModule {
 
 		bindPresenter(EventsPresenter.class, EventsPresenter.IEventsView.class,
 				EventsView.class, EventsPresenter.IEventsProxy.class);
+		
+		bindPresenter(BookingsPresenter.class, BookingsPresenter.IBookingsView.class,
+				BookingsView.class, BookingsPresenter.IBookingsProxy.class);
 
 		bindPresenter(EventBookingPresenter.class,
 				EventBookingPresenter.MyView.class, EventBookingView.class,

@@ -1,8 +1,7 @@
-package com.workpoint.icpak.client.ui.eventsandseminars;
+package com.workpoint.icpak.client.ui.events.bookings;
 
 import java.util.List;
 
-import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rest.delegates.client.ResourceDelegate;
@@ -22,46 +21,38 @@ import com.workpoint.icpak.client.ui.component.PagingConfig;
 import com.workpoint.icpak.client.ui.component.PagingLoader;
 import com.workpoint.icpak.client.ui.component.PagingPanel;
 import com.workpoint.icpak.client.ui.events.EditModelEvent;
+import com.workpoint.icpak.client.ui.events.EditModelEvent.EditModelHandler;
 import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
 import com.workpoint.icpak.client.ui.events.ProcessingEvent;
-import com.workpoint.icpak.client.ui.events.EditModelEvent.EditModelHandler;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
-import com.workpoint.icpak.client.ui.security.AdminGateKeeper;
 import com.workpoint.icpak.client.ui.security.LoginGateKeeper;
-import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.api.EventsResource;
 import com.workpoint.icpak.shared.model.events.BookingDto;
 import com.workpoint.icpak.shared.model.events.DelegateDto;
 import com.workpoint.icpak.shared.model.events.EventDto;
 
-public class EventsPresenter extends
-		Presenter<EventsPresenter.IEventsView, EventsPresenter.IEventsProxy>
+public class BookingsPresenter extends
+		Presenter<BookingsPresenter.IBookingsView, BookingsPresenter.IBookingsProxy>
 		implements EditModelHandler {
 
-	public interface IEventsView extends View {
-
+	public interface IBookingsView extends View {
 		void showAdvancedView(boolean show);
-
 		void bindEvents(List<EventDto> events);
-
 		void bindEvent(EventDto event);
-
 		void bindBookings(List<BookingDto> events);
-
 		PagingPanel getEventsPagingPanel();
-
 		PagingPanel getBookingsPagingPanel();
 	}
 
 	@ProxyCodeSplit
-	@NameToken(NameTokens.events)
-	@UseGatekeeper(AdminGateKeeper.class)
-	public interface IEventsProxy extends TabContentProxyPlace<EventsPresenter> {
+	@NameToken(NameTokens.bookings)
+	@UseGatekeeper(LoginGateKeeper.class)
+	public interface IBookingsProxy extends TabContentProxyPlace<BookingsPresenter> {
 	}
 
 	@TabInfo(container = HomePresenter.class)
-	static TabData getTabLabel(AdminGateKeeper gateKeeper) {
-		String tabName= "Events and Seminars";;
+	static TabData getTabLabel(LoginGateKeeper gateKeeper) {
+		String tabName= "My Bookings";
 		TabDataExt data = new TabDataExt(tabName, "fa fa-tags",2, gateKeeper, true);
 		return data;
 	}
@@ -70,8 +61,8 @@ public class EventsPresenter extends
 	private String eventId;
 
 	@Inject
-	public EventsPresenter(final EventBus eventBus, final IEventsView view,
-			final IEventsProxy proxy,
+	public BookingsPresenter(final EventBus eventBus, final IBookingsView view,
+			final IBookingsProxy proxy,
 			ResourceDelegate<EventsResource> eventsDelegate) {
 		super(eventBus, view, proxy, HomePresenter.SLOT_SetTabContent);
 		this.eventsDelegate = eventsDelegate;
