@@ -132,7 +132,8 @@ public class Delegate extends PO{
 	public DelegateDto toDto() {
 		DelegateDto dto  = new DelegateDto();
 		dto.setEmail(email);
-		dto.setMember(new MemberDto(memberRefId, memberRegistrationNo));
+		dto.setMemberId(memberRefId);
+		dto.setMemberRefId(memberRefId);
 		dto.setOtherNames(otherNames);
 		dto.setRefId(getRefId());
 		dto.setSurname(surname);
@@ -191,8 +192,10 @@ public class Delegate extends PO{
 		return ern;
 	}
 
-	private void setErn(String ern) {
-		this.ern = ern;
+	@Override
+	public String toString() {
+	
+		return surname+ " "+otherNames+" ("+ern+")";
 	}
 
 }

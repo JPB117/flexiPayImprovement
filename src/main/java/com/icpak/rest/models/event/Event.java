@@ -58,6 +58,7 @@ public class Event extends PO {
 	private Date startDate;
 	private Date endDate;
 	private EventStatus status;
+	@Column(nullable=false)
 	private EventType type;
 
 	@Column(nullable = false)

@@ -1,7 +1,5 @@
 package com.workpoint.icpak.shared.model.events;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.workpoint.icpak.shared.model.MemberDto;
 import com.workpoint.icpak.shared.model.SerializableObj;
 
 public class DelegateDto extends SerializableObj{
@@ -22,7 +20,6 @@ public class DelegateDto extends SerializableObj{
 	private DelegateType delegateType;
 	private String bookingId;
 	private String eventId;
-	private transient MemberDto member;
 	
 	public DelegateDto() {
 	}
@@ -83,11 +80,6 @@ public class DelegateDto extends SerializableObj{
 		this.attendance = attendance;
 	}
 
-	@JsonIgnore
-	public boolean isMember() {
-		return delegateType==DelegateType.MEMBER;
-	}
-
 	public DelegateType getDelegateType() {
 		return delegateType;
 	}
@@ -127,14 +119,4 @@ public class DelegateDto extends SerializableObj{
 	public void setMemberRefId(String memberRefId) {
 		this.memberRefId = memberRefId;
 	}
-
-	@JsonIgnore
-	public void setMember(MemberDto memberDto) {
-		this.member = memberDto;
-		if(memberDto!=null){
-			memberId = memberDto.getMemberId();
-			memberRefId = memberDto.getRefId();
-		}
-	}
-
 }

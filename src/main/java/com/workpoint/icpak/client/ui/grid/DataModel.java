@@ -9,14 +9,14 @@ public class DataModel extends HashMap<String, Object>{
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private Long id;
+	private Object id;
 	
 	public DataModel(){}
 	
-	public Long getId() {
+	public Object getId() {
 		return id;
 	}
-	public void setId(Long id) {
+	public void setId(Object id) {
 		this.id = id;
 	}
 	

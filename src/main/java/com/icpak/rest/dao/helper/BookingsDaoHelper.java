@@ -4,6 +4,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -24,7 +26,6 @@ import com.icpak.rest.models.event.Accommodation;
 import com.icpak.rest.models.event.Booking;
 import com.icpak.rest.models.event.Delegate;
 import com.icpak.rest.models.event.Event;
-import com.icpak.rest.models.membership.ApplicationCategory;
 import com.icpak.rest.models.membership.Contact;
 import com.icpak.rest.models.util.Attachment;
 import com.icpak.rest.utils.Doc;
@@ -32,7 +33,6 @@ import com.icpak.rest.utils.DocumentHTMLMapper;
 import com.icpak.rest.utils.DocumentLine;
 import com.icpak.rest.utils.EmailServiceHelper;
 import com.icpak.rest.utils.HTMLToPDFConvertor;
-import com.workpoint.icpak.shared.model.ApplicationType;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.InvoiceLineDto;
 import com.workpoint.icpak.shared.model.events.BookingDto;
@@ -122,7 +122,7 @@ public class BookingsDaoHelper {
 			
 			//Event Pricing
 			Double price = event.getNonMemberPrice();
-			if(delegateDto.getMemberId()!=null || d.isMember()){
+			if(delegateDto.getMemberId()!=null){
 				price = event.getMemberPrice();
 			}
 			
@@ -142,6 +142,7 @@ public class BookingsDaoHelper {
 		booking.setAmountDue(total);//Total
 		booking.setDelegates(delegates);
 		dao.createBooking(booking);
+		dao.merge(booking);
 		sendProInvoice(booking);
 				
 		//Copy into dto
@@ -216,16 +217,131 @@ public class BookingsDaoHelper {
 		InvoiceDto invoice   = new InvoiceDto();
 		invoice.setDescription("Event Booking Invoice");
 		double amount = 0.0;
-		for(Delegate delegate : booking.getDelegates()){
-			InvoiceLineDto dto = new InvoiceLineDto();
-			dto.setEventDelegateRefId(delegate.getRefId());
-			dto.setDescription( delegate.getSurname()+" "+delegate.getOtherNames());
-			dto.setUnitPrice(delegate.getAmount());
-			dto.setTotalAmount(delegate.getAmount());
-			invoice.addLine(dto);
+		
+		
+//		THE ANNUAL MANAGEMENT ACCOUNTING CONFERENCE - Conference fees for 2
+//		members:JUSTUS MUSASIAH(6061, ERN: 430-0236),EVANS MULERA(4295, ERN: 430-0237)
+		
+		List<Delegate> delegates = new ArrayList<>(); 
+		delegates.addAll(booking.getDelegates());
+		Collections.sort(delegates, new Comparator<Delegate>() {
+			@Override
+			public int compare(Delegate o1, Delegate o2) {
+				return o1.getMemberRegistrationNo()==null? -1: o2.getMemberRegistrationNo()==null?1 : 0;
+			}});
+		
+		InvoiceLineDto memberInvoice  = new InvoiceLineDto();
+		memberInvoice.setQuantity(0);
+		memberInvoice.setMemberNames("");
+		
+		InvoiceLineDto nonMemberInvoice  = new InvoiceLineDto();
+		nonMemberInvoice.setQuantity(0);
+		nonMemberInvoice.setMemberNames("");
+
+		Map<String, InvoiceLineDto> memberRefLineMap = new HashMap<>();
+		Map<String, InvoiceLineDto> nonMemberRefLineMap = new HashMap<>();
+		
+		Event event = booking.getEvent();
+		for(Delegate delegate : delegates){
+			if(delegate.getMemberRegistrationNo()!=null){
+				String description = "%s - %s fees for %d members: %s";
+				memberInvoice.setMemberNames(memberInvoice.getMemberNames().concat(
+						(memberInvoice.getMemberNames().isEmpty()?"":", ")+delegate.toString()));
+				
+				int qty = memberInvoice.getQuantity()+1;
+				
+				memberInvoice.setEventDelegateRefId(delegate.getRefId());
+				description = String.format(description, event.getName(),event.getType().getDisplayName(),
+						qty, memberInvoice.getMemberNames());
+				memberInvoice.setDescription(description);
+				memberInvoice.setQuantity(qty);
+				memberInvoice.setUnitPrice(delegate.getAmount());
+				memberInvoice.setTotalAmount(qty*delegate.getAmount());
+				amount+=memberInvoice.getTotalAmount();
+			}else{
+				String description = "%s - %s fees for %d non-members: %s";
+				int qty = nonMemberInvoice.getQuantity()+1;
+				nonMemberInvoice.setEventDelegateRefId(delegate.getRefId());
+				
+				nonMemberInvoice.setMemberNames( nonMemberInvoice.getMemberNames()
+						.concat((nonMemberInvoice.getMemberNames().isEmpty()?"":", ")+delegate.toString()));
+						
+				description = String.format(description, event.getName(),event.getType().getDisplayName(),
+						qty, nonMemberInvoice.getMemberNames());
+				nonMemberInvoice.setDescription(description);
+				nonMemberInvoice.setQuantity(qty);
+				nonMemberInvoice.setUnitPrice(delegate.getAmount());
+				nonMemberInvoice.setTotalAmount(qty*delegate.getAmount());
+				amount+=nonMemberInvoice.getTotalAmount();
+			}
 			
-			amount+=delegate.getAmount();
+			
+			
+			if(delegate.getAccommodation()!=null){
+				if(delegate.getMemberRegistrationNo()!=null){
+					InvoiceLineDto line = memberRefLineMap.get(delegate.getAccommodation().getRefId());
+					if(line==null){
+						line = new InvoiceLineDto();
+						line.setMemberNames("");
+						memberRefLineMap.put(delegate.getAccommodation().getRefId(), line);
+					}
+					
+					String description = "%s - Accommodation at %s %d Nights HB "
+							+ "for %d members: %s";
+					line.setMemberNames(line.getMemberNames().concat(", "+delegate.toString()));
+					int qty = line.getQuantity()+1;
+					
+					line.setEventDelegateRefId(delegate.getRefId());
+					description = String.format(description, event.getName(),
+							delegate.getAccommodation().getHotel(),
+							delegate.getAccommodation().getNights(),
+							qty, line.getMemberNames());
+					line.setDescription(description);
+					line.setQuantity(qty);
+					line.setUnitPrice(delegate.getAccommodation().getFee());
+					line.setTotalAmount(qty*delegate.getAccommodation().getFee());
+					amount+=line.getTotalAmount();
+				}else{
+
+					InvoiceLineDto line =nonMemberRefLineMap.get(delegate.getAccommodation().getRefId());
+					if(line==null){
+						line = new InvoiceLineDto();
+						line.setMemberNames("");
+						nonMemberRefLineMap.put(delegate.getAccommodation().getRefId(), line);
+					}
+					
+					String description = "%s - Accommodation at %s %d Nights HB "
+							+ "for %d members: %s";
+					line.setMemberNames(line.getMemberNames().concat(", "+delegate.toString()));
+					int qty = line.getQuantity()+1;
+					
+					line.setEventDelegateRefId(delegate.getRefId());
+					description = String.format(description, event.getName(),
+							delegate.getAccommodation().getHotel(),
+							delegate.getAccommodation().getNights(),
+							qty, line.getMemberNames());
+					line.setDescription(description);
+					line.setQuantity(qty);
+					line.setUnitPrice(delegate.getAccommodation().getFee());
+					line.setTotalAmount(qty*delegate.getAccommodation().getFee());
+					amount+=line.getTotalAmount();
+				}
+				
+				//delegate.getAccommodation().getRefId();
+				
+			}
 		}
+		
+		if(memberInvoice.getQuantity()!=0){
+			invoice.addLine(memberInvoice);
+		}
+		if(nonMemberInvoice.getQuantity()!=0){
+			invoice.addLine(nonMemberInvoice);
+		}
+		
+		invoice.addLines(memberRefLineMap.values());
+		invoice.addLines(nonMemberRefLineMap.values());
+
 		invoice.setAmount(amount);
 		invoice.setDocumentNo(booking.getId()+"");
 		invoice.setCompanyName(booking.getContact().getCompany());
@@ -283,7 +399,7 @@ public class BookingsDaoHelper {
 		}
 		
 		delegate.copyFrom(delegateDto);
-		assert delegate.getMemberRegistrationNo()!=null;
+		//assert delegate.getMemberRegistrationNo()!=null;
 		
 		return delegate;
 	}

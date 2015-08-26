@@ -187,7 +187,11 @@ public class ApplicationFormDaoHelper {
 		dto.setContactName(application.getSurname() + " "
 				+ application.getOtherNames());
 		dto.setDate(new Date().getTime());
-		dto.addLine(new InvoiceLineDto(category.getDescription(), category
+		
+		
+		dto.addLine(new InvoiceLineDto(
+				dto.getContactName()+", "+
+				"'"+category.getType().getDisplayName()+"' member registration fee", category
 				.getApplicationAmount(), category.getApplicationAmount()));
 
 		dto = invoiceHelper.save(dto);

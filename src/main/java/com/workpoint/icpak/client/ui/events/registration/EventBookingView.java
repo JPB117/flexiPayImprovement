@@ -177,6 +177,7 @@ public class EventBookingView extends ViewImpl implements
 			}
 
 			DataModel model = new DataModel();
+			model.setId(dto.getRefId());
 			model.set("memberNo", member);
 			model.set("title", dto.getTitle());
 			model.set("surname", dto.getSurname());
@@ -194,8 +195,12 @@ public class EventBookingView extends ViewImpl implements
 				return null;
 			}
 
-			dto.setMember(model.get("memberNo") == null ? null
-					: ((MemberDto) model.get("memberNo")));
+			MemberDto memberDto = model.get("memberNo") == null ? null
+					: ((MemberDto) model.get("memberNo"));
+			dto.setMemberId(memberDto == null ? null : memberDto.getMemberId());
+			dto.setMemberRefId(memberDto == null ? null : memberDto
+					.getRefId());
+
 			dto.setTitle(model.get("title") == null ? null : model.get("title")
 					.toString());
 			dto.setSurname(model.get("surname") == null ? null : model.get(
@@ -228,7 +233,7 @@ public class EventBookingView extends ViewImpl implements
 		tblDelegates.setAutoNumber(false);
 		List<ColumnConfig> configs = new ArrayList<ColumnConfig>();
 		configs.add(memberColumn);
-		
+
 		ColumnConfig config = new ColumnConfig("title", "Title",
 				DataType.STRING, "", "form-control");
 		configs.add(config);
@@ -238,7 +243,7 @@ public class EventBookingView extends ViewImpl implements
 		config = new ColumnConfig("otherNames", "Other Names", DataType.STRING,
 				"", "form-control");
 		configs.add(config);
-		
+
 		// config = new ColumnConfig("email", "Email Address", DataType.STRING,
 		// "", "form-control");
 		// configs.add(config);
@@ -246,7 +251,7 @@ public class EventBookingView extends ViewImpl implements
 		configs.add(accommodationConfig);
 
 		tblDelegates.setColumnConfigs(configs);
-		
+
 		memberColumn.addValueChangeHandler(new ValueChangeHandler<Listable>() {
 			@Override
 			public void onValueChange(ValueChangeEvent<Listable> event) {
@@ -257,8 +262,11 @@ public class EventBookingView extends ViewImpl implements
 				if (event.getValue() != null) {
 					MemberDto dto = (MemberDto) event.getValue();
 					DelegateDto delegate = mapper.getData(row.getData());
-
-					delegate.setMember(dto);
+					// delegate.setMember(dto);
+					if (dto != null) {
+						delegate.setMemberId(dto.getMemberId());
+						delegate.setMemberRefId(dto.getRefId());
+					}
 					delegate.setSurname(dto.getLastName());
 					delegate.setOtherNames(dto.getFirstName());
 					delegate.setEmail(dto.getEmail());
@@ -266,6 +274,9 @@ public class EventBookingView extends ViewImpl implements
 
 					DataModel model = mapper.getModel(delegate);
 					row.setModel(model, true);
+				}else{
+					DelegateDto delegate = mapper.getData(row.getData());
+					Window.alert("Reset Shit!! "+delegate.getSurname());
 				}
 
 			}
@@ -489,7 +500,22 @@ public class EventBookingView extends ViewImpl implements
 	}
 
 	private List<DelegateDto> getDelegates() {
-		return tblDelegates.getData(mapper);
+		
+		List<DelegateDto> list = tblDelegates.getData(mapper);
+		String msg = "";
+		boolean throwException=false;
+		for(DelegateDto d: list){
+			if(d.getMemberRefId()==null){
+				throwException=true;
+			}
+			msg = msg.concat("{"+d.getMemberId()+","+d.getMemberRefId()+"}, ");
+		}
+		
+		Window.alert(msg);
+		if(throwException){
+			throw new RuntimeException("MemberRefID cannot be null!");
+		}
+		return list;
 	}
 
 	@Override

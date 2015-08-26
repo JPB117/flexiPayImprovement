@@ -2,6 +2,7 @@ package com.icpak.rest.models.trx;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -31,7 +32,7 @@ public class Invoice extends PO {
 
 	@OneToMany(mappedBy = "invoice", cascade = { CascadeType.PERSIST,
 			CascadeType.REMOVE })
-	private Set<InvoiceLine> lines = new HashSet<InvoiceLine>();
+	private Set<InvoiceLine> lines = new LinkedHashSet<InvoiceLine>();
 
 	public Invoice() {
 	}
