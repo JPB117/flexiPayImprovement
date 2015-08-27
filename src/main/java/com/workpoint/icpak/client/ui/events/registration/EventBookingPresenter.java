@@ -132,7 +132,7 @@ public class EventBookingPresenter extends
 										source.setValues(members);
 									}
 
-								}).search(query);
+								}).search(query,0,30);
 					}
 				});
 
