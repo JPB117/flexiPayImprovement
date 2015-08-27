@@ -3,7 +3,6 @@ package com.workpoint.icpak.client.ui.component.autocomplete;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gwt.user.client.Window;
 import com.workpoint.icpak.shared.model.Listable;
 
 public class DataOracle<T extends Listable> extends SimpleOracle<T> {

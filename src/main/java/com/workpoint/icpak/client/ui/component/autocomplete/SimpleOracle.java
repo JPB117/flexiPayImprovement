@@ -11,5 +11,5 @@ public abstract class SimpleOracle<T extends Listable> extends SuggestOracle {
 
 	protected List<Suggestion> suggestions = new ArrayList<Suggestion>();
 	
-	public abstract void setValues(List<T> values);
+	public void setValues(List<T> values){}
 }

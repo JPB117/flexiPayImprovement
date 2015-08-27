@@ -8,6 +8,8 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.SuggestOracle.Callback;
+import com.google.gwt.user.client.ui.SuggestOracle.Request;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rest.delegates.client.ResourceDelegate;
@@ -23,6 +25,7 @@ import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.workpoint.icpak.client.place.NameTokens;
 import com.workpoint.icpak.client.service.AbstractAsyncCallback;
 import com.workpoint.icpak.client.ui.component.ActionLink;
+import com.workpoint.icpak.client.ui.component.AutoCompleteField;
 import com.workpoint.icpak.client.ui.component.autocomplete.ServerOracle;
 import com.workpoint.icpak.client.ui.grid.ColumnConfig;
 import com.workpoint.icpak.shared.api.CountriesResource;
@@ -117,19 +120,16 @@ public class EventBookingPresenter extends
 	protected void onBind() {
 		super.onBind();
 
-		getView().getMemberColumnConfig().setOracle(
-				new ServerOracle<MemberDto>() {
-
+		getView().getMemberColumnConfig().setLoader(
+				new AutoCompleteField.Loader() {
 					@Override
-					public void onLoad(final String query) {
-						final ServerOracle<MemberDto> instance = this;
-
+					public void onLoad(final ServerOracle source,final String query) {
 						membersDelegate.withCallback(
 								new AbstractAsyncCallback<List<MemberDto>>() {
 									@Override
 									public void onSuccess(
 											List<MemberDto> members) {
-										instance.setValues(members);
+										source.setValues(members);
 									}
 
 								}).search(query);

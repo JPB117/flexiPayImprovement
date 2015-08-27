@@ -3,24 +3,28 @@ package com.workpoint.icpak.client.ui.component.autocomplete;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.workpoint.icpak.client.ui.component.AutoCompleteField;
 import com.workpoint.icpak.shared.model.Listable;
 
-public abstract class ServerOracle<T extends Listable> extends SimpleOracle<T> {
+public class ServerOracle<T extends Listable> extends SimpleOracle<T> {
 
 	private Request request;
 	private Callback callback;
-	private List<OnStoreChangedHandler<T>> handlers = new ArrayList<OnStoreChangedHandler<T>>();
-
+	private List<StoreChangedHandler<T>> handlers = new ArrayList<StoreChangedHandler<T>>();
+	private AutoCompleteField.Loader<T> loader;
+	
+	public ServerOracle(AutoCompleteField.Loader<T> loader) {
+		this.loader = loader;
+	}
+	
 	@Override
 	public void requestSuggestions(Request request, Callback callback) {
 		this.request = request;
 		this.callback = callback;
 		String query = request.getQuery();
-		onLoad(query.trim());
-
+		loader.onLoad(this,query);
+		
 	}
-
-	public abstract void onLoad(final String query);
 
 	public void setValues(List<T> values) {
 		suggestions.clear();
@@ -41,18 +45,17 @@ public abstract class ServerOracle<T extends Listable> extends SimpleOracle<T> {
 			//Reset
 			request=null;
 			resp=null;
-			for(OnStoreChangedHandler<T> handler:handlers){
+			for(StoreChangedHandler<T> handler:handlers){
 				handler.onStoreChanged(values);
 			}
 		}
 	}
 	
-	public void addStoreChangedHandler(OnStoreChangedHandler<T> handler){
+	public void addStoreChangedHandler(StoreChangedHandler<T> handler){
 		handlers.add(handler);
 	}
 	
-	public static abstract class OnStoreChangedHandler<T>{
-
-		public abstract void onStoreChanged(List<T> values);
+	public static interface StoreChangedHandler<T>{
+		public void onStoreChanged(List<T> values);
 	}
 }

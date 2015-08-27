@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gwt.aria.client.AutocompleteValue;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
@@ -13,6 +14,7 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasValue;
@@ -25,9 +27,10 @@ import com.workpoint.icpak.client.ui.component.autocomplete.ServerOracle;
 import com.workpoint.icpak.client.ui.component.autocomplete.SimpleOracle;
 import com.workpoint.icpak.client.ui.grid.AggregationGridRow;
 import com.workpoint.icpak.shared.model.Listable;
+import com.workpoint.icpak.shared.model.MemberDto;
 
 public class AutoCompleteField<T extends Listable> extends Composite 
-	implements HasValueChangeHandlers<T>,HasValue<T>{
+	implements HasValueChangeHandlers<T>,HasValue<T>,ServerOracle.StoreChangedHandler<T> {
 
 	private static AutoCompleteFieldUiBinder uiBinder = GWT
 			.create(AutoCompleteFieldUiBinder.class);
@@ -56,13 +59,13 @@ public class AutoCompleteField<T extends Listable> extends Composite
 		this(null);
 	}
 	
-	public AutoCompleteField(SimpleOracle<T> simpleOracle) {
+	public AutoCompleteField(Loader<T> loader) {
 		initWidget(uiBinder.createAndBindUi(this));
 		itemBox.getElement().setAttribute("style", "outline-color: -moz-use-text-color; outline-style: none; outline-width: medium;");
 		container.getElement().setAttribute("onclick", "document.getElementById('"+id+"').focus()");
 		
-		if(simpleOracle!=null){
-			this.oracle = simpleOracle;
+		if(loader!=null){
+			this.oracle = new ServerOracle<T>(loader);
 		}
 		
 		box = new SuggestBox(oracle, itemBox);
@@ -84,17 +87,9 @@ public class AutoCompleteField<T extends Listable> extends Composite
         });
 		
 		if(oracle instanceof ServerOracle){
-			
-			((ServerOracle<T>)oracle).addStoreChangedHandler(
-					new ServerOracle.OnStoreChangedHandler<T>() {
-
-						@Override
-						public void onStoreChanged(List<T> values) {
-							setValues(values,false);
-						}
-						
-					});
+			((ServerOracle<T>)oracle).addStoreChangedHandler(AutoCompleteField.this);
 		}
+		
 		container.add(box);
 		//box.setFocus(true);
 	}
@@ -182,5 +177,14 @@ public class AutoCompleteField<T extends Listable> extends Composite
 	public void setParentRow(AggregationGridRow aggregationGridRow) {
 		this.aggregationGridRow = aggregationGridRow;
 		
+	}
+
+	@Override
+	public void onStoreChanged(List<T> values) {
+			setValues(values,false);
+	}
+	
+	public static interface Loader<T>{
+		public void onLoad(ServerOracle source,String query);
 	}
 }

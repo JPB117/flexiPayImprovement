@@ -10,6 +10,7 @@ import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Widget;
 import com.workpoint.icpak.client.ui.component.AutoCompleteField;
+import com.workpoint.icpak.client.ui.component.AutoCompleteField.Loader;
 import com.workpoint.icpak.client.ui.component.DoubleField;
 import com.workpoint.icpak.client.ui.component.DropDownList;
 import com.workpoint.icpak.client.ui.component.IntegerField;
@@ -34,7 +35,7 @@ public class ColumnConfig {
 	private boolean isAggregationColumn;
 	private boolean isMandatory;
 	private DataType type;
-	private SimpleOracle oracle;
+	private Loader loader;
 	private List<Listable> dropDownItems = new ArrayList<Listable>();
 	private List<ValueChangeHandler> valueChangeHandlers = new ArrayList<ValueChangeHandler>();
 
@@ -91,7 +92,7 @@ public class ColumnConfig {
 			dropDown.setItems(dropDownItems);
 			widget = dropDown;
 		} else if (type == DataType.SELECTAUTOCOMPLETE) {
-			AutoCompleteField auto = new AutoCompleteField(oracle);
+			AutoCompleteField auto = new AutoCompleteField(loader);
 
 			// ((Widget) widget).getElement().getFirstChildElement()
 			// .addClassName(styleName);
@@ -232,16 +233,16 @@ public class ColumnConfig {
 		this.styleName = styleName;
 	}
 
-	public SimpleOracle getOracle() {
-		return oracle;
-	}
-
-	public void setOracle(SimpleOracle oracle) {
-		this.oracle = oracle;
-	}
-
 	public Widget createHeaderWidget() {
 		return createHeaderWidget("");
+	}
+
+	public Loader getLoader() {
+		return loader;
+	}
+
+	public void setLoader(Loader loader) {
+		this.loader = loader;
 	}
 
 }
