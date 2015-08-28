@@ -26,26 +26,32 @@ import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.tests.base.AbstractDaoTest;
 
 public class TestOutput extends AbstractDaoTest {
-	
-	@Inject CPDDaoHelper helper;
+
+	@Inject
+	CPDDaoHelper helper;
 
 	@Test
-	public void print() throws IOException, SAXException, ParserConfigurationException, FactoryConfigurationError, DocumentException{
+	public void print() throws IOException, SAXException,
+			ParserConfigurationException, FactoryConfigurationError,
+			DocumentException {
 		CPDDto cpd = helper.getCPD("", "DUbn83aNiV9ss94z");
-		
+
 		Map<String, Object> values = new HashMap<String, Object>();
 		values.put("eventName", cpd.getTitle());
-		values.put("eventDates", DateUtils.formatDate(cpd.getStartDate(), "dd/MM/yyyy"));
+		values.put("eventDates",
+				DateUtils.formatDate(cpd.getStartDate(), "dd/MM/yyyy"));
 		values.put("memberName", cpd.getFullNames());
 		values.put("dateIssued", DateUtils.formatDate(new Date(), "dd/MM/yyyy"));
 		values.put("cpdHours", cpd.getCpdHours());
 		Doc doc = new Doc(values);
-		
+
 		HTMLToPDFConvertor convertor = new HTMLToPDFConvertor();
-		InputStream is = TestOutput.class.getClassLoader().getResourceAsStream("cpdcertificate.html");
+		InputStream is = TestOutput.class.getClassLoader().getResourceAsStream(
+				"cpdcertificate.html");
 		String html = IOUtils.toString(is);
-		byte[] bite= convertor.convert(doc, html);
-		
-		IOUtils.copy(new ByteArrayInputStream(bite), new FileOutputStream(new File("cpdcert.pdf")));
+		byte[] bite = convertor.convert(doc, html);
+
+		IOUtils.copy(new ByteArrayInputStream(bite), new FileOutputStream(
+				new File("cpdcert.pdf")));
 	}
 }

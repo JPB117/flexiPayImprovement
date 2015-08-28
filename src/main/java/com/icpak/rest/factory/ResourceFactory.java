@@ -12,11 +12,22 @@ import com.icpak.rest.TrainingsResourceImpl;
 public interface ResourceFactory {
 
 	public BookingsResourceImpl createBookingResource(String eventId);
+
 	public EducationResourceImpl createEducationResource(String applicationId);
+
 	public TrainingsResourceImpl createTrainingsResource(String applicationId);
-	public SpecializationsResourceImpl createSpecializationResource(String applicationId);
+
+	public SpecializationsResourceImpl createSpecializationResource(
+			String applicationId);
+
 	public CPDResourceImpl createCPDResource(String memberId);
-	public AccommodationsResourceImpl createAccommodationsResource(String eventId);
+
+	public AccommodationsResourceImpl createAccommodationsResource(
+			String eventId);
+
 	public EnrollmentsResourceImpl createEnrollmentsResource(String courseId);
+
 	public EnquiriesResourceImpl createEnquiriesResource(String memberId);
+
+	public CPDResourceImpl downloadCert(String cpdRefId);
 }
