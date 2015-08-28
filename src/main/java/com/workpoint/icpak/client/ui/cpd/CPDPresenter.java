@@ -13,6 +13,7 @@ import java.util.List;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rest.delegates.client.ResourceDelegate;
@@ -53,10 +54,13 @@ public class CPDPresenter extends
 
 	public interface ICPDView extends View {
 		HasClickHandlers getRecordButton();
+
 		void bindResults(List<CPDDto> result);
+
 		void showDetailedView();
+
 		PagingPanel getPagingPanel();
-		
+
 	}
 
 	@ProxyCodeSplit
@@ -96,9 +100,9 @@ public class CPDPresenter extends
 				showCreatePopup();
 			}
 		});
-		
+
 		getView().getPagingPanel().setLoader(new PagingLoader() {
-			
+
 			@Override
 			public void load(int offset, int limit) {
 				load(offset, limit);
@@ -114,10 +118,10 @@ public class CPDPresenter extends
 		showInstructions();
 	}
 
-	private void showInstructions(){
+	private void showInstructions() {
 		showInstructions(null);
 	}
-	
+
 	private void showInstructions(final CPDDto model) {
 		final RecordCPD cpdRecord = new RecordCPD();
 		cpdRecord.setCPD(model);
@@ -140,6 +144,29 @@ public class CPDPresenter extends
 	protected void showForm(final CPDDto model) {
 		final RecordCPD cpdRecord = new RecordCPD();
 		cpdRecord.setCPD(model);
+		cpdRecord.getStartUploadButton().addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				if (cpdRecord.getCPD().getRefId() == null) {
+					// not saved
+					if (cpdRecord.isValid()) {
+						String memberId = currentUser.getUser().getRefId();
+						memberDelegate
+								.withCallback(
+										new AbstractAsyncCallback<CPDDto>() {
+											@Override
+											public void onSuccess(CPDDto result) {
+												cpdRecord.setCPD(result);
+												cpdRecord.showUploadPanel(true);
+											}
+										}).cpd(memberId)
+								.create(cpdRecord.getCPD());
+					}
+				} else {
+					cpdRecord.showUploadPanel(true);
+				}
+			}
+		});
 		cpdRecord.showForm(true);
 		AppManager.showPopUp("Record CPD Wizard", cpdRecord.asWidget(),
 				new OptionControl() {
@@ -169,7 +196,7 @@ public class CPDPresenter extends
 					loadData();
 				}
 			}).cpd(memberId).update(dto.getRefId(), dto);
-			
+
 		} else {
 			memberDelegate.withCallback(new AbstractAsyncCallback<CPDDto>() {
 				@Override
@@ -194,15 +221,14 @@ public class CPDPresenter extends
 			@Override
 			public void onSuccess(Integer aCount) {
 				fireEvent(new ProcessingCompletedEvent());
-				PagingPanel panel=getView().getPagingPanel();
+				PagingPanel panel = getView().getPagingPanel();
 				panel.setTotal(aCount);
 				PagingConfig config = panel.getConfig();
-				
+
 				loadCPD(config.getOffset(), config.getLimit());
 			}
-		}).cpd(AppContext.isCurrentUserAdmin()? "ALL":memberId)
-		.getCount();
-		
+		}).cpd(AppContext.isCurrentUserAdmin() ? "ALL" : memberId).getCount();
+
 	}
 
 	protected void loadCPD(int offset, int limit) {
@@ -214,8 +240,8 @@ public class CPDPresenter extends
 				fireEvent(new ProcessingCompletedEvent());
 				getView().bindResults(result);
 			}
-		}).cpd(AppContext.isCurrentUserAdmin()? "ALL":memberId)
-		.getAll(offset, limit);
+		}).cpd(AppContext.isCurrentUserAdmin() ? "ALL" : memberId)
+				.getAll(offset, limit);
 	}
 
 	String getApplicationRefId() {

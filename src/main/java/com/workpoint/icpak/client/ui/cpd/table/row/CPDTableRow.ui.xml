@@ -9,7 +9,7 @@
 			<d:ActionLink ui:field="aMember"></d:ActionLink>
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divCourseName">
-			
+
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divOrganiser">
 		</g:HTMLPanel>
@@ -28,10 +28,13 @@
 					-Select-
 					<span class="caret"></span>
 				</a>
-				
+
 				<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
 					<li>
 						<d:ActionLink ui:field="aEdit">Edit</d:ActionLink>
+					</li>
+					<li>
+						<d:ActionLink ui:field="aDownloadCert">Download Certificate</d:ActionLink>
 					</li>
 					<li>
 						<d:ActionLink ui:field="aAttended">Approved</d:ActionLink>

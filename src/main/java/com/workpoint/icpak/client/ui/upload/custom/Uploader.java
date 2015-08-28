@@ -45,65 +45,64 @@ public class Uploader extends Composite {
 	HTMLPanel uploaderPanel;
 
 	IUploader uploader;
-	
+
 	UploadContext context;
-	
+
 	public Uploader() {
 		this(false);
 	}
-	
+
 	public Uploader(boolean isSingleUploader) {
 		initWidget(binder.createAndBindUi(this));
-		
-		if(isSingleUploader){
+
+		if (isSingleUploader) {
 			uploader = new SingleUploader();
-		}else{
+		} else {
 			uploader = new MultiUploader();
 		}
-		
-		uploader.setAutoSubmit(true);	
+
+		uploader.setAutoSubmit(false);
 		uploader.setMultipleSelection(!isSingleUploader);
 		uploaderPanel.add(uploader);
 		uploader.addOnFinishUploadHandler(onFinishHandler);
 		uploader.addOnStartUploadHandler(uploadStarted);
 		uploader.getFileInput().setName("Filedata");
 	}
-	
-	public Uploader(UploadContext ctx){
+
+	public Uploader(UploadContext ctx) {
 		this();
 		setContext(ctx);
 	}
-	
-	public void setAvoidRepeatFiles(boolean allow){
-		if(uploader instanceof MultiUploader){
-			((MultiUploader)uploader).setAvoidRepeatFiles(allow);
+
+	public void setAvoidRepeatFiles(boolean allow) {
+		if (uploader instanceof MultiUploader) {
+			((MultiUploader) uploader).setAvoidRepeatFiles(allow);
 		}
-		
-		if(uploader instanceof SingleUploader){
-			((SingleUploader)uploader).setAvoidRepeatFiles(allow);
+
+		if (uploader instanceof SingleUploader) {
+			((SingleUploader) uploader).setAvoidRepeatFiles(allow);
 		}
 	}
-	
-	public void setContext(UploadContext context){
+
+	public void setContext(UploadContext context) {
 		this.context = context;
-		
+
 		StringBuffer servletPath = new StringBuffer();
 		String url = context.getUrl() == null ? "upload" : context.getUrl();
 		servletPath.append(url + "?" + context.getContextValuesAsURLParams());
 		uploader.setServletPath(servletPath.toString());
-		if(context.getAcceptTypes()!=null)
+		if (context.getAcceptTypes() != null)
 			uploader.setValidExtensions(context.getAcceptTypes());
 	}
 
 	OnStartUploaderHandler uploadStarted = new OnStartUploaderHandler() {
-		
+
 		@Override
 		public void onStart(IUploader uploader) {
 			AppContext.fireEvent(new UploadStartedEvent());
 		}
 	};
-	
-	
+
 	OnFinishUploaderHandler onFinishHandler = new OnFinishUploaderHandler() {
 
 		@Override
@@ -114,64 +113,68 @@ public class Uploader extends Composite {
 				new PreloadedImage(uploader.fileUrl(), showImage);
 
 				// The server sends useful information to the client by default
-//				UploadedInfo info = uploader.getServerInfo();
-//				System.out.println("File name " + info.name);
-//				System.out.println("File content-type " + info.ctype);
-//				System.out.println("File size " + info.size);
-//
-//				// You can send any customized message and parse it
-//				System.out.println("Server message " + info.message);
+				// UploadedInfo info = uploader.getServerInfo();
+				// System.out.println("File name " + info.name);
+				// System.out.println("File content-type " + info.ctype);
+				// System.out.println("File size " + info.size);
+				//
+				// // You can send any customized message and parse it
+				// System.out.println("Server message " + info.message);
 			}
 		}
 	};
 
 	OnCancelUploaderHandler handler = new OnCancelUploaderHandler() {
-		
+
 		@Override
 		public void onCancel(IUploader uploader) {
-			
+
 		}
 	};
 	OnLoadPreloadedImageHandler showImage = new OnLoadPreloadedImageHandler() {
 
 		@Override
 		public void onLoad(PreloadedImage image) {
-			//image.setWidth("75px");
+			// image.setWidth("75px");
 			panelImages.add(image);
 		}
 	};
-	
-	public void cancel(){
+
+	public void cancel() {
 		List<IUploader> uploaders = new ArrayList<IUploader>();
-		if(uploader instanceof MultiUploader){
-			 uploaders = ((MultiUploader)uploader).getUploaders();
-		}else{
-			//Single Uploader
+		if (uploader instanceof MultiUploader) {
+			uploaders = ((MultiUploader) uploader).getUploaders();
+		} else {
+			// Single Uploader
 			uploaders.add(uploader);
-		}	
-		
-		if(uploaders!=null){
+		}
+
+		if (uploaders != null) {
 			List<IUploader> uplodas = new ArrayList<IUploader>();
 			uplodas.addAll(uploaders);
-			for(IUploader uploader: uplodas){
+			for (IUploader uploader : uplodas) {
 				uploader.cancel();
 			}
 		}
 	}
-	
-	public void addOnFinishUploaderHandler(OnFinishUploaderHandler handler){
+
+	public void addOnFinishUploaderHandler(OnFinishUploaderHandler handler) {
 		uploader.addOnFinishUploadHandler(handler);
 	}
-	
-	public void addOnChangeUploaderHandler(OnChangeUploaderHandler handler){
+
+	public void addOnChangeUploaderHandler(OnChangeUploaderHandler handler) {
 		uploader.addOnChangeUploadHandler(handler);
 	}
 
 	public void clear() {
-		uploader.clear();			
+		uploader.clear();
 	}
-	
-	public void addOnCancelUploaderHandler(OnCancelUploaderHandler handler){
+
+	public void addOnCancelUploaderHandler(OnCancelUploaderHandler handler) {
 		uploader.addOnCancelUploadHandler(handler);
+	}
+
+	public void setAutoSubmit(boolean isAutoSubmit) {
+		uploader.setAutoSubmit(isAutoSubmit);
 	}
 }

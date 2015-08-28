@@ -40,6 +40,9 @@ public class CPDTableRow extends RowWidget {
 	HTMLPanel divCPD;
 	@UiField
 	SpanElement spnStatus;
+	
+	@UiField
+	ActionLink aDownloadCert;
 
 	@UiField
 	ActionLink aEdit;
@@ -59,7 +62,7 @@ public class CPDTableRow extends RowWidget {
 	private CPDDto dto;
 
 	public CPDTableRow() {
-		initWidget(uiBinder.createAndBindUi(this));
+		initWidget(uiBinder.createAndBindUi(this));	
 		aEdit.addClickHandler(new ClickHandler() {
 
 			@Override

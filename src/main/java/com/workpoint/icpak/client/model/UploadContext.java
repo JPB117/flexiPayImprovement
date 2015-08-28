@@ -14,8 +14,8 @@ import java.util.Set;
  */
 public class UploadContext {
 
-	private String url="/upload";
-	public static final String ACTION="ACTION"; 
+	private String url="upload";
+	public static final String ACTION="action"; 
 	private List<String> acceptsDocTypes=new ArrayList<String>();
 	
 	private Map<String,String> context = new HashMap<String, String>();
@@ -27,11 +27,10 @@ public class UploadContext {
 		IMPORTFORM, 
 		UPLOADUSERIMAGE,
 		UPLOADLOGO, UPLOADDOCFILE, UPLOADOUTPUTDOC, GENERATEOUTPUT,
-		IMPORTGRIDDATA
+		IMPORTGRIDDATA, UPLOADCPD
 	}
 	
 	public UploadContext(){
-		this.url="upload";
 	}
 	
 	public UploadContext(String url){

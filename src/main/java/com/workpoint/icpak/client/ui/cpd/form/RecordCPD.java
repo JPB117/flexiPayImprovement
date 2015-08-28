@@ -9,12 +9,15 @@ import java.util.List;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.workpoint.icpak.client.model.UploadContext;
+import com.workpoint.icpak.client.model.UploadContext.UPLOADACTION;
 import com.workpoint.icpak.client.ui.OptionControl;
 import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.DateField;
@@ -62,6 +65,12 @@ public class RecordCPD extends Composite {
 	Uploader uploader;
 
 	@UiField
+	ActionLink aStartUpload;
+
+	@UiField
+	HTMLPanel panelUploader;
+
+	@UiField
 	DropDownList<CPDCategory> lstCategory;
 
 	private CPDDto dto;
@@ -75,6 +84,26 @@ public class RecordCPD extends Composite {
 			categories.add(cat);
 		}
 		lstCategory.setItems(categories);
+		uploader.setAutoSubmit(false);
+	}
+
+	public void showUploadPanel(boolean showForm) {
+		aStartUpload.setVisible(showForm);
+		if (showForm) {
+			panelUploader.removeStyleName("hide");
+			setUploadContext();
+		} else {
+			panelUploader.addStyleName("hide");
+
+		}
+	}
+
+	private void setUploadContext() {
+		UploadContext context = new UploadContext();
+		context.setContext("cpdId", getCPD().getRefId());
+		context.setAction(UPLOADACTION.UPLOADCPD);
+		context.setAccept(Arrays.asList("doc","pdf","jpg","jpeg","png"));
+		uploader.setContext(context);	
 	}
 
 	public boolean isValid() {
@@ -84,7 +113,6 @@ public class RecordCPD extends Composite {
 			isValid = false;
 			issues.addError("Title is mandatory");
 		}
-
 		if (isNullOrEmpty(txtOrganizer.getValue())) {
 			isValid = false;
 			issues.addError("Organizer is mandatory");
@@ -117,10 +145,10 @@ public class RecordCPD extends Composite {
 	public CPDDto getCPD() {
 
 		CPDDto dto = new CPDDto();
-		if(this.dto!=null){
+		if (this.dto != null) {
 			dto = this.dto;
 		}
-		
+
 		dto.setCategory(lstCategory.getValue());
 		// dto.setCpdHours();
 		dto.setEndDate(dtEndDate.getValueDate());
@@ -138,12 +166,16 @@ public class RecordCPD extends Composite {
 		if (dto == null) {
 			return;
 		}
-		
+
 		lstCategory.setValue(dto.getCategory());
 		dtEndDate.setValue(dto.getEndDate());
 		dtStartDate.setValue(dto.getStartDate());
 		txtTitle.setValue(dto.getTitle());
 		txtOrganizer.setValue(dto.getOrganizer());
+	}
+
+	public HasClickHandlers getStartUploadButton() {
+		return aStartUpload;
 	}
 
 }

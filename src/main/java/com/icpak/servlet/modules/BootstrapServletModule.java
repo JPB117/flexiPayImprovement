@@ -15,6 +15,8 @@ import com.icpak.rest.factory.ResourceFactory;
 import com.icpak.rest.filters.CORSFilter;
 import com.icpak.servlet.config.GenericBootstrapConstants;
 import com.icpak.servlet.swagger.SwaggerApiServlet;
+import com.icpak.servlet.upload.GetReport;
+import com.icpak.servlet.upload.UploadServlet;
 import com.sun.jersey.api.core.PackagesResourceConfig;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 import com.workpoint.icpak.shared.api.BookingsResource;
@@ -59,7 +61,10 @@ public class BootstrapServletModule extends ServletModule{
         params.put("com.sun.jersey.api.json.POJOMappingFeature","true");
         serve("/api/*").with(GuiceContainer.class, params);
         filter("/api/*").through(CORSFilter.class);
-          
+        
+        serve("/upload/*").with(UploadServlet.class);
+        serve("/getreport/*").with(GetReport.class);
+        
         Map<String, String> params2 = new HashMap<String, String>();
         params2.put("loadonstartup", "1");
         serve("").with(SwaggerApiServlet.class,params2);
