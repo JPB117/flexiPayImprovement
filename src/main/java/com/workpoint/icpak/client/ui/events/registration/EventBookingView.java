@@ -274,11 +274,7 @@ public class EventBookingView extends ViewImpl implements
 
 					DataModel model = mapper.getModel(delegate);
 					row.setModel(model, true);
-				}else{
-					DelegateDto delegate = mapper.getData(row.getData());
-					Window.alert("Reset Shit!! "+delegate.getSurname());
 				}
-
 			}
 		});
 

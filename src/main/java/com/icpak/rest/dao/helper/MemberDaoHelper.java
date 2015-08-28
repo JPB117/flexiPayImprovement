@@ -48,7 +48,12 @@ public class MemberDaoHelper {
 	
 	public List<MemberDto> getAllMembers(Integer offset, Integer limit,
 			String uriInfo, String searchTerm) {
-		List<Member> members = memberDao.getAllMembers(offset, limit, searchTerm);
+		
+		if(searchTerm!=null){
+			return memberDao.getAllMembers(offset, limit, searchTerm);
+		}
+		
+		List<Member> members = memberDao.getAllMembers(offset, limit);
 		
 		List<MemberDto> rtn = new ArrayList<>();
 		for(Member member: members){
