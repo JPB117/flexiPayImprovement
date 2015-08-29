@@ -62,11 +62,15 @@ public class BootstrapServletModule extends ServletModule{
         serve("/api/*").with(GuiceContainer.class, params);
         filter("/api/*").through(CORSFilter.class);
         
-        serve("/upload/*").with(UploadServlet.class);
-        serve("/getreport/*").with(GetReport.class);
+//        Map<String, String> params2 = new HashMap<String, String>();
+//        params2.put("load-on-startup", "1");
         
         Map<String, String> params2 = new HashMap<String, String>();
         params2.put("loadonstartup", "1");
+        serve("/upload/*").with(UploadServlet.class, params2);
+        serve("/getreport/*").with(GetReport.class, params2);
+        
+        
         serve("").with(SwaggerApiServlet.class,params2);
         
 	}
