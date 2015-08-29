@@ -198,8 +198,7 @@ public class EventBookingView extends ViewImpl implements
 			MemberDto memberDto = model.get("memberNo") == null ? null
 					: ((MemberDto) model.get("memberNo"));
 			dto.setMemberId(memberDto == null ? null : memberDto.getMemberId());
-			dto.setMemberRefId(memberDto == null ? null : memberDto
-					.getRefId());
+			dto.setMemberRefId(memberDto == null ? null : memberDto.getRefId());
 
 			dto.setTitle(model.get("title") == null ? null : model.get("title")
 					.toString());
@@ -496,21 +495,7 @@ public class EventBookingView extends ViewImpl implements
 	}
 
 	private List<DelegateDto> getDelegates() {
-		
 		List<DelegateDto> list = tblDelegates.getData(mapper);
-		String msg = "";
-		boolean throwException=false;
-		for(DelegateDto d: list){
-			if(d.getMemberRefId()==null){
-				throwException=true;
-			}
-			msg = msg.concat("{"+d.getMemberId()+","+d.getMemberRefId()+"}, ");
-		}
-		
-		Window.alert(msg);
-		if(throwException){
-			throw new RuntimeException("MemberRefID cannot be null!");
-		}
 		return list;
 	}
 

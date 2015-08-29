@@ -54,24 +54,8 @@ public class AppManager {
 			// WORK ON A GENERIC PLACEMENT MECHANISM e.g Centered Buttons,
 			// AS WELL AS DYNAMIC STYLING BY PASSING BUTTON STYLES TO THIS
 			// MECHANISM
-
-			if (text.equals("Cancel")) {
-				aLnk.setHTML("&nbsp;<i class=\"icon-remove\"></i>" + text);
-				aLnk.setStyleName("btn btn-default btn-fill pull-right");
-			} else if (text.equals("Save")) {
-				aLnk.setHTML(text
-						+ "&nbsp;<i class=\"icon-double-angle-right\"></i>");
-				// aLnk.setStyleName("btn btn-primary btn-fill pull-left");
-				aLnk.setStyleName("btn btn-primary btn-fill pull-right");
-			} else if (text.equals("Next")) {
-				aLnk.setHTML(text
-						+ "&nbsp;<i class=\"icon-double-angle-right\"></i>");
-				aLnk.setStyleName("btn btn-primary btn-fill pull-right");
-			} else if (text.equals("Previous")) {
-				aLnk.setHTML(text
-						+ "&nbsp;<i class=\"icon-double-angle-right\"></i>");
-				aLnk.setStyleName("btn btn-primary btn-fill pull-left");
-			}
+			aLnk.setHTML(text);
+			aLnk.setStyleName("btn btn-default btn-fill pull-right");
 
 			aLnk.addClickHandler(new ClickHandler() {
 

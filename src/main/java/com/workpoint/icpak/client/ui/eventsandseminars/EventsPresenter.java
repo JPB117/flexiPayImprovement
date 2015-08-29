@@ -22,13 +22,11 @@ import com.workpoint.icpak.client.ui.component.PagingConfig;
 import com.workpoint.icpak.client.ui.component.PagingLoader;
 import com.workpoint.icpak.client.ui.component.PagingPanel;
 import com.workpoint.icpak.client.ui.events.EditModelEvent;
+import com.workpoint.icpak.client.ui.events.EditModelEvent.EditModelHandler;
 import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
 import com.workpoint.icpak.client.ui.events.ProcessingEvent;
-import com.workpoint.icpak.client.ui.events.EditModelEvent.EditModelHandler;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
 import com.workpoint.icpak.client.ui.security.AdminGateKeeper;
-import com.workpoint.icpak.client.ui.security.LoginGateKeeper;
-import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.api.EventsResource;
 import com.workpoint.icpak.shared.model.events.BookingDto;
 import com.workpoint.icpak.shared.model.events.DelegateDto;
@@ -61,8 +59,10 @@ public class EventsPresenter extends
 
 	@TabInfo(container = HomePresenter.class)
 	static TabData getTabLabel(AdminGateKeeper gateKeeper) {
-		String tabName= "Events and Seminars";;
-		TabDataExt data = new TabDataExt(tabName, "fa fa-tags",2, gateKeeper, true);
+		String tabName = "Events and Seminars";
+		;
+		TabDataExt data = new TabDataExt(tabName, "fa fa-tags", 2, gateKeeper,
+				true);
 		return data;
 	}
 
@@ -82,7 +82,6 @@ public class EventsPresenter extends
 		super.onBind();
 		addRegisteredHandler(EditModelEvent.TYPE, this);
 		getView().getEventsPagingPanel().setLoader(new PagingLoader() {
-
 			@Override
 			public void load(int offset, int limit) {
 				loadEvents(offset, limit);
@@ -90,7 +89,6 @@ public class EventsPresenter extends
 		});
 
 		getView().getBookingsPagingPanel().setLoader(new PagingLoader() {
-
 			@Override
 			public void load(int offset, int limit) {
 				loadBookings(offset, limit);
@@ -186,6 +184,7 @@ public class EventsPresenter extends
 	}
 
 	private void save(DelegateDto model) {
+		// Window.alert("Called " + model.getMemberId());
 		assert model.getBookingId() != null && model.getEventId() != null;
 		fireEvent(new ProcessingEvent());
 		eventsDelegate.withCallback(new AbstractAsyncCallback<DelegateDto>() {

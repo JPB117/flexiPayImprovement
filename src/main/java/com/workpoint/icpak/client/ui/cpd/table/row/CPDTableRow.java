@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.RowWidget;
 import com.workpoint.icpak.client.ui.events.EditModelEvent;
+import com.workpoint.icpak.client.ui.events.TableActionEvent;
 import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.model.CPDDto;
@@ -40,7 +41,7 @@ public class CPDTableRow extends RowWidget {
 	HTMLPanel divCPD;
 	@UiField
 	SpanElement spnStatus;
-	
+
 	@UiField
 	ActionLink aDownloadCert;
 
@@ -62,12 +63,19 @@ public class CPDTableRow extends RowWidget {
 	private CPDDto dto;
 
 	public CPDTableRow() {
-		initWidget(uiBinder.createAndBindUi(this));	
+		initWidget(uiBinder.createAndBindUi(this));
 		aEdit.addClickHandler(new ClickHandler() {
-
 			@Override
 			public void onClick(ClickEvent event) {
 				AppContext.fireEvent(new EditModelEvent(dto));
+			}
+		});
+
+		aDownloadCert.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				AppContext.fireEvent(new TableActionEvent(dto,
+						TableActionType.DOWNLOADCERT));
 			}
 		});
 	}
@@ -110,6 +118,10 @@ public class CPDTableRow extends RowWidget {
 			aNotAttended.addStyleName("hide");
 		}
 
+	}
+
+	public enum TableActionType {
+		DOWNLOADCERT
 	}
 
 }

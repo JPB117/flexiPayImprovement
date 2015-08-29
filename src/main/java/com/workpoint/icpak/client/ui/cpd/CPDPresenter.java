@@ -13,7 +13,6 @@ import java.util.List;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rest.delegates.client.ResourceDelegate;
@@ -38,9 +37,11 @@ import com.workpoint.icpak.client.ui.component.PagingLoader;
 import com.workpoint.icpak.client.ui.component.PagingPanel;
 import com.workpoint.icpak.client.ui.cpd.form.RecordCPD;
 import com.workpoint.icpak.client.ui.events.EditModelEvent;
+import com.workpoint.icpak.client.ui.events.EditModelEvent.EditModelHandler;
 import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
 import com.workpoint.icpak.client.ui.events.ProcessingEvent;
-import com.workpoint.icpak.client.ui.events.EditModelEvent.EditModelHandler;
+import com.workpoint.icpak.client.ui.events.TableActionEvent;
+import com.workpoint.icpak.client.ui.events.TableActionEvent.TableActionHandler;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
 import com.workpoint.icpak.client.ui.popup.GenericPopupPresenter;
 import com.workpoint.icpak.client.ui.security.LoginGateKeeper;
@@ -50,7 +51,7 @@ import com.workpoint.icpak.shared.model.CPDDto;
 
 public class CPDPresenter extends
 		Presenter<CPDPresenter.ICPDView, CPDPresenter.ICPDProxy> implements
-		EditModelHandler {
+		EditModelHandler, TableActionHandler {
 
 	public interface ICPDView extends View {
 		HasClickHandlers getRecordButton();
@@ -271,5 +272,20 @@ public class CPDPresenter extends
 	private void delete(CPDDto model) {
 
 	}
+
+	@Override
+	public void onTableAction(TableActionEvent event) {
+		// TODO Auto-generated method stub
+		
+	}
+
+//	@Override
+//	public void onEditModel(TableActionEvent event) {
+//		if (event.getAction() == TableActionType.DOWNLOADCERT) {
+//			//Send the refId to server side
+//			
+//			
+//		}
+//	}
 
 }

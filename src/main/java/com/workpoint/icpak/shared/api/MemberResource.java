@@ -25,7 +25,8 @@ public interface MemberResource extends BaseResource{
 	@Path("/search/{searchTerm}")
 	public List<MemberDto> search(@PathParam("searchTerm") String searchTerm, 
 			@QueryParam("offset") Integer offset, @QueryParam("limit") Integer limit);
-
+	
+	
 	@Path("/{memberId}/cpd")
 	public CPDResource cpd(@PathParam("memberId") String memberId);
 	
