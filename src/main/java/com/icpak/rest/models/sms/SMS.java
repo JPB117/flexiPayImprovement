@@ -17,15 +17,14 @@ public class SMS extends PO {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-
 	private String subject;
 
 	private String pin;
 
 	private String telNo;
+	
+	public SMS() {
+	}
 
 	public SMS(String subject, String to, String pin) {
 		this.pin = pin;
@@ -39,14 +38,6 @@ public class SMS extends PO {
 
 	public void setSubject(String subject) {
 		this.subject = subject;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	public String getPin() {

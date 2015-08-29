@@ -1,5 +1,6 @@
 package com.icpak.rest.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Query;
@@ -9,7 +10,9 @@ import com.icpak.rest.models.ErrorCodes;
 import com.icpak.rest.models.event.Accommodation;
 import com.icpak.rest.models.event.Event;
 import com.workpoint.icpak.shared.model.EventType;
+import com.workpoint.icpak.shared.model.MemberDto;
 import com.workpoint.icpak.shared.model.PaymentStatus;
+import com.workpoint.icpak.shared.model.EventSummaryDto;
 
 public class EventsDao extends BaseDao {
 
@@ -101,6 +104,32 @@ public class EventsDao extends BaseDao {
 	public List<Accommodation> getAllAccommodations() {
 		return getResultList(getEntityManager()
 				.createQuery("FROM Accommodation"));
+	}
+	
+	
+	public EventSummaryDto getEventsSummary(){
+		String sql = "select count(*),dateStatus from "
+				+ "(select "
+				+ "(case when enddate<current_date then 'CLOSED' else 'OPEN' end) "
+				+ "as dateStatus from event) as q1";
+		
+		List<Object[]> rows =  getEntityManager().createNativeQuery(sql).getResultList();
+		EventSummaryDto summary = new EventSummaryDto();
+		
+		for(Object[] row: rows){
+			int i=0;
+			Object value=null;
+			Integer count = (value=row[i++])==null? null: ((Number)value).intValue();
+			String status=(value=row[i++])==null? null: value.toString();
+			if(status.equals("OPEN")){
+				summary.setOpen(count);
+			}else{
+				summary.setClosed(count);
+			}
+		}
+		
+		return summary;
+	
 	}
 
 }

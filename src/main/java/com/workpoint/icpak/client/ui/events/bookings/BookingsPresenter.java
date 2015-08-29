@@ -26,7 +26,7 @@ import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
 import com.workpoint.icpak.client.ui.events.ProcessingEvent;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
 import com.workpoint.icpak.client.ui.security.LoginGateKeeper;
-import com.workpoint.icpak.client.ui.security.NotAdminGateKeeper;
+import com.workpoint.icpak.client.ui.security.MemberGateKeeper;
 import com.workpoint.icpak.shared.api.EventsResource;
 import com.workpoint.icpak.shared.model.events.BookingDto;
 import com.workpoint.icpak.shared.model.events.DelegateDto;
@@ -53,7 +53,7 @@ public class BookingsPresenter
 
 	@ProxyCodeSplit
 	@NameToken(NameTokens.bookings)
-	@UseGatekeeper(NotAdminGateKeeper.class)
+	@UseGatekeeper(MemberGateKeeper.class)
 	public interface IBookingsProxy extends
 			TabContentProxyPlace<BookingsPresenter> {
 	}

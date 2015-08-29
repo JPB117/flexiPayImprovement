@@ -30,7 +30,7 @@
 							<span class="" ui:field="spnTotalProcessed" title="Money Out">
 							</span>
 						</div>
-						<div class="text-uppercase">Pending Events</div>
+						<div class="text-uppercase">Closed Events</div>
 					</div>
 				</div>
 			</div>
