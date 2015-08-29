@@ -76,7 +76,7 @@ public class AppContext {
 		return show;
 	}
 
-	public static boolean isValid() {
+	public static boolean isLoggedIn() {
 		boolean isValid = user.isLoggedIn();
 		if (isValid) {
 			return true;

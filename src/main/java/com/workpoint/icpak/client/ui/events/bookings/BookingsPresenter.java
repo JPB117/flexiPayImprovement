@@ -26,34 +26,43 @@ import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
 import com.workpoint.icpak.client.ui.events.ProcessingEvent;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
 import com.workpoint.icpak.client.ui.security.LoginGateKeeper;
+import com.workpoint.icpak.client.ui.security.NotAdminGateKeeper;
 import com.workpoint.icpak.shared.api.EventsResource;
 import com.workpoint.icpak.shared.model.events.BookingDto;
 import com.workpoint.icpak.shared.model.events.DelegateDto;
 import com.workpoint.icpak.shared.model.events.EventDto;
 
-public class BookingsPresenter extends
+public class BookingsPresenter
+		extends
 		Presenter<BookingsPresenter.IBookingsView, BookingsPresenter.IBookingsProxy>
 		implements EditModelHandler {
 
 	public interface IBookingsView extends View {
 		void showAdvancedView(boolean show);
+
 		void bindEvents(List<EventDto> events);
+
 		void bindEvent(EventDto event);
+
 		void bindBookings(List<BookingDto> events);
+
 		PagingPanel getEventsPagingPanel();
+
 		PagingPanel getBookingsPagingPanel();
 	}
 
 	@ProxyCodeSplit
 	@NameToken(NameTokens.bookings)
-	@UseGatekeeper(LoginGateKeeper.class)
-	public interface IBookingsProxy extends TabContentProxyPlace<BookingsPresenter> {
+	@UseGatekeeper(NotAdminGateKeeper.class)
+	public interface IBookingsProxy extends
+			TabContentProxyPlace<BookingsPresenter> {
 	}
 
 	@TabInfo(container = HomePresenter.class)
 	static TabData getTabLabel(LoginGateKeeper gateKeeper) {
-		String tabName= "My Bookings";
-		TabDataExt data = new TabDataExt(tabName, "fa fa-tags",2, gateKeeper, true);
+		String tabName = "My Bookings";
+		TabDataExt data = new TabDataExt(tabName, "fa fa-tags", 2, gateKeeper,
+				true);
 		return data;
 	}
 
