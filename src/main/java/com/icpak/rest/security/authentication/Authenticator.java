@@ -55,13 +55,10 @@ public class Authenticator {
 	}
 
 	public UserDto authenticateCredentials(String username, String password) {
-
-		User user = userDao.findUserByUsername(username);
-
-		if (authenticate(username, password) != null) {
-			UserDto userDto = user.toDto();
+		UserDto userDto =null;
+		
+		if ((userDto=authenticate(username, password)) != null) {
 			persistHttpSessionCookie(userDto);
-
 			return userDto;
 		} else {
 			throw new AuthenticationException();
@@ -70,17 +67,18 @@ public class Authenticator {
 	}
 
 	@SuppressWarnings("deprecation")
-	private UserDto authenticate(String username, String password) {
+	private UserDto authenticate(String usernameOrMemberNo, String password) {
 
 		Sha256CredentialsMatcher matcher = new Sha256CredentialsMatcher();
-		User user = userDao.findUserByUsername(username);
+		User user =  userDao.getUserByUsernameOrMemberNo(usernameOrMemberNo);
+		
 		if (password == null || user == null) {
 			throw new ServiceException(ErrorCodes.UNAUTHORIZEDACCESS);
 		}
 
-		AuthenticationToken token = new UsernamePasswordToken(username,
+		AuthenticationToken token = new UsernamePasswordToken(usernameOrMemberNo,
 				password);
-		UsernamePasswordToken authcToken = new UsernamePasswordToken(username,
+		UsernamePasswordToken authcToken = new UsernamePasswordToken(usernameOrMemberNo,
 				password);
 		boolean isMatch = false;
 		try {
@@ -96,7 +94,7 @@ public class Authenticator {
 
 		return user.toDto();
 	}
-
+	
 	public UserDto authenticatCookie(String loggedInCookie)
 			throws AuthenticationException {
 		UserDto userDto = userSessionDao.getUserFromCookie(loggedInCookie);

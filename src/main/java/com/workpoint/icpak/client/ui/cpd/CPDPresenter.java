@@ -48,7 +48,7 @@ import com.workpoint.icpak.client.ui.security.LoginGateKeeper;
 import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.api.MemberResource;
 import com.workpoint.icpak.shared.model.CPDDto;
-import com.workpoint.icpak.shared.model.CPDSummary;
+import com.workpoint.icpak.shared.model.CPDSummaryDto;
 
 public class CPDPresenter extends
 		Presenter<CPDPresenter.ICPDView, CPDPresenter.ICPDProxy> implements
@@ -63,7 +63,7 @@ public class CPDPresenter extends
 
 		PagingPanel getPagingPanel();
 
-		void bindSummary(CPDSummary summary);
+		void bindSummary(CPDSummaryDto summary);
 
 	}
 
@@ -223,9 +223,9 @@ public class CPDPresenter extends
 		fireEvent(new ProcessingEvent());
 		
 
-		memberDelegate.withCallback(new AbstractAsyncCallback<CPDSummary>() {
+		memberDelegate.withCallback(new AbstractAsyncCallback<CPDSummaryDto>() {
 			@Override
-			public void onSuccess(CPDSummary summary) {
+			public void onSuccess(CPDSummaryDto summary) {
 				getView().bindSummary(summary);
 			}
 		}).cpd(memberId).getCPDSummary();

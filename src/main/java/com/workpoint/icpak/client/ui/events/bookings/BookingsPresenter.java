@@ -52,7 +52,8 @@ public class BookingsPresenter
 	@Inject
 	public BookingsPresenter(final EventBus eventBus, final IBookingsView view,
 			final IBookingsProxy proxy,
-			ResourceDelegate<MemberResource> membersDelegate) {
+			ResourceDelegate<MemberResource> membersDelegate
+			) {
 		super(eventBus, view, proxy, HomePresenter.SLOT_SetTabContent);
 		this.membersDelegate = membersDelegate;
 	}

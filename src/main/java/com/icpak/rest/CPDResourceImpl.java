@@ -22,7 +22,7 @@ import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 import com.workpoint.icpak.shared.api.CPDResource;
 import com.workpoint.icpak.shared.model.CPDDto;
-import com.workpoint.icpak.shared.model.CPDSummary;
+import com.workpoint.icpak.shared.model.CPDSummaryDto;
 
 @Api(value = "", description = "Handles CRUD on cpd data")
 public class CPDResourceImpl implements CPDResource{
@@ -50,9 +50,10 @@ public class CPDResourceImpl implements CPDResource{
 		}
 		
 		@GET
-		@Path("/{summary}")
+		@Path("/summary")
+		@Produces(MediaType.APPLICATION_JSON)
 		@Consumes(MediaType.APPLICATION_JSON)
-		public CPDSummary getCPDSummary(){
+		public CPDSummaryDto getCPDSummary(){
 			return cpdDao.getCPDSummary(memberId);
 		}
 		

@@ -15,25 +15,25 @@ public class EventSummaryDto implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	public Integer open;
-	public Integer closed;
+	public int open;
+	public int closed;
 	
 	public EventSummaryDto() {
 	}
 
-	public Integer getClosed() {
+	public int getClosed() {
 		return closed;
 	}
 
-	public void setClosed(Integer closed) {
+	public void setClosed(int closed) {
 		this.closed = closed;
 	}
 
-	public Integer getOpen() {
+	public int getOpen() {
 		return open;
 	}
 
-	public void setOpen(Integer open) {
+	public void setOpen(int open) {
 		this.open = open;
 	}
 	

@@ -33,7 +33,7 @@ public class ICPAKAuthenticatingRealm extends AuthenticatingRealm {
 	public AuthenticationInfo doGetAuthenticationInfo(
 			AuthenticationToken authcToken) throws AuthenticationException {
 		UsernamePasswordToken token = (UsernamePasswordToken) authcToken;
-		User user = getUserDao().findUserByUsername(token.getUsername());
+		User user =   getUserDao().getUserByUsernameOrMemberNo(token.getUsername());
 		if (user != null) {
 			return new SimpleAuthenticationInfo(user.getId(),
 					user.getHashedPassword(), getName());

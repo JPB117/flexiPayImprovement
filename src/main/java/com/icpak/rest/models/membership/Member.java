@@ -31,7 +31,7 @@ public class Member extends PO{
 	 */
 	private static final long serialVersionUID = 1L;
 	private String userRefId;
-	private String memberId;
+	private String memberNo;
 	
 	@OneToOne
 	@JoinColumn(name="userId")
@@ -56,21 +56,21 @@ public class Member extends PO{
 		MemberDto dto = new MemberDto();
 		dto.setRefId(getRefId());
 		dto.setUserId(userRefId);
-		dto.setMemberId(memberId);
+		dto.setMemberNo(memberNo);
 		
 		return dto;
 	}
 
 	public void copyFrom(MemberDto memberDto) {
-		setMemberId(memberId);
+		setMemberNo(memberNo);
 	}
 
-	public String getMemberId() {
-		return memberId;
+	public String getMemberNo() {
+		return memberNo;
 	}
 
-	public void setMemberId(String memberId) {
-		this.memberId = memberId;
+	public void setMemberNo(String memberNo) {
+		this.memberNo = memberNo;
 	}
 
 	public User getUser() {

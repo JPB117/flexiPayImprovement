@@ -23,7 +23,7 @@ public class TestMemberDao extends AbstractDaoTest {
 	public void search() {
 		List<MemberDto> list = helper.getAllMembers(0, 100, "", "mar");
 		for (MemberDto dto : list) {
-			System.err.println(dto.getRefId() + " " + dto.getMemberId() + " "
+			System.err.println(dto.getRefId() + " " + dto.getMemberNo() + " "
 					+ dto.getLastName() + " " + dto.getFirstName());
 		}
 		System.err.print("Size = " + list.size());

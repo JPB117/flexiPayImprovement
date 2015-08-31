@@ -6,7 +6,9 @@ import org.junit.Test;
 
 import com.google.inject.Inject;
 import com.icpak.rest.dao.UserSessionDao;
+import com.icpak.rest.dao.UsersDao;
 import com.icpak.rest.dao.helper.UsersDaoHelper;
+import com.icpak.rest.models.auth.User;
 import com.workpoint.icpak.shared.model.UserDto;
 import com.workpoint.icpak.shared.model.auth.LogInAction;
 import com.workpoint.icpak.shared.model.auth.LogInResult;
@@ -16,11 +18,20 @@ public class TestLoginAuth extends AbstractDaoTest{
 	
 	@Inject UsersDaoHelper helper;
 	@Inject UserSessionDao sessionDao;
+	
+	@Inject UsersDao usersDao;
 
 	@Ignore
+	public void getUser(){
+		User user= usersDao.findUserByMemberNo("ASSOC/867");
+		Assert.assertNotNull(user);
+		System.err.println(user.getRefId());
+	}
+	
+	@Test
 	public void auth2(){
 		
-		LogInResult result = helper.execLogin(new LogInAction("mdkimani@gmail.com", "Th1KsC"));
+		LogInResult result = helper.execLogin(new LogInAction("ASSOC/867", "pass1"));
 		Assert.assertTrue(result.getCurrentUserDto().getUser() != null);
 		
 	}
@@ -32,7 +43,7 @@ public class TestLoginAuth extends AbstractDaoTest{
 		Assert.assertTrue(result.getCurrentUserDto().isLoggedIn());
 	}
 	
-	@Test
+	@Ignore
 	public void logout(){
 		sessionDao.removeLoggedInCookie(new UserDto("NPw8aeaZlJtCS6I2"));
 	}

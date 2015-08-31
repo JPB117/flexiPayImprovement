@@ -7,13 +7,14 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
 
+import com.google.gwt.user.client.rpc.IsSerializable;
 import com.workpoint.icpak.shared.model.EventStatus;
 import com.workpoint.icpak.shared.model.PaymentStatus;
 
 
 @XmlType
 @XmlAccessorType(XmlAccessType.FIELD)
-public class MemberBookingDto implements Serializable{
+public class MemberBookingDto implements Serializable, IsSerializable{
 
 	/**
 	 * 

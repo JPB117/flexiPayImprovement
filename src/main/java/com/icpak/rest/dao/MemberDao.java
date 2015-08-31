@@ -41,7 +41,7 @@ public class MemberDao extends BaseDao {
 			
 			MemberDto dto = new MemberDto();
 			dto.setUserId(userRefId);
-			dto.setMemberId(memberId);
+			dto.setMemberNo(memberId);
 			dto.setRefId(memberRefId);
 			dto.setEmail(email);
 			dto.setFirstName(firstName);

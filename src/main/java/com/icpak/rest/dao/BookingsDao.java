@@ -78,6 +78,7 @@ public class BookingsDao extends BaseDao {
 	public List<MemberBookingDto> getMemberBookings(String memberRefId, int offset, int limit){
 		String sql = "select b.refId bookingRefId, "
 				+ "e.refId eventRefId, "
+				+ "d.refId delegateRefId, "
 				+ "e.name, "
 				+ "e.startdate, "
 				+ "e.enddate, "
@@ -93,15 +94,18 @@ public class BookingsDao extends BaseDao {
 				+ "left join accommodation a on (a.id=d.accommodationid) "
 				+ "where memberRefId=:memberRefId";
 		
-		List<Object[]> rows =  getResultList(getEntityManager().createNativeQuery(sql),offset,limit);
+		List<Object[]> rows =  getResultList(getEntityManager()
+				.createNativeQuery(sql)
+				.setParameter("memberRefId", memberRefId),
+				offset,limit);
 		List<MemberBookingDto> memberEvents = new ArrayList<>();
 		
 		for(Object[] row: rows){
 			int i=0;
 			Object value=null;
-			String delegateRefId=(value=row[i++])==null? null: value.toString();
 			String bookingRefId=(value=row[i++])==null? null: value.toString();
 			String eventRefId=(value=row[i++])==null? null: value.toString();
+			String delegateRefId=(value=row[i++])==null? null: value.toString();
 			String eventName=(value=row[i++])==null? null: value.toString();
 			Date startDate=(value=row[i++])==null? null: (Date)value;
 			Date endDate=(value=row[i++])==null? null: (Date)value;

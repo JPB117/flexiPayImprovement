@@ -6,7 +6,7 @@ import com.icpak.rest.exceptions.ServiceException;
 import com.icpak.rest.models.ErrorCodes;
 import com.icpak.rest.models.cpd.CPD;
 import com.workpoint.icpak.shared.model.CPDStatus;
-import com.workpoint.icpak.shared.model.CPDSummary;
+import com.workpoint.icpak.shared.model.CPDSummaryDto;
 import com.workpoint.icpak.shared.model.EventSummaryDto;
 
 /**
@@ -99,13 +99,13 @@ public class CPDDao extends BaseDao {
 		return cpd;
 	}
 
-	public CPDSummary getCPDSummary(String memberId) {
+	public CPDSummaryDto getCPDSummary(String memberId) {
 		String sql = "select sum(cpdHours), status from cpd where memberId=:memberId group by status";
 		
 		List<Object[]> rows =  getResultList(getEntityManager().createNativeQuery(sql)
 				.setParameter("memberId", memberId));
 		
-		CPDSummary summary = new CPDSummary();
+		CPDSummaryDto summary = new CPDSummaryDto();
 		
 		for(Object[] row: rows){
 			int i=0;

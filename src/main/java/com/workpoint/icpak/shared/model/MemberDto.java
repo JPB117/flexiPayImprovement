@@ -10,7 +10,7 @@ public class MemberDto extends SerializableObj implements Listable{
 	private static final long serialVersionUID = 1L;
 	
 	private String userId;
-	private String memberId;
+	private String memberNo;
 	private String email;
 	private String lastName;
 	private String firstName;
@@ -20,13 +20,13 @@ public class MemberDto extends SerializableObj implements Listable{
 	public MemberDto() {
 	}
 
-	public MemberDto(String memberId) {
-		this.memberId = memberId;
+	public MemberDto(String memberNo) {
+		this.memberNo = memberNo;
 	}
 	
-	public MemberDto(String memberRefId,String memberId) {
+	public MemberDto(String memberRefId,String memberNo) {
 		setRefId(memberRefId);
-		this.memberId = memberId;
+		this.memberNo = memberNo;
 	}
 
 	public String getUserId() {
@@ -39,13 +39,13 @@ public class MemberDto extends SerializableObj implements Listable{
 	}
 
 
-	public String getMemberId() {
-		return memberId;
+	public String getMemberNo() {
+		return memberNo;
 	}
 
 
-	public void setMemberId(String memberId) {
-		this.memberId = memberId;
+	public void setMemberNo(String memberId) {
+		this.memberNo = memberId;
 	}
 
 
@@ -81,7 +81,7 @@ public class MemberDto extends SerializableObj implements Listable{
 
 	@JsonIgnore
 	public String getDisplayName() {
-		return (memberId==null? "": memberId)+" - "+
+		return (memberNo==null? "": memberNo)+" - "+
 				getName();
 	}
 

@@ -18,6 +18,23 @@ public class UsersDao extends BaseDao {
 		return getSingleResultOrNull(getEntityManager().createQuery(query)
 				.setParameter("username", username));
 	}
+	
+	public User findUserByMemberNo(String memberNo) {
+		assert memberNo != null;
+		String query = "from User u where u.memberNo = :memberNo";
+		return getSingleResultOrNull(getEntityManager().createQuery(query)
+				.setParameter("memberNo", memberNo));
+	}
+	
+	public User getUserByUsernameOrMemberNo(String username) {
+		
+		User user = findUserByUsername(username);
+		if(user==null){
+			user = findUserByMemberNo(username);
+		}
+		return user;
+	}
+
 
 	public void createUser(User user) {
 		if (user.getHashedPassword() != null && user.getId() == null)
@@ -157,5 +174,6 @@ public class UsersDao extends BaseDao {
 								+ "inner join Member m on m.userRefId=u.refId where m.refId=:memberNo")
 				.setParameter("memberNo", memberNo));
 	}
+
 
 }

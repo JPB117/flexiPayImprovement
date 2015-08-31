@@ -111,7 +111,8 @@ public class EventsDao extends BaseDao {
 				+ "(case when enddate<current_date then 'CLOSED' else 'OPEN' end) "
 				+ "as dateStatus from event) as q1";
 		
-		List<Object[]> rows =  getEntityManager().createNativeQuery(sql).getResultList();
+		List<Object[]> rows = getResultList(getEntityManager()
+				.createNativeQuery(sql));
 		EventSummaryDto summary = new EventSummaryDto();
 		
 		for(Object[] row: rows){
@@ -119,6 +120,7 @@ public class EventsDao extends BaseDao {
 			Object value=null;
 			Integer count = (value=row[i++])==null? null: ((Number)value).intValue();
 			String status=(value=row[i++])==null? null: value.toString();
+			
 			if(status.equals("OPEN")){
 				summary.setOpen(count);
 			}else{

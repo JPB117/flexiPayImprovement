@@ -29,7 +29,7 @@ import com.workpoint.icpak.client.ui.cpd.table.row.CPDTableRow;
 import com.workpoint.icpak.client.ui.cpd.unconfirmed.UnconfirmedCPD;
 import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.shared.model.CPDDto;
-import com.workpoint.icpak.shared.model.CPDSummary;
+import com.workpoint.icpak.shared.model.CPDSummaryDto;
 import com.workpoint.icpak.shared.model.Listable;
 
 public class CPDView extends ViewImpl implements CPDPresenter.ICPDView {
@@ -191,8 +191,8 @@ public class CPDView extends ViewImpl implements CPDPresenter.ICPDView {
 	}
 
 	@Override
-	public void bindSummary(CPDSummary summary) {
-		headerContainer.setValues(summary.getConfirmedCPD()+summary.getConfirmedCPD(),
-				summary.getConfirmedCPD(), summary.getConfirmedCPD());
+	public void bindSummary(CPDSummaryDto summary) {
+		headerContainer.setValues(summary.getUnconfirmedCPD()+summary.getConfirmedCPD(),
+				summary.getConfirmedCPD(), summary.getUnconfirmedCPD());
 	}
 }

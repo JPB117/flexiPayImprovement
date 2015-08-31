@@ -2,7 +2,13 @@ package com.workpoint.icpak.shared.model;
 
 import java.io.Serializable;
 
-public class CPDSummary implements Serializable{
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlType;
+
+@XmlType
+@XmlAccessorType(XmlAccessType.FIELD)
+public class CPDSummaryDto implements Serializable{
 
 	/**
 	 * 
@@ -11,7 +17,7 @@ public class CPDSummary implements Serializable{
 	private int confirmedCPD=0;
 	private int unconfirmedCPD=0;
 	
-	public CPDSummary() {
+	public CPDSummaryDto() {
 	}
 
 	public int getConfirmedCPD() {
