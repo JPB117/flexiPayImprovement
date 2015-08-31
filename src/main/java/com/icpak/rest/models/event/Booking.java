@@ -75,6 +75,7 @@ public class Booking extends PO{
 	
 	@ManyToOne
 	private Event event;
+	
 	private Date registrationDate= new Date();
 	private String memberId; //For Courses, may not have delegates
 		

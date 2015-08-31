@@ -29,7 +29,7 @@ import com.workpoint.icpak.client.ui.cpd.table.row.CPDTableRow;
 import com.workpoint.icpak.client.ui.cpd.unconfirmed.UnconfirmedCPD;
 import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.shared.model.CPDDto;
-import com.workpoint.icpak.shared.model.CPDStatus;
+import com.workpoint.icpak.shared.model.CPDSummary;
 import com.workpoint.icpak.shared.model.Listable;
 
 public class CPDView extends ViewImpl implements CPDPresenter.ICPDView {
@@ -174,20 +174,6 @@ public class CPDView extends ViewImpl implements CPDPresenter.ICPDView {
 
 	@Override
 	public void bindResults(List<CPDDto> result) {
-		int totalHrs = 0;
-		int confirmed = 0;
-		int unconfirmed = 0;
-
-		for (CPDDto cpd : result) {
-			totalHrs = totalHrs + cpd.getCpdHours();
-			if (cpd.getStatus().equals(CPDStatus.CONFIRMED)) {
-				confirmed = confirmed + cpd.getCpdHours();
-			} else {
-				unconfirmed = unconfirmed + cpd.getCpdHours();
-			}
-		}
-		headerContainer.setValues(totalHrs, confirmed, unconfirmed);
-
 		tblView.clearRows();
 		for (CPDDto dto : result) {
 			tblView.createRow(new CPDTableRow(dto));
@@ -202,5 +188,11 @@ public class CPDView extends ViewImpl implements CPDPresenter.ICPDView {
 	@Override
 	public PagingPanel getPagingPanel() {
 		return tblView.getPagingPanel();
+	}
+
+	@Override
+	public void bindSummary(CPDSummary summary) {
+		headerContainer.setValues(summary.getConfirmedCPD()+summary.getConfirmedCPD(),
+				summary.getConfirmedCPD(), summary.getConfirmedCPD());
 	}
 }

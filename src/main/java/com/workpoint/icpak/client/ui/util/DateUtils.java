@@ -18,6 +18,7 @@ public class DateUtils {
 	static String fullPattern = "EEE,MMM d,yyyy";
 	static String halfPattern = "EEEE, MMM d";
 	static String monthDayPattern = "MMM d";
+	static String monthDayYearPattern = "MMM d yyyy";
 	static String Time = "hh:mm a";
 	static String MonthTime = "MMM d, hh:mm a";
 
@@ -35,6 +36,8 @@ public class DateUtils {
 			.getFormat(fullPattern);
 	public static final DateTimeFormat MONTHDAYFORMAT = DateTimeFormat
 			.getFormat(monthDayPattern);
+	public static final DateTimeFormat MONTHDAYYEARFORMAT = DateTimeFormat
+			.getFormat(monthDayYearPattern);
 	public static final DateTimeFormat TIMEFORMAT12HR = DateTimeFormat
 			.getFormat(Time);
 	public static final DateTimeFormat MONTHTIME = DateTimeFormat

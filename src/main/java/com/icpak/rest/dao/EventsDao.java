@@ -1,6 +1,5 @@
 package com.icpak.rest.dao;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Query;
@@ -9,10 +8,9 @@ import com.icpak.rest.exceptions.ServiceException;
 import com.icpak.rest.models.ErrorCodes;
 import com.icpak.rest.models.event.Accommodation;
 import com.icpak.rest.models.event.Event;
-import com.workpoint.icpak.shared.model.EventType;
-import com.workpoint.icpak.shared.model.MemberDto;
-import com.workpoint.icpak.shared.model.PaymentStatus;
 import com.workpoint.icpak.shared.model.EventSummaryDto;
+import com.workpoint.icpak.shared.model.EventType;
+import com.workpoint.icpak.shared.model.PaymentStatus;
 
 public class EventsDao extends BaseDao {
 

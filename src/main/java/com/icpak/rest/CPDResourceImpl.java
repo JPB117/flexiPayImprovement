@@ -15,18 +15,22 @@ import javax.ws.rs.core.MediaType;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
+import com.icpak.rest.dao.CPDDao;
 import com.icpak.rest.dao.helper.CPDDaoHelper;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 import com.workpoint.icpak.shared.api.CPDResource;
 import com.workpoint.icpak.shared.model.CPDDto;
+import com.workpoint.icpak.shared.model.CPDSummary;
 
 @Api(value = "", description = "Handles CRUD on cpd data")
 public class CPDResourceImpl implements CPDResource{
 
 		@Inject
 		CPDDaoHelper helper;
+		@Inject CPDDao cpdDao;
+		
 		private final String memberId;
 		
 		@Inject
@@ -43,6 +47,13 @@ public class CPDResourceImpl implements CPDResource{
 				@QueryParam("limit") Integer limit) {
 
 			return helper.getAllCPD(memberId,offset, limit);
+		}
+		
+		@GET
+		@Path("/{summary}")
+		@Consumes(MediaType.APPLICATION_JSON)
+		public CPDSummary getCPDSummary(){
+			return cpdDao.getCPDSummary(memberId);
 		}
 		
 		@GET

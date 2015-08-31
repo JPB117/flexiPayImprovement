@@ -15,6 +15,7 @@ import com.workpoint.icpak.client.ui.eventsandseminars.delegates.table.Delegates
 import com.workpoint.icpak.client.ui.eventsandseminars.header.EventsHeader;
 import com.workpoint.icpak.client.ui.eventsandseminars.row.EventsTableRow;
 import com.workpoint.icpak.client.ui.eventsandseminars.table.EventsTable;
+import com.workpoint.icpak.shared.model.EventSummaryDto;
 import com.workpoint.icpak.shared.model.events.BookingDto;
 import com.workpoint.icpak.shared.model.events.DelegateDto;
 import com.workpoint.icpak.shared.model.events.EventDto;
@@ -65,7 +66,6 @@ public class EventsView extends ViewImpl implements EventsPresenter.IEventsView 
 
 	@Override
 	public void bindEvents(List<EventDto> events) {
-		headerContainer.setCounts(events.size(),0,0);
 		tblView.clearRows();
 		for(EventDto event: events){
 			tblView.createRow(new EventsTableRow(event));
@@ -95,6 +95,11 @@ public class EventsView extends ViewImpl implements EventsPresenter.IEventsView 
 	@Override
 	public PagingPanel getBookingsPagingPanel() {
 		return tblDelegates.getPagingPanel();
+	}
+
+	@Override
+	public void bindEventSummary(EventSummaryDto eventSummary) {
+		headerContainer.setCounts(eventSummary.getClosed()+eventSummary.getOpen(),eventSummary.getClosed(), eventSummary.getOpen());
 	}
 
 }

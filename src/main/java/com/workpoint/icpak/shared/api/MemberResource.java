@@ -11,6 +11,7 @@ import javax.ws.rs.core.MediaType;
 
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.MemberDto;
+import com.workpoint.icpak.shared.model.events.MemberBookingDto;
 
 @Path("members")
 @Produces(MediaType.APPLICATION_JSON)
@@ -36,4 +37,9 @@ public interface MemberResource extends BaseResource{
 	
 	@Path("/{memberId}/enquiries")
 	public EnquiriesResource enquiries(@PathParam("memberId") String memberId);
+	
+	@GET
+	@Path("/{memberId}/bookings")
+	public List<MemberBookingDto> getMemberBookings(@PathParam("memberId") String memberId,
+			@QueryParam("offset") Integer offset, @QueryParam("limit") Integer limit);
 }

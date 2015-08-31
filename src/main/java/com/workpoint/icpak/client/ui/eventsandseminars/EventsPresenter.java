@@ -28,6 +28,7 @@ import com.workpoint.icpak.client.ui.events.ProcessingEvent;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
 import com.workpoint.icpak.client.ui.security.AdminGateKeeper;
 import com.workpoint.icpak.shared.api.EventsResource;
+import com.workpoint.icpak.shared.model.EventSummaryDto;
 import com.workpoint.icpak.shared.model.events.BookingDto;
 import com.workpoint.icpak.shared.model.events.DelegateDto;
 import com.workpoint.icpak.shared.model.events.EventDto;
@@ -49,6 +50,8 @@ public class EventsPresenter extends
 		PagingPanel getEventsPagingPanel();
 
 		PagingPanel getBookingsPagingPanel();
+
+		void bindEventSummary(EventSummaryDto result);
 	}
 
 	@ProxyCodeSplit
@@ -114,6 +117,14 @@ public class EventsPresenter extends
 	private void loadData() {
 		fireEvent(new ProcessingEvent());
 
+		
+		eventsDelegate.withCallback(new AbstractAsyncCallback<EventSummaryDto>() {
+			public void onSuccess(EventSummaryDto result) {
+				getView().bindEventSummary(result);
+			};
+		}).getEventsSummary();
+		
+		
 		if (eventId != null) {
 			// Load Bookings
 			eventsDelegate.withCallback(new AbstractAsyncCallback<Integer>() {

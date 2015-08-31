@@ -2,6 +2,13 @@ package com.workpoint.icpak.shared.model;
 
 import java.io.Serializable;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlType;
+
+
+@XmlType
+@XmlAccessorType(XmlAccessType.FIELD)
 public class EventSummaryDto implements Serializable {
 
 	/**
@@ -10,7 +17,6 @@ public class EventSummaryDto implements Serializable {
 	private static final long serialVersionUID = 1L;
 	public Integer open;
 	public Integer closed;
-	public Integer upcoming;
 	
 	public EventSummaryDto() {
 	}
@@ -21,14 +27,6 @@ public class EventSummaryDto implements Serializable {
 
 	public void setClosed(Integer closed) {
 		this.closed = closed;
-	}
-
-	public Integer getUpcoming() {
-		return upcoming;
-	}
-
-	public void setUpcoming(Integer upcoming) {
-		this.upcoming = upcoming;
 	}
 
 	public Integer getOpen() {

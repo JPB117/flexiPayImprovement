@@ -17,38 +17,21 @@ import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.workpoint.icpak.client.place.NameTokens;
 import com.workpoint.icpak.client.service.AbstractAsyncCallback;
 import com.workpoint.icpak.client.ui.admin.TabDataExt;
-import com.workpoint.icpak.client.ui.component.PagingConfig;
-import com.workpoint.icpak.client.ui.component.PagingLoader;
-import com.workpoint.icpak.client.ui.component.PagingPanel;
-import com.workpoint.icpak.client.ui.events.EditModelEvent;
-import com.workpoint.icpak.client.ui.events.EditModelEvent.EditModelHandler;
-import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
-import com.workpoint.icpak.client.ui.events.ProcessingEvent;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
-import com.workpoint.icpak.client.ui.security.LoginGateKeeper;
 import com.workpoint.icpak.client.ui.security.MemberGateKeeper;
-import com.workpoint.icpak.shared.api.EventsResource;
-import com.workpoint.icpak.shared.model.events.BookingDto;
-import com.workpoint.icpak.shared.model.events.DelegateDto;
-import com.workpoint.icpak.shared.model.events.EventDto;
+import com.workpoint.icpak.client.util.AppContext;
+import com.workpoint.icpak.shared.api.MemberResource;
+import com.workpoint.icpak.shared.model.events.MemberBookingDto;
 
 public class BookingsPresenter
 		extends
-		Presenter<BookingsPresenter.IBookingsView, BookingsPresenter.IBookingsProxy>
-		implements EditModelHandler {
+		Presenter<BookingsPresenter.IBookingsView, BookingsPresenter.IBookingsProxy>{
+
+	private ResourceDelegate<MemberResource> membersDelegate;
 
 	public interface IBookingsView extends View {
-		void showAdvancedView(boolean show);
-
-		void bindEvents(List<EventDto> events);
-
-		void bindEvent(EventDto event);
-
-		void bindBookings(List<BookingDto> events);
-
-		PagingPanel getEventsPagingPanel();
-
-		PagingPanel getBookingsPagingPanel();
+		void bindBookings(List<MemberBookingDto> result);
+		//PagingPanel getBookingsPagingPanel();
 	}
 
 	@ProxyCodeSplit
@@ -59,142 +42,41 @@ public class BookingsPresenter
 	}
 
 	@TabInfo(container = HomePresenter.class)
-	static TabData getTabLabel(LoginGateKeeper gateKeeper) {
+	static TabData getTabLabel(MemberGateKeeper gateKeeper) {
 		String tabName = "My Bookings";
 		TabDataExt data = new TabDataExt(tabName, "fa fa-tags", 2, gateKeeper,
 				true);
 		return data;
 	}
-
-	private ResourceDelegate<EventsResource> eventsDelegate;
-	private String eventId;
-
+	
 	@Inject
 	public BookingsPresenter(final EventBus eventBus, final IBookingsView view,
 			final IBookingsProxy proxy,
-			ResourceDelegate<EventsResource> eventsDelegate) {
+			ResourceDelegate<MemberResource> membersDelegate) {
 		super(eventBus, view, proxy, HomePresenter.SLOT_SetTabContent);
-		this.eventsDelegate = eventsDelegate;
+		this.membersDelegate = membersDelegate;
 	}
 
 	@Override
 	protected void onBind() {
 		super.onBind();
-		addRegisteredHandler(EditModelEvent.TYPE, this);
-		getView().getEventsPagingPanel().setLoader(new PagingLoader() {
-
-			@Override
-			public void load(int offset, int limit) {
-				loadEvents(offset, limit);
-			}
-		});
-
-		getView().getBookingsPagingPanel().setLoader(new PagingLoader() {
-
-			@Override
-			public void load(int offset, int limit) {
-				loadBookings(offset, limit);
-			}
-		});
 	}
 
 	@Override
 	public void prepareFromRequest(PlaceRequest request) {
 		super.prepareFromRequest(request);
-		eventId = request.getParameter("eventId", null);
-
-		// Load Event Details to View
-		if (eventId != null) {
-			getView().showAdvancedView(true);
-		} else {
-			getView().showAdvancedView(false);
-		}
-
 		loadData();
 	}
 
 	private void loadData() {
-		fireEvent(new ProcessingEvent());
-
-		if (eventId != null) {
-			// Load Bookings
-			eventsDelegate.withCallback(new AbstractAsyncCallback<Integer>() {
-				@Override
-				public void onSuccess(Integer aCount) {
-					fireEvent(new ProcessingCompletedEvent());
-					PagingPanel panel = getView().getBookingsPagingPanel();
-					panel.setTotal(aCount);
-					PagingConfig config = panel.getConfig();
-					loadBookings(config.getOffset(), config.getLimit());
-				}
-			}).bookings(eventId).getCount();
-
-			eventsDelegate.withCallback(new AbstractAsyncCallback<EventDto>() {
-				@Override
-				public void onSuccess(EventDto event) {
-					fireEvent(new ProcessingCompletedEvent());
-					getView().bindEvent(event);
-				}
-			}).getById(eventId);
-
-		} else {
-
-			// Load Events
-			eventsDelegate.withCallback(new AbstractAsyncCallback<Integer>() {
-				@Override
-				public void onSuccess(Integer aCount) {
-					fireEvent(new ProcessingCompletedEvent());
-					PagingPanel panel = getView().getEventsPagingPanel();
-					panel.setTotal(aCount);
-					PagingConfig config = panel.getConfig();
-					loadEvents(config.getOffset(), config.getLimit());
-				}
-			}).getCount();
-		}
-	}
-
-	protected void loadBookings(int offset, int limit) {
-		fireEvent(new ProcessingEvent());
-
-		eventsDelegate
-				.withCallback(new AbstractAsyncCallback<List<BookingDto>>() {
-					@Override
-					public void onSuccess(List<BookingDto> bookings) {
-						fireEvent(new ProcessingCompletedEvent());
-						getView().bindBookings(bookings);
-					}
-				}).bookings(eventId).getAll(offset, limit);
-	}
-
-	protected void loadEvents(int offset, int limit) {
-		fireEvent(new ProcessingEvent());
-		eventsDelegate.withCallback(
-				new AbstractAsyncCallback<List<EventDto>>() {
-					@Override
-					public void onSuccess(List<EventDto> events) {
-						fireEvent(new ProcessingCompletedEvent());
-						getView().bindEvents(events);
-					}
-				}).getAll(offset, limit);
-	}
-
-	@Override
-	public void onEditModel(EditModelEvent event) {
-		if (event.getModel() instanceof DelegateDto) {
-			save((DelegateDto) event.getModel());
-		}
-	}
-
-	private void save(DelegateDto model) {
-		assert model.getBookingId() != null && model.getEventId() != null;
-		fireEvent(new ProcessingEvent());
-		eventsDelegate.withCallback(new AbstractAsyncCallback<DelegateDto>() {
+		String memberId =AppContext.getCurrentUser().getUser().getMemberRefId();
+		
+		membersDelegate.withCallback(new AbstractAsyncCallback<List<MemberBookingDto>>() {
 			@Override
-			public void onSuccess(DelegateDto result) {
-				fireEvent(new ProcessingCompletedEvent());
+			public void onSuccess(List<MemberBookingDto> result) {
+				getView().bindBookings(result);				
 			}
-		}).bookings(model.getEventId())
-				.updateDelegate(model.getBookingId(), model.getRefId(), model);
+		}).getMemberBookings(memberId, 0, 100);
 	}
 
 }

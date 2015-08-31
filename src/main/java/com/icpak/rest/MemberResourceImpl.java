@@ -10,7 +10,9 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import com.google.inject.Inject;
+import com.icpak.rest.dao.BookingsDao;
 import com.icpak.rest.dao.InvoiceDaoHelper;
+import com.icpak.rest.dao.helper.BookingsDaoHelper;
 import com.icpak.rest.dao.helper.MemberDaoHelper;
 import com.icpak.rest.factory.ResourceFactory;
 import com.wordnik.swagger.annotations.Api;
@@ -20,6 +22,7 @@ import com.workpoint.icpak.shared.api.EnquiriesResource;
 import com.workpoint.icpak.shared.api.MemberResource;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.MemberDto;
+import com.workpoint.icpak.shared.model.events.MemberBookingDto;
 
 @Path("members")
 @Produces(MediaType.APPLICATION_JSON)
@@ -34,6 +37,8 @@ public class MemberResourceImpl implements MemberResource {
 
 	@Inject
 	MemberDaoHelper membersHelper;
+	
+	@Inject BookingsDaoHelper bookingsDaoHelper;
 
 	@GET
 	@ApiOperation(value = "Retrieve all active members")
@@ -97,6 +102,13 @@ public class MemberResourceImpl implements MemberResource {
 	public EnquiriesResourceImpl enquiries(
 			@PathParam("memberId") String memberId) {
 		return resourceFactory.createEnquiriesResource(memberId);
+	}
+	
+	@GET
+	@Path("/{memberId}/bookings")
+	public List<MemberBookingDto> getMemberBookings(@PathParam("memberId") String memberId,
+			@QueryParam("offset") Integer offset, @QueryParam("limit") Integer limit){
+		return bookingsDaoHelper.getMemberBookings(memberId,offset,limit);
 	}
 
 }

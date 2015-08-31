@@ -14,6 +14,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import com.google.inject.Inject;
+import com.icpak.rest.dao.EventsDao;
 import com.icpak.rest.dao.helper.EventsDaoHelper;
 import com.icpak.rest.factory.ResourceFactory;
 import com.icpak.rest.models.event.Event;
@@ -21,6 +22,7 @@ import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 import com.workpoint.icpak.shared.api.EventsResource;
+import com.workpoint.icpak.shared.model.EventSummaryDto;
 import com.workpoint.icpak.shared.model.events.EventDto;
 
 @Path("events")
@@ -28,7 +30,7 @@ import com.workpoint.icpak.shared.model.events.EventDto;
 public class EventsResourceImpl implements EventsResource{
 
 	@Inject EventsDaoHelper helper;
-	
+	@Inject EventsDao eventsDao;
 	@Inject ResourceFactory factory;
 	
 	@GET
@@ -83,6 +85,13 @@ public class EventsResourceImpl implements EventsResource{
 		
 		return dto;
 	}
+	
+	@GET
+	@Path("/summary")
+	@Produces(MediaType.APPLICATION_JSON)
+	public EventSummaryDto getEventsSummary(){
+		return eventsDao.getEventsSummary();
+	}
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -114,4 +123,6 @@ public class EventsResourceImpl implements EventsResource{
 		
 		helper.deleteEvent(eventId);
 	}
+	
+	
 }

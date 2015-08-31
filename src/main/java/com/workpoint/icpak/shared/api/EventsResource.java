@@ -13,6 +13,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import com.workpoint.icpak.shared.model.EventSummaryDto;
 import com.workpoint.icpak.shared.model.events.EventDto;
 
 
@@ -36,6 +37,12 @@ public interface EventsResource extends BaseResource{
 		public EventDto getById( 
 				@PathParam("eventId") String eventId);
 
+		@GET
+		@Path("/summary")
+		@Produces(MediaType.APPLICATION_JSON)
+		public EventSummaryDto getEventsSummary();
+		
+		
 		@POST
 		@Consumes(MediaType.APPLICATION_JSON)
 		@Produces(MediaType.APPLICATION_JSON)
@@ -53,5 +60,6 @@ public interface EventsResource extends BaseResource{
 		@Produces(MediaType.APPLICATION_JSON)
 		public void delete(
 				@PathParam("eventId") String eventId);
+		
 		
 }

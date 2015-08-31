@@ -15,7 +15,6 @@ import com.icpak.rest.BaseResource;
 import com.icpak.rest.exceptions.ServiceException;
 import com.icpak.rest.models.ErrorCodes;
 import com.icpak.rest.models.cpd.CPD;
-import com.icpak.rest.models.cpd.CPDSummary;
 import com.icpak.rest.models.event.Event;
 
 /**
@@ -29,7 +28,7 @@ import com.icpak.rest.models.event.Event;
 @JsonSerialize(include=Inclusion.NON_NULL)
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlSeeAlso({Event.class, CPD.class, CPDSummary.class})
+@XmlSeeAlso({Event.class, CPD.class})
 public class ResourceCollectionModel<T extends ResourceModel> extends ResourceModel{
 
 	private Integer offset;

@@ -41,6 +41,7 @@ import com.workpoint.icpak.shared.model.events.AttendanceStatus;
 import com.workpoint.icpak.shared.model.events.BookingDto;
 import com.workpoint.icpak.shared.model.events.ContactDto;
 import com.workpoint.icpak.shared.model.events.DelegateDto;
+import com.workpoint.icpak.shared.model.events.MemberBookingDto;
 
 @Transactional
 public class BookingsDaoHelper {
@@ -493,5 +494,9 @@ public class BookingsDaoHelper {
 		cpdDao.updateCPDFromAttendance(delegate, delegate.getAttendance());
 
 		return delegate.toDto();
+	}
+
+	public List<MemberBookingDto> getMemberBookings(String memberRefId, int offset, int limit) {
+		return dao.getMemberBookings(memberRefId, offset, limit);
 	}
 }

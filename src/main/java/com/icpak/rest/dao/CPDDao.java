@@ -5,6 +5,9 @@ import java.util.List;
 import com.icpak.rest.exceptions.ServiceException;
 import com.icpak.rest.models.ErrorCodes;
 import com.icpak.rest.models.cpd.CPD;
+import com.workpoint.icpak.shared.model.CPDStatus;
+import com.workpoint.icpak.shared.model.CPDSummary;
+import com.workpoint.icpak.shared.model.EventSummaryDto;
 
 /**
  * 
@@ -82,17 +85,42 @@ public class CPDDao extends BaseDao {
 	}
 
 	public void deleteCPDByMemberAndEvent(String memberId, String eventId) {
-		
+
 		delete(getCPDByMemberAndEvent(memberId, eventId));
 	}
 
 	public CPD getCPDByMemberAndEvent(String memberId, String eventId) {
 		CPD cpd = getSingleResultOrNull(getEntityManager()
-				.createQuery("from CPD u where u.memberId=:memberId and u.eventId=:eventId")
-		.setParameter("memberId", memberId)
-		.setParameter("eventId", eventId));
-		
+				.createQuery(
+						"from CPD u where u.memberId=:memberId and u.eventId=:eventId")
+				.setParameter("memberId", memberId)
+				.setParameter("eventId", eventId));
+
 		return cpd;
+	}
+
+	public CPDSummary getCPDSummary(String memberId) {
+		String sql = "select sum(cpdHours), status from cpd where memberId=:memberId group by status";
+		
+		List<Object[]> rows =  getResultList(getEntityManager().createNativeQuery(sql)
+				.setParameter("memberId", memberId));
+		
+		CPDSummary summary = new CPDSummary();
+		
+		for(Object[] row: rows){
+			int i=0;
+			Object value=null;
+			Integer count = (value=row[i++])==null? null: ((Number)value).intValue();
+			Integer status=(value=row[i++])==null? null: ((Number)value).intValue();
+			
+			if(status == CPDStatus.CONFIRMED.ordinal()){
+				summary.setConfirmedCPD(count);
+			}else{
+				summary.setUnconfirmedCPD(count);
+			}
+		}
+		
+		return summary;
 	}
 
 }

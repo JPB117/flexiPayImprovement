@@ -14,6 +14,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import com.workpoint.icpak.shared.model.CPDDto;
+import com.workpoint.icpak.shared.model.CPDSummary;
 
 @Produces(MediaType.APPLICATION_JSON)
 public interface CPDResource extends BaseResource{
@@ -23,6 +24,11 @@ public interface CPDResource extends BaseResource{
 	public List<CPDDto> getAll(
 			@QueryParam("offset") Integer offset,
 			@QueryParam("limit") Integer limit);
+	
+	@GET
+	@Path("/{summary}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public CPDSummary getCPDSummary();
 	
 	@GET
 	@Path("/{cpdId}")
@@ -44,5 +50,4 @@ public interface CPDResource extends BaseResource{
 	@Path("/{cpdId}")
 	public void delete(
 			@PathParam("cpdId") String cpdId);
-
 }

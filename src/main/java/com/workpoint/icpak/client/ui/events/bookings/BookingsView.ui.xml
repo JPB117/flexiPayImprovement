@@ -24,31 +24,11 @@
 				<div class="panel-heading">All Event Details</div>
 				<div class="panel-body">
 					<div class="col-sm-12">
-						<table:EventsTable ui:field="tblView">
-						</table:EventsTable>
+						<d:TableView ui:field="tblEvents"></d:TableView>
 					</div>
 				</div>
 			</div>
 		</g:HTMLPanel>
-
-
-		<g:HTMLPanel styleName="row" ui:field="panelEventDrillDown">
-			<div class="col-sm-12">
-				<h4 class="info-text">
-					<span ui:field="spnEventTitle"></span>
-				</h4>
-				<hr />
-			</div>
-			<div class="panel panel-default">
-				<div class="panel-heading">Delegates</div>
-				<div class="panel-body">
-					<div class="col-sm-12">
-						<table2:DelegatesTable ui:field="tblDelegates">
-						</table2:DelegatesTable>
-					</div>
-				</div>
-			</div>
-		</g:HTMLPanel>
-
+		
 	</g:HTMLPanel>
 </ui:UiBinder>
