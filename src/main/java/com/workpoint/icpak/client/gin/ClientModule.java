@@ -27,6 +27,8 @@ import com.workpoint.icpak.client.ui.admin.settings.SettingsPresenter;
 import com.workpoint.icpak.client.ui.admin.settings.SettingsView;
 import com.workpoint.icpak.client.ui.cpd.CPDPresenter;
 import com.workpoint.icpak.client.ui.cpd.CPDView;
+import com.workpoint.icpak.client.ui.cpd.admin.CPDManagementPresenter;
+import com.workpoint.icpak.client.ui.cpd.admin.CPDManagementView;
 import com.workpoint.icpak.client.ui.dashboard.DashboardPresenter;
 import com.workpoint.icpak.client.ui.dashboard.DashboardView;
 import com.workpoint.icpak.client.ui.enquiries.EnquiriesPresenter;
@@ -161,6 +163,9 @@ public class ClientModule extends AbstractPresenterModule {
 
 		bindPresenter(CPDPresenter.class, CPDPresenter.ICPDView.class,
 				CPDView.class, CPDPresenter.ICPDProxy.class);
+		
+		bindPresenter(CPDManagementPresenter.class, CPDManagementPresenter.ICPDManagementView.class,
+				CPDManagementView.class, CPDManagementPresenter.ICPDManagementProxy.class);
 		
 //		bindPresenter(CPDManagementPresenter.class, CPDManagementPresenter.ICPDManagementView.class,
 //				CPDView.class, CPDManagementPresenter.ICPDManagementProxy.class);

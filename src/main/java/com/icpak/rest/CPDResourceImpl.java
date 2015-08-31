@@ -54,7 +54,7 @@ public class CPDResourceImpl implements CPDResource{
 		@Produces(MediaType.APPLICATION_JSON)
 		@Consumes(MediaType.APPLICATION_JSON)
 		public CPDSummaryDto getCPDSummary(){
-			return cpdDao.getCPDSummary(memberId);
+			return helper.getCPDSummary(memberId);
 		}
 		
 		@GET

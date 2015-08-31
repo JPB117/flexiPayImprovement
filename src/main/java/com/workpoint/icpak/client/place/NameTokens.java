@@ -35,6 +35,7 @@ public class NameTokens {
 	public static final String statements = "statements";
 	public static final String events = "events";
 	public static final String cpd = "cpd";
+	public static final String cpdmgt = "cpdmgt";
 	public static final String createpassword = "createpassword";
 	public static final String activateacc = "activateacc";
 	public static final String unauthorized = "unauthorized";

@@ -14,6 +14,7 @@ import com.icpak.rest.models.event.Event;
 import com.icpak.rest.models.membership.Member;
 import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.shared.model.CPDStatus;
+import com.workpoint.icpak.shared.model.CPDSummaryDto;
 import com.workpoint.icpak.shared.model.events.AttendanceStatus;
 
 @Transactional
@@ -120,8 +121,19 @@ public class CPDDaoHelper {
 		}else{
 			create(memberId, cpd);
 		}
+	}
+
+	public CPDSummaryDto getCPDSummary(String memberRefId) {
 		
+		CPDSummaryDto dto = null;
 		
+		if(memberRefId.equals("ALL")){
+			dto = dao.getCPDSummary();
+		}else{
+			dto = dao.getCPDSummary(memberRefId);
+		}
+		
+		return dto;
 	}
 
 }

@@ -17,6 +17,12 @@ public class CPDSummaryDto implements Serializable{
 	private int confirmedCPD=0;
 	private int unconfirmedCPD=0;
 	
+	/**
+	 * Additional fields for Administrator
+	 */
+	private int processedCount;
+	private int pendingCount;
+	
 	public CPDSummaryDto() {
 	}
 
@@ -34,6 +40,22 @@ public class CPDSummaryDto implements Serializable{
 
 	public void setUnconfirmedCPD(int unconfirmedCPD) {
 		this.unconfirmedCPD = unconfirmedCPD;
+	}
+
+	public int getPendingCount() {
+		return pendingCount;
+	}
+
+	public void setPendingCount(int pendingCount) {
+		this.pendingCount = pendingCount;
+	}
+
+	public int getProcessedCount() {
+		return processedCount;
+	}
+
+	public void setProcessedCount(int processedCount) {
+		this.processedCount = processedCount;
 	}
 	
 }

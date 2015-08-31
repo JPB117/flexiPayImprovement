@@ -5,9 +5,9 @@ import java.util.List;
 import com.icpak.rest.exceptions.ServiceException;
 import com.icpak.rest.models.ErrorCodes;
 import com.icpak.rest.models.cpd.CPD;
+import com.workpoint.icpak.shared.model.CPDCountSummaryDto;
 import com.workpoint.icpak.shared.model.CPDStatus;
 import com.workpoint.icpak.shared.model.CPDSummaryDto;
-import com.workpoint.icpak.shared.model.EventSummaryDto;
 
 /**
  * 
@@ -117,6 +117,28 @@ public class CPDDao extends BaseDao {
 				summary.setConfirmedCPD(count);
 			}else{
 				summary.setUnconfirmedCPD(count);
+			}
+		}
+		
+		return summary;
+	}
+	
+	public CPDSummaryDto getCPDSummary(){
+		String sql = "select count(*), status from cpd group by status";
+		List<Object[]> rows =  getResultList(getEntityManager().createNativeQuery(sql));
+		
+		CPDSummaryDto summary = new CPDSummaryDto();
+		
+		for(Object[] row: rows){
+			int i=0;
+			Object value=null;
+			Integer count = (value=row[i++])==null? null: ((Number)value).intValue();
+			Integer status=(value=row[i++])==null? null: ((Number)value).intValue();
+			
+			if(status == CPDStatus.CONFIRMED.ordinal()){
+				summary.setProcessedCount(count);
+			}else{
+				summary.setPendingCount(count);
 			}
 		}
 		

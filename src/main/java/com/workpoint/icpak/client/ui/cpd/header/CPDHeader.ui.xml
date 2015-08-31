@@ -19,7 +19,7 @@
 								<div class="h2 mt0">
 									<span ui:field="spnTransactions"></span>
 								</div>
-								<div class="text-uppercase">Total CPD Hours</div>
+								<div class="text-uppercase" ui:field="title1">Total CPD Hours</div>
 							</div>
 							<div class="col-lg-4 text-right text-muted">
 								<em class="fa fa-briefcase fa-2x"></em>
@@ -36,7 +36,7 @@
 									<span class="" ui:field="spnAmount">
 									</span>
 								</div>
-								<div class="text-uppercase">Confirmed CPD</div>
+								<div class="text-uppercase" ui:field="title2">Confirmed CPD</div>
 							</div>
 							<div class="col-lg-4 text-right text-muted">
 								<em class="fa fa-check fa-2x"></em>
@@ -54,7 +54,7 @@
 										
 									</span>
 								</div>
-								<div class="bold muted helper-font-small">Un-Confirmed CPD</div>
+								<div class="bold muted helper-font-small" ui:field="title3">Un-Confirmed CPD</div>
 							</div>
 
 							<div class="col-lg-4 text-right text-muted">
