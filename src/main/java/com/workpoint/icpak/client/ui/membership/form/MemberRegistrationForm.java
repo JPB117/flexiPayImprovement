@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.i18n.client.TimeZone;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
@@ -145,6 +146,7 @@ public class MemberRegistrationForm extends Composite {
 		dto.setPostCode(txtPostalCode.getValue());
 		dto.setApplicationType(type);
 		dto.setDob(dtDOB.getValueDate());
+		//dto.setTimezone(TimeZone.createTimeZone(timeZoneOffsetInMinutes));
 		dto.setGender(lstGender.getValue());
 		return dto;
 	}

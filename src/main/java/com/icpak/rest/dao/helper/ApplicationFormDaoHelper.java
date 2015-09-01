@@ -22,6 +22,7 @@ import com.icpak.rest.models.auth.BioData;
 import com.icpak.rest.models.auth.User;
 import com.icpak.rest.models.membership.ApplicationCategory;
 import com.icpak.rest.models.membership.ApplicationFormHeader;
+import com.icpak.rest.models.membership.Member;
 import com.icpak.rest.models.membership.MemberImport;
 import com.icpak.rest.models.util.Attachment;
 import com.icpak.rest.utils.Doc;
@@ -31,6 +32,7 @@ import com.icpak.rest.utils.EmailServiceHelper;
 import com.icpak.rest.utils.HTMLToPDFConvertor;
 import com.workpoint.icpak.shared.model.ApplicationCategoryDto;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
+import com.workpoint.icpak.shared.model.ApplicationSummaryDto;
 import com.workpoint.icpak.shared.model.ApplicationType;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.InvoiceLineDto;
@@ -306,6 +308,15 @@ public class ApplicationFormDaoHelper {
 
 	public InvoiceDto getInvoice(String applicationId) {
 		return generateInvoice(getApplicationById(applicationId));
+	}
+
+	public ApplicationSummaryDto getApplicationSummary() {
+		
+		return applicationDao.getApplicationsSummary();
+	}
+	
+	public void forwardToLMS(Member member){
+		
 	}
 
 }

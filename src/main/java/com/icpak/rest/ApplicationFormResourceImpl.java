@@ -25,6 +25,7 @@ import com.workpoint.icpak.shared.api.EducationResource;
 import com.workpoint.icpak.shared.api.SpecializationsResource;
 import com.workpoint.icpak.shared.api.TrainingsResource;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
+import com.workpoint.icpak.shared.model.ApplicationSummaryDto;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 
 
@@ -53,6 +54,12 @@ public class ApplicationFormResourceImpl implements ApplicationFormResource{
 	@Path("/count")
 	public Integer getCount() {
 		return helper.getApplicationCount();
+	}
+	
+	@GET
+	@Path("/summary")
+	public ApplicationSummaryDto getSummary() {
+		return helper.getApplicationSummary();
 	}
 	
 	@GET

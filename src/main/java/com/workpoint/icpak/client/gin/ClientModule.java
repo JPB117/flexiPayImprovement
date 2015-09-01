@@ -55,8 +55,8 @@ import com.workpoint.icpak.client.ui.login.LoginPresenter;
 import com.workpoint.icpak.client.ui.login.LoginView;
 import com.workpoint.icpak.client.ui.login.createpassword.ActivateAccountPresenter;
 import com.workpoint.icpak.client.ui.login.createpassword.ActivateAccountView;
-import com.workpoint.icpak.client.ui.members.MembersPresenter;
-import com.workpoint.icpak.client.ui.members.MembersView;
+import com.workpoint.icpak.client.ui.members.ApplicationsPresenter;
+import com.workpoint.icpak.client.ui.members.ApplicationsView;
 import com.workpoint.icpak.client.ui.membership.MemberRegistrationPresenter;
 import com.workpoint.icpak.client.ui.membership.MemberRegistrationView;
 import com.workpoint.icpak.client.ui.notifications.NotificationsPresenter;
@@ -170,9 +170,9 @@ public class ClientModule extends AbstractPresenterModule {
 //		bindPresenter(CPDManagementPresenter.class, CPDManagementPresenter.ICPDManagementView.class,
 //				CPDView.class, CPDManagementPresenter.ICPDManagementProxy.class);
 
-		bindPresenter(MembersPresenter.class,
-				MembersPresenter.IMembersView.class, MembersView.class,
-				MembersPresenter.IMembersProxy.class);
+		bindPresenter(ApplicationsPresenter.class,
+				ApplicationsPresenter.IApplicationsView.class, ApplicationsView.class,
+				ApplicationsPresenter.IApplicationsProxy.class);
 
 		bindPresenter(ErrorPagePresenter.class,
 				ErrorPagePresenter.MyView.class, ErrorPageView.class,

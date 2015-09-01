@@ -14,6 +14,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
+import com.workpoint.icpak.shared.model.ApplicationSummaryDto;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 
 @Path("applications")
@@ -23,6 +24,10 @@ public interface ApplicationFormResource extends BaseResource{
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<ApplicationFormHeaderDto> getAll(@QueryParam("offset") Integer offset,
 			@QueryParam("limit") Integer limit);
+	
+	@GET
+	@Path("/summary")
+	public ApplicationSummaryDto getSummary();
 	
 	@Path("/{applicationId}/education")
 	public EducationResource education(@PathParam("applicationId") String applicationId);

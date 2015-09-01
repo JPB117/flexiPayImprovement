@@ -11,6 +11,7 @@ import com.icpak.rest.models.membership.ApplicationFormHeader;
 import com.icpak.rest.models.membership.ApplicationFormSpecialization;
 import com.icpak.rest.models.membership.ApplicationFormTraining;
 import com.icpak.rest.models.membership.MemberImport;
+import com.workpoint.icpak.shared.model.ApplicationSummaryDto;
 import com.workpoint.icpak.shared.model.ApplicationType;
 import com.workpoint.icpak.shared.model.EduType;
 import com.workpoint.icpak.shared.model.Specializations;
@@ -164,6 +165,30 @@ public class ApplicationFormDao extends BaseDao {
 								+ "and applicationRefId=:refId and isactive=1")
 				.setParameter("specialization", specialization)
 				.setParameter("refId", applicationRefId));
+	}
+	
+	public ApplicationSummaryDto getApplicationsSummary(){
+		String sql = "select count(*), applicationStatus from `Application Form Header` group by applicationStatus";
+		
+		List<Object[]> rows =  getResultList(getEntityManager().createNativeQuery(sql));
+		
+		ApplicationSummaryDto summary = new ApplicationSummaryDto();
+		
+		for(Object[] row: rows){
+			int i=0;
+			Object value=null;
+			Integer count = (value=row[i++])==null? null: ((Number)value).intValue();
+			String status=(value=row[i++])==null? null: value.toString();
+			
+			if(ApplicationStatus.valueOf(status)==ApplicationStatus.APPROVED){
+				summary.setProcessedCount(count);
+			}else{
+				summary.setPendingCount(count);
+			}
+		}
+		
+		return summary;
+		
 	}
 
 }

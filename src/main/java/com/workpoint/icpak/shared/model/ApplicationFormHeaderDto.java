@@ -103,6 +103,7 @@ public class ApplicationFormHeaderDto extends SerializableObj {
 	private String userRefId;
 	private String memberNo;
 	private Integer percCompletion; // Percentage completion
+	private String timezone;
 
 	public ApplicationFormHeaderDto() {
 	}

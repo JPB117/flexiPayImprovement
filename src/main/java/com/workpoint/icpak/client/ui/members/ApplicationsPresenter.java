@@ -10,7 +10,6 @@ package com.workpoint.icpak.client.ui.members;
 //import com.workpoint.icpak.shared.responses.UpdatePasswordResponse;
 import java.util.List;
 
-import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rest.delegates.client.ResourceDelegate;
@@ -38,27 +37,28 @@ import com.workpoint.icpak.client.ui.security.AdminGateKeeper;
 import com.workpoint.icpak.shared.api.ApplicationFormResource;
 import com.workpoint.icpak.shared.model.ApplicationFormEducationalDto;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
+import com.workpoint.icpak.shared.model.ApplicationSummaryDto;
 
-public class MembersPresenter
+public class ApplicationsPresenter
 		extends
-		Presenter<MembersPresenter.IMembersView, MembersPresenter.IMembersProxy>
+		Presenter<ApplicationsPresenter.IApplicationsView, ApplicationsPresenter.IApplicationsProxy>
 		implements EditModelHandler {
 
-	public interface IMembersView extends View {
+	public interface IApplicationsView extends View {
 
 		void bindApplications(List<ApplicationFormHeaderDto> result);
-
 		void setCount(Integer aCount);
 
 		PagingPanel getPagingPanel();
+		void bindSummary(ApplicationSummaryDto summary);
 
 	}
 
 	@ProxyCodeSplit
 	@NameToken(NameTokens.members)
 	@UseGatekeeper(AdminGateKeeper.class)
-	public interface IMembersProxy extends
-			TabContentProxyPlace<MembersPresenter> {
+	public interface IApplicationsProxy extends
+			TabContentProxyPlace<ApplicationsPresenter> {
 	}
 
 	@TabInfo(container = HomePresenter.class)
@@ -72,8 +72,8 @@ public class MembersPresenter
 	private ResourceDelegate<ApplicationFormResource> applicationDelegate;
 
 	@Inject
-	public MembersPresenter(final EventBus eventBus, final IMembersView view,
-			final IMembersProxy proxy,
+	public ApplicationsPresenter(final EventBus eventBus, final IApplicationsView view,
+			final IApplicationsProxy proxy,
 			ResourceDelegate<ApplicationFormResource> applicationDelegate,
 			final CurrentUser currentUser) {
 		super(eventBus, view, proxy, HomePresenter.SLOT_SetTabContent);
@@ -103,6 +103,13 @@ public class MembersPresenter
 	}
 
 	private void loadData() {
+		
+		applicationDelegate.withCallback(new AbstractAsyncCallback<ApplicationSummaryDto>() {
+			@Override
+			public void onSuccess(ApplicationSummaryDto result) {
+				getView().bindSummary(result);
+			}
+		}).getSummary();
 		applicationDelegate.withCallback(new AbstractAsyncCallback<Integer>() {
 			@Override
 			public void onSuccess(Integer aCount) {

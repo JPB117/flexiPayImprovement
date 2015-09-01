@@ -14,9 +14,10 @@ import com.workpoint.icpak.client.ui.members.header.MembersHeader;
 import com.workpoint.icpak.client.ui.members.row.MembersTableRow;
 import com.workpoint.icpak.client.ui.members.table.MembersTable;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
+import com.workpoint.icpak.shared.model.ApplicationSummaryDto;
 
-public class MembersView extends ViewImpl implements
-		MembersPresenter.IMembersView {
+public class ApplicationsView extends ViewImpl implements
+		ApplicationsPresenter.IApplicationsView {
 
 	private final Widget widget;
 	@UiField
@@ -28,11 +29,11 @@ public class MembersView extends ViewImpl implements
 	@UiField
 	MembersHeader headerContainer;
 
-	public interface Binder extends UiBinder<Widget, MembersView> {
+	public interface Binder extends UiBinder<Widget, ApplicationsView> {
 	}
 
 	@Inject
-	public MembersView(final Binder binder) {
+	public ApplicationsView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
 	}
 
@@ -43,8 +44,6 @@ public class MembersView extends ViewImpl implements
 
 	@Override
 	public void bindApplications(List<ApplicationFormHeaderDto> list) {
-		headerContainer.setValues(list.size(), 0, list.size());
-
 		tblView.clearRows();
 		for (ApplicationFormHeaderDto dto : list) {
 			MembersTableRow row = new MembersTableRow(dto);
@@ -60,6 +59,13 @@ public class MembersView extends ViewImpl implements
 	@Override
 	public PagingPanel getPagingPanel() {
 		return tblView.getPagingPanel();
+	}
+
+	@Override
+	public void bindSummary(ApplicationSummaryDto summary) {
+		headerContainer.setValues(summary.getPendingCount()+summary.getProcessedCount(), summary.getProcessedCount(),
+				summary.getPendingCount());
+
 	}
 
 }

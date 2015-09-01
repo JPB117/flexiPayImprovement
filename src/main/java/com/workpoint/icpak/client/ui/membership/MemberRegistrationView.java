@@ -154,6 +154,7 @@ public class MemberRegistrationView extends ViewImpl implements
 			selectCategory(selected);
 		}
 	};
+	
 
 	@Inject
 	public MemberRegistrationView(final Binder binder) {
@@ -286,6 +287,7 @@ public class MemberRegistrationView extends ViewImpl implements
 	}
 
 	public ApplicationFormHeaderDto getApplicationForm() {
+		
 		return memberRegistrationForm.getApplicationForm();
 	}
 
