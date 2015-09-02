@@ -6,9 +6,9 @@ import org.apache.shiro.guice.web.ShiroWebModule;
 
 import com.icpak.rest.security.ICPAKAuthenticatingRealm;
 
-public class ICPAKShiroWebModule extends ShiroWebModule{
+public class ShiroSecurityModule extends ShiroWebModule{
 
-	public ICPAKShiroWebModule(ServletContext context) {
+	public ShiroSecurityModule(ServletContext context) {
 		super(context);
 	}
 	

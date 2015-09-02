@@ -6,9 +6,11 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Widget;
+import com.workpoint.icpak.client.model.UploadContext;
 import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.RowWidget;
 import com.workpoint.icpak.client.ui.events.EditModelEvent;
@@ -117,6 +119,17 @@ public class CPDTableRow extends RowWidget {
 			aAttended.addStyleName("hide");
 			aNotAttended.addStyleName("hide");
 		}
+		
+		//aDownloadCert.add
+		final String url  ="getreport?action=downloadcpdcert&cpdRefId="+dto.getRefId();
+		final String wintitle = "CPD Certificate for event "+dto.getTitle();
+		aDownloadCert.addClickHandler(new ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent event) {
+				Window.open(url, wintitle, "");
+			}
+		});
 
 	}
 

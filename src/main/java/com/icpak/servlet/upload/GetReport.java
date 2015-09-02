@@ -1,19 +1,35 @@
 package com.icpak.servlet.upload;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.parsers.FactoryConfigurationError;
+import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.http.client.utils.DateUtils;
 import org.apache.log4j.Logger;
+import org.xml.sax.SAXException;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.icpak.rest.dao.AttachmentsDao;
+import com.icpak.rest.dao.helper.CPDDaoHelper;
 import com.icpak.rest.dao.helper.UsersDaoHelper;
 import com.icpak.rest.models.util.Attachment;
+import com.icpak.rest.utils.Doc;
+import com.icpak.rest.utils.HTMLToPDFConvertor;
+import com.itextpdf.text.DocumentException;
+import com.workpoint.icpak.shared.model.CPDDto;
 
 @Singleton
 public class GetReport extends HttpServlet {
@@ -26,34 +42,52 @@ public class GetReport extends HttpServlet {
 	private static Logger log = Logger.getLogger(GetReport.class);
 
 	@Inject UsersDaoHelper helper;
+	@Inject AttachmentsDao attachmentDao;
+	@Inject CPDDaoHelper cpdHelper;
+	
+	@Override
+	public void init(ServletConfig config) throws ServletException {
+		super.init(config);
+		log.info("LOADED SERVLET "+getClass()+": ContextPath= "+config.getServletContext().getContextPath()
+				+", ContextName= "+config.getServletContext().getServletContextName()
+				+", ServletName= "+config.getServletName()
+				);
+	}
+	
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		try {
+			executeGet(req, resp);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		} 
+	}
 	
 	protected void executeGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
+			throws ServletException, IOException, SAXException, ParserConfigurationException, FactoryConfigurationError, DocumentException {
 
 		String action = req.getParameter("action");
+		if(action==null){
+			action = req.getParameter("ACTION");
+		}
+		
 		log.debug("GetReport Action = "+action);
 
 		if (action == null) {
-			action = "GETATTACHMENT";
-		}
-
-		if(action.equals("GETDOCUMENTPROCESS")){
-			
+			return;
 		}
 		
-		if (action.equals("GETATTACHMENT")) {
+		if (action.equalsIgnoreCase("GETATTACHMENT")) {
 			processAttachmentRequest(req, resp);
 		}
 		
-		if(action.equals("EXPORTFORM")){
-			processExportFormRequest(req , resp);
-		}
-		
-		if(action.equals("GetUser")){
+		if(action.equalsIgnoreCase("GetUserImage")){
 			processUserImage(req, resp);
 		}
 		
-		if(action.equals("GetLogo")){
+		if(action.equalsIgnoreCase("GetLogo")){
 			processSettingsImage(req, resp);
 		}
 		
@@ -61,8 +95,41 @@ public class GetReport extends HttpServlet {
 			processOutputDoc(req,resp);
 		}
 		
+		if (action.equalsIgnoreCase("DownloadCPDCert")) {
+			processCPDCertRequest(req, resp);
+		}
+		
 	}
 
+
+	private void processCPDCertRequest(HttpServletRequest req,
+			HttpServletResponse resp) throws IOException, SAXException, ParserConfigurationException, FactoryConfigurationError, DocumentException {
+		String cpdRefId= req.getParameter("cpdRefId");
+		assert cpdRefId!=null;
+		
+		CPDDto cpd = cpdHelper.getCPD("", cpdRefId);
+		assert cpd!=null;
+		
+		Map<String, Object> values = new HashMap<String, Object>();
+		values.put("eventName", cpd.getTitle());
+		values.put("eventDates",
+				DateUtils.formatDate(cpd.getStartDate(), "dd/MM/yyyy"));
+		values.put("memberName", cpd.getFullNames());
+		values.put("dateIssued", DateUtils.formatDate(new Date(), "dd/MM/yyyy"));
+		values.put("cpdHours", cpd.getCpdHours());
+		Doc doc = new Doc(values);
+
+		HTMLToPDFConvertor convertor = new HTMLToPDFConvertor();
+		InputStream is = GetReport.class.getClassLoader().getResourceAsStream(
+				"cpdcertificate.html");
+		String html = IOUtils.toString(is);
+		byte[] data = convertor.convert(doc, html);
+
+		String name = cpd.getFullNames()+" "+cpd.getTitle()+
+				DateUtils.formatDate(new Date(), "dd/MM/yyyy")+".pdf";
+		
+		processAttachmentRequest(resp, data, name);
+	}
 
 	private void processOutputDoc(HttpServletRequest req,
 			HttpServletResponse resp) {
@@ -151,61 +218,36 @@ public class GetReport extends HttpServlet {
 
 	private void processUserImage(HttpServletRequest req,
 			HttpServletResponse resp){		
-//		String userId = req.getParameter("userId");
-//		assert userId!=null;
-//		
-//		String widthPx = req.getParameter("width");
-//		String heightPx = req.getParameter("height");
-//		
-//		if(widthPx!=null && heightPx==null){
-//			heightPx=widthPx;
-//		}
-//		
-//		Double width=null;
-//		Double height=null;
-//		
-//		if(widthPx!=null && widthPx.matches("[0-9]+(\\.[0-9][0-9]?)?")){
-//			width = new Double(widthPx);
-//			height = new Double(heightPx);
-//		}
-//		
-//		LocalAttachment attachment = DB.getAttachmentDao().getUserImage(userId);
-//		
-//		if(attachment==null)
-//			return;
-//		
-//		byte[] bites = attachment.getAttachment();
-//		
+		String userId = req.getParameter("userRefId");
+		assert userId!=null;
+		
+		String widthPx = req.getParameter("width");
+		String heightPx = req.getParameter("height");
+		
+		if(widthPx!=null && heightPx==null){
+			heightPx=widthPx;
+		}
+		
+		Double width=null;
+		Double height=null;
+		
+		if(widthPx!=null && widthPx.matches("[0-9]+(\\.[0-9][0-9]?)?")){
+			width = new Double(widthPx);
+			height = new Double(heightPx);
+		}
+		
+		Attachment attachment = attachmentDao.getUserProfileImage(userId);
+		
+		if(attachment==null)
+			return;
+		
+		processAttachmentRequest(resp, attachment);
+		
 //		if(width!=null){
 //			ImageUtils.resizeImage(resp, bites, width.intValue(), height.intValue());
 //		}else{
 //			ImageUtils.resizeImage(resp, bites);
 //		}
-//		
-	}
-
-	private void processExportFormRequest(HttpServletRequest req,
-			HttpServletResponse resp) {
-//		String param1 = req.getParameter("formId");
-//		assert param1!=null;
-//		
-//		Long formId  = Long.parseLong(param1);
-//		ADForm form = DB.getFormDao().getForm(formId);
-//		
-//		String name = form.getCaption();
-//		if(name==null){
-//			name=form.getName();
-//		}
-//		
-//		if(name==null){
-//			name="Untitled"+formId;
-//		}
-//		
-//		name=name+".xml";
-//		
-//		String xml = FormDaoHelper.exportForm(form);
-//		
-//		processAttachmentRequest(resp,xml.getBytes() , name);
 		
 	}
 

@@ -3,15 +3,21 @@ package com.icpak.servlet.upload;
 //import java.io.File;
 import gwtupload.server.UploadAction;
 import gwtupload.server.exceptions.UploadActionException;
+import gwtupload.shared.UConsts;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.fileupload.FileItem;
+import org.apache.log4j.Logger;
 
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.workpoint.icpak.client.model.UploadContext;
 
@@ -22,6 +28,20 @@ public class UploadServlet extends UploadAction {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	private static Logger log = Logger.getLogger(UploadServlet.class);
+	
+	@Inject CPDAttachmentsExecutor cpdExecutor;
+	@Inject UserProfileImageExecutor userProfileImageExecutor;
+	
+	@Override
+	public void init(ServletConfig config) throws ServletException {
+		super.init(config);
+		log.info("LOADED SERVLET "+getClass()+": ContextPath= "+config.getServletContext().getContextPath()
+				+", ContextName= "+config.getServletContext().getServletContextName()
+				+", ServletName= "+config.getServletName());
+	}
+	
 	
 	/**
 	 * Override executeAction to save the received files in a custom place and
@@ -52,7 +72,12 @@ public class UploadServlet extends UploadAction {
 		FileExecutor executor = null;
 		
 		switch (uploadAction) {
-		case UPLOADDOCFILE:
+		case UPLOADCPD:
+			executor = cpdExecutor;
+			break;
+		case UPLOADUSERIMAGE:
+			executor = userProfileImageExecutor;
+			break;
 //		case ATTACHDOCUMENT:
 //			executor = new DocumentAttachmentExecutor();
 //			break;

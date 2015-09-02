@@ -84,7 +84,7 @@ public class RecordCPD extends Composite {
 			categories.add(cat);
 		}
 		lstCategory.setItems(categories);
-		uploader.setAutoSubmit(false);
+		//uploader.setAutoSubmit(false);
 	}
 
 	public void showUploadPanel(boolean showForm) {
@@ -100,9 +100,9 @@ public class RecordCPD extends Composite {
 
 	private void setUploadContext() {
 		UploadContext context = new UploadContext();
-		context.setContext("cpdId", getCPD().getRefId());
+		context.setContext("cpdRefId", getCPD().getRefId());
 		context.setAction(UPLOADACTION.UPLOADCPD);
-		context.setAccept(Arrays.asList("doc","pdf","jpg","jpeg","png"));
+		context.setAccept(Arrays.asList("doc","pdf","jpg","jpeg","png","docx"));
 		uploader.setContext(context);	
 	}
 
