@@ -45,10 +45,15 @@ public class ActivateAccountPresenter
 	public interface IActivateAccountView extends View {
 
 		void bindUser(UserDto user);
+
 		boolean isValid();
+
 		String getPassword();
+
 		HasClickHandlers getSubmit();
+
 		void setError(String string);
+
 		void setLoginButtonEnabled(boolean b);
 
 	}
@@ -56,7 +61,8 @@ public class ActivateAccountPresenter
 	@ProxyCodeSplit
 	@NameToken(NameTokens.activateacc)
 	@NoGatekeeper
-	public interface IActivateAccountProxy extends ProxyPlace<ActivateAccountPresenter> {
+	public interface IActivateAccountProxy extends
+			ProxyPlace<ActivateAccountPresenter> {
 	}
 
 	@Inject
@@ -69,8 +75,8 @@ public class ActivateAccountPresenter
 	private ResourceDelegate<UsersResource> usersDelegate;
 	private UserDto user;
 	private ResourceDelegate<SessionResource> sessionResource;
-	private static final Logger LOGGER = Logger.getLogger(ActivateAccountPresenter.class
-			.getName());
+	private static final Logger LOGGER = Logger
+			.getLogger(ActivateAccountPresenter.class.getName());
 
 	@Inject
 	public ActivateAccountPresenter(final EventBus eventBus,
@@ -92,38 +98,36 @@ public class ActivateAccountPresenter
 	@Override
 	public void prepareFromRequest(PlaceRequest request) {
 		String userId = request.getParameter("uid", null);
-		if(userId==null){
-			//Error
+		if (userId == null) {
+			// Error
 			return;
 		}
-		
+
 		usersDelegate.withCallback(new AbstractAsyncCallback<UserDto>() {
 			@Override
 			public void onSuccess(UserDto user) {
 				ActivateAccountPresenter.this.user = user;
 				getView().bindUser(user);
-				
+
 			}
 		}).getById(userId);
-		
+
 	}
 
 	@Override
 	protected void onBind() {
 		super.onBind();
 		getView().getSubmit().addClickHandler(new ClickHandler() {
-			
 			@Override
 			public void onClick(ClickEvent event) {
-				if(getView().isValid()){
-					if(user!=null){
-						usersDelegate.withoutCallback()
-						.changePassword(user.getRefId(), getView().getPassword());
-						
-						placeManager.revealPlace(new PlaceRequest.Builder().
-								nameToken(NameTokens.login).build());
+				if (getView().isValid()) {
+					if (user != null) {
+						usersDelegate.withoutCallback().changePassword(
+								user.getRefId(), getView().getPassword());
+
+						placeManager.revealPlace(new PlaceRequest.Builder()
+								.nameToken(NameTokens.login).build());
 					}
-					
 				}
 			}
 		});
@@ -131,36 +135,36 @@ public class ActivateAccountPresenter
 
 	protected void executeLogin(String email, String password) {
 		LogInAction logInAction = new LogInAction(email, password);
-		usersDelegate.withCallback(
-				new AbstractAsyncCallback<LogInResult>() {
-					@Override
-					public void onSuccess(LogInResult result) {
-						//getView().clearLoginProgress();
-						
-						if (result.getCurrentUserDto().isLoggedIn()) {
-							//setLoggedInCookie(result.getLoggedInCookie());
-						}
+		usersDelegate.withCallback(new AbstractAsyncCallback<LogInResult>() {
+			@Override
+			public void onSuccess(LogInResult result) {
+				// getView().clearLoginProgress();
 
-						if (result.getActionType() == ActionType.VIA_COOKIE) {
-							onLoginCallSucceededForCookie(result
-									.getCurrentUserDto());
-						} else {
-							onLoginCallSucceeded(result.getCurrentUserDto());
-						}
+				if (result.getCurrentUserDto().isLoggedIn()) {
+					// setLoggedInCookie(result.getLoggedInCookie());
+				}
 
-					}
+				if (result.getActionType() == ActionType.VIA_COOKIE) {
+					onLoginCallSucceededForCookie(result.getCurrentUserDto());
+				} else {
+					onLoginCallSucceeded(result.getCurrentUserDto());
+				}
 
-					@Override
-					public void onFailure(Throwable caught) {
-						//getView().clearLoginProgress();
-						super.onFailure(caught);
-						getView().setError("Could authenticate user. Please report this to your administrator");
-						LOGGER.log(
-								Level.SEVERE,
-								"callServerLoginAction(): Server failed to process login call.",
-								caught);
-					}
-				}).execLogin(logInAction);
+			}
+
+			@Override
+			public void onFailure(Throwable caught) {
+				// getView().clearLoginProgress();
+				super.onFailure(caught);
+				getView()
+						.setError(
+								"Could authenticate user. Please report this to your administrator");
+				LOGGER.log(
+						Level.SEVERE,
+						"callServerLoginAction(): Server failed to process login call.",
+						caught);
+			}
+		}).execLogin(logInAction);
 	}
 
 	private void onLoginCallSucceededForCookie(CurrentUserDto currentUserDto) {
@@ -172,7 +176,7 @@ public class ActivateAccountPresenter
 	}
 
 	private void onLoginCallSucceeded(CurrentUserDto currentUserDto) {
-		
+
 		if (currentUserDto.isLoggedIn()) {
 			currentUser.fromCurrentUserDto(currentUserDto);
 			redirectToLoggedOnPage();
@@ -180,7 +184,7 @@ public class ActivateAccountPresenter
 			getView().setError("Wrong username or password");
 		}
 	}
-	
+
 	void redirectToLoggedOnPage() {
 		String token = placeManager.getCurrentPlaceRequest().getParameter(
 				ParameterTokens.REDIRECT, NameTokens.getOnLoginDefaultPage());

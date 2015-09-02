@@ -58,6 +58,8 @@ public class UserSaveView extends PopupViewImpl implements
 	PasswordField txtPassword;
 	@UiField
 	PasswordField txtConfirmPassword;
+	@UiField
+	TextField txtPhoneNo;
 
 	@UiField
 	TextField txtGroupname;
@@ -175,7 +177,8 @@ public class UserSaveView extends PopupViewImpl implements
 		user.setName(txtFirstname.getValue());
 		user.setPassword(txtPassword.getValue());
 		user.setSurname(txtLastname.getValue());
-		//user.setUserId(txtUserName.getValue());
+		user.setPhoneNumber(txtPhoneNo.getValue());
+		// user.setUserId(txtUserName.getValue());
 		user.setGroups(lstGroups.getSelectedItems());
 		return user;
 	}
@@ -189,6 +192,7 @@ public class UserSaveView extends PopupViewImpl implements
 		txtConfirmPassword.setValue(user.getPassword());
 		txtLastname.setValue(user.getSurname());
 		txtUserName.setValue(user.getEmail());
+		txtPhoneNo.setValue(user.getPhoneNumber());
 		lstGroups.select(user.getGroups());
 		setContext(user.getRefId());
 

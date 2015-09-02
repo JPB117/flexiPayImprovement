@@ -87,7 +87,6 @@ public class ApplicationsPresenter
 		addRegisteredHandler(EditModelEvent.TYPE, this);
 
 		getView().getPagingPanel().setLoader(new PagingLoader() {
-
 			@Override
 			public void load(int offset, int limit) {
 				loadApplications(offset, limit);
