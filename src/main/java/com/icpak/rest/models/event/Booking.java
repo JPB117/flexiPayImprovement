@@ -70,7 +70,8 @@ public class Booking extends PO{
 	private Double amountDue;
 	private PaymentStatus paymentStatus= PaymentStatus.NOTPAID;
 	
-	@OneToMany(mappedBy="booking",fetch=FetchType.LAZY,cascade={CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE})
+	@OneToMany(mappedBy="booking",fetch=FetchType.LAZY,cascade={CascadeType.PERSIST, 
+			CascadeType.REMOVE, CascadeType.MERGE, CascadeType.REFRESH})
 	private Collection<Delegate> delegates = new HashSet<>();
 	
 	@ManyToOne

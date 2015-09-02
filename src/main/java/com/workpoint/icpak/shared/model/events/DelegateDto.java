@@ -20,6 +20,7 @@ public class DelegateDto extends SerializableObj{
 	private DelegateType delegateType;
 	private String bookingId;
 	private String eventId;
+	private String ern;
 	
 	public DelegateDto() {
 	}
@@ -118,5 +119,13 @@ public class DelegateDto extends SerializableObj{
 
 	public void setMemberRefId(String memberRefId) {
 		this.memberRefId = memberRefId;
+	}
+
+	public String getErn() {
+		return ern;
+	}
+
+	public void setErn(String ern) {
+		this.ern = ern;
 	}
 }
