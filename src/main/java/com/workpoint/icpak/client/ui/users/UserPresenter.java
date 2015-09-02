@@ -229,6 +229,7 @@ public class UserPresenter extends
 			@Override
 			public void onSuccess(Integer aCount) {
 				fireEvent(new ProcessingCompletedEvent());
+				
 				PagingPanel panel = getView().getPagingPanel();
 				panel.setTotal(aCount);
 				PagingConfig config = panel.getConfig();
