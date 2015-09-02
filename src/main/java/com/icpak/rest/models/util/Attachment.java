@@ -14,6 +14,7 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.icpak.rest.models.base.PO;
+import com.icpak.rest.models.cpd.CPD;
 import com.icpak.rest.models.membership.Education;
 import com.icpak.rest.models.membership.TrainingAndExperience;
 import com.wordnik.swagger.annotations.ApiModel;
@@ -52,6 +53,10 @@ public class Attachment extends PO{
 	
 	//Profile Pic
 	private String profilePicUserId;
+	
+	@ManyToOne
+	@JoinColumn(name="cpdid")
+	private CPD cpd;
 	
 	public Attachment() {
 		super();
@@ -116,5 +121,13 @@ public class Attachment extends PO{
 
 	public void setProfilePicUserId(String profilePicUserId) {
 		this.profilePicUserId = profilePicUserId;
+	}
+
+	public CPD getCpd() {
+		return cpd;
+	}
+
+	public void setCpd(CPD cpd) {
+		this.cpd = cpd;
 	}
 }

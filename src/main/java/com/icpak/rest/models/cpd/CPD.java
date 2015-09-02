@@ -1,17 +1,24 @@
 package com.icpak.rest.models.cpd;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.eclipse.jetty.server.session.HashSessionIdManager;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.icpak.rest.models.base.PO;
+import com.icpak.rest.models.util.Attachment;
 import com.wordnik.swagger.annotations.ApiModel;
 import com.workpoint.icpak.shared.model.CPDCategory;
 import com.workpoint.icpak.shared.model.CPDDto;
@@ -45,6 +52,9 @@ public class CPD extends PO{
 	private CPDStatus status = CPDStatus.UNCONFIRMED;
 	private String memberId;
 	private String eventId;
+	
+	@OneToMany(mappedBy="cpd", fetch=FetchType.LAZY, cascade={CascadeType.REMOVE})
+	private Set<Attachment> attachments=  new HashSet<>();
 	
 	public CPD() {
 	}

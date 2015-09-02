@@ -61,7 +61,7 @@ public class Uploader extends Composite {
 			uploader = new MultiUploader();
 		}
 
-		uploader.setAutoSubmit(false);
+		uploader.setAutoSubmit(true);
 		uploader.setMultipleSelection(!isSingleUploader);
 		uploaderPanel.add(uploader);
 		uploader.addOnFinishUploadHandler(onFinishHandler);

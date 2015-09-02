@@ -22,6 +22,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 import com.workpoint.icpak.client.model.UploadContext;
+import com.workpoint.icpak.client.model.UploadContext.UPLOADACTION;
 import com.workpoint.icpak.client.security.CurrentUser;
 import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.ProgressBar;
@@ -130,8 +131,6 @@ public class ProfileWidget extends Composite {
 				specializationDetail, "specialisation_details", false),
 				new TabContent(trainingDetail, "training_details", false)));
 
-		imgUser.setUrl("img/james.jpg");
-
 		/* Set Edit Mode */
 		aEditPicture.addClickHandler(new ClickHandler() {
 			@Override
@@ -157,7 +156,8 @@ public class ProfileWidget extends Composite {
 		uploader.addOnFinishUploaderHandler(new IUploader.OnFinishUploaderHandler() {
 			@Override
 			public void onFinish(IUploader uploaderRef) {
-				imgUser.setUrl(url + "?version=" + Random.nextInt());
+				imgUser.setUrl(url + "&version=" + Random.nextInt());
+				uploader.clear();
 			}
 		});
 	}
@@ -211,14 +211,16 @@ public class ProfileWidget extends Composite {
 
 	public void bindCurrentUser(CurrentUser user) {
 		String refId = user.getUser().getRefId();
-		uploader.setContext(new UploadContext("api/users/" + refId + "/profile"));
-
-		url = "api/users/" + refId + "/profile";
-		imgUser.setUrl(url);
+		UploadContext ctx  = new UploadContext();
+		ctx.setContext("userRefId", refId);
+		ctx.setAction(UPLOADACTION.UPLOADUSERIMAGE);
+		uploader.setContext(ctx);
+		
+		setUserImage(user.getUser().getRefId());
 	}
 
 	public void setUserImage(String refId) {
-		url = "api/users/" + refId + "/profile";
+		url = "getreport?userRefId=" + refId+"&action=getuserimage";
 		imgUser.setUrl(url);
 	}
 

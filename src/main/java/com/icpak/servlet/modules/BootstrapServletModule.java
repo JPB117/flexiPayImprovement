@@ -9,8 +9,6 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.persist.PersistFilter;
 import com.google.inject.persist.jpa.JpaPersistModule;
 import com.google.inject.servlet.ServletModule;
-import com.icpak.rest.BookingsResourceImpl;
-import com.icpak.rest.EducationResourceImpl;
 import com.icpak.rest.factory.ResourceFactory;
 import com.icpak.rest.filters.CORSFilter;
 import com.icpak.servlet.config.GenericBootstrapConstants;
@@ -19,8 +17,6 @@ import com.icpak.servlet.upload.GetReport;
 import com.icpak.servlet.upload.UploadServlet;
 import com.sun.jersey.api.core.PackagesResourceConfig;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
-import com.workpoint.icpak.shared.api.BookingsResource;
-import com.workpoint.icpak.shared.api.EducationResource;
 
 /**
  * This class bootstraps the application Servlet (Jersey 1.18.1). 
@@ -50,7 +46,7 @@ public class BootstrapServletModule extends ServletModule{
         filter("/*").through(PersistFilter.class);
 		
 		//Initialize Apache Shiro if present
-		install(new ICPAKShiroWebModule(getServletContext()));
+		install(new ShiroSecurityModule(getServletContext()));
 		
         //if you had a ShiroWebModule installed above you would need to add this GuiceShiroFilter also.
         filter("/*").through(GuiceShiroFilter.class);
@@ -67,9 +63,8 @@ public class BootstrapServletModule extends ServletModule{
         
         Map<String, String> params2 = new HashMap<String, String>();
         params2.put("loadonstartup", "1");
-        serve("/upload/*").with(UploadServlet.class, params2);
-        serve("/getreport/*").with(GetReport.class, params2);
-        
+        serve("/upload").with(UploadServlet.class, params2);
+        serve("/getreport").with(GetReport.class, params2);
         
         serve("").with(SwaggerApiServlet.class,params2);
         
