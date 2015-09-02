@@ -123,7 +123,8 @@ public class EventBookingPresenter extends
 		getView().getMemberColumnConfig().setLoader(
 				new AutoCompleteField.Loader() {
 					@Override
-					public void onLoad(final ServerOracle source,final String query) {
+					public void onLoad(final ServerOracle source,
+							final String query) {
 						membersDelegate.withCallback(
 								new AbstractAsyncCallback<List<MemberDto>>() {
 									@Override
@@ -132,7 +133,7 @@ public class EventBookingPresenter extends
 										source.setValues(members);
 									}
 
-								}).search(query,0,30);
+								}).search(query, 0, 30);
 					}
 				});
 
@@ -217,17 +218,11 @@ public class EventBookingPresenter extends
 		eventsResource.withCallback(new AbstractAsyncCallback<EventDto>() {
 			@Override
 			public void onSuccess(EventDto event) {
-				// Window.alert(">>>>>>>>>>>>Set event called" +
-				// event.getName());
 				getView().setEvent(event);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				// Window.alert(">>>>>>>>Failure on loading data!!!!"
-				// + caught.getMessage());
-				// Window.alert(caught.getClass() + "<br>"
-				// + caught.getStackTrace());
 
 				StringBuffer buffer = new StringBuffer();
 				for (StackTraceElement elem : caught.getStackTrace()) {

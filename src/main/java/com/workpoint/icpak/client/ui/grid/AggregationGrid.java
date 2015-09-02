@@ -99,7 +99,6 @@ public class AggregationGrid extends Composite {
 	}
 
 	protected void createRowLast() {
-
 		int count = tblView.getRowCount();
 		if (count == 0) {
 			addRowData(new DataModel());

@@ -71,7 +71,6 @@ public class DelegateTableRow extends RowWidget {
 	public DelegateTableRow() {
 		initWidget(uiBinder.createAndBindUi(this));
 		aAttended.addClickHandler(new ClickHandler() {
-
 			@Override
 			public void onClick(ClickEvent event) {
 				onAttendanceChanged(AttendanceStatus.ATTENDED);

@@ -76,8 +76,8 @@ public class BookingsPresenter
 			@Override
 			public void onSuccess(List<MemberBookingDto> result) {
 				getView().bindBookings(result);				
-			}
-		}).getMemberBookings(memberId, 0, 100);
+					}
+				}).getMemberBookings(memberId, 0, 100);
 	}
 
 }

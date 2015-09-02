@@ -36,6 +36,8 @@ implements AfterSaveHandler, AdminPageLoadHandler, ContextLoadedHandler, LoadAle
 
 	public interface IHeaderView extends View {
 		public HasClickHandlers getALogout();
+
+		public void setLoggedInUser(UserDto currentUser);
 	}
 
 	//@Inject DispatchAsync dispatcher;
@@ -85,21 +87,6 @@ implements AfterSaveHandler, AdminPageLoadHandler, ContextLoadedHandler, LoadAle
 		});
 	}
 
-	protected void loadAlerts() {
-		
-//		dispatcher.execute(new GetNotificationsAction(AppContext.getUserId()),
-//				new TaskServiceCallback<GetNotificationsActionResult>() {
-//				
-//			@Override
-//			public void processResult(
-//					GetNotificationsActionResult notificationsResult) {
-//
-//				assert notificationsResult!=null;
-//				fireEvent(new NotificationsLoadEvent(notificationsResult.getNotifications()));
-//				getView().setLoading(false);
-//			}
-//		});
-	}
 
 	/**
 	 * Called too many times - reloading context/ alert counts from here
@@ -111,8 +98,6 @@ implements AfterSaveHandler, AdminPageLoadHandler, ContextLoadedHandler, LoadAle
 	protected void onReset() {		
 		super.onReset();
 		setInSlot(NOTIFICATIONS_SLOT, notifications);
-//		loadAlertCount();
-//		AppContext.reloadContext();
 	}
 	
 	protected void loadAlertCount() {
@@ -132,6 +117,7 @@ implements AfterSaveHandler, AdminPageLoadHandler, ContextLoadedHandler, LoadAle
 	@Override
 	public void onContextLoaded(ContextLoadedEvent event) {
 		UserDto currentUser = event.getCurrentUser();
+		getView().setLoggedInUser(currentUser);
 	}
 
 	@Override

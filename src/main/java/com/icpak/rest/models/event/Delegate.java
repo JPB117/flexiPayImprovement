@@ -18,44 +18,42 @@ import com.workpoint.icpak.shared.model.events.AccommodationDto;
 import com.workpoint.icpak.shared.model.events.AttendanceStatus;
 import com.workpoint.icpak.shared.model.events.DelegateDto;
 
-@ApiModel(value="Event delegates", description="List of delegates sharing a single booking")
-
+@ApiModel(value = "Event delegates", description = "List of delegates sharing a single booking")
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlSeeAlso({Booking.class})
-
+@XmlSeeAlso({ Booking.class })
 @Entity
-@Table(name="delegate")
-public class Delegate extends PO{
+@Table(name = "delegate")
+public class Delegate extends PO {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	private String memberRegistrationNo;
-	private String ern;//ERN Number - see trigger generate_booking_ern_no
+	private String ern;// ERN Number - see trigger generate_booking_ern_no
 	private String memberRefId;
 	private String title;
 	private String surname;
 	private String otherNames;
 	private String email;
 	private boolean isMember;
-	
+
 	@Transient
 	private String bookingId;
-	
+
 	@ManyToOne
-	@JoinColumn(name="booking_id")
+	@JoinColumn(name = "booking_id")
 	@XmlTransient
 	private Booking booking;
-	
+
 	@ManyToOne
-	@JoinColumn(name="accommodationId")
+	@JoinColumn(name = "accommodationId")
 	private Accommodation accommodation;
-	
+
 	private Double amount;
-	
+
 	private AttendanceStatus attendance = AttendanceStatus.NOTATTENDED;
 
 	public String getMemberRegistrationNo() {
@@ -105,12 +103,12 @@ public class Delegate extends PO{
 	public void setBooking(Booking booking) {
 		this.booking = booking;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		return super.equals(obj);
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return super.hashCode();
@@ -118,33 +116,33 @@ public class Delegate extends PO{
 
 	public void copyFrom(DelegateDto delegateDto) {
 		setEmail(delegateDto.getEmail());
-		
+
 		setMemberRegistrationNo(delegateDto.getMemberId());
 		setMemberRefId(delegateDto.getMemberRefId());
 		setOtherNames(delegateDto.getOtherNames());
 		setSurname(delegateDto.getSurname());
 		setTitle(delegateDto.getTitle());
-		
-		if(delegateDto.getAttendance()!=null)
+
+		if (delegateDto.getAttendance() != null)
 			setAttendance(delegateDto.getAttendance());
 	}
 
 	public DelegateDto toDto() {
-		DelegateDto dto  = new DelegateDto();
+		DelegateDto dto = new DelegateDto();
 		dto.setEmail(email);
-		dto.setMemberId(memberRefId);
+		dto.setMemberId(memberRegistrationNo);
 		dto.setMemberRefId(memberRefId);
 		dto.setOtherNames(otherNames);
 		dto.setRefId(getRefId());
 		dto.setSurname(surname);
 		dto.setTitle(title);
-		if(getAccommodation()!=null){
+		if (getAccommodation() != null) {
 			dto.setAccommodation(getAccommodation().toDto());
 		}
-		
+
 		dto.setAttendance(attendance);
 		dto.setAmount(amount);
-		
+
 		return dto;
 	}
 
@@ -194,8 +192,8 @@ public class Delegate extends PO{
 
 	@Override
 	public String toString() {
-	
-		return surname+ " "+otherNames+" ("+ern+")";
+
+		return surname + " " + otherNames + " (" + ern + ")";
 	}
 
 }
