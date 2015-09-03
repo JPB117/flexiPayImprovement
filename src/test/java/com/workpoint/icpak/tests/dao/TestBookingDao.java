@@ -20,33 +20,37 @@ import com.workpoint.icpak.shared.model.events.ContactDto;
 import com.workpoint.icpak.shared.model.events.DelegateDto;
 import com.workpoint.icpak.tests.base.AbstractDaoTest;
 
-public class TestBookingDao  extends AbstractDaoTest {
-	
-	@Inject BookingsDaoHelper bookingsHelper;
-	@Inject CPDDaoHelper daoHelper;
-	@Inject EventsDao eventDao;
-	
+public class TestBookingDao extends AbstractDaoTest {
+
+	@Inject
+	BookingsDaoHelper bookingsHelper;
+	@Inject
+	CPDDaoHelper daoHelper;
+	@Inject
+	EventsDao eventDao;
+
 	@Ignore
-	public void member(){
-		
+	public void member() {
+
 		Delegate d = eventDao.findByRefId("dvIGX5Qn5Y3T3oEJ", Delegate.class);
-		daoHelper.updateCPDFromAttendance(d, AttendanceStatus.ATTENDED);		
+		daoHelper.updateCPDFromAttendance(d, AttendanceStatus.ATTENDED);
 	}
-	
+
 	@Ignore
-	public void getBooking(){
-		
-		BookingDto dto = bookingsHelper.getBookingById("Jx4Ca6HpOutf2ic7", "Ac920rNN12ILqKFN");
-		for(DelegateDto delegate:dto.getDelegates()){
+	public void getBooking() {
+
+		BookingDto dto = bookingsHelper.getBookingById("Jx4Ca6HpOutf2ic7",
+				"Ac920rNN12ILqKFN");
+		for (DelegateDto delegate : dto.getDelegates()) {
 			delegate.getAccommodation();
 		}
-		
+
 	}
-	
-	@Ignore
-	public void createBooking(){
+
+	@Test
+	public void createBooking() {
 		BookingDto dto = new BookingDto();
-		 
+
 		dto.setStatus("");
 		dto.setPaymentStatus(PaymentStatus.NOTPAID);
 		dto.setBookingDate(new Date().getTime());
@@ -56,22 +60,23 @@ public class TestBookingDao  extends AbstractDaoTest {
 		contact.setCompany("Workpoint");
 		contact.setContactName("Kimani");
 		contact.setCountry("KENYA");
-		contact.setEmail("kk@mimi.io");
+		contact.setEmail("tomkim@wira.io");
 		contact.setPostCode("00200");
 		contact.setTelephoneNumbers("02302023");
 		dto.setContact(contact);
-		
-		List<DelegateDto> delegates  = new ArrayList<>();
+
+		List<DelegateDto> delegates = new ArrayList<>();
 		DelegateDto delegate = new DelegateDto();
 		delegate.setEmail("kim@wira.io");
 		delegate.setOtherNames("Kimani");
 		delegate.setSurname("Duggan");
-		delegate.setMemberId("7789002");
+		delegate.setMemberId("10000");
+		delegate.setMemberRefId("LCJ4fe1eoOdxwq69");
 		delegates.add(delegate);
 		dto.setDelegates(delegates);
 
 		// dto.setCurrency(currency);
-		bookingsHelper.createBooking("Jx4Ca6HpOutf2ic7",dto);
-		
+		bookingsHelper.createBooking("PrjIf8x4RIDaPZIv", dto);
+
 	}
 }

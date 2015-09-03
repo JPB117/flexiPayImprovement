@@ -79,7 +79,8 @@
 									<label for="Username">
 										<b>Password:</b>
 									</label>
-									<d:ActionLink ui:field="aResetPassword" styleName="btn btn-default btn-fill"></d:ActionLink>
+									<d:ActionLink ui:field="aResetPassword" styleName="btn btn-default btn-fill">Reset
+										Password</d:ActionLink>
 								</div>
 							</div>
 						</div>

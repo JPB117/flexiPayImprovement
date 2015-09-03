@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rest.client.RestDispatch;
@@ -50,6 +51,14 @@ public class ActivateAccountPresenter
 
 		void setLoginButtonEnabled(boolean b);
 
+		void showForgot(boolean b);
+
+		HasClickHandlers getResendButton();
+
+		String getEmail();
+
+		void showProcessing(boolean b);
+
 	}
 
 	@ProxyCodeSplit
@@ -92,19 +101,25 @@ public class ActivateAccountPresenter
 	@Override
 	public void prepareFromRequest(PlaceRequest request) {
 		String userId = request.getParameter("uid", null);
-		if (userId == null) {
+		String reason = request.getParameter("r", null);
+
+		if (reason.equals("forgot")) {
+			getView().showForgot(true);
+		} else if (userId == null) {
 			// Error
 			return;
+		} else {
+
+			getView().showForgot(false);
+			usersDelegate.withCallback(new AbstractAsyncCallback<UserDto>() {
+				@Override
+				public void onSuccess(UserDto user) {
+					ActivateAccountPresenter.this.user = user;
+					getView().bindUser(user);
+
+				}
+			}).getById(userId);
 		}
-
-		usersDelegate.withCallback(new AbstractAsyncCallback<UserDto>() {
-			@Override
-			public void onSuccess(UserDto user) {
-				ActivateAccountPresenter.this.user = user;
-				getView().bindUser(user);
-
-			}
-		}).getById(userId);
 
 	}
 
@@ -122,6 +137,29 @@ public class ActivateAccountPresenter
 						placeManager.revealPlace(new PlaceRequest.Builder()
 								.nameToken(NameTokens.login).build());
 					}
+				}
+			}
+		});
+
+		getView().getResendButton().addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				if (!getView().getEmail().isEmpty()) {
+					getView().showProcessing(true);
+					usersDelegate.withCallback(
+							new AbstractAsyncCallback<UserDto>() {
+								@Override
+								public void onSuccess(UserDto result) {
+									getView().showProcessing(false);
+									// Send Email address
+									Window.alert("Email found in our records!");
+								}
+
+								public void onFailure(Throwable caught) {
+									getView().showProcessing(false);
+									Window.alert("Email not found in our records!");
+								};
+							}).getById(getView().getEmail());
 				}
 			}
 		});
