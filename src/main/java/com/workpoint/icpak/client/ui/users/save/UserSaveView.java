@@ -23,6 +23,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.PopupViewImpl;
 import com.workpoint.icpak.client.model.UploadContext;
 import com.workpoint.icpak.client.model.UploadContext.UPLOADACTION;
+import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.IssuesPanel;
 import com.workpoint.icpak.client.ui.component.PasswordField;
 import com.workpoint.icpak.client.ui.component.TextArea;
@@ -55,17 +56,15 @@ public class UserSaveView extends PopupViewImpl implements
 	@UiField
 	TextField txtEmail;
 	@UiField
-	PasswordField txtPassword;
-	@UiField
-	PasswordField txtConfirmPassword;
-	@UiField
 	TextField txtPhoneNo;
 
 	@UiField
 	TextField txtGroupname;
 	@UiField
 	TextArea txtDescription;
-	// @UiField TextField txtUsers;
+
+	@UiField
+	ActionLink aResetPassword;
 
 	@UiField
 	PopupPanel AddUserDialog;
@@ -175,10 +174,8 @@ public class UserSaveView extends PopupViewImpl implements
 		UserDto user = new UserDto();
 		user.setEmail(txtEmail.getValue());
 		user.setName(txtFirstname.getValue());
-		user.setPassword(txtPassword.getValue());
 		user.setSurname(txtLastname.getValue());
 		user.setPhoneNumber(txtPhoneNo.getValue());
-		// user.setUserId(txtUserName.getValue());
 		user.setGroups(lstGroups.getSelectedItems());
 		return user;
 	}
@@ -188,8 +185,6 @@ public class UserSaveView extends PopupViewImpl implements
 	public void setUser(UserDto user) {
 		txtEmail.setValue(user.getEmail());
 		txtFirstname.setValue(user.getName());
-		txtPassword.setValue(user.getPassword());
-		txtConfirmPassword.setValue(user.getPassword());
 		txtLastname.setValue(user.getSurname());
 		txtUserName.setValue(user.getEmail());
 		txtPhoneNo.setValue(user.getPhoneNumber());
@@ -215,15 +210,6 @@ public class UserSaveView extends PopupViewImpl implements
 		if (isNullOrEmpty(txtEmail.getValue())) {
 			valid = false;
 			issues.addError("Email is mandatory");
-		}
-
-		if (isNullOrEmpty(txtPassword.getText())) {
-			valid = false;
-			issues.addError("Password is mandatory");
-		} else {
-			if (!txtPassword.getValue().equals(txtConfirmPassword.getValue())) {
-				issues.addError("Password and confirm password fields do not match");
-			}
 		}
 
 		return valid;
@@ -278,5 +264,10 @@ public class UserSaveView extends PopupViewImpl implements
 	@Override
 	public PopupPanel getPopUpPanel() {
 		return AddUserDialog;
+	}
+	
+	
+	public HasClickHandlers getaResetPassword() {
+		return aResetPassword;
 	}
 }

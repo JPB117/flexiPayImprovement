@@ -46,6 +46,8 @@ public class UserSavePresenter extends
 
 		PopupPanel getPopUpPanel();
 
+		HasClickHandlers getaResetPassword();
+
 	}
 
 	public enum TYPE {
@@ -130,6 +132,13 @@ public class UserSavePresenter extends
 								}).create(userGroup);
 					}
 				}
+			}
+		});
+		
+		getView().getaResetPassword().addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				//Send Email to client to Reset password
 			}
 		});
 	}
