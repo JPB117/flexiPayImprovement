@@ -75,21 +75,8 @@
 
 						<div class="form-group">
 							<div class="row">
-								<div class="col-lg-6">
-									<label for="ProcessName">
-										<b>Password:</b>
-									</label>
-									<d:PasswordField ui:field="txtPassword" type="password"
-										class="form-control" placeholder="Password" />
-								</div>
-
-								<div class="col-lg-6">
-									<label class="control-label">
-										<b>Confirm Password:</b>
-									</label>
-									<d:PasswordField ui:field="txtConfirmPassword"
-										type="password" class="form-control" placeholder="Confirm Password" />
-								</div>
+								
+								
 							</div>
 						</div>
 

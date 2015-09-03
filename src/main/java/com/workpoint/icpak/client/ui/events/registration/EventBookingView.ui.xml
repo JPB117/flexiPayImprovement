@@ -293,7 +293,7 @@
 										<div class="wizard-footer">
 											<div class="pull-right">
 												<d:ActionLink styleName='hide' ui:field="aAccount"
-													href="#activateacc">Pay Later
+													href="#bookings">Pay Later
 												</d:ActionLink>
 
 												<g:Anchor

@@ -229,7 +229,7 @@ public class UserPresenter extends
 			@Override
 			public void onSuccess(Integer aCount) {
 				fireEvent(new ProcessingCompletedEvent());
-				
+
 				PagingPanel panel = getView().getPagingPanel();
 				panel.setTotal(aCount);
 				PagingConfig config = panel.getConfig();
@@ -237,7 +237,7 @@ public class UserPresenter extends
 				loadUsers(config.getOffset(), config.getLimit(), searchTerm);
 				fireEvent(new ProcessingCompletedEvent());
 			}
-		}).getCount();
+		}).getSearchCount(searchTerm);
 	}
 
 	protected void loadUsers(int offset, int limit, String searchTerm) {

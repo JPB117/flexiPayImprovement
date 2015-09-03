@@ -180,8 +180,12 @@ public class UsersDaoHelper {
 		return dtos;
 	}
 
+	public Integer getCount(String searchTerm) {
+		return dao.getUserCount(searchTerm);
+	}
+
 	public Integer getCount() {
-		return dao.getUserCount();
+		return getCount(null);
 	}
 
 	public ResourceCollectionModel<User> getAllUsers(Integer offSet,
@@ -364,4 +368,5 @@ public class UsersDaoHelper {
 	public String getApplicationRefId(String userRef) {
 		return dao.getApplicationRefId(userRef);
 	}
+
 }

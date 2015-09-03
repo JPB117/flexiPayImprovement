@@ -44,7 +44,7 @@ public class TestApplicationForm extends AbstractDaoTest {
 		}
 	}
 
-	@Test
+	@Ignore
 	public void getApplications() {
 		List<ApplicationFormHeaderDto> members = helper.getAllApplications(0,
 				100, "");
@@ -54,7 +54,7 @@ public class TestApplicationForm extends AbstractDaoTest {
 		}
 	}
 
-	@Test
+	@Ignore
 	public void getUser() {
 
 		List<UserDto> users = usersDaoHelper.getAllUsers(0, 20, "");
@@ -62,5 +62,11 @@ public class TestApplicationForm extends AbstractDaoTest {
 		for (UserDto user : users) {
 			System.err.println("Names:" + user.getMemberNo());
 		}
+	}
+
+	@Test
+	public void getCount() {
+		System.err.println("Count>>" + usersDaoHelper.getCount("Mary"));
+		
 	}
 }
