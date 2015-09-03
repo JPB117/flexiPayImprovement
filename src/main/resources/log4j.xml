@@ -10,8 +10,14 @@
     <logger name="com.icpak">
         <level value="FATAL"/>
     </logger>
-    <logger name="com.icpak.rest.utils">
+    <logger name="com.icpak.servlet">
         <level value="DEBUG"/>
+    </logger>
+    <logger name="com.mchange">
+        <level value="FATAL"/>
+    </logger>
+    <logger name="com.google.inject">
+        <level value="ALL"/>
     </logger>
     <logger name="org.hibernate">
         <level value="FATAL"/>

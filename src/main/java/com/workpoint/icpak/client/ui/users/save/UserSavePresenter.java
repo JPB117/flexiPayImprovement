@@ -15,11 +15,10 @@ import com.workpoint.icpak.client.service.AbstractAsyncCallback;
 import com.workpoint.icpak.client.ui.AppManager;
 import com.workpoint.icpak.client.ui.events.LoadGroupsEvent;
 import com.workpoint.icpak.client.ui.events.LoadUsersEvent;
-import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
 import com.workpoint.icpak.shared.api.RoleResource;
 import com.workpoint.icpak.shared.api.UsersResource;
-import com.workpoint.icpak.shared.model.UserDto;
 import com.workpoint.icpak.shared.model.RoleDto;
+import com.workpoint.icpak.shared.model.UserDto;
 
 public class UserSavePresenter extends
 		PresenterWidget<UserSavePresenter.IUserSaveView> {

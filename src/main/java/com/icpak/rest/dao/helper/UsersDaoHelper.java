@@ -1,10 +1,13 @@
 package com.icpak.rest.dao.helper;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
 
+import javax.mail.MessagingException;
 import javax.ws.rs.core.UriInfo;
 
 import com.google.inject.Inject;
@@ -28,6 +31,8 @@ import com.icpak.rest.models.trx.Transaction;
 import com.icpak.rest.models.util.Attachment;
 import com.icpak.rest.security.authentication.AuthenticationException;
 import com.icpak.rest.security.authentication.Authenticator;
+import com.icpak.rest.util.ApplicationSettings;
+import com.icpak.rest.utils.EmailServiceHelper;
 import com.workpoint.icpak.shared.model.RoleDto;
 import com.workpoint.icpak.shared.model.UserDto;
 import com.workpoint.icpak.shared.model.auth.AccountStatus;
@@ -52,6 +57,8 @@ public class UsersDaoHelper {
 
 	@Inject
 	UserSessionDao loginCookieDao;
+	
+	@Inject ApplicationSettings settings;
 
 	/**
 	 * System User
@@ -367,6 +374,31 @@ public class UsersDaoHelper {
 
 	public String getApplicationRefId(String userRef) {
 		return dao.getApplicationRefId(userRef);
+	}
+
+	public void resetAccount(String userId) {
+		User user = dao.findByUserId(userId);
+		
+		String subject="ICPAK Portal Email Reset";
+		String resetUrl = settings.getApplicationPath()+"/#activateacc;uid="+userId;
+		
+		String body="Password Reset Instructions For: <br/>"
+				+ "<div>"
+				+ "Name: "+user.getUserData().getFullNames()
+				+"<br/>Member No: "+user.getMemberNo()==null? "N/A":user.getMemberNo()
+				+ "</div>"
+				+ "<a href='"+resetUrl+"'>Reset Your Password</a> and follow onscreen instructions."
+				+ "This email can be ignored if you did not request a password reset. The link is only "
+				+ "available for a short time";
+		
+		try {
+			EmailServiceHelper.sendEmail(body, subject, Arrays.asList(user.getEmail()),
+					Arrays.asList(user.getUserData().getFirstName()));
+		} catch (UnsupportedEncodingException | MessagingException e) {
+			logger.warning("Send Reset Email Failed: email= "+user.getEmail()+", refId= "+user.getRefId());
+			e.printStackTrace();
+			
+		}
 	}
 
 }

@@ -40,6 +40,11 @@ public interface UsersResource extends BaseResource {
 	@GET
 	@Path("/searchCount")
 	public Integer getSearchCount(@QueryParam("searchTerm") String searchTerm);
+	
+	@POST
+	@Path("/reset/{userId}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public void resetAccount(@PathParam("userId") String userId);
 
 	@POST
 	@Path("/auth2")

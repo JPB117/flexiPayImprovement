@@ -31,6 +31,7 @@ import com.icpak.rest.models.event.Event;
 import com.icpak.rest.models.membership.Contact;
 import com.icpak.rest.models.membership.Member;
 import com.icpak.rest.models.util.Attachment;
+import com.icpak.rest.util.ApplicationSettings;
 import com.icpak.rest.util.SMSIntegration;
 import com.icpak.rest.utils.Doc;
 import com.icpak.rest.utils.DocumentHTMLMapper;
@@ -70,6 +71,8 @@ public class BookingsDaoHelper {
 
 	@Inject
 	SMSIntegration smsIntergration;
+	
+	@Inject ApplicationSettings settings;
 
 	public List<BookingDto> getAllBookings(String uriInfo, String eventId,
 			Integer offset, Integer limit) {
@@ -189,8 +192,7 @@ public class BookingsDaoHelper {
 			values.put("date", invoice.getDate());
 			values.put("firstName", invoice.getContactName());
 
-			values.put("DocumentURL",
-					"http://www2.icpak.com:8080/icpakportal.html");
+			values.put("DocumentURL",settings.getApplicationPath());
 			values.put("email", booking.getContact().getEmail());
 			values.put("eventId", booking.getEvent().getRefId());
 			values.put("bookingId", booking.getRefId());

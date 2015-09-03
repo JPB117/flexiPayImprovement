@@ -107,6 +107,13 @@ public class UsersResourceImpl implements UsersResource {
 		User user = helper.getUser(userId);
 		return user.toDto();
 	}
+	
+	@POST
+	@Path("/reset/{userId}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public void resetAccount(@PathParam("userId") String userId){
+		helper.resetAccount(userId);
+	}
 
 	@GET
 	@Path("/auth")
