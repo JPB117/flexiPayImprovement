@@ -385,7 +385,7 @@ public class UsersDaoHelper {
 		String body="Password Reset Instructions For: <br/>"
 				+ "<div>"
 				+ "Name: "+user.getUserData().getFullNames()
-				+"<br/>Member No: "+user.getMemberNo()
+				+"<br/>Member No: "+user.getMemberNo()==null? "N/A":user.getMemberNo()
 				+ "</div>"
 				+ "<a href='"+resetUrl+"'>Reset Your Password</a> and follow onscreen instructions."
 				+ "This email can be ignored if you did not request a password reset. The link is only "

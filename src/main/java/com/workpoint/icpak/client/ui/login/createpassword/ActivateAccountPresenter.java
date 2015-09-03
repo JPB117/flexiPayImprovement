@@ -18,6 +18,7 @@ import com.gwtplatform.mvp.client.annotations.NoGatekeeper;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
+import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 import com.gwtplatform.mvp.client.proxy.RevealRootLayoutContentEvent;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest.Builder;
@@ -25,6 +26,9 @@ import com.workpoint.icpak.client.place.NameTokens;
 import com.workpoint.icpak.client.place.ParameterTokens;
 import com.workpoint.icpak.client.security.CurrentUser;
 import com.workpoint.icpak.client.service.AbstractAsyncCallback;
+import com.workpoint.icpak.client.ui.AppManager;
+import com.workpoint.icpak.client.ui.MainPagePresenter;
+import com.workpoint.icpak.client.ui.OnOptionSelected;
 import com.workpoint.icpak.shared.api.SessionResource;
 import com.workpoint.icpak.shared.api.UsersResource;
 import com.workpoint.icpak.shared.model.UserDto;
@@ -96,6 +100,7 @@ public class ActivateAccountPresenter
 	@Override
 	protected void revealInParent() {
 		RevealRootLayoutContentEvent.fire(this, this);
+		//RevealContentEvent.fire(this, MainPagePresenter.CONTENT_SLOT, this);
 	}
 
 	@Override
@@ -152,7 +157,7 @@ public class ActivateAccountPresenter
 								public void onSuccess(UserDto result) {
 									getView().showProcessing(false);
 									// Send Email address
-									Window.alert("Email found in our records!");
+									sendResetEmail(result.getRefId());
 								}
 
 								public void onFailure(Throwable caught) {
@@ -163,6 +168,20 @@ public class ActivateAccountPresenter
 				}
 			}
 		});
+	}
+	
+	private void sendResetEmail(String userRefId) {
+		usersDelegate.withoutCallback().resetAccount(userRefId);
+		Window.alert("Reset Password Instructions have been sent to your email");
+		placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.login).build());
+//		AppManager.showPopUp("Reset Password", "Reset Password Instructions have been sent to your email",
+//				new OnOptionSelected() {
+//					
+//					@Override
+//					public void onSelect(String name) {
+//						
+//					}
+//				}, "Ok");
 	}
 
 	protected void executeLogin(String email, String password) {
