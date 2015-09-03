@@ -138,4 +138,11 @@ public class BookingsDao extends BaseDao {
 		return memberEvents;
 	}
 
+	public String getErn(String refId) {
+		
+		return getSingleResultOrNull(getEntityManager().
+				createNativeQuery("select ern from delegate where refId=:refId")
+				.setParameter("refId", refId));
+	}
+
 }

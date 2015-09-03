@@ -134,6 +134,7 @@ public class Delegate extends PO {
 		dto.setMemberRefId(memberRefId);
 		dto.setOtherNames(otherNames);
 		dto.setRefId(getRefId());
+		dto.setErn(ern);
 		dto.setSurname(surname);
 		dto.setTitle(title);
 		if (getAccommodation() != null) {
@@ -194,6 +195,10 @@ public class Delegate extends PO {
 	public String toString() {
 
 		return surname + " " + otherNames + " (" + ern + ")";
+	}
+
+	public void setErn(String ern) {
+		this.ern = ern;
 	}
 
 }

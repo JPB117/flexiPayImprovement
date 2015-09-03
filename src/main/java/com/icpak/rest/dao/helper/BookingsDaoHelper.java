@@ -160,7 +160,6 @@ public class BookingsDaoHelper {
 		booking.setAmountDue(total);// Total
 		booking.setDelegates(delegates);
 		dao.createBooking(booking);
-		dao.merge(booking);
 
 		sendProInvoice(booking);
 
@@ -169,9 +168,10 @@ public class BookingsDaoHelper {
 		int i = 0;
 		for (Delegate delegate : booking.getDelegates()) {
 			dto.getDelegates().get(i).setRefId(delegate.getRefId());
+			dto.getDelegates().get(i).setErn(delegate.getErn());
 		}
 
-		dao.getEntityManager().merge(booking);
+		//dao.getEntityManager().merge(booking);
 		dto.setInvoiceRef(dao.getInvoiceRef(booking.getRefId()));
 		return dto;
 	}
@@ -270,6 +270,8 @@ public class BookingsDaoHelper {
 
 		Event event = booking.getEvent();
 		for (Delegate delegate : delegates) {
+			delegate.setErn(dao.getErn(delegate.getRefId()));
+			
 			if (delegate.getMemberRegistrationNo() != null) {
 				String description = "%s - %s fees for %d members: %s";
 				memberInvoice.setMemberNames(memberInvoice.getMemberNames()
