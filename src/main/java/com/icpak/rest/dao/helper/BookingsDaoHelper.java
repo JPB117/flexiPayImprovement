@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
-import org.eclipse.jdt.internal.compiler.lookup.MemberTypeBinding;
 
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
@@ -24,7 +23,6 @@ import com.icpak.rest.dao.MemberDao;
 import com.icpak.rest.dao.UsersDao;
 import com.icpak.rest.exceptions.ServiceException;
 import com.icpak.rest.models.ErrorCodes;
-import com.icpak.rest.models.auth.User;
 import com.icpak.rest.models.event.Accommodation;
 import com.icpak.rest.models.event.Booking;
 import com.icpak.rest.models.event.Delegate;
@@ -40,7 +38,6 @@ import com.icpak.rest.utils.EmailServiceHelper;
 import com.icpak.rest.utils.HTMLToPDFConvertor;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.InvoiceLineDto;
-import com.workpoint.icpak.shared.model.MemberDto;
 import com.workpoint.icpak.shared.model.events.AttendanceStatus;
 import com.workpoint.icpak.shared.model.events.BookingDto;
 import com.workpoint.icpak.shared.model.events.ContactDto;
