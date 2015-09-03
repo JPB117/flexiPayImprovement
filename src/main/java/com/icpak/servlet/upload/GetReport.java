@@ -2,6 +2,7 @@ package com.icpak.servlet.upload;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +17,6 @@ import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.http.client.utils.DateUtils;
 import org.apache.log4j.Logger;
 import org.xml.sax.SAXException;
 
@@ -106,6 +106,7 @@ public class GetReport extends HttpServlet {
 			HttpServletResponse resp) throws IOException, SAXException, ParserConfigurationException, FactoryConfigurationError, DocumentException {
 		String cpdRefId= req.getParameter("cpdRefId");
 		assert cpdRefId!=null;
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 		
 		CPDDto cpd = cpdHelper.getCPD("", cpdRefId);
 		assert cpd!=null;
@@ -113,9 +114,9 @@ public class GetReport extends HttpServlet {
 		Map<String, Object> values = new HashMap<String, Object>();
 		values.put("eventName", cpd.getTitle());
 		values.put("eventDates",
-				DateUtils.formatDate(cpd.getStartDate(), "dd/MM/yyyy"));
+				formatter.format(cpd.getStartDate()));
 		values.put("memberName", cpd.getFullNames());
-		values.put("dateIssued", DateUtils.formatDate(new Date(), "dd/MM/yyyy"));
+		values.put("dateIssued", formatter.format(new Date()));
 		values.put("cpdHours", cpd.getCpdHours());
 		Doc doc = new Doc(values);
 
@@ -126,7 +127,7 @@ public class GetReport extends HttpServlet {
 		byte[] data = convertor.convert(doc, html);
 
 		String name = cpd.getFullNames()+" "+cpd.getTitle()+
-				DateUtils.formatDate(new Date(), "dd/MM/yyyy")+".pdf";
+				formatter.format(new Date())+".pdf";
 		
 		processAttachmentRequest(resp, data, name);
 	}
