@@ -3,8 +3,6 @@ package com.workpoint.icpak.client.ui.login.createpassword;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.ws.rs.core.NewCookie;
-
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -26,10 +24,6 @@ import com.workpoint.icpak.client.place.NameTokens;
 import com.workpoint.icpak.client.place.ParameterTokens;
 import com.workpoint.icpak.client.security.CurrentUser;
 import com.workpoint.icpak.client.service.AbstractAsyncCallback;
-import com.workpoint.icpak.client.ui.login.LoginPresenter;
-import com.workpoint.icpak.client.ui.profile.password.PasswordWidget;
-import com.workpoint.icpak.client.util.AppContext;
-import com.workpoint.icpak.shared.api.ApiParameters;
 import com.workpoint.icpak.shared.api.SessionResource;
 import com.workpoint.icpak.shared.api.UsersResource;
 import com.workpoint.icpak.shared.model.UserDto;

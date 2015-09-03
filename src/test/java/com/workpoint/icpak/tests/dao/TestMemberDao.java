@@ -18,6 +18,11 @@ public class TestMemberDao extends AbstractDaoTest {
 	MemberDaoHelper helper;
 	@Inject
 	UsersDaoHelper userHelper;
+	
+	@Test
+	public void resetPassword(){
+		userHelper.resetAccount("gNtLJ03iEfS3LCac");
+	}
 
 	@Ignore
 	public void search() {
@@ -29,7 +34,7 @@ public class TestMemberDao extends AbstractDaoTest {
 		System.err.print("Size = " + list.size());
 	}
 
-	@Test
+	@Ignore
 	public void searchUser() {
 		List<UserDto> list = userHelper.getAllUsers(0, 100, "", "mar");
 		for (UserDto dto : list) {

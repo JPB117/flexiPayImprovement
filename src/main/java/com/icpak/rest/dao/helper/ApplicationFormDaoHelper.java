@@ -25,6 +25,7 @@ import com.icpak.rest.models.membership.ApplicationFormHeader;
 import com.icpak.rest.models.membership.Member;
 import com.icpak.rest.models.membership.MemberImport;
 import com.icpak.rest.models.util.Attachment;
+import com.icpak.rest.util.ApplicationSettings;
 import com.icpak.rest.utils.Doc;
 import com.icpak.rest.utils.DocumentHTMLMapper;
 import com.icpak.rest.utils.DocumentLine;
@@ -50,6 +51,8 @@ public class ApplicationFormDaoHelper {
 	InvoiceDaoHelper invoiceHelper;
 	@Inject
 	TransactionDaoHelper trxHelper;
+	
+	@Inject ApplicationSettings settings;
 
 	public void createApplication(ApplicationFormHeaderDto application) {
 
@@ -118,9 +121,10 @@ public class ApplicationFormDaoHelper {
 			values.put("quoteNo", application.getId());
 			values.put("date", application.getDate());
 			values.put("firstName", application.getOtherNames());
-			values.put("DocumentURL", "http://www2.icpak.com/icpak/");
+			//http://localhost:8080/icpakportal/#eventBooking;eventId=Jx4Ca6HpOutf2ic7;bookingId=ttDzH7OkgAHk5CSk
+			values.put("DocumentURL", settings.getApplicationPath());
+			values.put("userRefId", user.getRefId());
 			values.put("email", application.getEmail());
-			values.put("password", user.getHashedPassword());
 			Doc doc = new Doc(values);
 
 			Map<String, Object> line = new HashMap<String, Object>();
