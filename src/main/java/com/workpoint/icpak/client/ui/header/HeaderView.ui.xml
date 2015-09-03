@@ -32,13 +32,6 @@
 							</a>
 						</li>
 
-						<!-- Fullscreen (only desktops) -->
-						<li class="visible-lg hide">
-							<a href="#" toggle-fullscreen="toggle-fullscreen">
-								<em class="fa fa-expand"></em>
-							</a>
-						</li>
-						<!-- START Alert menu -->
 						<li dropdown="" class="dropdown dropdown-list hide">
 							<a dropdown-toggle="" aria-haspopup="true" aria-expanded="false">
 								<em class="icon-bell"></em>
@@ -47,6 +40,14 @@
 							<!-- START Dropdown menu -->
 						</li>
 						<!-- END Alert menu -->
+
+						<li>
+							<a href="#profile">
+								<em class="fa fa-user"></em>
+								<span ui:field="spnLoggedInUser"></span>
+							</a>
+						</li>
+
 						<!-- START Contacts button -->
 						<li>
 							<g:Anchor ui:field="aLogout">

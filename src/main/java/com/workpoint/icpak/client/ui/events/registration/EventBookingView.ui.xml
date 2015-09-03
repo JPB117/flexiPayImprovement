@@ -292,6 +292,10 @@
 
 										<div class="wizard-footer">
 											<div class="pull-right">
+												<d:ActionLink styleName='hide' ui:field="aAccount"
+													href="#activateacc">Pay Later
+												</d:ActionLink>
+
 												<g:Anchor
 													styleName='btn btn-next btn-fill btn-gold btn-wd
 										btn-sm hide'
@@ -302,11 +306,6 @@
 												<g:Anchor
 													styleName='btn btn-previous btn-fill btn-default btn-wd btn-sm hide'
 													ui:field="aBack">Back
-												</g:Anchor>
-
-												<g:Anchor
-													styleName='btn hide btn-previous btn-fill btn-default btn-wd btn-sm hide'
-													ui:field="aAccount" href="#login">Back
 												</g:Anchor>
 											</div>
 

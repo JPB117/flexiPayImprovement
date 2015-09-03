@@ -97,6 +97,8 @@ public class UsersDaoHelper {
 		po.setEmail(dto.getEmail());
 		// po.setPassword(dto.getPassword());
 
+		updatePassword(userId, dto.getPassword());
+
 		if (po.getUserData() == null) {
 			po.setUserData(dto);
 		} else {

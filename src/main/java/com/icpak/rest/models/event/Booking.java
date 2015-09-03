@@ -238,6 +238,7 @@ public class Booking extends PO{
 		
 		dto.setContact(contact.toDto());
 		dto.setCurrency(currency);
+		
 		if(getDelegates()!=null){
 			List<DelegateDto> dtos = new ArrayList<>();
 			for(Delegate delegate: delegates){

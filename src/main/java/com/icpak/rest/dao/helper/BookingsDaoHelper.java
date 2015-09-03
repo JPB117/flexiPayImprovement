@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.jdt.internal.compiler.lookup.MemberTypeBinding;
 
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
@@ -19,9 +20,11 @@ import com.icpak.rest.IDUtils;
 import com.icpak.rest.dao.BookingsDao;
 import com.icpak.rest.dao.EventsDao;
 import com.icpak.rest.dao.InvoiceDaoHelper;
+import com.icpak.rest.dao.MemberDao;
 import com.icpak.rest.dao.UsersDao;
 import com.icpak.rest.exceptions.ServiceException;
 import com.icpak.rest.models.ErrorCodes;
+import com.icpak.rest.models.auth.User;
 import com.icpak.rest.models.event.Accommodation;
 import com.icpak.rest.models.event.Booking;
 import com.icpak.rest.models.event.Delegate;
@@ -37,6 +40,7 @@ import com.icpak.rest.utils.EmailServiceHelper;
 import com.icpak.rest.utils.HTMLToPDFConvertor;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.InvoiceLineDto;
+import com.workpoint.icpak.shared.model.MemberDto;
 import com.workpoint.icpak.shared.model.events.AttendanceStatus;
 import com.workpoint.icpak.shared.model.events.BookingDto;
 import com.workpoint.icpak.shared.model.events.ContactDto;
@@ -50,6 +54,10 @@ public class BookingsDaoHelper {
 	BookingsDao dao;
 	@Inject
 	UsersDao userDao;
+
+	@Inject
+	MemberDao memberDao;
+
 	@Inject
 	EventsDao eventDao;
 
@@ -152,8 +160,7 @@ public class BookingsDaoHelper {
 		booking.setAmountDue(total);// Total
 		booking.setDelegates(delegates);
 		dao.createBooking(booking);
-		//dao.merge(booking);
-		
+
 		sendProInvoice(booking);
 
 		// Copy into dto
@@ -183,7 +190,8 @@ public class BookingsDaoHelper {
 			values.put("date", invoice.getDate());
 			values.put("firstName", invoice.getContactName());
 
-			values.put("DocumentURL", "http://127.0.0.1:8888/icpakportal.html");
+			values.put("DocumentURL",
+					"http://www2.icpak.com:8080/icpakportal.html");
 			values.put("email", booking.getContact().getEmail());
 			values.put("eventId", booking.getEvent().getRefId());
 			values.put("bookingId", booking.getRefId());
@@ -409,7 +417,6 @@ public class BookingsDaoHelper {
 		List<DelegateDto> dtos = dto.getDelegates();
 		Collection<Delegate> delegates = new ArrayList<>();
 		for (DelegateDto delegateDto : dtos) {
-
 			Delegate delegate = get(delegateDto);
 			dao.save(delegate);
 			delegates.add(delegate);
@@ -417,12 +424,34 @@ public class BookingsDaoHelper {
 		poBooking.setDelegates(delegates);
 
 		dao.save(poBooking);
-
 		sendProInvoice(poBooking);
+		sendDelegateSMS(poBooking);
 
 		BookingDto bookingDto = poBooking.toDto();
 		dto.setInvoiceRef(dao.getInvoiceRef(bookingId));
 		return bookingDto;
+	}
+
+	private void sendDelegateSMS(Booking booking) {
+		Event event = booking.getEvent();
+		Collection<Delegate> delegates = booking.getDelegates();
+		List<Delegate> delegateList = new ArrayList<>();
+		delegateList.addAll(delegates);
+
+		for (Delegate delegate : delegateList) {
+			String smsMemssage = "Dear" + " " + delegate.getSurname()
+					+ ",You have been booked for " + event.getName()
+					+ " held between " + event.getStartDate() + " to "
+					+ event.getEndDate() + "";
+
+			if (delegate.getMemberRefId() != null) {
+				Member member = memberDao.findByRefId(
+						delegate.getMemberRefId(), Member.class);
+				smsIntergration.send(member.getUser().getPhoneNumber(),
+						smsMemssage);
+			}
+		}
+
 	}
 
 	private Delegate get(DelegateDto delegateDto) {
@@ -475,7 +504,8 @@ public class BookingsDaoHelper {
 					Member.class);
 			Event event = dao
 					.findByRefId(delegateDto.getEventId(), Event.class);
-			String message = "Dear"
+
+			String smsMemssage = "Dear"
 					+ " "
 					+ delegateDto.getSurname()
 					+ ",You have been marked as "
@@ -490,7 +520,8 @@ public class BookingsDaoHelper {
 					+ (delegateDto.getAttendance() == AttendanceStatus.ATTENDED ? ". You have earned "
 							+ event.getCpdHours() + " Hrs."
 							: "");
-			smsIntergration.send(member.getUser().getPhoneNumber(), message);
+			smsIntergration
+					.send(member.getUser().getPhoneNumber(), smsMemssage);
 		}
 		delegate.setAttendance(delegateDto.getAttendance());
 		dao.save(delegate);
@@ -500,7 +531,8 @@ public class BookingsDaoHelper {
 		return delegate.toDto();
 	}
 
-	public List<MemberBookingDto> getMemberBookings(String memberRefId, int offset, int limit) {
+	public List<MemberBookingDto> getMemberBookings(String memberRefId,
+			int offset, int limit) {
 		return dao.getMemberBookings(memberRefId, offset, limit);
 	}
 }

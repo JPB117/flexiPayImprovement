@@ -25,6 +25,7 @@ public class UserDto extends SerializableObj implements Listable, Serializable {
 	private int participated;
 	private int inbox;
 	private AccountStatus status = AccountStatus.NEWACC;
+	private String phoneNumber;
 
 	public UserDto() {
 	}
@@ -39,6 +40,10 @@ public class UserDto extends SerializableObj implements Listable, Serializable {
 
 	public String getName() {
 		return name;
+	}
+	
+	public String getPhoneNumber() {
+		return phoneNumber;
 	}
 	
 	public String getEmail() {
@@ -188,5 +193,9 @@ public class UserDto extends SerializableObj implements Listable, Serializable {
 
 	public void setMemberNo(String memberNo) {
 		this.memberNo = memberNo;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
 	}
 }

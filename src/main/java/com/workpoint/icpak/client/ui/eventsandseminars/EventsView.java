@@ -80,6 +80,7 @@ public class EventsView extends ViewImpl implements EventsPresenter.IEventsView 
 	@Override
 	public void bindBookings(List<BookingDto> bookings) {
 		tblDelegates.clearRows();
+		
 		for(BookingDto dto: bookings){
 			for(DelegateDto delegate: dto.getDelegates()){
 				tblDelegates.createRow(new DelegateTableRow(dto, delegate));

@@ -32,6 +32,7 @@ import com.workpoint.icpak.client.place.NameTokens;
 import com.workpoint.icpak.client.place.ParameterTokens;
 import com.workpoint.icpak.client.security.CurrentUser;
 import com.workpoint.icpak.client.service.AbstractAsyncCallback;
+import com.workpoint.icpak.client.ui.events.ContextLoadedEvent;
 import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.api.ApiParameters;
@@ -162,50 +163,50 @@ public class LoginPresenter extends
 		getView().showLoginProgress();
 
 		usersDelegate.withCallback(
-		ManualRevealCallback.create(this,
-				new AbstractAsyncCallback<LogInResult>() {
-					@Override
-					public void onSuccess(LogInResult result) {
-						getView().clearLoginProgress();
+				ManualRevealCallback.create(this,
+						new AbstractAsyncCallback<LogInResult>() {
+							@Override
+							public void onSuccess(LogInResult result) {
+								if (result.getCurrentUserDto().isLoggedIn()) {
+									setLoggedInCookie(result
+											.getLoggedInCookie());
+								}
 
-						if (result.getCurrentUserDto().isLoggedIn()) {
-							setLoggedInCookie(result.getLoggedInCookie());
-						}
+								if (result.getActionType() == ActionType.VIA_COOKIE) {
+									onLoginCallSucceededForCookie(result
+											.getCurrentUserDto());
+								} else {
+									onLoginCallSucceeded(result
+											.getCurrentUserDto());
+								}
+								getView().clearLoginProgress();
+							}
 
-						if (result.getActionType() == ActionType.VIA_COOKIE) {
-							onLoginCallSucceededForCookie(result
-									.getCurrentUserDto());
-						} else {
-							onLoginCallSucceeded(result.getCurrentUserDto());
-						}
-
-					}
-
-					@Override
-					public void onFailure(Throwable caught) {
-						getView().clearLoginProgress();
-						LOGGER.log(Level.SEVERE,
-								"Wrong username or password......");
-						getView().setError("Wrong username or password");
-						super.onFailure(caught);
-					}
-				})
-				).execLogin(logInAction);
+							@Override
+							public void onFailure(Throwable caught) {
+								getView().clearLoginProgress();
+								LOGGER.log(Level.SEVERE,
+										"Wrong username or password......");
+								getView()
+										.setError("Wrong username or password");
+								super.onFailure(caught);
+							}
+						})).execLogin(logInAction);
 
 	}
 
 	private void onLoginCallSucceededForCookie(CurrentUserDto currentUserDto) {
 		getView().setLoginButtonEnabled(true);
-
 		if (currentUserDto.isLoggedIn()) {
 			onLoginCallSucceeded(currentUserDto);
 		}
 	}
 
 	private void onLoginCallSucceeded(CurrentUserDto currentUserDto) {
-
 		if (currentUserDto.isLoggedIn()) {
 			currentUser.fromCurrentUserDto(currentUserDto);
+			fireEvent(new ContextLoadedEvent(currentUser.getUser(), null));
+
 			redirectToLoggedOnPage();
 		} else {
 			LOGGER.log(Level.SEVERE, "Wrong username or password......");
@@ -236,12 +237,13 @@ public class LoginPresenter extends
 		Date expires = DateUtils.addDays(new Date(), REMEMBER_ME_DAYS);
 		boolean secure = false;
 
-		Cookies.setCookie(ApiParameters.LOGIN_COOKIE, value,expires,
-		 domain, path, secure);
-		
-//		NewCookie newCookie = new NewCookie(ApiParameters.LOGIN_COOKIE, value,
-//				path, domain, "", maxAge, secure);
-//		sessionResource.withoutCallback().rememberMe(newCookie);
+		Cookies.setCookie(ApiParameters.LOGIN_COOKIE, value, expires, domain,
+				path, secure);
+
+		// NewCookie newCookie = new NewCookie(ApiParameters.LOGIN_COOKIE,
+		// value,
+		// path, domain, "", maxAge, secure);
+		// sessionResource.withoutCallback().rememberMe(newCookie);
 
 		// LOGGER.info("LoginPresenter.setLoggedInCookie() Set client cookie="
 		// + value);

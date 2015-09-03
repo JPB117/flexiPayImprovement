@@ -75,10 +75,9 @@ public class EventBookingView extends ViewImpl implements
 	Anchor aNext;
 	@UiField
 	Anchor aBack;
-
 	@UiField
+	
 	Anchor aAccount;
-
 	@UiField
 	DivElement divPackage;
 
@@ -153,7 +152,6 @@ public class EventBookingView extends ViewImpl implements
 	private List<PageElement> pageElements = new ArrayList<PageElement>();
 
 	DataMapper mapper = new DataMapper() {
-
 		@Override
 		public List<DataModel> getDataModels(List objs) {
 			List<DataModel> models = new ArrayList<DataModel>();
@@ -199,7 +197,6 @@ public class EventBookingView extends ViewImpl implements
 					: ((MemberDto) model.get("memberNo"));
 			dto.setMemberId(memberDto == null ? null : memberDto.getMemberNo());
 			dto.setMemberRefId(memberDto == null ? null : memberDto.getRefId());
-
 			dto.setTitle(model.get("title") == null ? null : model.get("title")
 					.toString());
 			dto.setSurname(model.get("surname") == null ? null : model.get(
@@ -222,6 +219,7 @@ public class EventBookingView extends ViewImpl implements
 
 	ColumnConfig memberColumn = new ColumnConfig("memberNo", "Member No",
 			DataType.SELECTAUTOCOMPLETE, "", "form-control");
+	
 	ColumnConfig accommodationConfig = new ColumnConfig("accommodation",
 			"Accommodation", DataType.SELECTBASIC);
 
@@ -229,18 +227,18 @@ public class EventBookingView extends ViewImpl implements
 	public EventBookingView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
 
-		tblDelegates.setAutoNumber(false);
+		tblDelegates.setAutoNumber(true);
 		List<ColumnConfig> configs = new ArrayList<ColumnConfig>();
 		configs.add(memberColumn);
 
 		ColumnConfig config = new ColumnConfig("title", "Title",
 				DataType.STRING, "", "form-control");
 		configs.add(config);
-		config = new ColumnConfig("surname", "Surname", DataType.STRING, "",
-				"form-control");
-		configs.add(config);
-		config = new ColumnConfig("otherNames", "Other Names", DataType.STRING,
+		config = new ColumnConfig("surname", "First Name:", DataType.STRING,
 				"", "form-control");
+		configs.add(config);
+		config = new ColumnConfig("otherNames", "Other Names:",
+				DataType.STRING, "", "form-control");
 		configs.add(config);
 
 		// config = new ColumnConfig("email", "Email Address", DataType.STRING,
@@ -280,6 +278,15 @@ public class EventBookingView extends ViewImpl implements
 		aAddMember.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
+				memberColumn.setEnabled(true);
+				tblDelegates.addRowData(new DataModel());
+			}
+		});
+
+		aAddNonMember.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				memberColumn.setEnabled(false);
 				tblDelegates.addRowData(new DataModel());
 			}
 		});

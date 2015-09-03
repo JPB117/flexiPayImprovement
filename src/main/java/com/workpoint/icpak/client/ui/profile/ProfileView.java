@@ -113,10 +113,10 @@ public class ProfileView extends ViewImpl implements
 		return divProfileContent.getActiveTab();
 	}
 
-//	@Override
-//	public ApplicationFormHeaderDto getBasicDetails() {
-//		return divProfileContent.getBasicDetails();
-//	}
+	// @Override
+	// public ApplicationFormHeaderDto getBasicDetails() {
+	// return divProfileContent.getBasicDetails();
+	// }
 
 	@Override
 	public boolean isValid() {
@@ -168,7 +168,7 @@ public class ProfileView extends ViewImpl implements
 	public void clear() {
 		divProfileContent.clear();
 	}
-	
+
 	public void bindTrainingDetails(
 			List<ApplicationFormTrainingDto> trainingDetails) {
 		divProfileContent.bindTrainingDetails(trainingDetails);
@@ -176,7 +176,7 @@ public class ProfileView extends ViewImpl implements
 
 	@Override
 	public void setCountries(List<Country> countries) {
-		//divProfileContent.setCountries(countries);
+		// divProfileContent.setCountries(countries);
 	}
 
 	@Override

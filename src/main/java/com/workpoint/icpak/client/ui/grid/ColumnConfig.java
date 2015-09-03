@@ -38,6 +38,15 @@ public class ColumnConfig {
 	private Loader loader;
 	private List<Listable> dropDownItems = new ArrayList<Listable>();
 	private List<ValueChangeHandler> valueChangeHandlers = new ArrayList<ValueChangeHandler>();
+	private boolean isEnabled;
+
+	public boolean isEnabled() {
+		return isEnabled;
+	}
+
+	public void setEnabled(boolean isEnabled) {
+		this.isEnabled = isEnabled;
+	}
 
 	public ColumnConfig(String key, String displayName, DataType type) {
 		this.key = key;
@@ -56,6 +65,12 @@ public class ColumnConfig {
 		this(key, displayName, type);
 		this.placeHolder = placeHolder;
 		this.styleName = styleName;
+	}
+
+	public ColumnConfig(String key, String displayName, DataType type,
+			String placeHolder, String styleName, boolean isEnabled) {
+		this(key, displayName, type, placeHolder, styleName);
+		this.isEnabled = isEnabled;
 	}
 
 	public String getKey() {
@@ -93,7 +108,7 @@ public class ColumnConfig {
 			widget = dropDown;
 		} else if (type == DataType.SELECTAUTOCOMPLETE) {
 			AutoCompleteField auto = new AutoCompleteField(loader);
-
+			auto.setEnabled(isEnabled);
 			// ((Widget) widget).getElement().getFirstChildElement()
 			// .addClassName(styleName);
 
