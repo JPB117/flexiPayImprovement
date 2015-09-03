@@ -352,6 +352,8 @@ public class EventBookingView extends ViewImpl implements
 		} else {
 			aBack.getElement().addClassName("hide");
 		}
+		
+		aBack.getElement().removeClassName("hide");
 	}
 
 	private void setActive(LIElement liElement, PageElement page) {
