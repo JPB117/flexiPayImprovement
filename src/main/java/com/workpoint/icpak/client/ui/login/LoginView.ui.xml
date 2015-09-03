@@ -11,8 +11,7 @@
 				<div class="container">
 					<div class="navbar-header" style="width: 100%; text-align: center;">
 						<a class="brand">
-							<img src="img/icpak_logo.png"
-								width="150px" />
+							<img src="img/icpak_logo.png" width="150px" />
 						</a>
 					</div>
 				</div>
@@ -41,7 +40,6 @@
 									<g:PasswordTextBox ui:field="password"
 										styleName="form-control"></g:PasswordTextBox>
 								</div>
-								<a href="#" class="forgot hide">Forgot password?</a>
 								<div class="remember">
 									<input id="remember-me" type="checkbox"></input>
 									<label for="remember-me">Keep me Signed In</label>
@@ -49,6 +47,8 @@
 								<g:Anchor ui:field="aLogin" styleName="btn btn-lg btn-success btn-block">Log in</g:Anchor>
 
 								<div class="row">
+									<br />
+									<a href="#activateacc;r=forgot">Forgot password</a>
 									<br />
 									New Member ?
 									<a href="#signup">Register here</a>

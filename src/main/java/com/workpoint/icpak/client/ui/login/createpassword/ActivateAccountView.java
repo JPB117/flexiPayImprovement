@@ -60,4 +60,24 @@ public class ActivateAccountView extends ViewImpl implements
 	public void setLoginButtonEnabled(boolean enable) {
 		panelPasswordWidget.setSaveEnabled(enable);
 	}
+
+	@Override
+	public void showForgot(boolean show) {
+		panelPasswordWidget.showForgot(show);
+	}
+
+	@Override
+	public HasClickHandlers getResendButton() {
+		return panelPasswordWidget.getResendButton();
+	}
+
+	@Override
+	public String getEmail() {
+		return panelPasswordWidget.getEmail();
+	}
+
+	@Override
+	public void showProcessing(boolean showProcessing) {
+		panelPasswordWidget.showProcessing(showProcessing);
+	}
 }
