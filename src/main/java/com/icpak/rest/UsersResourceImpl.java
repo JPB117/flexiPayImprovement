@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.logging.Logger;
 
+import javax.mail.search.SearchTerm;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -85,6 +86,12 @@ public class UsersResourceImpl implements UsersResource {
 	}
 
 	@GET
+	@Path("/searchCount")
+	public Integer getSearchCount(@QueryParam("searchTerm") String searchTerm) {
+		return helper.getCount(searchTerm);
+	}
+
+	@GET
 	@Path("/count")
 	public Integer getCount() {
 		return helper.getCount();
@@ -132,8 +139,8 @@ public class UsersResourceImpl implements UsersResource {
 	 * To test use this uri:
 	 * <p/>
 	 * curl -v -F 'filename=POvBCBE-PO-NRB-1_1.pdf' -F
-	 * 'file=@/home/duggan/Downloads/PO_BCBE-PO-NRB-1_1.pdf;type=application/pdf'
-	 * http://localhost:8080/icpak/api/users/xIXcSQNcXmqMDrth/profile
+	 * 'file=@/home/duggan/Downloads/PO_BCBE-PO-NRB-1_1.pdf;type=application/pdf
+	 * ' http://localhost:8080/icpak/api/users/xIXcSQNcXmqMDrth/profile
 	 * <p/>
 	 * 
 	 * @param userId

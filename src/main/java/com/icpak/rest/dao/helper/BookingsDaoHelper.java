@@ -168,7 +168,7 @@ public class BookingsDaoHelper {
 			dto.getDelegates().get(i).setErn(delegate.getErn());
 		}
 
-		//dao.getEntityManager().merge(booking);
+		// dao.getEntityManager().merge(booking);
 		dto.setInvoiceRef(dao.getInvoiceRef(booking.getRefId()));
 		return dto;
 	}
@@ -268,7 +268,7 @@ public class BookingsDaoHelper {
 		Event event = booking.getEvent();
 		for (Delegate delegate : delegates) {
 			delegate.setErn(dao.getErn(delegate.getRefId()));
-			
+
 			if (delegate.getMemberRegistrationNo() != null) {
 				String description = "%s - %s fees for %d members: %s";
 				memberInvoice.setMemberNames(memberInvoice.getMemberNames()

@@ -35,6 +35,11 @@ public interface UsersResource extends BaseResource {
 	@Path("/auth")
 	public UserDto login(@QueryParam("username") String username,
 			@QueryParam("password") String password);
+	
+	
+	@GET
+	@Path("/searchCount")
+	public Integer getSearchCount(@QueryParam("searchTerm") String searchTerm);
 
 	@POST
 	@Path("/auth2")

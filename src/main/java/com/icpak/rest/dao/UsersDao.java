@@ -18,28 +18,26 @@ public class UsersDao extends BaseDao {
 		return getSingleResultOrNull(getEntityManager().createQuery(query)
 				.setParameter("username", username));
 	}
-	
+
 	public User findUserByMemberNo(String memberNo) {
 		assert memberNo != null;
 		String query = "from User u where u.memberNo = :memberNo";
 		return getSingleResultOrNull(getEntityManager().createQuery(query)
 				.setParameter("memberNo", memberNo));
 	}
-	
+
 	public User getUserByUsernameOrMemberNo(String username) {
-		
+
 		User user = findUserByUsername(username);
-		if(user==null){
+		if (user == null) {
 			user = findUserByMemberNo(username);
 		}
 		return user;
 	}
 
-
 	public void createUser(User user) {
 		if (user.getHashedPassword() != null && user.getId() == null)
 			user.setPassword(encrypt(user.getHashedPassword()));
-
 		save(user);
 	}
 
@@ -77,17 +75,19 @@ public class UsersDao extends BaseDao {
 		createUser(user);
 	}
 
-	public int getUserCount() {
-		return getUserCount(null);
+	public int getUserCount(String searchTerm) {
+		return getUserCount(null, searchTerm);
 	}
 
-	public int getUserCount(String roleId) {
-
+	public int getUserCount(String roleId, String searchTerm) {
 		Number number = null;
 		if (roleId == null) {
 			number = getSingleResultOrNull(getEntityManager()
 					.createNativeQuery(
-							"select count(*) from user where isactive=1"));
+							"select count(*) from user where isactive=1 and "
+									+ "(Name like :searchTerm or email like :searchTerm "
+									+ " or memberNo like :searchTerm)")
+									.setParameter("searchTerm", "%"+searchTerm+"%"));
 		} else {
 			number = getSingleResultOrNull(getEntityManager()
 					.createNativeQuery(
@@ -174,6 +174,5 @@ public class UsersDao extends BaseDao {
 								+ "inner join Member m on m.userRefId=u.refId where m.refId=:memberNo")
 				.setParameter("memberNo", memberNo));
 	}
-
 
 }

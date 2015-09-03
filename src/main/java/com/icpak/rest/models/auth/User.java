@@ -202,6 +202,7 @@ public class User extends PO {
 
 	public void copyFrom(UserDto dto) {
 		setEmail(dto.getEmail());
+		setPhoneNumber(dto.getPhoneNumber());
 		BioData bio = new BioData();
 		bio.setFirstName(dto.getName());
 		bio.setLastName(dto.getSurname());
@@ -280,6 +281,7 @@ public class User extends PO {
 		dto.setEmail(email);
 		dto.setName(userData.getFirstName());
 		dto.setSurname(userData.getLastName());
+		dto.setPhoneNumber(phoneNumber);
 		dto.setRefId(refId);
 		dto.setStatus(status);
 
