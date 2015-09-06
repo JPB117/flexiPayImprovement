@@ -45,7 +45,7 @@ public class StatementsView extends ViewImpl implements
 		double totalPaid=0.0;
 		double totalUnpaid=0.0;
 		for(InvoiceDto invoice: invoices){
-			totalPaid+=invoice.getAmount()==null? 0:invoice.getAmount();
+			totalPaid+=invoice.getInvoiceAmount()==null? 0:invoice.getInvoiceAmount();
 			tblView.createRow(new StatementTableRow(invoice));
 		}
 		

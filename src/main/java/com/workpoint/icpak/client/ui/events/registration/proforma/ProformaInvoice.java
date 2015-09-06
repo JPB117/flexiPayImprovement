@@ -89,7 +89,7 @@ public class ProformaInvoice extends Composite {
 						new InlineLabel(),
 						new InlineLabel("Total"),
 						new InlineLabel(CURRENCYFORMAT.format(invoice
-								.getAmount()) + ""));
+								.getInvoiceAmount()) + ""));
 	}
 
 }

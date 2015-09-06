@@ -3,8 +3,10 @@ package com.workpoint.icpak.client.ui.statements.row;
 import java.util.Date;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Widget;
@@ -37,6 +39,8 @@ public class StatementTableRow extends RowWidget {
 	HTMLPanel divAmount;
 	@UiField
 	HTMLPanel divBalance;
+	@UiField
+	SpanElement spnStatus;
 
 	public StatementTableRow() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -44,21 +48,40 @@ public class StatementTableRow extends RowWidget {
 
 	public StatementTableRow(InvoiceDto invoice) {
 		this();
-		if (invoice.getDate() != null) {
-			divDate.add(new InlineLabel(DATEFORMAT.format(new Date(invoice
-					.getDate()))));
-			divDueDate.add(new InlineLabel(DATEFORMAT.format(new Date(invoice
-					.getDate()))));
+		if (invoice.getInvoiceDate() != null) {
+			divDate.add(new InlineLabel(DATEFORMAT.format(invoice
+					.getInvoiceDate())));
 		}
+
+		if (invoice.getDueDate() != null) {
+			divDueDate.add(new InlineLabel(DATEFORMAT.format(invoice
+					.getDueDate())));
+		}
+
 		divDocNum.add(new InlineLabel(invoice.getDocumentNo()));
 		divDescription.add(new InlineLabel(invoice.getDescription()));
 
-		if (invoice.getAmount() != null) {
-			divAmount.add(new InlineLabel(NUMBERFORMAT.format(invoice
-					.getAmount()) + ""));
-			divBalance.add(new InlineLabel(NUMBERFORMAT.format(invoice
-					.getAmount()) + ""));
-		}
-	}
+		Double amount = (invoice.getInvoiceAmount() == null ? 0 : invoice
+				.getInvoiceAmount());
+		divAmount.add(new InlineLabel(NUMBERFORMAT.format(amount) + ""));
 
+		Double balance = amount;
+
+		if (invoice.getPaymentStatus() != null) {
+			spnStatus.addClassName("label label-success");
+			spnStatus.setInnerText(invoice.getPaymentStatus());
+
+			if (invoice.getPaymentStatus().equals("PAID")) {
+				balance = (invoice.getInvoiceAmount() == null ? 0 : invoice
+						.getInvoiceAmount())
+						- (invoice.getTransactionAmount() == null ? 0 : invoice
+								.getTransactionAmount());
+			}
+		} else {
+			spnStatus.addClassName("label label-danger");
+			spnStatus.setInnerText("NOT PAID");
+		}
+
+		divBalance.add(new InlineLabel(NUMBERFORMAT.format(balance) + ""));
+	}
 }

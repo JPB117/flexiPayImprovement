@@ -1,6 +1,7 @@
 package com.workpoint.icpak.tests.dao;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 import org.junit.Assert;
@@ -20,32 +21,33 @@ public class TestInvoiceDao extends AbstractDaoTest {
 
 	@Inject
 	InvoiceDaoHelper invoiceHelper;
-	@Inject BookingsDaoHelper bookingHelper;
-	@Inject BookingsDao bookingsDao;
-	
-	@Test
-	public void createFromBooking(){
-		Booking booking = bookingsDao.findByRefId("xTNqziYTSzZrh4E8", Booking.class);
+	@Inject
+	BookingsDaoHelper bookingHelper;
+	@Inject
+	BookingsDao bookingsDao;
+
+	@Ignore
+	public void createFromBooking() {
+		Booking booking = bookingsDao.findByRefId("xTNqziYTSzZrh4E8",
+				Booking.class);
 		Assert.assertNotNull(booking);
-		
+
 		bookingHelper.generateInvoice(booking);
 	}
-	
+
 	@Ignore
-	public void getCounts(){
+	public void getCounts() {
 		int count = invoiceHelper.getInvoiceCount();
 		System.err.println(count);
 	}
-	
-	@Ignore
-	public void getInvoice(){
-		InvoiceDto dto = invoiceHelper.getInvoice("5JibXv2kxP9LMhyp");
-		for(InvoiceLineDto line : dto.getLines()){
-			System.err.println(line.getRefId()+" >> "+line.getMemberId());
-		}
-		
+
+	@Test
+	public void getInvoices() {
+		// CQuyDBuiNLZPwPRX
+		List<InvoiceDto> dtos = invoiceHelper.getAll("ALL", 0, 10);
+		System.err.println(dtos.size());
 	}
-	
+
 	@Ignore
 	public void create() {
 		InvoiceDto invoice = new InvoiceDto();
@@ -60,6 +62,7 @@ public class TestInvoiceDao extends AbstractDaoTest {
 
 			amount += dto.getUnitPrice();
 		}
+
 		invoice.setAmount(amount);
 		invoice.setDocumentNo((new Random()).nextInt() + "");
 		invoice.setCompanyName("EEEWr");
@@ -68,7 +71,7 @@ public class TestInvoiceDao extends AbstractDaoTest {
 		invoice.setContactName("Kimani");
 		invoice.setPhoneNumber("0230343");
 		invoice.setBookingRefId("433dsfsfds");
-		
+
 		invoiceHelper.save(invoice);
 	}
 

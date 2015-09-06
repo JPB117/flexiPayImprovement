@@ -28,7 +28,6 @@ public class TransactionsResourceImpl implements TransactionsResource {
 			@QueryParam("trxNumber") String trxNumber) {
 
 		trxDaoHelper.receivePayment(paymentRef,businessNo, accountNo, paymentMode, trxNumber);
-		
 		return "SUCCESS";
 	}
 

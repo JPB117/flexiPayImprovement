@@ -76,7 +76,6 @@ public class EventBookingView extends ViewImpl implements
 	@UiField
 	Anchor aBack;
 	@UiField
-	
 	Anchor aAccount;
 	@UiField
 	DivElement divPackage;
@@ -219,7 +218,7 @@ public class EventBookingView extends ViewImpl implements
 
 	ColumnConfig memberColumn = new ColumnConfig("memberNo", "Member No",
 			DataType.SELECTAUTOCOMPLETE, "", "form-control");
-	
+
 	ColumnConfig accommodationConfig = new ColumnConfig("accommodation",
 			"Accommodation", DataType.SELECTBASIC);
 
@@ -352,7 +351,7 @@ public class EventBookingView extends ViewImpl implements
 		} else {
 			aBack.getElement().addClassName("hide");
 		}
-		
+
 		aBack.getElement().removeClassName("hide");
 	}
 
@@ -612,12 +611,9 @@ public class EventBookingView extends ViewImpl implements
 	private void bindTransaction(InvoiceDto invoice) {
 		// 197.248.4.221
 		String url = "http://197.248.4.221:8080/flexiPay#websiteClient;"
-				// String url =
-				// "http://197.248.4.221:8080/ewallet/#websiteClient;"
 				+ "businessNo=722722;" + "refId=" + invoice.getRefId() + ";"
-				+ "orgName=ICPAK;" + "amount=" + invoice.getAmount() + ";"
-				+ "accountNo=Use ID Number";
-
+				+ "orgName=ICPAK;" + "amount=" + invoice.getInvoiceAmount() + ";"
+				+ "accountNo=" + invoice.getDocumentNo();
 		framePayment.setUrl(url);
 	}
 

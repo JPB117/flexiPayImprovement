@@ -16,96 +16,105 @@ import com.workpoint.icpak.shared.model.InvoiceLineDto;
 @Transactional
 public class InvoiceDaoHelper {
 
-	@Inject InvoiceDao dao;
-	@Inject BookingsDao bookingsDao;
-	
-	public InvoiceDto getInvoice(String invoiceRef){
+	@Inject
+	InvoiceDao dao;
+	@Inject
+	BookingsDao bookingsDao;
+
+	public InvoiceDto getInvoice(String invoiceRef) {
 		Invoice invoice = dao.findByRefId(invoiceRef, Invoice.class);
 		InvoiceDto dto = invoice.toDto();
-		
-		for(InvoiceLineDto line: dto.getLines()){
+
+		for (InvoiceLineDto line : dto.getLines()) {
 			String eventDelegateRefId = line.getEventDelegateRefId();
-			if(eventDelegateRefId!=null){
-				Delegate delegate = bookingsDao.findByRefId(eventDelegateRefId, Delegate.class);
+			if (eventDelegateRefId != null) {
+				Delegate delegate = bookingsDao.findByRefId(eventDelegateRefId,
+						Delegate.class);
 				line.setMemberId(delegate.getMemberRegistrationNo());
-				
+
 				line.setDelegateERN(delegate.getErn());
-				line.setAccommodation(delegate.getAccommodation()==null? null: delegate.getAccommodation().toDto());
+				line.setAccommodation(delegate.getAccommodation() == null ? null
+						: delegate.getAccommodation().toDto());
 			}
 		}
-		
+
 		return dto;
 	}
-	
-	public InvoiceDto save(InvoiceDto dto){
+
+	public InvoiceDto save(InvoiceDto dto) {
 		Invoice invoice = new Invoice();
 		invoice.copyFrom(dto);
-		
-		for(InvoiceLineDto lineDto: dto.getLines()){
+
+		for (InvoiceLineDto lineDto : dto.getLines()) {
 			InvoiceLine line = new InvoiceLine();
 			line.copyFrom(lineDto);
 			invoice.addLine(line);
 		}
-		
+
 		dao.save(invoice);
 		dao.merge(invoice);
-		
+
 		return invoice.toDto();
 	}
-	
-	public InvoiceDto update(String invoiceRef, InvoiceDto dto){
+
+	public InvoiceDto update(String invoiceRef, InvoiceDto dto) {
 		Invoice invoice = dao.findByRefId(invoiceRef, Invoice.class);
 		invoice.copyFrom(dto);
-		
-		for(InvoiceLineDto lineDto: dto.getLines()){
+
+		for (InvoiceLineDto lineDto : dto.getLines()) {
 			InvoiceLine line = new InvoiceLine();
-			if(line.getRefId()!=null){
+			if (line.getRefId() != null) {
 				line = dao.findByRefId(line.getRefId(), Invoice.class);
 			}
 			line.copyFrom(lineDto);
 			invoice.addLine(line);
 		}
-		
+
 		dao.save(invoice);
-		
+
 		return invoice.toDto();
 	}
 
-	public List<InvoiceDto> getAllInvoices(String memberId, Integer offset,Integer limit) {
-		
+	public List<InvoiceDto> getAllInvoices(String memberId, Integer offset,
+			Integer limit) {
+
 		List<Invoice> invoices = dao.getAllInvoices(memberId, offset, limit);
 		List<InvoiceDto> dtos = new ArrayList<>();
-		
-		for(Invoice invoice: invoices){
+
+		for (Invoice invoice : invoices) {
 			dtos.add(invoice.toDto());
 		}
-		
+
 		return dtos;
 	}
-	
+
+	public List<InvoiceDto> getAll(String memberId, Integer offset,
+			Integer limit) {
+		return dao.getAll(memberId, offset, limit);
+	}
 
 	public int getInvoiceCount() {
 		return getInvoiceCount(null);
 	}
 
 	public List<InvoiceDto> getAllInvoicesForMember(String memberId) {
-		
+
 		List<Invoice> invoices = dao.getAllInvoicesForMember(memberId);
 		List<InvoiceDto> dtos = new ArrayList<>();
-		
-		for(Invoice invoice: invoices){
+
+		for (Invoice invoice : invoices) {
 			dtos.add(invoice.toDto());
 		}
-		
+
 		return dtos;
 	}
 
 	public Integer getInvoiceCount(String memberId) {
-		
-		if(memberId==null || memberId.equals("ALL")){
+
+		if (memberId == null || memberId.equals("ALL")) {
 			return dao.getInvoiceCount();
 		}
-		
+
 		return dao.getInvoiceCount(memberId);
 	}
 }

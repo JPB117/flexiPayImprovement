@@ -2,12 +2,13 @@ package com.workpoint.icpak.shared.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import com.workpoint.icpak.shared.model.events.AccommodationDto;
 
-public class InvoiceDto extends SerializableObj{
-	
+public class InvoiceDto extends SerializableObj {
+
 	/**
 	 * 
 	 */
@@ -18,12 +19,37 @@ public class InvoiceDto extends SerializableObj{
 	private String companyAddress;
 	private String contactName;
 	private String phoneNumber;
-	private Double amount;
+	private Double invoiceAmount;
 	private String bookingRefId;
 	private String description;
 	private List<InvoiceLineDto> lines = new ArrayList<InvoiceLineDto>();
+	private String invoiceRefId;
+	private Date invoiceDate;
+	private Date transactionDate;
+	private Date dueDate;
+	private String paymentStatus;
+	private String paymentMode;
+	private Double transactionAmount;
+	private String userId;
 
 	public InvoiceDto() {
+	}
+
+	public InvoiceDto(String refId, Double invoiceAmount, String documentNo,String description,
+			Date invoiceDate, Date transactionDate, Date dueDate,
+			String paymentStatus, String paymentMode, Double transactionAmount,
+			String userId) {
+		this.invoiceRefId = refId;
+		this.documentNo = documentNo;
+		this.description = description;
+		this.invoiceDate = invoiceDate;
+		this.transactionDate = transactionDate;
+		this.dueDate = dueDate;
+		this.paymentStatus = paymentStatus;
+		this.paymentMode = paymentMode;
+		this.invoiceAmount = invoiceAmount;
+		this.setUserId(userId);
+		this.setTransactionAmount(transactionAmount);
 	}
 
 	public String getCompanyName() {
@@ -34,12 +60,12 @@ public class InvoiceDto extends SerializableObj{
 		this.companyName = companyName;
 	}
 
-	public Double getAmount() {
-		return amount;
+	public Double getInvoiceAmount() {
+		return invoiceAmount;
 	}
 
 	public void setAmount(Double amount) {
-		this.amount = amount;
+		this.invoiceAmount = amount;
 	}
 
 	public List<InvoiceLineDto> getLines() {
@@ -112,6 +138,70 @@ public class InvoiceDto extends SerializableObj{
 
 	public void addLines(Collection<InvoiceLineDto> values) {
 		lines.addAll(values);
+	}
+
+	public String getInvoiceRefId() {
+		return invoiceRefId;
+	}
+
+	public void setInvoiceRefId(String invoiceRefId) {
+		this.invoiceRefId = invoiceRefId;
+	}
+
+	public Date getInvoiceDate() {
+		return invoiceDate;
+	}
+
+	public void setInvoiceDate(Date invoiceDate) {
+		this.invoiceDate = invoiceDate;
+	}
+
+	public Date getTransactionDate() {
+		return transactionDate;
+	}
+
+	public void setTransactionDate(Date transactionDate) {
+		this.transactionDate = transactionDate;
+	}
+
+	public Date getDueDate() {
+		return dueDate;
+	}
+
+	public void setDueDate(Date dueDate) {
+		this.dueDate = dueDate;
+	}
+
+	public String getPaymentStatus() {
+		return paymentStatus;
+	}
+
+	public void setPaymentStatus(String paymentStatus) {
+		this.paymentStatus = paymentStatus;
+	}
+
+	public String getPaymentMode() {
+		return paymentMode;
+	}
+
+	public void setPaymentMode(String paymentMode) {
+		this.paymentMode = paymentMode;
+	}
+
+	public Double getTransactionAmount() {
+		return transactionAmount;
+	}
+
+	public void setTransactionAmount(Double transactionAmount) {
+		this.transactionAmount = transactionAmount;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
 }

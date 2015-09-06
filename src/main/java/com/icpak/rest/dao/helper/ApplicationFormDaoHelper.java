@@ -161,7 +161,7 @@ public class ApplicationFormDaoHelper {
 							+ application.getOtherNames()), attachment);
 
 			trxHelper.charge(user.getRefId(), new Date(), subject, null,
-					invoice.getAmount(), documentNo, invoice.getRefId());
+					invoice.getInvoiceAmount(), documentNo, invoice.getRefId());
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -201,6 +201,8 @@ public class ApplicationFormDaoHelper {
 				.getApplicationAmount(), category.getApplicationAmount()));
 
 		dto = invoiceHelper.save(dto);
+		
+		
 
 		return dto;
 	}

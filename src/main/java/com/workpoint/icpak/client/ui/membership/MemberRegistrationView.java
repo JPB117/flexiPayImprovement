@@ -388,7 +388,7 @@ public class MemberRegistrationView extends ViewImpl implements
 		// 197.248.4.221
 		String url = "http://197.248.4.221:8080/flexiPay#websiteClient;"
 				+ "businessNo=722722;" + "refId=" + invoice.getRefId() + ";"
-				+ "orgName=ICPAK;" + "amount=" + invoice.getAmount() + ";"
+				+ "orgName=ICPAK;" + "amount=" + invoice.getInvoiceAmount() + ";"
 				+ "accountNo=" + invoice.getDocumentNo();
 
 		framePayment.setUrl(url);

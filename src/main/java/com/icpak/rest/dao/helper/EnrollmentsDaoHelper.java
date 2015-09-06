@@ -138,7 +138,7 @@ public class EnrollmentsDaoHelper {
 				doc.addDetail(new DocumentLine("invoiceDetails",line));
 			}
 			
-			values.put("totalAmount", invoice.getAmount());
+			values.put("totalAmount", invoice.getInvoiceAmount());
 			
 			
 			//PDF Invoice Generation
@@ -162,7 +162,7 @@ public class EnrollmentsDaoHelper {
 		}
 		
 		String trxRef = trxHelper.charge(booking.getUserId(),
-				booking.getBookingDate(), subject, event.getStartDate(), invoice.getAmount(),
+				booking.getBookingDate(), subject, event.getStartDate(), invoice.getInvoiceAmount(),
 				"Booking #"+booking.getId(), invoice.getRefId());
 	}
 	

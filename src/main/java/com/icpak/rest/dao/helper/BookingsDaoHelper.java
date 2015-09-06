@@ -206,7 +206,7 @@ public class BookingsDaoHelper {
 				doc.addDetail(new DocumentLine("invoiceDetails", line));
 			}
 
-			values.put("totalAmount", invoice.getAmount());
+			values.put("totalAmount", invoice.getInvoiceAmount());
 
 			// PDF Invoice Generation
 			InputStream inv = EmailServiceHelper.class.getClassLoader()
@@ -235,7 +235,7 @@ public class BookingsDaoHelper {
 
 		String trxRef = trxHelper.charge(booking.getUserId(),
 				booking.getBookingDate(), subject, event.getStartDate(),
-				invoice.getAmount(), "Booking #" + booking.getId(),
+				invoice.getInvoiceAmount(), "Booking #" + booking.getId(),
 				invoice.getRefId());
 	}
 

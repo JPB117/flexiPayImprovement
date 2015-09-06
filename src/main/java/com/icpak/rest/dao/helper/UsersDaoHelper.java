@@ -19,7 +19,6 @@ import com.icpak.rest.dao.UserSessionDao;
 import com.icpak.rest.dao.UsersDao;
 import com.icpak.rest.exceptions.ServiceException;
 import com.icpak.rest.models.ErrorCodes;
-import com.icpak.rest.models.SearchFilter;
 import com.icpak.rest.models.auth.BioData;
 import com.icpak.rest.models.auth.Role;
 import com.icpak.rest.models.auth.User;

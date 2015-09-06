@@ -32,7 +32,6 @@ public class TransactionDaoHelper {
 	}
 	
 	public void receivePayment(String paymentRef,String businessNo,String accountNo,String paymentMode,String trxNumber){
-		
 		Transaction trx = dao.findByRefId(paymentRef, Transaction.class);
 		trx.setAccountNo(accountNo);
 		trx.setPaymentMode(paymentMode);

@@ -29,6 +29,7 @@ public class Invoice extends PO {
 	private String bookingRefId;
 	private String memberId; // Invoice owner
 	private String description;
+	
 
 	@OneToMany(mappedBy = "invoice", cascade = { CascadeType.PERSIST,
 			CascadeType.REMOVE })
@@ -140,7 +141,7 @@ public class Invoice extends PO {
 	}
 
 	public void copyFrom(InvoiceDto dto) {
-		setAmount(dto.getAmount());
+		setAmount(dto.getInvoiceAmount());
 		setCompanyAddress(dto.getCompanyAddress());
 		setCompanyName(dto.getCompanyName());
 		setContactName(dto.getContactName());

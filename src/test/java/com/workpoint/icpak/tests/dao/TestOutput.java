@@ -34,7 +34,7 @@ public class TestOutput extends AbstractDaoTest {
 	public void print() throws IOException, SAXException,
 			ParserConfigurationException, FactoryConfigurationError,
 			DocumentException {
-		CPDDto cpd = helper.getCPD("", "DUbn83aNiV9ss94z");
+		CPDDto cpd = helper.getCPD("", "wEshf16zCGxyqThu");
 
 		Map<String, Object> values = new HashMap<String, Object>();
 		values.put("eventName", cpd.getTitle());
@@ -47,7 +47,7 @@ public class TestOutput extends AbstractDaoTest {
 
 		HTMLToPDFConvertor convertor = new HTMLToPDFConvertor();
 		InputStream is = TestOutput.class.getClassLoader().getResourceAsStream(
-				"cpdcertificate.html");
+				"cpdcertificate.html");	
 		String html = IOUtils.toString(is);
 		byte[] bite = convertor.convert(doc, html);
 

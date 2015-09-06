@@ -43,6 +43,7 @@ public class TransactionTable extends Composite {
 		th.add(new TableHeader("Due Date"));
 		th.add(new TableHeader("Amount"));
 		th.add(new TableHeader("Balance"));
+		th.add(new TableHeader("Payment Status"));
 
 		tblView.setTableHeaders(th);
 	}
@@ -63,7 +64,6 @@ public class TransactionTable extends Composite {
 	public void setAutoNumber(boolean autoNumber) {
 		tblView.setAutoNumber(false);
 	}
-
 
 	public PagingPanel getPagingPanel() {
 		return tblView.getPagingPanel();

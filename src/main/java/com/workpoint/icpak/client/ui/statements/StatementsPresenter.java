@@ -36,35 +36,42 @@ import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.api.InvoiceResource;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 
-public class StatementsPresenter extends
-		Presenter<StatementsPresenter.IStatementsView, StatementsPresenter.IStatementsProxy>{
+public class StatementsPresenter
+		extends
+		Presenter<StatementsPresenter.IStatementsView, StatementsPresenter.IStatementsProxy> {
 
 	public interface IStatementsView extends View {
 
 		void bindInvoices(List<InvoiceDto> invoices);
+
 		void setCount(Integer aCount);
+
 		PagingPanel getPagingPanel();
-		
+
 	}
-	
+
 	@ProxyCodeSplit
 	@NameToken(NameTokens.statements)
 	@UseGatekeeper(LoginGateKeeper.class)
-	public interface IStatementsProxy extends TabContentProxyPlace<StatementsPresenter> {
+	public interface IStatementsProxy extends
+			TabContentProxyPlace<StatementsPresenter> {
 	}
-	
-	@TabInfo(container = HomePresenter.class)
-    static TabData getTabLabel(LoginGateKeeper adminGatekeeper) {
-		TabDataExt data = new TabDataExt("Payment Summary","fa fa-briefcase",7,adminGatekeeper, true);
-        return data;
-    }
 
-	@Inject CurrentUser user;
-	private ResourceDelegate<InvoiceResource> invoiceDelegate;
-	
+	@TabInfo(container = HomePresenter.class)
+	static TabData getTabLabel(LoginGateKeeper adminGatekeeper) {
+		TabDataExt data = new TabDataExt("Payment Summary", "fa fa-briefcase",
+				7, adminGatekeeper, true);
+		return data;
+	}
+
 	@Inject
-	public StatementsPresenter(final EventBus eventBus, final IStatementsView view,
-			final IStatementsProxy proxy, final ResourceDelegate<InvoiceResource> invoiceDelegate) {
+	CurrentUser user;
+	private ResourceDelegate<InvoiceResource> invoiceDelegate;
+
+	@Inject
+	public StatementsPresenter(final EventBus eventBus,
+			final IStatementsView view, final IStatementsProxy proxy,
+			final ResourceDelegate<InvoiceResource> invoiceDelegate) {
 		super(eventBus, view, proxy, HomePresenter.SLOT_SetTabContent);
 		this.invoiceDelegate = invoiceDelegate;
 	}
@@ -72,16 +79,16 @@ public class StatementsPresenter extends
 	@Override
 	protected void onBind() {
 		super.onBind();
-		
+
 		getView().getPagingPanel().setLoader(new PagingLoader() {
-			
+
 			@Override
 			public void load(int offset, int limit) {
 				loadInvoices(offset, limit);
 			}
 		});
 	}
-	
+
 	protected void save() {
 	}
 
@@ -91,26 +98,28 @@ public class StatementsPresenter extends
 	}
 
 	private void loadData() {
-		
 		invoiceDelegate.withCallback(new AbstractAsyncCallback<Integer>() {
 			@Override
 			public void onSuccess(Integer aCount) {
 				getView().setCount(aCount);
 				PagingConfig config = getView().getPagingPanel().getConfig();
-				loadInvoices(config.getOffset(),config.getLimit());
-				
+				loadInvoices(config.getOffset(), config.getLimit());
+
 			}
 		}).getCount();
-		
+
 	}
 
 	protected void loadInvoices(int offset, int limit) {
-		invoiceDelegate.withCallback(new AbstractAsyncCallback<List<InvoiceDto>>() {
-			@Override
-			public void onSuccess(List<InvoiceDto> result) {
-				getView().bindInvoices(result);
-			}
-		}).getInvoices(AppContext.getContextUser().getMemberRefId(), offset, limit);
+		String memberId = (AppContext.isCurrentUserAdmin() ? "ALL" : AppContext
+				.getContextUser().getMemberRefId());
+		invoiceDelegate.withCallback(
+				new AbstractAsyncCallback<List<InvoiceDto>>() {
+					@Override
+					public void onSuccess(List<InvoiceDto> result) {
+						getView().bindInvoices(result);
+					}
+				}).getInvoices(memberId, offset, limit);
 	}
 
 }
