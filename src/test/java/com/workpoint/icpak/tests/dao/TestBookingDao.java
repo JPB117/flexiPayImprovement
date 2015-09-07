@@ -29,6 +29,11 @@ public class TestBookingDao extends AbstractDaoTest {
 	@Inject
 	EventsDao eventDao;
 
+	@Test
+	public void getTrx(){
+		bookingsHelper.getMemberBookings("lYEAuIVOBGoh9e9j", 0, 100);
+	}
+	
 	@Ignore
 	public void member() {
 
@@ -47,7 +52,7 @@ public class TestBookingDao extends AbstractDaoTest {
 
 	}
 
-	@Test
+	@Ignore
 	public void createBooking() {
 		BookingDto dto = new BookingDto();
 
