@@ -12,7 +12,6 @@ import com.icpak.rest.dao.EventsDao;
 import com.icpak.rest.dao.helper.BookingsDaoHelper;
 import com.icpak.rest.dao.helper.CPDDaoHelper;
 import com.icpak.rest.models.event.Delegate;
-import com.workpoint.icpak.shared.model.MemberDto;
 import com.workpoint.icpak.shared.model.PaymentStatus;
 import com.workpoint.icpak.shared.model.events.AttendanceStatus;
 import com.workpoint.icpak.shared.model.events.BookingDto;
@@ -29,6 +28,11 @@ public class TestBookingDao extends AbstractDaoTest {
 	@Inject
 	EventsDao eventDao;
 
+	@Test
+	public void getTrx(){
+		bookingsHelper.getMemberBookings("lYEAuIVOBGoh9e9j", 0, 100);
+	}
+	
 	@Ignore
 	public void member() {
 
@@ -47,7 +51,7 @@ public class TestBookingDao extends AbstractDaoTest {
 
 	}
 
-	@Test
+	@Ignore
 	public void createBooking() {
 		BookingDto dto = new BookingDto();
 

@@ -10,7 +10,6 @@ package com.workpoint.icpak.client.ui.statements;
 //import com.workpoint.icpak.shared.responses.UpdatePasswordResponse;
 import java.util.List;
 
-import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rest.delegates.client.ResourceDelegate;
@@ -35,6 +34,7 @@ import com.workpoint.icpak.client.ui.security.LoginGateKeeper;
 import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.api.InvoiceResource;
 import com.workpoint.icpak.shared.model.InvoiceDto;
+import com.workpoint.icpak.shared.model.InvoiceSummary;
 
 public class StatementsPresenter
 		extends
@@ -47,6 +47,8 @@ public class StatementsPresenter
 		void setCount(Integer aCount);
 
 		PagingPanel getPagingPanel();
+
+		void bindSummary(InvoiceSummary result);
 
 	}
 
@@ -98,15 +100,24 @@ public class StatementsPresenter
 	}
 
 	private void loadData() {
+		String memberId = (AppContext.isCurrentUserAdmin() ? "ALL" : AppContext
+				.getContextUser().getMemberRefId());
+		
+		invoiceDelegate.withCallback(new AbstractAsyncCallback<InvoiceSummary>() {
+			@Override
+			public void onSuccess(InvoiceSummary result) {
+				getView().bindSummary(result);
+			}
+		}).getSummary(memberId);
+		
 		invoiceDelegate.withCallback(new AbstractAsyncCallback<Integer>() {
 			@Override
 			public void onSuccess(Integer aCount) {
 				getView().setCount(aCount);
 				PagingConfig config = getView().getPagingPanel().getConfig();
 				loadInvoices(config.getOffset(), config.getLimit());
-
 			}
-		}).getCount();
+		}).getCount(memberId);
 
 	}
 

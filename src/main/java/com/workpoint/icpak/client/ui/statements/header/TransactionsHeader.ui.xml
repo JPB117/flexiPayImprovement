@@ -13,7 +13,7 @@
 						<div class="h2 mt0">
 							<span ui:field="spnTransactions"></span>
 						</div>
-						<div class="text-uppercase">Transactions</div>
+						<div class="text-uppercase">Total Amount</div>
 					</div>
 				</div>
 			</div>
@@ -30,11 +30,10 @@
 							<span class="" ui:field="spnAmount">
 							</span>
 						</div>
-						<div class="text-uppercase">Total Amount</div>
+						<div class="text-uppercase">Paid</div>
 					</div>
 				</div>
 			</div>
-
 		</div>
 
 		<div class="col-lg-4">

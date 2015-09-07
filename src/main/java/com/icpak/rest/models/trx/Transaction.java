@@ -3,6 +3,8 @@ package com.icpak.rest.models.trx;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -10,6 +12,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.icpak.rest.models.base.PO;
 import com.wordnik.swagger.annotations.ApiModel;
+import com.workpoint.icpak.shared.model.PaymentStatus;
 import com.workpoint.icpak.shared.trx.TransactionDto;
 
 /**
@@ -32,13 +35,15 @@ public class Transaction extends PO{
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private String userId;
+	private String memberId;
 	private Date date;
 	private String description;
 	private Date dueDate;
 	private Double amount;
 	private String paymentMode;
-	private String status;
+	
+	@Enumerated(EnumType.STRING)
+	private PaymentStatus status=PaymentStatus.NOTPAID;
 	
 	//MPESA
 	private String businessNo;
@@ -53,15 +58,14 @@ public class Transaction extends PO{
 	private String invoiceRef;
 	
 	public Transaction() {
-	
 	}
 
-	public String getUserId() {
-		return userId;
+	public String getMemberId() {
+		return memberId;
 	}
 
-	public void setUserId(String userId) {
-		this.userId = userId;
+	public void setMemberId(String memberId) {
+		this.memberId = memberId;
 	}
 
 	public Date getDate() {
@@ -103,7 +107,7 @@ public class Transaction extends PO{
 		dto.setDate(date);
 		dto.setDescription(description);
 		dto.setDueDate(dueDate);
-		dto.setUserId(userId);
+		dto.setUserId(memberId);
 		dto.setAccountNo(accountNo);
 		dto.setBusinessNo(businessNo);
 		dto.setPaymentMode(paymentMode);
@@ -114,11 +118,11 @@ public class Transaction extends PO{
 		return dto;
 	}
 
-	public String getStatus() {
+	public PaymentStatus getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(PaymentStatus status) {
 		this.status = status;
 	}
 

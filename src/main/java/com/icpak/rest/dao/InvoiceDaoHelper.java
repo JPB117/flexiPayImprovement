@@ -1,9 +1,6 @@
 package com.icpak.rest.dao;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import javax.ws.rs.QueryParam;
 
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
@@ -12,6 +9,7 @@ import com.icpak.rest.models.trx.Invoice;
 import com.icpak.rest.models.trx.InvoiceLine;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.InvoiceLineDto;
+import com.workpoint.icpak.shared.model.InvoiceSummary;
 
 @Transactional
 public class InvoiceDaoHelper {
@@ -26,6 +24,7 @@ public class InvoiceDaoHelper {
 		InvoiceDto dto = invoice.toDto();
 
 		for (InvoiceLineDto line : dto.getLines()) {
+			//For Events Only
 			String eventDelegateRefId = line.getEventDelegateRefId();
 			if (eventDelegateRefId != null) {
 				Delegate delegate = bookingsDao.findByRefId(eventDelegateRefId,
@@ -77,44 +76,32 @@ public class InvoiceDaoHelper {
 
 	public List<InvoiceDto> getAllInvoices(String memberId, Integer offset,
 			Integer limit) {
-
-		List<Invoice> invoices = dao.getAllInvoices(memberId, offset, limit);
-		List<InvoiceDto> dtos = new ArrayList<>();
-
-		for (Invoice invoice : invoices) {
-			dtos.add(invoice.toDto());
-		}
-
-		return dtos;
-	}
-
-	public List<InvoiceDto> getAll(String memberId, Integer offset,
-			Integer limit) {
-		return dao.getAll(memberId, offset, limit);
+		List<InvoiceDto> invoices = dao.getAllInvoices(memberId, offset, limit);
+		return invoices;
 	}
 
 	public int getInvoiceCount() {
 		return getInvoiceCount(null);
 	}
 
-	public List<InvoiceDto> getAllInvoicesForMember(String memberId) {
-
-		List<Invoice> invoices = dao.getAllInvoicesForMember(memberId);
-		List<InvoiceDto> dtos = new ArrayList<>();
-
-		for (Invoice invoice : invoices) {
-			dtos.add(invoice.toDto());
-		}
-
-		return dtos;
-	}
+//	public List<InvoiceDto> getAllInvoicesForMember(String memberId) {
+//
+//		List<Invoice> invoices = dao.getAllInvoicesForMember(memberId);
+//		List<InvoiceDto> dtos = new ArrayList<>();
+//
+//		for (Invoice invoice : invoices) {
+//			dtos.add(invoice.toDto());
+//		}
+//
+//		return dtos;
+//	}
 
 	public Integer getInvoiceCount(String memberId) {
-
-		if (memberId == null || memberId.equals("ALL")) {
-			return dao.getInvoiceCount();
-		}
-
 		return dao.getInvoiceCount(memberId);
+	}
+
+	public InvoiceSummary getSummary(String memberId) {
+		// TODO Auto-generated method stub
+		return dao.getSummary(memberId);
 	}
 }

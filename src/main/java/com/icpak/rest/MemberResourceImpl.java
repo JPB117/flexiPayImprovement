@@ -90,7 +90,7 @@ public class MemberResourceImpl implements MemberResource {
 	public List<InvoiceDto> getAllInvoicesForMember(
 			@ApiParam(value = "Member Id", required = true) @PathParam("memberId") String memberId) {
 
-		return helper.getAllInvoicesForMember(memberId);
+		return helper.getAllInvoices(memberId, 0, 50);
 	}
 
 	@Path("/{memberId}/cpd")

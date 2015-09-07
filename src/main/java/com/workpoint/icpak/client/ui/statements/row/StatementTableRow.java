@@ -64,7 +64,8 @@ public class StatementTableRow extends RowWidget {
 
 		Double balance = amount;
 
-		if (invoice.getPaymentStatus() != null) {
+		if (invoice.getPaymentStatus() != null && 
+				!invoice.getPaymentStatus().equals("NOTPAID")) {
 			spnStatus.addClassName("label label-success");
 			spnStatus.setInnerText(invoice.getPaymentStatus());
 

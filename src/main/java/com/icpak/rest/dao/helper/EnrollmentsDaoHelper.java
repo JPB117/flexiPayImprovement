@@ -161,7 +161,7 @@ public class EnrollmentsDaoHelper {
 			e.printStackTrace();
 		}
 		
-		String trxRef = trxHelper.charge(booking.getUserId(),
+		String trxRef = trxHelper.charge(booking.getMemberId(),
 				booking.getBookingDate(), subject, event.getStartDate(), invoice.getInvoiceAmount(),
 				"Booking #"+booking.getId(), invoice.getRefId());
 	}

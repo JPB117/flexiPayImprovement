@@ -13,8 +13,6 @@ import javax.xml.bind.annotation.XmlTransient;
 
 import com.icpak.rest.models.base.PO;
 import com.wordnik.swagger.annotations.ApiModel;
-import com.workpoint.icpak.shared.model.MemberDto;
-import com.workpoint.icpak.shared.model.events.AccommodationDto;
 import com.workpoint.icpak.shared.model.events.AttendanceStatus;
 import com.workpoint.icpak.shared.model.events.DelegateDto;
 
@@ -38,7 +36,6 @@ public class Delegate extends PO {
 	private String surname;
 	private String otherNames;
 	private String email;
-	private boolean isMember;
 
 	@Transient
 	private String bookingId;
@@ -145,14 +142,6 @@ public class Delegate extends PO {
 		dto.setAmount(amount);
 
 		return dto;
-	}
-
-	public boolean isMember() {
-		return isMember;
-	}
-
-	public void setMember(boolean isMember) {
-		this.isMember = isMember;
 	}
 
 	public Accommodation getAccommodation() {

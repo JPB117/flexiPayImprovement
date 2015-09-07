@@ -13,6 +13,7 @@ import com.workpoint.icpak.client.ui.statements.header.TransactionsHeader;
 import com.workpoint.icpak.client.ui.statements.row.StatementTableRow;
 import com.workpoint.icpak.client.ui.statements.table.TransactionTable;
 import com.workpoint.icpak.shared.model.InvoiceDto;
+import com.workpoint.icpak.shared.model.InvoiceSummary;
 
 public class StatementsView extends ViewImpl implements
 		StatementsPresenter.IStatementsView {
@@ -43,9 +44,6 @@ public class StatementsView extends ViewImpl implements
 	@Override
 	public void bindInvoices(List<InvoiceDto> invoices) {
 		tblView.clearRows();
-
-		double totalPaid = 0.0;
-		double totalUnpaid = 0.0;
 		for (InvoiceDto invoice : invoices) {
 			tblView.createRow(new StatementTableRow(invoice));
 		}
@@ -60,6 +58,12 @@ public class StatementsView extends ViewImpl implements
 	@Override
 	public PagingPanel getPagingPanel() {
 		return tblView.getPagingPanel();
+	}
+
+	@Override
+	public void bindSummary(InvoiceSummary result) {
+		headerContainer.setValues(result.getPaid()+result.getUnpaid(),
+				result.getPaid(), result.getUnpaid());
 	}
 
 }

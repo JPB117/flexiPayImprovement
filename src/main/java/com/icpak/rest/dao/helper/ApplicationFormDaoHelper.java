@@ -160,7 +160,8 @@ public class ApplicationFormDaoHelper {
 					Arrays.asList(application.getSurname() + " "
 							+ application.getOtherNames()), attachment);
 
-			trxHelper.charge(user.getRefId(), new Date(), subject, null,
+			trxHelper.charge(user.getMember()==null? null: user.getMember().getRefId(),
+					new Date(), subject, null,
 					invoice.getInvoiceAmount(), documentNo, invoice.getRefId());
 
 		} catch (Exception e) {

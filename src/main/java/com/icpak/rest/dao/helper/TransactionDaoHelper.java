@@ -7,8 +7,11 @@ import java.util.List;
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import com.icpak.rest.dao.TransactionsDao;
+import com.icpak.rest.models.event.Booking;
+import com.icpak.rest.models.trx.Invoice;
 import com.icpak.rest.models.trx.Transaction;
 import com.icpak.rest.util.SMSIntegration;
+import com.workpoint.icpak.shared.model.PaymentStatus;
 import com.workpoint.icpak.shared.trx.TransactionDto;
 
 @Transactional
@@ -16,7 +19,7 @@ public class TransactionDaoHelper {
 
 	@Inject
 	TransactionsDao dao;
-	
+
 	@Inject
 	SMSIntegration smsIntergration;
 
@@ -29,7 +32,7 @@ public class TransactionDaoHelper {
 		trx.setDate(chargeDate);
 		trx.setDescription(description);
 		trx.setDueDate(dueDate);
-		trx.setUserId(userId);
+		trx.setMemberId(userId);
 		trx.setDocumentNo(documentNo);
 		dao.save(trx);
 
@@ -43,7 +46,21 @@ public class TransactionDaoHelper {
 		trx.setPaymentMode(paymentMode);
 		trx.setTrxNumber(trxNumber);
 		trx.setBusinessNo(businessNo);
-		trx.setStatus("PAID");
+		trx.setStatus(PaymentStatus.PAID);
+
+		// Remove this duplication #07/10/2015
+		if (trx.getInvoiceRef() != null) {
+			Invoice invoice = dao.findByRefId(trx.getInvoiceRef(),
+					Invoice.class, false);
+			if (invoice != null && invoice.getBookingRefId() != null) {
+				Booking booking = dao.findByRefId(invoice.getBookingRefId(),
+						Booking.class, false);
+				booking.setPaymentStatus(PaymentStatus.PAID);
+				booking.setPaymentDate(new Date());
+				booking.setPaymentMode(paymentMode);
+				booking.setPaymentRef(paymentRef);
+			}
+		}
 		dao.save(trx);
 	}
 
