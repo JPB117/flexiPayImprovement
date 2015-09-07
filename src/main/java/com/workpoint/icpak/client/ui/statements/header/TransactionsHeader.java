@@ -31,9 +31,9 @@ public class TransactionsHeader extends Composite {
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 
-	public void setValues(int trxCount,double totalPaid, double totalUnpaid) {
-		spnTransactions.setInnerText(trxCount+"");
-		spnAmount.setInnerText(NUMBERFORMAT.format(totalPaid+totalUnpaid)+"");
+	public void setValues(double total,double totalPaid, double totalUnpaid) {
+		spnTransactions.setInnerText(NUMBERFORMAT.format(totalPaid+totalUnpaid));
+		spnAmount.setInnerText(NUMBERFORMAT.format(totalPaid));
 		spnBalance.setInnerText(NUMBERFORMAT.format(totalUnpaid)+"");
 	}
 

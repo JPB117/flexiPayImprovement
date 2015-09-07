@@ -44,7 +44,7 @@ public class TestInvoiceDao extends AbstractDaoTest {
 	@Test
 	public void getInvoices() {
 		// CQuyDBuiNLZPwPRX
-		List<InvoiceDto> dtos = invoiceHelper.getAll("ALL", 0, 10);
+		List<InvoiceDto> dtos = invoiceHelper.getAllInvoices("ALL", 0, 10);
 		System.err.println(dtos.size());
 	}
 

@@ -8,6 +8,7 @@ import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import com.icpak.rest.dao.TransactionsDao;
 import com.icpak.rest.models.trx.Transaction;
+import com.workpoint.icpak.shared.model.PaymentStatus;
 import com.workpoint.icpak.shared.trx.TransactionDto;
 
 @Transactional
@@ -24,7 +25,7 @@ public class TransactionDaoHelper {
 		trx.setDate(chargeDate);
 		trx.setDescription(description);
 		trx.setDueDate(dueDate);
-		trx.setUserId(userId);
+		trx.setMemberId(userId);
 		trx.setDocumentNo(documentNo);
 		dao.save(trx);
 		
@@ -37,7 +38,7 @@ public class TransactionDaoHelper {
 		trx.setPaymentMode(paymentMode);
 		trx.setTrxNumber(trxNumber);
 		trx.setBusinessNo(businessNo);
-		trx.setStatus("PAID");
+		trx.setStatus(PaymentStatus.PAID);
 		dao.save(trx);
 	}
 

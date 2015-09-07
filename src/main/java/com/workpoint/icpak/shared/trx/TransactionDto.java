@@ -2,6 +2,7 @@ package com.workpoint.icpak.shared.trx;
 
 import java.util.Date;
 
+import com.workpoint.icpak.shared.model.PaymentStatus;
 import com.workpoint.icpak.shared.model.SerializableObj;
 
 public class TransactionDto extends SerializableObj{
@@ -16,7 +17,7 @@ public class TransactionDto extends SerializableObj{
 	private Date dueDate;
 	private Double amount;
 	private String paymentMode;
-	private String status;
+	private PaymentStatus status;
 	
 	//MPESA
 	private String businessNo;
@@ -78,11 +79,11 @@ public class TransactionDto extends SerializableObj{
 		this.paymentMode = paymentMode;
 	}
 
-	public String getStatus() {
+	public PaymentStatus getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(PaymentStatus status) {
 		this.status = status;
 	}
 

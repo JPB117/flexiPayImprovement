@@ -125,6 +125,7 @@ public class EventBookingPresenter extends
 					@Override
 					public void onLoad(final ServerOracle source,
 							final String query) {
+						query.replaceAll("/", "%");
 						membersDelegate.withCallback(
 								new AbstractAsyncCallback<List<MemberDto>>() {
 									@Override
