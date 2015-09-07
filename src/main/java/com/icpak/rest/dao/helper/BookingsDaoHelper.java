@@ -71,8 +71,9 @@ public class BookingsDaoHelper {
 
 	@Inject
 	SMSIntegration smsIntergration;
-	
-	@Inject ApplicationSettings settings;
+
+	@Inject
+	ApplicationSettings settings;
 
 	public List<BookingDto> getAllBookings(String uriInfo, String eventId,
 			Integer offset, Integer limit) {
@@ -100,11 +101,9 @@ public class BookingsDaoHelper {
 	}
 
 	public BookingDto getBookingById(String eventId, String bookingId) {
-
 		Booking booking = dao.getByBookingId(bookingId);
 		BookingDto bookingDto = booking.toDto();
 		bookingDto.setInvoiceRef(dao.getInvoiceRef(bookingId));
-
 		return bookingDto;
 	}
 
@@ -188,11 +187,11 @@ public class BookingsDaoHelper {
 			Map<String, Object> values = new HashMap<String, Object>();
 			values.put("companyName", invoice.getCompanyName());
 			values.put("companyAddress", invoice.getCompanyAddress());
-			values.put("quoteNo", booking.getId());
+			values.put("quoteNo", invoice.getDocumentNo());
 			values.put("date", invoice.getDate());
 			values.put("firstName", invoice.getContactName());
 
-			values.put("DocumentURL",settings.getApplicationPath());
+			values.put("DocumentURL", settings.getApplicationPath());
 			values.put("email", booking.getContact().getEmail());
 			values.put("eventId", booking.getEvent().getRefId());
 			values.put("bookingId", booking.getRefId());
