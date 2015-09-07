@@ -1,20 +1,17 @@
 package com.workpoint.icpak.client.ui.statements.row;
 
-import java.util.Date;
+import static com.workpoint.icpak.client.ui.util.DateUtils.DATEFORMAT;
+import static com.workpoint.icpak.client.ui.util.NumberUtils.NUMBERFORMAT;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Widget;
 import com.workpoint.icpak.client.ui.component.RowWidget;
 import com.workpoint.icpak.shared.model.InvoiceDto;
-
-import static com.workpoint.icpak.client.ui.util.DateUtils.*;
-import static com.workpoint.icpak.client.ui.util.NumberUtils.*;
 
 public class StatementTableRow extends RowWidget {
 

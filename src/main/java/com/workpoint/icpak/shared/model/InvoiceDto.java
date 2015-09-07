@@ -47,7 +47,7 @@ public class InvoiceDto extends SerializableObj {
 		this.dueDate = dueDate;
 		this.paymentStatus = paymentStatus;
 		this.paymentMode = paymentMode;
-		this.invoiceAmount = invoiceAmount;
+		this.setInvoiceAmount(invoiceAmount);
 		this.setUserId(userId);
 		this.setTransactionAmount(transactionAmount);
 	}
@@ -65,7 +65,7 @@ public class InvoiceDto extends SerializableObj {
 	}
 
 	public void setAmount(Double amount) {
-		this.invoiceAmount = amount;
+		this.setInvoiceAmount(amount);
 	}
 
 	public List<InvoiceLineDto> getLines() {
@@ -202,6 +202,10 @@ public class InvoiceDto extends SerializableObj {
 
 	public void setUserId(String userId) {
 		this.userId = userId;
+	}
+
+	public void setInvoiceAmount(Double invoiceAmount) {
+		this.invoiceAmount = invoiceAmount;
 	}
 
 }

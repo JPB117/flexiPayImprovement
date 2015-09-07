@@ -4,10 +4,10 @@ import java.util.List;
 
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
-import com.workpoint.icpak.client.ui.component.PagingConfig;
 import com.workpoint.icpak.client.ui.component.PagingPanel;
 import com.workpoint.icpak.client.ui.statements.header.TransactionsHeader;
 import com.workpoint.icpak.client.ui.statements.row.StatementTableRow;
@@ -21,8 +21,9 @@ public class StatementsView extends ViewImpl implements
 
 	@UiField
 	TransactionTable tblView;
-	
-	@UiField TransactionsHeader headerContainer;
+
+	@UiField
+	TransactionsHeader headerContainer;
 
 	public interface Binder extends UiBinder<Widget, StatementsView> {
 	}
@@ -31,7 +32,7 @@ public class StatementsView extends ViewImpl implements
 	public StatementsView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
 		tblView.setAutoNumber(true);
-		
+
 	}
 
 	@Override
@@ -42,14 +43,13 @@ public class StatementsView extends ViewImpl implements
 	@Override
 	public void bindInvoices(List<InvoiceDto> invoices) {
 		tblView.clearRows();
-		double totalPaid=0.0;
-		double totalUnpaid=0.0;
-		for(InvoiceDto invoice: invoices){
-			totalPaid+=invoice.getInvoiceAmount()==null? 0:invoice.getInvoiceAmount();
+
+		double totalPaid = 0.0;
+		double totalUnpaid = 0.0;
+		for (InvoiceDto invoice : invoices) {
 			tblView.createRow(new StatementTableRow(invoice));
 		}
-		
-		headerContainer.setValues(invoices.size(),totalPaid, totalUnpaid);
+		// headerContainer.setValues(invoices.size(), totalPaid, totalUnpaid);
 	}
 
 	@Override
