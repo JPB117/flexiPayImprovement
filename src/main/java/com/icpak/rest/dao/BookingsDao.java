@@ -87,12 +87,15 @@ public class BookingsDao extends BaseDao {
 				+ "(case when e.enddate<current_date then 'CLOSED' else 'OPEN' end) eventStatus, "
 				+ "d.attendance,"
 				+ "b.paymentStatus, "
+				+ "t.status trxStatus, "
 				+ "a.hotel "
 				+ "from event e "
 				+ "inner join booking b on (e.id=b.event_Id)  "
 				+ "inner join delegate d on (d.booking_id=b.id) "
 				+ "left join accommodation a on (a.id=d.accommodationid) "
-				+ "where memberRefId=:memberRefId";
+				+ "left join invoice i on (i.bookingRefId=b.refId) "
+				+ "left join transaction t on (t.invoiceRef=i.refId) "
+				+ "where d.memberRefId=:memberRefId";
 		
 		List<Object[]> rows =  getResultList(getEntityManager()
 				.createNativeQuery(sql)
@@ -113,7 +116,8 @@ public class BookingsDao extends BaseDao {
 			String cpdHours=(value=row[i++])==null? null: value.toString();
 			String eventStatus=(value=row[i++])==null? null: value.toString();
 			Integer attendance=(value=row[i++])==null? null: ((Number)value).intValue();
-			Integer paymentStatus=(value=row[i++])==null? null: ((Number)value).intValue();
+			Integer paymentStatus=(value=row[i++])==null? null: ((Number)value).intValue();//Should remove this field
+			String trxStatus=(value=row[i++])==null? null: value.toString();//From Transactions
 			String hotel=(value=row[i++])==null? null: value.toString();
 			
 			MemberBookingDto dto = new MemberBookingDto();
@@ -128,8 +132,11 @@ public class BookingsDao extends BaseDao {
 			dto.setEventRefId(eventRefId);
 			dto.setEventStatus(EventStatus.valueOf(eventStatus));
 			dto.setLocation(venue);
-			dto.setPaymentStatus(PaymentStatus.PAID.ordinal()==paymentStatus? 
-					PaymentStatus.PAID: PaymentStatus.NOTPAID);
+//			dto.setPaymentStatus(PaymentStatus.PAID.ordinal()==paymentStatus? 
+//					PaymentStatus.PAID: PaymentStatus.NOTPAID);
+			dto.setPaymentStatus(trxStatus==null? PaymentStatus.NOTPAID : 
+				PaymentStatus.valueOf(trxStatus));
+			
 			dto.setStartDate(startDate);
 			memberEvents.add(dto);
 		}

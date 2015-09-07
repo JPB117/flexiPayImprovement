@@ -107,13 +107,13 @@ public class InvoiceDao extends BaseDao {
 
 		StringBuffer sqlBuffer = new StringBuffer("select count(*) from Invoice i  "
 				+ "left join Transaction t on (i.refId=t.invoiceRef) "
-				+ "where i.isActive=1");
+				+ "where i.isActive=1 ");
 		
 		Query query = null;
 		if (memberId == null || memberId.equals("ALL")) {
 			query = getEntityManager().createNativeQuery(sqlBuffer.toString());
 		} else {
-			sqlBuffer.append("and t.memberId=:memberId");
+			sqlBuffer.append("and t.memberId=:memberId ");
 			query = getEntityManager().createNativeQuery(sqlBuffer.toString())
 					.setParameter("memberId", memberId);
 		}
