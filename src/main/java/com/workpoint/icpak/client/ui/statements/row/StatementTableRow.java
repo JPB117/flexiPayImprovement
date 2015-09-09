@@ -37,6 +37,10 @@ public class StatementTableRow extends RowWidget {
 	@UiField
 	HTMLPanel divBalance;
 	@UiField
+	HTMLPanel divContact;
+	@UiField
+	HTMLPanel divPaymentMode;
+	@UiField
 	SpanElement spnStatus;
 
 	public StatementTableRow() {
@@ -45,16 +49,17 @@ public class StatementTableRow extends RowWidget {
 
 	public StatementTableRow(InvoiceDto invoice) {
 		this();
+		if (invoice.getContactName() != null) {
+			divContact.add(new InlineLabel(invoice.getContactName()));
+		}
 		if (invoice.getInvoiceDate() != null) {
 			divDate.add(new InlineLabel(DATEFORMAT.format(invoice
 					.getInvoiceDate())));
 		}
-
 		if (invoice.getDueDate() != null) {
 			divDueDate.add(new InlineLabel(DATEFORMAT.format(invoice
 					.getDueDate())));
 		}
-
 		divDocNum.add(new InlineLabel(invoice.getDocumentNo()));
 		divDescription.add(new InlineLabel(invoice.getDescription()));
 
@@ -62,10 +67,14 @@ public class StatementTableRow extends RowWidget {
 				.getInvoiceAmount());
 		divAmount.add(new InlineLabel(NUMBERFORMAT.format(amount) + ""));
 
+		divPaymentMode.add(new InlineLabel(
+				invoice.getPaymentMode() == null ? "N/A" : invoice
+						.getPaymentMode()));
+
 		Double balance = amount;
 
-		if (invoice.getPaymentStatus() != null && 
-				!invoice.getPaymentStatus().equals("NOTPAID")) {
+		if (invoice.getPaymentStatus() != null
+				&& !invoice.getPaymentStatus().equals("NOTPAID")) {
 			spnStatus.addClassName("label label-success");
 			spnStatus.setInnerText(invoice.getPaymentStatus());
 

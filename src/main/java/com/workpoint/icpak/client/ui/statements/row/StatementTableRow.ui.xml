@@ -5,15 +5,19 @@
 	<g:HTMLPanel styleName="tr" ui:field="row">
 		<g:HTMLPanel styleName="td" ui:field="divDate">
 		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td" ui:field="divContact">
+		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divDocNum">
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divDescription">
 		</g:HTMLPanel>
-		<g:HTMLPanel styleName="td" ui:field="divDueDate">
+		<g:HTMLPanel styleName="td hide" ui:field="divDueDate">
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divAmount">
 		</g:HTMLPanel>
-		<g:HTMLPanel styleName="td" ui:field="divBalance">
+		<g:HTMLPanel styleName="td" ui:field="divPaymentMode">
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td hide" ui:field="divBalance">
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divStatus">
 			<span ui:field="spnStatus"></span>

@@ -38,7 +38,7 @@ public class InvoiceDto extends SerializableObj {
 	public InvoiceDto(String refId, Double invoiceAmount, String documentNo,String description,
 			Date invoiceDate, Date transactionDate, Date dueDate,
 			String paymentStatus, String paymentMode, Double transactionAmount,
-			String userId) {
+			String userId,String contactName) {
 		this.invoiceRefId = refId;
 		this.documentNo = documentNo;
 		this.description = description;
@@ -47,6 +47,7 @@ public class InvoiceDto extends SerializableObj {
 		this.dueDate = dueDate;
 		this.paymentStatus = paymentStatus;
 		this.paymentMode = paymentMode;
+		this.contactName = contactName;
 		this.setInvoiceAmount(invoiceAmount);
 		this.setUserId(userId);
 		this.setTransactionAmount(transactionAmount);

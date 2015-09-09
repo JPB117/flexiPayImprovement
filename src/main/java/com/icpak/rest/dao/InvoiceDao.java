@@ -11,28 +11,13 @@ import com.workpoint.icpak.shared.model.InvoiceSummary;
 
 public class InvoiceDao extends BaseDao {
 
-//	public List<Invoice> getAllInvoices(String memberId, Integer offset,
-//			Integer limit) {
-//		if (memberId == null || memberId.equals("ALL")) {
-//			return getResultList(getEntityManager().createQuery(
-//					"FROM Invoice where isActive=1 " + "order by id desc"),
-//					offset, limit);
-//		} else {
-//			return getResultList(
-//					getEntityManager().createQuery(
-//							"FROM Invoice where isActive=1 and memberId=:memberId "
-//									+ "order by id desc").setParameter(
-//							"memberId", memberId), offset, limit);
-//		}
-//	}
-
-	public List<InvoiceDto> getAllInvoices(String memberId, Integer offset, Integer limit) {
+	public List<InvoiceDto> getAllInvoices(String memberId, Integer offset,
+			Integer limit) {
 		StringBuffer sqlBuffer = new StringBuffer("select i.refId, "
 				+ "i.amount as invoiceAmount,i.date as invoiceDate,"
-				+ "i.documentNo,i.description," 
+				+ "i.documentNo,i.description,i.contactName,"
 				+ "t.date,t.dueDate,t.status,"
-				+ "t.paymentMode,t.amount,t.memberId " 
-				+ "from Invoice i "
+				+ "t.paymentMode,t.amount,t.memberId " + "from Invoice i "
 				+ "left join Transaction t on (i.refId=t.invoiceRef) "
 				+ "where i.isActive=1 ");
 
@@ -66,6 +51,9 @@ public class InvoiceDao extends BaseDao {
 			String description = (value = row[i++]) == null ? null : value
 					.toString();
 
+			String contactName = (value = row[i++]) == null ? null : value
+					.toString();
+
 			Date transactionDate = (value = row[i++]) == null ? null
 					: (Date) value;
 			Date dueDate = (value = row[i++]) == null ? null : (Date) value;
@@ -81,7 +69,7 @@ public class InvoiceDao extends BaseDao {
 			InvoiceDto statement = new InvoiceDto(refId, invoiceAmount,
 					documentNo, description, invoiceDate, transactionDate,
 					dueDate, paymentStatus, paymentMode, transactionAmount,
-					userRefId);
+					userRefId,contactName);
 			statements.add(statement);
 
 		}
@@ -90,25 +78,26 @@ public class InvoiceDao extends BaseDao {
 
 	}
 
-//	public List<Invoice> getAllInvoicesForMember(String memberId) {
-//		return getResultList(getEntityManager().createQuery(
-//				"FROM Invoice where isActive=1 " + "and memberId=:memberId "
-//						+ "order by id desc")
-//				.setParameter("memberId", memberId));
-//	}
+	// public List<Invoice> getAllInvoicesForMember(String memberId) {
+	// return getResultList(getEntityManager().createQuery(
+	// "FROM Invoice where isActive=1 " + "and memberId=:memberId "
+	// + "order by id desc")
+	// .setParameter("memberId", memberId));
+	// }
 
-//	public int getInvoiceCount() {
-//		Number number = getSingleResultOrNull(getEntityManager().createQuery(
-//				"SELECT count(i) from Invoice i where i.isActive=1"));
-//		return number.intValue();
-//	}
+	// public int getInvoiceCount() {
+	// Number number = getSingleResultOrNull(getEntityManager().createQuery(
+	// "SELECT count(i) from Invoice i where i.isActive=1"));
+	// return number.intValue();
+	// }
 
 	public Integer getInvoiceCount(String memberId) {
 
-		StringBuffer sqlBuffer = new StringBuffer("select count(*) from Invoice i  "
-				+ "left join Transaction t on (i.refId=t.invoiceRef) "
-				+ "where i.isActive=1 ");
-		
+		StringBuffer sqlBuffer = new StringBuffer(
+				"select count(*) from Invoice i  "
+						+ "left join Transaction t on (i.refId=t.invoiceRef) "
+						+ "where i.isActive=1 ");
+
 		Query query = null;
 		if (memberId == null || memberId.equals("ALL")) {
 			query = getEntityManager().createNativeQuery(sqlBuffer.toString());
@@ -123,13 +112,13 @@ public class InvoiceDao extends BaseDao {
 		return number.intValue();
 
 	}
-	
-	public InvoiceSummary getSummary(String memberId){
-		StringBuffer sqlBuffer = new StringBuffer("select sum(i.amount),status from Invoice i "
-				+ "left join Transaction t "
-				+ "on (i.refId=t.invoiceRef) "
-				+ "where i.isActive=1 ");
-		
+
+	public InvoiceSummary getSummary(String memberId) {
+		StringBuffer sqlBuffer = new StringBuffer(
+				"select sum(i.amount),status from Invoice i "
+						+ "left join Transaction t "
+						+ "on (i.refId=t.invoiceRef) " + "where i.isActive=1 ");
+
 		Query query = null;
 		if (memberId == null || memberId.equals("ALL")) {
 			sqlBuffer.append("group by t.status ");
@@ -140,10 +129,10 @@ public class InvoiceDao extends BaseDao {
 			query = getEntityManager().createNativeQuery(sqlBuffer.toString())
 					.setParameter("memberId", memberId);
 		}
-		
+
 		List<Object[]> rows = getResultList(query);
 		InvoiceSummary summary = new InvoiceSummary();
-		
+
 		for (Object[] row : rows) {
 			int i = 0;
 			Object value = null;
@@ -152,13 +141,15 @@ public class InvoiceDao extends BaseDao {
 					: new Double(value.toString());
 			String status = (value = row[i++]) == null ? null : value
 					.toString();
-			if(status==null || status.equals("NOTPAID")){
-				summary.setUnpaid(invoiceAmount+(summary.getUnpaid()==null? 0: summary.getUnpaid()));
-			}else{
+			if (status == null || status.equals("NOTPAID")) {
+				summary.setUnpaid(invoiceAmount
+						+ (summary.getUnpaid() == null ? 0 : summary
+								.getUnpaid()));
+			} else {
 				summary.setPaid(invoiceAmount);
 			}
 		}
-		
+
 		return summary;
 	}
 
