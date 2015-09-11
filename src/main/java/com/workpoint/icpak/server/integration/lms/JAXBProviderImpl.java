@@ -13,9 +13,7 @@ public class JAXBProviderImpl implements ContextResolver<JSONJAXBContext> {
 	@Override
 	public JSONJAXBContext getContext(Class<?> arg0) {
 
-
-		if (!(arg0.equals(MemberDto.class)
-				|| arg0.equals(UserDto.class))) {
+		if (!(arg0.equals(MemberDto.class) || arg0.equals(UserDto.class))) {
 			return null;
 		}
 

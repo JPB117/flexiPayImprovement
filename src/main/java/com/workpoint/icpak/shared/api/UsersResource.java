@@ -35,12 +35,11 @@ public interface UsersResource extends BaseResource {
 	@Path("/auth")
 	public UserDto login(@QueryParam("username") String username,
 			@QueryParam("password") String password);
-	
-	
+
 	@GET
 	@Path("/searchCount")
 	public Integer getSearchCount(@QueryParam("searchTerm") String searchTerm);
-	
+
 	@POST
 	@Path("/reset/{userId}")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -60,6 +59,11 @@ public interface UsersResource extends BaseResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void changePassword(@PathParam("userId") String userId,
 			@QueryParam("password") String newPassword);
+
+	@POST
+	@Path("/{userId}/lmsPost")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public String postUserLMS(@PathParam("userId") String userId);
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)

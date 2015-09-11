@@ -1,5 +1,6 @@
 package com.workpoint.icpak.tests.dao;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.junit.Ignore;
@@ -48,7 +49,6 @@ public class TestApplicationForm extends AbstractDaoTest {
 	public void getApplications() {
 		List<ApplicationFormHeaderDto> members = helper.getAllApplications(0,
 				100, "");
-
 		for (ApplicationFormHeaderDto dto : members) {
 			System.out.println("Application:" + dto.getUserRefId());
 		}
@@ -65,8 +65,8 @@ public class TestApplicationForm extends AbstractDaoTest {
 	}
 
 	@Test
-	public void getCount() {
-		System.err.println("Count>>" + usersDaoHelper.getCount("Mary"));
-		
+	public void getCount() throws IOException {
+		System.err.println("Response>>"
+				+ usersDaoHelper.postUserToLMS("50LMW3Qrv3SsLySW"));
 	}
 }

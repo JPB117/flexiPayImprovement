@@ -1,9 +1,12 @@
 package com.icpak.rest.dao.helper;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -32,7 +35,11 @@ import com.icpak.rest.security.authentication.AuthenticationException;
 import com.icpak.rest.security.authentication.Authenticator;
 import com.icpak.rest.util.ApplicationSettings;
 import com.icpak.rest.utils.EmailServiceHelper;
+import com.workpoint.icpak.server.integration.lms.LMSIntegrationUtil;
+import com.workpoint.icpak.shared.lms.LMSMemberDto;
+import com.workpoint.icpak.shared.model.Gender;
 import com.workpoint.icpak.shared.model.RoleDto;
+import com.workpoint.icpak.shared.model.Title;
 import com.workpoint.icpak.shared.model.UserDto;
 import com.workpoint.icpak.shared.model.auth.AccountStatus;
 import com.workpoint.icpak.shared.model.auth.ActionType;
@@ -56,8 +63,9 @@ public class UsersDaoHelper {
 
 	@Inject
 	UserSessionDao loginCookieDao;
-	
-	@Inject ApplicationSettings settings;
+
+	@Inject
+	ApplicationSettings settings;
 
 	/**
 	 * System User
@@ -364,6 +372,40 @@ public class UsersDaoHelper {
 		User user = dao.findByUserId(userId);
 		user.setPassword(newPassword);
 		dao.changePassword(user);
+
+	}
+
+	public String postUserToLMS(String userId) throws IOException {
+		User user = dao.findByUserId(userId);
+		LMSMemberDto dto = new LMSMemberDto();
+		dto.setFirstName(user.getUserData().getFirstName());
+		dto.setLastName(user.getUserData().getLastName());
+		dto.setGender((user.getUserData().getGender() == Gender.MALE ? Gender.MALE
+				.getCode() : Gender.FEMALE.getCode()));
+		dto.setMobileNo(user.getPhoneNumber());
+		dto.setPassword(user.getPassword());
+		dto.setTimeZone("E. Africa Standard Time");
+		dto.setTitle(Title.Mr.getCode());
+		if (user.getUserData().getDob() != null) {
+			dto.setDOB(new SimpleDateFormat("dd-mm-yyyy").format(user
+					.getUserData().getDob()));
+		} else {
+			dto.setDOB(new SimpleDateFormat("dd-mm-yyyy").format(new Date()));
+		}
+		if (user.getMemberNo() != null) {
+			dto.setUserName(user.getMemberNo() + "@wira.io");
+			// dto.setUserName(user.getMemberNo());
+			dto.setMembershipID(user.getMemberNo());
+		} else if (user.getEmail() != null) {
+			dto.setUserName(user.getEmail());
+			dto.setMembershipID("");
+		}
+		dto.setRefID(user.getRefId());
+
+		String response = LMSIntegrationUtil.getInstance().executeLMSCall(
+				"/Account/Register", dto, String.class);
+		//messages -for testing
+		return response;
 	}
 
 	public void activateAccount(String userId, AccountStatus activated) {
@@ -377,26 +419,31 @@ public class UsersDaoHelper {
 
 	public void resetAccount(String userId) {
 		User user = dao.findByUserId(userId);
-		
-		String subject="ICPAK Portal Email Reset";
-		String resetUrl = settings.getApplicationPath()+"/#activateacc;uid="+userId;
-		
-		String body="Password Reset Instructions For: <br/>"
-				+ "<div>"
-				+ "Name: "+user.getUserData().getFullNames()
-				+"<br/>Member No: "+user.getMemberNo()==null? "N/A":user.getMemberNo()
-				+ "</div>"
-				+ "<a href='"+resetUrl+"'>Reset Your Password</a> and follow onscreen instructions."
-				+ "This email can be ignored if you did not request a password reset. The link is only "
-				+ "available for a short time";
-		
+
+		String subject = "ICPAK Portal Email Reset";
+		String resetUrl = settings.getApplicationPath() + "/#activateacc;uid="
+				+ userId;
+
+		String body = "Password Reset Instructions For: <br/>" + "<div>"
+				+ "Name: " + user.getUserData().getFullNames()
+				+ "<br/>Member No: " + user.getMemberNo() == null ? "N/A"
+				: user.getMemberNo()
+						+ "</div>"
+						+ "<a href='"
+						+ resetUrl
+						+ "'>Reset Your Password</a> and follow onscreen instructions."
+						+ "This email can be ignored if you did not request a password reset. The link is only "
+						+ "available for a short time";
+
 		try {
-			EmailServiceHelper.sendEmail(body, subject, Arrays.asList(user.getEmail()),
+			EmailServiceHelper.sendEmail(body, subject,
+					Arrays.asList(user.getEmail()),
 					Arrays.asList(user.getUserData().getFirstName()));
 		} catch (UnsupportedEncodingException | MessagingException e) {
-			logger.warning("Send Reset Email Failed: email= "+user.getEmail()+", refId= "+user.getRefId());
+			logger.warning("Send Reset Email Failed: email= " + user.getEmail()
+					+ ", refId= " + user.getRefId());
 			e.printStackTrace();
-			
+
 		}
 	}
 

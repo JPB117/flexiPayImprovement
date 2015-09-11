@@ -2,33 +2,32 @@ package com.workpoint.icpak.shared.lms;
 
 import java.util.Date;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * Target Url - http://e-learning.datamedu.com:8084/mLearning/api/Account/Register
+ * Target Url -
+ * http://e-learning.datamedu.com:8084/mLearning/api/Account/Register
  * 
  * @author duggan
  *
  */
-@XmlType
-@XmlAccessorType(XmlAccessType.FIELD)
+
+@XmlRootElement
 public class LMSMemberDto {
-
-	private int title; //Mr : 38, Miss : 39 , Mrs : 40 Dr : 42
-
+	private int title; // Mr : 38, Miss : 39 , Mrs : 40 Dr : 42
 	private String firstName;
 	private String lastName;
 	private String mobileNo;
 	private String userName;
 	private String password;
-	private Date dob;
-	private int gender; //Male : 22, Female : 23
+	private String DOB;
+	private int gender; // Male : 22, Female : 23
 	private String timeZone = "";
-	
+	private String membershipID;
+	private String refID;
+
 	public LMSMemberDto() {
-		
+
 	}
 
 	public String getFirstName() {
@@ -71,12 +70,12 @@ public class LMSMemberDto {
 		this.password = password;
 	}
 
-	public Date getDob() {
-		return dob;
+	public String getDOB() {
+		return DOB;
 	}
 
-	public void setDob(Date dob) {
-		this.dob = dob;
+	public void setDOB(String dob) {
+		this.DOB = dob;
 	}
 
 	public String getTimeZone() {
@@ -101,5 +100,21 @@ public class LMSMemberDto {
 
 	public void setGender(int gender) {
 		this.gender = gender;
+	}
+
+	public String getMembershipID() {
+		return membershipID;
+	}
+
+	public void setMembershipID(String membershipId) {
+		this.membershipID = membershipId;
+	}
+
+	public String getRefID() {
+		return refID;
+	}
+
+	public void setRefID(String refId) {
+		this.refID = refId;
 	}
 }

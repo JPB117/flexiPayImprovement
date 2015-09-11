@@ -40,18 +40,18 @@ public class LMSIntegrationUtil {
 	private Client jclient;
 
 	private static LMSIntegrationUtil util = null;
-	
-	public static LMSIntegrationUtil getInstance() throws IOException{
-		if(util==null){
+
+	public static LMSIntegrationUtil getInstance() throws IOException {
+		if (util == null) {
 			synchronized (logger) {
-				if(util==null){
+				if (util == null) {
 					util = new LMSIntegrationUtil();
 				}
 			}
 		}
 		return util;
 	}
-	
+
 	private LMSIntegrationUtil() throws IOException {
 		DefaultClientConfig config = new DefaultClientConfig(
 				JAXBProviderImpl.class);
@@ -69,11 +69,13 @@ public class LMSIntegrationUtil {
 
 	/**
 	 * 
-	 * @param resourcePath e.g /users. The path to the resource after the base path
+	 * @param resourcePath
+	 *            e.g /users. The path to the resource after the base path
 	 * @param payLoad
 	 * @return
 	 */
-	public <T> T executeCall(String resourcePath, Object payLoad, final Class<T> returnTypeClazz) {
+	public <T> T executeCall(String resourcePath, Object payLoad,
+			final Class<T> returnTypeClazz) {
 
 		if (resourcePath == null || resourcePath.isEmpty()) {
 			throw new IllegalArgumentException(
@@ -94,23 +96,47 @@ public class LMSIntegrationUtil {
 
 			// response.getHeaders()
 		} catch (Exception e) {
-
 			// server unavailable
 			throw new RuntimeException(e);
 		}
 
 		if (clientResponse.getClientResponseStatus() != ClientResponse.Status.OK) {
-
 			throw new RuntimeException(clientResponse.getEntity(String.class));
 		}
 
 		T response = null;
-
-		// if(gt.getRawClass().equals(Void.class)){
-		// response = null;
-		// }else{
 		response = clientResponse.getEntity(returnTypeClazz);
-		// }
+
+		return response;
+
+	}
+
+	public <T> T executeLMSCall(String resourcePath, Object payLoad,
+			final Class<T> returnTypeClazz) throws IOException {
+
+		Client client = Client.create();
+
+		if (resourcePath == null || resourcePath.isEmpty()) {
+			throw new IllegalArgumentException(
+					"ResourcePath cannot be null for rest service");
+		}
+
+		logger.info("Submitting payload to " + getResourceUri(resourcePath)
+				+ " ;payLoad " + payLoad);
+
+		WebResource resource = client.resource(getResourceUri(resourcePath));
+
+		ClientResponse clientResponse = resource
+				.type(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON)
+				.post(ClientResponse.class, payLoad);
+
+		if (clientResponse.getClientResponseStatus() != ClientResponse.Status.OK) {
+			throw new RuntimeException(clientResponse.getEntity(String.class));
+		}
+
+		T response = null;
+		response = clientResponse.getEntity(returnTypeClazz);
 
 		return response;
 
@@ -132,11 +158,11 @@ public class LMSIntegrationUtil {
 		header.setCity1("Nairobi");
 		header.setEmployer("Workpoint Limited");
 		header.setApplicationType(ApplicationType.NON_PRACTISING);
-		ApplicationFormHeaderDto saved = LMSIntegrationUtil
-				.getInstance()
-				.executeCall("/applications", header, ApplicationFormHeaderDto.class);
-		assert saved.getRefId()!=null;
-		
+		ApplicationFormHeaderDto saved = LMSIntegrationUtil.getInstance()
+				.executeCall("/applications", header,
+						ApplicationFormHeaderDto.class);
+		assert saved.getRefId() != null;
+
 		System.err.println(saved.getRefId());
 	}
 }

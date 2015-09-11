@@ -28,6 +28,7 @@ import com.icpak.rest.models.membership.MaritalStatus;
 import com.icpak.rest.models.membership.StudentType;
 import com.wordnik.swagger.annotations.ApiModel;
 import com.workpoint.icpak.shared.model.Gender;
+import com.workpoint.icpak.shared.model.Title;
 
 @ApiModel(value = "User Data Model", description = "A UserData model represents data for any person")
 @XmlRootElement
@@ -105,6 +106,8 @@ public class BioData {
 	private Set<String> salutation = new HashSet<>(); // Mr, Miss, Dr etc
 
 	private String title;// Not sure - will see
+	
+	private Title lmsTitle;
 
 	private Long delegateId; // Event delegate id
 
@@ -232,6 +235,14 @@ public class BioData {
 	
 	public void setFullNames(String fullNames) {
 		this.fullNames = fullNames;
+	}
+
+	public Title getLmsTitle() {
+		return lmsTitle;
+	}
+
+	public void setLmsTitle(Title lmsTitle) {
+		this.lmsTitle = lmsTitle;
 	}
 
 

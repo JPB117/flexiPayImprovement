@@ -107,11 +107,11 @@ public class UsersResourceImpl implements UsersResource {
 		User user = helper.getUser(userId);
 		return user.toDto();
 	}
-	
+
 	@POST
 	@Path("/reset/{userId}")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public void resetAccount(@PathParam("userId") String userId){
+	public void resetAccount(@PathParam("userId") String userId) {
 		helper.resetAccount(userId);
 	}
 
@@ -285,6 +285,18 @@ public class UsersResourceImpl implements UsersResource {
 				.header("Content-Disposition",
 						"attachment; filename=" + name + "; Content-Length="
 								+ length).build();
+	}
+
+	@POST
+	@Path("/{userId}/lmsPost")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public String postUserLMS(@PathParam("userId") String userId) {
+		try {
+			return helper.postUserToLMS(userId);
+		} catch (IOException e) {
+			return e.getStackTrace().toString();
+		}
 	}
 
 }

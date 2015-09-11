@@ -200,6 +200,10 @@ public class User extends PO {
 		this.userData = userData;
 	}
 
+	public String getPassword() {
+		return password;
+	}
+
 	public void copyFrom(UserDto dto) {
 		setEmail(dto.getEmail());
 		setPhoneNumber(dto.getPhoneNumber());

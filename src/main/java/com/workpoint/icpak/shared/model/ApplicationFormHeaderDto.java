@@ -790,4 +790,12 @@ public class ApplicationFormHeaderDto extends SerializableObj {
 		this.percCompletion = percCompletion;
 	}
 
+	public String getTimezone() {
+		return timezone;
+	}
+
+	public void setTimezone(String timezone) {
+		this.timezone = timezone;
+	}
+
 }
