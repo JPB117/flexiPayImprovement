@@ -8,6 +8,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.CalendarUtil;
@@ -70,20 +71,26 @@ public class PaymentWidget extends Composite {
 
 	}
 
+	List<Year> allYears = new ArrayList<Year>();
+
 	private void setDate() {
 		Date startDate = new Date();
-		List<Year> allYears = new ArrayList<Year>();
 		for (int i = 1; i <= totalYears; i++) {
 			CalendarUtil.addMonthsToDate(startDate, 12);
-			allYears.add(new Year(startDate));
+			Year year = new Year(startDate);
+			allYears.add(year);
+		}
+
+		for (Year year : allYears) {
+			Window.alert(year.getDisplayName());
 		}
 		lstYears.setItems(allYears);
 
 		Date startMonth = new Date();
 		CalendarUtil.addMonthsToDate(startMonth, -startMonth.getMonth());
 		List<Month> allMonths = new ArrayList<Month>();
-
-		for (int i = 1; i <= totalMonths; i++) {
+		
+		for (int i = 0; i <= totalMonths; i++) {
 			CalendarUtil.addMonthsToDate(startMonth, 1);
 			allMonths.add(new Month(startMonth));
 		}
