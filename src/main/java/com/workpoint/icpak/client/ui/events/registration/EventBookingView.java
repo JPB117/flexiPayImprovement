@@ -12,6 +12,7 @@ import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -35,8 +36,10 @@ import com.workpoint.icpak.client.ui.grid.ColumnConfig;
 import com.workpoint.icpak.client.ui.grid.DataMapper;
 import com.workpoint.icpak.client.ui.grid.DataModel;
 import com.workpoint.icpak.client.ui.membership.PageElement;
+import com.workpoint.icpak.client.ui.payment.PaymentWidget;
 import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.shared.model.Country;
+import com.workpoint.icpak.shared.model.CreditCardDto;
 import com.workpoint.icpak.shared.model.DataType;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.Listable;
@@ -61,6 +64,9 @@ public class EventBookingView extends ViewImpl implements
 
 	@UiField
 	HTMLPanel divFooter;
+
+	@UiField
+	PaymentWidget panelPayment;
 
 	@UiField
 	Element divHeaderTopics;
@@ -211,11 +217,11 @@ public class EventBookingView extends ViewImpl implements
 		}
 	};
 
-	int counter = 0;
+	int counter = 3;
 
 	public interface Binder extends UiBinder<Widget, EventBookingView> {
 	}
-
+	
 	ColumnConfig memberColumn = new ColumnConfig("memberNo", "Member No",
 			DataType.SELECTAUTOCOMPLETE, "", "form-control");
 
@@ -612,14 +618,22 @@ public class EventBookingView extends ViewImpl implements
 		// 197.248.4.221
 		String url = "http://197.248.4.221:8080/flexiPay#websiteClient;"
 				+ "businessNo=722722;" + "refId=" + invoice.getRefId() + ";"
-				+ "orgName=ICPAK;" + "amount=" + invoice.getInvoiceAmount() + ";"
-				+ "accountNo=" + invoice.getDocumentNo();
+				+ "orgName=ICPAK;" + "amount=" + invoice.getInvoiceAmount()
+				+ ";" + "accountNo=" + invoice.getDocumentNo();
 		framePayment.setUrl(url);
 	}
 
 	@Override
 	public ColumnConfig getMemberColumnConfig() {
 		return memberColumn;
+	}
+
+	public HasClickHandlers getPayButton() {
+		return panelPayment.getPayButton();
+	}
+
+	public CreditCardDto getCreditCardDetails() {
+		return panelPayment.getCardDetails();
 	}
 
 }

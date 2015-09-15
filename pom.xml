@@ -621,6 +621,12 @@
 			<version>${jukito.version}</version>
 			<scope>test</scope>
 		</dependency>
+		
+		<dependency>
+        <groupId>com.amazonaws</groupId>
+        <artifactId>aws-java-sdk</artifactId>
+        <version>1.9.0</version>
+    </dependency>
 
 	</dependencies>
 

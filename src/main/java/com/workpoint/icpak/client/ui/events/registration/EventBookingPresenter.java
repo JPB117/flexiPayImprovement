@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.SuggestOracle.Callback;
@@ -29,11 +30,13 @@ import com.workpoint.icpak.client.ui.component.AutoCompleteField;
 import com.workpoint.icpak.client.ui.component.autocomplete.ServerOracle;
 import com.workpoint.icpak.client.ui.grid.ColumnConfig;
 import com.workpoint.icpak.shared.api.CountriesResource;
+import com.workpoint.icpak.shared.api.CreditCardResource;
 import com.workpoint.icpak.shared.api.EventsResource;
 import com.workpoint.icpak.shared.api.InvoiceResource;
 import com.workpoint.icpak.shared.api.MemberResource;
 //import com.workpoint.icpak.shared.api.EventsResource;
 import com.workpoint.icpak.shared.model.Country;
+import com.workpoint.icpak.shared.model.CreditCardDto;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.MemberDto;
 import com.workpoint.icpak.shared.model.events.BookingDto;
@@ -75,6 +78,10 @@ public class EventBookingPresenter extends
 		void showmask(boolean processing);
 
 		ColumnConfig getMemberColumnConfig();
+
+		HasClickHandlers getPayButton();
+
+		CreditCardDto getCreditCardDetails();
 	}
 
 	@ProxyCodeSplit
@@ -92,6 +99,8 @@ public class EventBookingPresenter extends
 	private ResourceDelegate<CountriesResource> countriesResource;
 
 	private ResourceDelegate<EventsResource> eventsResource;
+
+	private ResourceDelegate<CreditCardResource> creditCardResource;
 
 	private ResourceDelegate<InvoiceResource> invoiceResource;
 
@@ -139,7 +148,6 @@ public class EventBookingPresenter extends
 				});
 
 		getView().getANext().addClickHandler(new ClickHandler() {
-
 			@Override
 			public void onClick(ClickEvent event) {
 				if (getView().isValid()) {
@@ -160,6 +168,19 @@ public class EventBookingPresenter extends
 					getView().addError("Kindly specify at least one delegate");
 				}
 
+			}
+		});
+
+		getView().getPayButton().addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				creditCardResource.withCallback(
+						new AbstractAsyncCallback<String>() {
+							@Override
+							public void onSuccess(String response) {
+								Window.alert(response);
+							}
+						}).postPayment(getView().getCreditCardDetails());
 			}
 		});
 	}

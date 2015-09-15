@@ -153,24 +153,6 @@ public class CPDView extends ViewImpl implements CPDPresenter.ICPDView {
 		return widget;
 	}
 
-	public class Year implements Listable {
-		private Date pickDate;
-
-		public Year(Date passedDate) {
-			pickDate = passedDate;
-		}
-
-		@Override
-		public String getName() {
-			return DateUtils.YEARFORMAT.format(pickDate);
-		}
-
-		@Override
-		public String getDisplayName() {
-			return DateUtils.YEARFORMAT.format(pickDate);
-		}
-
-	}
 
 	@Override
 	public void bindResults(List<CPDDto> result) {
@@ -192,7 +174,8 @@ public class CPDView extends ViewImpl implements CPDPresenter.ICPDView {
 
 	@Override
 	public void bindSummary(CPDSummaryDto summary) {
-		headerContainer.setValues(summary.getUnconfirmedCPD()+summary.getConfirmedCPD(),
+		headerContainer.setValues(
+				summary.getUnconfirmedCPD() + summary.getConfirmedCPD(),
 				summary.getConfirmedCPD(), summary.getUnconfirmedCPD());
 	}
 }

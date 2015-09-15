@@ -3,6 +3,7 @@
 	xmlns:g='urn:import:com.google.gwt.user.client.ui' ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	xmlns:d='urn:import:com.workpoint.icpak.client.ui.component'
+	xmlns:payment='urn:import:com.workpoint.icpak.client.ui.payment'
 	xmlns:grid='urn:import:com.workpoint.icpak.client.ui.grid'
 	xmlns:proforma='urn:import:com.workpoint.icpak.client.ui.events.registration.proforma'
 	ui:generateLocales='default'>
@@ -285,7 +286,9 @@
 											<div class="row">
 												<div class="col-md-12">
 													<g:Frame ui:field="framePayment" height="590px"
-														width="100%"></g:Frame>
+														styleName="hide" width="100%"></g:Frame>
+
+													<payment:PaymentWidget ui:field="panelPayment"></payment:PaymentWidget>
 												</div>
 											</div>
 										</div>

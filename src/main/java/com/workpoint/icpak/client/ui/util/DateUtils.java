@@ -18,6 +18,8 @@ public class DateUtils {
 	static String fullPattern = "EEE,MMM d,yyyy";
 	static String halfPattern = "EEEE, MMM d";
 	static String monthDayPattern = "MMM d";
+	static String monthPattern = "MMM (MM)";
+	static String monthOnlyPattern = "MM";
 	static String monthDayYearPattern = "MMM d yyyy";
 	static String Time = "hh:mm a";
 	static String MonthTime = "MMM d, hh:mm a";
@@ -42,6 +44,10 @@ public class DateUtils {
 			.getFormat(Time);
 	public static final DateTimeFormat MONTHTIME = DateTimeFormat
 			.getFormat(MonthTime);
+	public static final DateTimeFormat MONTHFORMAT = DateTimeFormat
+			.getFormat(monthPattern);
+	public static final DateTimeFormat MONTHONLYFORMAT = DateTimeFormat
+			.getFormat(monthOnlyPattern);
 
 	static long dayInMillis = 24 * 3600 * 1000;
 	static long hourInMillis = 3600 * 1000;

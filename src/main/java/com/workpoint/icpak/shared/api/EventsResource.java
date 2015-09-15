@@ -16,50 +16,45 @@ import javax.ws.rs.core.MediaType;
 import com.workpoint.icpak.shared.model.EventSummaryDto;
 import com.workpoint.icpak.shared.model.events.EventDto;
 
-
 @Path("events")
-public interface EventsResource extends BaseResource{
+public interface EventsResource extends BaseResource {
 
-		@GET
-		@Produces(MediaType.APPLICATION_JSON)
-		public List<EventDto> getAll(@QueryParam("offset") Integer offset,
-				@QueryParam("limit") Integer limit);
-		
-		@Path("/{eventId}/bookings")
-		public BookingsResource bookings(@PathParam("eventId") String eventId);
-		
-		@Path("/{eventId}/accommodations")
-		public AccommodationsResource accommodations(@PathParam("eventId") String eventId);
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<EventDto> getAll(@QueryParam("offset") Integer offset,
+			@QueryParam("limit") Integer limit);
 
-		@GET
-		@Path("/{eventId}")
-		@Produces(MediaType.APPLICATION_JSON)
-		public EventDto getById( 
-				@PathParam("eventId") String eventId);
+	@Path("/{eventId}/bookings")
+	public BookingsResource bookings(@PathParam("eventId") String eventId);
 
-		@GET
-		@Path("/summary")
-		@Produces(MediaType.APPLICATION_JSON)
-		public EventSummaryDto getEventsSummary();
-		
-		
-		@POST
-		@Consumes(MediaType.APPLICATION_JSON)
-		@Produces(MediaType.APPLICATION_JSON)
-		public EventDto create(EventDto dto);
+	@Path("/{eventId}/accommodations")
+	public AccommodationsResource accommodations(
+			@PathParam("eventId") String eventId);
 
-		@PUT
-		@Path("/{eventId}")
-		@Consumes(MediaType.APPLICATION_JSON)
-		@Produces(MediaType.APPLICATION_JSON)
-		public EventDto update( 
-				@PathParam("eventId") String eventId, EventDto dto);
+	@GET
+	@Path("/{eventId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public EventDto getById(@PathParam("eventId") String eventId);
 
-		@DELETE
-		@Path("/{eventId}")
-		@Produces(MediaType.APPLICATION_JSON)
-		public void delete(
-				@PathParam("eventId") String eventId);
-		
-		
+	@GET
+	@Path("/summary")
+	@Produces(MediaType.APPLICATION_JSON)
+	public EventSummaryDto getEventsSummary();
+
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public EventDto create(EventDto dto);
+
+	@PUT
+	@Path("/{eventId}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public EventDto update(@PathParam("eventId") String eventId, EventDto dto);
+
+	@DELETE
+	@Path("/{eventId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public void delete(@PathParam("eventId") String eventId);
+
 }
