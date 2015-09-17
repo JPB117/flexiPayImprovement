@@ -12,7 +12,9 @@ import com.wordnik.swagger.annotations.ApiOperation;
 import com.workpoint.icpak.server.payment.CreditCardServiceImpl;
 import com.workpoint.icpak.shared.api.CreditCardResource;
 import com.workpoint.icpak.shared.model.CreditCardDto;
+import com.workpoint.icpak.shared.model.CreditCardResponse;
 
+@Path("creditCardPayments")
 public class CreditCardPaymentImpl implements CreditCardResource{
 	
 	@Inject
@@ -29,8 +31,8 @@ public class CreditCardPaymentImpl implements CreditCardResource{
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Post Payment", response = String.class, consumes = MediaType.APPLICATION_JSON)
-	public String postPayment(CreditCardDto dto) {
-		return creditCardService.authorizeCardTransaction(dto).toString();
+	public CreditCardResponse postPayment(CreditCardDto dto) {
+		return creditCardService.authorizeCardTransaction(dto);
 	}
 
 }

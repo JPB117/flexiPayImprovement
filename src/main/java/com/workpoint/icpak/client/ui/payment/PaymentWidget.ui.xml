@@ -5,6 +5,15 @@
 		<form class="form-horizontal" role="form">
 			<fieldset>
 				<legend>Payment</legend>
+				<d:IssuesPanel ui:field="issuesPanel"
+							   styleName="hide alert alert-danger"></d:IssuesPanel>
+				<div class="form-group">
+					<label class="col-sm-3 control-label">Amount To Paid:</label>
+					<div class="col-sm-9">
+						<g:InlineLabel styleName="form-control" ui:field="spnAmount">
+						</g:InlineLabel>
+					</div>
+				</div>
 				<div class="form-group">
 					<label class="col-sm-3 control-label" for="card-holder-name">Name on Card:</label>
 					<div class="col-sm-9">

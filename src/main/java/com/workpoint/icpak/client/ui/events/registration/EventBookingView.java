@@ -217,7 +217,7 @@ public class EventBookingView extends ViewImpl implements
 		}
 	};
 
-	int counter = 3;
+	int counter = 0;
 
 	public interface Binder extends UiBinder<Widget, EventBookingView> {
 	}
@@ -456,6 +456,10 @@ public class EventBookingView extends ViewImpl implements
 
 	}
 
+	public boolean isPaymentValid(){
+		return panelPayment.isValid();
+	}
+
 	@Override
 	public Widget asWidget() {
 		return widget;
@@ -596,6 +600,10 @@ public class EventBookingView extends ViewImpl implements
 	public void bindInvoice(InvoiceDto invoice) {
 		proformaInv.clearRows();
 		proformaInv.setInvoice(invoice);
+
+		if (invoice.getInvoiceAmount() != null){
+			panelPayment.setAmount(invoice.getInvoiceAmount().toString());
+		}
 
 		bindTransaction(invoice);
 	}
