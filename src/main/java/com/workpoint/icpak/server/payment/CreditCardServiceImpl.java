@@ -9,11 +9,13 @@ import java.util.List;
 import java.util.Objects;
 
 import com.workpoint.icpak.shared.model.CreditCardResponse;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
@@ -122,7 +124,11 @@ public class CreditCardServiceImpl implements CreditCardService {
 				.getCurrency()));
 		StringBuffer result = null;
 		try {
-			post.setEntity(new UrlEncodedFormEntity(urlParameters));
+			log.warn("Payment Params>> "+cardDetails);
+			StringEntity e;
+			System.out.println("Payment Params>> "+cardDetails);
+			UrlEncodedFormEntity entity = new UrlEncodedFormEntity(urlParameters);
+			post.setEntity(entity);
 			response = client.execute(post);
 
 			BufferedReader rd = new BufferedReader(new InputStreamReader(

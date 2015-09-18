@@ -1,16 +1,15 @@
 package com.workpoint.icpak.client.ui.payment;
 
+import static com.workpoint.icpak.client.ui.util.StringUtils.isNullOrEmpty;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Widget;
@@ -23,8 +22,6 @@ import com.workpoint.icpak.client.ui.cpd.Year;
 import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.shared.model.CreditCardDto;
 import com.workpoint.icpak.shared.model.Listable;
-
-import static com.workpoint.icpak.client.ui.util.StringUtils.isNullOrEmpty;
 
 public class PaymentWidget extends Composite {
 

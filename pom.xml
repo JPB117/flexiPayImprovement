@@ -253,6 +253,19 @@
 			<artifactId>hibernate-c3p0</artifactId>
 			<version>${hibernate.version}</version>
 		</dependency>
+
+		<dependency>
+        <groupId>com.amazonaws</groupId>
+        <artifactId>aws-java-sdk</artifactId>
+        <version>1.9.0</version>
+	<exclusions>
+				<exclusion>
+					<groupId>org.apache.httpcomponents</groupId>
+					<artifactId>httpcore</artifactId>
+				</exclusion>
+			</exclusions>
+    </dependency>
+
 		<!-- End of Persistence -->
 
 
@@ -622,12 +635,6 @@
 			<scope>test</scope>
 		</dependency>
 		
-		<dependency>
-        <groupId>com.amazonaws</groupId>
-        <artifactId>aws-java-sdk</artifactId>
-        <version>1.9.0</version>
-    </dependency>
-
 	</dependencies>
 
 </project>

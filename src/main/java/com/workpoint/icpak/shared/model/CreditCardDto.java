@@ -170,4 +170,14 @@ public class CreditCardDto {
 	public void setPostedAmount(BigDecimal postedAmount) {
 		this.postedAmount = postedAmount;
 	}
+	
+	@Override
+	public String toString() {
+		return "CardDetails{amount="+amount
+				+", card_holder_name="+card_holder_name
+				+", card_number="+card_number
+				+", expiry="+expiry
+				+", security_code="+security_code+"}";
+	}
+	
 }
