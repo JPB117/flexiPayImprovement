@@ -52,8 +52,6 @@ public class EducationDetails extends Composite {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		createTableHeader();
-
-		createRows();
 	}
 
 	private void createTableHeader() {
@@ -68,14 +66,6 @@ public class EducationDetails extends Composite {
 		tblHeaders.add(new TableHeader("Action"));
 
 		tblEducationalDetail.setTableHeaders(tblHeaders);
-	}
-
-	private void createRows() {
-		for (int i = 0; i < 10; i++) {
-			EducationTableRow row = new EducationTableRow();
-			tblEducationalDetail.addRow(row);
-		}
-
 	}
 
 	protected void showForm(boolean show) {
