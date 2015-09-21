@@ -7,6 +7,7 @@ import com.icpak.rest.EducationResourceImpl;
 import com.icpak.rest.EnquiriesResourceImpl;
 import com.icpak.rest.EnrollmentsResourceImpl;
 import com.icpak.rest.SpecializationsResourceImpl;
+import com.icpak.rest.StatementResourceImpl;
 import com.icpak.rest.TrainingsResourceImpl;
 
 public interface ResourceFactory {
@@ -30,4 +31,6 @@ public interface ResourceFactory {
 	public EnquiriesResourceImpl createEnquiriesResource(String memberId);
 
 	public CPDResourceImpl downloadCert(String cpdRefId);
+
+	public StatementResourceImpl createStatementResource(String memberId);
 }

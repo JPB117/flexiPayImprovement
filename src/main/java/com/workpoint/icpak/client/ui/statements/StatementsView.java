@@ -9,8 +9,9 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
 import com.workpoint.icpak.client.ui.component.Grid;
-import com.workpoint.icpak.client.ui.component.PagingPanel;
-import com.workpoint.icpak.shared.model.InvoiceDto;
+import com.workpoint.icpak.shared.model.statement.StatementDto;
+import static com.workpoint.icpak.client.ui.util.DateUtils.*;
+import static com.workpoint.icpak.client.ui.util.NumberUtils.*;
 
 public class StatementsView extends ViewImpl implements
 		StatementsPresenter.IStatementsView {
@@ -20,72 +21,77 @@ public class StatementsView extends ViewImpl implements
 	public interface Binder extends UiBinder<Widget, StatementsView> {
 	}
 
-	@UiField Grid<InvoiceDto> grid;
+	@UiField Grid<StatementDto> grid;
 	
 	@Inject
 	public StatementsView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
 
-		TextColumn<InvoiceDto> entryNo = new TextColumn<InvoiceDto>() {
+		TextColumn<StatementDto> entryNo = new TextColumn<StatementDto>() {
 			@Override
-			public String getValue(InvoiceDto arg0) {
-				return arg0.getCompanyName();
+			public String getValue(StatementDto arg0) {
+				return arg0.getEntryNo();
 			}
 		}; 
 		
-		TextColumn<InvoiceDto> ledgerNo = new TextColumn<InvoiceDto>() {
+		TextColumn<StatementDto> ledgerNo = new TextColumn<StatementDto>() {
 			@Override
-			public String getValue(InvoiceDto arg0) {
-				return arg0.getCompanyName();
+			public String getValue(StatementDto arg0) {
+				return arg0.getCustLedgerEntryNo();
 			}
 		}; 
 		
-		TextColumn<InvoiceDto> date = new TextColumn<InvoiceDto>() {
+		TextColumn<StatementDto> date = new TextColumn<StatementDto>() {
 			@Override
-			public String getValue(InvoiceDto arg0) {
-				return arg0.getCompanyName();
+			public String getValue(StatementDto arg0) {
+				return (arg0.getPostingDate()==null? "" : DATEFORMAT.format(arg0.getPostingDate()));
 			}
 		}; 
 		
-		TextColumn<InvoiceDto> type = new TextColumn<InvoiceDto>() {
+		TextColumn<StatementDto> type = new TextColumn<StatementDto>() {
 			@Override
-			public String getValue(InvoiceDto arg0) {
-				return arg0.getCompanyName();
+			public String getValue(StatementDto arg0) {
+				return arg0.getDocumentType();
 			}
 		}; 
 		
-		TextColumn<InvoiceDto> docNo = new TextColumn<InvoiceDto>() {
+		TextColumn<StatementDto> docNo = new TextColumn<StatementDto>() {
 			@Override
-			public String getValue(InvoiceDto arg0) {
-				return arg0.getCompanyName();
+			public String getValue(StatementDto arg0) {
+				return arg0.getDocumentNo();
 			}
 		}; 
 		
-		TextColumn<InvoiceDto> amount = new TextColumn<InvoiceDto>() {
+		TextColumn<StatementDto> amount = new TextColumn<StatementDto>() {
 			@Override
-			public String getValue(InvoiceDto arg0) {
-				return arg0.getCompanyName();
+			public String getValue(StatementDto arg0) {
+				
+				return arg0.getAmount()==null? "": 
+					arg0.getAmount()<0? "("+CURRENCYFORMAT.format(-arg0.getAmount())+")":
+						CURRENCYFORMAT.format(arg0.getAmount());
 			}
 		}; 
 		
-		TextColumn<InvoiceDto> description = new TextColumn<InvoiceDto>() {
+		TextColumn<StatementDto> description = new TextColumn<StatementDto>() {
 			@Override
-			public String getValue(InvoiceDto arg0) {
-				return arg0.getCompanyName();
+			public String getValue(StatementDto arg0) {
+				return arg0.getDescription();
 			}
 		}; 
 		
-		TextColumn<InvoiceDto> memberNo = new TextColumn<InvoiceDto>() {
+		TextColumn<StatementDto> memberNo = new TextColumn<StatementDto>() {
 			@Override
-			public String getValue(InvoiceDto arg0) {
-				return arg0.getCompanyName();
+			public String getValue(StatementDto arg0) {
+				return arg0.getCustomerNo();
 			}
 		}; 
 		
-		TextColumn<InvoiceDto> dueDate = new TextColumn<InvoiceDto>() {
+		TextColumn<StatementDto> dueDate = new TextColumn<StatementDto>() {
 			@Override
-			public String getValue(InvoiceDto arg0) {
-				return arg0.getCompanyName();
+			public String getValue(StatementDto arg0) {
+				
+				return (arg0.getDueDate()==null? "" : 
+					DATEFORMAT.format(arg0.getDueDate()));
 			}
 		}; 
 		
@@ -93,9 +99,9 @@ public class StatementsView extends ViewImpl implements
 		grid.addColumn(ledgerNo, "Ledger No");
 		grid.addColumn(date, "Date");
 		grid.addColumn(type, "Doc Type");
-		grid.addColumn(docNo, "Doc No");
+		grid.addColumn(docNo, "Doc No", "120px");
 		grid.addColumn(amount, "Amount");
-		grid.addColumn(description, "Description");
+		grid.addColumn(description, "Description", "150px");
 		grid.addColumn(memberNo, "Member No");
 		grid.addColumn(dueDate, "Due Date");
 	}
@@ -106,17 +112,13 @@ public class StatementsView extends ViewImpl implements
 	}
 
 	@Override
-	public void setCount(Integer aCount) {
-		grid.getPagingPanel().setTotal(aCount);
+	public void setData(List<StatementDto> data, int totalCount) {
+		grid.setData(data,totalCount);		
 	}
 
 	@Override
-	public PagingPanel getPagingPanel() {
-		return grid.getPagingPanel();
-	}
-
-	@Override
-	public void setData(List<InvoiceDto> data) {
-		grid.setData(data);		
+	public Grid<StatementDto> getGrid() {
+		
+		return grid;
 	}
 }

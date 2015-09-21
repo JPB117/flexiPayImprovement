@@ -1,9 +1,13 @@
 package com.icpak.rest.dao;
 
+import java.math.BigInteger;
 import java.util.List;
+
+import javax.persistence.Query;
 
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
+import com.icpak.rest.IDUtils;
 import com.icpak.rest.models.event.Delegate;
 import com.icpak.rest.models.trx.Invoice;
 import com.icpak.rest.models.trx.InvoiceLine;
@@ -103,5 +107,25 @@ public class InvoiceDaoHelper {
 	public InvoiceSummary getSummary(String memberId) {
 		// TODO Auto-generated method stub
 		return dao.getSummary(memberId);
+	}
+	
+	public void insertIds(){
+		Query query = dao.getEntityManager().createNativeQuery("select id from cpd");
+		List<BigInteger> array = query.getResultList();
+		
+		int i=0;
+		for(BigInteger col: array){
+			int val = col.intValue();
+			i++;
+			Query updateQuery = dao.getEntityManager().createNativeQuery("update cpd set refId=:refId "
+					+ "where id=:id")
+					.setParameter("refId", IDUtils.generateId())
+					.setParameter("id", val);
+			updateQuery.executeUpdate();
+			
+			if(i%1000==0){
+				System.out.println(i);
+			}
+		}
 	}
 }

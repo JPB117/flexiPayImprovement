@@ -10,6 +10,12 @@ package com.workpoint.icpak.client.ui.statements;
 //import com.workpoint.icpak.shared.responses.UpdatePasswordResponse;
 import java.util.List;
 
+import com.amazonaws.services.simpleworkflow.flow.core.TryCatchFinally.State;
+import com.google.gwt.user.cellview.client.SimplePager;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.view.client.AsyncDataProvider;
+import com.google.gwt.view.client.HasData;
+import com.google.gwt.view.client.Range;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rest.delegates.client.ResourceDelegate;
@@ -26,23 +32,25 @@ import com.workpoint.icpak.client.place.NameTokens;
 import com.workpoint.icpak.client.security.CurrentUser;
 import com.workpoint.icpak.client.service.AbstractAsyncCallback;
 import com.workpoint.icpak.client.ui.admin.TabDataExt;
+import com.workpoint.icpak.client.ui.component.Grid;
 import com.workpoint.icpak.client.ui.component.PagingConfig;
+import com.workpoint.icpak.client.ui.component.PagingLoader;
 import com.workpoint.icpak.client.ui.component.PagingPanel;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
 import com.workpoint.icpak.client.ui.security.LoginGateKeeper;
 import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.api.InvoiceResource;
-import com.workpoint.icpak.shared.model.InvoiceDto;
+import com.workpoint.icpak.shared.api.MemberResource;
 import com.workpoint.icpak.shared.model.InvoiceSummary;
+import com.workpoint.icpak.shared.model.statement.StatementDto;
 
 public class StatementsPresenter
 		extends
 		Presenter<StatementsPresenter.IStatementsView, StatementsPresenter.IStatementsProxy> {
 
 	public interface IStatementsView extends View {
-		void setCount(Integer aCount);
-		PagingPanel getPagingPanel();
-		void setData(List<InvoiceDto> result);
+		void setData(List<StatementDto> result,int totalCount);
+		Grid<StatementDto> getGrid();
 
 	}
 
@@ -60,22 +68,44 @@ public class StatementsPresenter
 		return data;
 	}
 
+	int totalCount=0;
+	
 	@Inject
 	CurrentUser user;
-	private ResourceDelegate<InvoiceResource> invoiceDelegate;
+
+	private ResourceDelegate<MemberResource> memberDelegate;
 
 	@Inject
 	public StatementsPresenter(final EventBus eventBus,
 			final IStatementsView view, final IStatementsProxy proxy,
-			final ResourceDelegate<InvoiceResource> invoiceDelegate) {
+			final ResourceDelegate<MemberResource> memberResource) {
 		super(eventBus, view, proxy, HomePresenter.SLOT_SetTabContent);
-		this.invoiceDelegate = invoiceDelegate;
+		this.memberDelegate = memberResource;
 	}
 
 	@Override
 	protected void onBind() {
 		super.onBind();
 
+		getView().getGrid().setDataProvider(new AsyncDataProvider<StatementDto>() {
+			@Override
+			protected void onRangeChanged(final HasData<StatementDto> display) {
+				final Range range = getView().getGrid().getVisibleRange();		
+				
+				if(totalCount==0){
+					memberDelegate.withCallback(new AbstractAsyncCallback<Integer>() {
+						@Override
+						public void onSuccess(Integer aCount) {
+							totalCount = aCount;
+							loadStatements(display,range.getStart(), range.getLength());
+						}
+					}).statements(getMemberId()).getCount();
+				}else{
+					loadStatements(display,range.getStart(), range.getLength());
+				}
+				
+			}
+		});
 //		getView().getPagingPanel().setLoader(new PagingLoader() {
 //
 //			@Override
@@ -85,46 +115,25 @@ public class StatementsPresenter
 //		});
 	}
 
+	protected String getMemberId() {
+
+		String memberId = (AppContext.isCurrentUserAdmin() ? "ALL" : AppContext
+				.getContextUser().getMemberRefId());
+		return memberId;
+	}
+
 	protected void save() {
 	}
 
-	@Override
-	public void prepareFromRequest(PlaceRequest request) {
-		loadData();
-	}
-
-	private void loadData() {
-		String memberId = (AppContext.isCurrentUserAdmin() ? "ALL" : AppContext
-				.getContextUser().getMemberRefId());
-		
-		invoiceDelegate.withCallback(new AbstractAsyncCallback<InvoiceSummary>() {
-			@Override
-			public void onSuccess(InvoiceSummary result) {
-				//getView().bindSummary(result);
-			}
-		}).getSummary(memberId);
-		
-		invoiceDelegate.withCallback(new AbstractAsyncCallback<Integer>() {
-			@Override
-			public void onSuccess(Integer aCount) {
-				getView().setCount(aCount);
-				PagingConfig config = getView().getPagingPanel().getConfig();
-				loadInvoices(config.getOffset(), config.getLimit());
-			}
-		}).getCount(memberId);
-
-	}
-
-	protected void loadInvoices(int offset, int limit) {
-		String memberId = (AppContext.isCurrentUserAdmin() ? "ALL" : AppContext
-				.getContextUser().getMemberRefId());
-		invoiceDelegate.withCallback(
-				new AbstractAsyncCallback<List<InvoiceDto>>() {
+	protected void loadStatements(final HasData<StatementDto> arg0, int offset, int limit) {
+		memberDelegate.withCallback(
+				new AbstractAsyncCallback<List<StatementDto>>() {
 					@Override
-					public void onSuccess(List<InvoiceDto> result) {
-						getView().setData(result);
+					public void onSuccess(List<StatementDto> result) {
+						getView().setData(result,totalCount);
 					}
-				}).getInvoices(memberId, offset, limit);
+				}).statements(getMemberId()).getAll(offset, limit);
+				
 	}
 
 }

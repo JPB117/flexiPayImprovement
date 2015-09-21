@@ -13,12 +13,15 @@ import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.cellview.client.DataGrid;
 import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.cellview.client.SimplePager.TextLocation;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HasWidgets;
+import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.view.client.ListDataProvider;
+import com.google.gwt.view.client.AsyncDataProvider;
 import com.google.gwt.view.client.MultiSelectionModel;
 import com.google.gwt.view.client.ProvidesKey;
+import com.google.gwt.view.client.Range;
 import com.google.gwt.view.client.SelectionModel;
 import com.workpoint.icpak.shared.model.HasKey;
 
@@ -28,15 +31,16 @@ public class Grid<T extends HasKey> extends Composite {
 
 	interface GridUiBinder extends UiBinder<Widget, Grid> {
 	}
+	
+	static int PAGESIZE=10;
 
-	@UiField HasWidgets container;
-	@UiField PagingPanel paginPanel;
+	@UiField ScrollPanel container;
+	SimplePager pager;
 	
 	private DataGrid<T> dataGrid;
-	private ListDataProvider<T> dataProvider;
+	private AsyncDataProvider<T> dataProvider;
 	private ListHandler<T> sortDataHandler;
 	private final ProvidesKey<T> KEY_PROVIDER = new ProvidesKey<T>() {
-
 		@Override
 		public Object getKey(T item) {
 			return item.getKey();
@@ -51,12 +55,19 @@ public class Grid<T extends HasKey> extends Composite {
 
 	public Grid() {
 		initWidget(uiBinder.createAndBindUi(this));
+		int height = Window.getClientHeight();
+		container.setHeight((height-260)+"px");
 		initGrid();
 	}
 	
 	public void initGrid(){
 		dataGrid = createDataGrid();
-		container.add(dataGrid);
+		
+		VerticalPanel vp = new VerticalPanel();
+		vp.setWidth("100%");
+		vp.add(pager);
+		vp.add(dataGrid);
+	    container.add(vp);
 	}
 
 	private DataGrid<T> createDataGrid() {
@@ -80,27 +91,25 @@ public class Grid<T extends HasKey> extends Composite {
 		};
 		checkColumn.setFieldUpdater(checkColumnFU);
 
-		final DataGrid<T> dataGrid = new DataGrid<T>(100, KEY_PROVIDER);
+		final DataGrid<T> dataGrid = new DataGrid<T>(PAGESIZE, KEY_PROVIDER);
 		dataGrid.setSize("100%", "75vh");
-		//dataGrid.setHeight("200px");
 		dataGrid.setStyleName("responsive-table");
 		dataGrid.addColumn(checkColumn);
 		dataGrid.setColumnWidth(checkColumn, "12px");
 
 		SimplePager.Resources pagerResources = GWT
 				.create(SimplePager.Resources.class);
-		SimplePager pager = new SimplePager(TextLocation.CENTER,
+		pager = new SimplePager(TextLocation.CENTER,
 				pagerResources, false, 0, true);
+		pager.setRangeLimited(true);
+		
 		pager.setDisplay(dataGrid);
-
-		dataProvider = new ListDataProvider<T>();
-		dataProvider.addDataDisplay(dataGrid);
 		dataGrid.addColumnSortHandler(sortDataHandler);
-
+		
 		return dataGrid;
 
 	}
-	
+
 	public void addColumn(Column col, String name){
 		dataGrid.addColumn(col, name);
 	}
@@ -109,20 +118,24 @@ public class Grid<T extends HasKey> extends Composite {
 		addColumn(col, name);
 		dataGrid.setColumnWidth(col, width);
 	}
+	
+	public void setDataProvider(AsyncDataProvider<T> dataProvider){
+		this.dataProvider  = dataProvider;		
+		dataProvider.addDataDisplay(dataGrid);
+	}
 
-	public void setData(List<T> data) {
-		dataProvider.setList(data);
-		sortDataHandler.setList(data);
+	public void setData(List<T> data, int totalCount) {
+		Range range = dataGrid.getVisibleRange();
+		dataProvider.updateRowCount(totalCount, true);
+		dataProvider.updateRowData(range.getStart(), data);
 	}
 	
-	@Override
-	protected void onLoad() {
-		super.onLoad();
-		dataGrid.onResize();
+	public SimplePager getPager(){
+		return pager;
 	}
-	
-	public PagingPanel getPagingPanel(){
-		return paginPanel;
+
+	public Range getVisibleRange() {
+		return dataGrid.getVisibleRange();
 	}
 		
 }
