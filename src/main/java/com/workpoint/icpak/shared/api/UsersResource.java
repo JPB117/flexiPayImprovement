@@ -67,7 +67,7 @@ public interface UsersResource extends BaseResource {
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	public UserDto create(UserDto user);
+	public UserDto create(UserDto user,@QueryParam("isSendEmail") boolean isSendEmail);
 
 	@PUT
 	@Path("/{userId}")

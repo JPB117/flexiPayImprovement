@@ -103,7 +103,7 @@ public class ProfilePresenter
 
 	@TabInfo(container = HomePresenter.class)
 	static TabData getTabLabel(LoginGateKeeper adminGatekeeper) {
-		TabDataExt data = new TabDataExt("My Profile", "icon-user", 8,
+		TabDataExt data = new TabDataExt("My Profile", "icon-user", 9,
 				adminGatekeeper, true);
 		return data;
 	}
@@ -145,9 +145,12 @@ public class ProfilePresenter
 										saveBasicDetails();
 										hide();
 									}
+								}else{
+									hide();
 								}
+								
 							}
-						}, "Save");
+						}, "Save", "Cancel");
 			}
 		});
 

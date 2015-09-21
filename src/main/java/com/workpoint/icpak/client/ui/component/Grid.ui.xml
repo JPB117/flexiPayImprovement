@@ -1,0 +1,11 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:t="urn:import:com.google.gwt.user.cellview.client"
+	xmlns:d='urn:import:com.workpoint.icpak.client.ui.component'>
+	<g:HTMLPanel>
+		<g:HTMLPanel ui:field="container">
+		</g:HTMLPanel>
+		<d:PagingPanel ui:field="paginPanel"></d:PagingPanel>
+	</g:HTMLPanel>
+</ui:UiBinder> 

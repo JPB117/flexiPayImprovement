@@ -5,9 +5,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import com.workpoint.icpak.shared.model.events.AccommodationDto;
-
-public class InvoiceDto extends SerializableObj {
+public class InvoiceDto extends SerializableObj implements HasKey {
 
 	/**
 	 * 
@@ -207,6 +205,11 @@ public class InvoiceDto extends SerializableObj {
 
 	public void setInvoiceAmount(Double invoiceAmount) {
 		this.invoiceAmount = invoiceAmount;
+	}
+
+	@Override
+	public String getKey() {
+		return getRefId();
 	}
 
 }

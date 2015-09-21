@@ -46,6 +46,8 @@ public class UserSavePresenter extends
 		PopupPanel getPopUpPanel();
 
 		HasClickHandlers getaResetPassword();
+		
+		boolean isSendEmail();
 
 	}
 
@@ -99,7 +101,7 @@ public class UserSavePresenter extends
 										bindUser(dto);
 									}
 
-								}).create(userDto);
+								}).create(userDto,getView().isSendEmail());
 					}
 				}
 			}

@@ -1,4 +1,4 @@
-package com.workpoint.icpak.client.ui.statements;
+package com.workpoint.icpak.client.ui.invoices;
 
 //import com.workpoint.icpak.shared.requests.CheckPasswordRequest;
 //import com.workpoint.icpak.shared.requests.GetUserRequest;
@@ -27,6 +27,7 @@ import com.workpoint.icpak.client.security.CurrentUser;
 import com.workpoint.icpak.client.service.AbstractAsyncCallback;
 import com.workpoint.icpak.client.ui.admin.TabDataExt;
 import com.workpoint.icpak.client.ui.component.PagingConfig;
+import com.workpoint.icpak.client.ui.component.PagingLoader;
 import com.workpoint.icpak.client.ui.component.PagingPanel;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
 import com.workpoint.icpak.client.ui.security.LoginGateKeeper;
@@ -35,28 +36,33 @@ import com.workpoint.icpak.shared.api.InvoiceResource;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.InvoiceSummary;
 
-public class StatementsPresenter
+public class InvoiceListPresenter
 		extends
-		Presenter<StatementsPresenter.IStatementsView, StatementsPresenter.IStatementsProxy> {
+		Presenter<InvoiceListPresenter.IInvoiceView, InvoiceListPresenter.IInvoiceProxy> {
 
-	public interface IStatementsView extends View {
+	public interface IInvoiceView extends View {
+
+		void bindInvoices(List<InvoiceDto> invoices);
+
 		void setCount(Integer aCount);
+
 		PagingPanel getPagingPanel();
-		void setData(List<InvoiceDto> result);
+
+		void bindSummary(InvoiceSummary result);
 
 	}
 
 	@ProxyCodeSplit
-	@NameToken(NameTokens.statements)
+	@NameToken(NameTokens.invoices)
 	@UseGatekeeper(LoginGateKeeper.class)
-	public interface IStatementsProxy extends
-			TabContentProxyPlace<StatementsPresenter> {
+	public interface IInvoiceProxy extends
+			TabContentProxyPlace<InvoiceListPresenter> {
 	}
 
 	@TabInfo(container = HomePresenter.class)
-	static TabData getTabLabel(LoginGateKeeper gateKeeper) {
-		TabDataExt data = new TabDataExt("Statements", "fa fa-briefcase",
-				8, gateKeeper, true);
+	static TabData getTabLabel(LoginGateKeeper adminGatekeeper) {
+		TabDataExt data = new TabDataExt("Invoicing Summary", "fa fa-briefcase",
+				7, adminGatekeeper, true);
 		return data;
 	}
 
@@ -65,8 +71,8 @@ public class StatementsPresenter
 	private ResourceDelegate<InvoiceResource> invoiceDelegate;
 
 	@Inject
-	public StatementsPresenter(final EventBus eventBus,
-			final IStatementsView view, final IStatementsProxy proxy,
+	public InvoiceListPresenter(final EventBus eventBus,
+			final IInvoiceView view, final IInvoiceProxy proxy,
 			final ResourceDelegate<InvoiceResource> invoiceDelegate) {
 		super(eventBus, view, proxy, HomePresenter.SLOT_SetTabContent);
 		this.invoiceDelegate = invoiceDelegate;
@@ -76,13 +82,13 @@ public class StatementsPresenter
 	protected void onBind() {
 		super.onBind();
 
-//		getView().getPagingPanel().setLoader(new PagingLoader() {
-//
-//			@Override
-//			public void load(int offset, int limit) {
-//				loadInvoices(offset, limit);
-//			}
-//		});
+		getView().getPagingPanel().setLoader(new PagingLoader() {
+
+			@Override
+			public void load(int offset, int limit) {
+				loadInvoices(offset, limit);
+			}
+		});
 	}
 
 	protected void save() {
@@ -100,7 +106,7 @@ public class StatementsPresenter
 		invoiceDelegate.withCallback(new AbstractAsyncCallback<InvoiceSummary>() {
 			@Override
 			public void onSuccess(InvoiceSummary result) {
-				//getView().bindSummary(result);
+				getView().bindSummary(result);
 			}
 		}).getSummary(memberId);
 		
@@ -122,7 +128,7 @@ public class StatementsPresenter
 				new AbstractAsyncCallback<List<InvoiceDto>>() {
 					@Override
 					public void onSuccess(List<InvoiceDto> result) {
-						getView().setData(result);
+						getView().bindInvoices(result);
 					}
 				}).getInvoices(memberId, offset, limit);
 	}

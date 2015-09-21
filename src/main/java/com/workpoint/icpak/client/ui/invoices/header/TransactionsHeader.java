@@ -1,4 +1,4 @@
-package com.workpoint.icpak.client.ui.statements.header;
+package com.workpoint.icpak.client.ui.invoices.header;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.SpanElement;

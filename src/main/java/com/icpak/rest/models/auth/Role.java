@@ -179,7 +179,6 @@ public class Role extends PO{
 		setDescription(dto.getFullName());
 		setName(dto.getName());
 	}
-
 }
 
 

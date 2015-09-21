@@ -4,36 +4,100 @@ import java.util.List;
 
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Window;
+import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
+import com.workpoint.icpak.client.ui.component.Grid;
 import com.workpoint.icpak.client.ui.component.PagingPanel;
-import com.workpoint.icpak.client.ui.statements.header.TransactionsHeader;
-import com.workpoint.icpak.client.ui.statements.row.StatementTableRow;
-import com.workpoint.icpak.client.ui.statements.table.TransactionTable;
 import com.workpoint.icpak.shared.model.InvoiceDto;
-import com.workpoint.icpak.shared.model.InvoiceSummary;
 
 public class StatementsView extends ViewImpl implements
 		StatementsPresenter.IStatementsView {
 
 	private final Widget widget;
 
-	@UiField
-	TransactionTable tblView;
-
-	@UiField
-	TransactionsHeader headerContainer;
-
 	public interface Binder extends UiBinder<Widget, StatementsView> {
 	}
 
+	@UiField Grid<InvoiceDto> grid;
+	
 	@Inject
 	public StatementsView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
-		tblView.setAutoNumber(true);
 
+		TextColumn<InvoiceDto> entryNo = new TextColumn<InvoiceDto>() {
+			@Override
+			public String getValue(InvoiceDto arg0) {
+				return arg0.getCompanyName();
+			}
+		}; 
+		
+		TextColumn<InvoiceDto> ledgerNo = new TextColumn<InvoiceDto>() {
+			@Override
+			public String getValue(InvoiceDto arg0) {
+				return arg0.getCompanyName();
+			}
+		}; 
+		
+		TextColumn<InvoiceDto> date = new TextColumn<InvoiceDto>() {
+			@Override
+			public String getValue(InvoiceDto arg0) {
+				return arg0.getCompanyName();
+			}
+		}; 
+		
+		TextColumn<InvoiceDto> type = new TextColumn<InvoiceDto>() {
+			@Override
+			public String getValue(InvoiceDto arg0) {
+				return arg0.getCompanyName();
+			}
+		}; 
+		
+		TextColumn<InvoiceDto> docNo = new TextColumn<InvoiceDto>() {
+			@Override
+			public String getValue(InvoiceDto arg0) {
+				return arg0.getCompanyName();
+			}
+		}; 
+		
+		TextColumn<InvoiceDto> amount = new TextColumn<InvoiceDto>() {
+			@Override
+			public String getValue(InvoiceDto arg0) {
+				return arg0.getCompanyName();
+			}
+		}; 
+		
+		TextColumn<InvoiceDto> description = new TextColumn<InvoiceDto>() {
+			@Override
+			public String getValue(InvoiceDto arg0) {
+				return arg0.getCompanyName();
+			}
+		}; 
+		
+		TextColumn<InvoiceDto> memberNo = new TextColumn<InvoiceDto>() {
+			@Override
+			public String getValue(InvoiceDto arg0) {
+				return arg0.getCompanyName();
+			}
+		}; 
+		
+		TextColumn<InvoiceDto> dueDate = new TextColumn<InvoiceDto>() {
+			@Override
+			public String getValue(InvoiceDto arg0) {
+				return arg0.getCompanyName();
+			}
+		}; 
+		
+		grid.addColumn(entryNo, "Entry No");
+		grid.addColumn(ledgerNo, "Ledger No");
+		grid.addColumn(date, "Date");
+		grid.addColumn(type, "Doc Type");
+		grid.addColumn(docNo, "Doc No");
+		grid.addColumn(amount, "Amount");
+		grid.addColumn(description, "Description");
+		grid.addColumn(memberNo, "Member No");
+		grid.addColumn(dueDate, "Due Date");
 	}
 
 	@Override
@@ -42,28 +106,17 @@ public class StatementsView extends ViewImpl implements
 	}
 
 	@Override
-	public void bindInvoices(List<InvoiceDto> invoices) {
-		tblView.clearRows();
-		for (InvoiceDto invoice : invoices) {
-			tblView.createRow(new StatementTableRow(invoice));
-		}
-		// headerContainer.setValues(invoices.size(), totalPaid, totalUnpaid);
-	}
-
-	@Override
 	public void setCount(Integer aCount) {
-		tblView.getPagingPanel().setTotal(aCount);
+		grid.getPagingPanel().setTotal(aCount);
 	}
 
 	@Override
 	public PagingPanel getPagingPanel() {
-		return tblView.getPagingPanel();
+		return grid.getPagingPanel();
 	}
 
 	@Override
-	public void bindSummary(InvoiceSummary result) {
-		headerContainer.setValues(result.getPaid()+result.getUnpaid(),
-				result.getPaid(), result.getUnpaid());
+	public void setData(List<InvoiceDto> data) {
+		grid.setData(data);		
 	}
-
 }

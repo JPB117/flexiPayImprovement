@@ -44,13 +44,14 @@
 
 						<div class="form-group">
 							<div class="row">
-								<div class="col-lg-6">
+								<!-- div class="col-lg-6 hide">
 									<label for="Username">
 										<b>Username:</b>
 									</label>
 									<d:TextField ui:field="txtUserName" type="text"
 										class="form-control" placeholder="" disabled="false" />
-								</div>
+								</div -->
+								
 								<div class="col-lg-6">
 									<label for="Email">
 										<b>Email:</b>
@@ -58,11 +59,7 @@
 									<d:TextField ui:field="txtEmail" type="email"
 										class="form-control" placeholder="Email" />
 								</div>
-							</div>
-						</div>
-
-						<div class="form-group">
-							<div class="row">
+								
 								<div class="col-lg-6">
 									<label for="Username">
 										<b>Phone Number:</b>
@@ -73,7 +70,19 @@
 							</div>
 						</div>
 
-						<div class="form-group">
+						<!-- div class="form-group">
+							<div class="row">
+								<div class="col-lg-6">
+									<label for="Username">
+										<b>Phone Number:</b>
+									</label>
+									<d:TextField ui:field="txtPhoneNo" type="text"
+										class="form-control" placeholder="" disabled="false" />
+								</div>
+							</div>
+						</div-->
+
+						<div class="form-group hide" ui:field="divReset">
 							<div class="row">
 								<div class="col-lg-6">
 									<label for="Username">
@@ -84,6 +93,18 @@
 								</div>
 							</div>
 						</div>
+						
+						<div class="form-group">
+							<div class="row">
+								<div class="col-lg-6">
+									<g:CheckBox ui:field="chkSendEmail" value="true"></g:CheckBox>
+									<label for="Username">
+										<b>Send Activation Email</b>
+									</label>
+								</div>
+							</div>
+						</div>
+						
 
 						<div class="form-group">
 							<div class="row">
@@ -109,10 +130,15 @@
 				</g:HTMLPanel>
 
 				<div class="modal-footer" ui:field="divUserSave">
-					<g:Anchor ui:field="aSaveUser" styleName="btn btn-primary btn-fill pull-left">
+				<g:Anchor ui:field="aCancelUser" styleName="btn btn-danger btn-fill pull-left">
+						Cancel&nbsp;
+						<i class="icon-double-angle-right"></i>
+					</g:Anchor>
+					<g:Anchor ui:field="aSaveUser" styleName="btn btn-primary btn-fill pull-right">
 						Save&nbsp;
 						<i class="icon-double-angle-right"></i>
 					</g:Anchor>
+					
 				</div>
 
 				<g:HTMLPanel styleName="hide" ui:field="divGroupDetails">
@@ -135,7 +161,12 @@
 					</g:HTMLPanel>
 
 					<div class="modal-footer">
-						<g:Anchor ui:field="aSaveGroup" styleName="btn btn-primary btn-fill pull-left">
+						<g:Anchor ui:field="aCancelGroup" styleName="btn btn-danger btn-fill pull-left">
+							Cancel&nbsp;
+							<i class="icon-double-angle-right"></i>
+						</g:Anchor>
+						
+						<g:Anchor ui:field="aSaveGroup" styleName="btn btn-primary btn-fill pull-right">
 							Save&nbsp;
 							<i class="icon-double-angle-right"></i>
 						</g:Anchor>

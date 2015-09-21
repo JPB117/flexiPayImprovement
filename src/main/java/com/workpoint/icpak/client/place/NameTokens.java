@@ -33,6 +33,7 @@ public class NameTokens {
 	public static final String admindashboards = "admindashboards";
 	public static final String offences = "offences";
 	public static final String statements = "statements";
+	public static final String invoices = "invoices";
 	public static final String events = "events";
 	public static final String cpd = "cpd";
 	public static final String cpdmgt = "cpdmgt";

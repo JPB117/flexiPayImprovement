@@ -51,6 +51,8 @@ import com.workpoint.icpak.client.ui.header.HeaderPresenter;
 import com.workpoint.icpak.client.ui.header.HeaderView;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
 import com.workpoint.icpak.client.ui.home.HomeView;
+import com.workpoint.icpak.client.ui.invoices.InvoiceListPresenter;
+import com.workpoint.icpak.client.ui.invoices.InvoiceListView;
 import com.workpoint.icpak.client.ui.login.LoginPresenter;
 import com.workpoint.icpak.client.ui.login.LoginView;
 import com.workpoint.icpak.client.ui.login.createpassword.ActivateAccountPresenter;
@@ -129,6 +131,11 @@ public class ClientModule extends AbstractPresenterModule {
 				MemberRegistrationView.class,
 				MemberRegistrationPresenter.MyProxy.class);
 
+		bindPresenter(InvoiceListPresenter.class,
+				InvoiceListPresenter.IInvoiceView.class,
+				InvoiceListView.class,
+				InvoiceListPresenter.IInvoiceProxy.class);
+		
 		bindPresenter(StatementsPresenter.class,
 				StatementsPresenter.IStatementsView.class,
 				StatementsView.class,

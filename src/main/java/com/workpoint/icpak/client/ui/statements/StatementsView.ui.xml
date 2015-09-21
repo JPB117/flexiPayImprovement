@@ -2,8 +2,7 @@
 
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
 	xmlns:g='urn:import:com.google.gwt.user.client.ui' ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
-	xmlns:d='urn:import:com.workpoint.icpak.client.ui.component' xmlns:p='urn:import:com.workpoint.icpak.client.ui.statements.header'
-	xmlns:table='urn:import:com.workpoint.icpak.client.ui.statements.table'
+	xmlns:d='urn:import:com.workpoint.icpak.client.ui.component'
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
 
@@ -11,33 +10,34 @@
 		<g:HTMLPanel styleName="content-wrapper ng-scope ng-fadeInUp"
 			ui:field="divMainContainer">
 			<h3 class="ng-scope">
-				Payment Summary
+				Statements
 			</h3>
 
-			<g:HTMLPanel styleName="content-top" ui:field="divContentTop">
-				<!--Action Buttons -->
-				<div class="action-buttons row-fluid">
-					<div class="span6 date-box hide">
-						<!-- d:DateBoxDropDown ui:field="boxDateBox"></d:DateBoxDropDown -->
-						<d:ActionLink ui:field="aRefresh"></d:ActionLink>
+
+			<div class="form-group">
+				<div class="row">
+					<div class="col-lg-3">
+						<label for="firstname">Start Date:</label>
+						<d:DateField ui:field="txtFirstname" class="form-control" />
+					</div>
+					<div class="col-lg-3">
+						<label for="firstname">End Date:</label>
+						<d:DateField ui:field="txtLastname" class="form-control" />
+					</div>
+					<div class="col-lg-1">
+						<label for="firstname">&nbsp;&nbsp;</label>
+						<br/>
+						<d:ActionLink ui:field="aRefresh" styleName="btn btn-fill btn-default">
+							<i class="fa fa-refresh"></i>						
+						</d:ActionLink>
 					</div>
 				</div>
-
-				<div class="col-sm-12">
-					<p:TransactionsHeader ui:field="headerContainer">
-					</p:TransactionsHeader>
-				</div>
-			</g:HTMLPanel>
+			</div>
 
 
 			<div class="col-lg-12">
 				<div class="panel widget">
-					<g:HTMLPanel ui:field="divMiddleContent" styleName="tabbable tabs-below full-page">
-						<div ui:field="divTab1Content" class="tab-pane fade in active">
-							<table:TransactionTable ui:field="tblView">
-							</table:TransactionTable>
-						</div>
-					</g:HTMLPanel>
+					<d:Grid ui:field="grid"></d:Grid>
 				</div>
 			</div>
 
