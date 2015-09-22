@@ -1,7 +1,10 @@
 package com.icpak.rest.dao.helper;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import javax.ws.rs.QueryParam;
 
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
@@ -9,6 +12,7 @@ import com.icpak.rest.IDUtils;
 import com.icpak.rest.dao.StatementDao;
 import com.icpak.rest.models.membership.Member;
 import com.icpak.rest.models.trx.Statement;
+import com.workpoint.icpak.shared.model.statement.SearchDto;
 import com.workpoint.icpak.shared.model.statement.StatementDto;
 
 /**
@@ -21,18 +25,20 @@ public class StatementDaoHelper {
 
 
     public List<StatementDto> getAllStatements(String memberId,
+    		Date startDate, 
+			Date endDate,
 			Integer offset, Integer limit){
     	
     	List<Statement> statementList = new ArrayList<>();
     	
     	if(memberId!=null && memberId.equals("ALL")){
-    		statementList = statementDao.getAllStatements(offset, limit);
+    		statementList = statementDao.getAllStatements(startDate,endDate,offset, limit);
     	}else{
     		Member member = statementDao.findByRefId(memberId, Member.class);
         	if(member.getMemberNo()==null){
         		return new ArrayList<>();
         	}
-        	statementList = statementDao.getAllStatements(member.getMemberNo(), offset, limit);
+        	statementList = statementDao.getAllStatements(member.getMemberNo(),startDate,endDate, offset, limit);
     	}
     	
         
@@ -58,16 +64,16 @@ public class StatementDaoHelper {
         return statementDtos;
     }
     
-    public Integer getCount(String memberId) {
+    public Integer getCount(String memberId, Date startDate, Date endDate) {
     	if(memberId!=null && memberId.equals("ALL")){
     		
-    		return statementDao.getStatementCount(null);
+    		return statementDao.getStatementCount(null, startDate, endDate);
     	}else{
     		Member member = statementDao.findByRefId(memberId, Member.class);
         	if(member.getMemberNo()==null){
         		return 0;
         	}
-        	return statementDao.getStatementCount(member.getMemberNo());
+        	return statementDao.getStatementCount(member.getMemberNo(), startDate,endDate);
     	}
     	
 		

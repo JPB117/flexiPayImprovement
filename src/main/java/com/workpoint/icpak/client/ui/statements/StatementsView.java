@@ -2,14 +2,19 @@ package com.workpoint.icpak.client.ui.statements;
 
 import java.util.List;
 
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
+import com.workpoint.icpak.client.ui.component.ActionLink;
+import com.workpoint.icpak.client.ui.component.DateField;
 import com.workpoint.icpak.client.ui.component.Grid;
+import com.workpoint.icpak.shared.model.statement.SearchDto;
 import com.workpoint.icpak.shared.model.statement.StatementDto;
+
 import static com.workpoint.icpak.client.ui.util.DateUtils.*;
 import static com.workpoint.icpak.client.ui.util.NumberUtils.*;
 
@@ -22,6 +27,10 @@ public class StatementsView extends ViewImpl implements
 	}
 
 	@UiField Grid<StatementDto> grid;
+	
+	@UiField DateField dtStartDate;
+	@UiField DateField dtEndDate;
+	@UiField ActionLink aRefresh;
 	
 	@Inject
 	public StatementsView(final Binder binder) {
@@ -118,7 +127,31 @@ public class StatementsView extends ViewImpl implements
 
 	@Override
 	public Grid<StatementDto> getGrid() {
-		
 		return grid;
+	}
+
+	@Override
+	public SearchDto getSearchCriteria() {
+		
+		SearchDto dto = new SearchDto();
+		dto.setEndDate(dtEndDate.getValueDate());
+		dto.setStartDate(dtStartDate.getValueDate());
+		
+		return dto;
+	}
+
+	@Override
+	public HasClickHandlers getRefresh() {
+		return aRefresh;
+	}
+
+	@Override
+	public DateField getStartDate() {
+		return dtStartDate;
+	}
+
+	@Override
+	public DateField getEndDate() {
+		return dtEndDate;
 	}
 }

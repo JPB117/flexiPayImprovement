@@ -137,5 +137,10 @@ public class Grid<T extends HasKey> extends Composite {
 	public Range getVisibleRange() {
 		return dataGrid.getVisibleRange();
 	}
+
+	public void refresh() {
+		Window.alert("redraw!");
+		dataGrid.redraw();
+	}
 		
 }

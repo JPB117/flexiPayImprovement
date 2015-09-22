@@ -8,11 +8,14 @@ package com.workpoint.icpak.client.ui.statements;
 //import com.workpoint.icpak.shared.responses.GetUserRequestResult;
 //import com.workpoint.icpak.shared.responses.SaveUserResponse;
 //import com.workpoint.icpak.shared.responses.UpdatePasswordResponse;
+import java.util.Date;
 import java.util.List;
 
-import com.amazonaws.services.simpleworkflow.flow.core.TryCatchFinally.State;
-import com.google.gwt.user.cellview.client.SimplePager;
-import com.google.gwt.user.client.Window;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.view.client.AsyncDataProvider;
 import com.google.gwt.view.client.HasData;
 import com.google.gwt.view.client.Range;
@@ -27,21 +30,17 @@ import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.annotations.TabInfo;
 import com.gwtplatform.mvp.client.annotations.UseGatekeeper;
 import com.gwtplatform.mvp.client.proxy.TabContentProxyPlace;
-import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.workpoint.icpak.client.place.NameTokens;
 import com.workpoint.icpak.client.security.CurrentUser;
 import com.workpoint.icpak.client.service.AbstractAsyncCallback;
 import com.workpoint.icpak.client.ui.admin.TabDataExt;
+import com.workpoint.icpak.client.ui.component.DateField;
 import com.workpoint.icpak.client.ui.component.Grid;
-import com.workpoint.icpak.client.ui.component.PagingConfig;
-import com.workpoint.icpak.client.ui.component.PagingLoader;
-import com.workpoint.icpak.client.ui.component.PagingPanel;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
 import com.workpoint.icpak.client.ui.security.LoginGateKeeper;
 import com.workpoint.icpak.client.util.AppContext;
-import com.workpoint.icpak.shared.api.InvoiceResource;
 import com.workpoint.icpak.shared.api.MemberResource;
-import com.workpoint.icpak.shared.model.InvoiceSummary;
+import com.workpoint.icpak.shared.model.statement.SearchDto;
 import com.workpoint.icpak.shared.model.statement.StatementDto;
 
 public class StatementsPresenter
@@ -51,7 +50,10 @@ public class StatementsPresenter
 	public interface IStatementsView extends View {
 		void setData(List<StatementDto> result,int totalCount);
 		Grid<StatementDto> getGrid();
-
+		SearchDto getSearchCriteria();
+		HasClickHandlers getRefresh();
+		DateField getStartDate();
+		DateField getEndDate();
 	}
 
 	@ProxyCodeSplit
@@ -97,12 +99,45 @@ public class StatementsPresenter
 						@Override
 						public void onSuccess(Integer aCount) {
 							totalCount = aCount;
-							loadStatements(display,range.getStart(), range.getLength());
+							loadStatements(range.getStart(), range.getLength());
 						}
 					}).statements(getMemberId()).getCount();
 				}else{
-					loadStatements(display,range.getStart(), range.getLength());
+					loadStatements(range.getStart(), range.getLength());
 				}
+			}
+		});
+		
+		ValueChangeHandler<String> vch = new ValueChangeHandler<String>() {
+			
+			@Override
+			public void onValueChange(ValueChangeEvent<String> arg0) {
+				
+				Date startDate = getView().getStartDate().getValueDate();
+				Date endDate = getView().getEndDate().getValueDate();
+				
+				memberDelegate.withCallback(new AbstractAsyncCallback<Integer>() {
+					@Override
+					public void onSuccess(Integer aCount) {
+						//final Range range = getView().getGrid().getVisibleRange();
+						totalCount = aCount;
+						//loadStatements(0, range.getLength());
+					}
+				}).statements(getMemberId()).getCount(startDate==null? null: startDate.getTime(),
+						endDate==null? null:endDate.getTime());
+			}
+		};
+		
+		getView().getStartDate().addValueChangeHandler(vch);
+		getView().getEndDate().addValueChangeHandler(vch);
+		
+		getView().getRefresh().addClickHandler(new ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent arg0) {
+				//getView().getGrid().refresh();
+				final Range range = getView().getGrid().getVisibleRange();
+				loadStatements(range.getStart(), range.getLength());
 				
 			}
 		});
@@ -125,14 +160,18 @@ public class StatementsPresenter
 	protected void save() {
 	}
 
-	protected void loadStatements(final HasData<StatementDto> arg0, int offset, int limit) {
+	protected void loadStatements(int offset, int limit) {
+		Date startDate = getView().getSearchCriteria().getStartDate();
+		Date endDate = getView().getSearchCriteria().getEndDate();
+		
 		memberDelegate.withCallback(
 				new AbstractAsyncCallback<List<StatementDto>>() {
 					@Override
 					public void onSuccess(List<StatementDto> result) {
 						getView().setData(result,totalCount);
 					}
-				}).statements(getMemberId()).getAll(offset, limit);
+				}).statements(getMemberId()).getAll(startDate==null? null: startDate.getTime(),
+						endDate==null? null:endDate.getTime(),offset, limit);
 				
 	}
 

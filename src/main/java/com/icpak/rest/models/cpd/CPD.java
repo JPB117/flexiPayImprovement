@@ -5,7 +5,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -48,9 +51,16 @@ public class CPD extends PO{
 	private String title;
 	private String organizer;
 	private CPDCategory category;
-	private int cpdHours;
-	private CPDStatus status = CPDStatus.UNCONFIRMED;
+	private Double cpdHours;
+	
+	@Enumerated(EnumType.STRING)
+	private CPDStatus status = CPDStatus.Unconfirmed;
+	
+	@Column(length=20)
 	private String memberId;
+	
+	@Column(length=20)
+	private String memberRegistrationNo;
 	private String eventId;
 	
 	@OneToMany(mappedBy="cpd", fetch=FetchType.LAZY, cascade={CascadeType.REMOVE})
@@ -148,20 +158,28 @@ public class CPD extends PO{
 		this.memberId = memberId;
 	}
 
-	public int getCpdHours() {
-		return cpdHours;
-	}
-
-	public void setCpdHours(int cpdHours) {
-		this.cpdHours = cpdHours;
-	}
-
 	public String getEventId() {
 		return eventId;
 	}
 
 	public void setEventId(String eventId) {
 		this.eventId = eventId;
+	}
+
+	public String getMemberRegistrationNo() {
+		return memberRegistrationNo;
+	}
+
+	public void setMemberRegistrationNo(String memberRegistrationNo) {
+		this.memberRegistrationNo = memberRegistrationNo;
+	}
+
+	public void setCpdHours(double cpdHours) {
+		this.cpdHours = cpdHours;
+	}
+
+	public double getCpdHours() {
+		return cpdHours;
 	}
 	
 }

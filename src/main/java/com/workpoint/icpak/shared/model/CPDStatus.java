@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 public enum CPDStatus implements Serializable{
 
-	UNCONFIRMED,
-	CONFIRMED
+	Unconfirmed,
+	Approved,
+	Rejected,
+	Cancelled
 }

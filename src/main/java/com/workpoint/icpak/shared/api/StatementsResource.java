@@ -2,7 +2,9 @@ package com.workpoint.icpak.shared.api;
 
 import java.util.List;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
@@ -15,9 +17,15 @@ import com.workpoint.icpak.shared.model.statement.StatementDto;
 public interface StatementsResource extends BaseResource{
 	
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/filteredcount")
+	public Integer getCount(@QueryParam("startdate")Long startDate, 
+			@QueryParam("enddate")Long endDate);
+	
+	@GET
+	@Consumes(MediaType.APPLICATION_JSON)
 	@ApiOperation(value="Retrieve all member statement")
-	public List<StatementDto> getAll(
+	public List<StatementDto> getAll(@QueryParam("startdate")Long startDate, 
+			@QueryParam("enddate")Long endDate,
 			@QueryParam("offset") Integer offset,
 			@QueryParam("limit") Integer limit);
 }

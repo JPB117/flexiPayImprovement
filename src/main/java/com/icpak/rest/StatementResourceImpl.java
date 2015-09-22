@@ -1,7 +1,9 @@
 package com.icpak.rest;
 
+import java.util.Date;
 import java.util.List;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -14,6 +16,7 @@ import com.icpak.rest.dao.helper.StatementDaoHelper;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.workpoint.icpak.shared.api.StatementsResource;
+import com.workpoint.icpak.shared.model.statement.SearchDto;
 import com.workpoint.icpak.shared.model.statement.StatementDto;
 
 @Api(value="", description="Handles CRUD for Statements")
@@ -31,9 +34,10 @@ public class StatementResourceImpl implements StatementsResource{
 	}
 	
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
 	@ApiOperation(value="Retrieve all member statement")
-	public List<StatementDto> getAll(
+	public List<StatementDto> getAll(@QueryParam("startdate")Long startDate, 
+			@QueryParam("enddate")Long endDate,
 			@QueryParam("offset") Integer offset,
 			@QueryParam("limit") Integer limit) {
 		if(offset==null){
@@ -43,13 +47,22 @@ public class StatementResourceImpl implements StatementsResource{
 			limit = 30;
 		}
 		
-		List<StatementDto> dtos = helper.getAllStatements(memberId,offset, limit);
+		List<StatementDto> dtos = helper.getAllStatements(memberId,startDate==null? null: new Date(startDate),
+				endDate==null? null: new Date(endDate),offset, limit);
 		return dtos;
 	}
 	
 	@GET
 	@Path("/count")
 	public Integer getCount(){
-		return helper.getCount(memberId);
+		return helper.getCount(memberId,null,null);
+	}
+	
+	@GET
+	@Path("/filteredcount")
+	public Integer getCount(@QueryParam("startdate")Long startDate, 
+			@QueryParam("enddate")Long endDate){
+		return helper.getCount(memberId,startDate==null? null: new Date(startDate),
+				endDate==null? null: new Date(endDate));
 	}
 }
