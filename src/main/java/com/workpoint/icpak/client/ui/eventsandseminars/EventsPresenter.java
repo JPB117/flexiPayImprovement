@@ -85,14 +85,14 @@ public class EventsPresenter extends
 		addRegisteredHandler(EditModelEvent.TYPE, this);
 		getView().getEventsPagingPanel().setLoader(new PagingLoader() {
 			@Override
-			public void load(int offset, int limit) {
+			public void onLoad(int offset, int limit) {
 				loadEvents(offset, limit);
 			}
 		});
 
 		getView().getBookingsPagingPanel().setLoader(new PagingLoader() {
 			@Override
-			public void load(int offset, int limit) {
+			public void onLoad(int offset, int limit) {
 				loadBookings(offset, limit);
 			}
 		});

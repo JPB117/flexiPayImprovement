@@ -96,7 +96,7 @@ public class StatementDao extends BaseDao {
 			} else {
 				sql.append(" and ");
 			}
-			params.put("regNo", endDate);
+			params.put("regNo", memberRegistrationNo);
 			sql.append(" customerNo=:regNo");
 		}
 		
@@ -149,7 +149,7 @@ public class StatementDao extends BaseDao {
 			} else {
 				sql.append(" and ");
 			}
-			params.put("regNo", endDate);
+			params.put("regNo", memberNo);
 			sql.append(" customerNo=:regNo");
 		}
 		Query query = getEntityManager().createNativeQuery(sql.toString());
