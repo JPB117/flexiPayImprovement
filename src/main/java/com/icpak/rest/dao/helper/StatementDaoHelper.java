@@ -4,15 +4,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.ws.rs.QueryParam;
-
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import com.icpak.rest.IDUtils;
 import com.icpak.rest.dao.StatementDao;
 import com.icpak.rest.models.membership.Member;
 import com.icpak.rest.models.trx.Statement;
-import com.workpoint.icpak.shared.model.statement.SearchDto;
 import com.workpoint.icpak.shared.model.statement.StatementDto;
 
 /**

@@ -1,17 +1,15 @@
 package com.icpak.rest.dao;
 
-import com.google.gwt.dev.util.collect.HashMap;
-import com.icpak.rest.dao.BaseDao;
-import com.icpak.rest.exceptions.ServiceException;
-import com.icpak.rest.models.ErrorCodes;
-import com.icpak.rest.models.trx.Statement;
-import com.workpoint.icpak.shared.model.statement.SearchDto;
-
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.persistence.Query;
+
+import com.icpak.rest.exceptions.ServiceException;
+import com.icpak.rest.models.ErrorCodes;
+import com.icpak.rest.models.trx.Statement;
 
 public class StatementDao extends BaseDao {
 
