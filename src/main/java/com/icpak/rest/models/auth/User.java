@@ -91,14 +91,18 @@ public class User extends PO {
 	// @Index(name="idx_users_email")
 	private String email;
 
-	@Basic(optional = false)
+	@Basic(optional = true) //Allow an initial user with no password to be created
 	@Column(length = 255)
 	private String password;
 
 	@JsonIgnore
 	@XmlTransient
-	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
-	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = @JoinColumn(name = "roleid"))
+	@ManyToMany(cascade = { CascadeType.DETACH,
+            CascadeType.MERGE,
+            CascadeType.REFRESH,
+            CascadeType.PERSIST})
+	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "userid"),
+	inverseJoinColumns = @JoinColumn(name = "roleid"))
 	@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 	private Set<Role> roles = new HashSet<Role>();
 

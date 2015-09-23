@@ -31,6 +31,9 @@ public interface MemberResource extends BaseResource{
 	@Path("/{memberId}/cpd")
 	public CPDResource cpd(@PathParam("memberId") String memberId);
 	
+	@Path("/{memberId}/statements")
+	public StatementsResource statements(@PathParam("memberId") String memberId);
+	
 	@Path("/{memberId}/invoice")
 	@GET
 	public List<InvoiceDto> getAllInvoicesForMember(@PathParam("memberId") String memberId);

@@ -21,6 +21,17 @@ public class TestLoginAuth extends AbstractDaoTest{
 	
 	@Inject UsersDao usersDao;
 
+	@Test
+	public void authenticate(){
+		User user =  usersDao.getUserByUsernameOrMemberNo("kimani@wira.io");
+		assert user!=null;
+		
+		LogInResult result = helper.execLogin(
+				new LogInAction("kimani@wira.io", "pass"));
+		Assert.assertTrue(result.getCurrentUserDto().getUser() != null);
+		Assert.assertTrue(result.getCurrentUserDto().isLoggedIn());
+	}
+	
 	@Ignore
 	public void getUser(){
 		User user= usersDao.findUserByMemberNo("ASSOC/867");
@@ -28,7 +39,7 @@ public class TestLoginAuth extends AbstractDaoTest{
 		System.err.println(user.getRefId());
 	}
 	
-	@Test
+	@Ignore
 	public void auth2(){
 		
 		LogInResult result = helper.execLogin(new LogInAction("ASSOC/867", "pass1"));

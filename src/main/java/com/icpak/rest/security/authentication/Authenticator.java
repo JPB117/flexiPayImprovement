@@ -24,6 +24,7 @@ import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authc.credential.Sha256CredentialsMatcher;
+import org.apache.shiro.crypto.hash.Sha256Hash;
 
 import com.google.inject.persist.Transactional;
 import com.icpak.rest.dao.UserSessionDao;
@@ -82,9 +83,11 @@ public class Authenticator {
 				password);
 		boolean isMatch = false;
 		try {
+			System.out.println("credentials to use: "+usernameOrMemberNo+" : "+password);
 			isMatch = matcher.doCredentialsMatch(token,
 					realm.getAuthenticationInfo(authcToken));
 		} catch (IncorrectCredentialsException e) {
+			e.printStackTrace();
 			throw new ServiceException(ErrorCodes.UNAUTHORIZEDACCESS);
 		}
 

@@ -14,7 +14,7 @@ public class CPDDto extends SerializableObj{
 	private String title;
 	private String organizer;
 	private CPDCategory category;
-	private int cpdHours;
+	private double cpdHours;
 	private CPDStatus status;
 	private String memberId;
 	private String fullNames;
@@ -79,14 +79,6 @@ public class CPDDto extends SerializableObj{
 		this.category = category;
 	}
 
-	public int getCpdHours() {
-		return cpdHours;
-	}
-
-	public void setCpdHours(int cpdHours) {
-		this.cpdHours = cpdHours;
-	}
-
 	public Date getCreated() {
 		return created;
 	}
@@ -109,5 +101,13 @@ public class CPDDto extends SerializableObj{
 
 	public String getEventId() {
 		return eventId;
+	}
+
+	public double getCpdHours() {
+		return cpdHours;
+	}
+
+	public void setCpdHours(double cpdHours) {
+		this.cpdHours = cpdHours;
 	}
 }

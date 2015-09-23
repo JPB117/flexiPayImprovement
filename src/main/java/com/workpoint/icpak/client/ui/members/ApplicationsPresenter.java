@@ -88,7 +88,7 @@ public class ApplicationsPresenter
 
 		getView().getPagingPanel().setLoader(new PagingLoader() {
 			@Override
-			public void load(int offset, int limit) {
+			public void onLoad(int offset, int limit) {
 				loadApplications(offset, limit);
 			}
 		});

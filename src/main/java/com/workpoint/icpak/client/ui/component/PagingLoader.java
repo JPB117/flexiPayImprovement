@@ -1,6 +1,6 @@
 package com.workpoint.icpak.client.ui.component;
 
-public interface PagingLoader {
+public interface PagingLoader{
 
-	public void load(int offset, int limit);
+	public void onLoad(int offset, int limit);
 }

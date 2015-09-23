@@ -10,7 +10,6 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import com.google.inject.Inject;
-import com.icpak.rest.dao.BookingsDao;
 import com.icpak.rest.dao.InvoiceDaoHelper;
 import com.icpak.rest.dao.helper.BookingsDaoHelper;
 import com.icpak.rest.dao.helper.MemberDaoHelper;
@@ -18,7 +17,6 @@ import com.icpak.rest.factory.ResourceFactory;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
-import com.workpoint.icpak.shared.api.EnquiriesResource;
 import com.workpoint.icpak.shared.api.MemberResource;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.MemberDto;
@@ -91,6 +89,12 @@ public class MemberResourceImpl implements MemberResource {
 			@ApiParam(value = "Member Id", required = true) @PathParam("memberId") String memberId) {
 
 		return helper.getAllInvoices(memberId, 0, 50);
+	}
+	
+	@Path("/{memberId}/statements")
+	public StatementResourceImpl statements(
+			@PathParam("memberId") String memberId) {
+		return resourceFactory.createStatementResource(memberId);
 	}
 
 	@Path("/{memberId}/cpd")

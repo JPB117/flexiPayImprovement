@@ -9,8 +9,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.SuggestOracle.Callback;
-import com.google.gwt.user.client.ui.SuggestOracle.Request;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rest.delegates.client.ResourceDelegate;
@@ -40,7 +38,7 @@ import com.workpoint.icpak.shared.model.CreditCardDto;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.MemberDto;
 import com.workpoint.icpak.shared.model.events.BookingDto;
-import com.workpoint.icpak.shared.model.events.DelegateDto;
+import com.workpoint.icpak.shared.model.CreditCardResponse;
 import com.workpoint.icpak.shared.model.events.EventDto;
 
 //import com.workpoint.icpak.shared.model.events.BookingDto;
@@ -82,6 +80,8 @@ public class EventBookingPresenter extends
 		HasClickHandlers getPayButton();
 
 		CreditCardDto getCreditCardDetails();
+
+		boolean isPaymentValid();
 	}
 
 	@ProxyCodeSplit
@@ -112,12 +112,14 @@ public class EventBookingPresenter extends
 			ResourceDelegate<CountriesResource> countriesResource,
 			ResourceDelegate<EventsResource> eventsResource,
 			ResourceDelegate<InvoiceResource> invoiceResource,
+			ResourceDelegate<CreditCardResource> creditCardResource,
 			ResourceDelegate<MemberResource> membersDelegate) {
 		super(eventBus, view, proxy);
 		this.countriesResource = countriesResource;
 		this.eventsResource = eventsResource;
 		this.invoiceResource = invoiceResource;
 		this.membersDelegate = membersDelegate;
+		this.creditCardResource = creditCardResource;
 	}
 
 	@Override
@@ -174,13 +176,15 @@ public class EventBookingPresenter extends
 		getView().getPayButton().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				creditCardResource.withCallback(
-						new AbstractAsyncCallback<String>() {
-							@Override
-							public void onSuccess(String response) {
-								Window.alert(response);
-							}
-						}).postPayment(getView().getCreditCardDetails());
+				if(getView().isPaymentValid()) {
+					creditCardResource.withCallback(
+							new AbstractAsyncCallback<CreditCardResponse>() {
+								@Override
+								public void onSuccess(CreditCardResponse response) {
+									Window.alert(response.toString());
+								}
+							}).postPayment(getView().getCreditCardDetails());
+				}
 			}
 		});
 	}

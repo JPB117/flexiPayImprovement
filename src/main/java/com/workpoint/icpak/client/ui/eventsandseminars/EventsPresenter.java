@@ -2,7 +2,6 @@ package com.workpoint.icpak.client.ui.eventsandseminars;
 
 import java.util.List;
 
-import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rest.delegates.client.ResourceDelegate;
@@ -62,7 +61,7 @@ public class EventsPresenter extends
 
 	@TabInfo(container = HomePresenter.class)
 	static TabData getTabLabel(AdminGateKeeper gateKeeper) {
-		String tabName = "Events and Seminars";
+		String tabName = "Events & Seminars";
 		;
 		TabDataExt data = new TabDataExt(tabName, "fa fa-tags", 2, gateKeeper,
 				true);
@@ -86,14 +85,14 @@ public class EventsPresenter extends
 		addRegisteredHandler(EditModelEvent.TYPE, this);
 		getView().getEventsPagingPanel().setLoader(new PagingLoader() {
 			@Override
-			public void load(int offset, int limit) {
+			public void onLoad(int offset, int limit) {
 				loadEvents(offset, limit);
 			}
 		});
 
 		getView().getBookingsPagingPanel().setLoader(new PagingLoader() {
 			@Override
-			public void load(int offset, int limit) {
+			public void onLoad(int offset, int limit) {
 				loadBookings(offset, limit);
 			}
 		});

@@ -7,6 +7,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import com.workpoint.icpak.shared.model.CreditCardDto;
+import com.workpoint.icpak.shared.model.CreditCardResponse;
 
 
 @Path("creditCardPayments")
@@ -14,6 +15,5 @@ public interface CreditCardResource extends BaseResource {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public String postPayment(CreditCardDto dto);
-
+	public CreditCardResponse postPayment(CreditCardDto dto);
 }

@@ -1,4 +1,4 @@
-package com.workpoint.icpak.client.ui.statements.table;
+package com.workpoint.icpak.client.ui.invoices.table;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +12,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.workpoint.icpak.client.ui.component.PagingPanel;
 import com.workpoint.icpak.client.ui.component.PagingTable;
 import com.workpoint.icpak.client.ui.component.TableHeader;
-import com.workpoint.icpak.client.ui.statements.row.StatementTableRow;
+import com.workpoint.icpak.client.ui.invoices.row.InvoiceTableRow;
 
 public class TransactionTable extends Composite {
 
@@ -47,7 +47,7 @@ public class TransactionTable extends Composite {
 		tblView.setTableHeaders(th);
 	}
 
-	public void createRow(StatementTableRow row) {
+	public void createRow(InvoiceTableRow row) {
 		tblView.addRow(row);
 	}
 

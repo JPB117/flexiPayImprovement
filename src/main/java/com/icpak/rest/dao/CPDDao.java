@@ -111,12 +111,12 @@ public class CPDDao extends BaseDao {
 			int i=0;
 			Object value=null;
 			Integer count = (value=row[i++])==null? null: ((Number)value).intValue();
-			Integer status=(value=row[i++])==null? null: ((Number)value).intValue();
+			String status=(value=row[i++])==null? null: value.toString();
 			
-			if(status == CPDStatus.CONFIRMED.ordinal()){
-				summary.setConfirmedCPD(count);
-			}else{
+			if(status!=null && status.equals(CPDStatus.Unconfirmed.name())){
 				summary.setUnconfirmedCPD(count);
+			}else{
+				summary.setConfirmedCPD(count);
 			}
 		}
 		
@@ -133,12 +133,12 @@ public class CPDDao extends BaseDao {
 			int i=0;
 			Object value=null;
 			Integer count = (value=row[i++])==null? null: ((Number)value).intValue();
-			Integer status=(value=row[i++])==null? null: ((Number)value).intValue();
+			String status=(value=row[i++])==null? null: value.toString();
 			
-			if(status == CPDStatus.CONFIRMED.ordinal()){
-				summary.setProcessedCount(count);
-			}else{
+			if(status!=null && status.equals(CPDStatus.Unconfirmed.name())){
 				summary.setPendingCount(count);
+			}else{
+				summary.setProcessedCount(count);
 			}
 		}
 		

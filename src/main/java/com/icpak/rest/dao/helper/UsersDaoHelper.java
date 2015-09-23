@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -74,6 +75,11 @@ public class UsersDaoHelper {
 	 * @return
 	 */
 	public UserDto create(UserDto dto) {
+
+		return create(dto, true);
+	}
+
+	public UserDto create(UserDto dto, boolean sendActivationEmail) {
 		User user = new User();
 		user.copyFrom(dto);
 		user.setPassword(dto.getPassword());
@@ -83,7 +89,35 @@ public class UsersDaoHelper {
 		}
 		dao.createUser(user);
 		// createDefaultMemberForUser(user);
+
+		if (sendActivationEmail) {
+			sendActivationEmail(user);
+		}
+
 		return user.toDto();
+	}
+
+	private void sendActivationEmail(User user) {
+		String subject = "Welcome to ICPAK Portal!";
+		String link = settings.getApplicationPath() + "#activateacc;uid="+user.getRefId();
+		String body = "Dear User,"
+				+ "<br/>An account has been created for you onthe ICPAK portal. "
+				+ "You will need to reset your password on the portal using the following details."
+				+ "<p/>Username: " + user.getEmail() + "<br/>Click this link "
+				+ link + " to reset your account." + "<p>Thank you";
+
+		try {
+			EmailServiceHelper.sendEmail(body, subject,
+					Arrays.asList(user.getEmail()),
+					Arrays.asList(user.getUserData().getFullNames()));
+
+		} catch (Exception e) {
+			logger.warning("Activation Email for " + user.getEmail()
+					+ " failed. Cause: " + e.getMessage());
+			e.printStackTrace();
+			// throw new Run
+		}
+
 	}
 
 	/**
@@ -111,7 +145,8 @@ public class UsersDaoHelper {
 		po.setEmail(dto.getEmail());
 		// po.setPassword(dto.getPassword());
 
-		updatePassword(userId, dto.getPassword());
+		//We do not update password here :Duggan 21/09/2015 
+		//updatePassword(userId, dto.getPassword());
 
 		if (po.getUserData() == null) {
 			po.setUserData(dto);
@@ -404,7 +439,7 @@ public class UsersDaoHelper {
 
 		String response = LMSIntegrationUtil.getInstance().executeLMSCall(
 				"/Account/Register", dto, String.class);
-		//messages -for testing
+		// messages -for testing
 		return response;
 	}
 

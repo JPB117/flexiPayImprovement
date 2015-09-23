@@ -84,7 +84,7 @@ public class EnquiriesPresenter
 		getView().getPagingPanel().setLoader(new PagingLoader() {
 
 			@Override
-			public void load(int offset, int limit) {
+			public void onLoad(int offset, int limit) {
 				loadEnquiries(offset, limit);
 			}
 		});

@@ -15,8 +15,8 @@ import com.workpoint.icpak.client.ui.component.PagingPanel;
 import com.workpoint.icpak.client.ui.component.PagingTable;
 import com.workpoint.icpak.client.ui.component.TableHeader;
 import com.workpoint.icpak.client.ui.component.TableView;
+import com.workpoint.icpak.client.ui.invoices.row.InvoiceTableRow;
 import com.workpoint.icpak.client.ui.members.row.MembersTableRow;
-import com.workpoint.icpak.client.ui.statements.row.StatementTableRow;
 import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 

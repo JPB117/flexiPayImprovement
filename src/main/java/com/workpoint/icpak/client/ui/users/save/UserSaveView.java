@@ -15,6 +15,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -25,14 +26,13 @@ import com.workpoint.icpak.client.model.UploadContext;
 import com.workpoint.icpak.client.model.UploadContext.UPLOADACTION;
 import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.IssuesPanel;
-import com.workpoint.icpak.client.ui.component.PasswordField;
 import com.workpoint.icpak.client.ui.component.TextArea;
 import com.workpoint.icpak.client.ui.component.TextField;
 import com.workpoint.icpak.client.ui.component.autocomplete.MultiSelectField;
 import com.workpoint.icpak.client.ui.upload.custom.Uploader;
 import com.workpoint.icpak.client.ui.users.save.UserSavePresenter.TYPE;
-import com.workpoint.icpak.shared.model.UserDto;
 import com.workpoint.icpak.shared.model.RoleDto;
+import com.workpoint.icpak.shared.model.UserDto;
 
 public class UserSaveView extends PopupViewImpl implements
 		UserSavePresenter.IUserSaveView {
@@ -47,8 +47,8 @@ public class UserSaveView extends PopupViewImpl implements
 	@UiField
 	Anchor aClose;
 
-	@UiField
-	TextField txtUserName;
+//	@UiField
+//	TextField txtUserName;
 	@UiField
 	TextField txtFirstname;
 	@UiField
@@ -65,7 +65,12 @@ public class UserSaveView extends PopupViewImpl implements
 
 	@UiField
 	ActionLink aResetPassword;
+	
+	@UiField
+	DivElement divReset;
 
+	@UiField CheckBox chkSendEmail;
+	
 	@UiField
 	PopupPanel AddUserDialog;
 	@UiField
@@ -73,6 +78,9 @@ public class UserSaveView extends PopupViewImpl implements
 	@UiField
 	Anchor aSaveUser;
 
+	@UiField HasClickHandlers aCancelUser;
+	@UiField HasClickHandlers aCancelGroup;
+	
 	@UiField
 	SpanElement header;
 
@@ -98,6 +106,20 @@ public class UserSaveView extends PopupViewImpl implements
 				hide();
 			}
 		});
+		
+		aCancelGroup.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				hide();
+			}
+		});
+		
+		aCancelUser.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				hide();
+			}
+		});
 
 		AddUserDialog.getElement().getStyle().setDisplay(Display.BLOCK);
 		AddUserDialog.getElement().getStyle().setOverflowY(Overflow.AUTO);
@@ -113,7 +135,7 @@ public class UserSaveView extends PopupViewImpl implements
 
 		AddUserDialog.setPopupPosition((int) width1, (int) height1);
 
-		txtUserName.addValueChangeHandler(new ValueChangeHandler<String>() {
+		txtEmail.addValueChangeHandler(new ValueChangeHandler<String>() {
 
 			@Override
 			public void onValueChange(ValueChangeEvent<String> event) {
@@ -186,10 +208,14 @@ public class UserSaveView extends PopupViewImpl implements
 		txtEmail.setValue(user.getEmail());
 		txtFirstname.setValue(user.getName());
 		txtLastname.setValue(user.getSurname());
-		txtUserName.setValue(user.getEmail());
 		txtPhoneNo.setValue(user.getPhoneNumber());
 		lstGroups.select(user.getGroups());
 		setContext(user.getRefId());
+		
+		if(user.getRefId()!=null){
+			//loaded from db
+			divReset.removeClassName("hide");
+		}
 
 	}
 
@@ -269,5 +295,10 @@ public class UserSaveView extends PopupViewImpl implements
 	
 	public HasClickHandlers getaResetPassword() {
 		return aResetPassword;
+	}
+
+	@Override
+	public boolean isSendEmail() {
+		return chkSendEmail.getValue();
 	}
 }

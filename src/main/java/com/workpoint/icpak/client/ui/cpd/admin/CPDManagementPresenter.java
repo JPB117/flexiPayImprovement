@@ -88,8 +88,8 @@ public class CPDManagementPresenter extends
 		
 		getView().getPagingPanel().setLoader(new PagingLoader() {
 			@Override
-			public void load(int offset, int limit) {
-				load(offset, limit);
+			public void onLoad(int offset, int limit) {
+				onLoad(offset, limit);
 			}
 		});
 

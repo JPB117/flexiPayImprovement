@@ -35,6 +35,7 @@ public class ICPAKAuthenticatingRealm extends AuthenticatingRealm {
 		UsernamePasswordToken token = (UsernamePasswordToken) authcToken;
 		User user =   getUserDao().getUserByUsernameOrMemberNo(token.getUsername());
 		if (user != null) {
+			System.err.println("hashed password>> "+user.getHashedPassword());
 			return new SimpleAuthenticationInfo(user.getId(),
 					user.getHashedPassword(), getName());
 		}

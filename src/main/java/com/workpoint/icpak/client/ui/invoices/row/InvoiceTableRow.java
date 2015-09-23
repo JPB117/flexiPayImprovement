@@ -1,4 +1,4 @@
-package com.workpoint.icpak.client.ui.statements.row;
+package com.workpoint.icpak.client.ui.invoices.row;
 
 import static com.workpoint.icpak.client.ui.util.DateUtils.DATEFORMAT;
 import static com.workpoint.icpak.client.ui.util.NumberUtils.NUMBERFORMAT;
@@ -13,13 +13,13 @@ import com.google.gwt.user.client.ui.Widget;
 import com.workpoint.icpak.client.ui.component.RowWidget;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 
-public class StatementTableRow extends RowWidget {
+public class InvoiceTableRow extends RowWidget {
 
 	private static ActivitiesTableRowUiBinder uiBinder = GWT
 			.create(ActivitiesTableRowUiBinder.class);
 
 	interface ActivitiesTableRowUiBinder extends
-			UiBinder<Widget, StatementTableRow> {
+			UiBinder<Widget, InvoiceTableRow> {
 	}
 
 	@UiField
@@ -43,11 +43,11 @@ public class StatementTableRow extends RowWidget {
 	@UiField
 	SpanElement spnStatus;
 
-	public StatementTableRow() {
+	public InvoiceTableRow() {
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 
-	public StatementTableRow(InvoiceDto invoice) {
+	public InvoiceTableRow(InvoiceDto invoice) {
 		this();
 		if (invoice.getContactName() != null) {
 			divContact.add(new InlineLabel(invoice.getContactName()));

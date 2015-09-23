@@ -112,7 +112,7 @@ public class CPDDaoHelper {
 		cpd.setMemberId(memberId);
 		cpd.setEventId(event.getRefId());
 		cpd.setOrganizer("ICPAK");
-		cpd.setStatus(CPDStatus.CONFIRMED);
+		cpd.setStatus(CPDStatus.Approved);
 		cpd.setEventId(event.getRefId());
 		cpd.setTitle(event.getName());
 		

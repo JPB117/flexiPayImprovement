@@ -106,11 +106,11 @@ public class CPDTableRow extends RowWidget {
 
 		divCPD.add(new InlineLabel(dto.getCpdHours() + " hrs"));
 
-		CPDStatus status = dto.getStatus() == null ? CPDStatus.UNCONFIRMED
+		CPDStatus status = dto.getStatus() == null ? CPDStatus.Unconfirmed
 				: dto.getStatus();
 
 		spnStatus.setInnerText(status.name());
-		if (status.equals(CPDStatus.UNCONFIRMED)) {
+		if (status.equals(CPDStatus.Unconfirmed)) {
 			spnStatus.removeClassName("label-success");
 			spnStatus.addClassName("label-warning");
 		}

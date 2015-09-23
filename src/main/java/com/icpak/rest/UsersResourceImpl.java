@@ -138,8 +138,8 @@ public class UsersResourceImpl implements UsersResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Create a new user", response = UserDto.class, consumes = MediaType.APPLICATION_JSON)
-	public UserDto create(UserDto user) {
-		return helper.create(user);
+	public UserDto create(UserDto user,@QueryParam("isSendEmail") boolean isSendEmail) {
+		return helper.create(user,isSendEmail);
 	}
 
 	/**
@@ -292,11 +292,13 @@ public class UsersResourceImpl implements UsersResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public String postUserLMS(@PathParam("userId") String userId) {
-		try {
-			return helper.postUserToLMS(userId);
-		} catch (IOException e) {
-			return e.getStackTrace().toString();
-		}
+		return "Success";
+//		try {
+//			//return helper.postUserToLMS(userId);
+//			return "";
+//		} catch (IOException e) {
+//			return e.getStackTrace().toString();
+//		}
 	}
 
 }
