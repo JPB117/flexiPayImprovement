@@ -54,11 +54,9 @@ public class DateUtils {
 	static long minInMillis = 60 * 1000;
 
 	public static String getTimeDifference(Date createdDate) {
-
 		if (createdDate == null) {
 			return "";
 		}
-
 		Date today = new Date();
 		long now = today.getTime();
 		long created = createdDate.getTime();

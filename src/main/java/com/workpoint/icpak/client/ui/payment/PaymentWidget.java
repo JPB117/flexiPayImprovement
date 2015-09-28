@@ -41,13 +41,10 @@ public class PaymentWidget extends Composite {
 	TextField txtCvv;
 	@UiField
 	ActionLink aPay;
-
 	@UiField
-	InlineLabel spnAmount;
-
+	TextField txtAmount;
 	@UiField
 	IssuesPanel issuesPanel;
-
 
 	private int totalYears = 10;
 
@@ -100,7 +97,7 @@ public class PaymentWidget extends Composite {
 		Date startMonth = new Date();
 		CalendarUtil.addMonthsToDate(startMonth, -startMonth.getMonth());
 		List<Month> allMonths = new ArrayList<Month>();
-		
+
 		for (int i = 0; i <= totalMonths; i++) {
 			CalendarUtil.addMonthsToDate(startMonth, 1);
 			allMonths.add(new Month(startMonth));
@@ -114,14 +111,14 @@ public class PaymentWidget extends Composite {
 		CreditCardDto creditCard = new CreditCardDto();
 		creditCard.setCard_holder_name(txtCardHolderName.getValue());
 		creditCard.setCard_number(txtCardNumber.getValue());
-		creditCard.setAmount(spnAmount.getText());
+		creditCard.setAmount(txtAmount.getText());
 		creditCard.setExpiry(expiry);
 		creditCard.setSecurity_code(txtCvv.getValue());
 		return creditCard;
 	}
 
 	public void setAmount(String amount1) {
-		spnAmount.setText(amount1);
+		txtAmount.setText(amount1);
 	}
 
 	public boolean isValid() {
@@ -129,30 +126,30 @@ public class PaymentWidget extends Composite {
 		issuesPanel.clear();
 
 		// Window.alert("Counter:"+counter);
-			if (isNullOrEmpty(txtCardHolderName.getValue())) {
-				isValid = false;
-				issuesPanel.addError("Card Holder name is required");
-			}
+		if (isNullOrEmpty(txtCardHolderName.getValue())) {
+			isValid = false;
+			issuesPanel.addError("Card Holder name is required");
+		}
 
-			if (isNullOrEmpty(txtCardNumber.getValue())) {
-				isValid = false;
-				issuesPanel.addError("Card number is required");
-			}
+		if (isNullOrEmpty(txtCardNumber.getValue())) {
+			isValid = false;
+			issuesPanel.addError("Card number is required");
+		}
 
-			if (isNullOrEmpty(txtCvv.getValue())) {
-				isValid = false;
-				issuesPanel.addError("Security Code is required");
-			}
+		if (isNullOrEmpty(txtCvv.getValue())) {
+			isValid = false;
+			issuesPanel.addError("Security Code is required");
+		}
 
-			if (lstMonths.getValue() == null) {
-				isValid = false;
-				issuesPanel.addError("Provide month");
-			}
+		if (lstMonths.getValue() == null) {
+			isValid = false;
+			issuesPanel.addError("Provide month");
+		}
 
-			if (lstYears.getValue() == null) {
-				isValid = false;
-				issuesPanel.addError("Provide year");
-			}
+		if (lstYears.getValue() == null) {
+			isValid = false;
+			issuesPanel.addError("Provide year");
+		}
 
 		// show/hide isValid Panel
 		if (isValid) {

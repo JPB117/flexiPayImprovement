@@ -3,6 +3,7 @@ package com.workpoint.icpak.client.ui.events.registration;
 import static com.workpoint.icpak.client.ui.util.StringUtils.isNullOrEmpty;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -45,6 +46,7 @@ import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.Listable;
 import com.workpoint.icpak.shared.model.MemberDto;
 import com.workpoint.icpak.shared.model.PaymentStatus;
+import com.workpoint.icpak.shared.model.Title;
 import com.workpoint.icpak.shared.model.events.AccommodationDto;
 import com.workpoint.icpak.shared.model.events.BookingDto;
 import com.workpoint.icpak.shared.model.events.ContactDto;
@@ -217,11 +219,11 @@ public class EventBookingView extends ViewImpl implements
 		}
 	};
 
-	int counter = 0;
+	int counter = 3;
 
 	public interface Binder extends UiBinder<Widget, EventBookingView> {
 	}
-	
+
 	ColumnConfig memberColumn = new ColumnConfig("memberNo", "Member No",
 			DataType.SELECTAUTOCOMPLETE, "", "form-control");
 
@@ -237,7 +239,9 @@ public class EventBookingView extends ViewImpl implements
 		configs.add(memberColumn);
 
 		ColumnConfig config = new ColumnConfig("title", "Title",
-				DataType.STRING, "", "form-control");
+				DataType.SELECTBASIC, "", "form-control");
+		config.setDropDownItems(Arrays.asList(Title.values()));
+
 		configs.add(config);
 		config = new ColumnConfig("surname", "First Name:", DataType.STRING,
 				"", "form-control");
@@ -456,7 +460,7 @@ public class EventBookingView extends ViewImpl implements
 
 	}
 
-	public boolean isPaymentValid(){
+	public boolean isPaymentValid() {
 		return panelPayment.isValid();
 	}
 
@@ -601,7 +605,7 @@ public class EventBookingView extends ViewImpl implements
 		proformaInv.clearRows();
 		proformaInv.setInvoice(invoice);
 
-		if (invoice.getInvoiceAmount() != null){
+		if (invoice.getInvoiceAmount() != null) {
 			panelPayment.setAmount(invoice.getInvoiceAmount().toString());
 		}
 
