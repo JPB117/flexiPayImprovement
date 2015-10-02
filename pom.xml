@@ -258,12 +258,12 @@
         <groupId>com.amazonaws</groupId>
         <artifactId>aws-java-sdk</artifactId>
         <version>1.9.0</version>
-	<exclusions>
-				<exclusion>
-					<groupId>org.apache.httpcomponents</groupId>
-					<artifactId>httpcore</artifactId>
-				</exclusion>
-			</exclusions>
+	<!--<exclusions>-->
+				<!--<exclusion>-->
+					<!--<groupId>org.apache.httpcomponents</groupId>-->
+					<!--<artifactId>httpcore</artifactId>-->
+				<!--</exclusion>-->
+			<!--</exclusions>-->
     </dependency>
 
 		<!-- End of Persistence -->
@@ -318,7 +318,7 @@
 		    <groupId>com.gwtplatform.extensions</groupId>
 		    <artifactId>dispatch-rest-delegates</artifactId>
 		    <version>${gwtp.version}</version>
-		    <!-- scope>provided</scope-->
+		     <scope>provided</scope>
 		</dependency>
 		
 		<!-- Google Web Toolkit -->
@@ -326,7 +326,7 @@
 			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-user</artifactId>
 			<version>${gwt.version}</version>
-			<!--scope>provided</scope -->
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.google.gwt</groupId>
@@ -377,7 +377,7 @@
 			<groupId>commons-collections</groupId>
 			<artifactId>commons-collections</artifactId>
 			<version>3.2.1</version>
-			<!--scope>provided</scope -->
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
