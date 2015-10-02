@@ -58,13 +58,15 @@ public class Event extends PO {
 	private Date startDate;
 	private Date endDate;
 	private EventStatus status;
-	@Column(nullable=false)
+	@Column(nullable = false)
 	private EventType type;
 
 	@Column(nullable = false)
 	private Double memberPrice;
 	@Column(nullable = false)
 	private Double nonMemberPrice;
+	@Column(nullable = false)
+	private Double associatePrice;
 
 	private String code;
 
@@ -217,6 +219,7 @@ public class Event extends PO {
 		dto.setMemberPrice(memberPrice);
 		dto.setName(name);
 		dto.setNonMemberPrice(nonMemberPrice);
+		dto.setAssociatePrice(associatePrice);
 		dto.setStatus(status);
 		dto.setType(type);
 		dto.setVenue(venue);
@@ -248,6 +251,7 @@ public class Event extends PO {
 		setMemberPrice(dto.getMemberPrice());
 		setName(dto.getName());
 		setNonMemberPrice(dto.getNonMemberPrice());
+		setAssociatePrice(dto.getAssociatePrice());
 		setStatus(dto.getStatus());
 		setType(dto.getType());
 		setVenue(dto.getVenue());
@@ -338,6 +342,14 @@ public class Event extends PO {
 
 	public void setCategoryName(String categoryName) {
 		this.categoryName = categoryName;
+	}
+
+	public Double getAssociatePrice() {
+		return associatePrice;
+	}
+
+	public void setAssociatePrice(Double associatePrice) {
+		this.associatePrice = associatePrice;
 	}
 
 }
