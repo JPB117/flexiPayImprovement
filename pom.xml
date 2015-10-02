@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.workpoint.icpak</groupId>
@@ -51,17 +51,17 @@
 		<webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
 	</properties>
 
-<repositories>
-        <!-- Use GWTP snapshots for the latest and greatest -->
-        <repository>
-            <id>sonatype.snapshots</id>
-            <name>Sonatype snapshot repository</name>
-            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
+	<repositories>
+		<!-- Use GWTP snapshots for the latest and greatest -->
+		<repository>
+			<id>sonatype.snapshots</id>
+			<name>Sonatype snapshot repository</name>
+			<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
 
 	<build>
 		<outputDirectory>${webappDirectory}/WEB-INF/classes</outputDirectory>
@@ -69,20 +69,20 @@
 			<resource>
 				<directory>src/main/resources</directory>
 				<includes>
-		          <include>**/*</include>
-		        </includes>
-		        <excludes>
-		        	<exclude>**/*.java</exclude>
-		        </excludes>
+					<include>**/*</include>
+				</includes>
+				<excludes>
+					<exclude>**/*.java</exclude>
+				</excludes>
 			</resource>
 			<resource>
 				<directory>src/main/java</directory>
 				<includes>
-		          <include>**/*</include>
-		        </includes>
-		        <excludes>
-		        	<exclude>**/*.java</exclude>
-		        </excludes>
+					<include>**/*</include>
+				</includes>
+				<excludes>
+					<exclude>**/*.java</exclude>
+				</excludes>
 			</resource>
 		</resources>
 
@@ -100,7 +100,7 @@
 			<plugin>
 				<artifactId>maven-war-plugin</artifactId>
 				<version>2.4</version>
-				<!--configuration> <packagingExcludes>WEB-INF/lib/javassist*.jar</packagingExcludes> 
+				<!--configuration> <packagingExcludes>WEB-INF/lib/javassist*.jar</packagingExcludes>
 					</configuration -->
 			</plugin>
 			<plugin>
@@ -121,8 +121,8 @@
 				<configuration>
 					<url>http://localhost:8080/manager/text</url>
 					<server>TomcatServer</server>
-					<username>Tom</username>  
-					<password>gitaru09</password>  
+					<username>Tom</username>
+					<password>gitaru09</password>
 					<path>/icpakportal</path>
 					<update>true</update>
 				</configuration>
@@ -198,9 +198,9 @@
 				</executions>
 			</plugin>
 
-			<!-- plugin> <artifactId>maven-clean-plugin</artifactId> <version>2.5</version> 
-				<configuration> <filesets> <fileset> <directory>src/main/webapp/WEB-INF/classes</directory> 
-				<includes> <include>**/*</include> </includes> <followSymlinks>false</followSymlinks> 
+			<!-- plugin> <artifactId>maven-clean-plugin</artifactId> <version>2.5</version>
+				<configuration> <filesets> <fileset> <directory>src/main/webapp/WEB-INF/classes</directory>
+				<includes> <include>**/*</include> </includes> <followSymlinks>false</followSymlinks>
 				</fileset> </filesets> </configuration> </plugin -->
 		</plugins>
 
@@ -213,16 +213,16 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<version>5.1.35</version>
 		</dependency>
-		
-		
+
+
 		<!-- Run the command below to add  sqljdbc4
 		mvn install:install-file -Dfile=sqljdbc4.jar -DgroupId=com.microsoft.sqlserver -DartifactId=sqljdbc4 -Dversion=4.0 -Dpackaging=jar
 		 -->
-		<!--dependency> 
-			<groupId>com.microsoft.sqlserver</groupId> 
-			<artifactId>sqljdbc4</artifactId> 
-			<version>4.0</version> 
-		</dependency--> 
+		<!--dependency>
+			<groupId>com.microsoft.sqlserver</groupId>
+			<artifactId>sqljdbc4</artifactId>
+			<version>4.0</version>
+		</dependency-->
 
 		<!-- Hibernate/ JPA -->
 		<dependency>
@@ -231,7 +231,7 @@
 			<version>1.0.0.Final</version>
 		</dependency>
 
-		<!-- dependency> <groupId>org.hibernate.javax.persistence</groupId> <artifactId>hibernate-jpa-2.0-api</artifactId> 
+		<!-- dependency> <groupId>org.hibernate.javax.persistence</groupId> <artifactId>hibernate-jpa-2.0-api</artifactId>
 			<version>1.0.1.Final</version> </dependency -->
 		<dependency>
 			<groupId>org.hibernate</groupId>
@@ -255,24 +255,24 @@
 		</dependency>
 
 		<dependency>
-        <groupId>com.amazonaws</groupId>
-        <artifactId>aws-java-sdk</artifactId>
-        <version>1.9.0</version>
-	<!--<exclusions>-->
-				<!--<exclusion>-->
-					<!--<groupId>org.apache.httpcomponents</groupId>-->
-					<!--<artifactId>httpcore</artifactId>-->
-				<!--</exclusion>-->
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk</artifactId>
+			<version>1.9.0</version>
+			<!--<exclusions>-->
+			<!--<exclusion>-->
+			<!--<groupId>org.apache.httpcomponents</groupId>-->
+			<!--<artifactId>httpcore</artifactId>-->
+			<!--</exclusion>-->
 			<!--</exclusions>-->
-    </dependency>
+		</dependency>
 
 		<!-- End of Persistence -->
 
 
-		<!-- dependency> <groupId>org.eclipse.tycho</groupId> <artifactId>org.eclipse.jdt.core</artifactId> 
+		<!-- dependency> <groupId>org.eclipse.tycho</groupId> <artifactId>org.eclipse.jdt.core</artifactId>
 			<version>3.8.1.v20120531-0637</version> </dependency -->
 
-		<!-- dependency> <groupId>org.eclipse.jdt.core.compiler</groupId> <artifactId>ecj</artifactId> 
+		<!-- dependency> <groupId>org.eclipse.jdt.core.compiler</groupId> <artifactId>ecj</artifactId>
 			<version>3.5.1</version> </dependency -->
 
 		<!-- GWT-Platform -->
@@ -315,12 +315,12 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-		    <groupId>com.gwtplatform.extensions</groupId>
-		    <artifactId>dispatch-rest-delegates</artifactId>
-		    <version>${gwtp.version}</version>
-		     <scope>provided</scope>
+			<groupId>com.gwtplatform.extensions</groupId>
+			<artifactId>dispatch-rest-delegates</artifactId>
+			<version>${gwtp.version}</version>
+			<scope>provided</scope>
 		</dependency>
-		
+
 		<!-- Google Web Toolkit -->
 		<dependency>
 			<groupId>com.google.gwt</groupId>
@@ -406,11 +406,11 @@
 			<version>18.0</version>
 		</dependency>
 
-		<!-- dependency> <groupId>com.google.gwt.inject</groupId> <artifactId>gin</artifactId> 
-			<version>2.1.2</version> </dependency> <dependency> <groupId>com.google.inject</groupId> 
-			<artifactId>guice</artifactId> <version>3.0</version> </dependency> <dependency> 
-			<groupId>com.google.inject.extensions</groupId> <artifactId>guice-assistedinject</artifactId> 
-			<version>3.0</version> </dependency> <dependency> <groupId>com.google.inject.extensions</groupId> 
+		<!-- dependency> <groupId>com.google.gwt.inject</groupId> <artifactId>gin</artifactId>
+			<version>2.1.2</version> </dependency> <dependency> <groupId>com.google.inject</groupId>
+			<artifactId>guice</artifactId> <version>3.0</version> </dependency> <dependency>
+			<groupId>com.google.inject.extensions</groupId> <artifactId>guice-assistedinject</artifactId>
+			<version>3.0</version> </dependency> <dependency> <groupId>com.google.inject.extensions</groupId>
 			<artifactId>guice-servlet</artifactId> <version>3.0</version> </dependency -->
 
 		<dependency>
@@ -497,7 +497,7 @@
 			<version>${jersey.version}</version>
 		</dependency>
 
-		<!-- dependency> <groupId>com.sun.jersey</groupId> <artifactId>jersey-core</artifactId> 
+		<!-- dependency> <groupId>com.sun.jersey</groupId> <artifactId>jersey-core</artifactId>
 			<version>${jersey.version}</version> </dependency -->
 
 		<dependency>
@@ -570,20 +570,20 @@
 			<version>${shiro.version}</version>
 		</dependency>
 
-		
+
 
 		<dependency>
 			<groupId>javax.mail</groupId>
 			<artifactId>mail</artifactId>
 			<version>1.4.7</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
 			<version>1.2.17</version>
 		</dependency>
-		
+
 		<!-- HTML To PDF convertor -->
 		<dependency>
 			<groupId>org.xhtmlrenderer</groupId>
@@ -596,8 +596,8 @@
 			<artifactId>javase</artifactId>
 			<version>2.0</version>
 		</dependency>
-		
-		
+
+
 
 		<!-- Swagger Jersey API documentation Framework -->
 		<dependency>
@@ -634,7 +634,7 @@
 			<version>${jukito.version}</version>
 			<scope>test</scope>
 		</dependency>
-		
+
 	</dependencies>
 
 </project>

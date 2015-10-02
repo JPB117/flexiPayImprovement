@@ -219,7 +219,7 @@ public class EventBookingView extends ViewImpl implements
 		}
 	};
 
-	int counter = 3;
+	int counter = 0;
 
 	public interface Binder extends UiBinder<Widget, EventBookingView> {
 	}
