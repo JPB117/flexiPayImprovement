@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.hibernate.dialect.MySQL5Dialect;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.inject.Inject;
@@ -21,45 +22,34 @@ public class TestEventsDao extends AbstractDaoTest {
 	String eventId1;
 	String eventId2;
 
-	@Test
+	@Ignore
 	public void testCrud() {
-		 createEvent();
+		createEvent();
 
-		//retrieveEvents();
+		// retrieveEvents();
 		// getById();
 		// delete();
 		// retrieveEventsAfterDelete();
 	}
 
+	@Test
 	public void createEvent() {
 		EventDto event = new EventDto();
-		event.setName("jua kali Show");
-		event.setDescription("Some Show");
+		event.setName("The Financial Reporting Workshop: Mt. Kenya Branch, Nyeri");
+		event.setDescription("");
 		event.setStartDate(new Date().getTime());
 		event.setEndDate(new Date().getTime());
 		event.setNonMemberPrice(30000.00);
 		event.setMemberPrice(20000.00);
-		event.setVenue("Laikipia Board Room");
-		event.setType(EventType.COURSE);
+		event.setVenue("GreenHills Hotel, Nyeri");
+		event.setType(EventType.EVENT);
 		event.setCategoryName("Conferences");
-		event.setCpdHours(10);
+		event.setCpdHours(14);
 		helper.createEvent(event);
 		eventId1 = event.getRefId();
 
-		event = new EventDto();
-		event.setName("Mama show");
-		event.setDescription("Testing");
-		event.setStartDate(new Date().getTime());
-		event.setEndDate(new Date().getTime());
-		event.setNonMemberPrice(30000.00);
-		event.setMemberPrice(20000.00);
-		event.setType(EventType.EVENT);
-		event.setVenue("Strath Board Room");
-		event.setCategoryName("Abroad");
-		event.setCpdHours(5);
-		helper.createEvent(event);
-		eventId2 = event.getRefId();
-		
+		System.out.println("Event Id::" + eventId1);
+
 	}
 
 	public void retrieveEvents() {
