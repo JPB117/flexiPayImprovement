@@ -36,7 +36,7 @@
 		<shiro.version>1.2.3</shiro.version>
 
 		<!-- maven -->
-		<!--gwt-maven-plugin.version>2.5.1</gwt-maven-plugin.version-->
+		<!--gwt-maven-plugin.version>2.5.1</gwt-maven-plugin.version -->
 		<gwt-maven-plugin.version>2.7.0</gwt-maven-plugin.version>
 		<maven-surefire-plugin.version>2.6</maven-surefire-plugin.version>
 		<maven-compiler-plugin.version>2.3.2</maven-compiler-plugin.version>
@@ -51,17 +51,17 @@
 		<webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
 	</properties>
 
-<repositories>
-        <!-- Use GWTP snapshots for the latest and greatest -->
-        <repository>
-            <id>sonatype.snapshots</id>
-            <name>Sonatype snapshot repository</name>
-            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
+	<repositories>
+		<!-- Use GWTP snapshots for the latest and greatest -->
+		<repository>
+			<id>sonatype.snapshots</id>
+			<name>Sonatype snapshot repository</name>
+			<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
 
 	<build>
 		<outputDirectory>${webappDirectory}/WEB-INF/classes</outputDirectory>
@@ -69,20 +69,20 @@
 			<resource>
 				<directory>src/main/resources</directory>
 				<includes>
-		          <include>**/*</include>
-		        </includes>
-		        <excludes>
-		        	<exclude>**/*.java</exclude>
-		        </excludes>
+					<include>**/*</include>
+				</includes>
+				<excludes>
+					<exclude>**/*.java</exclude>
+				</excludes>
 			</resource>
 			<resource>
 				<directory>src/main/java</directory>
 				<includes>
-		          <include>**/*</include>
-		        </includes>
-		        <excludes>
-		        	<exclude>**/*.java</exclude>
-		        </excludes>
+					<include>**/*</include>
+				</includes>
+				<excludes>
+					<exclude>**/*.java</exclude>
+				</excludes>
 			</resource>
 		</resources>
 
@@ -100,8 +100,9 @@
 			<plugin>
 				<artifactId>maven-war-plugin</artifactId>
 				<version>2.4</version>
-				<!--configuration> <packagingExcludes>WEB-INF/lib/javassist*.jar</packagingExcludes> 
-					</configuration -->
+				<configuration>
+					<packagingExcludes>WEB-INF/lib/gwt-dev*.jar</packagingExcludes>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -121,8 +122,8 @@
 				<configuration>
 					<url>http://localhost:8080/manager/text</url>
 					<server>TomcatServer</server>
-					<username>Tom</username>  
-					<password>gitaru09</password>  
+					<username>Tom</username>
+					<password>gitaru09</password>
 					<path>/icpakportal</path>
 					<update>true</update>
 				</configuration>
@@ -213,16 +214,12 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<version>5.1.35</version>
 		</dependency>
-		
-		
-		<!-- Run the command below to add  sqljdbc4
-		mvn install:install-file -Dfile=sqljdbc4.jar -DgroupId=com.microsoft.sqlserver -DartifactId=sqljdbc4 -Dversion=4.0 -Dpackaging=jar
-		 -->
-		<!--dependency> 
-			<groupId>com.microsoft.sqlserver</groupId> 
-			<artifactId>sqljdbc4</artifactId> 
-			<version>4.0</version> 
-		</dependency--> 
+
+
+		<!-- Run the command below to add sqljdbc4 mvn install:install-file -Dfile=sqljdbc4.jar 
+			-DgroupId=com.microsoft.sqlserver -DartifactId=sqljdbc4 -Dversion=4.0 -Dpackaging=jar -->
+		<!--dependency> <groupId>com.microsoft.sqlserver</groupId> <artifactId>sqljdbc4</artifactId> 
+			<version>4.0</version> </dependency -->
 
 		<!-- Hibernate/ JPA -->
 		<dependency>
@@ -255,16 +252,16 @@
 		</dependency>
 
 		<dependency>
-        <groupId>com.amazonaws</groupId>
-        <artifactId>aws-java-sdk</artifactId>
-        <version>1.9.0</version>
-	<exclusions>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk</artifactId>
+			<version>1.9.0</version>
+			<exclusions>
 				<exclusion>
 					<groupId>org.apache.httpcomponents</groupId>
 					<artifactId>httpcore</artifactId>
 				</exclusion>
 			</exclusions>
-    </dependency>
+		</dependency>
 
 		<!-- End of Persistence -->
 
@@ -315,18 +312,24 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-		    <groupId>com.gwtplatform.extensions</groupId>
-		    <artifactId>dispatch-rest-delegates</artifactId>
-		    <version>${gwtp.version}</version>
-		    <!-- scope>provided</scope-->
+			<groupId>com.gwtplatform.extensions</groupId>
+			<artifactId>dispatch-rest-delegates</artifactId>
+			<version>${gwtp.version}</version>
+			<!-- scope>provided</scope -->
 		</dependency>
-		
+
 		<!-- Google Web Toolkit -->
 		<dependency>
 			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-user</artifactId>
 			<version>${gwt.version}</version>
-			<!--scope>provided</scope -->
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-dev</artifactId>
+			<version>${gwt.version}</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.google.gwt</groupId>
@@ -377,7 +380,7 @@
 			<groupId>commons-collections</groupId>
 			<artifactId>commons-collections</artifactId>
 			<version>3.2.1</version>
-			<!--scope>provided</scope -->
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
@@ -387,17 +390,11 @@
 		</dependency>
 
 
-		<!--dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-			<version>2.2</version>
-		</dependency-->
+		<!--dependency> <groupId>commons-io</groupId> <artifactId>commons-io</artifactId> 
+			<version>2.2</version> </dependency -->
 
-		<!--dependency>
-			<groupId>commons-lang</groupId>
-			<artifactId>commons-lang</artifactId>
-			<version>2.4</version>
-		</dependency-->
+		<!--dependency> <groupId>commons-lang</groupId> <artifactId>commons-lang</artifactId> 
+			<version>2.4</version> </dependency -->
 
 		<!-- GWT-GIN DEPENDENCIES -->
 		<dependency>
@@ -570,20 +567,20 @@
 			<version>${shiro.version}</version>
 		</dependency>
 
-		
+
 
 		<dependency>
 			<groupId>javax.mail</groupId>
 			<artifactId>mail</artifactId>
 			<version>1.4.7</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
 			<version>1.2.17</version>
 		</dependency>
-		
+
 		<!-- HTML To PDF convertor -->
 		<dependency>
 			<groupId>org.xhtmlrenderer</groupId>
@@ -596,8 +593,8 @@
 			<artifactId>javase</artifactId>
 			<version>2.0</version>
 		</dependency>
-		
-		
+
+
 
 		<!-- Swagger Jersey API documentation Framework -->
 		<dependency>
@@ -634,7 +631,7 @@
 			<version>${jukito.version}</version>
 			<scope>test</scope>
 		</dependency>
-		
+
 	</dependencies>
 
 </project>
