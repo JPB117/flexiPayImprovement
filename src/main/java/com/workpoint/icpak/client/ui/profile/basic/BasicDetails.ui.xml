@@ -5,107 +5,109 @@
 	<g:HTMLPanel>
 
 		<div class="row">
-			<div class="col-sm-12">
-				<d:ActionLink
-					styleName="btn btn-next btn-fill btn-default btn-wd btn-sm pull-right"
-					ui:field="aEdit">
-					<i class="fa fa-pencil"></i>
-					Edit Details
-				</d:ActionLink>
+			<div class="row">
+				<div class="col-sm-12">
+					<d:ActionLink
+						styleName="btn btn-next btn-fill btn-default btn-wd btn-sm pull-right"
+						ui:field="aEdit">
+						<i class="fa fa-pencil"></i>
+						Edit Details
+					</d:ActionLink>
+				</div>
 			</div>
 
-			<br />
+			<div class="row">
+				<g:HTMLPanel styleName="col-xs-12" ui:field="panelDisplay">
+					<table class="table table-bordered table-striped">
+						<tbody>
+							<tr>
+								<td width="30%">
+									<Strong>Phone:</Strong>
+								</td>
+								<td>
+									<i ui:field="elPhone"></i>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<Strong>Email:</Strong>
+								</td>
+								<td>
+									<i ui:field="elEmail"></i>
+								</td>
+							</tr>
 
-			<g:HTMLPanel styleName="col-xs-12" ui:field="panelDisplay">
-				<table class="table table-bordered table-striped">
-					<tbody>
-						<tr>
-							<td width="30%">
-								<Strong>Phone:</Strong>
-							</td>
-							<td>
-								<i ui:field="elPhone"></i>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<Strong>Email:</Strong>
-							</td>
-							<td>
-								<i ui:field="elEmail"></i>
-							</td>
-						</tr>
+							<tr>
+								<td>
+									<Strong>Date Of Birth:</Strong>
+								</td>
+								<td>
+									<i ui:field="elDob"></i>
+								</td>
+							</tr>
 
-						<tr>
-							<td>
-								<Strong>Date Of Birth:</Strong>
-							</td>
-							<td>
-								<i ui:field="elDob"></i>
-							</td>
-						</tr>
+							<tr>
+								<td>
+									<Strong>Gender:</Strong>
+								</td>
+								<td>
+									<i ui:field="elSex"></i>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<Strong>Employer Name:</Strong>
+								</td>
+								<td ui:field="elEmployer"></td>
+							</tr>
 
-						<tr>
-							<td>
-								<Strong>Gender:</Strong>
-							</td>
-							<td>
-								<i ui:field="elSex"></i>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<Strong>Employer Name:</Strong>
-							</td>
-							<td ui:field="elEmployer"></td>
-						</tr>
+							<tr>
+								<td>
+									<Strong>Residence:</Strong>
+								</td>
+								<td>
+									<i ui:field="elResidence"></i>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<Strong>Address:</Strong>
+								</td>
+								<td>
+									<i ui:field="elAddress"></i>
+								</td>
+							</tr>
 
-						<tr>
-							<td>
-								<Strong>Residence:</Strong>
-							</td>
-							<td>
-								<i ui:field="elResidence"></i>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<Strong>Address:</Strong>
-							</td>
-							<td>
-								<i ui:field="elAddress"></i>
-							</td>
-						</tr>
+							<tr>
+								<td>
+									<Strong>Postal Code:</Strong>
+								</td>
+								<td>
+									<i ui:field="elPostalCode"></i>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<Strong>Country:</Strong>
+								</td>
+								<td>
+									<i ui:field="elCountry"></i>
+								</td>
+							</tr>
 
-						<tr>
-							<td>
-								<Strong>Postal Code:</Strong>
-							</td>
-							<td>
-								<i ui:field="elPostalCode"></i>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<Strong>Country:</Strong>
-							</td>
-							<td>
-								<i ui:field="elCountry"></i>
-							</td>
-						</tr>
+							<tr>
+								<td>
+									<Strong>Town/City:</Strong>
+								</td>
+								<td>
+									<i ui:field="elCity"></i>
+								</td>
+							</tr>
 
-						<tr>
-							<td>
-								<Strong>Town/City:</Strong>
-							</td>
-							<td>
-								<i ui:field="elCity"></i>
-							</td>
-						</tr>
-
-					</tbody>
-				</table>
-			</g:HTMLPanel>
+						</tbody>
+					</table>
+				</g:HTMLPanel>
+			</div>
 
 			<g:HTMLPanel styleName="col-xs-12 hide" ui:field="panelEditMode">
 				<form:MemberRegistrationForm ui:field="panelRegistration"></form:MemberRegistrationForm>

@@ -35,7 +35,9 @@ import com.workpoint.icpak.client.ui.membership.form.MemberRegistrationForm;
 import com.workpoint.icpak.client.ui.profile.education.form.EducationRegistrationForm;
 import com.workpoint.icpak.client.ui.profile.specialization.form.SpecializationRegistrationForm;
 import com.workpoint.icpak.client.ui.profile.training.form.TrainingRegistrationForm;
+import com.workpoint.icpak.client.ui.security.AdminGateKeeper;
 import com.workpoint.icpak.client.ui.security.LoginGateKeeper;
+import com.workpoint.icpak.client.ui.security.MemberGateKeeper;
 import com.workpoint.icpak.shared.api.ApplicationFormResource;
 import com.workpoint.icpak.shared.api.CountriesResource;
 import com.workpoint.icpak.shared.model.ApplicationFormEducationalDto;
@@ -102,7 +104,7 @@ public class ProfilePresenter
 	}
 
 	@TabInfo(container = HomePresenter.class)
-	static TabData getTabLabel(LoginGateKeeper adminGatekeeper) {
+	static TabData getTabLabel(MemberGateKeeper adminGatekeeper) {
 		TabDataExt data = new TabDataExt("My Profile", "icon-user", 9,
 				adminGatekeeper, true);
 		return data;
@@ -145,10 +147,10 @@ public class ProfilePresenter
 										saveBasicDetails();
 										hide();
 									}
-								}else{
+								} else {
 									hide();
 								}
-								
+
 							}
 						}, "Save", "Cancel");
 			}

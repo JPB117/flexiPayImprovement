@@ -9,9 +9,9 @@ import com.workpoint.icpak.client.util.AppContext;
 public class LoginGateKeeper implements Gatekeeper {
 
 	@Inject
-	public LoginGateKeeper(){	
+	public LoginGateKeeper() {
 	}
-	
+
 	@Override
 	public boolean canReveal() {
 		return AppContext.isLoggedIn();

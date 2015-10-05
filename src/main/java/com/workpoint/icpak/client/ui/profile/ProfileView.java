@@ -84,8 +84,8 @@ public class ProfileView extends ViewImpl implements
 
 	@Override
 	public void bindBasicDetails(ApplicationFormHeaderDto result) {
-
 		divProfileContent.bindBasicDetails(result);
+		
 	}
 
 	@Override

@@ -18,9 +18,10 @@
 			<g:HTMLPanel ui:field="panelTable">
 				<div class="col-sm-12">
 					<div class="row">
-						<br />
-						<d:TableView ui:field="tblTrainingDetails">
-						</d:TableView>
+						<div class="col-sm-12">
+							<d:TableView ui:field="tblTrainingDetails">
+							</d:TableView>
+						</div>
 					</div>
 				</div>
 			</g:HTMLPanel>
