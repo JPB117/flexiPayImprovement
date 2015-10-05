@@ -1,9 +1,10 @@
 html, body {
-	/* overflow-y:auto !important; */	
+	/* overflow-y:auto !important; */
+	
 }
 
-.modal{
-	overflow-y:auto !important;
+.modal {
+	overflow-y: auto !important;
 }
 
 .search-bar {
@@ -12,8 +13,8 @@ html, body {
 	border: 1px solid #E6E6E6;
 	margin-right: 0px;
 	border-radius: 0px 0px;
-	 height: 50px;
- 	padding-top: 5px;
+	height: 50px;
+	padding-top: 5px;
 }
 
 .search-bar .input-append {
@@ -44,15 +45,16 @@ html, body {
 	color: #DDDDDD;
 	opacity: 1;
 }
-.form-control .gwt-SuggestBox{
-    border: none;
 
+.form-control .gwt-SuggestBox {
+	border: none;
 }
 /*     General overwrite     */
 a {
 	color: #2CA8FF;
 	cursor: pointer;
 }
+
 a:hover, a:focus {
 	color: #109CFF;
 }
@@ -341,9 +343,9 @@ h1 .subtitle {
 }
 
 .btn-gold.btn-fill {
-  color: #fff;
-  background-color:#deb509;
-  border-color:#deb509;
+	color: #fff;
+	background-color: #deb509;
+	border-color: #deb509;
 }
 
 .btn-warning.btn-fill {
@@ -498,10 +500,14 @@ h1 .subtitle {
 .input-group
 
 
+
  
 
 
+
 .form-control
+
+
 
 
 
@@ -513,9 +519,13 @@ h1 .subtitle {
 
 
 
+
+
 :first-child
 ,
 .input-group-btn
+
+
 
 
 
@@ -525,6 +535,8 @@ h1 .subtitle {
 .btn
 ,
 .input-group-btn
+
+
 
 
 
@@ -538,6 +550,8 @@ h1 .subtitle {
 
 
 
+
+
 :last-child
 >
 .btn
@@ -545,24 +559,32 @@ h1 .subtitle {
 
 
 
+
+
 :not
 
 
+
  
+
 
 
 (
 :last-child
 
 
+
  
+
 
 
 )
 :not
 
 
+
  
+
 
 
 (
@@ -570,7 +592,9 @@ h1 .subtitle {
 
 
 
+
 	
+
 
 
 )
@@ -580,14 +604,20 @@ border-right
 
 
 
+
+
 :
+
 
 
  
 
 
+
 0
 none
+
+
 
 
 
@@ -597,10 +627,14 @@ none
 .input-group
 
 
+
  
 
 
+
 .form-control
+
+
 
 
 
@@ -612,9 +646,13 @@ none
 
 
 
+
+
 :last-child
 ,
 .input-group-btn
+
+
 
 
 
@@ -624,6 +662,8 @@ none
 .btn
 ,
 .input-group-btn
+
+
 
 
 
@@ -637,6 +677,8 @@ none
 
 
 
+
+
 :first-child
 >
 .btn
@@ -644,17 +686,23 @@ none
 
 
 
+
+
 :not
 
 
+
  
+
 
 
 (
 :first-child
 
 
+
  
+
 
 
 )
@@ -664,14 +712,20 @@ border-left
 
 
 
+
+
 :
+
 
 
  
 
 
+
 0
 none
+
+
 
 
 
@@ -1197,8 +1251,9 @@ label {
 }
 
 .wizard-card.ct-wizard-gold>ul>li.active a {
-    background-color:#deb509;
+	background-color: #deb509;
 }
+
 .wizard-card.ct-wizard-blue>ul>li.active a {
 	background-color: #3472f7;
 }
@@ -1573,4 +1628,9 @@ body .GWTUpld .gwt-FileUpload {
 	filter: progid:DXImageTransform.Microsoft.gradient(enabled= false);
 	background-color: #3078eb;
 	background-color: #3078eb \9;
+}
+
+/*Payments*/
+#mobile ul {
+	list-style-type: none;
 }

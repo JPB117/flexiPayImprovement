@@ -20,6 +20,7 @@ public class EventDto extends SerializableObj implements Listable{
 	private EventStatus status;
 	private EventType type;
 	private Double memberPrice;
+	private Double associatePrice;
 	private Double nonMemberPrice;
 	private String categoryName;
 	private List<AccommodationDto> accommodation;
@@ -168,6 +169,14 @@ public class EventDto extends SerializableObj implements Listable{
 
 	public void setCategoryName(String categoryName) {
 		this.categoryName = categoryName;
+	}
+
+	public Double getAssociatePrice() {
+		return associatePrice;
+	}
+
+	public void setAssociatePrice(Double associatePrice) {
+		this.associatePrice = associatePrice;
 	}
 
 }

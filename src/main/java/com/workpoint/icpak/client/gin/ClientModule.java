@@ -105,7 +105,7 @@ public class ClientModule extends AbstractPresenterModule {
 
 		// SECURITY
 		bind(CurrentUser.class).asEagerSingleton();
-		
+		 
 		requestStaticInjection(AppContext.class);
 		requestStaticInjection(AppManager.class);
 

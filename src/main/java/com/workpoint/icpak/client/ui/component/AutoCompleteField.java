@@ -126,10 +126,10 @@ public class AutoCompleteField<T extends Listable> extends Composite implements
 	public void setEnabled(boolean isEnabled) {
 		if (isEnabled) {
 			itemBox.getElement().removeAttribute("disabled");
-		} else {
-			itemBox.getElement().setAttribute("disabled", "disabled");
 			itemBox.getElement().setAttribute("placeholder",
 					"Start typing to autocomplete");
+		} else {
+			itemBox.getElement().setAttribute("disabled", "disabled");
 		}
 	}
 
