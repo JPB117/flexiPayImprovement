@@ -104,7 +104,6 @@ public class CPDPresenter extends
 
 			@Override
 			public void onLoad(int offset, int limit) {
-				Window.alert("Paging offset="+offset+"; limit="+limit);
 				loadCPD(offset, limit);
 			}
 		});

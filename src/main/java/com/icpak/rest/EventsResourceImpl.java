@@ -23,7 +23,6 @@ import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 import com.workpoint.icpak.server.payment.CreditCardServiceImpl;
 import com.workpoint.icpak.shared.api.EventsResource;
-import com.workpoint.icpak.shared.model.CreditCardDto;
 import com.workpoint.icpak.shared.model.EventSummaryDto;
 import com.workpoint.icpak.shared.model.events.EventDto;
 
