@@ -23,6 +23,7 @@ public class DateUtils {
 	static String monthDayYearPattern = "MMM d yyyy";
 	static String Time = "hh:mm a";
 	static String MonthTime = "MMM d, hh:mm a";
+	static String shortTimeStamp = "yyyy-MM-dd";
 
 	public static final DateTimeFormat CREATEDFORMAT = DateTimeFormat
 			.getFormat(createdpattern);
@@ -30,6 +31,8 @@ public class DateUtils {
 			.getFormat(datepattern);
 	public static final DateTimeFormat DATEFORMAT_SYS = DateTimeFormat
 			.getFormat(datepattern_sys);
+	public static final DateTimeFormat SHORTTIMESTAMP = DateTimeFormat
+			.getFormat(shortTimeStamp);
 	public static final DateTimeFormat YEARFORMAT = DateTimeFormat
 			.getFormat(yearpattern);
 	public static final DateTimeFormat HALFDATEFORMAT = DateTimeFormat
@@ -228,5 +231,56 @@ public class DateUtils {
 			return buff.toString();
 		}
 		return days + " day" + (days == 1 ? "" : "s");
+	}
+
+	public static Date getDateByRange(DateRange range, boolean setToMidnight) {
+		Date today = new Date();
+		switch (range) {
+		case NOW:
+			return today;
+		case TODAY:
+			return setToMidnight(today);
+		case YESTERDAY:
+			CalendarUtil.addDaysToDate(today, -1);
+			if (setToMidnight) {
+				return setToMidnight(today);
+			} else {
+				return today;
+			}
+		case THISWEEK:
+			CalendarUtil.addDaysToDate(today, -7);
+			return setToMidnight(today);
+		case THISMONTH:
+			CalendarUtil.setToFirstDayOfMonth(today);
+			return setToMidnight(today);
+
+		case LASTMONTH:
+			CalendarUtil.addMonthsToDate(today, -1);
+			CalendarUtil.setToFirstDayOfMonth(today);
+			return setToMidnight(today);
+
+		case THISQUARTER:
+			CalendarUtil.addMonthsToDate(today, -3);
+			CalendarUtil.setToFirstDayOfMonth(today);
+			return setToMidnight(today);
+
+		case HALFYEAR:
+			CalendarUtil.addMonthsToDate(today, -6);
+			CalendarUtil.setToFirstDayOfMonth(today);
+			return setToMidnight(today);
+		case THISYEAR:
+			CalendarUtil.addMonthsToDate(today, -today.getMonth());
+			CalendarUtil.setToFirstDayOfMonth(today);
+			return setToMidnight(today);
+
+		default:
+			return today;
+
+		}
+	}
+
+	public static Date setToMidnight(Date passedDate) {
+		String todayText = SHORTTIMESTAMP.format(passedDate);
+		return SHORTTIMESTAMP.parse(todayText);
 	}
 }

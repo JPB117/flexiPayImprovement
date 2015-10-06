@@ -12,6 +12,9 @@
 					</d:ActionLink>
 				</div>
 			</div>
+
+			<br />
+
 			<div class="row">
 				<div class="col-sm-12">
 					<d:TableView ui:field="tblEducationalDetail"
@@ -52,13 +55,13 @@
 							<div class="col-xs-6">
 								<label for="startdate">Start Date</label>
 								<d:DateField ui:field="dtStartDate" class="form-control"
-									placeholder="Enter Start Date" value="" required="true">
+									placeholder="Enter Start Date" required="true">
 								</d:DateField>
 							</div>
 							<div class="col-xs-6">
 								<label for="class">Date Completed</label>
 								<d:DateField ui:field="dtDateCompleted" class="form-control"
-									placeholder="Enter End Date" value="" required="true">
+									placeholder="Enter End Date" required="true">
 								</d:DateField>
 							</div>
 						</div>

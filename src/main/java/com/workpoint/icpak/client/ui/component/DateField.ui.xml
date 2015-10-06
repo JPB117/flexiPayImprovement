@@ -1,6 +1,12 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-	xmlns:g="urn:import:com.google.gwt.user.client.ui">
-	<g:HTMLPanel>
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.workpoint.icpak.client.ui.component">
+
+	<g:HTMLPanel styleName="input-group date datepicker"
+		ui:field="panelContainer">
+		<d:TextField class="form-control" ui:field="txtDate"></d:TextField>
+		<span class="input-group-addon">
+			<span class="fa fa-calendar"></span>
+		</span>
 	</g:HTMLPanel>
 </ui:UiBinder> 

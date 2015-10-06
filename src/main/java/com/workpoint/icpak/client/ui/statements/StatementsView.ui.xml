@@ -6,6 +6,13 @@
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
 
+	<ui:style>
+	.top-bar {
+		margin: 0px 15px;
+		width: 99%;
+	}
+	</ui:style>
+
 	<g:HTMLPanel styleName="set-full-height">
 		<g:HTMLPanel styleName="content-wrapper ng-scope ng-fadeInUp"
 			ui:field="divMainContainer">
@@ -14,30 +21,35 @@
 			</h3>
 
 
-			<div class="form-group">
-				<div class="row">
-					<div class="col-lg-3">
-						<label for="firstname">Start Date:</label>
-						<d:DateField ui:field="dtStartDate" class="form-control" />
-					</div>
-					<div class="col-lg-3">
-						<label for="firstname">End Date:</label>
-						<d:DateField ui:field="dtEndDate" class="form-control" />
-					</div>
-					<div class="col-lg-1">
-						<label for="firstname">&nbsp;&nbsp;</label>
-						<br/>
-						<d:ActionLink ui:field="aRefresh" styleName="btn btn-fill btn-default">
-							<i class="fa fa-refresh"></i>						
-						</d:ActionLink>
+			<div class="row">
+				<div class="col-lg-12 tabbable {style.top-bar}">
+					<div class="row search-bar">
+						<div class="col-lg-3">
+							<d:DateField ui:field="dtStartDate" />
+						</div>
+						<div class="col-lg-3">
+							<d:DateField ui:field="dtEndDate" />
+						</div>
+						<div class="col-lg-1">
+							<d:ActionLink ui:field="aRefresh" styleName="btn btn-fill btn-default">
+								Filter
+							</d:ActionLink>
+						</div>
+						<div class="pull-right action-buttons">
+							<d:ActionLink ui:field="downloadPdf">
+								<i class="fa fa-file-pdf-o"></i>
+								Download as Pdf
+							</d:ActionLink>
+						</div>
 					</div>
 				</div>
 			</div>
 
-
-			<div class="col-lg-12">
-				<div class="panel widget">
-					<d:Grid ui:field="grid"></d:Grid>
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="panel widget">
+						<d:Grid ui:field="grid"></d:Grid>
+					</div>
 				</div>
 			</div>
 

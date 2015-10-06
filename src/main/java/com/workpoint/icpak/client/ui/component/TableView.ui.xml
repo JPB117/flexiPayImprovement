@@ -8,10 +8,13 @@
 				<d:TextField placeholder="Search here" ui:field="txtSearch"
 					styleName="form-control"></d:TextField>
 			</div>
+			<div class="pull-right action-buttons">
+				<d:ActionLink ui:field="downloadPdf">
+					<i class="fa fa-file-pdf-o"></i>
+					Download as Pdf
+				</d:ActionLink>
+			</div>
 		</div>
-
-		<br />
-
 		<g:HTMLPanel styleName="table table-striped table-hover table-bordered"
 			ui:field="tblContainer">
 			<div class='thead'>

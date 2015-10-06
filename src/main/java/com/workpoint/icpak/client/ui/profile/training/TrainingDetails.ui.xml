@@ -1,46 +1,24 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:d='urn:import:com.workpoint.icpak.client.ui.component' xmlns:g="urn:import:com.google.gwt.user.client.ui">
-	<g:HTMLPanel styleName="row">
-		<div class="col-sm-12">
-
-			<div class="col-sm-12">
-				<div class="row">
+	<g:HTMLPanel>
+		<g:HTMLPanel styleName="row">
+			<div class="row">
+				<div class="col-sm-12">
 					<d:ActionLink styleName="btn btn-next btn-fill btn-primary btn-wd btn-sm"
 						ui:field="aAdd">
 						<i class="fa fa-plus"></i>
 						Add Training
 					</d:ActionLink>
-					<br />
 				</div>
 			</div>
-
-			<g:HTMLPanel ui:field="panelTable">
+			<br />
+			<g:HTMLPanel ui:field="panelTable" styleName="row">
 				<div class="col-sm-12">
-					<div class="row">
-						<div class="col-sm-12">
-							<d:TableView ui:field="tblTrainingDetails">
-							</d:TableView>
-						</div>
-					</div>
+					<d:TableView ui:field="tblTrainingDetails">
+					</d:TableView>
 				</div>
 			</g:HTMLPanel>
-
-			<g:HTMLPanel ui:field="panelForm" styleName="hide">
-			</g:HTMLPanel>
-
-			<!-- <div class="tab-content hide"> -->
-			<!-- <div role="tabpanel" class="tab-pane active" id="beforeCPA"> -->
-			<!-- <br /> -->
-			<!-- <d:TableView ui:field="tblBeforeCPA"> -->
-			<!-- </d:TableView> -->
-			<!-- </div> -->
-
-			<!-- <div role="tabpanel" class="tab-pane" id="afterCPA"> -->
-			<!-- <d:TableView ui:field="tblAfterCPA"> -->
-			<!-- </d:TableView> -->
-			<!-- </div> -->
-			<!-- </div> -->
-		</div>
+		</g:HTMLPanel>
 	</g:HTMLPanel>
 </ui:UiBinder> 

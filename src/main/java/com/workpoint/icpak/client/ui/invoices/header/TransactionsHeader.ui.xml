@@ -13,7 +13,7 @@
 						<div class="h2 mt0">
 							<span ui:field="spnTransactions"></span>
 						</div>
-						<div class="text-uppercase">Total Amount</div>
+						<div class="text-uppercase">Total Amount (KES)</div>
 					</div>
 				</div>
 			</div>
@@ -30,7 +30,7 @@
 							<span class="" ui:field="spnAmount">
 							</span>
 						</div>
-						<div class="text-uppercase">Paid</div>
+						<div class="text-uppercase">Total Paid(KES)</div>
 					</div>
 				</div>
 			</div>
@@ -47,7 +47,7 @@
 							<span class="" ui:field="spnBalance" title="Balance">
 							</span>
 						</div>
-						<div class="bold muted helper-font-small">Balance</div>
+						<div class="bold muted helper-font-small">Balance(KES)</div>
 					</div>
 				</div>
 			</div>

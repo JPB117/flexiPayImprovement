@@ -68,4 +68,8 @@ public class TransactionTable extends Composite {
 		return tblView.getPagingPanel();
 	}
 
+	public void setNoRecords(int size) {
+		tblView.setNoRecords(size);
+	}
+
 }

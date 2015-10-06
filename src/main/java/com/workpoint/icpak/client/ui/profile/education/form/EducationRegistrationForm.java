@@ -100,8 +100,8 @@ public class EducationRegistrationForm extends Composite {
 	public void clear() {
 		txtInstitution.setValue("");
 		txtExaminingBody.setValue("");
-		dtStartDate.setValue("");
-		dtDateCompleted.setValue("");
+		dtStartDate.clear();
+		dtDateCompleted.clear();
 		txtSectionsPassed.setValue("");
 		txtRegistrationNo.setValue("");
 		txtClassOrDivision.setValue("");

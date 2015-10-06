@@ -485,11 +485,12 @@ h1 .subtitle {
 	border-color: #FF3B30;
 }
 
-.input-group-addon {
+/*.input-group-addon {
 	background-color: #FFFFFF;
 	border: 1px solid #E3E3E3;
 	border-radius: 4px;
 }
+*/
 
 .form-control:focus+.input-group-addon, .form-control:focus ~
 	.input-group-addon {
@@ -1496,7 +1497,7 @@ label {
 		padding-left: 5px;
 		padding-right: 5px;
 	}
-	.navbar-nav>li>.dropdown-menu, .dropdown-menu {
+	/*.navbar-nav>li>.dropdown-menu, .dropdown-menu {
 		display: block;
 		margin: 0;
 		padding: 0;

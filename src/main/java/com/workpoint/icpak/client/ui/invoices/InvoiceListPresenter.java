@@ -10,6 +10,7 @@ package com.workpoint.icpak.client.ui.invoices;
 //import com.workpoint.icpak.shared.responses.UpdatePasswordResponse;
 import java.util.List;
 
+import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rest.delegates.client.ResourceDelegate;
@@ -61,8 +62,8 @@ public class InvoiceListPresenter
 
 	@TabInfo(container = HomePresenter.class)
 	static TabData getTabLabel(LoginGateKeeper adminGatekeeper) {
-		TabDataExt data = new TabDataExt("Invoicing Summary", "fa fa-briefcase",
-				7, adminGatekeeper, true);
+		TabDataExt data = new TabDataExt("Invoicing Summary",
+				"fa fa-briefcase", 7, adminGatekeeper, true);
 		return data;
 	}
 
@@ -102,14 +103,15 @@ public class InvoiceListPresenter
 	private void loadData() {
 		String memberId = (AppContext.isCurrentUserAdmin() ? "ALL" : AppContext
 				.getContextUser().getMemberRefId());
-		
-		invoiceDelegate.withCallback(new AbstractAsyncCallback<InvoiceSummary>() {
-			@Override
-			public void onSuccess(InvoiceSummary result) {
-				getView().bindSummary(result);
-			}
-		}).getSummary(memberId);
-		
+
+		invoiceDelegate.withCallback(
+				new AbstractAsyncCallback<InvoiceSummary>() {
+					@Override
+					public void onSuccess(InvoiceSummary result) {
+						getView().bindSummary(result);
+					}
+				}).getSummary(memberId);
+
 		invoiceDelegate.withCallback(new AbstractAsyncCallback<Integer>() {
 			@Override
 			public void onSuccess(Integer aCount) {

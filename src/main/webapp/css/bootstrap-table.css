@@ -273,4 +273,10 @@ Re-written for purposes of GWT
 	margin: 5px 5px;
 }
 
+.tabbable .search-bar .action-buttons{
+	padding-right: 25px;
+	padding-top: 8px;
+	font-size: 16px;
+}
+
 /*End of Table Styling */

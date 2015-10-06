@@ -29,8 +29,6 @@ public class TrainingDetails extends Composite {
 	@UiField
 	TableView tblTrainingDetails;
 
-	@UiField
-	HTMLPanel panelForm;
 
 	@UiField
 	HTMLPanel panelTable;

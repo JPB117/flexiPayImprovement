@@ -128,7 +128,6 @@ public class CPDView extends ViewImpl implements CPDPresenter.ICPDView {
 
 		createRow(new CPDTableRow());
 
-
 	}
 
 	public HasClickHandlers getRecordButton() {
@@ -161,6 +160,7 @@ public class CPDView extends ViewImpl implements CPDPresenter.ICPDView {
 	@Override
 	public void bindResults(List<CPDDto> result) {
 		tblView.clearRows();
+		tblView.setNoRecords(result.size());
 		for (CPDDto dto : result) {
 			tblView.createRow(new CPDTableRow(dto));
 		}

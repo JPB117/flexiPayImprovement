@@ -14,6 +14,7 @@ import java.util.List;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.view.client.AsyncDataProvider;
@@ -36,8 +37,10 @@ import com.workpoint.icpak.client.service.AbstractAsyncCallback;
 import com.workpoint.icpak.client.ui.admin.TabDataExt;
 import com.workpoint.icpak.client.ui.component.DateField;
 import com.workpoint.icpak.client.ui.component.Grid;
+import com.workpoint.icpak.client.ui.component.TextField;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
 import com.workpoint.icpak.client.ui.security.LoginGateKeeper;
+import com.workpoint.icpak.client.ui.util.DateRange;
 import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.api.MemberResource;
 import com.workpoint.icpak.shared.model.statement.SearchDto;
@@ -56,9 +59,15 @@ public class StatementsPresenter
 
 		HasClickHandlers getRefresh();
 
-		DateField getStartDate();
+		HasValueChangeHandlers<String> getStartDate();
 
-		DateField getEndDate();
+		HasValueChangeHandlers<String> getEndDate();
+
+		Date getEndDateValue();
+
+		Date getStartDateValue();
+
+		void setInitialDates(DateRange thisquarter, Date date);
 	}
 
 	@ProxyCodeSplit
@@ -127,8 +136,8 @@ public class StatementsPresenter
 			@Override
 			public void onValueChange(ValueChangeEvent<String> arg0) {
 
-				Date startDate = getView().getStartDate().getValueDate();
-				Date endDate = getView().getEndDate().getValueDate();
+				Date startDate = getView().getStartDateValue();
+				Date endDate = getView().getEndDateValue();
 
 				memberDelegate
 						.withCallback(new AbstractAsyncCallback<Integer>() {
@@ -202,6 +211,8 @@ public class StatementsPresenter
 		super.onReveal();
 		final Range range = getView().getGrid().getVisibleRange();
 		loadStatements(range.getStart(), range.getLength());
+
+		getView().setInitialDates(DateRange.THISQUARTER, new Date());
 	}
 
 }

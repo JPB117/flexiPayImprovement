@@ -206,8 +206,13 @@ public class ProfileWidget extends Composite {
 			spnApplicationType.setInnerText(result.getApplicationType()
 					.getDisplayName());
 
-			panelApplicationType.getElement().setInnerText(
-					result.getApplicationType().getDisplayName());
+			String str = result.getApplicationType().getDisplayName();
+			String[] vals = str.split(" ");
+			String value = "";
+			if (vals.length > 1) {
+				value = vals[0];
+			}
+			panelApplicationType.getElement().setInnerText(value);
 
 			result.setPercCompletion(50);
 			progressBar.setProgress(result.getPercCompletion());
