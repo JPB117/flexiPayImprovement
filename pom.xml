@@ -36,7 +36,7 @@
 		<shiro.version>1.2.3</shiro.version>
 
 		<!-- maven -->
-		<!--gwt-maven-plugin.version>2.5.1</gwt-maven-plugin.version-->
+		<!--gwt-maven-plugin.version>2.5.1</gwt-maven-plugin.version -->
 		<gwt-maven-plugin.version>2.7.0</gwt-maven-plugin.version>
 		<maven-surefire-plugin.version>2.6</maven-surefire-plugin.version>
 		<maven-compiler-plugin.version>2.3.2</maven-compiler-plugin.version>
@@ -100,8 +100,9 @@
 			<plugin>
 				<artifactId>maven-war-plugin</artifactId>
 				<version>2.4</version>
-				<!--configuration> <packagingExcludes>WEB-INF/lib/javassist*.jar</packagingExcludes>
-					</configuration -->
+				<configuration>
+					<packagingExcludes>WEB-INF/lib/gwt-dev*.jar</packagingExcludes>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -330,6 +331,12 @@
 		</dependency>
 		<dependency>
 			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-dev</artifactId>
+			<version>${gwt.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-servlet</artifactId>
 			<version>${gwt.version}</version>
 		</dependency>
@@ -387,17 +394,11 @@
 		</dependency>
 
 
-		<!--dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-			<version>2.2</version>
-		</dependency-->
+		<!--dependency> <groupId>commons-io</groupId> <artifactId>commons-io</artifactId>
+			<version>2.2</version> </dependency -->
 
-		<!--dependency>
-			<groupId>commons-lang</groupId>
-			<artifactId>commons-lang</artifactId>
-			<version>2.4</version>
-		</dependency-->
+		<!--dependency> <groupId>commons-lang</groupId> <artifactId>commons-lang</artifactId>
+			<version>2.4</version> </dependency -->
 
 		<!-- GWT-GIN DEPENDENCIES -->
 		<dependency>
