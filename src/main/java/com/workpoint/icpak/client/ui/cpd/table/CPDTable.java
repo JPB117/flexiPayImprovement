@@ -29,6 +29,7 @@ public class CPDTable extends Composite {
 	public CPDTable() {
 		initWidget(uiBinder.createAndBindUi(this));
 		tblView.setAutoNumber(false);
+		tblView.setSearchSection(true);
 		createHeader(AppContext.isCurrentUserAdmin());
 	}
 
@@ -67,6 +68,10 @@ public class CPDTable extends Composite {
 
 	public PagingPanel getPagingPanel() {
 		return tblView.getPagingPanel();
+	}
+
+	public void setNoRecords(int size) {
+		tblView.setNoRecords(size);
 	}
 
 }

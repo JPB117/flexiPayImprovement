@@ -90,7 +90,7 @@ public class TrainingRegistrationForm extends Composite {
 			isValid = false;
 			issues.addError("Clients is mandatory");
 		}
-		if (isNullOrEmpty(dtDatePassed.getValue())) {
+		if (isNullOrEmpty(dtDatePassed.getValueDate())) {
 			isValid = false;
 			issues.addError("Date Passed is mandatory");
 		}
@@ -106,12 +106,12 @@ public class TrainingRegistrationForm extends Composite {
 	public void clear() {
 		txtOrganization.setValue("");
 		txtPosition.setValue("");
-		dtStartDate.setValue("");
-		dtDateCompleted.setValue("");
+		dtStartDate.clear();
+		dtDateCompleted.clear();
 		txtTaskNature.setValue("");
 		txtResponsibility.setValue("");
 		// lstTrainingType.setValue("");
-		dtDatePassed.setValue("");
+		dtDatePassed.setValue(null);
 	}
 
 	public ApplicationFormTrainingDto getTrainingDto() {

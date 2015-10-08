@@ -91,7 +91,7 @@ public class PaymentWidget extends Composite {
 		}
 
 		for (Year year : allYears) {
-			Window.alert(year.getDisplayName());
+			//Window.alert(year.getDisplayName());
 		}
 		lstYears.setItems(allYears);
 

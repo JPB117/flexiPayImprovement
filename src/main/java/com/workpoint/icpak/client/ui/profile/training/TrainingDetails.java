@@ -29,8 +29,6 @@ public class TrainingDetails extends Composite {
 	@UiField
 	TableView tblTrainingDetails;
 
-	@UiField
-	HTMLPanel panelForm;
 
 	@UiField
 	HTMLPanel panelTable;
@@ -78,6 +76,9 @@ public class TrainingDetails extends Composite {
 
 	public void bindDetails(List<ApplicationFormTrainingDto> result) {
 		tblTrainingDetails.clearRows();
+
+		tblTrainingDetails.setNoRecords(result.size());
+
 		for (ApplicationFormTrainingDto training : result) {
 
 			final ActionLink edit = new ActionLink(training);

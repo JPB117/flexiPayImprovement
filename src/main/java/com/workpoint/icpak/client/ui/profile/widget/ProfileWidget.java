@@ -71,6 +71,8 @@ public class ProfileWidget extends Composite {
 	HTMLPanel panelProfile;
 	@UiField
 	HTMLPanel PanelProfileDisplay;
+	@UiField
+	HTMLPanel panelApplicationType;
 
 	@UiField
 	HTMLPanel divEditDropDown;
@@ -204,6 +206,14 @@ public class ProfileWidget extends Composite {
 			spnApplicationType.setInnerText(result.getApplicationType()
 					.getDisplayName());
 
+			String str = result.getApplicationType().getDisplayName();
+			String[] vals = str.split(" ");
+			String value = "";
+			if (vals.length > 1) {
+				value = vals[0];
+			}
+			panelApplicationType.getElement().setInnerText(value);
+
 			result.setPercCompletion(50);
 			progressBar.setProgress(result.getPercCompletion());
 		}
@@ -211,16 +221,16 @@ public class ProfileWidget extends Composite {
 
 	public void bindCurrentUser(CurrentUser user) {
 		String refId = user.getUser().getRefId();
-		UploadContext ctx  = new UploadContext();
+		UploadContext ctx = new UploadContext();
 		ctx.setContext("userRefId", refId);
 		ctx.setAction(UPLOADACTION.UPLOADUSERIMAGE);
 		uploader.setContext(ctx);
-		
+
 		setUserImage(user.getUser().getRefId());
 	}
 
 	public void setUserImage(String refId) {
-		url = "getreport?userRefId=" + refId+"&action=getuserimage";
+		url = "getreport?userRefId=" + refId + "&action=getuserimage";
 		imgUser.setUrl(url);
 	}
 
@@ -250,9 +260,9 @@ public class ProfileWidget extends Composite {
 		return divTabs.getActiveTab();
 	}
 
-//	public ApplicationFormHeaderDto getBasicDetails() {
-//		return basicDetail.getApplicationForm();
-//	}
+	// public ApplicationFormHeaderDto getBasicDetails() {
+	// return basicDetail.getApplicationForm();
+	// }
 
 	public HasClickHandlers getSaveBasicDetailsButton() {
 		return basicDetail.getSaveButton();

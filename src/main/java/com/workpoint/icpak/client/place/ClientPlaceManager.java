@@ -17,7 +17,6 @@ public class ClientPlaceManager extends PlaceManagerImpl {
 			@DefaultPlace final String defaultPlaceNameToken,
 			final Historian historian) {
 		super(eventBus, tokenFormatter, historian);
-		
 		this.defaultPlaceRequest = new PlaceRequest.Builder().nameToken(defaultPlaceNameToken).build();
 	}
 

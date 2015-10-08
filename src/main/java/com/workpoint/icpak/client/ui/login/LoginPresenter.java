@@ -223,11 +223,18 @@ public class LoginPresenter extends
 	}
 
 	public void redirectToLoggedOnPage() {
+		String redirect = "";
+		if (AppContext.isCurrentUserAdmin()) {
+			redirect = NameTokens.getAdminDefaultPage();
+		} else {
+			redirect = NameTokens.getOnLoginDefaultPage();
+		}
 		String token = placeManager.getCurrentPlaceRequest().getParameter(
-				ParameterTokens.REDIRECT, NameTokens.getOnLoginDefaultPage());
+				ParameterTokens.REDIRECT, redirect);
 		PlaceRequest placeRequest = new Builder().nameToken(token).build();
 
 		placeManager.revealPlace(placeRequest);
+
 	}
 
 	public void setLoggedInCookie(String value) {

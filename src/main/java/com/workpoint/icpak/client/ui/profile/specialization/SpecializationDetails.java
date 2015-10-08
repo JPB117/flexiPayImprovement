@@ -24,11 +24,9 @@ public class SpecializationDetails extends Composite {
 
 	List<TableHeader> tblHeaders = new ArrayList<TableHeader>();
 
-	// @UiField
-	// TableView tblSpecialization;
+	@UiField
+	SpecializationRegistrationForm formSpecialization;
 
-	@UiField SpecializationRegistrationForm formSpecialization;
-	
 	@UiField
 	ActionLink aAdd;
 
@@ -82,6 +80,7 @@ public class SpecializationDetails extends Composite {
 
 	public void bindSpecializations(
 			List<ApplicationFormSpecializationDto> result) {
+
 		formSpecialization.bindDetails(result);
 	}
 

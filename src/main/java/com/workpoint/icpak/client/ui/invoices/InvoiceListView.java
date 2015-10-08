@@ -43,6 +43,7 @@ public class InvoiceListView extends ViewImpl implements
 	@Override
 	public void bindInvoices(List<InvoiceDto> invoices) {
 		tblView.clearRows();
+		tblView.setNoRecords(invoices.size());
 		for (InvoiceDto invoice : invoices) {
 			tblView.createRow(new InvoiceTableRow(invoice));
 		}
@@ -61,8 +62,12 @@ public class InvoiceListView extends ViewImpl implements
 
 	@Override
 	public void bindSummary(InvoiceSummary result) {
-		headerContainer.setValues(result.getPaid()+result.getUnpaid(),
-				result.getPaid(), result.getUnpaid());
+		if (result.getPaid() == null) {
+			headerContainer.setValues(0, 0, 0);
+		} else {
+			headerContainer.setValues(result.getPaid() + result.getUnpaid(),
+					result.getPaid(), result.getUnpaid());
+		}
 	}
 
 }

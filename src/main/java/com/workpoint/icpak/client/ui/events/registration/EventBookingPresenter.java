@@ -176,11 +176,12 @@ public class EventBookingPresenter extends
 		getView().getPayButton().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				if(getView().isPaymentValid()) {
+				if (getView().isPaymentValid()) {
 					creditCardResource.withCallback(
 							new AbstractAsyncCallback<CreditCardResponse>() {
 								@Override
-								public void onSuccess(CreditCardResponse response) {
+								public void onSuccess(
+										CreditCardResponse response) {
 									Window.alert(response.toString());
 								}
 							}).postPayment(getView().getCreditCardDetails());
@@ -286,10 +287,16 @@ public class EventBookingPresenter extends
 		invoiceResource.withCallback(new AbstractAsyncCallback<InvoiceDto>() {
 			@Override
 			public void onSuccess(InvoiceDto invoice) {
+				Window.alert("Success");
 				getView().bindInvoice(invoice);
-
 				if (moveNext)
 					getView().next();
+			}
+
+			@Override
+			public void onFailure(Throwable caught) {
+				super.onFailure(caught);
+				Window.alert("Ooops..! Something went wrong and we ve noted. Report to ICPAK Customer Care");
 			}
 		}).getInvoice(invoiceRef);
 

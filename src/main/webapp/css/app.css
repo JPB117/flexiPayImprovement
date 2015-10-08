@@ -1852,7 +1852,6 @@ html {
 }
 .topnavbar .navbar-header .brand-logo {
     display: block;
-    padding: 10px 15px
 }
 .topnavbar .navbar-header .brand-logo-collapsed {
     display: none;
@@ -8012,7 +8011,7 @@ x:-o-prefocus {
 }
 /*!*/
 
-.glyphicon {
+/*.glyphicon {
     display: inline-block;
     font: normal normal normal 14px/1 FontAwesome;
     font-size: inherit;
@@ -8041,15 +8040,9 @@ x:-o-prefocus {
 }
 .glyphicon.glyphicon-folder-open:before {
     content: "\f07c"
-}
-.ng-cloak,
-.x-ng-cloak,
-[data-ng-cloak],
-[ng-cloak],
-[ng\:cloak],
-[x-ng-cloak] {
-    display: none !important
-}
+}*/
+
+
 :focus,
 a {
     outline: 0 !important
@@ -8831,12 +8824,12 @@ html {
 .topnavbar .navbar-header .brand-logo-collapsed>img,
 .topnavbar .navbar-header .brand-logo>img {
     margin: 0 auto;
-    width: 80px;
-    height: 30px;
+    width: 110px;
+    height: 50px;
 }
 .topnavbar .navbar-header .brand-logo {
-    display: block;
-    padding: 10px 15px
+    display: block;/* padding: 10px 15px
+ */
 }
 .topnavbar .navbar-header .brand-logo-collapsed {
     display: none;

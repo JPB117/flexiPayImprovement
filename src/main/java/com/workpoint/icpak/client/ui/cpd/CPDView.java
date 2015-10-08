@@ -10,11 +10,13 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.CalendarUtil;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
+import com.workpoint.icpak.client.ui.AppManager;
 import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.DropDownList;
 import com.workpoint.icpak.client.ui.component.PagingPanel;
@@ -28,6 +30,7 @@ import com.workpoint.icpak.client.ui.cpd.table.CPDTable;
 import com.workpoint.icpak.client.ui.cpd.table.row.CPDTableRow;
 import com.workpoint.icpak.client.ui.cpd.unconfirmed.UnconfirmedCPD;
 import com.workpoint.icpak.client.ui.util.DateUtils;
+import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.shared.model.CPDSummaryDto;
 import com.workpoint.icpak.shared.model.Listable;
@@ -124,6 +127,7 @@ public class CPDView extends ViewImpl implements CPDPresenter.ICPDView {
 		showDateFilter(false);
 
 		createRow(new CPDTableRow());
+
 	}
 
 	public HasClickHandlers getRecordButton() {
@@ -153,10 +157,10 @@ public class CPDView extends ViewImpl implements CPDPresenter.ICPDView {
 		return widget;
 	}
 
-
 	@Override
 	public void bindResults(List<CPDDto> result) {
 		tblView.clearRows();
+		tblView.setNoRecords(result.size());
 		for (CPDDto dto : result) {
 			tblView.createRow(new CPDTableRow(dto));
 		}

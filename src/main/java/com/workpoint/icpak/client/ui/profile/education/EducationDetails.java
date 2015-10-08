@@ -17,7 +17,6 @@ import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.TableHeader;
 import com.workpoint.icpak.client.ui.component.TableView;
 import com.workpoint.icpak.client.ui.events.EditModelEvent;
-import com.workpoint.icpak.client.ui.profile.education.row.EducationTableRow;
 import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.model.ApplicationFormEducationalDto;
@@ -50,7 +49,6 @@ public class EducationDetails extends Composite {
 
 	public EducationDetails() {
 		initWidget(uiBinder.createAndBindUi(this));
-
 		createTableHeader();
 	}
 
@@ -64,7 +62,6 @@ public class EducationDetails extends Composite {
 		tblHeaders.add(new TableHeader("Reg No."));
 		tblHeaders.add(new TableHeader("Section Passed"));
 		tblHeaders.add(new TableHeader("Action"));
-
 		tblEducationalDetail.setTableHeaders(tblHeaders);
 	}
 
@@ -90,6 +87,8 @@ public class EducationDetails extends Composite {
 
 	public void bindDetails(List<ApplicationFormEducationalDto> result) {
 		tblEducationalDetail.clearRows();
+		tblEducationalDetail.setNoRecords(result.size());
+
 		for (ApplicationFormEducationalDto edu : result) {
 
 			final ActionLink edit = new ActionLink(edu);

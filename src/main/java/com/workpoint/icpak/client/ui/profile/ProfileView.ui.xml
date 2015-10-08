@@ -13,7 +13,7 @@
 		<h3 class="ng-scope">
 			User Profile
 		</h3>
-		
+
 		<profile:ProfileWidget ui:field="divProfileContent"></profile:ProfileWidget>
 
 		<g:HTMLPanel ui:field="divPasswordContent">

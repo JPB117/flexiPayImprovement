@@ -10,9 +10,9 @@
 					<div class="panel widget">
 						<div class="ember-view popovercontainer ribbon" disabled="false"
 							data-original-title="" title="">
-							<div class="ribbon-inner ribbon-draft">
-								Pending
-							</div>
+							<g:HTMLPanel styleName="ribbon-inner ribbon-draft"
+								ui:field="panelApplicationType">
+							</g:HTMLPanel>
 						</div>
 						<div class="panel-header">
 							<g:HTMLPanel styleName="dropdown pull-right"
@@ -65,18 +65,18 @@
 										styleName="col-md-12">
 										<div class="row">
 											<h3 class="m0">
-												<span ui:field="spnNames">Tom Kimani Muriranja</span>
+												<span ui:field="spnNames"></span>
 											</h3>
 										</div>
 
 										<div class="row">
 											<p class="text-muted">
 												<br />
-												<span ui:field="spnApplicationType">Non-Practising</span>
+												<span ui:field="spnApplicationType"></span>
 											</p>
 										</div>
 
-										<div class="row">
+										<div class="row hide">
 											<div class="col-md-4 p0">
 												<d:ProgressBar ui:field="progressBar"></d:ProgressBar>
 											</div>

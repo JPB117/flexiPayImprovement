@@ -81,4 +81,8 @@ public class NameTokens {
 		return profile;
 	}
 
+	public static String getAdminDefaultPage() {
+		return events;
+	}
+
 }

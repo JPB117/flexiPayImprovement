@@ -35,7 +35,6 @@ public class TableView extends Composite {
 	HTMLPanel panelFooter;
 	@UiField
 	DivElement divSearch;
-
 	@UiField
 	HTMLPanel panelPaging;
 
@@ -45,6 +44,7 @@ public class TableView extends Composite {
 	public TableView() {
 		initWidget(uiBinder.createAndBindUi(this));
 		setSearchSection(false);
+
 	}
 
 	public void setHeaders(List<String> names) {
@@ -270,5 +270,13 @@ public class TableView extends Composite {
 
 	public void insert(RowWidget rowWidget, int beforeIndex) {
 		panelBody.insert(rowWidget, beforeIndex);
+	}
+
+	public void setNoRecords(Integer count) {
+		NoTableRecord noRecord = new NoTableRecord();
+		panelBody.add(noRecord);
+		if (count >= 1) {
+			noRecord.removeFromParent();
+		}
 	}
 }

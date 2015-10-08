@@ -10,6 +10,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.CalendarUtil;
@@ -28,11 +29,13 @@ import com.workpoint.icpak.client.ui.cpd.table.CPDTable;
 import com.workpoint.icpak.client.ui.cpd.table.row.CPDTableRow;
 import com.workpoint.icpak.client.ui.cpd.unconfirmed.UnconfirmedCPD;
 import com.workpoint.icpak.client.ui.util.DateUtils;
+import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.shared.model.CPDSummaryDto;
 import com.workpoint.icpak.shared.model.Listable;
 
-public class CPDManagementView extends ViewImpl implements CPDManagementPresenter.ICPDManagementView {
+public class CPDManagementView extends ViewImpl implements
+		CPDManagementPresenter.ICPDManagementView {
 
 	private final Widget widget;
 
@@ -75,8 +78,9 @@ public class CPDManagementView extends ViewImpl implements CPDManagementPresente
 	@Inject
 	public CPDManagementView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
-		headerContainer.setTitles("Total CPD Requests", "Total Processed", "Total Pending");
-		
+		headerContainer.setTitles("Total CPD Requests", "Total Processed",
+				"Total Pending");
+
 		unconfirmedWidget = new UnconfirmedCPD();
 		confirmedWidget = new ConfirmedCPD();
 
@@ -123,6 +127,9 @@ public class CPDManagementView extends ViewImpl implements CPDManagementPresente
 			}
 		});
 		showDateFilter(false);
+		if (AppContext.isCurrentUserAdmin()) {
+			aCreate.setVisible(false);
+		}
 
 		createRow(new CPDTableRow());
 	}
@@ -193,7 +200,8 @@ public class CPDManagementView extends ViewImpl implements CPDManagementPresente
 
 	@Override
 	public void bindSummary(CPDSummaryDto summary) {
-		headerContainer.setValues(summary.getProcessedCount()+summary.getPendingCount(),
+		headerContainer.setValues(
+				summary.getProcessedCount() + summary.getPendingCount(),
 				summary.getProcessedCount(), summary.getPendingCount());
 	}
 }
