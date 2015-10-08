@@ -83,9 +83,10 @@ public class PaymentWidget extends Composite {
 
 	private void setDate() {
 		Date startDate = new Date();
+		int thisYear = startDate.getYear();
 		for (int i = 1; i <= totalYears; i++) {
-			CalendarUtil.addMonthsToDate(startDate, 12);
-			Year year = new Year(startDate);
+			Year year = new Year(thisYear);
+			thisYear++;
 			allYears.add(year);
 		}
 
