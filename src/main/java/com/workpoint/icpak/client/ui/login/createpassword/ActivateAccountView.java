@@ -62,8 +62,8 @@ public class ActivateAccountView extends ViewImpl implements
 	}
 
 	@Override
-	public void showForgot(boolean show) {
-		panelPasswordWidget.showForgot(show);
+	public void changeWidget(String reason) {
+		panelPasswordWidget.changeWidget(reason);
 	}
 
 	@Override
@@ -80,4 +80,5 @@ public class ActivateAccountView extends ViewImpl implements
 	public void showProcessing(boolean showProcessing) {
 		panelPasswordWidget.showProcessing(showProcessing);
 	}
+
 }

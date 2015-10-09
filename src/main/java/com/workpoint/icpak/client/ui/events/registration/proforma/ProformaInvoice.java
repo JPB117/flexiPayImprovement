@@ -1,5 +1,7 @@
 package com.workpoint.icpak.client.ui.events.registration.proforma;
 
+import static com.workpoint.icpak.client.ui.util.NumberUtils.CURRENCYFORMAT;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -17,8 +19,6 @@ import com.workpoint.icpak.client.ui.events.registration.proforma.last.ProformaL
 import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.InvoiceLineDto;
-import com.workpoint.icpak.shared.model.events.AccommodationDto;
-import static com.workpoint.icpak.client.ui.util.NumberUtils.*;
 
 public class ProformaInvoice extends Composite {
 

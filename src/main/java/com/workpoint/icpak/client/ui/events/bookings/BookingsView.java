@@ -1,5 +1,8 @@
 package com.workpoint.icpak.client.ui.events.bookings;
 
+import static com.workpoint.icpak.client.ui.util.DateUtils.MONTHDAYFORMAT;
+import static com.workpoint.icpak.client.ui.util.DateUtils.MONTHDAYYEARFORMAT;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -12,26 +15,32 @@ import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
 import com.workpoint.icpak.client.ui.component.TableView;
 import com.workpoint.icpak.client.ui.eventsandseminars.header.EventsHeader;
+import com.workpoint.icpak.shared.model.PaymentStatus;
+import com.workpoint.icpak.shared.model.events.AttendanceStatus;
 import com.workpoint.icpak.shared.model.events.MemberBookingDto;
-import static com.workpoint.icpak.client.ui.util.DateUtils.*;
 
-public class BookingsView extends ViewImpl implements BookingsPresenter.IBookingsView {
+public class BookingsView extends ViewImpl implements
+		BookingsPresenter.IBookingsView {
 
 	private final Widget widget;
 
-	@UiField HTMLPanel container;
-	@UiField EventsHeader headerContainer;
-	
-	@UiField TableView tblEvents;
+	@UiField
+	HTMLPanel container;
+	@UiField
+	EventsHeader headerContainer;
 
-	public interface Binder extends UiBinder<Widget, BookingsView> {}
+	@UiField
+	TableView tblEvents;
+
+	public interface Binder extends UiBinder<Widget, BookingsView> {
+	}
 
 	@Inject
 	public BookingsView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
-		tblEvents.setHeaders(Arrays.asList("Date", "Event Name","Location","Event Status",
-				"CPD Hours","Attendance",
-				"Payment","Accommodation"));
+		tblEvents.setHeaders(Arrays.asList("Date", "Event Name", "Location",
+				"Event Status", "CPD Hours", "Attendance", "Payment",
+				"Accommodation"));
 	}
 
 	@Override
@@ -42,19 +51,47 @@ public class BookingsView extends ViewImpl implements BookingsPresenter.IBooking
 	@Override
 	public void bindBookings(List<MemberBookingDto> result) {
 		tblEvents.clearRows();
-		for(MemberBookingDto dto: result){
-			tblEvents.addRow(
-					new InlineLabel(MONTHDAYFORMAT.format(dto.getStartDate())+"-"+
-							MONTHDAYYEARFORMAT.format(dto.getEndDate())),
-					new InlineLabel(dto.getEventName()),
-					new InlineLabel(dto.getLocation()),
-					new InlineLabel(dto.getEventStatus().name()),
-					new InlineLabel(dto.getCpdHours()),
-					new InlineLabel(dto.getAttendance().getDisplayName()),
-					new InlineLabel(dto.getPaymentStatus().name()),
-					new InlineLabel(dto.getAccommodation())
-					);
+		for (MemberBookingDto dto : result) {
+			tblEvents
+					.addRow(new InlineLabel(MONTHDAYFORMAT.format(dto
+							.getStartDate())
+							+ "-"
+							+ MONTHDAYYEARFORMAT.format(dto.getEndDate())),
+							new InlineLabel(dto.getEventName()),
+							new InlineLabel(dto.getLocation()),
+							new InlineLabel(dto.getEventStatus().name()),
+							new InlineLabel(dto.getCpdHours()),
+							setAttendance(dto.getAttendance()),
+							setPaymentStatus(dto.getPaymentStatus()),
+							new InlineLabel(dto.getAccommodation()));
 		}
+	}
+
+	private InlineLabel setAttendance(AttendanceStatus attendance) {
+		InlineLabel label = new InlineLabel();
+		if (attendance != null) {
+			label.getElement().setInnerText(attendance.getDisplayName());
+			if (attendance == AttendanceStatus.NOTATTENDED) {
+				label.removeStyleName("label-success");
+				label.addStyleName("label-danger");
+			} else {
+				label.removeStyleName("label-danger");
+				label.addStyleName("label-success");
+			}
+		}
+		return label;
+	}
+
+	private InlineLabel setPaymentStatus(PaymentStatus paymentStatus) {
+		InlineLabel label = new InlineLabel();
+		if (paymentStatus != null) {
+			label.getElement().setInnerText(paymentStatus.name());
+			if (paymentStatus == PaymentStatus.NOTPAID) {
+				label.removeStyleName("label-success");
+				label.addStyleName("label-danger");
+			}
+		}
+		return label;
 	}
 
 }

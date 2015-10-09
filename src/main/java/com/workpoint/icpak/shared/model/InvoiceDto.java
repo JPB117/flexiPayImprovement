@@ -28,15 +28,16 @@ public class InvoiceDto extends SerializableObj implements HasKey {
 	private String paymentStatus;
 	private String paymentMode;
 	private Double transactionAmount;
+	private String trxRefId;
 	private String userId;
 
 	public InvoiceDto() {
 	}
 
-	public InvoiceDto(String refId, Double invoiceAmount, String documentNo,String description,
-			Date invoiceDate, Date transactionDate, Date dueDate,
-			String paymentStatus, String paymentMode, Double transactionAmount,
-			String userId,String contactName) {
+	public InvoiceDto(String refId, Double invoiceAmount, String documentNo,
+			String description, Date invoiceDate, Date transactionDate,
+			Date dueDate, String paymentStatus, String paymentMode,
+			Double transactionAmount, String userId, String contactName) {
 		this.invoiceRefId = refId;
 		this.documentNo = documentNo;
 		this.description = description;
@@ -49,6 +50,20 @@ public class InvoiceDto extends SerializableObj implements HasKey {
 		this.setInvoiceAmount(invoiceAmount);
 		this.setUserId(userId);
 		this.setTransactionAmount(transactionAmount);
+	}
+
+	public InvoiceDto(String refId, Double invoiceAmount2, String documentNo2,
+			String description2, Date invoiceDate2, String contactName2,
+			String trxRefId, String bookingRefId) {
+		this.invoiceRefId = refId;
+		invoiceAmount = invoiceAmount2;
+		this.documentNo = documentNo2;
+		this.description = description2;
+		this.invoiceDate = invoiceDate2;
+		this.contactName = contactName2;
+		this.bookingRefId = bookingRefId;
+		this.setTrxRefId(trxRefId);
+
 	}
 
 	public String getCompanyName() {
@@ -210,6 +225,14 @@ public class InvoiceDto extends SerializableObj implements HasKey {
 	@Override
 	public String getKey() {
 		return getRefId();
+	}
+
+	public String getTrxRefId() {
+		return trxRefId;
+	}
+
+	public void setTrxRefId(String trxRefId) {
+		this.trxRefId = trxRefId;
 	}
 
 }

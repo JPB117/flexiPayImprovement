@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.logging.Logger;
 
-import javax.mail.search.SearchTerm;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;

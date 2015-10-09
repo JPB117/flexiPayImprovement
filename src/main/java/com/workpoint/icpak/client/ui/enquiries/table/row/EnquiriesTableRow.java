@@ -24,14 +24,20 @@ public class EnquiriesTableRow extends RowWidget {
 	HTMLPanel row;
 	@UiField
 	HTMLPanel divDate;
+
 	@UiField
-	ActionLink aMemberNo;
+	HTMLPanel divMemberName;
 	@UiField
-	ActionLink aMember;
+	HTMLPanel divMemberNo;
 	@UiField
 	HTMLPanel divEmail;
 	@UiField
 	HTMLPanel divPhone;
+
+	@UiField
+	ActionLink aMemberNo;
+	@UiField
+	ActionLink aMember;
 	@UiField
 	ActionLink aSubject;
 	@UiField
@@ -60,10 +66,17 @@ public class EnquiriesTableRow extends RowWidget {
 	public EnquiriesTableRow(EnquiriesDto dto) {
 		this();
 		divDate.getElement().setInnerText(dto.getDate().toString());
-		aMemberNo.setText(dto.getMembershipNo());
-		aMember.setText(dto.getFullNames());
-		divEmail.getElement().setInnerText(dto.getEmailAddress());
-		divPhone.getElement().setInnerText(dto.getPhone());
+		if (AppContext.isCurrentUserAdmin()) {
+			aMemberNo.setText(dto.getMembershipNo());
+			aMember.setText(dto.getFullNames());
+			divEmail.getElement().setInnerText(dto.getEmailAddress());
+			divPhone.getElement().setInnerText(dto.getPhone());
+		} else {
+			divMemberNo.addStyleName("hide");
+			divMemberName.addStyleName("hide");
+			divEmail.addStyleName("hide");
+			divPhone.addStyleName("hide");
+		}
 		aSubject.setText(dto.getSubject());
 		divCategory.getElement().setInnerText(
 				dto.getCategory().getDisplayName());

@@ -12,7 +12,6 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
@@ -35,14 +34,13 @@ public class CreditCardServiceImpl implements CreditCardService {
 	public CreditCardDto setInitials(CreditCardDto creditCardDto) {
 		CreditCardDto creditCardDetails1 = new CreditCardDto();
 
-		creditCardDetails1.setAccount_number(creditCardDto.getAccount_number());
 		creditCardDetails1.setAddress1(creditCardDto.getAddress1());
 		creditCardDetails1.setAddress2(creditCardDto.getAddress2());
 		creditCardDetails1.setAmount(creditCardDto.getPostedAmount()
 				.toPlainString());
 		creditCardDetails1.setCard_holder_name(creditCardDto
 				.getCard_holder_name());
-		creditCardDetails1.setAccount_number(creditCardDto.getAccount_number());
+		creditCardDetails1.setAccount_number("03369");
 		creditCardDetails1.setEmail(creditCardDto.getEmail());
 		creditCardDetails1.setCountry("KE");
 		creditCardDetails1.setState("Nairobi");
@@ -56,27 +54,29 @@ public class CreditCardServiceImpl implements CreditCardService {
 		return creditCardDetails1;
 	}
 
-//	@Override
-//	public void RequestPayment(CreditCardDto cardDetails) throws JSONException,
-//			CardAuthorizationException {
-//		CreditCardResponse data = authorizeCardTransaction(cardDetails);
-//		System.out.println("Result==========>" + data);
-//		JSONObject content = data.getJSONObject("content");
-//		JSONObject status = data.getJSONObject("status");
-//		String transaction_status = status.getString("status");
-//		if (Objects.equals(transaction_status, "SUCCESS")) {
-//			String transaction_index = content.getString("transaction_index");
-//			String transaction_reference = content
-//					.getString("transaction_reference");
-//			completeCardTransaction(transaction_reference, transaction_index);
-//		} else {
-//			throw new CardAuthorizationException("Card Authorization Failed");
-//		}
-//	}
+	// @Override
+	// public void RequestPayment(CreditCardDto cardDetails) throws
+	// JSONException,
+	// CardAuthorizationException {
+	// CreditCardResponse data = authorizeCardTransaction(cardDetails);
+	// System.out.println("Result==========>" + data);
+	// JSONObject content = data.getJSONObject("content");
+	// JSONObject status = data.getJSONObject("status");
+	// String transaction_status = status.getString("status");
+	// if (Objects.equals(transaction_status, "SUCCESS")) {
+	// String transaction_index = content.getString("transaction_index");
+	// String transaction_reference = content
+	// .getString("transaction_reference");
+	// completeCardTransaction(transaction_reference, transaction_index);
+	// } else {
+	// throw new CardAuthorizationException("Card Authorization Failed");
+	// }
+	// }
 
 	public CreditCardResponse authorizeCardTransaction(CreditCardDto cardDetails) {
 
-		log.warn("================= Authorizing card payment");
+		System.err.println("================= Authorizing card payment");
+		System.err.println(cardDetails);
 
 		HttpClient client = new DefaultHttpClient();
 		HttpPost post = new HttpPost(
@@ -122,11 +122,8 @@ public class CreditCardServiceImpl implements CreditCardService {
 				.getCurrency()));
 		StringBuffer result = null;
 		try {
-			log.warn("Payment Params>> "+cardDetails);
-			StringEntity e;
-			System.out.println("Payment Params>> "+cardDetails);
-			UrlEncodedFormEntity entity = new UrlEncodedFormEntity(urlParameters);
-			post.setEntity(entity);
+			// System.err.println("Values:" + urlParameters.size());
+			post.setEntity(new UrlEncodedFormEntity(urlParameters));
 			response = client.execute(post);
 
 			BufferedReader rd = new BufferedReader(new InputStreamReader(
@@ -141,25 +138,42 @@ public class CreditCardServiceImpl implements CreditCardService {
 		}
 		assert result != null;
 		res = result.toString();
-//		System.out.println("Lipisha ====================================="
-//				+ res);
-		log.info("gateway feedback authorize " + res);
+		// System.out.println("Lipisha ====================================="
+		// + res);
+		System.err.println("gateway feedback authorize " + res);
 		// writeToFile(res);
 		JSONObject jObject = null;
 		CreditCardResponse creditCardResp = new CreditCardResponse();
 		try {
 			jObject = new JSONObject(res);
-			JSONObject content = (JSONObject) jObject.getJSONObject("content");
 
-			if(content!=null){
-				creditCardResp.setInvalidParams(content.getString("invalid_parameters"));
-			}
-
-			JSONObject status= (JSONObject) jObject.getJSONObject("status");
-			if(status!=null){
-				creditCardResp.setStatusCode(status.getInt("status_code")+"");
-				creditCardResp.setStatusDesc(status.getString("status_description"));
+			JSONObject status = (JSONObject) jObject.getJSONObject("status");
+			if (status != null) {
+				creditCardResp.setStatusCode(status.getString("status_code")
+						+ "");
+				creditCardResp.setStatusDesc(status
+						.getString("status_description"));
 				creditCardResp.setStatus(status.getString("status"));
+
+				JSONObject content = (JSONObject) jObject
+						.getJSONObject("content");
+				if (content != null) {
+					if ((creditCardResp.getStatusCode()).equals("0000")) {
+						creditCardResp.setTransactionIndex(content
+								.getString("transaction_index"));
+						creditCardResp.setTransactionReference(content
+								.getString("transaction_reference"));
+					} else if ((creditCardResp.getStatusCode()).equals("2000")) {
+						creditCardResp.setInvalidParams(content
+								.getString("invalid_parameters"));
+					} else if (((creditCardResp.getStatusCode()).equals("5000"))) {
+						creditCardResp.setInvalidParams(content
+								.getString("reason"));
+					} else {
+						creditCardResp
+								.setInvalidParams("We could not process your credit card payment, please contact support for assistance");
+					}
+				}
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();

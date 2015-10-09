@@ -5,7 +5,6 @@ import java.util.List;
 import com.icpak.rest.exceptions.ServiceException;
 import com.icpak.rest.models.ErrorCodes;
 import com.icpak.rest.models.cpd.CPD;
-import com.workpoint.icpak.shared.model.CPDCountSummaryDto;
 import com.workpoint.icpak.shared.model.CPDStatus;
 import com.workpoint.icpak.shared.model.CPDSummaryDto;
 

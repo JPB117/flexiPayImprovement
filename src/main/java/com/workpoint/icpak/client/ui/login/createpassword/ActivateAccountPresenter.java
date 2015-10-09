@@ -18,7 +18,6 @@ import com.gwtplatform.mvp.client.annotations.NoGatekeeper;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
-import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 import com.gwtplatform.mvp.client.proxy.RevealRootLayoutContentEvent;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest.Builder;
@@ -26,9 +25,6 @@ import com.workpoint.icpak.client.place.NameTokens;
 import com.workpoint.icpak.client.place.ParameterTokens;
 import com.workpoint.icpak.client.security.CurrentUser;
 import com.workpoint.icpak.client.service.AbstractAsyncCallback;
-import com.workpoint.icpak.client.ui.AppManager;
-import com.workpoint.icpak.client.ui.MainPagePresenter;
-import com.workpoint.icpak.client.ui.OnOptionSelected;
 import com.workpoint.icpak.shared.api.SessionResource;
 import com.workpoint.icpak.shared.api.UsersResource;
 import com.workpoint.icpak.shared.model.UserDto;
@@ -55,7 +51,7 @@ public class ActivateAccountPresenter
 
 		void setLoginButtonEnabled(boolean b);
 
-		void showForgot(boolean b);
+		void changeWidget(String reason);
 
 		HasClickHandlers getResendButton();
 
@@ -108,14 +104,13 @@ public class ActivateAccountPresenter
 		String userId = request.getParameter("uid", null);
 		String reason = request.getParameter("r", null);
 
-		if (reason.equals("forgot")) {
-			getView().showForgot(true);
+		if (reason != null) {
+			getView().changeWidget(reason);
 		} else if (userId == null) {
 			// Error
 			return;
 		} else {
-
-			getView().showForgot(false);
+			getView().changeWidget("default");
 			usersDelegate.withCallback(new AbstractAsyncCallback<UserDto>() {
 				@Override
 				public void onSuccess(UserDto user) {
@@ -162,7 +157,7 @@ public class ActivateAccountPresenter
 
 								public void onFailure(Throwable caught) {
 									getView().showProcessing(false);
-									Window.alert("Email not found in our records!");
+									Window.alert("Your Email Address was not found. Kindly contact ICPAK Support to update your Email");
 								};
 							}).getById(getView().getEmail());
 				}

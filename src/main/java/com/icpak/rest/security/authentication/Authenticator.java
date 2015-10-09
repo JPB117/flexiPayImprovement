@@ -24,7 +24,6 @@ import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authc.credential.Sha256CredentialsMatcher;
-import org.apache.shiro.crypto.hash.Sha256Hash;
 
 import com.google.inject.persist.Transactional;
 import com.icpak.rest.dao.UserSessionDao;

@@ -35,10 +35,12 @@ public class EnquiriesTable extends Composite {
 	public void createHeader(boolean isAdmin) {
 		List<TableHeader> th = new ArrayList<TableHeader>();
 		th.add(new TableHeader("#"));
-		th.add(new TableHeader("Member No"));
-		th.add(new TableHeader("Member Name"));
-		th.add(new TableHeader("Email Address"));
-		th.add(new TableHeader("Mobile"));
+		if (isAdmin) {
+			th.add(new TableHeader("Member No"));
+			th.add(new TableHeader("Member Name"));
+			th.add(new TableHeader("Email Address"));
+			th.add(new TableHeader("Mobile"));
+		}
 		th.add(new TableHeader("Category"));
 		th.add(new TableHeader("Subject"));
 		th.add(new TableHeader("Message"));

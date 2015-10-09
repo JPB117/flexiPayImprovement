@@ -28,7 +28,7 @@
 							<d:DateField ui:field="dtStartDate" />
 						</div>
 						<div class="col-lg-3">
-							<d:DateField ui:field="dtEndDate" />
+							<d:DateField ui:field="dtEndDate"/>
 						</div>
 						<div class="col-lg-1">
 							<d:ActionLink ui:field="aRefresh" styleName="btn btn-fill btn-default">

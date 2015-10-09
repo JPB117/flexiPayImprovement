@@ -5,7 +5,6 @@ import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HasHandlers;
 import com.workpoint.icpak.client.ui.cpd.table.row.CPDTableRow.TableActionType;
 import com.workpoint.icpak.shared.model.UserDto;
-import com.workpoint.icpak.shared.model.auth.ActionType;
 
 public class TableActionEvent extends
 		GwtEvent<TableActionEvent.TableActionHandler> {

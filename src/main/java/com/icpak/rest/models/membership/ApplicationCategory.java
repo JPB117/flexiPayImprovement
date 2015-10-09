@@ -10,8 +10,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.icpak.rest.models.base.PO;
 import com.wordnik.swagger.annotations.ApiModel;
-import com.workpoint.icpak.shared.model.ApplicationType;
 import com.workpoint.icpak.shared.model.ApplicationCategoryDto;
+import com.workpoint.icpak.shared.model.ApplicationType;
 
 @ApiModel(description="Application Category charges")
 

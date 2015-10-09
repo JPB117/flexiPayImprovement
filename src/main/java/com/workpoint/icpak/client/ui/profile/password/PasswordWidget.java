@@ -3,7 +3,6 @@ package com.workpoint.icpak.client.ui.profile.password;
 import static com.workpoint.icpak.client.ui.util.StringUtils.isNullOrEmpty;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -55,7 +54,7 @@ public class PasswordWidget extends Composite {
 	@UiField
 	HTMLPanel panelContainer;
 
-	private boolean forgotPassword;
+	private boolean doValidation;
 
 	public PasswordWidget() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -81,7 +80,7 @@ public class PasswordWidget extends Composite {
 		boolean isValid = true;
 		issues.clear();
 
-		if (forgotPassword) {
+		if (!doValidation) {
 			return true;
 		}
 
@@ -138,16 +137,26 @@ public class PasswordWidget extends Composite {
 		return null;
 	}
 
-	public void showForgot(boolean show) {
-		this.forgotPassword = show;
-		if (show) {
-			spnInfo.setInnerText("Enter the E-mail you used to do registration, and email will be sent");
+	public void changeWidget(String reason) {
+		if (reason.equals("forgot")) {
+			this.doValidation = false;
+			spnInfo.setInnerText("Enter the E-mail you used to do registration, and email will be sent with Reset Instructions");
 			txtEmail.getElement().removeAttribute("disabled");
 			divConfirmPassword.addClassName("hide");
 			divPassword.addClassName("hide");
 			aResendAct.removeStyleName("hide");
 			aSave.addStyleName("hide");
+		} else if (reason.equals("activate")) {
+			this.doValidation = false;
+			spnInfo.setInnerText("Enter the E-mail you used to do registration, and email will be sent with Activation Instructions.");
+			txtEmail.getElement().removeAttribute("disabled");
+			divConfirmPassword.addClassName("hide");
+			divPassword.addClassName("hide");
+			aResendAct.removeStyleName("hide");
+			aSave.addStyleName("hide");
+			aResendAct.setText("Send Activation Email");
 		} else {
+			this.doValidation = true;
 			spnInfo.setInnerText("This page allows you to create your password that you will use to access your account.");
 			txtEmail.getElement().setAttribute("disabled", "disabled");
 			divConfirmPassword.removeClassName("hide");

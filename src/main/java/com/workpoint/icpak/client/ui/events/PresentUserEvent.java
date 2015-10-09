@@ -3,8 +3,8 @@ package com.workpoint.icpak.client.ui.events;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HasHandlers;
-import com.workpoint.icpak.shared.model.UserDto;
 import com.workpoint.icpak.shared.model.RoleDto;
+import com.workpoint.icpak.shared.model.UserDto;
 
 public class PresentUserEvent extends
 		GwtEvent<PresentUserEvent.PresentUserHandler> {

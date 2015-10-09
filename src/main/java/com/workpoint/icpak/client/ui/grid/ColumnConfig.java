@@ -16,7 +16,6 @@ import com.workpoint.icpak.client.ui.component.DropDownList;
 import com.workpoint.icpak.client.ui.component.IntegerField;
 import com.workpoint.icpak.client.ui.component.TextArea;
 import com.workpoint.icpak.client.ui.component.TextField;
-import com.workpoint.icpak.client.ui.component.autocomplete.SimpleOracle;
 import com.workpoint.icpak.shared.model.BooleanValue;
 import com.workpoint.icpak.shared.model.DataType;
 import com.workpoint.icpak.shared.model.DateValue;

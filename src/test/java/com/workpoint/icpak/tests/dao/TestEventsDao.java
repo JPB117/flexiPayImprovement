@@ -3,7 +3,6 @@ package com.workpoint.icpak.tests.dao;
 import java.util.Date;
 import java.util.List;
 
-import org.hibernate.dialect.MySQL5Dialect;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;

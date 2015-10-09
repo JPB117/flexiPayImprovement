@@ -5,7 +5,6 @@ import org.junit.Test;
 import com.google.inject.Inject;
 import com.icpak.rest.dao.helper.SpecializationDaoHelper;
 import com.workpoint.icpak.shared.model.ApplicationFormSpecializationDto;
-import com.workpoint.icpak.shared.model.SpecializationCategory;
 import com.workpoint.icpak.shared.model.Specializations;
 import com.workpoint.icpak.tests.base.AbstractDaoTest;
 

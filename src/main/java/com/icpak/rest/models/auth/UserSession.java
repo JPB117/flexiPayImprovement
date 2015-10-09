@@ -3,7 +3,6 @@ package com.icpak.rest.models.auth;
 import java.util.Date;
 
 import javax.persistence.Entity;
-import javax.persistence.Id;
 
 import com.icpak.rest.models.base.PO;
 

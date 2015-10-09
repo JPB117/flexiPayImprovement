@@ -8,12 +8,10 @@ import java.util.Date;
 import javax.ws.rs.core.MediaType;
 
 import org.junit.Ignore;
-import org.junit.Test;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
-import com.workpoint.icpak.server.integration.lms.LMSIntegrationUtil;
 import com.workpoint.icpak.shared.lms.LMSMemberDto;
 import com.workpoint.icpak.shared.model.Gender;
 import com.workpoint.icpak.shared.model.Title;

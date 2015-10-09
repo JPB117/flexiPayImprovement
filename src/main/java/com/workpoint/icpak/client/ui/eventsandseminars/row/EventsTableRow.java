@@ -1,5 +1,8 @@
 package com.workpoint.icpak.client.ui.eventsandseminars.row;
 
+import static com.workpoint.icpak.client.ui.util.DateUtils.DATEFORMAT;
+import static com.workpoint.icpak.client.ui.util.NumberUtils.NUMBERFORMAT;
+
 import java.util.Date;
 
 import com.google.gwt.core.client.GWT;
@@ -11,9 +14,6 @@ import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Widget;
 import com.workpoint.icpak.client.ui.component.RowWidget;
 import com.workpoint.icpak.shared.model.events.EventDto;
-
-import static com.workpoint.icpak.client.ui.util.DateUtils.*;
-import static com.workpoint.icpak.client.ui.util.NumberUtils.*;
 
 public class EventsTableRow extends RowWidget {
 

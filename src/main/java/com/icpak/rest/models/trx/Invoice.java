@@ -1,7 +1,6 @@
 package com.icpak.rest.models.trx;
 
 import java.util.Date;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -29,7 +28,6 @@ public class Invoice extends PO {
 	private String bookingRefId;
 	private String memberId; // Invoice owner
 	private String description;
-	
 
 	@OneToMany(mappedBy = "invoice", cascade = { CascadeType.PERSIST,
 			CascadeType.REMOVE })

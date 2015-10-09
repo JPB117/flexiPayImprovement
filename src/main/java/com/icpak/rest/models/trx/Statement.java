@@ -2,11 +2,11 @@ package com.icpak.rest.models.trx;
 
 import java.util.Date;
 
-import com.icpak.rest.models.base.PO;
-import com.workpoint.icpak.shared.model.statement.StatementDto;
-
 import javax.persistence.Entity;
 import javax.persistence.Table;
+
+import com.icpak.rest.models.base.PO;
+import com.workpoint.icpak.shared.model.statement.StatementDto;
 
 /**
  * Created by wladek on 9/18/15.

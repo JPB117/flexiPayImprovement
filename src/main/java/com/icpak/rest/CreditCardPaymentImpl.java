@@ -8,6 +8,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import com.google.inject.Inject;
+import com.icpak.rest.dao.helper.TransactionDaoHelper;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.workpoint.icpak.server.payment.CreditCardServiceImpl;
 import com.workpoint.icpak.shared.api.CreditCardResource;
@@ -15,11 +16,12 @@ import com.workpoint.icpak.shared.model.CreditCardDto;
 import com.workpoint.icpak.shared.model.CreditCardResponse;
 
 @Path("creditCardPayments")
-public class CreditCardPaymentImpl implements CreditCardResource{
-	
+public class CreditCardPaymentImpl implements CreditCardResource {
+
 	@Inject
 	CreditCardServiceImpl creditCardService;
-	
+	@Inject
+	TransactionDaoHelper trxDaoHelper;
 
 	@GET
 	@Path("/count")
@@ -32,7 +34,13 @@ public class CreditCardPaymentImpl implements CreditCardResource{
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Post Payment", response = String.class, consumes = MediaType.APPLICATION_JSON)
 	public CreditCardResponse postPayment(CreditCardDto dto) {
-		return creditCardService.authorizeCardTransaction(dto);
+		CreditCardResponse response = creditCardService
+				.authorizeCardTransaction(dto);
+		if (response.getStatusCode().equals("0000")) {
+			trxDaoHelper.receivePaymentFromInvoiceNo(dto.getPaymentRefId(),
+					"N/A", "N/A", "Credit/Debit Card",
+					response.getTransactionIndex());
+		}
+		return response;
 	}
-
 }

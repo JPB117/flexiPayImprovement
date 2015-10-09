@@ -21,13 +21,16 @@ public class TransactionsResourceImpl implements TransactionsResource {
 
 	@GET
 	@Path("/payment")
-	public String makePayment(@QueryParam("refId") String paymentRef,
-			@QueryParam("businessNo") String businessNo,
-			@QueryParam("accountNo") String accountNo,
+	public String makePayment(@QueryParam("mpesa_acc") String paymentRef,
+			@QueryParam("business_number") String businessNo,
+			@QueryParam("mpesa_acc") String accountNo,
+			@QueryParam("id") String mpesaRef,
 			@QueryParam("paymentMode") String paymentMode,
-			@QueryParam("trxNumber") String trxNumber) {
+			@QueryParam("trxNumber") String trxNumber,
+			@QueryParam("mpesaAmt") String mpesaAmt) {
 
-		trxDaoHelper.receivePayment(paymentRef,businessNo, accountNo, paymentMode, trxNumber);
+		trxDaoHelper.receivePaymentFromInvoiceNo(paymentRef, businessNo,
+				accountNo, paymentMode, trxNumber);
 		return "SUCCESS";
 	}
 

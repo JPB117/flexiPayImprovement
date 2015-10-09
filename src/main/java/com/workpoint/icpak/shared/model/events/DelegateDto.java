@@ -2,7 +2,7 @@ package com.workpoint.icpak.shared.model.events;
 
 import com.workpoint.icpak.shared.model.SerializableObj;
 
-public class DelegateDto extends SerializableObj{
+public class DelegateDto extends SerializableObj {
 
 	/**
 	 * 
@@ -21,7 +21,7 @@ public class DelegateDto extends SerializableObj{
 	private String bookingId;
 	private String eventId;
 	private String ern;
-	
+
 	public DelegateDto() {
 	}
 

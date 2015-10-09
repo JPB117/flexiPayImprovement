@@ -12,6 +12,8 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.datepicker.client.CalendarUtil;
+import com.workpoint.icpak.client.ui.util.DateUtils;
 
 public class DateField extends Composite {
 
@@ -29,8 +31,6 @@ public class DateField extends Composite {
 
 	public DateField() {
 		initWidget(uiBinder.createAndBindUi(this));
-
-		panelContainer.getElement().setAttribute("id", "datepicker1");
 	}
 
 	public Date getValueDate() {
@@ -106,19 +106,26 @@ public class DateField extends Composite {
 	@Override
 	protected void onAttach() {
 		super.onAttach();
-		initCollapsable();
+		Date today = new Date();
+		CalendarUtil.addDaysToDate(today, 1);
+
+		initCollapsable(DateUtils.DATEFORMAT_SYS.format(today));
 	}
 
-	public static native void initCollapsable()/*-{
-												$wnd.jQuery(".datepicker").datetimepicker({
-												icons: {
-												time: "fa fa-clock-o",
-												date: "fa fa-calendar",
-												up: "fa fa-arrow-up",
-												down: "fa fa-arrow-down",
-												previous: 'fa fa-chevron-left',
-												next: 'fa fa-chevron-right',
-												},
-												format: 'YYYY-MM-DD'
-												});}-*/;
+	public static native void initCollapsable(String maxDate)/*-{
+																var ToEndDate = new Date();
+																$wnd.jQuery(".datepicker").datetimepicker({
+																icons: {
+																time: "fa fa-clock-o",
+																date: "fa fa-calendar",
+																up: "fa fa-arrow-up",
+																down: "fa fa-arrow-down",
+																previous: 'fa fa-chevron-left',
+																next: 'fa fa-chevron-right',
+																},
+																format: 'YYYY-MM-DD',
+																maxDate:maxDate,
+																useCurrent:false
+																});
+																}-*/;
 }

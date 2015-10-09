@@ -3,8 +3,6 @@ package com.icpak.rest.dao.helper;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.ws.rs.QueryParam;
-
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import com.icpak.rest.dao.EnquiriesDao;

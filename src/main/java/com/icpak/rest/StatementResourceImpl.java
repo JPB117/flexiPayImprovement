@@ -16,7 +16,6 @@ import com.icpak.rest.dao.helper.StatementDaoHelper;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.workpoint.icpak.shared.api.StatementsResource;
-import com.workpoint.icpak.shared.model.statement.SearchDto;
 import com.workpoint.icpak.shared.model.statement.StatementDto;
 
 @Api(value="", description="Handles CRUD for Statements")

@@ -35,6 +35,7 @@ public class ProfileView extends ViewImpl implements
 
 	@UiField
 	HTMLPanel divPasswordContent;
+	private CurrentUser currentUser;
 
 	public interface Binder extends UiBinder<Widget, ProfileView> {
 	}
@@ -62,6 +63,9 @@ public class ProfileView extends ViewImpl implements
 					@Override
 					public void onClick(ClickEvent event) {
 						showChangePassword(true);
+						panelPasswordWidget.changeWidget("default");
+						panelPasswordWidget.setUser(currentUser.getUser());
+
 					}
 				});
 
@@ -76,6 +80,7 @@ public class ProfileView extends ViewImpl implements
 		if (show) {
 			divProfileContent.setVisible(false);
 			divPasswordContent.setVisible(true);
+
 		} else {
 			divProfileContent.setVisible(true);
 			divPasswordContent.setVisible(false);
@@ -85,11 +90,12 @@ public class ProfileView extends ViewImpl implements
 	@Override
 	public void bindBasicDetails(ApplicationFormHeaderDto result) {
 		divProfileContent.bindBasicDetails(result);
-		
+
 	}
 
 	@Override
 	public void bindCurrentUser(CurrentUser user) {
+		this.currentUser = user;
 		divProfileContent.bindCurrentUser(user);
 	}
 

@@ -74,6 +74,7 @@ public class ProfileWidget extends Composite {
 	@UiField
 	HTMLPanel panelApplicationType;
 
+
 	@UiField
 	HTMLPanel divEditDropDown;
 

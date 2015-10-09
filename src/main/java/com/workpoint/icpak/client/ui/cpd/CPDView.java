@@ -2,7 +2,6 @@ package com.workpoint.icpak.client.ui.cpd;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -10,13 +9,10 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.user.datepicker.client.CalendarUtil;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
-import com.workpoint.icpak.client.ui.AppManager;
 import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.DropDownList;
 import com.workpoint.icpak.client.ui.component.PagingPanel;
@@ -29,11 +25,8 @@ import com.workpoint.icpak.client.ui.cpd.header.CPDHeader;
 import com.workpoint.icpak.client.ui.cpd.table.CPDTable;
 import com.workpoint.icpak.client.ui.cpd.table.row.CPDTableRow;
 import com.workpoint.icpak.client.ui.cpd.unconfirmed.UnconfirmedCPD;
-import com.workpoint.icpak.client.ui.util.DateUtils;
-import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.shared.model.CPDSummaryDto;
-import com.workpoint.icpak.shared.model.Listable;
 
 public class CPDView extends ViewImpl implements CPDPresenter.ICPDView {
 
@@ -92,17 +85,8 @@ public class CPDView extends ViewImpl implements CPDPresenter.ICPDView {
 
 		divTabs.setPosition(TabPosition.PILLS);
 
-		Date endYear = new Date();
-		allYears.add(new Year(endYear));
-
 		String display = "";
 		String display2 = "";
-		for (int i = 1; i <= totalYears; i++) {
-			CalendarUtil.addMonthsToDate(endYear, -12);
-			allYears.add(new Year(endYear));
-			display = display + "," + allYears.get(i).getDisplayName();
-		}
-		// spnDebug.setInnerText("Size>>" + allYears.size());
 
 		for (int i2 = 0; i2 <= totalYears; i2++) {
 			display2 = display2 + "," + allYears.get(i2).getDisplayName();

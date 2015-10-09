@@ -3,21 +3,16 @@ package com.icpak.rest.models.membership;
 import java.sql.Timestamp;
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import com.icpak.rest.models.auth.User;
 import com.icpak.rest.models.base.PO;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 import com.workpoint.icpak.shared.model.ApplicationType;
 import com.workpoint.icpak.shared.model.Gender;
-import com.workpoint.icpak.shared.model.auth.AccountStatus;
 import com.workpoint.icpak.shared.model.auth.ApplicationStatus;
 
 @Entity

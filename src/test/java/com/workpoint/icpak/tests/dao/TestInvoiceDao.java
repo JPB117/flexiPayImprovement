@@ -1,7 +1,6 @@
 package com.workpoint.icpak.tests.dao;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Random;
 
 import org.junit.Assert;
@@ -10,8 +9,10 @@ import org.junit.Test;
 
 import com.google.inject.Inject;
 import com.icpak.rest.dao.BookingsDao;
+import com.icpak.rest.dao.InvoiceDao;
 import com.icpak.rest.dao.InvoiceDaoHelper;
 import com.icpak.rest.dao.helper.BookingsDaoHelper;
+import com.icpak.rest.dao.helper.TransactionDaoHelper;
 import com.icpak.rest.models.event.Booking;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.InvoiceLineDto;
@@ -25,6 +26,11 @@ public class TestInvoiceDao extends AbstractDaoTest {
 	BookingsDaoHelper bookingHelper;
 	@Inject
 	BookingsDao bookingsDao;
+	@Inject
+	TransactionDaoHelper trxHelper;
+
+	@Inject
+	InvoiceDao invoiceDao;
 
 	@Ignore
 	public void createFromBooking() {
@@ -41,11 +47,20 @@ public class TestInvoiceDao extends AbstractDaoTest {
 		System.err.println(count);
 	}
 
-	@Test
+	@Ignore
 	public void getInvoices() {
 		// CQuyDBuiNLZPwPRX
-		List<InvoiceDto> dtos = invoiceHelper.getAllInvoices("ALL", 0, 10);
-		System.err.println(dtos.size());
+		// List<InvoiceDto> dtos = invoiceHelper.getAllInvoices("ALL", 0, 10);
+		// System.err.println(dtos.size());
+
+		InvoiceDto invoice = invoiceDao.getInvoiceByDocumentNo("INV-0024");
+		System.err.println(invoice.getDescription());
+	}
+
+	@Test
+	public void testPayment() {
+		trxHelper.receivePaymentFromInvoiceNo("INV-0030", "722722", "INV-0030",
+				"", "JGV1SYJTR5");
 	}
 
 	@Ignore

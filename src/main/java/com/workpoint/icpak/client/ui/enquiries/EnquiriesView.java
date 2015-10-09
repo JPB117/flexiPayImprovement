@@ -22,14 +22,13 @@ public class EnquiriesView extends ViewImpl implements
 
 	@UiField
 	HTMLPanel container;
-
 	@UiField
 	HTMLPanel panelListing;
-
 	@UiField
 	ActionLink aCreate;
-	
-	@UiField EnquiriesTable tblView;
+
+	@UiField
+	EnquiriesTable tblView;
 
 	public interface Binder extends UiBinder<Widget, EnquiriesView> {
 	}
@@ -57,10 +56,10 @@ public class EnquiriesView extends ViewImpl implements
 	@Override
 	public void bindEnquiries(List<EnquiriesDto> list) {
 		tblView.clearRows();
-		for(EnquiriesDto dto: list){
+		for (EnquiriesDto dto : list) {
 			tblView.createRow(new EnquiriesTableRow(dto));
 		}
-		
+
 	}
 
 }

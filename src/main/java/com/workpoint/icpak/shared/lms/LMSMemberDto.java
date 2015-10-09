@@ -1,7 +1,5 @@
 package com.workpoint.icpak.shared.lms;
 
-import java.util.Date;
-
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**

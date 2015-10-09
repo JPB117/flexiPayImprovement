@@ -1,25 +1,22 @@
 package com.workpoint.icpak.client.ui.cpd;
 
-import java.util.Date;
-
-import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.shared.model.Listable;
 
 public class Year implements Listable {
-	private Date pickDate;
+	private int pickDate;
 
-	public Year(Date passedDate) {
+	public Year(int passedDate) {
 		pickDate = passedDate;
 	}
 
 	@Override
 	public String getName() {
-		return DateUtils.YEARFORMAT.format(pickDate);
+		return pickDate + "";
 	}
 
 	@Override
 	public String getDisplayName() {
-		return DateUtils.YEARFORMAT.format(pickDate);
+		return pickDate + "";
 	}
 
 }

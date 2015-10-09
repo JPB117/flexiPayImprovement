@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.user.client.ui.SuggestOracle;
-import com.google.gwt.user.client.ui.SuggestOracle.Suggestion;
 import com.workpoint.icpak.shared.model.Listable;
 
 public abstract class SimpleOracle<T extends Listable> extends SuggestOracle {

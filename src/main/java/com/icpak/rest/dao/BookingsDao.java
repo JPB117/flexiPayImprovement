@@ -8,7 +8,6 @@ import com.icpak.rest.exceptions.ServiceException;
 import com.icpak.rest.models.ErrorCodes;
 import com.icpak.rest.models.event.Booking;
 import com.workpoint.icpak.shared.model.EventStatus;
-import com.workpoint.icpak.shared.model.EventSummaryDto;
 import com.workpoint.icpak.shared.model.PaymentStatus;
 import com.workpoint.icpak.shared.model.events.AttendanceStatus;
 import com.workpoint.icpak.shared.model.events.MemberBookingDto;

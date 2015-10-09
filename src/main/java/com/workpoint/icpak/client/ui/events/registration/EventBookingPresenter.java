@@ -35,10 +35,10 @@ import com.workpoint.icpak.shared.api.MemberResource;
 //import com.workpoint.icpak.shared.api.EventsResource;
 import com.workpoint.icpak.shared.model.Country;
 import com.workpoint.icpak.shared.model.CreditCardDto;
+import com.workpoint.icpak.shared.model.CreditCardResponse;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.MemberDto;
 import com.workpoint.icpak.shared.model.events.BookingDto;
-import com.workpoint.icpak.shared.model.CreditCardResponse;
 import com.workpoint.icpak.shared.model.events.EventDto;
 
 //import com.workpoint.icpak.shared.model.events.BookingDto;
@@ -82,6 +82,12 @@ public class EventBookingPresenter extends
 		CreditCardDto getCreditCardDetails();
 
 		boolean isPaymentValid();
+
+		void setCardResponse(CreditCardResponse response);
+
+		HasClickHandlers getMpesaCompleteButton();
+
+		void setInvoiceResult(InvoiceDto result);
 	}
 
 	@ProxyCodeSplit
@@ -95,6 +101,7 @@ public class EventBookingPresenter extends
 
 	private String eventId;
 	private String bookingId;
+	private InvoiceDto invoice;
 
 	private ResourceDelegate<CountriesResource> countriesResource;
 
@@ -158,10 +165,8 @@ public class EventBookingPresenter extends
 						BookingDto dto = getView().getBooking();
 						dto.setEventRefId(eventId);
 						submit(dto);
-
-						// We navigate next after server side has generated an
-						// account and submitted an email to user.
 					} else if (getView().getCounter() == 3) {
+						  
 					} else {
 						getView().next();
 					}
@@ -177,15 +182,39 @@ public class EventBookingPresenter extends
 			@Override
 			public void onClick(ClickEvent event) {
 				if (getView().isPaymentValid()) {
+					getView().showmask(true);
 					creditCardResource.withCallback(
 							new AbstractAsyncCallback<CreditCardResponse>() {
 								@Override
 								public void onSuccess(
 										CreditCardResponse response) {
-									Window.alert(response.toString());
+									getView().showmask(false);
+									getView().setCardResponse(response);
+
 								}
 							}).postPayment(getView().getCreditCardDetails());
 				}
+			}
+		});
+
+		getView().getMpesaCompleteButton().addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				getView().showmask(true);
+				invoiceResource.withCallback(
+						new AbstractAsyncCallback<InvoiceDto>() {
+							@Override
+							public void onSuccess(InvoiceDto result) {
+								getView().showmask(false);
+								getView().setInvoiceResult(result);
+							}
+
+							@Override
+							public void onFailure(Throwable caught) {
+								super.onFailure(caught);
+
+							}
+						}).getInvoice(invoice.getRefId());
 			}
 		});
 	}
@@ -285,9 +314,10 @@ public class EventBookingPresenter extends
 	protected void getInvoice(String invoiceRef, final boolean moveNext) {
 
 		invoiceResource.withCallback(new AbstractAsyncCallback<InvoiceDto>() {
+
 			@Override
 			public void onSuccess(InvoiceDto invoice) {
-				Window.alert("Success");
+				EventBookingPresenter.this.invoice = invoice;
 				getView().bindInvoice(invoice);
 				if (moveNext)
 					getView().next();

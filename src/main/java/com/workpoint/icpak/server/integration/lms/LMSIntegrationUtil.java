@@ -1,27 +1,19 @@
 package com.workpoint.icpak.server.integration.lms;
 
 import java.io.IOException;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 
 import javax.ws.rs.core.MediaType;
 
 import org.apache.log4j.Logger;
 
-import com.icpak.rest.models.auth.User;
-import com.icpak.servlet.swagger.SwaggerApiServlet;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.api.json.JSONConfiguration;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 import com.workpoint.icpak.shared.model.ApplicationType;
-import com.workpoint.icpak.shared.model.UserDto;
 
 /**
  * 25/08/2015

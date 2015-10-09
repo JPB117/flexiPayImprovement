@@ -7,12 +7,12 @@ import java.util.Date;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.InlineLabel;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.CalendarUtil;
 import com.workpoint.icpak.client.ui.component.ActionLink;
@@ -21,8 +21,12 @@ import com.workpoint.icpak.client.ui.component.IssuesPanel;
 import com.workpoint.icpak.client.ui.component.TextField;
 import com.workpoint.icpak.client.ui.cpd.Year;
 import com.workpoint.icpak.client.ui.util.DateUtils;
+import com.workpoint.icpak.client.ui.util.NumberUtils;
 import com.workpoint.icpak.shared.model.CreditCardDto;
+import com.workpoint.icpak.shared.model.CreditCardResponse;
+import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.Listable;
+import com.workpoint.icpak.shared.model.PaymentStatus;
 
 public class PaymentWidget extends Composite {
 
@@ -45,10 +49,24 @@ public class PaymentWidget extends Composite {
 	TextField txtAmount;
 	@UiField
 	IssuesPanel issuesPanel;
+	@UiField
+	SpanElement spnAccountNo;
+	@UiField
+	SpanElement spnAmount;
+	@UiField
+	SpanElement spnMessage;
+	@UiField
+	TextField txtAddress1;
+	@UiField
+	ActionLink aCompleteMpesa;
+	@UiField
+	HTMLPanel PanelPayment;
+	@UiField
+	HTMLPanel panelSuccess;
 
 	private int totalYears = 10;
-
 	private int totalMonths = 12;
+	String trxAmount;
 
 	interface PaymentWidgetUiBinder extends UiBinder<Widget, PaymentWidget> {
 	}
@@ -81,24 +99,26 @@ public class PaymentWidget extends Composite {
 
 	List<Year> allYears = new ArrayList<Year>();
 
+	private CreditCardDto creditCard = new CreditCardDto();
+
+	private String paymentRefId;
+
 	private void setDate() {
 		Date startDate = new Date();
+		int thisYear = 1900 + startDate.getYear();
 		for (int i = 1; i <= totalYears; i++) {
-			CalendarUtil.addMonthsToDate(startDate, 12);
-			Year year = new Year(startDate);
+			Year year = new Year(thisYear);
+			thisYear++;
 			allYears.add(year);
 		}
 
-		for (Year year : allYears) {
-			//Window.alert(year.getDisplayName());
-		}
 		lstYears.setItems(allYears);
 
 		Date startMonth = new Date();
-		CalendarUtil.addMonthsToDate(startMonth, -startMonth.getMonth());
+		CalendarUtil.addMonthsToDate(startMonth, -(startMonth.getMonth() + 2));
 		List<Month> allMonths = new ArrayList<Month>();
 
-		for (int i = 0; i <= totalMonths; i++) {
+		for (int i = 1; i <= totalMonths; i++) {
 			CalendarUtil.addMonthsToDate(startMonth, 1);
 			allMonths.add(new Month(startMonth));
 		}
@@ -108,17 +128,28 @@ public class PaymentWidget extends Composite {
 	public CreditCardDto getCardDetails() {
 		String expiry = lstMonths.getValue().getName()
 				+ lstYears.getValue().getName();
-		CreditCardDto creditCard = new CreditCardDto();
+		creditCard = new CreditCardDto();
 		creditCard.setCard_holder_name(txtCardHolderName.getValue());
 		creditCard.setCard_number(txtCardNumber.getValue());
-		creditCard.setAmount(txtAmount.getText());
+		creditCard.setAmount(trxAmount);
 		creditCard.setExpiry(expiry);
 		creditCard.setSecurity_code(txtCvv.getValue());
+		creditCard.setCountry("KE");
+		creditCard.setCurrency("KES");
+		creditCard.setState("Nairobi");
+		creditCard.setZip(trxAmount);
+		creditCard.setAddress1(txtAddress1.getValue());
+		creditCard.setPaymentRefId(paymentRefId);
+
 		return creditCard;
 	}
 
 	public void setAmount(String amount1) {
-		txtAmount.setText(amount1);
+		this.trxAmount = amount1;
+		txtAmount.setText(NumberUtils.CURRENCYFORMAT.format(Double
+				.parseDouble(amount1)));
+		spnAmount.setInnerText(NumberUtils.CURRENCYFORMAT.format(Double
+				.parseDouble(amount1)));
 	}
 
 	public boolean isValid() {
@@ -151,6 +182,10 @@ public class PaymentWidget extends Composite {
 			issuesPanel.addError("Provide year");
 		}
 
+		if (txtAddress1.getValue() == null) {
+			isValid = false;
+			issuesPanel.addError("Address is Mandatory");
+		}
 		// show/hide isValid Panel
 		if (isValid) {
 			issuesPanel.addStyleName("hide");
@@ -161,8 +196,41 @@ public class PaymentWidget extends Composite {
 
 	}
 
-	public HasClickHandlers getPayButton() {
+	public HasClickHandlers getCardPayButton() {
 		return aPay;
 	}
 
+	public HasClickHandlers getMpesaCompleteButton() {
+		return aCompleteMpesa;
+	}
+
+	public void bindTransaction(InvoiceDto invoice) {
+		this.paymentRefId = invoice.getDocumentNo();
+		spnAccountNo.setInnerText(invoice.getDocumentNo());// MPESA Payment
+	}
+
+	public void setCardResponse(CreditCardResponse response) {
+		if (response.getStatusCode().equals("0000")) {
+			panelSuccess.removeStyleName("hide");
+			PanelPayment.addStyleName("hide");
+		} else {
+			issuesPanel.clear();
+			String errorDesc = response.getInvalidParams();
+			issuesPanel.addError(errorDesc);
+			issuesPanel.removeStyleName("hide");
+		}
+
+	}
+
+	public void setInvoiceResult(InvoiceDto invoice) {
+		if (invoice.getPaymentStatus().equals(
+				PaymentStatus.PAID.getDisplayName())) {
+			panelSuccess.removeStyleName("hide");
+			PanelPayment.addStyleName("hide");
+		} else {
+			spnMessage
+					.setInnerText("Transaction not received. Please wait until you receive a message from ICPAK then try again");
+			aCompleteMpesa.setText("Retry");
+		}
+	}
 }

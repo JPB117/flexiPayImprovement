@@ -12,7 +12,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.workpoint.icpak.client.ui.component.PagingPanel;
 import com.workpoint.icpak.client.ui.component.PagingTable;
 import com.workpoint.icpak.client.ui.component.TableHeader;
-import com.workpoint.icpak.client.ui.component.TableView;
 import com.workpoint.icpak.client.ui.eventsandseminars.delegates.row.DelegateTableRow;
 
 public class DelegatesTable extends Composite {

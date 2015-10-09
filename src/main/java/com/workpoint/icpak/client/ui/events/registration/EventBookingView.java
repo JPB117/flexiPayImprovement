@@ -41,6 +41,7 @@ import com.workpoint.icpak.client.ui.payment.PaymentWidget;
 import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.shared.model.Country;
 import com.workpoint.icpak.shared.model.CreditCardDto;
+import com.workpoint.icpak.shared.model.CreditCardResponse;
 import com.workpoint.icpak.shared.model.DataType;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.Listable;
@@ -583,8 +584,9 @@ public class EventBookingView extends ViewImpl implements
 
 	@Override
 	public void bindBooking(BookingDto booking) {
-		spnNames.setInnerText(booking.getContact().getContactName());
+
 		if (booking.getContact() != null) {
+			spnNames.setInnerText(booking.getContact().getContactName());
 			txtAddress.setValue(booking.getContact().getAddress());
 			txtCompanyName.setValue(booking.getContact().getCompany());
 			txtCity.setValue(booking.getContact().getCity());
@@ -609,7 +611,9 @@ public class EventBookingView extends ViewImpl implements
 			panelPayment.setAmount(invoice.getInvoiceAmount().toString());
 		}
 
-		bindTransaction(invoice);
+		if (invoice.getDocumentNo() != null) {
+			panelPayment.bindTransaction(invoice);
+		}
 	}
 
 	@Override
@@ -626,26 +630,33 @@ public class EventBookingView extends ViewImpl implements
 		}
 	}
 
-	private void bindTransaction(InvoiceDto invoice) {
-		// 197.248.4.221
-		String url = "http://197.248.4.221:8080/flexiPay#websiteClient;"
-				+ "businessNo=722722;" + "refId=" + invoice.getRefId() + ";"
-				+ "orgName=ICPAK;" + "amount=" + invoice.getInvoiceAmount()
-				+ ";" + "accountNo=" + invoice.getDocumentNo();
-		framePayment.setUrl(url);
-	}
-
 	@Override
 	public ColumnConfig getMemberColumnConfig() {
 		return memberColumn;
 	}
 
 	public HasClickHandlers getPayButton() {
-		return panelPayment.getPayButton();
+		return panelPayment.getCardPayButton();
 	}
 
 	public CreditCardDto getCreditCardDetails() {
 		return panelPayment.getCardDetails();
+	}
+
+	@Override
+	public void setCardResponse(CreditCardResponse response) {
+		panelPayment.setCardResponse(response);
+
+	}
+
+	@Override
+	public HasClickHandlers getMpesaCompleteButton() {
+		return panelPayment.getMpesaCompleteButton();
+	}
+
+	@Override
+	public void setInvoiceResult(InvoiceDto invoice) {
+		panelPayment.setInvoiceResult(invoice);
 	}
 
 }

@@ -9,7 +9,6 @@ import org.junit.Test;
 import com.google.inject.Inject;
 import com.icpak.rest.dao.helper.ApplicationFormDaoHelper;
 import com.icpak.rest.dao.helper.UsersDaoHelper;
-import com.icpak.rest.models.auth.User;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 import com.workpoint.icpak.shared.model.ApplicationType;
 import com.workpoint.icpak.shared.model.UserDto;

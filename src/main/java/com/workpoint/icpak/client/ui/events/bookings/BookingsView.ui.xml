@@ -2,8 +2,7 @@
 
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
 	xmlns:g='urn:import:com.google.gwt.user.client.ui' ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
-	xmlns:d='urn:import:com.workpoint.icpak.client.ui.component' 
-	xmlns:up='urn:import:com.workpoint.icpak.client.ui.upload.custom'
+	xmlns:d='urn:import:com.workpoint.icpak.client.ui.component' xmlns:up='urn:import:com.workpoint.icpak.client.ui.upload.custom'
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	xmlns:p='urn:import:com.workpoint.icpak.client.ui.eventsandseminars.header'
 	xmlns:table='urn:import:com.workpoint.icpak.client.ui.eventsandseminars.table'
@@ -22,7 +21,7 @@
 				</p:EventsHeader>
 			</div>
 			<div class="panel panel-default">
-				<div class="panel-heading">All Event Details</div>
+				<div class="panel-heading">All Event I have Booked</div>
 				<div class="panel-body">
 					<div class="col-sm-12">
 						<d:TableView ui:field="tblEvents"></d:TableView>
@@ -30,6 +29,6 @@
 				</div>
 			</div>
 		</g:HTMLPanel>
-		
+
 	</g:HTMLPanel>
 </ui:UiBinder>

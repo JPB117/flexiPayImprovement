@@ -3,9 +3,7 @@ package com.icpak.servlet.upload;
 //import java.io.File;
 import gwtupload.server.UploadAction;
 import gwtupload.server.exceptions.UploadActionException;
-import gwtupload.shared.UConsts;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 

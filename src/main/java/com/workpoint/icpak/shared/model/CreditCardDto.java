@@ -23,9 +23,8 @@ public class CreditCardDto {
 	private Long stateId;
 	private Long currencyId;
 	private BigDecimal postedAmount;
-
-	// holds the koroboi payment account number for a given payment
-	private Long account_number;
+	private String paymentRefId;
+	private String accountNo;
 
 	public String getCard_number() {
 		return card_number;
@@ -131,14 +130,6 @@ public class CreditCardDto {
 		this.mobile_number = mobile_number;
 	}
 
-	public Long getAccount_number() {
-		return account_number;
-	}
-
-	public void setAccount_number(Long account_number) {
-		this.account_number = account_number;
-	}
-
 	public Long getCountryId() {
 		return countryId;
 	}
@@ -170,14 +161,26 @@ public class CreditCardDto {
 	public void setPostedAmount(BigDecimal postedAmount) {
 		this.postedAmount = postedAmount;
 	}
-	
+
 	@Override
 	public String toString() {
-		return "CardDetails{amount="+amount
-				+", card_holder_name="+card_holder_name
-				+", card_number="+card_number
-				+", expiry="+expiry
-				+", security_code="+security_code+"}";
+		return "CardDetails{amount=" + amount + ", card_holder_name="
+				+ card_holder_name + ", card_number=" + card_number
+				+ ", expiry=" + expiry + ", security_code=" + security_code
+				+ "}";
 	}
-	
+
+	public String getPaymentRefId() {
+		return paymentRefId;
+	}
+
+	public void setPaymentRefId(String paymentRefId) {
+		this.paymentRefId = paymentRefId;
+	}
+
+	public void setAccount_number(String string) {
+		// TODO Auto-generated method stub
+
+	}
+
 }

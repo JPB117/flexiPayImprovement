@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.i18n.client.TimeZone;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
@@ -20,7 +19,6 @@ import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 import com.workpoint.icpak.shared.model.ApplicationType;
 import com.workpoint.icpak.shared.model.Country;
 import com.workpoint.icpak.shared.model.Gender;
-import com.workpoint.icpak.shared.model.Listable;
 
 public class MemberRegistrationForm extends Composite {
 

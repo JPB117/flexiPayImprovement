@@ -69,13 +69,61 @@ public class InvoiceDao extends BaseDao {
 			InvoiceDto statement = new InvoiceDto(refId, invoiceAmount,
 					documentNo, description, invoiceDate, transactionDate,
 					dueDate, paymentStatus, paymentMode, transactionAmount,
-					userRefId,contactName);
+					userRefId, contactName);
 			statements.add(statement);
 
 		}
 
 		return statements;
+	}
 
+	public InvoiceDto getInvoiceByDocumentNo(String docNo) {
+		StringBuffer sqlBuffer = new StringBuffer(
+				"select i.refId, "
+						+ "i.amount as invoiceAmount,i.date as invoiceDate,"
+						+ "i.documentNo,i.description,i.contactName,t.refId as trxRefId,i.bookingRefId "
+						+ "from Invoice i "
+						+ "left join Transaction t on (i.refId=t.invoiceRef) "
+						+ "where i.isActive=1 and i.documentNo=:docNo ");
+
+		Query query = getEntityManager()
+				.createNativeQuery(sqlBuffer.toString()).setParameter("docNo",
+						docNo);
+
+		List<Object[]> rows = getResultList(query);
+		InvoiceDto invoice = new InvoiceDto();
+
+		for (Object[] row : rows) {
+			int i = 0;
+			Object value = null;
+
+			String refId = (value = row[i++]) == null ? null : value.toString();
+			Double invoiceAmount = (value = row[i++]) == null ? null
+					: new Double(value.toString());
+
+			Date invoiceDate = (value = row[i++]) == null ? null : (Date) value;
+
+			String documentNo = (value = row[i++]) == null ? null : value
+					.toString();
+
+			String description = (value = row[i++]) == null ? null : value
+					.toString();
+
+			String contactName = (value = row[i++]) == null ? null : value
+					.toString();
+
+			String trxRefId = (value = row[i++]) == null ? null : value
+					.toString();
+			
+			String bookingRefId =  (value = row[i++]) == null ? null : value
+					.toString();
+
+			InvoiceDto dbInvoice = new InvoiceDto(refId, invoiceAmount,
+					documentNo, description, invoiceDate, contactName, trxRefId,bookingRefId);
+
+			invoice = dbInvoice;
+		}
+		return invoice;
 	}
 
 	// public List<Invoice> getAllInvoicesForMember(String memberId) {
@@ -92,7 +140,6 @@ public class InvoiceDao extends BaseDao {
 	// }
 
 	public Integer getInvoiceCount(String memberId) {
-
 		StringBuffer sqlBuffer = new StringBuffer(
 				"select count(*) from Invoice i  "
 						+ "left join Transaction t on (i.refId=t.invoiceRef) "

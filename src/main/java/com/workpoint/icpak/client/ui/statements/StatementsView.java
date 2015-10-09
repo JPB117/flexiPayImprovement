@@ -46,7 +46,7 @@ public class StatementsView extends ViewImpl implements
 
 		grid.getElement().getFirstChildElement().getStyle().clearHeight();
 
-		grid.addStyleName("this-grid");
+		dtEndDate.addStyleName("end-date");
 
 		TextColumn<StatementDto> entryNo = new TextColumn<StatementDto>() {
 			@Override
