@@ -115,7 +115,7 @@ public class PaymentWidget extends Composite {
 		lstYears.setItems(allYears);
 
 		Date startMonth = new Date();
-		CalendarUtil.addMonthsToDate(startMonth, -(startMonth.getMonth() + 2));
+		CalendarUtil.addMonthsToDate(startMonth, -(startMonth.getMonth() + 1));
 		List<Month> allMonths = new ArrayList<Month>();
 
 		for (int i = 1; i <= totalMonths; i++) {
