@@ -1,10 +1,12 @@
 package com.icpak.servlet.upload;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletConfig;
@@ -23,13 +25,20 @@ import org.xml.sax.SAXException;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.icpak.rest.dao.AttachmentsDao;
+import com.icpak.rest.dao.UsersDao;
 import com.icpak.rest.dao.helper.CPDDaoHelper;
+import com.icpak.rest.dao.helper.StatementDaoHelper;
 import com.icpak.rest.dao.helper.UsersDaoHelper;
+import com.icpak.rest.models.auth.User;
+import com.icpak.rest.models.membership.Member;
 import com.icpak.rest.models.util.Attachment;
 import com.icpak.rest.utils.Doc;
+import com.icpak.rest.utils.DocumentLine;
 import com.icpak.rest.utils.HTMLToPDFConvertor;
 import com.itextpdf.text.DocumentException;
 import com.workpoint.icpak.shared.model.CPDDto;
+import com.workpoint.icpak.shared.model.UserDto;
+import com.workpoint.icpak.shared.model.statement.StatementDto;
 
 @Singleton
 public class GetReport extends HttpServlet {
@@ -42,8 +51,10 @@ public class GetReport extends HttpServlet {
 	private static Logger log = Logger.getLogger(GetReport.class);
 
 	@Inject UsersDaoHelper helper;
+	@Inject UsersDao userDao;
 	@Inject AttachmentsDao attachmentDao;
 	@Inject CPDDaoHelper cpdHelper;
+	@Inject StatementDaoHelper statementDaoHelper;
 	
 	@Override
 	public void init(ServletConfig config) throws ServletException {
@@ -99,8 +110,79 @@ public class GetReport extends HttpServlet {
 			processCPDCertRequest(req, resp);
 		}
 		
+		if (action.equalsIgnoreCase("GETSTATEMENT")) {
+			procesStatementsRequest(req, resp);
+		}
+		
 	}
 
+
+	private void procesStatementsRequest(HttpServletRequest req, HttpServletResponse resp) throws IOException, SAXException, ParserConfigurationException, FactoryConfigurationError, DocumentException {
+		Long startDate = null;
+		Long endDate = null;
+		String memberRefId = null;
+		
+		if(req.getParameter("startdate") != null){
+			startDate = new Long(req.getParameter("startdate"));
+		}
+		
+		if(req.getParameter("enddate") != null){
+			endDate = new Long(req.getParameter("enddate"));
+		}
+		
+		if(req.getParameter("memberRefId") != null){
+			memberRefId = req.getParameter("memberRefId");
+		} 
+		
+		Date finalStartDate = new Date(startDate);
+		Date finalEndDate = new Date(endDate);
+		
+		byte[] data = processStatementsRequest(memberRefId, finalStartDate, finalEndDate);
+		
+		processAttachmentRequest(resp, data, "statement.pdf");
+	}
+
+	public byte[] processStatementsRequest(String memberRefId, Date startDate, Date endDate) throws FileNotFoundException, IOException, SAXException, ParserConfigurationException, FactoryConfigurationError, DocumentException {
+		Member member = userDao.findByRefId(memberRefId, Member.class);
+		User user = member.getUser();
+		
+		List<StatementDto> statements = statementDaoHelper.getAllStatements(memberRefId, startDate, endDate, 0, 1000);
+		
+		Map<String, Object> values = new HashMap<String, Object>();
+		values.put("date", new Date());
+		values.put("memberAddress", user.getAddress());
+		values.put("memberLocation", user.getCity());
+		values.put("memberNo", user.getMemberNo());
+		
+		Doc doc = new Doc(values);
+		
+		for(StatementDto dto: statements){
+			
+			values = new HashMap<String, Object>();
+			values.put("postingDate",dto.getPostingDate());
+			values.put("docNo",dto.getDocumentNo());
+			values.put("description",dto.getDescription());
+			values.put("originalAmount",dto.getAmount());
+			values.put("credit", dto.getAmount());
+			values.put("balance", dto.getAmount());
+			DocumentLine line = new DocumentLine("statementDetail", values);
+			
+			doc.addDetail(line);
+		}
+		
+		
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+
+		HTMLToPDFConvertor convertor = new HTMLToPDFConvertor();
+		InputStream is = GetReport.class.getClassLoader().getResourceAsStream(
+				"member-statement.html");
+		String html = IOUtils.toString(is);
+		byte[] data = convertor.convert(doc, html);
+
+		String name = user.getMemberNo()+" "+formatter.format(new Date())+".pdf";
+		
+		return data;
+	}
 
 	private void processCPDCertRequest(HttpServletRequest req,
 			HttpServletResponse resp) throws IOException, SAXException, ParserConfigurationException, FactoryConfigurationError, DocumentException {
