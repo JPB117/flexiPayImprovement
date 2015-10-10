@@ -1,13 +1,24 @@
 package com.workpoint.icpak.tests.dao;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+import javax.xml.parsers.FactoryConfigurationError;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.xml.sax.SAXException;
 
 import com.google.inject.Inject;
 import com.icpak.rest.dao.InvoiceDaoHelper;
 import com.icpak.rest.dao.helper.StatementDaoHelper;
 import com.icpak.servlet.upload.GetReport;
+import com.itextpdf.text.DocumentException;
 import com.workpoint.icpak.tests.base.AbstractDaoTest;
 
 public class TestStatementsDao extends AbstractDaoTest{
@@ -17,9 +28,12 @@ public class TestStatementsDao extends AbstractDaoTest{
 	@Inject GetReport reportServlet;
 	
 	@Test 
-	public void generateReport(){
-		String memberId= "MRnWxqBFVfwdnMQ2";
-		reportServlet.processStatementsRequest(memberRefId, startDate, endDate)
+	public void generateReport() throws FileNotFoundException, IOException, SAXException, ParserConfigurationException, FactoryConfigurationError, DocumentException{
+		String memberRefId= "LLU0eoZpPuA4lfSU";
+		byte[] bites = reportServlet.processStatementsRequest(memberRefId, null, null);
+		
+		IOUtils.write(bites, new FileOutputStream(new File("statements.pdf")));
+		
 	}
 	
 	@Ignore
