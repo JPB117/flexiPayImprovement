@@ -185,7 +185,7 @@ public class EventBookingView extends ViewImpl implements
 			DataModel model = new DataModel();
 			model.setId(dto.getRefId());
 			model.set("memberNo", member);
-			model.set("title", dto.getTitle());
+			model.set("title", dto.getTitle()==null? null: Title.valueOf(dto.getTitle()));
 			model.set("surname", dto.getSurname());
 			model.set("otherNames", dto.getOtherNames());
 			model.set("email", dto.getEmail());
@@ -597,7 +597,8 @@ public class EventBookingView extends ViewImpl implements
 		}
 
 		if (booking.getDelegates() != null) {
-			tblDelegates.setData(mapper.getDataModels(booking.getDelegates()));
+			List<DataModel> models =  mapper.getDataModels(booking.getDelegates());
+			tblDelegates.setData(models);
 		}
 
 	}
