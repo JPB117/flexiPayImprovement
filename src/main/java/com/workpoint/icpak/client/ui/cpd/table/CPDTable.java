@@ -44,7 +44,6 @@ public class CPDTable extends Composite {
 		th.add(new TableHeader("CPD Hours"));
 		th.add(new TableHeader("Status"));
 		th.add(new TableHeader("Action"));
-
 		tblView.setTableHeaders(th);
 	}
 
