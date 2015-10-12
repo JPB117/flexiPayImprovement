@@ -96,6 +96,19 @@
 											</div>
 										</div>
 
+										<div ui:field="divMembershipStatus" styleName="hide">
+											<div class="row">
+												Membership Status:
+												<span ui:field="spnMembershipStatus" class="label label-warning"></span>
+											</div>
+
+											<div class="row">
+												<br />
+												<d:ActionLink ui:field="aDownloadCert"
+													styleName="btn btn-fill btn-success">Download GoodStanding Certificate</d:ActionLink>
+											</div>
+										</div>
+
 									</g:HTMLPanel>
 								</div>
 							</g:HTMLPanel>

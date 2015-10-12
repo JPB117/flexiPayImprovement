@@ -42,15 +42,20 @@ import com.workpoint.icpak.shared.api.MemberResource;
 import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.shared.model.CPDSummaryDto;
 
-public class CPDManagementPresenter extends
-		Presenter<CPDManagementPresenter.ICPDManagementView, CPDManagementPresenter.ICPDManagementProxy> implements
-		EditModelHandler{
+public class CPDManagementPresenter
+		extends
+		Presenter<CPDManagementPresenter.ICPDManagementView, CPDManagementPresenter.ICPDManagementProxy>
+		implements EditModelHandler {
 
 	public interface ICPDManagementView extends View {
 		HasClickHandlers getRecordButton();
+
 		void bindResults(List<CPDDto> result);
+
 		void showDetailedView();
+
 		PagingPanel getPagingPanel();
+
 		void bindSummary(CPDSummaryDto summary);
 
 	}
@@ -58,13 +63,14 @@ public class CPDManagementPresenter extends
 	@ProxyCodeSplit
 	@NameToken(NameTokens.cpdmgt)
 	@UseGatekeeper(LoginGateKeeper.class)
-	public interface ICPDManagementProxy extends TabContentProxyPlace<CPDManagementPresenter> {
+	public interface ICPDManagementProxy extends
+			TabContentProxyPlace<CPDManagementPresenter> {
 	}
 
 	@TabInfo(container = HomePresenter.class)
 	static TabData getTabLabel(AdminGateKeeper adminGatekeeper) {
-		TabDataExt data = new TabDataExt("C.P.D Management", "fa fa-graduation-cap", 5,
-				adminGatekeeper, true);
+		TabDataExt data = new TabDataExt("C.P.D Management",
+				"fa fa-graduation-cap", 5, adminGatekeeper, true);
 		return data;
 	}
 
@@ -72,8 +78,8 @@ public class CPDManagementPresenter extends
 	protected final CurrentUser currentUser;
 
 	@Inject
-	public CPDManagementPresenter(final EventBus eventBus, final ICPDManagementView view,
-			final ICPDManagementProxy proxy,
+	public CPDManagementPresenter(final EventBus eventBus,
+			final ICPDManagementView view, final ICPDManagementProxy proxy,
 			final ResourceDelegate<MemberResource> memberDelegate,
 			final CurrentUser currentUser) {
 		super(eventBus, view, proxy, HomePresenter.SLOT_SetTabContent);
@@ -85,7 +91,7 @@ public class CPDManagementPresenter extends
 	protected void onBind() {
 		super.onBind();
 		addRegisteredHandler(EditModelEvent.TYPE, this);
-		
+
 		getView().getPagingPanel().setLoader(new PagingLoader() {
 			@Override
 			public void onLoad(int offset, int limit) {
@@ -97,7 +103,6 @@ public class CPDManagementPresenter extends
 
 	@Inject
 	GenericPopupPresenter popup;
-
 
 	protected void saveRecord(CPDDto dto) {
 		if (dto.getRefId() != null) {
@@ -121,7 +126,7 @@ public class CPDManagementPresenter extends
 
 	protected void loadData() {
 		fireEvent(new ProcessingEvent());
-		
+
 		memberDelegate.withCallback(new AbstractAsyncCallback<CPDSummaryDto>() {
 			@Override
 			public void onSuccess(CPDSummaryDto summary) {
@@ -139,7 +144,6 @@ public class CPDManagementPresenter extends
 				loadCPD(config.getOffset(), config.getLimit());
 			}
 		}).cpd("ALL").getCount();
-		
 
 	}
 
@@ -169,17 +173,7 @@ public class CPDManagementPresenter extends
 
 	@Override
 	public void onEditModel(EditModelEvent event) {
-		
-	}
-	
 
-//	@Override
-//	public void onEditModel(TableActionEvent event) {
-//		if (event.getAction() == TableActionType.DOWNLOADCERT) {
-//			//Send the refId to server side
-//			
-//			
-//		}
-//	}
+	}
 
 }

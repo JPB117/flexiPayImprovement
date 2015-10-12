@@ -26,13 +26,12 @@ public class ActionLink extends Anchor {
 		super();
 		setText(text);
 	}
-	
+
 	public ActionLink(Object model, String text) {
 		super();
 		this.model = model;
 		setText(text);
 	}
-
 
 	public void setDataToggle(String data) {
 		getElement().setAttribute("data-toggle", data);
@@ -54,6 +53,14 @@ public class ActionLink extends Anchor {
 
 	public void setDataPlacement(String data) {
 		getElement().setAttribute("data-placement", data);
+	}
+
+	public void setAriaExpanded(String data) {
+		getElement().setAttribute("aria-expanded", data);
+	}
+
+	public void setHtmlId(String data) {
+		getElement().setAttribute("id", data);
 	}
 
 	public Object getModel() {

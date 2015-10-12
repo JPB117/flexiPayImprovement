@@ -22,6 +22,7 @@ import com.icpak.rest.dao.helper.CPDDaoHelper;
 import com.icpak.rest.utils.Doc;
 import com.icpak.rest.utils.HTMLToPDFConvertor;
 import com.itextpdf.text.DocumentException;
+import com.workpoint.icpak.client.ui.util.NumberUtils;
 import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.tests.base.AbstractDaoTest;
 
@@ -34,20 +35,22 @@ public class TestOutput extends AbstractDaoTest {
 	public void print() throws IOException, SAXException,
 			ParserConfigurationException, FactoryConfigurationError,
 			DocumentException {
-		CPDDto cpd = helper.getCPD("", "wEshf16zCGxyqThu");
+		CPDDto cpd = helper.getCPD("100", "dbd043Iq5LYQ8pd3");
 
 		Map<String, Object> values = new HashMap<String, Object>();
 		values.put("eventName", cpd.getTitle());
 		values.put("eventDates",
-				DateUtils.formatDate(cpd.getStartDate(), "dd/MM/yyyy"));
+				DateUtils.formatDate(cpd.getStartDate(), "dd/MM/yyyy") + " to "
+						+ DateUtils.formatDate(cpd.getEndDate(), "dd/MM/yyyy"));
 		values.put("memberName", cpd.getFullNames());
 		values.put("dateIssued", DateUtils.formatDate(new Date(), "dd/MM/yyyy"));
-		values.put("cpdHours", cpd.getCpdHours());
+		values.put("cpdHours",
+				NumberUtils.NUMBERFORMAT.format(cpd.getCpdHours()));
 		Doc doc = new Doc(values);
 
 		HTMLToPDFConvertor convertor = new HTMLToPDFConvertor();
 		InputStream is = TestOutput.class.getClassLoader().getResourceAsStream(
-				"cpdcertificate.html");	
+				"cpdcertificate.html");
 		String html = IOUtils.toString(is);
 		byte[] bite = convertor.convert(doc, html);
 

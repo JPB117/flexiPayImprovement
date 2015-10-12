@@ -16,6 +16,7 @@ import com.workpoint.icpak.client.ui.events.EditModelEvent;
 import com.workpoint.icpak.client.ui.events.TableActionEvent;
 import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.client.util.AppContext;
+import com.workpoint.icpak.shared.model.CPDCategory;
 import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.shared.model.CPDStatus;
 
@@ -31,8 +32,6 @@ public class CPDTableRow extends RowWidget {
 	HTMLPanel row;
 
 	@UiField
-	HTMLPanel divDate;
-	@UiField
 	HTMLPanel divCourseName;
 	@UiField
 	HTMLPanel divOrganiser;
@@ -42,9 +41,18 @@ public class CPDTableRow extends RowWidget {
 	HTMLPanel divCPD;
 	@UiField
 	SpanElement spnStatus;
+	@UiField
+	HTMLPanel divStartDate;
+	@UiField
+	HTMLPanel divEndDate;
+	@UiField
+	HTMLPanel divAction;
 
 	@UiField
 	ActionLink aDownloadCert;
+
+	@UiField
+	ActionLink aActions;
 
 	@UiField
 	ActionLink aEdit;
@@ -92,9 +100,15 @@ public class CPDTableRow extends RowWidget {
 			divMember.setVisible(false);
 		}
 
-		if (dto.getCreated() != null)
-			divDate.add(new InlineLabel(DateUtils.DATEFORMAT.format(dto
-					.getCreated())));
+		if ((dto.getStartDate() != null)) {
+			divStartDate.add(new InlineLabel(DateUtils.DATEFORMAT.format(dto
+					.getStartDate())));
+		}
+
+		if (dto.getEndDate() != null) {
+			divEndDate.add(new InlineLabel(DateUtils.DATEFORMAT.format(dto
+					.getEndDate())));
+		}
 
 		divCourseName.add(new InlineLabel(dto.getTitle()));
 		divOrganiser.add(new InlineLabel(dto.getOrganizer()));
@@ -118,12 +132,25 @@ public class CPDTableRow extends RowWidget {
 			aAttended.addStyleName("hide");
 			aNotAttended.addStyleName("hide");
 		}
-		
-		//aDownloadCert.add
-		final String url  ="getreport?action=downloadcpdcert&cpdRefId="+dto.getRefId();
-		final String wintitle = "CPD Certificate for event "+dto.getTitle();
+
+		InlineLabel spnNoAction = new InlineLabel("No Action Possible");
+		if (dto.getStatus() == CPDStatus.Approved
+				&& dto.getCategory() == CPDCategory.CATEGORY_D) {
+			aDownloadCert.setVisible(false);
+			aEdit.setVisible(false);
+			aActions.setVisible(false);
+			divAction.add(spnNoAction);
+		} else {
+			aDownloadCert.setVisible(true);
+			aEdit.setVisible(true);
+			aActions.setVisible(true);
+			spnNoAction.setVisible(false);
+		}
+
+		final String url = "getreport?action=downloadcpdcert&cpdRefId="
+				+ dto.getRefId();
+		final String wintitle = "CPD Certificate for event " + dto.getTitle();
 		aDownloadCert.addClickHandler(new ClickHandler() {
-			
 			@Override
 			public void onClick(ClickEvent event) {
 				Window.open(url, wintitle, "");

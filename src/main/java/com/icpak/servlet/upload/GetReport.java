@@ -191,13 +191,23 @@ public class GetReport extends HttpServlet {
 		processAttachmentRequest(resp, data, "memberCPDStatement.pdf");
 	}
 
-	public byte[] processStatementsRequest(String memberRefId, Date startDate,
-			Date endDate) throws FileNotFoundException, IOException,
-			SAXException, ParserConfigurationException,
-			FactoryConfigurationError, DocumentException {
-		Member member = userDao.findByRefId(memberRefId, Member.class);
-		User user = member.getUser();
-
+	public byte[] processStatementsRequest(String memberRefId, Date startDate, Date endDate) throws FileNotFoundException, IOException, SAXException, ParserConfigurationException, FactoryConfigurationError, DocumentException {
+		
+		Member member =null;
+		
+		try{
+			member = userDao.findByRefId(memberRefId, Member.class);
+		}catch(Exception e){
+		}
+		
+		User user = null;
+		if(member!=null){
+			user = member.getUser();
+		}else{
+			//Probably an admin
+			throw new IllegalArgumentException("No Member statements found. Kindly confirm you are logged in");
+		}
+		
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
 		List<StatementDto> statements = statementDaoHelper.getAllStatements(
