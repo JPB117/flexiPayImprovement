@@ -153,7 +153,7 @@ public class GetReport extends HttpServlet {
 		Double totalAmount = 0.00;
 		
 		for(StatementDto statementDto : statements){
-			totalAmount = totalAmount + statementDto.getAmount();
+			totalAmount = statementDto.getAmount() + totalAmount;
 		}
 		
 		Map<String, Object> values = new HashMap<String, Object>();
