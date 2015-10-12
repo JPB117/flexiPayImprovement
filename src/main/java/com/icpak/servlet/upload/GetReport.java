@@ -37,7 +37,6 @@ import com.icpak.rest.utils.DocumentLine;
 import com.icpak.rest.utils.HTMLToPDFConvertor;
 import com.itextpdf.text.DocumentException;
 import com.workpoint.icpak.shared.model.CPDDto;
-import com.workpoint.icpak.shared.model.UserDto;
 import com.workpoint.icpak.shared.model.statement.StatementDto;
 
 @Singleton
@@ -47,24 +46,30 @@ public class GetReport extends HttpServlet {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	private static Logger log = Logger.getLogger(GetReport.class);
 
-	@Inject UsersDaoHelper helper;
-	@Inject UsersDao userDao;
-	@Inject AttachmentsDao attachmentDao;
-	@Inject CPDDaoHelper cpdHelper;
-	@Inject StatementDaoHelper statementDaoHelper;
-	
+	@Inject
+	UsersDaoHelper helper;
+	@Inject
+	UsersDao userDao;
+	@Inject
+	AttachmentsDao attachmentDao;
+	@Inject
+	CPDDaoHelper cpdHelper;
+	@Inject
+	StatementDaoHelper statementDaoHelper;
+
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
-		log.info("LOADED SERVLET "+getClass()+": ContextPath= "+config.getServletContext().getContextPath()
-				+", ContextName= "+config.getServletContext().getServletContextName()
-				+", ServletName= "+config.getServletName()
-				);
+		log.info("LOADED SERVLET " + getClass() + ": ContextPath= "
+				+ config.getServletContext().getContextPath()
+				+ ", ContextName= "
+				+ config.getServletContext().getServletContextName()
+				+ ", ServletName= " + config.getServletName());
 	}
-	
+
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
@@ -73,114 +78,121 @@ public class GetReport extends HttpServlet {
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException(e);
-		} 
+		}
 	}
-	
+
 	protected void executeGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException, SAXException, ParserConfigurationException, FactoryConfigurationError, DocumentException {
+			throws ServletException, IOException, SAXException,
+			ParserConfigurationException, FactoryConfigurationError,
+			DocumentException {
 
 		String action = req.getParameter("action");
-		if(action==null){
+		if (action == null) {
 			action = req.getParameter("ACTION");
 		}
-		
-		log.debug("GetReport Action = "+action);
+
+		log.debug("GetReport Action = " + action);
 
 		if (action == null) {
 			return;
 		}
-		
+
 		if (action.equalsIgnoreCase("GETATTACHMENT")) {
 			processAttachmentRequest(req, resp);
 		}
-		
-		if(action.equalsIgnoreCase("GetUserImage")){
+
+		if (action.equalsIgnoreCase("GetUserImage")) {
 			processUserImage(req, resp);
 		}
-		
-		if(action.equalsIgnoreCase("GetLogo")){
+
+		if (action.equalsIgnoreCase("GetLogo")) {
 			processSettingsImage(req, resp);
 		}
-		
-		if(action.equalsIgnoreCase("GENERATEOUTPUT")){
-			processOutputDoc(req,resp);
+
+		if (action.equalsIgnoreCase("GENERATEOUTPUT")) {
+			processOutputDoc(req, resp);
 		}
-		
+
 		if (action.equalsIgnoreCase("DownloadCPDCert")) {
 			processCPDCertRequest(req, resp);
 		}
-		
+
 		if (action.equalsIgnoreCase("GETSTATEMENT")) {
 			procesStatementsRequest(req, resp);
 		}
-		
+
 	}
 
-
-	private void procesStatementsRequest(HttpServletRequest req, HttpServletResponse resp) throws IOException, SAXException, ParserConfigurationException, FactoryConfigurationError, DocumentException {
+	private void procesStatementsRequest(HttpServletRequest req,
+			HttpServletResponse resp) throws IOException, SAXException,
+			ParserConfigurationException, FactoryConfigurationError,
+			DocumentException {
 		Long startDate = null;
 		Long endDate = null;
 		String memberRefId = null;
-		
-		if(req.getParameter("startdate") != null){
+
+		if (req.getParameter("startdate") != null) {
 			startDate = new Long(req.getParameter("startdate"));
 		}
-		
-		if(req.getParameter("enddate") != null){
+
+		if (req.getParameter("enddate") != null) {
 			endDate = new Long(req.getParameter("enddate"));
 		}
-		
-		if(req.getParameter("memberRefId") != null){
+
+		if (req.getParameter("memberRefId") != null) {
 			memberRefId = req.getParameter("memberRefId");
-		} 
-		
+		}
+
 		Date finalStartDate = new Date(startDate);
 		Date finalEndDate = new Date(endDate);
-		
-		byte[] data = processStatementsRequest(memberRefId, finalStartDate, finalEndDate);
-		
+
+		byte[] data = processStatementsRequest(memberRefId, finalStartDate,
+				finalEndDate);
+
 		processAttachmentRequest(resp, data, "statement.pdf");
 	}
 
-	public byte[] processStatementsRequest(String memberRefId, Date startDate, Date endDate) throws FileNotFoundException, IOException, SAXException, ParserConfigurationException, FactoryConfigurationError, DocumentException {
+	public byte[] processStatementsRequest(String memberRefId, Date startDate,
+			Date endDate) throws FileNotFoundException, IOException,
+			SAXException, ParserConfigurationException,
+			FactoryConfigurationError, DocumentException {
 		Member member = userDao.findByRefId(memberRefId, Member.class);
 		User user = member.getUser();
-		
+
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-		
-		List<StatementDto> statements = statementDaoHelper.getAllStatements(memberRefId, startDate, endDate, 0, 1000);
-		
+
+		List<StatementDto> statements = statementDaoHelper.getAllStatements(
+				memberRefId, startDate, endDate, 0, 1000);
+
 		Double totalAmount = 0.00;
-		
-		for(StatementDto statementDto : statements){
+
+		for (StatementDto statementDto : statements) {
 			totalAmount = totalAmount + statementDto.getAmount();
 		}
-		
+
 		Map<String, Object> values = new HashMap<String, Object>();
 		values.put("date", formatter.format(new Date()));
 		values.put("memberAddress", user.getAddress());
 		values.put("memberLocation", user.getCity());
 		values.put("memberNo", user.getMemberNo());
+		values.put("memberNames", user.getUserData().getFullNames());
 		values.put("totalAmount", totalAmount);
-		
+
 		Doc doc = new Doc(values);
-		
-		for(StatementDto dto: statements){
-			
+
+		for (StatementDto dto : statements) {
+
 			values = new HashMap<String, Object>();
-			values.put("postingDate",formatter.format(dto.getPostingDate()));
-			values.put("docNo",dto.getDocumentNo());
-			values.put("description",dto.getDescription());
-			values.put("originalAmount",dto.getAmount());
+			values.put("postingDate", formatter.format(dto.getPostingDate()));
+			values.put("docNo", dto.getDocumentNo());
+			values.put("description", dto.getDescription());
+			values.put("originalAmount", dto.getAmount());
 			values.put("credit", dto.getAmount());
 			values.put("balance", dto.getAmount());
 			DocumentLine line = new DocumentLine("statementDetail", values);
-			
+
 			doc.addDetail(line);
 		}
-		
-		
-		
 
 		HTMLToPDFConvertor convertor = new HTMLToPDFConvertor();
 		InputStream is = GetReport.class.getClassLoader().getResourceAsStream(
@@ -188,24 +200,26 @@ public class GetReport extends HttpServlet {
 		String html = IOUtils.toString(is);
 		byte[] data = convertor.convert(doc, html);
 
-		String name = user.getMemberNo()+" "+formatter.format(new Date())+".pdf";
-		
+		String name = user.getMemberNo() + " " + formatter.format(new Date())
+				+ ".pdf";
+
 		return data;
 	}
 
 	private void processCPDCertRequest(HttpServletRequest req,
-			HttpServletResponse resp) throws IOException, SAXException, ParserConfigurationException, FactoryConfigurationError, DocumentException {
-		String cpdRefId= req.getParameter("cpdRefId");
-		assert cpdRefId!=null;
+			HttpServletResponse resp) throws IOException, SAXException,
+			ParserConfigurationException, FactoryConfigurationError,
+			DocumentException {
+		String cpdRefId = req.getParameter("cpdRefId");
+		assert cpdRefId != null;
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-		
+
 		CPDDto cpd = cpdHelper.getCPD("", cpdRefId);
-		assert cpd!=null;
-		
+		assert cpd != null;
+
 		Map<String, Object> values = new HashMap<String, Object>();
 		values.put("eventName", cpd.getTitle());
-		values.put("eventDates",
-				formatter.format(cpd.getStartDate()));
+		values.put("eventDates", formatter.format(cpd.getStartDate()));
 		values.put("memberName", cpd.getFullNames());
 		values.put("dateIssued", formatter.format(new Date()));
 		values.put("cpdHours", cpd.getCpdHours());
@@ -217,130 +231,134 @@ public class GetReport extends HttpServlet {
 		String html = IOUtils.toString(is);
 		byte[] data = convertor.convert(doc, html);
 
-		String name = cpd.getFullNames()+" "+cpd.getTitle()+
-				formatter.format(new Date())+".pdf";
-		
+		String name = cpd.getFullNames() + " " + cpd.getTitle()
+				+ formatter.format(new Date()) + ".pdf";
+
 		processAttachmentRequest(resp, data, name);
 	}
 
 	private void processOutputDoc(HttpServletRequest req,
 			HttpServletResponse resp) {
-		String outdoc= req.getParameter("template");
+		String outdoc = req.getParameter("template");
 		String name = req.getParameter("name");
 		String doc = req.getParameter("doc");
 		String path = req.getParameter("path");
-		
-//		assert outdoc!=null && doc!=null;
-//		
-//		byte[] pdf;
-//		
-//		try {
-//			
-//			String template = OutputDocumentDaoHelper.getHTMLTemplate(outdoc);
-//			Long documentId = new Long(doc);
-//			Doc document  = DocumentDaoHelper.getDocument(documentId);
-//			pdf = new HTMLToPDFConvertor().convert(document, template);
-//			
-//			LocalAttachment attachment = new LocalAttachment();
-//	
-//			AttachmentDaoImpl dao = DB.getAttachmentDao();		
-//			List<LocalAttachment> attachments = dao.getAttachmentsForDocument(documentId, name);
-//			if(!attachments.isEmpty()){
-//				attachment = attachments.get(0);
-//			}
-//			
-//			attachment.setArchived(false);
-//			attachment.setContentType("application/pdf");
-//			attachment.setDocument(DB.getDocumentDao().getById(documentId));
-//			attachment.setName(name+(name.endsWith(".pdf")? "": name));
-//			attachment.setPath(path);
-//			attachment.setSize(pdf.length);
-//			attachment.setAttachment(pdf);
-//			dao.save(attachment);
-//			
-//		} catch (IOException | SAXException | ParserConfigurationException
-//				| FactoryConfigurationError | DocumentException e) {
-//			
-//			e.printStackTrace();
-//			return;
-//		}
-//		
-//		processAttachmentRequest(resp, pdf, name);
+
+		// assert outdoc!=null && doc!=null;
+		//
+		// byte[] pdf;
+		//
+		// try {
+		//
+		// String template = OutputDocumentDaoHelper.getHTMLTemplate(outdoc);
+		// Long documentId = new Long(doc);
+		// Doc document = DocumentDaoHelper.getDocument(documentId);
+		// pdf = new HTMLToPDFConvertor().convert(document, template);
+		//
+		// LocalAttachment attachment = new LocalAttachment();
+		//
+		// AttachmentDaoImpl dao = DB.getAttachmentDao();
+		// List<LocalAttachment> attachments =
+		// dao.getAttachmentsForDocument(documentId, name);
+		// if(!attachments.isEmpty()){
+		// attachment = attachments.get(0);
+		// }
+		//
+		// attachment.setArchived(false);
+		// attachment.setContentType("application/pdf");
+		// attachment.setDocument(DB.getDocumentDao().getById(documentId));
+		// attachment.setName(name+(name.endsWith(".pdf")? "": name));
+		// attachment.setPath(path);
+		// attachment.setSize(pdf.length);
+		// attachment.setAttachment(pdf);
+		// dao.save(attachment);
+		//
+		// } catch (IOException | SAXException | ParserConfigurationException
+		// | FactoryConfigurationError | DocumentException e) {
+		//
+		// e.printStackTrace();
+		// return;
+		// }
+		//
+		// processAttachmentRequest(resp, pdf, name);
 	}
 
 	private void processSettingsImage(HttpServletRequest req,
 			HttpServletResponse resp) {
-		
-//		String settingName = req.getParameter("settingName");
-//		log.debug("Logging- SettingName "+settingName);
-//		assert settingName!=null;
-//		
-//		String widthPx = req.getParameter("width");
-//		String heightPx = req.getParameter("height");
-//		
-//		if(widthPx!=null && heightPx==null){
-//			heightPx=widthPx;
-//		}
-//		
-//		Double width=null;
-//		Double height=null;
-//		
-//		if(widthPx!=null && widthPx.matches("[0-9]+(\\.[0-9][0-9]?)?")){
-//			width = new Double(widthPx);
-//			height = new Double(heightPx);
-//		}
-//		
-//		LocalAttachment attachment = DB.getAttachmentDao().getSettingImage(SETTINGNAME.valueOf(settingName));
-//		
-//		if(attachment==null){
-//			log.debug("No Attachment Found for Setting: ["+settingName+"]");
-//			return;
-//		}
-//		
-//		log.debug("Attachment found for setting: ["+settingName+"], FileName = "+attachment.getName());
-//		
-//		byte[] bites = attachment.getAttachment();
-//		
-//		if(width!=null){
-//			ImageUtils.resizeImage(resp, bites, width.intValue(), height.intValue());
-//		}else{
-//			ImageUtils.resizeImage(resp, bites);
-//		}
+
+		// String settingName = req.getParameter("settingName");
+		// log.debug("Logging- SettingName "+settingName);
+		// assert settingName!=null;
+		//
+		// String widthPx = req.getParameter("width");
+		// String heightPx = req.getParameter("height");
+		//
+		// if(widthPx!=null && heightPx==null){
+		// heightPx=widthPx;
+		// }
+		//
+		// Double width=null;
+		// Double height=null;
+		//
+		// if(widthPx!=null && widthPx.matches("[0-9]+(\\.[0-9][0-9]?)?")){
+		// width = new Double(widthPx);
+		// height = new Double(heightPx);
+		// }
+		//
+		// LocalAttachment attachment =
+		// DB.getAttachmentDao().getSettingImage(SETTINGNAME.valueOf(settingName));
+		//
+		// if(attachment==null){
+		// log.debug("No Attachment Found for Setting: ["+settingName+"]");
+		// return;
+		// }
+		//
+		// log.debug("Attachment found for setting: ["+settingName+"], FileName = "+attachment.getName());
+		//
+		// byte[] bites = attachment.getAttachment();
+		//
+		// if(width!=null){
+		// ImageUtils.resizeImage(resp, bites, width.intValue(),
+		// height.intValue());
+		// }else{
+		// ImageUtils.resizeImage(resp, bites);
+		// }
 	}
 
 	private void processUserImage(HttpServletRequest req,
-			HttpServletResponse resp){		
+			HttpServletResponse resp) {
 		String userId = req.getParameter("userRefId");
-		assert userId!=null;
-		
+		assert userId != null;
+
 		String widthPx = req.getParameter("width");
 		String heightPx = req.getParameter("height");
-		
-		if(widthPx!=null && heightPx==null){
-			heightPx=widthPx;
+
+		if (widthPx != null && heightPx == null) {
+			heightPx = widthPx;
 		}
-		
-		Double width=null;
-		Double height=null;
-		
-		if(widthPx!=null && widthPx.matches("[0-9]+(\\.[0-9][0-9]?)?")){
+
+		Double width = null;
+		Double height = null;
+
+		if (widthPx != null && widthPx.matches("[0-9]+(\\.[0-9][0-9]?)?")) {
 			width = new Double(widthPx);
 			height = new Double(heightPx);
 		}
-		
+
 		Attachment attachment = attachmentDao.getUserProfileImage(userId);
-		
-		if(attachment==null)
+
+		if (attachment == null)
 			return;
-		
+
 		processAttachmentRequest(resp, attachment);
-		
-//		if(width!=null){
-//			ImageUtils.resizeImage(resp, bites, width.intValue(), height.intValue());
-//		}else{
-//			ImageUtils.resizeImage(resp, bites);
-//		}
-		
+
+		// if(width!=null){
+		// ImageUtils.resizeImage(resp, bites, width.intValue(),
+		// height.intValue());
+		// }else{
+		// ImageUtils.resizeImage(resp, bites);
+		// }
+
 	}
 
 	private void processAttachmentRequest(HttpServletRequest req,
@@ -349,50 +367,51 @@ public class GetReport extends HttpServlet {
 		if (id == null)
 			return;
 
-//		LocalAttachment attachment = DB.getAttachmentDao().getAttachmentById(
-//				Long.parseLong(id));
-		
-//		processAttachmentRequest(resp, attachment);
-	}
-	
+		// LocalAttachment attachment = DB.getAttachmentDao().getAttachmentById(
+		// Long.parseLong(id));
 
-	private void processAttachmentRequest(HttpServletResponse resp, Attachment attachment) {
+		// processAttachmentRequest(resp, attachment);
+	}
+
+	private void processAttachmentRequest(HttpServletResponse resp,
+			Attachment attachment) {
 
 		resp.setContentType(attachment.getContentType());
-		processAttachmentRequest(resp, attachment.getAttachment(), attachment.getName());
+		processAttachmentRequest(resp, attachment.getAttachment(),
+				attachment.getName());
 	}
-	
-	private void processAttachmentRequest(HttpServletResponse resp, byte[] data, String name ){
-		if(name.endsWith("png") || name.endsWith("jpg") || name.endsWith("html") || name.endsWith("htm") 
-				|| name.endsWith("svg") || name.endsWith("pdf")){
-			//displayed automatically
-			resp.setHeader("Content-disposition", "inline;filename=\""
-					+ name);
-		}else{
+
+	private void processAttachmentRequest(HttpServletResponse resp,
+			byte[] data, String name) {
+		if (name.endsWith("png") || name.endsWith("jpg")
+				|| name.endsWith("html") || name.endsWith("htm")
+				|| name.endsWith("svg") || name.endsWith("pdf")) {
+			// displayed automatically
+			resp.setHeader("Content-disposition", "inline;filename=\"" + name);
+		} else {
 			resp.setHeader("Content-disposition", "attachment;filename=\""
 					+ name);
 		}
-		
+
 		resp.setContentLength(data.length);
 		writeOut(resp, data);
 
 	}
 
-	private void writeOut(HttpServletResponse resp,
-			byte[] data) {
+	private void writeOut(HttpServletResponse resp, byte[] data) {
 		ServletOutputStream out = null;
-		try{
+		try {
 			out = resp.getOutputStream();
 			out.write(data);
-		}catch(Exception e){
+		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
-		
-		try{
-			out.close();			
-		}catch(Exception e){
+
+		try {
+			out.close();
+		} catch (Exception e) {
 			throw new RuntimeException(e);
-		}		
+		}
 	}
 
 }

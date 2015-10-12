@@ -3,34 +3,37 @@
 http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_1_0.xsd"
 	xmlns:orm="http://java.sun.com/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns="http://java.sun.com/xml/ns/persistence">
-	
-    <persistence-unit name="icpak_pu" transaction-type="RESOURCE_LOCAL">
-        <provider>org.hibernate.ejb.HibernatePersistence</provider>
-        <class>com.icpak.rest.models.auth.User</class>
-        <class>com.icpak.rest.models.event.Event</class>
-        <properties>
-        
-        	<!-- Overriding MYSQL5Dialect to solve this issue https://hibernate.atlassian.net/browse/HHH-8796 -->
-            <!-- property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/ -->
-            <property name="hibernate.dialect" value="com.icpak.rest.hibernate_ext.MYSQL5Dialect"/>
-        	
-            <property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver" />
-            <property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/icpakdb" />
-            <property name="hibernate.connection.username" value="root" />
-            <property name="hibernate.connection.password" value="toor" />
-            <property name="hibernate.max_fetch_depth" value="3" />
-            <property name="hibernate.hbm2ddl.auto" value="update" />
-            <property name="hibernate.show_sql" value="true" />
-            <property name="hibernate.schema_update.unique_constraint_strategy" value="RECREATE_QUIETLY"/>
-            
-            <property name="hibernate.c3p0.min_size" value="5"/>
-	        <property name="hibernate.c3p0.max_size" value="20"/>
-	        <property name="hibernate.c3p0.timeout" value="1800"/>
-	        <property name="hibernate.c3p0.max_statements" value="50"/>
-	            
-            <property name="hibernate.cache.region.factory_class" value="org.hibernate.cache.ehcache.EhCacheRegionFactory"/>
-            <property name="hibernate.cache.use_query_cache" value="true"/>
-            <property name="hibernate.cache.use_second_level_cache" value="true"/>
-        </properties>
-    </persistence-unit>
+
+	<persistence-unit name="icpak_pu" transaction-type="RESOURCE_LOCAL">
+		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+		<class>com.icpak.rest.models.auth.User</class>
+		<class>com.icpak.rest.models.event.Event</class>
+		<properties>
+
+			<!-- Overriding MYSQL5Dialect to solve this issue https://hibernate.atlassian.net/browse/HHH-8796 -->
+			<!-- property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/ -->
+			<property name="hibernate.dialect" value="com.icpak.rest.hibernate_ext.MYSQL5Dialect" />
+
+			<property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver" />
+			<property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/icpakdb" />
+			<property name="hibernate.connection.username" value="root" />
+			<property name="hibernate.connection.password" value="root" />
+			<property name="hibernate.max_fetch_depth" value="3" />
+			<property name="hibernate.hbm2ddl.auto" value="update" />
+			<property name="hibernate.show_sql" value="true" />
+			<property name="hibernate.schema_update.unique_constraint_strategy"
+				value="RECREATE_QUIETLY" />
+
+			<property name="hibernate.c3p0.min_size" value="5" />
+			<property name="hibernate.c3p0.max_size" value="20" />
+			<property name="hibernate.c3p0.timeout" value="1800" />
+			<property name="hibernate.c3p0.max_statements" value="50" />
+
+			<property name="hibernate.cache.region.factory_class"
+				value="org.hibernate.cache.ehcache.EhCacheRegionFactory" />
+			<property name="hibernate.cache.use_query_cache" value="true" />
+			<property name="hibernate.cache.use_second_level_cache"
+				value="true" />
+		</properties>
+	</persistence-unit>
 </persistence>

@@ -28,14 +28,13 @@ public class TestBookingDao extends AbstractDaoTest {
 	@Inject
 	EventsDao eventDao;
 
-	@Test
-	public void getTrx(){
+	@Ignore
+	public void getTrx() {
 		bookingsHelper.getMemberBookings("lYEAuIVOBGoh9e9j", 0, 100);
 	}
-	
+
 	@Ignore
 	public void member() {
-
 		Delegate d = eventDao.findByRefId("dvIGX5Qn5Y3T3oEJ", Delegate.class);
 		daoHelper.updateCPDFromAttendance(d, AttendanceStatus.ATTENDED);
 	}
@@ -51,7 +50,7 @@ public class TestBookingDao extends AbstractDaoTest {
 
 	}
 
-	@Ignore
+	@Test
 	public void createBooking() {
 		BookingDto dto = new BookingDto();
 
@@ -73,14 +72,14 @@ public class TestBookingDao extends AbstractDaoTest {
 		DelegateDto delegate = new DelegateDto();
 		delegate.setEmail("kim@wira.io");
 		delegate.setOtherNames("Kimani");
-		delegate.setSurname("Duggan");
+		delegate.setSurname("Tom");
 		delegate.setMemberId("10000");
-		//delegate.setMemberRefId("LCJ4fe1eoOdxwq69");
+		// delegate.setMemberRefId("LCJ4fe1eoOdxwq69");
 		delegates.add(delegate);
 		dto.setDelegates(delegates);
 
 		// dto.setCurrency(currency);
-		bookingsHelper.createBooking("Jx4Ca6HpOutf2ic7", dto);
+		bookingsHelper.createBooking("PrjIf8x4RIDaPZIv", dto);
 
 	}
 }
