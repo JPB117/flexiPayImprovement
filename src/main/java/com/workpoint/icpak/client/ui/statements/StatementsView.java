@@ -47,7 +47,6 @@ public class StatementsView extends ViewImpl implements StatementsPresenter.ISta
 
 	@UiField
 	ActionLink downloadPdf;
-
 	@Inject
 	public StatementsView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
