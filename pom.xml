@@ -255,12 +255,12 @@
 			<groupId>com.amazonaws</groupId>
 			<artifactId>aws-java-sdk</artifactId>
 			<version>1.9.0</version>
-			<exclusions>
+			<!-- exclusions>
 				<exclusion>
 					<groupId>org.apache.httpcomponents</groupId>
 					<artifactId>httpcore</artifactId>
 				</exclusion>
-			</exclusions>
+			</exclusions -->
 		</dependency>
 
 		<!-- End of Persistence -->
@@ -607,6 +607,14 @@
 					<artifactId>jsr311-api</artifactId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+		
+		
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpcore</artifactId>
+			<version>4.2</version>
+			<scope>runtime</scope>
 		</dependency>
 
 		<!-- Unit Tests -->

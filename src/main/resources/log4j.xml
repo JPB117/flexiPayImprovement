@@ -8,7 +8,7 @@
         </layout>
     </appender>
     <logger name="com.icpak">
-        <level value="FATAL"/>
+        <level value="DEBUG"/>
     </logger>
     <logger name="com.icpak.servlet">
         <level value="DEBUG"/>
