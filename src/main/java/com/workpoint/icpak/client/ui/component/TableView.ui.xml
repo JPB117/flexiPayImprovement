@@ -9,7 +9,7 @@
 					styleName="form-control"></d:TextField>
 			</div>
 			<div class="pull-right action-buttons">
-				<d:ActionLink ui:field="downloadPdf">
+				<d:ActionLink ui:field="aDownloadPdf">
 					<i class="fa fa-file-pdf-o"></i>
 					Download as Pdf
 				</d:ActionLink>

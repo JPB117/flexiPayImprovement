@@ -3,7 +3,9 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.workpoint.icpak.client.ui.component">
 
 	<g:HTMLPanel styleName="tr" ui:field="row">
-		<g:HTMLPanel styleName="td" ui:field="divDate">
+		<g:HTMLPanel styleName="td" ui:field="divStartDate">
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td" ui:field="divEndDate">
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divMember">
 			<d:ActionLink ui:field="aMember"></d:ActionLink>
@@ -23,11 +25,12 @@
 
 		<g:HTMLPanel styleName="td" ui:field="divAction">
 			<div class="dropdown">
-				<a class="btn btn-default btn-fill dropdown-toggle" id="dropdownMenu1"
-					data-toggle="dropdown" aria-expanded="true">
+				<d:ActionLink styleName="btn btn-default btn-fill dropdown-toggle"
+					dataToggle="dropdown" ariaExpanded="true" ui:field="aActions"
+					htmlId="dropdownMenu1">
 					-Select-
 					<span class="caret"></span>
-				</a>
+				</d:ActionLink>
 
 				<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
 					<li>

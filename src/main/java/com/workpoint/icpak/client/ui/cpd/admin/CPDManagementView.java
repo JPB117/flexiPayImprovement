@@ -1,7 +1,6 @@
 package com.workpoint.icpak.client.ui.cpd.admin;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -18,15 +17,11 @@ import com.gwtplatform.mvp.client.ViewImpl;
 import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.DropDownList;
 import com.workpoint.icpak.client.ui.component.PagingPanel;
-import com.workpoint.icpak.client.ui.component.tabs.TabContent;
-import com.workpoint.icpak.client.ui.component.tabs.TabHeader;
 import com.workpoint.icpak.client.ui.component.tabs.TabPanel;
 import com.workpoint.icpak.client.ui.component.tabs.TabPanel.TabPosition;
-import com.workpoint.icpak.client.ui.cpd.confirmed.ConfirmedCPD;
 import com.workpoint.icpak.client.ui.cpd.header.CPDHeader;
 import com.workpoint.icpak.client.ui.cpd.table.CPDTable;
 import com.workpoint.icpak.client.ui.cpd.table.row.CPDTableRow;
-import com.workpoint.icpak.client.ui.cpd.unconfirmed.UnconfirmedCPD;
 import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.model.CPDDto;
@@ -43,9 +38,6 @@ public class CPDManagementView extends ViewImpl implements
 
 	@UiField
 	HTMLPanel container;
-
-	private ConfirmedCPD confirmedWidget;
-	private UnconfirmedCPD unconfirmedWidget;
 
 	@UiField
 	DropDownList<Year> lstFrom;
@@ -80,16 +72,6 @@ public class CPDManagementView extends ViewImpl implements
 		headerContainer.setTitles("Total CPD Requests", "Total Processed",
 				"Total Pending");
 
-		unconfirmedWidget = new UnconfirmedCPD();
-		confirmedWidget = new ConfirmedCPD();
-
-		divTabs.setHeaders(Arrays.asList(new TabHeader("Confirmed CPD", true,
-				"confirmed_cpd"), new TabHeader("Un-Confirmed CPD", false,
-				"unconfirmed_cpd")));
-
-		divTabs.setContent(Arrays.asList(new TabContent(unconfirmedWidget,
-				"unconfirmed_cpd", false), new TabContent(confirmedWidget,
-				"confirmed_cpd", true)));
 
 		divTabs.setPosition(TabPosition.PILLS);
 
