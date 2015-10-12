@@ -146,20 +146,29 @@ public class GetReport extends HttpServlet {
 		Member member = userDao.findByRefId(memberRefId, Member.class);
 		User user = member.getUser();
 		
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+		
 		List<StatementDto> statements = statementDaoHelper.getAllStatements(memberRefId, startDate, endDate, 0, 1000);
 		
+		Double totalAmount = 0.00;
+		
+		for(StatementDto statementDto : statements){
+			totalAmount = statementDto.getAmount() + totalAmount;
+		}
+		
 		Map<String, Object> values = new HashMap<String, Object>();
-		values.put("date", new Date());
+		values.put("date", formatter.format(new Date()));
 		values.put("memberAddress", user.getAddress());
 		values.put("memberLocation", user.getCity());
 		values.put("memberNo", user.getMemberNo());
+		values.put("totalAmount", totalAmount);
 		
 		Doc doc = new Doc(values);
 		
 		for(StatementDto dto: statements){
 			
 			values = new HashMap<String, Object>();
-			values.put("postingDate",dto.getPostingDate());
+			values.put("postingDate",formatter.format(dto.getPostingDate()));
 			values.put("docNo",dto.getDocumentNo());
 			values.put("description",dto.getDescription());
 			values.put("originalAmount",dto.getAmount());
@@ -171,7 +180,7 @@ public class GetReport extends HttpServlet {
 		}
 		
 		
-		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+		
 
 		HTMLToPDFConvertor convertor = new HTMLToPDFConvertor();
 		InputStream is = GetReport.class.getClassLoader().getResourceAsStream(
