@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Calendar;
 
 import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
@@ -30,7 +31,17 @@ public class TestStatementsDao extends AbstractDaoTest{
 	@Test 
 	public void generateReport() throws FileNotFoundException, IOException, SAXException, ParserConfigurationException, FactoryConfigurationError, DocumentException{
 		String memberRefId= "LLU0eoZpPuA4lfSU";
-		byte[] bites = reportServlet.processStatementsRequest(memberRefId, null, null);
+		Calendar c = Calendar.getInstance();
+		c.set(Calendar.DATE, 02);
+		c.set(Calendar.YEAR, 2009);
+		c.set(Calendar.MONTH, 0);
+		c.set(Calendar.HOUR, 0);
+		c.set(Calendar.MINUTE, 0);
+		c.set(Calendar.SECOND, 0);
+		c.set(Calendar.MILLISECOND, 0);
+		
+		byte[] bites = reportServlet.processStatementsRequest(memberRefId,
+				c.getTime(), null);
 		
 		IOUtils.write(bites, new FileOutputStream(new File("statements.pdf")));
 		
