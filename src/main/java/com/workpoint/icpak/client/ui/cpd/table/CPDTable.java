@@ -34,9 +34,10 @@ public class CPDTable extends Composite {
 
 	public void createHeader(boolean isAdmin) {
 		List<TableHeader> th = new ArrayList<TableHeader>();
-		th.add(new TableHeader("#"));
+		th.add(new TableHeader("Start Date:"));
+		th.add(new TableHeader("End Date:"));
 		if (isAdmin) {
-			th.add(new TableHeader("Member Name"));
+			th.add(new TableHeader("Member Name:"));
 		}
 		th.add(new TableHeader("Course/Event Name"));
 		th.add(new TableHeader("Organiser"));
@@ -44,7 +45,6 @@ public class CPDTable extends Composite {
 		th.add(new TableHeader("CPD Hours"));
 		th.add(new TableHeader("Status"));
 		th.add(new TableHeader("Action"));
-
 		tblView.setTableHeaders(th);
 	}
 

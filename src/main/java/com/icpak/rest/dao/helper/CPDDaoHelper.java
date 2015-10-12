@@ -20,31 +20,33 @@ import com.workpoint.icpak.shared.model.events.AttendanceStatus;
 @Transactional
 public class CPDDaoHelper {
 
-	@Inject CPDDao dao;
-	@Inject EventsDao eventDao;
-	@Inject UsersDao userDao;
-	
-	public List<CPDDto> getAllCPD(String memberId, Integer offset,
-			Integer limit) {
-		
+	@Inject
+	CPDDao dao;
+	@Inject
+	EventsDao eventDao;
+	@Inject
+	UsersDao userDao;
+
+	public List<CPDDto> getAllCPD(String memberId, Integer offset, Integer limit) {
+
 		List<CPD> cpds = null;
-		
-		if(memberId!=null && memberId.equals("ALL")){
+
+		if (memberId != null && memberId.equals("ALL")) {
 			cpds = dao.getAllCPDs(offset, limit);
-		}else{
-			cpds = dao.getAllCPDs(memberId,offset, limit);
+		} else {
+			cpds = dao.getAllCPDs(memberId, offset, limit);
 		}
-		
+
 		List<CPDDto> rtn = new ArrayList<>();
-		for(CPD cpd: cpds){
+		for (CPD cpd : cpds) {
 			CPDDto dto = cpd.toDTO();
 			dto.setFullNames(userDao.getFullNames(cpd.getMemberId()));
 			rtn.add(dto);
 		}
-		
+
 		return rtn;
 	}
-	
+
 	public Integer getCount(String memberId) {
 		return dao.getCPDCount(memberId);
 	}
@@ -52,28 +54,29 @@ public class CPDDaoHelper {
 	public CPDDto getCPD(String memberId, String cpdId) {
 		CPD cpd = dao.findByCPDId(cpdId);
 		CPDDto rtn = cpd.toDTO();
-		rtn.setFullNames(userDao.getFullNames(memberId));
+		rtn.setFullNames(userDao.getNamesBymemberNo(cpd
+				.getMemberRegistrationNo()));
 		return rtn;
 	}
 
-	public CPDDto create(String memberId,CPDDto cpdDto) {
-		
+	public CPDDto create(String memberId, CPDDto cpdDto) {
+
 		CPD cpd = new CPD();
 		cpd.copyFrom(cpdDto);
 		cpd.setMemberId(memberId);
 		dao.save(cpd);
-		
+
 		CPDDto rtn = cpd.toDTO();
 		rtn.setFullNames(userDao.getFullNames(memberId));
 		return rtn;
 	}
-	
+
 	public CPDDto update(String memberId, String cpdId, CPDDto cpd) {
 		CPD poCPD = dao.findByCPDId(cpdId);
-		poCPD.copyFrom(cpd);		
+		poCPD.copyFrom(cpd);
 		poCPD.setMemberId(memberId);
 		dao.save(poCPD);
-		
+
 		CPDDto rtn = poCPD.toDTO();
 		rtn.setFullNames(userDao.getFullNames(memberId));
 		return rtn;
@@ -85,54 +88,54 @@ public class CPDDaoHelper {
 
 	public void updateCPDFromAttendance(Delegate delegate,
 			AttendanceStatus attendance) {
-		if(delegate.getMemberRefId()==null){
+		if (delegate.getMemberRefId() == null) {
 			return;
 		}
-		
-		Member member = dao.findByRefId(delegate.getMemberRefId(), Member.class);
+
+		Member member = dao
+				.findByRefId(delegate.getMemberRefId(), Member.class);
 		Event event = delegate.getBooking().getEvent();
 		String memberId = delegate.getMemberRefId();
-		
-		if(attendance==null || attendance == AttendanceStatus.NOTATTENDED){
+
+		if (attendance == null || attendance == AttendanceStatus.NOTATTENDED) {
 			dao.deleteCPDByMemberAndEvent(memberId, event.getRefId());
 			return;
 		}
-		
-		
+
 		CPDDto cpd = new CPDDto();
 		CPD po = dao.getCPDByMemberAndEvent(memberId, event.getRefId());
-		if(po!=null){
+		if (po != null) {
 			cpd = po.toDTO();
 		}
-		
+
 		cpd.setCpdHours(event.getCpdHours());
 		cpd.setEndDate(event.getEndDate());
 		cpd.setStartDate(event.getStartDate());
-		cpd.setFullNames(delegate.getSurname()+" "+delegate.getOtherNames());
+		cpd.setFullNames(delegate.getSurname() + " " + delegate.getOtherNames());
 		cpd.setMemberId(memberId);
 		cpd.setEventId(event.getRefId());
 		cpd.setOrganizer("ICPAK");
 		cpd.setStatus(CPDStatus.Approved);
 		cpd.setEventId(event.getRefId());
 		cpd.setTitle(event.getName());
-		
-		if(cpd.getRefId()!=null){
+
+		if (cpd.getRefId() != null) {
 			update(memberId, cpd.getRefId(), cpd);
-		}else{
+		} else {
 			create(memberId, cpd);
 		}
 	}
 
 	public CPDSummaryDto getCPDSummary(String memberRefId) {
-		
+
 		CPDSummaryDto dto = null;
-		
-		if(memberRefId.equals("ALL")){
+
+		if (memberRefId.equals("ALL")) {
 			dto = dao.getCPDSummary();
-		}else{
+		} else {
 			dto = dao.getCPDSummary(memberRefId);
 		}
-		
+
 		return dto;
 	}
 

@@ -1,11 +1,149 @@
 <!DOCTYPE html>
 <html>
 <head>
-<link href="css/bootstrap.css" rel="stylesheet" />
-<title></title>
 <style type="text/css">
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+	font-family: inherit;
+	font-weight: 500;
+	line-height: 1.1;
+	color: inherit;
+}
+
+h1 small, h2 small, h3 small, h4 small, h5 small, h6 small, .h1 small,
+	.h2 small, .h3 small, .h4 small, .h5 small, .h6 small, h1 .small, h2 .small,
+	h3 .small, h4 .small, h5 .small, h6 .small, .h1 .small, .h2 .small, .h3 .small,
+	.h4 .small, .h5 .small, .h6 .small {
+	font-weight: normal;
+	line-height: 1;
+	color: #777;
+}
+
+h1, .h1, h2, .h2, h3, .h3 {
+	margin-top: 20px;
+	margin-bottom: 10px;
+}
+
+h1 small, .h1 small, h2 small, .h2 small, h3 small, .h3 small, h1 .small,
+	.h1 .small, h2 .small, .h2 .small, h3 .small, .h3 .small {
+	font-size: 65%;
+}
+
+h4, .h4, h5, .h5, h6, .h6 {
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+h4 small, .h4 small, h5 small, .h5 small, h6 small, .h6 small, h4 .small,
+	.h4 .small, h5 .small, .h5 .small, h6 .small, .h6 .small {
+	font-size: 75%;
+}
+
+h1, .h1 {
+	font-size: 36px;
+}
+
+h2, .h2 {
+	font-size: 30px;
+}
+
+h3, .h3 {
+	font-size: 24px;
+}
+
+h4, .h4 {
+	font-size: 18px;
+}
+
+h5, .h5 {
+	font-size: 14px;
+}
+
+h6, .h6 {
+	font-size: 12px;
+}
+
+p {
+	margin: 0 0 10px;
+}
+
+/* Print grid css*/
+.row-fluid {
+	width: 100%;
+	*zoom: 1;
+}
+
+.row-fluid:before, .row-fluid:after {
+	display: block;
+	line-height: 0;
+	content: "";
+}
+
+.row-fluid:after {
+	clear: both;
+}
+
+.col-print-1 {
+	width: 8%;
+	float: left;
+}
+
+.col-print-2 {
+	width: 16%;
+	float: left;
+}
+
+.col-print-3 {
+	width: 25%;
+	float: left;
+}
+
+.col-print-4 {
+	width: 33%;
+	float: left;
+}
+
+.col-print-5 {
+	width: 42%;
+	float: left;
+}
+
+.col-print-6 {
+	width: 50%;
+	float: left;
+}
+
+.col-print-7 {
+	width: 58%;
+	float: left;
+}
+
+.col-print-8 {
+	width: 66%;
+	float: left;
+}
+
+.col-print-9 {
+	width: 75%;
+	float: left;
+}
+
+.col-print-10 {
+	width: 83%;
+	float: left;
+}
+
+.col-print-11 {
+	width: 92%;
+	float: left;
+}
+
+.col-print-12 {
+	width: 100%;
+	float: left;
+}
+
 .container {
-	width: 700px;
+	width: 100%;
 	margin: 10px auto;
 }
 
@@ -333,16 +471,20 @@ table td[class*="span"], table th[class*="span"], .row-fluid table td[class*="sp
 	top: 0;
 }
 
-/*.footer {
-	position: absolute;
-	width: inherit;
-	text-align: center;
-	font-style: italic;
-	color: grey;
-	bottom: 0;
-} */
 .num {
 	text-align: right !important;
+}
+
+.text-left {
+	text-align: left;
+}
+
+.text-right {
+	text-align: right;
+}
+
+.text-center {
+	text-align: center;
 }
 
 div.footer {
@@ -351,9 +493,8 @@ div.footer {
 	position: running(footer);
 }
 
-@page { @bottom-center { content:element(footer);
-	
-}
+@page {
+	size: 11.69in 8.27in;
 }
 </style>
 </head>
@@ -362,70 +503,79 @@ div.footer {
 	<div class="container">
 		<div class="row-fluid">
 			<div class="row-fluid">
-				<div class="span4">
+				<div class="col-print-4">
 					<br />
 					<p>Institute of Certified Public Accountants of Kenya</p>
 					<p>P.O. BOX 59963 00200 (City Square), CPA Center, Ruaraka,</p>
 					<p>Thika Rd. Website: www.icpak.com | E-mail:icpak@icpak.com</p>
 					<p>Mobile:0727-531006/0733-856262 | Wireless:020 2304226/7</p>
 				</div>
-				<div class="span4">
+				<div class="col-print-4 text-center">
 					<img
 						src="http://www2.icpak.com:8080/icpakportal/img/icpak_logo.png"
 						width="250px" height="150px" class="text-center"></img>
 				</div>
-				<div class="span4">
-					<p>V.A.T Registration No: 0122347L</p>
-					<p>Drop In Box No. 164</p>
+				<div class="col-print-4 text-right">
+					<br />
+					<p>Cheque Dropoff Point</p>
+					<p>Drop in Box No.164</p>
 					<p>Revlon Professional Plaza, 2nd Floor,</p>
 					<p>Biashara Street/Tubman Road</p>
-					<p>Bank: Barclays Bank of Kenya</p>
-					<p>Branch: Moi Avenue</p>
-					<p>Bank Account No. 03-075-1597134</p>
-					<p>Swift Code: BARCKENX</p>
-					<p>PIN NO: P000607239Y</p>
 				</div>
 			</div>
 			<div class="row-fluid">
-				<h2>PROFORMA INVOICE</h2>
-				<hr />
-				<div class="span6">
-					@#companyName<br /> @#companyAddress <br /> @#companyAddress <br />
+				<h1 class="text-center">Proforma Invoice</h1>
+			</div>
+			<div class="row-fluid">
+				<div class="col-print-6">
+					@#companyName<br /> @#companyAddress <br /> @#companyLocation <br />
 				</div>
-				<div class="span6">
+				<div class="col-print-6">
 					<b>Proforma No:</b>@#quoteNo<br /> @#date <br />
 				</div>
 			</div>
-			<h4>Invoice Details</h4>
-			<hr />
 
-			<table class="table table-bordered table-condensed">
-				<thead>
-					<tr>
-						<th>Description</th>
-						<th>Quantity</th>
-						<th>Unit Price(Ksh)</th>
-						<th>Amount(Ksh)</th>
-					</tr>
-				</thead>
-				<tbody>
-					<!--@>invoiceDetails-->
-					<tr>
-						<td>@#description</td>
-						<td>@#quantity</td>
-						<td>@#unitPrice</td>
-						<td class="num">@#amount</td>
-					</tr>
-					<!--@<invoiceDetails-->
-					<tr>
-						<td></td>
-						<td></td>
-						<td class="num"><b>Grand Total</b></td>
-						<td class="num"><b style="border-bottom: 3px double;">KES
-								@#totalAmount</b></td>
-					</tr>
-				</tbody>
-			</table>
+			<br />
+
+			<div class="row=fluid">
+				<table class="table table-bordered table-condensed">
+					<thead>
+						<tr>
+							<th>Description</th>
+							<th>Quantity</th>
+							<th>Unit Price(Ksh)</th>
+							<th>Amount(Ksh)</th>
+						</tr>
+					</thead>
+					<tbody>
+						<!--@>invoiceDetails-->
+						<tr>
+							<td>@#description</td>
+							<td>@#quantity</td>
+							<td>@#unitPrice</td>
+							<td class="num">@#amount</td>
+						</tr>
+						<!--@<invoiceDetails-->
+						<tr>
+							<td></td>
+							<td></td>
+							<td class="num"><b>Grand Total</b></td>
+							<td class="num"><b style="border-bottom: 3px double;">KES
+									@#totalAmount</b></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<div class="row-fluid">
+				<strong> NOTE: <br /> Bank Details: Barclays Bank of Kenya
+					(KSH Account), Branch: Moi Avenue, Bank Account No: 03-075-1597134
+					I&M (Dollar Account), Branch: Kenyatta Avenue, Bank Account No:
+					00100721751510, Swiftcode: IBMLKENA <br /> MPESA Payment: MPESA
+					Business No: 722722: Account No: (The Invoice Number) <br />Cash
+					payment will not be accepted
+				</strong>
+			</div>
 		</div>
 	</div>
 </body>

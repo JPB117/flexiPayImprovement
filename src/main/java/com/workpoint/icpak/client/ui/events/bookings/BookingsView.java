@@ -72,11 +72,11 @@ public class BookingsView extends ViewImpl implements
 		if (attendance != null) {
 			label.getElement().setInnerText(attendance.getDisplayName());
 			if (attendance == AttendanceStatus.NOTATTENDED) {
-				label.removeStyleName("label-success");
-				label.addStyleName("label-danger");
+				label.removeStyleName("label label-success");
+				label.addStyleName("label label-danger");
 			} else {
-				label.removeStyleName("label-danger");
-				label.addStyleName("label-success");
+				label.removeStyleName("label label-danger");
+				label.addStyleName("label label-success");
 			}
 		}
 		return label;
@@ -87,8 +87,11 @@ public class BookingsView extends ViewImpl implements
 		if (paymentStatus != null) {
 			label.getElement().setInnerText(paymentStatus.name());
 			if (paymentStatus == PaymentStatus.NOTPAID) {
-				label.removeStyleName("label-success");
-				label.addStyleName("label-danger");
+				label.removeStyleName("label label-success");
+				label.addStyleName("label label-danger");
+			} else {
+				label.removeStyleName("label label-danger");
+				label.addStyleName("label label-success");
 			}
 		}
 		return label;

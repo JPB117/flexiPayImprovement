@@ -85,15 +85,6 @@ public class CPDView extends ViewImpl implements CPDPresenter.ICPDView {
 
 		divTabs.setPosition(TabPosition.PILLS);
 
-		String display = "";
-		String display2 = "";
-
-		for (int i2 = 0; i2 <= totalYears; i2++) {
-			display2 = display2 + "," + allYears.get(i2).getDisplayName();
-		}
-
-		// spnDebug.setInnerText(">>>" + display + ">>>" + display2);
-
 		lstFrom.setItems(allYears);
 		lstTo.setItems(allYears);
 
