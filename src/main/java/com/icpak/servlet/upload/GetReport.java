@@ -214,17 +214,18 @@ public class GetReport extends HttpServlet {
 		assert cpdRefId != null;
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
-		CPDDto cpd = cpdHelper.getCPD("", cpdRefId);
+		CPDDto cpd = cpdHelper.getCPD(cpdRefId);
 		assert cpd != null;
 
 		Map<String, Object> values = new HashMap<String, Object>();
 		values.put("eventName", cpd.getTitle());
-		values.put("eventDates", formatter.format(cpd.getStartDate()));
+		values.put("eventDates", formatter.format(cpd.getStartDate()) + " to "
+				+ formatter.format(cpd.getEndDate()));
 		values.put("memberName", cpd.getFullNames());
 		values.put("dateIssued", formatter.format(new Date()));
 		values.put("cpdHours", cpd.getCpdHours());
+		values.put("eventVenue", cpd.getEventLocation());
 		Doc doc = new Doc(values);
-
 		HTMLToPDFConvertor convertor = new HTMLToPDFConvertor();
 		InputStream is = GetReport.class.getClassLoader().getResourceAsStream(
 				"cpdcertificate.html");

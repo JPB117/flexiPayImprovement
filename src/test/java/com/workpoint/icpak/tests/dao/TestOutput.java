@@ -35,7 +35,7 @@ public class TestOutput extends AbstractDaoTest {
 	public void print() throws IOException, SAXException,
 			ParserConfigurationException, FactoryConfigurationError,
 			DocumentException {
-		CPDDto cpd = helper.getCPD("100", "dbd043Iq5LYQ8pd3");
+		CPDDto cpd = helper.getCPD("dbd043Iq5LYQ8pd3");
 
 		Map<String, Object> values = new HashMap<String, Object>();
 		values.put("eventName", cpd.getTitle());

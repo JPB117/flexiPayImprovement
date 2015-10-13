@@ -70,7 +70,7 @@ public class CPDResourceImpl implements CPDResource{
 		public CPDDto getById(
 				@ApiParam(value = "CPD Id of the cpd to fetch", required = true) @PathParam("cpdId") String cpdId) {
 
-			CPDDto cpd = helper.getCPD(memberId,cpdId);
+			CPDDto cpd = helper.getCPDFromMemberRefId(memberId,cpdId);
 			return cpd;
 		}
 

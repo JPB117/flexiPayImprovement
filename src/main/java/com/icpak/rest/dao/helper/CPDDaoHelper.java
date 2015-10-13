@@ -12,6 +12,7 @@ import com.icpak.rest.models.cpd.CPD;
 import com.icpak.rest.models.event.Delegate;
 import com.icpak.rest.models.event.Event;
 import com.icpak.rest.models.membership.Member;
+import com.workpoint.icpak.shared.model.CPDCategory;
 import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.shared.model.CPDStatus;
 import com.workpoint.icpak.shared.model.CPDSummaryDto;
@@ -51,11 +52,18 @@ public class CPDDaoHelper {
 		return dao.getCPDCount(memberId);
 	}
 
-	public CPDDto getCPD(String memberId, String cpdId) {
+	public CPDDto getCPD(String cpdId) {
 		CPD cpd = dao.findByCPDId(cpdId);
 		CPDDto rtn = cpd.toDTO();
 		rtn.setFullNames(userDao.getNamesBymemberNo(cpd
 				.getMemberRegistrationNo()));
+		return rtn;
+	}
+
+	public CPDDto getCPDFromMemberRefId(String memberRefId, String cpdId) {
+		CPD cpd = dao.findByCPDId(cpdId);
+		CPDDto rtn = cpd.toDTO();
+		rtn.setFullNames(userDao.getFullNames(memberRefId));
 		return rtn;
 	}
 
@@ -91,19 +99,18 @@ public class CPDDaoHelper {
 		if (delegate.getMemberRefId() == null) {
 			return;
 		}
-
 		Member member = dao
 				.findByRefId(delegate.getMemberRefId(), Member.class);
 		Event event = delegate.getBooking().getEvent();
-		String memberId = delegate.getMemberRefId();
+		String memberRefId = delegate.getMemberRefId();
 
 		if (attendance == null || attendance == AttendanceStatus.NOTATTENDED) {
-			dao.deleteCPDByMemberAndEvent(memberId, event.getRefId());
+			dao.deleteCPDByMemberAndEvent(memberRefId, event.getRefId());
 			return;
 		}
 
 		CPDDto cpd = new CPDDto();
-		CPD po = dao.getCPDByMemberAndEvent(memberId, event.getRefId());
+		CPD po = dao.getCPDByMemberAndEvent(memberRefId, event.getRefId());
 		if (po != null) {
 			cpd = po.toDTO();
 		}
@@ -112,17 +119,20 @@ public class CPDDaoHelper {
 		cpd.setEndDate(event.getEndDate());
 		cpd.setStartDate(event.getStartDate());
 		cpd.setFullNames(delegate.getSurname() + " " + delegate.getOtherNames());
-		cpd.setMemberId(memberId);
+		cpd.setMemberRefId(memberRefId);
 		cpd.setEventId(event.getRefId());
 		cpd.setOrganizer("ICPAK");
 		cpd.setStatus(CPDStatus.Approved);
 		cpd.setEventId(event.getRefId());
 		cpd.setTitle(event.getName());
+		cpd.setMemberRegistrationNo(delegate.getMemberRegistrationNo());
+		cpd.setCategory(CPDCategory.CATEGORY_A);
+		cpd.setEventLocation(event.getVenue());
 
 		if (cpd.getRefId() != null) {
-			update(memberId, cpd.getRefId(), cpd);
+			update(memberRefId, cpd.getRefId(), cpd);
 		} else {
-			create(memberId, cpd);
+			create(memberRefId, cpd);
 		}
 	}
 

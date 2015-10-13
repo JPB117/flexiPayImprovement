@@ -2,24 +2,26 @@ package com.workpoint.icpak.shared.model;
 
 import java.util.Date;
 
-public class CPDDto extends SerializableObj{
-	
+public class CPDDto extends SerializableObj {
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	private Date created;
-	private Date startDate; //Copied from Event details;
+	private Date startDate; // Copied from Event details;
 	private Date endDate;
 	private String title;
 	private String organizer;
 	private CPDCategory category;
 	private double cpdHours;
 	private CPDStatus status;
-	private String memberId;
+	private String memberRefId;
 	private String fullNames;
 	private String eventId;
-	
+	private String eventLocation;
+	private String memberRegistrationNo;
+
 	public CPDDto() {
 	}
 
@@ -47,12 +49,12 @@ public class CPDDto extends SerializableObj{
 		this.status = status;
 	}
 
-	public String getMemberId() {
-		return memberId;
+	public String getMemberRefId() {
+		return memberRefId;
 	}
 
-	public void setMemberId(String memberId) {
-		this.memberId = memberId;
+	public void setMemberRefId(String memberId) {
+		this.memberRefId = memberId;
 	}
 
 	public String getTitle() {
@@ -109,5 +111,21 @@ public class CPDDto extends SerializableObj{
 
 	public void setCpdHours(double cpdHours) {
 		this.cpdHours = cpdHours;
+	}
+
+	public String getEventLocation() {
+		return eventLocation;
+	}
+
+	public void setEventLocation(String eventLocation) {
+		this.eventLocation = eventLocation;
+	}
+
+	public String getMemberRegistrationNo() {
+		return memberRegistrationNo;
+	}
+
+	public void setMemberRegistrationNo(String memberRegistrationNo) {
+		this.memberRegistrationNo = memberRegistrationNo;
 	}
 }

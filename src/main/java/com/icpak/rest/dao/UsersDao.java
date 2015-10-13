@@ -173,7 +173,7 @@ public class UsersDao extends BaseDao {
 				.createNativeQuery(
 						"select concat(firstName,' ',lastName) from user u "
 								+ "inner join Member m on m.userRefId=u.refId where m.refId=:refId")
-				.setParameter("memberNo", refId));
+				.setParameter("refId", refId));
 	}
 
 	public String getNamesBymemberNo(String memberNo) {
