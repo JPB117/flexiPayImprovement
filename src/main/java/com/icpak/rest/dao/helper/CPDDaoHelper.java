@@ -1,12 +1,16 @@
 package com.icpak.rest.dao.helper;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import org.apache.log4j.Logger;
 
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import com.icpak.rest.dao.CPDDao;
 import com.icpak.rest.dao.EventsDao;
+import com.icpak.rest.dao.MemberDao;
 import com.icpak.rest.dao.UsersDao;
 import com.icpak.rest.models.cpd.CPD;
 import com.icpak.rest.models.event.Delegate;
@@ -27,6 +31,10 @@ public class CPDDaoHelper {
 	EventsDao eventDao;
 	@Inject
 	UsersDao userDao;
+	@Inject
+	MemberDao memberDao;
+
+	static Logger logger = Logger.getLogger(CPDDaoHelper.class);
 
 	public List<CPDDto> getAllCPD(String memberId, Integer offset, Integer limit) {
 
@@ -99,6 +107,7 @@ public class CPDDaoHelper {
 		if (delegate.getMemberRefId() == null) {
 			return;
 		}
+
 		Member member = dao
 				.findByRefId(delegate.getMemberRefId(), Member.class);
 		Event event = delegate.getBooking().getEvent();
@@ -147,6 +156,29 @@ public class CPDDaoHelper {
 		}
 
 		return dto;
+	}
+
+	public List<CPDDto> filterMyCPD() {
+		List<CPDDto> cpDtos = new ArrayList<>();
+		return cpDtos;
+	}
+
+	// get a list of cpds filtered by date currently logged in member
+	public List<CPDDto> getAllMemberCpd(String memberRefId, Date startDate,
+			Date endDate, Integer limit, Integer offset) {
+
+		List<CPD> cpds = dao.getAllCPDS(memberRefId, startDate, endDate,
+				offset == null ? 0 : offset, limit == null ? 1000 : limit);
+		logger.info("CPD Records Count = " + cpds.size());
+
+		List<CPDDto> cpdDtos = new ArrayList<>();
+		for (CPD cpd : cpds) {
+			logger.debug("CPD memberr id " + cpd.getMemberId());
+			cpdDtos.add(cpd.toDTO());
+		}
+
+		return cpdDtos;
+
 	}
 
 }

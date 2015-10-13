@@ -26,12 +26,14 @@ public class StatementDaoHelper {
 			Date endDate,
 			Integer offset, Integer limit){
     	
-    	List<Statement> statementList = new ArrayList<>();
     	
+    	List<Statement> statementList = new ArrayList<>();
+    	Member member = null;
     	if(memberId!=null && memberId.equals("ALL")){
     		statementList = statementDao.getAllStatements(startDate,endDate,offset, limit);
+    		
     	}else{
-    		Member member = statementDao.findByRefId(memberId, Member.class);
+    		member= statementDao.findByRefId(memberId, Member.class);
         	if(member.getMemberNo()==null){
         		return new ArrayList<>();
         	}
@@ -40,7 +42,12 @@ public class StatementDaoHelper {
     	
         
         List<StatementDto> statementDtos = new ArrayList<>();
-
+        StatementDto balanceCD = null;
+    	if(startDate!=null && member!=null){
+    		balanceCD = statementDao.getBalanceCD(member.getMemberNo(), startDate);
+    		statementDtos.add(balanceCD);
+    	}
+    	
         for (Statement statement : statementList){
             StatementDto statementDto = new StatementDto();
             statementDto.setDueDate(statement.getDueDate());
@@ -57,6 +64,14 @@ public class StatementDaoHelper {
 
             statementDtos.add(statementDto);
         }
+        
+        
+    	if(member!=null){
+    		StatementDto balanceCF = statementDao.getBalanceCD(member.getMemberNo(), endDate==null? new Date(): endDate);
+    		balanceCF.setDescription("Balance C/F");
+    		balanceCF.setDocumentType("Balance C/F");
+    		statementDtos.add(balanceCF);
+    	}
 
         return statementDtos;
     }

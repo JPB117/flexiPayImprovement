@@ -1,10 +1,19 @@
 package com.icpak.rest.dao;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import javax.persistence.Query;
+
+import org.apache.log4j.Logger;
 
 import com.icpak.rest.exceptions.ServiceException;
 import com.icpak.rest.models.ErrorCodes;
 import com.icpak.rest.models.cpd.CPD;
+import com.icpak.rest.models.membership.Member;
+import com.icpak.rest.models.trx.Statement;
 import com.workpoint.icpak.shared.model.CPDStatus;
 import com.workpoint.icpak.shared.model.CPDSummaryDto;
 
@@ -14,6 +23,7 @@ import com.workpoint.icpak.shared.model.CPDSummaryDto;
  *
  */
 public class CPDDao extends BaseDao {
+	Logger logger = Logger.getLogger(CPDDao.class);
 
 	public void createCPD(CPD cpd) {
 		save(cpd);
@@ -142,6 +152,60 @@ public class CPDDao extends BaseDao {
 		}
 		
 		return summary;
+	}
+	
+	public List<CPD> getAllCPDS(String memberRefId,
+			Date startDate, Date endDate, Integer offset, Integer limit) {
+		
+		logger.debug("Member reg no ===<<>>==" + memberRefId);
+		logger.debug("startDate ===<<>>==" + startDate);
+		logger.debug("endDate ===<<>>==" + endDate);
+		
+		StringBuffer sql = new StringBuffer("FROM CPD");
+
+		boolean isFirstParam = true;
+		Map<String, Object> params = new HashMap<>();
+		
+		if (startDate != null) {
+			if (isFirstParam) {
+				isFirstParam = false;
+				sql.append(" where");
+			}
+			params.put("startDate", startDate);
+			sql.append(" startDate>:startDate");
+		}
+
+		if (endDate != null) {
+			if (isFirstParam) {
+				isFirstParam = false;
+				sql.append(" where");
+			} else {
+				sql.append(" and");
+			}
+			params.put("endDate", endDate);
+			sql.append(" endDate<:endDate");
+		}
+		
+		if (memberRefId != null && !memberRefId.equals("ALL")) {
+			if (isFirstParam) {
+				isFirstParam = false;
+				sql.append(" where");
+			} else {
+				sql.append(" and ");
+			}
+			params.put("memberRefId", memberRefId);
+			sql.append(" memberId=:memberRefId");
+		}
+		
+		sql.append(" order by startDate desc");
+		logger.debug("jpql= "+sql);
+		Query query = getEntityManager().createQuery(sql.toString());
+		for (String key : params.keySet()) {
+			query.setParameter(key, params.get(key));
+		}
+
+		return getResultList(query, offset, limit);
+		
 	}
 
 }

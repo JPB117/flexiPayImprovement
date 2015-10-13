@@ -109,8 +109,8 @@ public class CPDPresenter extends
 
 	}
 
-	@Inject
-	GenericPopupPresenter popup;
+//	@Inject
+//	GenericPopupPresenter popup;
 
 	protected void showCreatePopup() {
 		showInstructions();

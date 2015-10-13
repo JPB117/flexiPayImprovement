@@ -14,8 +14,10 @@ import com.google.gwt.user.client.ui.Widget;
 import com.workpoint.icpak.client.ui.component.DropDownList;
 import com.workpoint.icpak.client.ui.component.IssuesPanel;
 import com.workpoint.icpak.client.ui.component.TextField;
+import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.model.EnquiriesCategory;
 import com.workpoint.icpak.shared.model.EnquiriesDto;
+import com.workpoint.icpak.shared.model.UserDto;
 
 public class CreateEnquiry extends Composite {
 
@@ -50,6 +52,14 @@ public class CreateEnquiry extends Composite {
 		}
 		
 		lstCategory.setItems(cats);
+		
+		if(AppContext.isLoggedIn()){
+			UserDto currentUser = AppContext.getContextUser();
+			txtEmail.setValue(currentUser.getEmail());
+			txtFullNames.setValue(currentUser.getFullName());
+			txtMemberNo.setValue(currentUser.getMemberNo());
+			txtMobile.setValue(currentUser.getPhoneNumber());
+		}
 	}
 
 	public boolean isValid() {
