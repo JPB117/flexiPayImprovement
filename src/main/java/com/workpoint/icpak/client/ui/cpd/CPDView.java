@@ -1,7 +1,5 @@
 package com.workpoint.icpak.client.ui.cpd;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -9,22 +7,20 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
+import com.workpoint.icpak.client.model.UploadContext;
+import com.workpoint.icpak.client.model.UploadContext.UPLOADACTION;
 import com.workpoint.icpak.client.ui.component.ActionLink;
-import com.workpoint.icpak.client.ui.component.DropDownList;
 import com.workpoint.icpak.client.ui.component.PagingPanel;
-import com.workpoint.icpak.client.ui.component.tabs.TabContent;
-import com.workpoint.icpak.client.ui.component.tabs.TabHeader;
 import com.workpoint.icpak.client.ui.component.tabs.TabPanel;
-import com.workpoint.icpak.client.ui.component.tabs.TabPanel.TabPosition;
-import com.workpoint.icpak.client.ui.cpd.confirmed.ConfirmedCPD;
 import com.workpoint.icpak.client.ui.cpd.header.CPDHeader;
 import com.workpoint.icpak.client.ui.cpd.table.CPDTable;
 import com.workpoint.icpak.client.ui.cpd.table.row.CPDTableRow;
-import com.workpoint.icpak.client.ui.cpd.unconfirmed.UnconfirmedCPD;
+import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.shared.model.CPDSummaryDto;
 
@@ -34,36 +30,18 @@ public class CPDView extends ViewImpl implements CPDPresenter.ICPDView {
 
 	@UiField
 	TabPanel divTabs;
-
 	@UiField
 	HTMLPanel container;
-
-	private ConfirmedCPD confirmedWidget;
-	private UnconfirmedCPD unconfirmedWidget;
-
-	@UiField
-	DropDownList<Year> lstFrom;
-
 	@UiField
 	HTMLPanel panelDates;
-
-	@UiField
-	DropDownList<Year> lstTo;
-
 	@UiField
 	ActionLink aShowFilter;
-
 	@UiField
 	CPDTable tblView;
-
 	@UiField
 	CPDHeader headerContainer;
-
 	@UiField
 	ActionLink aCreate;
-
-	List<Year> allYears = new ArrayList<Year>();
-	private int totalYears = 20;
 
 	public interface Binder extends UiBinder<Widget, CPDView> {
 	}
@@ -72,60 +50,29 @@ public class CPDView extends ViewImpl implements CPDPresenter.ICPDView {
 	public CPDView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
 
-		unconfirmedWidget = new UnconfirmedCPD();
-		confirmedWidget = new ConfirmedCPD();
+		tblView.getDownloadButton().addClickHandler(new ClickHandler() {
 
-		divTabs.setHeaders(Arrays.asList(new TabHeader("Confirmed CPD", true,
-				"confirmed_cpd"), new TabHeader("Un-Confirmed CPD", false,
-				"unconfirmed_cpd")));
-
-		divTabs.setContent(Arrays.asList(new TabContent(unconfirmedWidget,
-				"unconfirmed_cpd", false), new TabContent(confirmedWidget,
-				"confirmed_cpd", true)));
-
-		divTabs.setPosition(TabPosition.PILLS);
-
-		lstFrom.setItems(allYears);
-		lstTo.setItems(allYears);
-
-		aShowFilter.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				if (isDateFilterShown) {
-					showDateFilter(false);
-				} else {
-					showDateFilter(true);
-				}
-
+				UploadContext ctx = new UploadContext("getreport");
+				if (tblView.getStartDate() != null)
+					ctx.setContext("startdate", tblView.getStartDate()
+							.getTime() + "");
+				if (tblView.getEndDate() != null)
+					ctx.setContext("enddate", tblView.getEndDate().getTime()
+							+ "");
+				ctx.setContext("memberRefId", AppContext.getCurrentUser()
+						.getUser().getMemberRefId());
+				ctx.setAction(UPLOADACTION.GETCPDSTATEMENT);
+				Window.open(ctx.toUrl(), "", null);
 			}
 		});
-		showDateFilter(false);
-
-		createRow(new CPDTableRow());
 
 	}
 
 	public HasClickHandlers getRecordButton() {
 		return aCreate;
 	}
-
-	private void createRow(CPDTableRow cpdTableRow) {
-		tblView.createRow(cpdTableRow);
-	}
-
-	public void showDateFilter(boolean showFilter) {
-		if (showFilter) {
-			panelDates.setVisible(true);
-			isDateFilterShown = true;
-			aShowFilter.setStyleName("fa fa-caret-up");
-		} else {
-			panelDates.setVisible(false);
-			isDateFilterShown = false;
-			aShowFilter.setStyleName("fa fa-caret-down");
-		}
-	}
-
-	boolean isDateFilterShown = false;
 
 	@Override
 	public Widget asWidget() {

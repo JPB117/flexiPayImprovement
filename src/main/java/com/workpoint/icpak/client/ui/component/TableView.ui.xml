@@ -4,16 +4,27 @@
 
 	<g:HTMLPanel ui:field="overalContainer">
 		<div class="search-bar" ui:field="divSearch">
-			<div class="col-md-3">
-				<d:TextField placeholder="Search here" ui:field="txtSearch"
-					styleName="form-control"></d:TextField>
-			</div>
-			<div class="pull-right action-buttons">
+			<g:HTMLPanel ui:field="panelSearch">
+				<div class="col-md-3">
+					<d:TextField placeholder="Search here" ui:field="txtSearch"
+						styleName="form-control"></d:TextField>
+				</div>
+			</g:HTMLPanel>
+			<g:HTMLPanel ui:field="panelDates">
+				<div class="col-lg-2">
+					<d:DateField ui:field="dtStartDate" />
+				</div>
+				<div class="col-lg-2">
+					<d:DateField ui:field="dtEndDate" />
+				</div>
+			</g:HTMLPanel>
+			<g:HTMLPanel styleName="pull-right action-buttons"
+				ui:field="panelActionButtons">
 				<d:ActionLink ui:field="aDownloadPdf">
 					<i class="fa fa-file-pdf-o"></i>
 					Download as Pdf
 				</d:ActionLink>
-			</div>
+			</g:HTMLPanel>
 		</div>
 		<g:HTMLPanel styleName="table table-striped table-hover table-bordered"
 			ui:field="tblContainer">
