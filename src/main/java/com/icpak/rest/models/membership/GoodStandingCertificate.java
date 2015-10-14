@@ -20,7 +20,7 @@ public class GoodStandingCertificate extends PO{
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private String refNo;
+	private String documentNo;
 	
 	@ManyToOne(optional=false)
 	@JoinColumn(name="member_id")
@@ -29,14 +29,6 @@ public class GoodStandingCertificate extends PO{
 	@OneToMany(mappedBy="goodStandingCert",
 			cascade={CascadeType.DETACH, CascadeType.REMOVE})
 	private List<Attachment> attachment = new ArrayList<>();
-
-	public String getRefNo() {
-		return refNo;
-	}
-
-	public void setRefNo(String refNo) {
-		this.refNo = refNo;
-	}
 
 	public List<Attachment> getAttachment() {
 		return attachment;
@@ -52,5 +44,13 @@ public class GoodStandingCertificate extends PO{
 
 	public void setMember(Member member) {
 		this.member = member;
+	}
+
+	public String getDocumentNo() {
+		return documentNo;
+	}
+
+	public void setDocumentNo(String documentNo) {
+		this.documentNo = documentNo;
 	}
 }

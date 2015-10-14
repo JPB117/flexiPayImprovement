@@ -285,13 +285,13 @@ public class GetReport extends HttpServlet {
 		userDao.save(cert);
 		userDao.merge(cert);
 		
-		if(cert.getRefNo()==null){
+		if(cert.getDocumentNo()==null){
 			writeError(resp,"Your Cert reference number was not generated, kindly contact ICPAK for help");
 			return;
 		}
 		
 		Map<String, Object> values = new HashMap<String, Object>();
-		String refNo = cert.getRefNo();
+		String refNo = cert.getDocumentNo();
 		
 		values.put("refNo", refNo);
 		values.put("letterDate", DateUtils.DATEFORMAT.format(new Date()));
