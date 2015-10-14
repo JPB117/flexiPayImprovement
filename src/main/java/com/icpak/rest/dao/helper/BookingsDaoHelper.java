@@ -56,6 +56,8 @@ public class BookingsDaoHelper {
 
 	@Inject
 	MemberDao memberDao;
+	@Inject
+	MemberDaoHelper memberDaoHelper;
 
 	@Inject
 	EventsDao eventDao;
@@ -181,38 +183,73 @@ public class BookingsDaoHelper {
 		InvoiceDto invoice = generateInvoice(booking);
 		Event event = booking.getEvent();
 		String subject = booking.getEvent().getName() + "' Event Registration";
-
+		SimpleDateFormat formatter = new SimpleDateFormat("MMM d Y");
 		try {
+			Map<String, Object> emailValues = new HashMap<String, Object>();
+			emailValues.put("companyName", invoice.getCompanyName());
+			emailValues.put("companyAddress", invoice.getCompanyAddress());
+			emailValues.put("companyLocation", booking.getContact()
+					.getPhysicalAddress());
+			emailValues.put("contactPhone", booking.getContact()
+					.getPhysicalAddress());
 
-			Map<String, Object> values = new HashMap<String, Object>();
-			values.put("companyName", invoice.getCompanyName());
-			values.put("companyAddress", invoice.getCompanyAddress());
-			values.put("quoteNo", invoice.getDocumentNo());
-			values.put("date", invoice.getDate());
-			values.put("firstName", invoice.getContactName());
+			emailValues.put("quoteNo", invoice.getDocumentNo());
+			emailValues.put("date", invoice.getDate());
+			emailValues.put("firstName", invoice.getContactName());
+			emailValues.put("eventName", booking.getEvent().getName());
+			emailValues.put("eventStartDate",
+					formatter.format(booking.getEvent().getStartDate()));
+			emailValues.put("DocumentURL", settings.getApplicationPath());
+			emailValues.put("email", booking.getContact().getEmail());
+			emailValues.put("eventId", booking.getEvent().getRefId());
+			emailValues.put("bookingId", booking.getRefId());
+			Doc emailDocument = new Doc(emailValues);
 
-			values.put("DocumentURL", settings.getApplicationPath());
-			values.put("email", booking.getContact().getEmail());
-			values.put("eventId", booking.getEvent().getRefId());
-			values.put("bookingId", booking.getRefId());
-			Doc doc = new Doc(values);
+			// Collection of Delegates
+			Collection<Delegate> delegates = booking.getDelegates();
+			int counter = 0;
 
+			for (Delegate delegate : delegates) {
+				counter++;
+				emailValues.put("counter", counter);
+				emailValues.put("delegateNames", delegate.getSurname() + " "
+						+ delegate.getOtherNames());
+
+				if (delegate.getMemberRegistrationNo() != null) {
+					emailValues.put("memberType", "Member");
+				} else {
+					emailValues.put("memberType", "Non-Member");
+				}
+				emailValues.put("ernNo", delegate.getErn());
+
+				emailValues.put("accomodationName", (delegate
+						.getAccommodation() == null ? "None" : delegate
+						.getAccommodation().getHotel()
+						+ " "
+						+ delegate.getAccommodation().getNights()));
+
+				DocumentLine docLine = new DocumentLine("accomadationDetails",
+						emailValues);
+				emailDocument.addDetail(docLine);
+			}
+
+			Map<String, Object> line = new HashMap<String, Object>();
+			Doc proformaDocument = new Doc(emailValues);
 			for (InvoiceLineDto dto : invoice.getLines()) {
-				Map<String, Object> line = new HashMap<String, Object>();
 				line.put("description", dto.getDescription());
 				line.put("unitPrice", dto.getUnitPrice());
 				line.put("amount", dto.getTotalAmount());
-				doc.addDetail(new DocumentLine("invoiceDetails", line));
+				proformaDocument.addDetail(new DocumentLine("invoiceDetails",
+						line));
 			}
-
-			values.put("totalAmount", invoice.getInvoiceAmount());
+			emailValues.put("totalAmount", invoice.getInvoiceAmount());
 
 			// PDF Invoice Generation
 			InputStream inv = EmailServiceHelper.class.getClassLoader()
 					.getResourceAsStream("proforma-invoice.html");
 			String invoiceHTML = IOUtils.toString(inv);
-			byte[] invoicePDF = new HTMLToPDFConvertor().convert(doc,
-					new String(invoiceHTML));
+			byte[] invoicePDF = new HTMLToPDFConvertor().convert(
+					proformaDocument, new String(invoiceHTML));
 			Attachment attachment = new Attachment();
 			attachment.setAttachment(invoicePDF);
 			attachment.setName("ProForma Invoice_"
@@ -222,7 +259,8 @@ public class BookingsDaoHelper {
 			InputStream is = EmailServiceHelper.class.getClassLoader()
 					.getResourceAsStream("booking-email.html");
 			String html = IOUtils.toString(is);
-			html = new DocumentHTMLMapper().map(doc, html);
+			html = new DocumentHTMLMapper().map(emailDocument, html);
+
 			EmailServiceHelper.sendEmail(html, "RE: ICPAK '" + subject,
 					Arrays.asList(booking.getContact().getEmail()),
 					Arrays.asList(booking.getContact().getContactName()),

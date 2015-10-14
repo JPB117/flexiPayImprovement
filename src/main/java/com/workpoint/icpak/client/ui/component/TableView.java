@@ -2,6 +2,7 @@ package com.workpoint.icpak.client.ui.component;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
@@ -41,6 +42,18 @@ public class TableView extends Composite {
 	@UiField
 	ActionLink aDownloadPdf;
 
+	@UiField
+	HTMLPanel panelSearch;
+	@UiField
+	HTMLPanel panelDates;
+	@UiField
+	HTMLPanel panelActionButtons;
+
+	@UiField
+	DateField dtStartDate;
+	@UiField
+	DateField dtEndDate;
+
 	private boolean isAutoNumber = true;
 	private int count = 0;
 
@@ -52,6 +65,37 @@ public class TableView extends Composite {
 
 	public void setHeaders(List<String> names) {
 		setHeaders(null, names);
+	}
+
+	public void setSearchVisible(boolean show) {
+		if (show) {
+			panelSearch.setVisible(true);
+		} else {
+			panelSearch.setVisible(false);
+		}
+	}
+
+	public void setDatesVisible(boolean show) {
+		if (show) {
+			panelDates.setVisible(true);
+		} else {
+			panelDates.setVisible(false);
+		}
+	}
+
+	public void setActionsVisible(boolean show) {
+		if (show) {
+			panelActionButtons.setVisible(true);
+		} else {
+			panelActionButtons.setVisible(false);
+		}
+	}
+
+	public Date getStartDate() {
+		return dtStartDate.getValueDate();
+	}
+	public Date getEndDate() {
+		return dtEndDate.getValueDate();
 	}
 
 	public void setHeaders(List<String> tdStyles, List<String> names) {

@@ -28,7 +28,8 @@ import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.model.statement.SearchDto;
 import com.workpoint.icpak.shared.model.statement.StatementDto;
 
-public class StatementsView extends ViewImpl implements StatementsPresenter.IStatementsView {
+public class StatementsView extends ViewImpl implements
+		StatementsPresenter.IStatementsView {
 
 	private final Widget widget;
 
@@ -47,6 +48,7 @@ public class StatementsView extends ViewImpl implements StatementsPresenter.ISta
 
 	@UiField
 	ActionLink downloadPdf;
+
 	@Inject
 	public StatementsView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
@@ -57,10 +59,13 @@ public class StatementsView extends ViewImpl implements StatementsPresenter.ISta
 			public void onClick(ClickEvent event) {
 				UploadContext ctx = new UploadContext("getreport");
 				if (dtStartDate.getValueDate() != null)
-					ctx.setContext("startdate", dtStartDate.getValueDate().getTime() + "");
+					ctx.setContext("startdate", dtStartDate.getValueDate()
+							.getTime() + "");
 				if (dtEndDate.getValueDate() != null)
-					ctx.setContext("enddate", dtEndDate.getValueDate().getTime() + "");
-				ctx.setContext("memberRefId", AppContext.getCurrentUser().getUser().getMemberRefId());
+					ctx.setContext("enddate", dtEndDate.getValueDate()
+							.getTime() + "");
+				ctx.setContext("memberRefId", AppContext.getCurrentUser()
+						.getUser().getMemberRefId());
 				ctx.setAction(UPLOADACTION.GETSTATEMENT);
 
 				// ctx.setContext(key, value)
@@ -89,7 +94,8 @@ public class StatementsView extends ViewImpl implements StatementsPresenter.ISta
 		TextColumn<StatementDto> date = new TextColumn<StatementDto>() {
 			@Override
 			public String getValue(StatementDto arg0) {
-				return (arg0.getPostingDate() == null ? "" : DATEFORMAT.format(arg0.getPostingDate()));
+				return (arg0.getPostingDate() == null ? "" : DATEFORMAT
+						.format(arg0.getPostingDate()));
 			}
 		};
 
@@ -112,8 +118,9 @@ public class StatementsView extends ViewImpl implements StatementsPresenter.ISta
 			public String getValue(StatementDto arg0) {
 
 				return arg0.getAmount() == null ? ""
-						: arg0.getAmount() < 0 ? "(" + CURRENCYFORMAT.format(-arg0.getAmount()) + ")"
-								: CURRENCYFORMAT.format(arg0.getAmount());
+						: arg0.getAmount() < 0 ? "("
+								+ CURRENCYFORMAT.format(-arg0.getAmount())
+								+ ")" : CURRENCYFORMAT.format(arg0.getAmount());
 			}
 		};
 
@@ -135,7 +142,8 @@ public class StatementsView extends ViewImpl implements StatementsPresenter.ISta
 			@Override
 			public String getValue(StatementDto arg0) {
 
-				return (arg0.getDueDate() == null ? "" : DATEFORMAT.format(arg0.getDueDate()));
+				return (arg0.getDueDate() == null ? "" : DATEFORMAT.format(arg0
+						.getDueDate()));
 			}
 		};
 

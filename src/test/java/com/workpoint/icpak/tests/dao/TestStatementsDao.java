@@ -43,27 +43,28 @@ public class TestStatementsDao extends AbstractDaoTest{
 		c.set(Calendar.MINUTE, 0);
 		c.set(Calendar.SECOND, 0);
 		c.set(Calendar.MILLISECOND, 0);
-		
+
 		byte[] bites = reportServlet.processStatementsRequest(memberRefId,
 				c.getTime(), null);
-		
+
 		IOUtils.write(bites, new FileOutputStream(new File("statements.pdf")));
 
 	}
-	
+
 	@Test
-	public void generateMemebrCPDReport() throws FileNotFoundException, IOException,
-			SAXException, ParserConfigurationException,
+	public void generateMemebrCPDReport() throws FileNotFoundException,
+			IOException, SAXException, ParserConfigurationException,
 			FactoryConfigurationError, DocumentException {
 		String memberRefId = "69WQZqVMM54kunKf";
-		
+
 		List<CPD> cpds = cpdDao.getAllCPDS(memberRefId, null, null, 0, 1000);
 		Assert.assertEquals(12, cpds.size());
-		System.err.println("No of entries = "+cpds.size());
-		
-		
-		byte[] bites = reportServlet.processMemberCPDStatementRequest(memberRefId, null, null);
-		IOUtils.write(bites, new FileOutputStream(new File("memberStatement.pdf")));
+		System.err.println("No of entries = " + cpds.size());
+
+		byte[] bites = reportServlet.processMemberCPDStatementRequest(
+				memberRefId, null, null);
+		IOUtils.write(bites, new FileOutputStream(new File(
+				"memberStatement.pdf")));
 
 	}
 

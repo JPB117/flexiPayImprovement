@@ -363,8 +363,20 @@ div.footer {
 	position: running(footer);
 }
 
-@page { @bottom-center { content:element(footer);
-	
+hr {
+	margin: 5px 0px;
+}
+
+@page {
+	margin: 10px;
+	@
+	bottom-center
+	{
+	content
+	:
+	element(
+	footer
+	);
 }
 }
 </style>
@@ -382,13 +394,12 @@ div.footer {
 			</div>
 
 			<div class="row-fluid">
-				<br /> <br /> To: @#memberNames<br /> MNo. @#memberNo<br /> <strong>Dear
-					@#memberNames</strong> <br /> <br /> <br />
+				<br /> To: CPA @#memberNames<br /> MNo. @#memberNo<br /> <strong>Dear
+					@#memberNames</strong> <br />
 				<div class="row-fluid">
 					<h4>RE: CPD PERFORMANCE CARD - @#startYear TO @#endYear</h4>
 					<hr />
 				</div>
-				<br />
 				<p>As a member of the Institute, you are expected to meet the
 					minimum CPD requirement for each year of your membership. Your
 					membership to the Institute confers you an obligation to attain a

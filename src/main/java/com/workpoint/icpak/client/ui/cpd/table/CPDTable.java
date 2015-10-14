@@ -1,9 +1,11 @@
 package com.workpoint.icpak.client.ui.cpd.table;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
@@ -29,6 +31,7 @@ public class CPDTable extends Composite {
 		initWidget(uiBinder.createAndBindUi(this));
 		tblView.setAutoNumber(false);
 		tblView.setSearchSection(true);
+		tblView.setSearchVisible(false);
 		createHeader(AppContext.isCurrentUserAdmin());
 	}
 
@@ -67,6 +70,17 @@ public class CPDTable extends Composite {
 
 	public PagingPanel getPagingPanel() {
 		return tblView.getPagingPanel();
+	}
+
+	public HasClickHandlers getDownloadButton() {
+		return tblView.getDownloadPdf();
+	}
+
+	public Date getStartDate() {
+		return tblView.getStartDate();
+	}
+	public Date getEndDate() {
+		return tblView.getEndDate();
 	}
 
 	public void setNoRecords(int size) {

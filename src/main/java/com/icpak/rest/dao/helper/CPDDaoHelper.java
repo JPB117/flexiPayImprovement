@@ -1,6 +1,7 @@
 package com.icpak.rest.dao.helper;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -16,9 +17,13 @@ import com.icpak.rest.models.cpd.CPD;
 import com.icpak.rest.models.event.Delegate;
 import com.icpak.rest.models.event.Event;
 import com.icpak.rest.models.membership.Member;
+import com.icpak.rest.models.membership.MembershipStatus;
+import com.workpoint.icpak.server.util.DateUtils;
+import com.workpoint.icpak.shared.model.CPDCategory;
 import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.shared.model.CPDStatus;
 import com.workpoint.icpak.shared.model.CPDSummaryDto;
+import com.workpoint.icpak.shared.model.MemberStanding;
 import com.workpoint.icpak.shared.model.events.AttendanceStatus;
 
 @Transactional
@@ -30,6 +35,8 @@ public class CPDDaoHelper {
 	EventsDao eventDao;
 	@Inject
 	UsersDao userDao;
+	
+	@Inject StatementDaoHelper statementHelper;
 	@Inject
 	MemberDao memberDao;
 
@@ -59,10 +66,18 @@ public class CPDDaoHelper {
 		return dao.getCPDCount(memberId);
 	}
 
-	public CPDDto getCPD(String memberId, String cpdId) {
+	public CPDDto getCPD(String cpdId) {
 		CPD cpd = dao.findByCPDId(cpdId);
 		CPDDto rtn = cpd.toDTO();
-		rtn.setFullNames(userDao.getNamesBymemberNo(cpd.getMemberRegistrationNo()));
+		rtn.setFullNames(userDao.getNamesBymemberNo(cpd
+				.getMemberRegistrationNo()));
+		return rtn;
+	}
+
+	public CPDDto getCPDFromMemberRefId(String memberRefId, String cpdId) {
+		CPD cpd = dao.findByCPDId(cpdId);
+		CPDDto rtn = cpd.toDTO();
+		rtn.setFullNames(userDao.getFullNames(memberRefId));
 		return rtn;
 	}
 
@@ -93,22 +108,24 @@ public class CPDDaoHelper {
 		dao.delete(dao.findByCPDId(cpdId));
 	}
 
-	public void updateCPDFromAttendance(Delegate delegate, AttendanceStatus attendance) {
+	public void updateCPDFromAttendance(Delegate delegate,
+			AttendanceStatus attendance) {
 		if (delegate.getMemberRefId() == null) {
 			return;
 		}
 
-		Member member = dao.findByRefId(delegate.getMemberRefId(), Member.class);
+		Member member = dao
+				.findByRefId(delegate.getMemberRefId(), Member.class);
 		Event event = delegate.getBooking().getEvent();
-		String memberId = delegate.getMemberRefId();
+		String memberRefId = delegate.getMemberRefId();
 
 		if (attendance == null || attendance == AttendanceStatus.NOTATTENDED) {
-			dao.deleteCPDByMemberAndEvent(memberId, event.getRefId());
+			dao.deleteCPDByMemberAndEvent(memberRefId, event.getRefId());
 			return;
 		}
 
 		CPDDto cpd = new CPDDto();
-		CPD po = dao.getCPDByMemberAndEvent(memberId, event.getRefId());
+		CPD po = dao.getCPDByMemberAndEvent(memberRefId, event.getRefId());
 		if (po != null) {
 			cpd = po.toDTO();
 		}
@@ -117,17 +134,20 @@ public class CPDDaoHelper {
 		cpd.setEndDate(event.getEndDate());
 		cpd.setStartDate(event.getStartDate());
 		cpd.setFullNames(delegate.getSurname() + " " + delegate.getOtherNames());
-		cpd.setMemberId(memberId);
+		cpd.setMemberRefId(memberRefId);
 		cpd.setEventId(event.getRefId());
 		cpd.setOrganizer("ICPAK");
 		cpd.setStatus(CPDStatus.Approved);
 		cpd.setEventId(event.getRefId());
 		cpd.setTitle(event.getName());
+		cpd.setMemberRegistrationNo(delegate.getMemberRegistrationNo());
+		cpd.setCategory(CPDCategory.CATEGORY_A);
+		cpd.setEventLocation(event.getVenue());
 
 		if (cpd.getRefId() != null) {
-			update(memberId, cpd.getRefId(), cpd);
+			update(memberRefId, cpd.getRefId(), cpd);
 		} else {
-			create(memberId, cpd);
+			create(memberRefId, cpd);
 		}
 	}
 
@@ -143,6 +163,114 @@ public class CPDDaoHelper {
 
 		return dto;
 	}
+	
+	/**
+	 * 
+	 * @param memberRefId
+	 * @return true if member meets all requirements
+	 */
+	public boolean isInGoodStanding(String memberRefId,List<String> messages){
+		boolean isGenerate = true;
+		
+		Member member = dao.findByRefId(memberRefId, Member.class);
+		
+		/**
+		 * Membership status must be Active
+		 */
+		MembershipStatus status = member.getMemberShipStatus();
+		if(status!=null){
+			if(status!=MembershipStatus.ACTIVE){
+				isGenerate = false;
+				messages.add("Membership status is "+status.name()+". "
+						+ "ICPAK Membership must be Active to get the certificate of good standing.");
+			}
+		}else{
+			isGenerate = false;
+			messages.add("No valid member status found");
+		}
+		
+		/**
+		 * Account Information - Statement
+		 * Account balance must be <=100
+		 */
+		Double balance = statementHelper.getAccountBalance(memberRefId);
+		if(balance>100){
+			isGenerate = false;
+			messages.add("Member account balance must be less than Ksh100.");
+		}
+		
+		/**
+		 * Ongoing displinary case must be false
+		 * TODO: Managed by Admin, admin to set true or false
+		 */
+		if(member.hasDisplinaryCase()){
+			isGenerate = false;
+			messages.add("Member must not have an ongoing displinary case for good standing");
+		}
+		
+		/**
+		 * CPD Hours Attended since registration<b>
+		 * 1 year or less : 0 hrs
+		 * >1 year and <= 2 year : 40 hrs
+		 * >2 year and <=3 year : 80 hrs
+		 * >3 year : 120 hrs
+		 * 
+		 */
+		Date registrationDate = member.getRegistrationDate();
+		double cpdHours = dao.getCPDHours(memberRefId);
+		if(registrationDate==null && member.getMemberShipStatus()==MembershipStatus.ACTIVE){
+			isGenerate = false;
+			messages.add("Your registration date cannot be found in the portal, kindly request "
+					+ "for your account update from the Administrator.");
+		}else{
+			Calendar regDate = Calendar.getInstance();
+			regDate.setTime(registrationDate);
+			
+			Double noOfYears = DateUtils.getYearsBetween(registrationDate, new Date());
+			if(noOfYears<=0.0){
+				//do nothing - all is well<=2
+			}else if(noOfYears<=2){
+				// >1 &&  <=2
+				if(cpdHours<40){
+					isGenerate = false;
+					messages.add("You have been a member for more than "+noOfYears
+							+ ". You have done "+cpdHours+"/40 expected hours.");
+				}
+			}else if(noOfYears<=3){
+				// >1 &&  <=2
+				if(cpdHours<80){
+					isGenerate = false;
+					messages.add("You have been a member for more than "+noOfYears
+							+ ". You have done "+cpdHours+"/80 expected hours.");
+				}
+			}else{
+				// >1 &&  <=2
+				if(cpdHours<120){
+					isGenerate = false;
+					messages.add("You have been a member for more than "+noOfYears.intValue()
+							+ "years but have done "+cpdHours+" cpd hours out of 120 expected hours.");
+				}
+			}
+		}
+		
+		
+		return isGenerate;
+	}
+
+	public MemberStanding getMemberStanding(String memberId) {
+		List<String> messages = new ArrayList<>();
+		boolean isInGoodStanding = isInGoodStanding(memberId, messages);
+		
+		MemberStanding standing = new MemberStanding();
+		standing.setStanding(isInGoodStanding? 1:0);
+		standing.setReasons(messages);
+		
+		return standing;
+	}
+
+	public double getCPDHours(String memberRefId) {
+		return dao.getCPDHours(memberRefId);
+	}
 
 	public List<CPDDto> filterMyCPD() {
 		List<CPDDto> cpDtos = new ArrayList<>();
@@ -150,11 +278,11 @@ public class CPDDaoHelper {
 	}
 
 	// get a list of cpds filtered by date currently logged in member
-	public List<CPDDto> getAllMemberCpd(String memberRefId, Date startDate, Date endDate, Integer limit,
-			Integer offset) {
+	public List<CPDDto> getAllMemberCpd(String memberRefId, Date startDate,
+			Date endDate, Integer limit, Integer offset) {
 
-		List<CPD> cpds = dao.getAllCPDS(memberRefId, startDate, endDate, offset == null ? 0 : offset,
-				limit == null ? 1000 : limit);
+		List<CPD> cpds = dao.getAllCPDS(memberRefId, startDate, endDate,
+				offset == null ? 0 : offset, limit == null ? 1000 : limit);
 		logger.info("CPD Records Count = " + cpds.size());
 
 		List<CPDDto> cpdDtos = new ArrayList<>();

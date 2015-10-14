@@ -2,10 +2,12 @@ package com.workpoint.icpak.tests.dao;
 
 import java.util.List;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.inject.Inject;
 import com.icpak.rest.dao.helper.CPDDaoHelper;
+import com.icpak.servlet.upload.GetReport;
 import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.tests.base.AbstractDaoTest;
 
@@ -13,8 +15,21 @@ public class TestCPDDao extends AbstractDaoTest {
 
 	@Inject
 	CPDDaoHelper helper;
-
+	
+	@Inject GetReport reporter;
+	
 	@Test
+	public void generateGoodStandingCert(){
+		
+	}
+	
+	@Ignore
+	public void getCPDHrs(){
+		double val = helper.getCPDHours(null);
+		System.err.println(val);
+	}
+
+	@Ignore
 	public void getCPD() {
 		String memberId = "pabGC3dh0OOzLzSC";
 		List<CPDDto> list = helper.getAllCPD(memberId, 0, 10);

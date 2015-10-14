@@ -65,6 +65,14 @@ public class SMSIntegration {
 		AfricasTalkingGateway gateway = new AfricasTalkingGateway(username,
 				apiKey);
 		try {
+			if (to == null || to.isEmpty()) {
+				return "Failed: The recipient telephone number must be provided. Kindly confirm the relavant fields are provided";
+			}
+
+			if (message == null || message.isEmpty()) {
+				return "Failed: SMS Message cannot be empty";
+			}
+			
 			JSONArray resp = gateway.sendMessage(to, message, from, 1);
 
 			JSONObject object = resp.getJSONObject(0);

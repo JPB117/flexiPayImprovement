@@ -110,62 +110,78 @@ public class CPDDao extends BaseDao {
 
 	public CPDSummaryDto getCPDSummary(String memberId) {
 		String sql = "select sum(cpdHours), status from cpd where memberId=:memberId group by status";
-		
-		List<Object[]> rows =  getResultList(getEntityManager().createNativeQuery(sql)
-				.setParameter("memberId", memberId));
-		
+
+		List<Object[]> rows = getResultList(getEntityManager()
+				.createNativeQuery(sql).setParameter("memberId", memberId));
+
 		CPDSummaryDto summary = new CPDSummaryDto();
-		
-		for(Object[] row: rows){
-			int i=0;
-			Object value=null;
-			Integer count = (value=row[i++])==null? null: ((Number)value).intValue();
-			String status=(value=row[i++])==null? null: value.toString();
-			
-			if(status!=null && status.equals(CPDStatus.Unconfirmed.name())){
+
+		for (Object[] row : rows) {
+			int i = 0;
+			Object value = null;
+			Integer count = (value = row[i++]) == null ? null
+					: ((Number) value).intValue();
+			String status = (value = row[i++]) == null ? null : value
+					.toString();
+
+			if (status != null && status.equals(CPDStatus.Unconfirmed.name())) {
 				summary.setUnconfirmedCPD(count);
-			}else{
+			} else {
 				summary.setConfirmedCPD(count);
 			}
 		}
-		
+
 		return summary;
 	}
-	
-	public CPDSummaryDto getCPDSummary(){
+
+	public CPDSummaryDto getCPDSummary() {
 		String sql = "select count(*), status from cpd group by status";
-		List<Object[]> rows =  getResultList(getEntityManager().createNativeQuery(sql));
-		
+		List<Object[]> rows = getResultList(getEntityManager()
+				.createNativeQuery(sql));
+
 		CPDSummaryDto summary = new CPDSummaryDto();
-		
-		for(Object[] row: rows){
-			int i=0;
-			Object value=null;
-			Integer count = (value=row[i++])==null? null: ((Number)value).intValue();
-			String status=(value=row[i++])==null? null: value.toString();
-			
-			if(status!=null && status.equals(CPDStatus.Unconfirmed.name())){
+
+		for (Object[] row : rows) {
+			int i = 0;
+			Object value = null;
+			Integer count = (value = row[i++]) == null ? null
+					: ((Number) value).intValue();
+			String status = (value = row[i++]) == null ? null : value
+					.toString();
+
+			if (status != null && status.equals(CPDStatus.Unconfirmed.name())) {
 				summary.setPendingCount(count);
-			}else{
+			} else {
 				summary.setProcessedCount(count);
 			}
 		}
-		
+
 		return summary;
 	}
-	
-	public List<CPD> getAllCPDS(String memberRefId,
-			Date startDate, Date endDate, Integer offset, Integer limit) {
-		
+
+	public Double getCPDHours(String memberRefId) {
+		String sql = "select sum(cpdhours) cpdhours from cpd "
+				+ "where memberId= :memberId and status='Approved' limit 1 ";
+
+		Number value = (Number)getSingleResultOrNull(getEntityManager()
+				.createNativeQuery(sql).setParameter("memberId", memberRefId));
+
+		return value == null ? 0.0 : value.doubleValue();
+
+	}
+
+	public List<CPD> getAllCPDS(String memberRefId, Date startDate,
+			Date endDate, Integer offset, Integer limit) {
+
 		logger.debug("Member reg no ===<<>>==" + memberRefId);
 		logger.debug("startDate ===<<>>==" + startDate);
 		logger.debug("endDate ===<<>>==" + endDate);
-		
+
 		StringBuffer sql = new StringBuffer("FROM CPD");
 
 		boolean isFirstParam = true;
 		Map<String, Object> params = new HashMap<>();
-		
+
 		if (startDate != null) {
 			if (isFirstParam) {
 				isFirstParam = false;
@@ -185,7 +201,7 @@ public class CPDDao extends BaseDao {
 			params.put("endDate", endDate);
 			sql.append(" endDate<:endDate");
 		}
-		
+
 		if (memberRefId != null && !memberRefId.equals("ALL")) {
 			if (isFirstParam) {
 				isFirstParam = false;
@@ -196,16 +212,16 @@ public class CPDDao extends BaseDao {
 			params.put("memberRefId", memberRefId);
 			sql.append(" memberId=:memberRefId");
 		}
-		
+
 		sql.append(" order by startDate desc");
-		logger.debug("jpql= "+sql);
+		logger.debug("jpql= " + sql);
 		Query query = getEntityManager().createQuery(sql.toString());
 		for (String key : params.keySet()) {
 			query.setParameter(key, params.get(key));
 		}
 
 		return getResultList(query, offset, limit);
-		
+
 	}
 
 }

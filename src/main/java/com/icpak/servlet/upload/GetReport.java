@@ -28,6 +28,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.icpak.rest.dao.AttachmentsDao;
 import com.icpak.rest.dao.CPDDao;
+import com.icpak.rest.dao.MemberDao;
 import com.icpak.rest.dao.UsersDao;
 import com.icpak.rest.dao.helper.CPDDaoHelper;
 import com.icpak.rest.dao.helper.StatementDaoHelper;
@@ -66,6 +67,8 @@ public class GetReport extends HttpServlet {
 	StatementDaoHelper statementDaoHelper;
 	@Inject
 	CPDDao CPDDao;
+	@Inject 
+	MemberDao memberDao;
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
@@ -160,7 +163,7 @@ public class GetReport extends HttpServlet {
 			SAXException, ParserConfigurationException, FactoryConfigurationError, DocumentException {
 		Long startDate = null;
 		Long endDate = null;
-		String userRefId = null;
+		String memberRefId = null;
 
 		if (req.getParameter("startdate") != null) {
 			startDate = new Long(req.getParameter("startdate"));
@@ -170,14 +173,14 @@ public class GetReport extends HttpServlet {
 			endDate = new Long(req.getParameter("enddate"));
 		}
 
-		if (req.getParameter("userRefId") != null) {
-			userRefId = req.getParameter("userRefId");
+		if (req.getParameter("memberRefId") != null) {
+			memberRefId = req.getParameter("memberRefId");
 		}
 
 		Date finalStartDate = new Date(startDate);
 		Date finalEndDate = new Date(endDate);
 
-		byte[] data = processMemberCPDStatementRequest(userRefId, finalStartDate, finalEndDate);
+		byte[] data = processMemberCPDStatementRequest(memberRefId, finalStartDate, finalEndDate);
 
 		processAttachmentRequest(resp, data, "memberCPDStatement.pdf");
 	}
@@ -245,29 +248,34 @@ public class GetReport extends HttpServlet {
 		return data;
 	}
 
-	private void processCPDCertRequest(HttpServletRequest req, HttpServletResponse resp) throws IOException,
-			SAXException, ParserConfigurationException, FactoryConfigurationError, DocumentException {
+	private void processCPDCertRequest(HttpServletRequest req,
+			HttpServletResponse resp) throws IOException, SAXException,
+			ParserConfigurationException, FactoryConfigurationError,
+			DocumentException {
 		String cpdRefId = req.getParameter("cpdRefId");
 		assert cpdRefId != null;
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
-		CPDDto cpd = cpdHelper.getCPD("", cpdRefId);
+		CPDDto cpd = cpdHelper.getCPD(cpdRefId);
 		assert cpd != null;
 
 		Map<String, Object> values = new HashMap<String, Object>();
 		values.put("eventName", cpd.getTitle());
-		values.put("eventDates", formatter.format(cpd.getStartDate()));
+		values.put("eventDates", formatter.format(cpd.getStartDate()) + " to "
+				+ formatter.format(cpd.getEndDate()));
 		values.put("memberName", cpd.getFullNames());
 		values.put("dateIssued", formatter.format(new Date()));
 		values.put("cpdHours", cpd.getCpdHours());
+		values.put("eventVenue", cpd.getEventLocation());
 		Doc doc = new Doc(values);
-
 		HTMLToPDFConvertor convertor = new HTMLToPDFConvertor();
-		InputStream is = GetReport.class.getClassLoader().getResourceAsStream("cpdcertificate.html");
+		InputStream is = GetReport.class.getClassLoader().getResourceAsStream(
+				"cpdcertificate.html");
 		String html = IOUtils.toString(is);
 		byte[] data = convertor.convert(doc, html);
 
-		String name = cpd.getFullNames() + " " + cpd.getTitle() + formatter.format(new Date()) + ".pdf";
+		String name = cpd.getFullNames() + " " + cpd.getTitle()
+				+ formatter.format(new Date()) + ".pdf";
 
 		processAttachmentRequest(resp, data, name);
 	}
@@ -446,14 +454,14 @@ public class GetReport extends HttpServlet {
 			throws FileNotFoundException, IOException, SAXException, ParserConfigurationException,
 			FactoryConfigurationError, DocumentException {
 
-		Member member = userDao.findByRefId(memberRefId, Member.class);
+		Member member = memberDao.findByRefId(memberRefId, Member.class);
 		User user = member.getUser();
 
 		UserDto userDto = user.toDto();
 
 		// List<CPDDto> cpds = cpdHelper.getAllMemberCpd(memberRefId, startDate,
 		// endDate, 0, 1000);
-		List<CPD> cpds = CPDDao.getAllCPDS(memberRefId, null, null, 0, 1000);
+		List<CPD> cpds = CPDDao.getAllCPDS(memberRefId, startDate==null?null:startDate,endDate==null?null:endDate,0,1000);
 		log.info("CPD Records Count = " + cpds.size());
 
 		Map<String, Object> values = new HashMap<String, Object>();

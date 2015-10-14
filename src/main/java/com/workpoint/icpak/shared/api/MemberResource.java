@@ -11,6 +11,7 @@ import javax.ws.rs.core.MediaType;
 
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.MemberDto;
+import com.workpoint.icpak.shared.model.MemberStanding;
 import com.workpoint.icpak.shared.model.events.MemberBookingDto;
 
 @Path("members")
@@ -30,6 +31,10 @@ public interface MemberResource extends BaseResource{
 	
 	@Path("/{memberId}/cpd")
 	public CPDResource cpd(@PathParam("memberId") String memberId);
+	
+	@GET
+	@Path("/{memberId}/standing")
+	public MemberStanding getMemberStanding(@PathParam("memberId") String memberId);
 	
 	@Path("/{memberId}/statements")
 	public StatementsResource statements(@PathParam("memberId") String memberId);
