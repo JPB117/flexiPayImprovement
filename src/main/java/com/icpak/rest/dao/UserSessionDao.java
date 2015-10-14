@@ -37,6 +37,9 @@ public class UserSessionDao extends BaseDao {
 
 	public void removeLoggedInCookie(UserDto userDto) {
 		// List<UserSession> userSession = findUserSession(userDto.getRefId());
+		if(userDto==null){
+			return;
+		}
 		getEntityManager().createNativeQuery(
 				"delete from UserSession where userRefId=:userId")
 				.setParameter("userId", userDto.getRefId())

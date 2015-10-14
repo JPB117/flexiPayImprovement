@@ -17,9 +17,11 @@ import org.apache.log4j.Logger;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.inject.persist.Transactional;
 import com.workpoint.icpak.client.model.UploadContext;
 
 @Singleton
+@Transactional
 public class UploadServlet extends UploadAction {
 
 	/**

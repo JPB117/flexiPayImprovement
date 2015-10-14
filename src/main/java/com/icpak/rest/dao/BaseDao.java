@@ -27,6 +27,10 @@ public class BaseDao {
 		getEntityManager().persist(po);
 	}
 	
+	public void flush(){
+		getEntityManager().flush();
+	}
+	
 	public void merge(PO po) {
 		getEntityManager().merge(po);
 	}

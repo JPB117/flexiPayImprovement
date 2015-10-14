@@ -25,6 +25,7 @@ import org.xml.sax.SAXException;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.inject.persist.Transactional;
 import com.icpak.rest.dao.AttachmentsDao;
 import com.icpak.rest.dao.CPDDao;
 import com.icpak.rest.dao.MemberDao;
@@ -48,6 +49,7 @@ import com.workpoint.icpak.shared.model.UserDto;
 import com.workpoint.icpak.shared.model.statement.StatementDto;
 
 @Singleton
+@Transactional
 public class GetReport extends HttpServlet {
 
 	/**
@@ -330,17 +332,20 @@ public class GetReport extends HttpServlet {
 		GoodStandingCertificate cert = new GoodStandingCertificate();
 		cert.setMember(member);
 		userDao.save(cert);
-		userDao.merge(cert);
+		userDao.flush();
+		cert = userDao.findByRefId(cert.getRefId(),GoodStandingCertificate.class); //reload?
 		
-		if(cert.getDocumentNo()==null){
+		//userDao.merge(cert);
+		
+		if(cert.getId()==null){
 			writeError(resp,"Your Cert reference number was not generated, kindly contact ICPAK for help");
 			return;
 		}
 		
 		Map<String, Object> values = new HashMap<String, Object>();
-		String refNo = cert.getDocumentNo();
+		String refNo = cert.getId()+"";//memberDao.getGoodStandingCertDocNumber(cert.getId());
 		
-		values.put("refNo", refNo);
+		values.put("refNo", cert.getId());
 		values.put("letterDate", DateUtils.DATEFORMAT.format(new Date()));
 		values.put("memberName", user.toDto().getFullName());
 		values.put("memberNo", member.getMemberNo());

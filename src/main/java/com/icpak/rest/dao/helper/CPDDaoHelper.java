@@ -226,8 +226,8 @@ public class CPDDaoHelper {
 			Calendar regDate = Calendar.getInstance();
 			regDate.setTime(registrationDate);
 			
-			double noOfYears = DateUtils.getYearsBetween(registrationDate, new Date());
-			if(noOfYears==0.0){
+			Double noOfYears = DateUtils.getYearsBetween(registrationDate, new Date());
+			if(noOfYears<=0.0){
 				//do nothing - all is well<=2
 			}else if(noOfYears<=2){
 				// >1 &&  <=2
@@ -247,8 +247,8 @@ public class CPDDaoHelper {
 				// >1 &&  <=2
 				if(cpdHours<120){
 					isGenerate = false;
-					messages.add("You have been a member for more than "+noOfYears
-							+ ". You have done "+cpdHours+"/120 expected hours.");
+					messages.add("You have been a member for more than "+noOfYears.intValue()
+							+ "years but have done "+cpdHours+" cpd hours out of 120 expected hours.");
 				}
 			}
 		}

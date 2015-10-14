@@ -39,11 +39,13 @@ import com.workpoint.icpak.client.ui.security.LoginGateKeeper;
 import com.workpoint.icpak.client.ui.security.MemberGateKeeper;
 import com.workpoint.icpak.shared.api.ApplicationFormResource;
 import com.workpoint.icpak.shared.api.CountriesResource;
+import com.workpoint.icpak.shared.api.MemberResource;
 import com.workpoint.icpak.shared.model.ApplicationFormEducationalDto;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 import com.workpoint.icpak.shared.model.ApplicationFormSpecializationDto;
 import com.workpoint.icpak.shared.model.ApplicationFormTrainingDto;
 import com.workpoint.icpak.shared.model.Country;
+import com.workpoint.icpak.shared.model.MemberStanding;
 
 public class ProfilePresenter
 		extends
@@ -91,6 +93,8 @@ public class ProfilePresenter
 		void setCountries(List<Country> countries);
 
 		void bindSpecializations(List<ApplicationFormSpecializationDto> result);
+
+		void bindMemberStanding(MemberStanding standing);
 	}
 
 	private final CurrentUser currentUser;
@@ -111,16 +115,19 @@ public class ProfilePresenter
 
 	private ResourceDelegate<ApplicationFormResource> applicationDelegate;
 	private ResourceDelegate<CountriesResource> countriesResource;
+	private ResourceDelegate<MemberResource> memberDelegate;
 
 	@Inject
 	public ProfilePresenter(final EventBus eventBus, final IProfileView view,
 			final IProfileProxy proxy,
 			ResourceDelegate<CountriesResource> countriesResource,
 			ResourceDelegate<ApplicationFormResource> applicationDelegate,
+			ResourceDelegate<MemberResource> memberDelegate,
 			final CurrentUser currentUser) {
 		super(eventBus, view, proxy, HomePresenter.SLOT_SetTabContent);
 		this.countriesResource = countriesResource;
 		this.applicationDelegate = applicationDelegate;
+		this.memberDelegate = memberDelegate;
 		this.currentUser = currentUser;
 	}
 
@@ -360,6 +367,13 @@ public class ProfilePresenter
 
 		loadData(applicationRefId);
 		getView().setApplicationId(applicationRefId);
+		
+		memberDelegate.withCallback(new AbstractAsyncCallback<MemberStanding>() {
+			@Override
+			public void onSuccess(MemberStanding standing) {
+				getView().bindMemberStanding(standing);
+			}
+		}).getMemberStanding(getMemberId());
 
 	}
 
@@ -449,6 +463,12 @@ public class ProfilePresenter
 	String getApplicationRefId() {
 		String applicationRefId = currentUser.getUser() == null ? null
 				: currentUser.getUser().getApplicationRefId();
+		return applicationRefId;
+	}
+	
+	String getMemberId() {
+		String applicationRefId = currentUser.getUser() == null ? null
+				: currentUser.getUser().getMemberRefId();
 		return applicationRefId;
 	}
 

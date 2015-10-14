@@ -19,6 +19,7 @@ import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 import com.workpoint.icpak.shared.model.ApplicationFormSpecializationDto;
 import com.workpoint.icpak.shared.model.ApplicationFormTrainingDto;
 import com.workpoint.icpak.shared.model.Country;
+import com.workpoint.icpak.shared.model.MemberStanding;
 
 public class ProfileView extends ViewImpl implements
 		ProfilePresenter.IProfileView {
@@ -189,6 +190,11 @@ public class ProfileView extends ViewImpl implements
 	public void bindSpecializations(
 			List<ApplicationFormSpecializationDto> result) {
 		divProfileContent.bindSpecializations(result);
+	}
+
+	@Override
+	public void bindMemberStanding(MemberStanding standing) {
+		divProfileContent.bindMemberStanding(standing);
 	}
 
 }

@@ -36,14 +36,14 @@ public class DateUtils {
 	public static final SimpleDateFormat MONTHFORMAT = getFormat(monthPattern);
 	public static final SimpleDateFormat MONTHONLYFORMAT = getFormat(monthOnlyPattern);
 	
-	static long yearInMillis = 365 * 24 * 3600 * 1000;
-	static long dayInMillis = 24 * 3600 * 1000;
-	static long monthInMillis = 30 *  24 * 3600 * 1000;
-	static long hourInMillis = 3600 * 1000;
 	static long minInMillis = 60 * 1000;
+	static long hourInMillis = 60 * minInMillis;
+	static long dayInMillis = 24 * hourInMillis;
+	static long monthInMillis = 30 *  dayInMillis;
+	static long yearInMillis = 12 * monthInMillis;
 
 	public static int getDaysBetween(Date startDate, Date endDate) {
-		int days = (int) ((startDate.getTime()-endDate.getTime())/dayInMillis);
+		int days = (int) ((endDate.getTime()-startDate.getTime())/dayInMillis);
 		
 		return days;
 	}
@@ -56,12 +56,12 @@ public class DateUtils {
 	 * @return
 	 */
 	public static int getMonthsBetween(Date startDate, Date endDate) {
-		int months = (int) ((startDate.getTime()-endDate.getTime())/monthInMillis);
+		int months = (int) ((endDate.getTime()-startDate.getTime())/monthInMillis);
 		return months;
 	}
 	
 	public static double getYearsBetween(Date startDate, Date endDate) {
-		double years = (double) ((startDate.getTime()-endDate.getTime())/yearInMillis);
+		double years = (double) ((endDate.getTime()-startDate.getTime())/yearInMillis);
 		return years;
 	}
 

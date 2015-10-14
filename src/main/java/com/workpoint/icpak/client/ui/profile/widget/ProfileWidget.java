@@ -16,6 +16,8 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Random;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -35,11 +37,13 @@ import com.workpoint.icpak.client.ui.profile.education.EducationDetails;
 import com.workpoint.icpak.client.ui.profile.specialization.SpecializationDetails;
 import com.workpoint.icpak.client.ui.profile.training.TrainingDetails;
 import com.workpoint.icpak.client.ui.upload.custom.Uploader;
+import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.model.ApplicationFormEducationalDto;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 import com.workpoint.icpak.shared.model.ApplicationFormSpecializationDto;
 import com.workpoint.icpak.shared.model.ApplicationFormTrainingDto;
 import com.workpoint.icpak.shared.model.Country;
+import com.workpoint.icpak.shared.model.MemberStanding;
 
 public class ProfileWidget extends Composite {
 
@@ -97,6 +101,8 @@ public class ProfileWidget extends Composite {
 
 	@UiField
 	ProgressBar progressBar;
+	
+	@UiField Anchor aDownloadCert;
 
 	private BasicDetails basicDetail;
 	private EducationDetails educationDetail;
@@ -161,6 +167,17 @@ public class ProfileWidget extends Composite {
 			public void onFinish(IUploader uploaderRef) {
 				imgUser.setUrl(url + "&version=" + Random.nextInt());
 				uploader.clear();
+			}
+		});
+		
+		aDownloadCert.addClickHandler(new ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent arg0) {
+				UploadContext ctx = new UploadContext("getreport");
+				ctx.setAction(UPLOADACTION.DownloadCertGoodStanding);
+				ctx.setContext("memberRefId", AppContext.getContextUser().getMemberRefId());
+				Window.open(ctx.toUrl(), "Certificate Of Good Standing", "");
 			}
 		});
 	}
@@ -320,6 +337,24 @@ public class ProfileWidget extends Composite {
 	public void bindSpecializations(
 			List<ApplicationFormSpecializationDto> result) {
 		specializationDetail.bindSpecializations(result);
+	}
+
+	public void bindMemberStanding(MemberStanding standing) {
+		if(standing.getStanding()==0){
+			aDownloadCert.setText("Not In GoodStanding");
+			aDownloadCert.removeStyleName("btn-success");
+			aDownloadCert.addStyleName("btn-danger");
+			String info = "";
+			for(String reason: standing.getReasons()){
+				info= info.concat(reason+"\n");
+			}
+			aDownloadCert.setTitle(info);
+			
+		}else{
+			aDownloadCert.addStyleName("btn-success");
+			aDownloadCert.removeStyleName("btn-danger");
+			aDownloadCert.setTitle("You are in good standing");
+		}
 	}
 
 }
