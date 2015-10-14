@@ -112,7 +112,7 @@ public class CPDManagementPresenter
 				public void onSuccess(CPDDto result) {
 					loadData();
 				}
-			}).cpd(dto.getMemberId()).update(dto.getRefId(), dto);
+			}).cpd(dto.getMemberRefId()).update(dto.getRefId(), dto);
 
 		}
 

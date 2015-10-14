@@ -26,12 +26,15 @@ import org.xml.sax.SAXException;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.icpak.rest.dao.AttachmentsDao;
+import com.icpak.rest.dao.CPDDao;
+import com.icpak.rest.dao.MemberDao;
 import com.icpak.rest.dao.UsersDao;
 import com.icpak.rest.dao.helper.CPDDaoHelper;
 import com.icpak.rest.dao.helper.StatementDaoHelper;
 import com.icpak.rest.dao.helper.UsersDaoHelper;
 import com.icpak.rest.models.auth.User;
 import com.icpak.rest.models.membership.GoodStandingCertificate;
+import com.icpak.rest.models.cpd.CPD;
 import com.icpak.rest.models.membership.Member;
 import com.icpak.rest.models.util.Attachment;
 import com.icpak.rest.utils.Doc;
@@ -41,6 +44,7 @@ import com.itextpdf.text.DocumentException;
 import com.workpoint.icpak.server.util.DateUtils;
 import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.shared.model.MemberStanding;
+import com.workpoint.icpak.shared.model.UserDto;
 import com.workpoint.icpak.shared.model.statement.StatementDto;
 
 @Singleton
@@ -56,6 +60,8 @@ public class GetReport extends HttpServlet {
 	@Inject
 	UsersDaoHelper helper;
 	@Inject
+	MemberDao memberDao;
+	@Inject
 	UsersDao userDao;
 	@Inject
 	AttachmentsDao attachmentDao;
@@ -63,6 +69,8 @@ public class GetReport extends HttpServlet {
 	CPDDaoHelper cpdHelper;
 	@Inject
 	StatementDaoHelper statementDaoHelper;
+	@Inject
+	CPDDao CPDDao;
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
@@ -132,6 +140,10 @@ public class GetReport extends HttpServlet {
 			procesStatementsRequest(req, resp);
 		}
 
+		if (action.equals("GETCPDSTATEMENT")) {
+			processMemberCPDStatementRequest(req, resp);
+		}
+
 	}
 
 	private void procesStatementsRequest(HttpServletRequest req,
@@ -163,23 +175,57 @@ public class GetReport extends HttpServlet {
 		processAttachmentRequest(resp, data, "statement.pdf");
 	}
 
-	public byte[] processStatementsRequest(String memberRefId, Date startDate, Date endDate) throws FileNotFoundException, IOException, SAXException, ParserConfigurationException, FactoryConfigurationError, DocumentException {
-		
-		Member member =null;
-		
-		try{
+	// cdp statement Request
+	private void processMemberCPDStatementRequest(HttpServletRequest req,
+			HttpServletResponse resp) throws IOException, SAXException,
+			ParserConfigurationException, FactoryConfigurationError,
+			DocumentException {
+		Long startDate = null;
+		Long endDate = null;
+		String memberRefId = null;
+
+		if (req.getParameter("startdate") != null) {
+			startDate = new Long(req.getParameter("startdate"));
+		}
+
+		if (req.getParameter("enddate") != null) {
+			endDate = new Long(req.getParameter("enddate"));
+		}
+
+		if (req.getParameter("memberRefId") != null) {
+			memberRefId = req.getParameter("memberRefId");
+		}
+
+		Date finalStartDate = new Date(startDate);
+		Date finalEndDate = new Date(endDate);
+
+		byte[] data = processMemberCPDStatementRequest(memberRefId,
+				finalStartDate, finalEndDate);
+
+		processAttachmentRequest(resp, data, "memberCPDStatement.pdf");
+	}
+
+	public byte[] processStatementsRequest(String memberRefId, Date startDate,
+			Date endDate) throws FileNotFoundException, IOException,
+			SAXException, ParserConfigurationException,
+			FactoryConfigurationError, DocumentException {
+
+		Member member = null;
+
+		try {
 			member = userDao.findByRefId(memberRefId, Member.class);
-		}catch(Exception e){
+		} catch (Exception e) {
 		}
-		
+
 		User user = null;
-		if(member!=null){
+		if (member != null) {
 			user = member.getUser();
-		}else{
-			//Probably an admin
-			throw new IllegalArgumentException("No Member statements found. Kindly confirm you are logged in");
+		} else {
+			// Probably an admin
+			throw new IllegalArgumentException(
+					"No Member statements found. Kindly confirm you are logged in");
 		}
-		
+
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
 		List<StatementDto> statements = statementDaoHelper.getAllStatements(
@@ -235,17 +281,18 @@ public class GetReport extends HttpServlet {
 		assert cpdRefId != null;
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
-		CPDDto cpd = cpdHelper.getCPD("", cpdRefId);
+		CPDDto cpd = cpdHelper.getCPD(cpdRefId);
 		assert cpd != null;
 
 		Map<String, Object> values = new HashMap<String, Object>();
 		values.put("eventName", cpd.getTitle());
-		values.put("eventDates", formatter.format(cpd.getStartDate()));
+		values.put("eventDates", formatter.format(cpd.getStartDate()) + " to "
+				+ formatter.format(cpd.getEndDate()));
 		values.put("memberName", cpd.getFullNames());
 		values.put("dateIssued", formatter.format(new Date()));
 		values.put("cpdHours", cpd.getCpdHours());
+		values.put("eventVenue", cpd.getEventLocation());
 		Doc doc = new Doc(values);
-
 		HTMLToPDFConvertor convertor = new HTMLToPDFConvertor();
 		InputStream is = GetReport.class.getClassLoader().getResourceAsStream(
 				"cpdcertificate.html");
@@ -509,4 +556,67 @@ public class GetReport extends HttpServlet {
 		}
 	}
 
+	// generate member cpd statement pdf
+	public byte[] processMemberCPDStatementRequest(String memberRefId,
+			Date startDate, Date endDate) throws FileNotFoundException,
+			IOException, SAXException, ParserConfigurationException,
+			FactoryConfigurationError, DocumentException {
+
+		Member member = memberDao.findByRefId(memberRefId, Member.class);
+		User user = member.getUser();
+
+		UserDto userDto = user.toDto();
+
+		// List<CPDDto> cpds = cpdHelper.getAllMemberCpd(memberRefId, startDate,
+		// endDate, 0, 1000);
+		List<CPD> cpds = CPDDao.getAllCPDS(memberRefId, null, null, 0, 1000);
+		log.info("CPD Records Count = " + cpds.size());
+
+		SimpleDateFormat formatter = new SimpleDateFormat("YYYY");
+		Map<String, Object> values = new HashMap<String, Object>();
+		values.put("memberNames", userDto.getFullName());
+		values.put("memberNo", user.getMemberNo());
+		values.put("startYear", formatter.format(startDate));
+		values.put("endYear", formatter.format(endDate));
+
+		Doc doc = new Doc(values);
+
+		for (CPD cpd : cpds) {
+			values = new HashMap<String, Object>();
+			values.put("number", cpd.getMemberId());
+			values.put("courseName", cpd.getTitle());
+			values.put("date", cpd.getEndDate());
+			values.put("category", cpd.getCategory());
+			values.put("cpd", cpd.getCpdHours());
+			// create row to loop through
+			DocumentLine line = new DocumentLine("invoiceDetails", values);
+
+			doc.addDetail(line);
+		}
+
+		for (CPD cpd : cpds) {
+			values = new HashMap<String, Object>();
+			values.put("year", cpd.getCreated());
+			values.put("totalStructured", cpd.getTitle());
+			values.put("totalUnstructured", cpd.getEndDate());
+			values.put("category", cpd.getCategory());
+			values.put("total", cpd.getCpdHours());
+
+			// create row to loop through
+			DocumentLine line = new DocumentLine("cpdDetails", values);
+
+			doc.addDetail(line);
+		}
+
+		HTMLToPDFConvertor convertor = new HTMLToPDFConvertor();
+		InputStream is = GetReport.class.getClassLoader().getResourceAsStream(
+				"cpd-statement.html");
+		String html = IOUtils.toString(is);
+		byte[] data = convertor.convert(doc, html);
+
+		String name = userDto.getFullName() + " "
+				+ formatter.format(new Date()) + ".pdf";
+
+		return data;
+	}
 }

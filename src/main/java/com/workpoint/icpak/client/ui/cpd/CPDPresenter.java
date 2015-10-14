@@ -1,15 +1,6 @@
 package com.workpoint.icpak.client.ui.cpd;
 
-//import com.workpoint.icpak.shared.requests.CheckPasswordRequest;
-//import com.workpoint.icpak.shared.requests.GetUserRequest;
-//import com.workpoint.icpak.shared.requests.SaveUserRequest;
-//import com.workpoint.icpak.shared.requests.UpdatePasswordRequest;
-//import com.workpoint.icpak.shared.responses.CheckPasswordRequestResult;
-//import com.workpoint.icpak.shared.responses.GetUserRequestResult;
-//import com.workpoint.icpak.shared.responses.SaveUserResponse;
-//import com.workpoint.icpak.shared.responses.UpdatePasswordResponse;
 import java.util.List;
-
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -41,7 +32,6 @@ import com.workpoint.icpak.client.ui.events.EditModelEvent.EditModelHandler;
 import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
 import com.workpoint.icpak.client.ui.events.ProcessingEvent;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
-import com.workpoint.icpak.client.ui.popup.GenericPopupPresenter;
 import com.workpoint.icpak.client.ui.security.MemberGateKeeper;
 import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.api.MemberResource;
@@ -50,13 +40,17 @@ import com.workpoint.icpak.shared.model.CPDSummaryDto;
 
 public class CPDPresenter extends
 		Presenter<CPDPresenter.ICPDView, CPDPresenter.ICPDProxy> implements
-		EditModelHandler{
+		EditModelHandler {
 
 	public interface ICPDView extends View {
 		HasClickHandlers getRecordButton();
+
 		void bindResults(List<CPDDto> result);
+
 		void showDetailedView();
+
 		PagingPanel getPagingPanel();
+
 		void bindSummary(CPDSummaryDto summary);
 
 	}
@@ -100,17 +94,20 @@ public class CPDPresenter extends
 		});
 
 		getView().getPagingPanel().setLoader(new PagingLoader() {
-
 			@Override
 			public void onLoad(int offset, int limit) {
 				loadCPD(offset, limit);
 			}
 		});
 
-	}
+		/*
+		 * getView().getFilterButton().addClickHandler(new ClickHandler() {
+		 * 
+		 * @Override public void onClick(ClickEvent event) { showCreatePopup();
+		 * } });
+		 */
 
-	@Inject
-	GenericPopupPresenter popup;
+	}
 
 	protected void showCreatePopup() {
 		showInstructions();
@@ -215,7 +212,6 @@ public class CPDPresenter extends
 	protected void loadData() {
 		String memberId = currentUser.getUser().getRefId();
 		fireEvent(new ProcessingEvent());
-		
 
 		memberDelegate.withCallback(new AbstractAsyncCallback<CPDSummaryDto>() {
 			@Override
@@ -223,8 +219,7 @@ public class CPDPresenter extends
 				getView().bindSummary(summary);
 			}
 		}).cpd(memberId).getCPDSummary();
-		
-		
+
 		memberDelegate.withCallback(new AbstractAsyncCallback<Integer>() {
 			@Override
 			public void onSuccess(Integer aCount) {
@@ -236,8 +231,6 @@ public class CPDPresenter extends
 				loadCPD(config.getOffset(), config.getLimit());
 			}
 		}).cpd(AppContext.isCurrentUserAdmin() ? "ALL" : memberId).getCount();
-		
-
 	}
 
 	protected void loadCPD(int offset, int limit) {
@@ -280,13 +273,13 @@ public class CPDPresenter extends
 	private void delete(CPDDto model) {
 	}
 
-//	@Override
-//	public void onEditModel(TableActionEvent event) {
-//		if (event.getAction() == TableActionType.DOWNLOADCERT) {
-//			//Send the refId to server side
-//			
-//			
-//		}
-//	}
+	// @Override
+	// public void onEditModel(TableActionEvent event) {
+	// if (event.getAction() == TableActionType.DOWNLOADCERT) {
+	// //Send the refId to server side
+	//
+	//
+	// }
+	// }
 
 }

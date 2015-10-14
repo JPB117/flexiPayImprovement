@@ -30,41 +30,40 @@ import com.workpoint.icpak.shared.model.CPDStatus;
  * Simple class that represents any User domain entity in any application.
  */
 
-@ApiModel(value="CPD Model", description="This is a CPD instance model")
-
+@ApiModel(value = "CPD Model", description = "This is a CPD instance model")
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-
 @Entity
-@Table(name="cpd")@Cache(usage= CacheConcurrencyStrategy.READ_WRITE)
-public class CPD extends PO{
+@Table(name = "cpd")
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+public class CPD extends PO {
 
-	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private Date startDate; //Copied from Event details;
+	private Date startDate; // Copied from Event details;
 	private Date endDate;
 	private String title;
 	private String organizer;
 	private CPDCategory category;
 	private Double cpdHours;
-	
+
 	@Enumerated(EnumType.STRING)
 	private CPDStatus status = CPDStatus.Unconfirmed;
-	
-	@Column(length=20)
+
+	@Column(length = 20)
 	private String memberId;
-	
-	@Column(length=20)
+	@Column(length = 20)
 	private String memberRegistrationNo;
 	private String eventId;
-	
-	@OneToMany(mappedBy="cpd", fetch=FetchType.LAZY, cascade={CascadeType.REMOVE})
-	private Set<Attachment> attachments=  new HashSet<>();
-	
+
+	@OneToMany(mappedBy = "cpd", fetch = FetchType.LAZY, cascade = { CascadeType.REMOVE })
+	private Set<Attachment> attachments = new HashSet<>();
+
+	private String eventLocation;
+
 	public CPD() {
 	}
 
@@ -91,27 +90,28 @@ public class CPD extends PO{
 	public void setStatus(CPDStatus status) {
 		this.status = status;
 	}
-	
-	public void copyFrom(CPDDto dto){
+
+	public void copyFrom(CPDDto dto) {
 		setCpdHours(dto.getCpdHours());
 		setEndDate(dto.getEndDate());
 		setStartDate(dto.getStartDate());
-		
-		if(dto.getStatus()!=null)
+
+		if (dto.getStatus() != null)
 			setStatus(dto.getStatus());
-		
+
 		setCategory(dto.getCategory());
-		setMemberId(dto.getMemberId());
+		setMemberId(dto.getMemberRefId());
 		setOrganizer(dto.getOrganizer());
 		setTitle(dto.getTitle());
 		setEventId(dto.getEventId());
+		setEventLocation(dto.getEventLocation());
+		setMemberRegistrationNo(dto.getMemberRegistrationNo());
 	}
 
 	public CPDDto toDTO() {
-		
 		CPDDto dto = new CPDDto();
 		dto.setCreated(getCreated());
-		dto.setMemberId(memberId);
+		dto.setMemberRefId(memberId);
 		dto.setRefId(getRefId());
 		dto.setCategory(category);
 		dto.setCpdHours(cpdHours);
@@ -121,7 +121,8 @@ public class CPD extends PO{
 		dto.setStatus(status);
 		dto.setTitle(title);
 		dto.setEventId(eventId);
-		
+		dto.setEventLocation(eventLocation);
+
 		return dto;
 	}
 
@@ -180,5 +181,13 @@ public class CPD extends PO{
 	public double getCpdHours() {
 		return cpdHours;
 	}
-	
+
+	public String getEventLocation() {
+		return eventLocation;
+	}
+
+	public void setEventLocation(String eventName) {
+		this.eventLocation = eventName;
+	}
+
 }

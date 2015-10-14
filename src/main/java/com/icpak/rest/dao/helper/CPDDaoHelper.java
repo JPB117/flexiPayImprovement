@@ -5,10 +5,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import com.icpak.rest.dao.CPDDao;
 import com.icpak.rest.dao.EventsDao;
+import com.icpak.rest.dao.MemberDao;
 import com.icpak.rest.dao.UsersDao;
 import com.icpak.rest.models.cpd.CPD;
 import com.icpak.rest.models.event.Delegate;
@@ -16,6 +19,7 @@ import com.icpak.rest.models.event.Event;
 import com.icpak.rest.models.membership.Member;
 import com.icpak.rest.models.membership.MembershipStatus;
 import com.workpoint.icpak.server.util.DateUtils;
+import com.workpoint.icpak.shared.model.CPDCategory;
 import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.shared.model.CPDStatus;
 import com.workpoint.icpak.shared.model.CPDSummaryDto;
@@ -33,6 +37,10 @@ public class CPDDaoHelper {
 	UsersDao userDao;
 	
 	@Inject StatementDaoHelper statementHelper;
+	@Inject
+	MemberDao memberDao;
+
+	static Logger logger = Logger.getLogger(CPDDaoHelper.class);
 
 	public List<CPDDto> getAllCPD(String memberId, Integer offset, Integer limit) {
 
@@ -58,11 +66,18 @@ public class CPDDaoHelper {
 		return dao.getCPDCount(memberId);
 	}
 
-	public CPDDto getCPD(String memberId, String cpdId) {
+	public CPDDto getCPD(String cpdId) {
 		CPD cpd = dao.findByCPDId(cpdId);
 		CPDDto rtn = cpd.toDTO();
 		rtn.setFullNames(userDao.getNamesBymemberNo(cpd
 				.getMemberRegistrationNo()));
+		return rtn;
+	}
+
+	public CPDDto getCPDFromMemberRefId(String memberRefId, String cpdId) {
+		CPD cpd = dao.findByCPDId(cpdId);
+		CPDDto rtn = cpd.toDTO();
+		rtn.setFullNames(userDao.getFullNames(memberRefId));
 		return rtn;
 	}
 
@@ -102,15 +117,15 @@ public class CPDDaoHelper {
 		Member member = dao
 				.findByRefId(delegate.getMemberRefId(), Member.class);
 		Event event = delegate.getBooking().getEvent();
-		String memberId = delegate.getMemberRefId();
+		String memberRefId = delegate.getMemberRefId();
 
 		if (attendance == null || attendance == AttendanceStatus.NOTATTENDED) {
-			dao.deleteCPDByMemberAndEvent(memberId, event.getRefId());
+			dao.deleteCPDByMemberAndEvent(memberRefId, event.getRefId());
 			return;
 		}
 
 		CPDDto cpd = new CPDDto();
-		CPD po = dao.getCPDByMemberAndEvent(memberId, event.getRefId());
+		CPD po = dao.getCPDByMemberAndEvent(memberRefId, event.getRefId());
 		if (po != null) {
 			cpd = po.toDTO();
 		}
@@ -119,17 +134,20 @@ public class CPDDaoHelper {
 		cpd.setEndDate(event.getEndDate());
 		cpd.setStartDate(event.getStartDate());
 		cpd.setFullNames(delegate.getSurname() + " " + delegate.getOtherNames());
-		cpd.setMemberId(memberId);
+		cpd.setMemberRefId(memberRefId);
 		cpd.setEventId(event.getRefId());
 		cpd.setOrganizer("ICPAK");
 		cpd.setStatus(CPDStatus.Approved);
 		cpd.setEventId(event.getRefId());
 		cpd.setTitle(event.getName());
+		cpd.setMemberRegistrationNo(delegate.getMemberRegistrationNo());
+		cpd.setCategory(CPDCategory.CATEGORY_A);
+		cpd.setEventLocation(event.getVenue());
 
 		if (cpd.getRefId() != null) {
-			update(memberId, cpd.getRefId(), cpd);
+			update(memberRefId, cpd.getRefId(), cpd);
 		} else {
-			create(memberId, cpd);
+			create(memberRefId, cpd);
 		}
 	}
 
@@ -252,6 +270,29 @@ public class CPDDaoHelper {
 
 	public double getCPDHours(String memberRefId) {
 		return dao.getCPDHours(memberRefId);
+	}
+
+	public List<CPDDto> filterMyCPD() {
+		List<CPDDto> cpDtos = new ArrayList<>();
+		return cpDtos;
+	}
+
+	// get a list of cpds filtered by date currently logged in member
+	public List<CPDDto> getAllMemberCpd(String memberRefId, Date startDate,
+			Date endDate, Integer limit, Integer offset) {
+
+		List<CPD> cpds = dao.getAllCPDS(memberRefId, startDate, endDate,
+				offset == null ? 0 : offset, limit == null ? 1000 : limit);
+		logger.info("CPD Records Count = " + cpds.size());
+
+		List<CPDDto> cpdDtos = new ArrayList<>();
+		for (CPD cpd : cpds) {
+			logger.debug("CPD memberr id " + cpd.getMemberId());
+			cpdDtos.add(cpd.toDTO());
+		}
+
+		return cpdDtos;
+
 	}
 
 }
