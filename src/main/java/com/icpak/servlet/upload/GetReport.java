@@ -473,7 +473,7 @@ public class GetReport extends HttpServlet {
 		for (CPD cpd : cpds) {
 			String cpdCategory = null;
 			values = new HashMap<String, Object>();
-			values.put("number", cpd.getEventId());
+			values.put("number", "CPD-"+cpd.getId());
 			values.put("courseName", cpd.getTitle());
 			values.put("date", formatter.format(cpd.getEndDate()));
 
@@ -516,9 +516,6 @@ public class GetReport extends HttpServlet {
 
 				if (currentCpdYear.equals(comparisonYear)) {
 					cdpTableValues.add(cpd);
-
-					// remove the added cpd from the cpds list
-//					cpds.remove(cpd);
 				}
 
 				// check if our hash tree is empty
