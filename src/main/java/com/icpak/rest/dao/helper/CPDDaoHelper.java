@@ -218,7 +218,7 @@ public class CPDDaoHelper {
 		 */
 		Date registrationDate = member.getRegistrationDate();
 		double cpdHours = dao.getCPDHours(memberRefId);
-		if(registrationDate==null && member.getMemberShipStatus()==MembershipStatus.ACTIVE){
+		if(registrationDate==null){
 			isGenerate = false;
 			messages.add("Your registration date cannot be found in the portal, kindly request "
 					+ "for your account update from the Administrator.");

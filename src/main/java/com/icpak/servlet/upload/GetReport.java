@@ -55,7 +55,7 @@ import com.workpoint.icpak.shared.model.statement.StatementDto;
 public class GetReport extends HttpServlet {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 
@@ -93,7 +93,7 @@ public class GetReport extends HttpServlet {
 			executeGet(req, resp);
 		} catch (Exception e) {
 			e.printStackTrace();
-			
+
 			writeError(resp, e.getMessage());
 			//throw new RuntimeException(e);
 		}
@@ -139,7 +139,7 @@ public class GetReport extends HttpServlet {
 		if (action.equalsIgnoreCase("DownloadCertGoodStanding")) {
 			processCertGoodStanding(req, resp);
 		}
-		
+
 		if (action.equalsIgnoreCase("GETSTATEMENT")) {
 			procesStatementsRequest(req, resp);
 		}
@@ -151,7 +151,7 @@ public class GetReport extends HttpServlet {
 	}
 
 	private void procesStatementsRequest(HttpServletRequest req,
-			HttpServletResponse resp) throws IOException, SAXException,
+										 HttpServletResponse resp) throws IOException, SAXException,
 			ParserConfigurationException, FactoryConfigurationError,
 			DocumentException {
 		Long startDate = null;
@@ -181,7 +181,7 @@ public class GetReport extends HttpServlet {
 
 	// cdp statement Request
 	private void processMemberCPDStatementRequest(HttpServletRequest req,
-			HttpServletResponse resp) throws IOException, SAXException,
+												  HttpServletResponse resp) throws IOException, SAXException,
 			ParserConfigurationException, FactoryConfigurationError,
 			DocumentException {
 		Long startDate = null;
@@ -210,7 +210,7 @@ public class GetReport extends HttpServlet {
 	}
 
 	public byte[] processStatementsRequest(String memberRefId, Date startDate,
-			Date endDate) throws FileNotFoundException, IOException,
+										   Date endDate) throws FileNotFoundException, IOException,
 			SAXException, ParserConfigurationException,
 			FactoryConfigurationError, DocumentException {
 
@@ -278,7 +278,7 @@ public class GetReport extends HttpServlet {
 	}
 
 	private void processCPDCertRequest(HttpServletRequest req,
-			HttpServletResponse resp) throws IOException, SAXException,
+									   HttpServletResponse resp) throws IOException, SAXException,
 			ParserConfigurationException, FactoryConfigurationError,
 			DocumentException {
 		String cpdRefId = req.getParameter("cpdRefId");
@@ -308,21 +308,21 @@ public class GetReport extends HttpServlet {
 
 		processAttachmentRequest(resp, data, name);
 	}
-	
+
 	private void processCertGoodStanding(HttpServletRequest req,
-			HttpServletResponse resp) throws IOException, SAXException,
+										 HttpServletResponse resp) throws IOException, SAXException,
 			ParserConfigurationException, FactoryConfigurationError,
 			DocumentException {
-		
+
 		String memberId = req.getParameter("memberRefId");
 		if(memberId==null){
 			writeError(resp,"Member Id must be provied to generate this certificate");
 			return;
 		}
-		
+
 		Member member = userDao.findByRefId(memberId, Member.class);
 		User user = member.getUser();
-		
+
 		MemberStanding standing = cpdHelper.getMemberStanding(memberId);
 		if(standing.getStanding()==0){
 			for(String reason: standing.getReasons()){
@@ -330,23 +330,23 @@ public class GetReport extends HttpServlet {
 			}
 			return;
 		}
-		
+
 		GoodStandingCertificate cert = new GoodStandingCertificate();
 		cert.setMember(member);
 		userDao.save(cert);
 		userDao.flush();
 		cert = userDao.findByRefId(cert.getRefId(),GoodStandingCertificate.class); //reload?
-		
+
 		//userDao.merge(cert);
-		
+
 		if(cert.getId()==null){
 			writeError(resp,"Your Cert reference number was not generated, kindly contact ICPAK for help");
 			return;
 		}
-		
+
 		Map<String, Object> values = new HashMap<String, Object>();
 		String refNo = cert.getId()+"";//memberDao.getGoodStandingCertDocNumber(cert.getId());
-		
+
 		values.put("refNo", cert.getId());
 		values.put("letterDate", DateUtils.DATEFORMAT.format(new Date()));
 		values.put("memberName", user.toDto().getFullName());
@@ -360,14 +360,14 @@ public class GetReport extends HttpServlet {
 				"goodstanding_certificate.html");
 		String html = IOUtils.toString(is);
 		byte[] data = convertor.convert(doc, html);
-		
+
 		Attachment attachment = new Attachment();
 		attachment.setGoodStandingCert(cert);
 		attachment.setAttachment(data);
 		attachment.setContentType("application/pdf");
 		attachment.setSize(data.length);
 		userDao.save(attachment);
-		
+
 		String name = "CertificateOfGoodStanding_"+refNo+".pdf";
 
 		processAttachmentRequest(resp, data, name);
@@ -382,12 +382,12 @@ public class GetReport extends HttpServlet {
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-		
-		
+
+
 	}
 
 	private void processOutputDoc(HttpServletRequest req,
-			HttpServletResponse resp) {
+								  HttpServletResponse resp) {
 		String outdoc = req.getParameter("template");
 		String name = req.getParameter("name");
 		String doc = req.getParameter("doc");
@@ -433,7 +433,7 @@ public class GetReport extends HttpServlet {
 	}
 
 	private void processSettingsImage(HttpServletRequest req,
-			HttpServletResponse resp) {
+									  HttpServletResponse resp) {
 
 		// String settingName = req.getParameter("settingName");
 		// log.debug("Logging- SettingName "+settingName);
@@ -475,7 +475,7 @@ public class GetReport extends HttpServlet {
 	}
 
 	private void processUserImage(HttpServletRequest req,
-			HttpServletResponse resp) {
+								  HttpServletResponse resp) {
 		String userId = req.getParameter("userRefId");
 		assert userId != null;
 
@@ -511,7 +511,7 @@ public class GetReport extends HttpServlet {
 	}
 
 	private void processAttachmentRequest(HttpServletRequest req,
-			HttpServletResponse resp) {
+										  HttpServletResponse resp) {
 		String id = req.getParameter("attachmentId");
 		if (id == null)
 			return;
@@ -523,7 +523,7 @@ public class GetReport extends HttpServlet {
 	}
 
 	private void processAttachmentRequest(HttpServletResponse resp,
-			Attachment attachment) {
+										  Attachment attachment) {
 
 		resp.setContentType(attachment.getContentType());
 		processAttachmentRequest(resp, attachment.getAttachment(),
@@ -531,7 +531,7 @@ public class GetReport extends HttpServlet {
 	}
 
 	private void processAttachmentRequest(HttpServletResponse resp,
-			byte[] data, String name) {
+										  byte[] data, String name) {
 		if (name.endsWith("png") || name.endsWith("jpg")
 				|| name.endsWith("html") || name.endsWith("htm")
 				|| name.endsWith("svg") || name.endsWith("pdf")) {
@@ -564,143 +564,143 @@ public class GetReport extends HttpServlet {
 	}
 
 	// generate member cpd statement pdf
-		public byte[] processMemberCPDStatementRequest(String memberRefId, Date startDate, Date endDate)
-				throws FileNotFoundException, IOException, SAXException, ParserConfigurationException,
-				FactoryConfigurationError, DocumentException {
+	public byte[] processMemberCPDStatementRequest(String memberRefId, Date startDate, Date endDate)
+			throws FileNotFoundException, IOException, SAXException, ParserConfigurationException,
+			FactoryConfigurationError, DocumentException {
 
-			Member member = memberDao.findByRefId(memberRefId, Member.class);
-			User user = member.getUser();
+		Member member = memberDao.findByRefId(memberRefId, Member.class);
+		User user = member.getUser();
 
-			UserDto userDto = user.toDto();
+		UserDto userDto = user.toDto();
 
-			// List<CPDDto> cpds = cpdHelper.getAllMemberCpd(memberRefId, startDate,
-			// endDate, 0, 1000);
-			List<CPD> cpds = CPDDao.getAllCPDS(memberRefId, startDate==null?null:startDate,endDate==null?null:endDate,0,1000);
-			log.info("CPD Records Count = " + cpds.size());
+		// List<CPDDto> cpds = cpdHelper.getAllMemberCpd(memberRefId, startDate,
+		// endDate, 0, 1000);
+		List<CPD> cpds = CPDDao.getAllCPDS(memberRefId, startDate==null?null:startDate,endDate==null?null:endDate,0,1000);
+		log.info("CPD Records Count = " + cpds.size());
 
-			Map<String, Object> values = new HashMap<String, Object>();
-			values.put("memberNames", userDto.getFullName());
-			values.put("memberNo", user.getMemberNo());
+		Map<String, Object> values = new HashMap<String, Object>();
+		values.put("memberNames", userDto.getFullName());
+		values.put("memberNo", user.getMemberNo());
 
-			Doc doc = new Doc(values);
-			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-			for (CPD cpd : cpds) {
-				String cpdCategory = null;
-				values = new HashMap<String, Object>();
-				values.put("number", "CPD-"+cpd.getId());
-				values.put("courseName", cpd.getTitle());
-				values.put("date", formatter.format(cpd.getEndDate()));
+		Doc doc = new Doc(values);
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+		for (CPD cpd : cpds) {
+			String cpdCategory = null;
+			values = new HashMap<String, Object>();
+			values.put("number", "CPD-"+cpd.getId());
+			values.put("courseName", cpd.getTitle());
+			values.put("date", formatter.format(cpd.getEndDate()));
 
-				if (cpd.getCategory().toString().equals("CATEGORY_A")) {
+			if (cpd.getCategory().toString().equals("CATEGORY_A")) {
 
-					cpdCategory = "Structured";
-					values.put("category", cpdCategory);
+				cpdCategory = "Structured";
+				values.put("category", cpdCategory);
 
-				} else {
+			} else {
 
-					cpdCategory = "Un-strucured";
-					values.put("category", cpdCategory);
-				}
-
-				values.put("cpd", cpd.getCpdHours());
-
-				// create row to loop through
-				DocumentLine line = new DocumentLine("invoiceDetails", values);
-
-				doc.addDetail(line);
+				cpdCategory = "Un-strucured";
+				values.put("category", cpdCategory);
 			}
 
-			SimpleDateFormat formatter_ = new SimpleDateFormat("yyyy");
+			values.put("cpd", cpd.getCpdHours());
 
-			Hashtable<String, List<CPD>> cpdStatementSummary = new Hashtable<>();
-			Hashtable<String, List<CPD>> cpdStatementSummary2 = new Hashtable<>();
+			// create row to loop through
+			DocumentLine line = new DocumentLine("invoiceDetails", values);
 
-			int cpdCount = cpds.size();
+			doc.addDetail(line);
+		}
+
+		SimpleDateFormat formatter_ = new SimpleDateFormat("yyyy");
+
+		Hashtable<String, List<CPD>> cpdStatementSummary = new Hashtable<>();
+		Hashtable<String, List<CPD>> cpdStatementSummary2 = new Hashtable<>();
+
+		int cpdCount = cpds.size();
 
 
-			for (int i = 0; i < cpdCount; i++) {
-				List<CPD> cdpTableValues = new ArrayList<>();
-				// current cpd
-				CPD currentCpd = cpds.get(i);
+		for (int i = 0; i < cpdCount; i++) {
+			List<CPD> cdpTableValues = new ArrayList<>();
+			// current cpd
+			CPD currentCpd = cpds.get(i);
 
-				for (CPD cpd : cpds) {
+			for (CPD cpd : cpds) {
 
-					String currentCpdYear = formatter_.format(currentCpd.getEndDate());
-					String comparisonYear = formatter_.format(cpd.getEndDate());
+				String currentCpdYear = formatter_.format(currentCpd.getEndDate());
+				String comparisonYear = formatter_.format(cpd.getEndDate());
 
-					if (currentCpdYear.equals(comparisonYear)) {
-						cdpTableValues.add(cpd);
-					}
+				if (currentCpdYear.equals(comparisonYear)) {
+					cdpTableValues.add(cpd);
+				}
 
-					// check if our hash tree is empty
+				// check if our hash tree is empty
 
-					if (cpdStatementSummary.isEmpty()) {
-						cpdStatementSummary2.put(currentCpdYear, cdpTableValues);
-					} else {
-						for (Map.Entry m : cpdStatementSummary.entrySet()) {
-							if (!m.getKey().equals(currentCpdYear)) {
-								cpdStatementSummary2.put(currentCpdYear, cdpTableValues);
-							}
+				if (cpdStatementSummary.isEmpty()) {
+					cpdStatementSummary2.put(currentCpdYear, cdpTableValues);
+				} else {
+					for (Map.Entry m : cpdStatementSummary.entrySet()) {
+						if (!m.getKey().equals(currentCpdYear)) {
+							cpdStatementSummary2.put(currentCpdYear, cdpTableValues);
 						}
 					}
-
 				}
 
 			}
 
-			// lets print the final hash table
-			for (Map.Entry m : cpdStatementSummary2.entrySet()) {
-				// a list to hold the key values that are cpds
-				List<CPD> hashTreeValues = (List<CPD>) m.getValue();
+		}
 
-				Double totalStructured = new Double(0);
-				Double totalUnstructured = new Double(0);
+		// lets print the final hash table
+		for (Map.Entry m : cpdStatementSummary2.entrySet()) {
+			// a list to hold the key values that are cpds
+			List<CPD> hashTreeValues = (List<CPD>) m.getValue();
 
-				values = new HashMap<String, Object>();
-				values.put("year", m.getKey());
+			Double totalStructured = new Double(0);
+			Double totalUnstructured = new Double(0);
 
-				for (CPD cpdValue : hashTreeValues) {
+			values = new HashMap<String, Object>();
+			values.put("year", m.getKey());
 
-					if (cpdValue.getCategory().toString().equals("CATEGORY_A")) {
-						totalStructured = totalStructured + cpdValue.getCpdHours();
-					} else {
-						totalUnstructured = totalUnstructured + cpdValue.getCpdHours();
-					}
+			for (CPD cpdValue : hashTreeValues) {
+
+				if (cpdValue.getCategory().toString().equals("CATEGORY_A")) {
+					totalStructured = totalStructured + cpdValue.getCpdHours();
+				} else {
+					totalUnstructured = totalUnstructured + cpdValue.getCpdHours();
 				}
-
-				Double total = totalStructured + totalUnstructured;
-				
-				System.out.println("==total Structured "+ totalStructured);
-				System.out.println("==total totalUnstructured "+ totalUnstructured);
-
-				values.put("totalStructured", totalStructured);
-				values.put("totalUnstructured", totalUnstructured);
-				values.put("total", total);
-
-				// create row to loop through
-				DocumentLine line = new DocumentLine("cpdDetails", values);
-
-				doc.addDetail(line);
 			}
 
-			HTMLToPDFConvertor convertor = new HTMLToPDFConvertor();
-			InputStream is = GetReport.class.getClassLoader().getResourceAsStream("cpd-statement.html");
-			String html = IOUtils.toString(is);
-			byte[] data = convertor.convert(doc, html);
+			Double total = totalStructured + totalUnstructured;
 
-			String name = userDto.getFullName() + " " + formatter_.format(new Date()) + ".pdf";
+			System.out.println("==total Structured "+ totalStructured);
+			System.out.println("==total totalUnstructured "+ totalUnstructured);
 
-			return data;
+			values.put("totalStructured", totalStructured);
+			values.put("totalUnstructured", totalUnstructured);
+			values.put("total", total);
+
+			// create row to loop through
+			DocumentLine line = new DocumentLine("cpdDetails", values);
+
+			doc.addDetail(line);
 		}
 
-		// calculates the cpd totals in a given cpd list
-		public Double calculateCPDTotal(List<CPD> cpdList) {
-			Double total = new Double(0);
+		HTMLToPDFConvertor convertor = new HTMLToPDFConvertor();
+		InputStream is = GetReport.class.getClassLoader().getResourceAsStream("cpd-statement.html");
+		String html = IOUtils.toString(is);
+		byte[] data = convertor.convert(doc, html);
 
-			for (CPD cpd : cpdList) {
-				total = total + cpd.getCpdHours();
-			}
+		String name = userDto.getFullName() + " " + formatter_.format(new Date()) + ".pdf";
 
-			return total;
+		return data;
+	}
+
+	// calculates the cpd totals in a given cpd list
+	public Double calculateCPDTotal(List<CPD> cpdList) {
+		Double total = new Double(0);
+
+		for (CPD cpd : cpdList) {
+			total = total + cpd.getCpdHours();
 		}
+
+		return total;
+	}
 }
