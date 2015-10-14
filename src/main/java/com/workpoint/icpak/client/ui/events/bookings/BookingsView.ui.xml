@@ -15,7 +15,7 @@
 		<h3 class="ng-scope">
 			My Bookings
 		</h3>
-		<g:HTMLPanel styleName="row" ui:field="panelEvents">
+		<g:HTMLPanel styleName="row main-content" ui:field="panelEvents">
 			<div class="col-sm-12">
 				<p:EventsHeader ui:field="headerContainer">
 				</p:EventsHeader>

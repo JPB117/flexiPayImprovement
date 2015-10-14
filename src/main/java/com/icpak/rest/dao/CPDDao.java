@@ -45,7 +45,7 @@ public class CPDDao extends BaseDao {
 				sql.append(" where");
 			}
 			params.put("startDate", startDate);
-			sql.append(" startDate>:startDate");
+			sql.append(" startDate>=:startDate");
 		}
 
 		if (endDate != null) {
@@ -56,7 +56,7 @@ public class CPDDao extends BaseDao {
 				sql.append(" and");
 			}
 			params.put("endDate", endDate);
-			sql.append(" endDate<:endDate");
+			sql.append(" endDate<=:endDate");
 		}
 
 		if (memberId != null && !memberId.equals("ALL")) {
@@ -92,14 +92,14 @@ public class CPDDao extends BaseDao {
 				number = getSingleResultOrNull(getEntityManager()
 						.createNativeQuery(
 								"select count(*) from cpd c "
-										+ "where c.isactive=1 and startDate>:startDate and endDate>:endDate")
+										+ "where c.isactive=1 and startDate>=:startDate and endDate<=:endDate")
 						.setParameter("startDate", startDate)
 						.setParameter("endDate", endDate));
 			} else {
 				number = getSingleResultOrNull(getEntityManager()
 						.createNativeQuery(
 								"select count(*) from cpd c inner join Member m on (c.memberId=m.refId) "
-										+ "where c.isactive=1 and m.refId=:refId and startDate>:startDate and endDate>:endDate")
+										+ "where c.isactive=1 and m.refId=:refId and startDate>=:startDate and endDate<:endDate")
 						.setParameter("startDate", startDate)
 						.setParameter("endDate", endDate)
 						.setParameter("refId", memberId));
@@ -145,7 +145,9 @@ public class CPDDao extends BaseDao {
 
 	public CPDSummaryDto getCPDSummary(String memberId, Date startDate,
 			Date endDate) {
-		String sql = "select sum(cpdHours), status from cpd where memberId=:memberId and startDate>:startDate and endDate>:endDate group by status";
+		String sql = "select sum(cpdHours), status from cpd where "
+				+ "memberId=:memberId and startDate>=:startDate "
+				+ "and endDate<=:endDate group by status";
 
 		List<Object[]> rows = getResultList(getEntityManager()
 				.createNativeQuery(sql).setParameter("memberId", memberId)
@@ -173,7 +175,8 @@ public class CPDDao extends BaseDao {
 	}
 
 	public CPDSummaryDto getCPDSummary(Date startDate, Date endDate) {
-		String sql = "select count(*), status from cpd group by status and startDate>:startDate and endDate>:endDate";
+		String sql = "select count(*), status from cpd where"
+				+ " startDate>=:startDate and endDate<=:endDate group by status";
 		List<Object[]> rows = getResultList(getEntityManager()
 				.createNativeQuery(sql).setParameter("startDate", startDate)
 				.setParameter("endDate", endDate));
@@ -198,20 +201,17 @@ public class CPDDao extends BaseDao {
 		return summary;
 	}
 
-<<<<<<< HEAD
-=======
 	public Double getCPDHours(String memberRefId) {
 		String sql = "select sum(cpdhours) cpdhours from cpd "
 				+ "where memberId= :memberId and status='Approved' limit 1 ";
 
-		Number value = (Number)getSingleResultOrNull(getEntityManager()
+		Number value = (Number) getSingleResultOrNull(getEntityManager()
 				.createNativeQuery(sql).setParameter("memberId", memberRefId));
 
 		return value == null ? 0.0 : value.doubleValue();
 
 	}
 
->>>>>>> 3584a508c74e98fb2d06960e95771bd690736171
 	public List<CPD> getAllCPDS(String memberRefId, Date startDate,
 			Date endDate, Integer offset, Integer limit) {
 
@@ -230,7 +230,7 @@ public class CPDDao extends BaseDao {
 				sql.append(" where");
 			}
 			params.put("startDate", startDate);
-			sql.append(" startDate>:startDate");
+			sql.append(" startDate>=:startDate");
 		}
 
 		if (endDate != null) {
@@ -241,7 +241,7 @@ public class CPDDao extends BaseDao {
 				sql.append(" and");
 			}
 			params.put("endDate", endDate);
-			sql.append(" endDate<:endDate");
+			sql.append(" endDate<=:endDate");
 		}
 
 		if (memberRefId != null && !memberRefId.equals("ALL")) {

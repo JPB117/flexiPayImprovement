@@ -10,7 +10,6 @@ import org.junit.Test;
 
 import com.google.inject.Inject;
 import com.icpak.rest.dao.helper.CPDDaoHelper;
-import com.icpak.servlet.upload.GetReport;
 import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.tests.base.AbstractDaoTest;
 
@@ -22,7 +21,7 @@ public class TestCPDDao extends AbstractDaoTest {
 	SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
 	@Ignore
-	public void getCPD() throws ParseException {
+	public void getCPD2() throws ParseException {
 	
 	@Inject GetReport reporter;
 	

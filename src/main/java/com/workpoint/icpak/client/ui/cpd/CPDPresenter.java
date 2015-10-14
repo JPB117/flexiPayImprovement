@@ -117,10 +117,9 @@ public class CPDPresenter extends
 		getView().getFilterButton().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				Window.alert("Filter");
 				startDate = getView().getStartDate();
 				endDate = getView().getEndDate();
-				loadCPD(0, 10);
+				loadData(startDate, endDate);
 			}
 		});
 
@@ -250,8 +249,7 @@ public class CPDPresenter extends
 
 				loadCPD(config.getOffset(), config.getLimit());
 			}
-		}).cpd(AppContext.isCurrentUserAdmin() ? "ALL" : memberId)
-				.getCount(startDate.getTime(), endDate.getTime());
+		}).cpd(memberId).getCount(startDate.getTime(), endDate.getTime());
 	}
 
 	protected void loadCPD(int offset, int limit) {

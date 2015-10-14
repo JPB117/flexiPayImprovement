@@ -78,7 +78,6 @@ public class ProfileWidget extends Composite {
 	@UiField
 	HTMLPanel panelApplicationType;
 
-
 	@UiField
 	HTMLPanel divEditDropDown;
 
@@ -101,8 +100,9 @@ public class ProfileWidget extends Composite {
 
 	@UiField
 	ProgressBar progressBar;
-	
-	@UiField Anchor aDownloadCert;
+
+	@UiField
+	Anchor aDownloadCert;
 
 	private BasicDetails basicDetail;
 	private EducationDetails educationDetail;
@@ -116,7 +116,6 @@ public class ProfileWidget extends Composite {
 	public ProfileWidget() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		// Forms
 		basicDetail = new BasicDetails();
 		educationDetail = new EducationDetails();
 		specializationDetail = new SpecializationDetails();
@@ -169,14 +168,15 @@ public class ProfileWidget extends Composite {
 				uploader.clear();
 			}
 		});
-		
+
 		aDownloadCert.addClickHandler(new ClickHandler() {
-			
+
 			@Override
 			public void onClick(ClickEvent arg0) {
 				UploadContext ctx = new UploadContext("getreport");
 				ctx.setAction(UPLOADACTION.DownloadCertGoodStanding);
-				ctx.setContext("memberRefId", AppContext.getContextUser().getMemberRefId());
+				ctx.setContext("memberRefId", AppContext.getContextUser()
+						.getMemberRefId());
 				Window.open(ctx.toUrl(), "Certificate Of Good Standing", "");
 			}
 		});
@@ -227,8 +227,10 @@ public class ProfileWidget extends Composite {
 			String str = result.getApplicationType().getDisplayName();
 			String[] vals = str.split(" ");
 			String value = "";
-			if (vals.length > 1) {
+			if (vals.length == 2) {
 				value = vals[0];
+			} else if (vals.length > 2) {
+				value = vals[0] + vals[1];
 			}
 			panelApplicationType.getElement().setInnerText(value);
 
@@ -340,17 +342,17 @@ public class ProfileWidget extends Composite {
 	}
 
 	public void bindMemberStanding(MemberStanding standing) {
-		if(standing.getStanding()==0){
+		if (standing.getStanding() == 0) {
 			aDownloadCert.setText("Not In GoodStanding");
 			aDownloadCert.removeStyleName("btn-success");
 			aDownloadCert.addStyleName("btn-danger");
 			String info = "";
-			for(String reason: standing.getReasons()){
-				info= info.concat(reason+"\n");
+			for (String reason : standing.getReasons()) {
+				info = info.concat(reason + "\n");
 			}
 			aDownloadCert.setTitle(info);
-			
-		}else{
+
+		} else {
 			aDownloadCert.addStyleName("btn-success");
 			aDownloadCert.removeStyleName("btn-danger");
 			aDownloadCert.setTitle("You are in good standing");

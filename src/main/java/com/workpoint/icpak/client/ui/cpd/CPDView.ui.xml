@@ -17,7 +17,7 @@
 				ui:field="aShowFilter"></d:ActionLink>
 		</h3>
 
-		<g:HTMLPanel ui:field="panelDetail">
+		<g:HTMLPanel ui:field="panelDetail" styleName="main-content">
 			<div class="row">
 				<div class="col-lg-12">
 					<p:CPDHeader ui:field="headerContainer">
