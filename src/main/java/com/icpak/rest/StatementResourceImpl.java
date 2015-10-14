@@ -23,8 +23,6 @@ import com.workpoint.icpak.shared.model.statement.StatementDto;
 public class StatementResourceImpl implements StatementsResource{
 
 	@Inject StatementDaoHelper helper;
-	
-	
 	private final String memberId;
 	
 	@Inject

@@ -170,22 +170,6 @@ public class StatementsPresenter
 		final Range range = getView().getGrid().getVisibleRange();
 		getView().setInitialDates(DateRange.THISQUARTER, new Date());
 		loadStatements(range.getStart(), range.getLength());
-		// Date startDate = getView().getStartDateValue();
-		// Date endDate = getView().getEndDateValue();
-		// memberDelegate
-		// .withCallback(new AbstractAsyncCallback<Integer>() {
-		// @Override
-		// public void onSuccess(Integer aCount) {
-		// totalCount = aCount;
-		// loadStatements(range.getStart(), range.getLength());
-		// }
-		// })
-		// .statements(getMemberId())
-		// .getCount(startDate == null ? null : startDate.getTime(),
-		// endDate == null ? null : endDate.getTime());
-		// } else {
-		// loadStatements(range.getStart(), range.getLength());
-		// }
 	}
 
 }

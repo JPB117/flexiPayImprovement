@@ -17,37 +17,40 @@ import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.shared.model.CPDSummaryDto;
 
 @Produces(MediaType.APPLICATION_JSON)
-public interface CPDResource extends BaseResource{
+public interface CPDResource extends BaseResource {
 
 	@GET
 	@Consumes(MediaType.APPLICATION_JSON)
-	public List<CPDDto> getAll(
-			@QueryParam("offset") Integer offset,
-			@QueryParam("limit") Integer limit);
-	
+	public List<CPDDto> getAll(@QueryParam("offset") Integer offset,
+			@QueryParam("limit") Integer limit,
+			@QueryParam("startDate") Long startDate,
+			@QueryParam("endDate") Long endDate);
+
 	@GET
 	@Path("/summary")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public CPDSummaryDto getCPDSummary();
-	
+	public CPDSummaryDto getCPDSummary(@QueryParam("startDate") Long startDate,
+			@QueryParam("endDate") Long endDate);
+
 	@GET
 	@Path("/{cpdId}")
 	public CPDDto getById(@PathParam("cpdId") String cpdId);
-	
+
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	public CPDDto create(CPDDto cpd);
-	
 
 	@PUT
 	@Path("/{cpdId}")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public CPDDto update(@PathParam("cpdId") String cpdId,
-			CPDDto cpd);
-	
+	public CPDDto update(@PathParam("cpdId") String cpdId, CPDDto cpd);
 
 	@DELETE
 	@Path("/{cpdId}")
-	public void delete(
-			@PathParam("cpdId") String cpdId);
+	public void delete(@PathParam("cpdId") String cpdId);
+
+	@GET
+	@Path("/filteredcount")
+	public Integer getCount(@QueryParam("startDate") Long startDate,
+			@QueryParam("endDate") Long endDate);
 }

@@ -36,14 +36,17 @@ public class CPDDaoHelper {
 
 	static Logger logger = Logger.getLogger(CPDDaoHelper.class);
 
-	public List<CPDDto> getAllCPD(String memberId, Integer offset, Integer limit) {
+	public List<CPDDto> getAllCPD(String memberId, Integer offset,
+			Integer limit, Long startDate, Long endDate) {
 
 		List<CPD> cpds = null;
 
 		if (memberId != null && memberId.equals("ALL")) {
-			cpds = dao.getAllCPDs(offset, limit);
+			cpds = dao.getAllCPDs(offset, limit, new Date(startDate), new Date(
+					endDate));
 		} else {
-			cpds = dao.getAllCPDs(memberId, offset, limit);
+			cpds = dao.getAllCPDs(memberId, offset, limit, new Date(startDate),
+					new Date(endDate));
 		}
 
 		List<CPDDto> rtn = new ArrayList<>();
@@ -56,8 +59,10 @@ public class CPDDaoHelper {
 		return rtn;
 	}
 
-	public Integer getCount(String memberId) {
-		return dao.getCPDCount(memberId);
+	public Integer getCount(String memberId, Long startDate, Long endDate) {
+		System.err.println("memberId" + memberId);
+		return dao
+				.getCPDCount(memberId, new Date(startDate), new Date(endDate));
 	}
 
 	public CPDDto getCPD(String cpdId) {
@@ -145,14 +150,16 @@ public class CPDDaoHelper {
 		}
 	}
 
-	public CPDSummaryDto getCPDSummary(String memberRefId) {
+	public CPDSummaryDto getCPDSummary(String memberRefId, Long startDate,
+			Long endDate) {
 
 		CPDSummaryDto dto = null;
 
 		if (memberRefId.equals("ALL")) {
-			dto = dao.getCPDSummary();
+			dto = dao.getCPDSummary(new Date(startDate), new Date(endDate));
 		} else {
-			dto = dao.getCPDSummary(memberRefId);
+			dto = dao.getCPDSummary(memberRefId, new Date(startDate), new Date(
+					endDate));
 		}
 
 		return dto;

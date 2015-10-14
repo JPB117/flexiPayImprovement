@@ -4947,7 +4947,7 @@ x:-o-prefocus {
 }
 .widget .panel,
 .widget.panel {
-    overflow: hidden
+    /*overflow: hidden*/	
 }
 .widget .lateral-picture {
     position: relative;
