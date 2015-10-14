@@ -1,12 +1,15 @@
 package com.icpak.rest.models.membership;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -50,6 +53,8 @@ public class Member extends PO{
 	@Enumerated(EnumType.STRING)
 	private MembershipStatus memberShipStatus;
 	
+	@OneToMany(mappedBy="member")
+	private Set<GoodStandingCertificate> goodStandingCerts = new HashSet<>();
 	
 	@OneToOne
 	@JoinColumn(name="userId")
@@ -121,5 +126,13 @@ public class Member extends PO{
 
 	public void setMemberDisplinaryCase(boolean hasDisplinaryCase) {
 		this.memberDisplinaryCase = hasDisplinaryCase? 1: 0;
+	}
+
+	public Set<GoodStandingCertificate> getGoodStandingCerts() {
+		return goodStandingCerts;
+	}
+
+	public void setGoodStandingCerts(Set<GoodStandingCertificate> goodStandingCerts) {
+		this.goodStandingCerts = goodStandingCerts;
 	}
 }

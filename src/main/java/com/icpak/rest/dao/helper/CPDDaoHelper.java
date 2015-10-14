@@ -250,4 +250,8 @@ public class CPDDaoHelper {
 		return standing;
 	}
 
+	public double getCPDHours(String memberRefId) {
+		return dao.getCPDHours(memberRefId);
+	}
+
 }

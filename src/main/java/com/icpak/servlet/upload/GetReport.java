@@ -3,6 +3,7 @@ package com.icpak.servlet.upload;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -30,13 +31,16 @@ import com.icpak.rest.dao.helper.CPDDaoHelper;
 import com.icpak.rest.dao.helper.StatementDaoHelper;
 import com.icpak.rest.dao.helper.UsersDaoHelper;
 import com.icpak.rest.models.auth.User;
+import com.icpak.rest.models.membership.GoodStandingCertificate;
 import com.icpak.rest.models.membership.Member;
 import com.icpak.rest.models.util.Attachment;
 import com.icpak.rest.utils.Doc;
 import com.icpak.rest.utils.DocumentLine;
 import com.icpak.rest.utils.HTMLToPDFConvertor;
 import com.itextpdf.text.DocumentException;
+import com.workpoint.icpak.server.util.DateUtils;
 import com.workpoint.icpak.shared.model.CPDDto;
+import com.workpoint.icpak.shared.model.MemberStanding;
 import com.workpoint.icpak.shared.model.statement.StatementDto;
 
 @Singleton
@@ -77,7 +81,9 @@ public class GetReport extends HttpServlet {
 			executeGet(req, resp);
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new RuntimeException(e);
+			
+			writeError(resp, e.getMessage());
+			//throw new RuntimeException(e);
 		}
 	}
 
@@ -117,6 +123,11 @@ public class GetReport extends HttpServlet {
 			processCPDCertRequest(req, resp);
 		}
 
+
+		if (action.equalsIgnoreCase("DownloadCertGoodStanding")) {
+			processCertGoodStanding(req, resp);
+		}
+		
 		if (action.equalsIgnoreCase("GETSTATEMENT")) {
 			procesStatementsRequest(req, resp);
 		}
@@ -245,6 +256,80 @@ public class GetReport extends HttpServlet {
 				+ formatter.format(new Date()) + ".pdf";
 
 		processAttachmentRequest(resp, data, name);
+	}
+	
+	private void processCertGoodStanding(HttpServletRequest req,
+			HttpServletResponse resp) throws IOException, SAXException,
+			ParserConfigurationException, FactoryConfigurationError,
+			DocumentException {
+		
+		String memberId = req.getParameter("memberRefId");
+		if(memberId==null){
+			writeError(resp,"Member Id must be provied to generate this certificate");
+			return;
+		}
+		
+		Member member = userDao.findByRefId(memberId, Member.class);
+		User user = member.getUser();
+		
+		MemberStanding standing = cpdHelper.getMemberStanding(memberId);
+		if(standing.getStanding()==0){
+			for(String reason: standing.getReasons()){
+				writeError(resp, reason);
+			}
+			return;
+		}
+		
+		GoodStandingCertificate cert = new GoodStandingCertificate();
+		cert.setMember(member);
+		userDao.save(cert);
+		userDao.merge(cert);
+		
+		if(cert.getRefNo()==null){
+			writeError(resp,"Your Cert reference number was not generated, kindly contact ICPAK for help");
+			return;
+		}
+		
+		Map<String, Object> values = new HashMap<String, Object>();
+		String refNo = cert.getRefNo();
+		
+		values.put("refNo", refNo);
+		values.put("letterDate", DateUtils.DATEFORMAT.format(new Date()));
+		values.put("memberName", user.toDto().getFullName());
+		values.put("memberNo", member.getMemberNo());
+		values.put("cpdHours", cpdHelper.getCPDHours(memberId));
+		values.put("firstName", user.getUserData().getFirstName());
+		Doc doc = new Doc(values);
+
+		HTMLToPDFConvertor convertor = new HTMLToPDFConvertor();
+		InputStream is = GetReport.class.getClassLoader().getResourceAsStream(
+				"goodstanding_certificate.html");
+		String html = IOUtils.toString(is);
+		byte[] data = convertor.convert(doc, html);
+		
+		Attachment attachment = new Attachment();
+		attachment.setGoodStandingCert(cert);
+		attachment.setAttachment(data);
+		attachment.setContentType("application/pdf");
+		attachment.setSize(data.length);
+		userDao.save(attachment);
+		
+		String name = "CertificateOfGoodStanding_"+refNo+".pdf";
+
+		processAttachmentRequest(resp, data, name);
+	}
+
+
+	private void writeError(HttpServletResponse resp,String message) {
+		resp.setContentType("text/html");
+		try{
+			PrintWriter out = resp.getWriter();
+			out.print(message);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		
 	}
 
 	private void processOutputDoc(HttpServletRequest req,
