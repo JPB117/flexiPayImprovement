@@ -32,7 +32,7 @@ public class TestStatementsDao extends AbstractDaoTest{
 	@Inject GetReport reportServlet;
 	@Inject CPDDao cpdDao;
 	
-	@Test 
+	@Ignore
 	public void generateReport() throws FileNotFoundException, IOException, SAXException, ParserConfigurationException, FactoryConfigurationError, DocumentException{
 		String memberRefId= "LLU0eoZpPuA4lfSU";
 		Calendar c = Calendar.getInstance();
