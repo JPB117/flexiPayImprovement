@@ -5,8 +5,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
@@ -562,66 +564,143 @@ public class GetReport extends HttpServlet {
 	}
 
 	// generate member cpd statement pdf
-	public byte[] processMemberCPDStatementRequest(String memberRefId,
-			Date startDate, Date endDate) throws FileNotFoundException,
-			IOException, SAXException, ParserConfigurationException,
-			FactoryConfigurationError, DocumentException {
+		public byte[] processMemberCPDStatementRequest(String memberRefId, Date startDate, Date endDate)
+				throws FileNotFoundException, IOException, SAXException, ParserConfigurationException,
+				FactoryConfigurationError, DocumentException {
 
-		Member member = memberDao.findByRefId(memberRefId, Member.class);
-		User user = member.getUser();
+			Member member = memberDao.findByRefId(memberRefId, Member.class);
+			User user = member.getUser();
 
-		UserDto userDto = user.toDto();
+			UserDto userDto = user.toDto();
 
-		// List<CPDDto> cpds = cpdHelper.getAllMemberCpd(memberRefId, startDate,
-		// endDate, 0, 1000);
-		List<CPD> cpds = CPDDao.getAllCPDS(memberRefId, null, null, 0, 1000);
-		log.info("CPD Records Count = " + cpds.size());
+			// List<CPDDto> cpds = cpdHelper.getAllMemberCpd(memberRefId, startDate,
+			// endDate, 0, 1000);
+			List<CPD> cpds = CPDDao.getAllCPDS(memberRefId, startDate==null?null:startDate,endDate==null?null:endDate,0,1000);
+			log.info("CPD Records Count = " + cpds.size());
 
-		SimpleDateFormat formatter = new SimpleDateFormat("YYYY");
-		Map<String, Object> values = new HashMap<String, Object>();
-		values.put("memberNames", userDto.getFullName());
-		values.put("memberNo", user.getMemberNo());
-		values.put("startYear", formatter.format(startDate));
-		values.put("endYear", formatter.format(endDate));
+			Map<String, Object> values = new HashMap<String, Object>();
+			values.put("memberNames", userDto.getFullName());
+			values.put("memberNo", user.getMemberNo());
 
-		Doc doc = new Doc(values);
+			Doc doc = new Doc(values);
+			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+			for (CPD cpd : cpds) {
+				String cpdCategory = null;
+				values = new HashMap<String, Object>();
+				values.put("number", "CPD-"+cpd.getId());
+				values.put("courseName", cpd.getTitle());
+				values.put("date", formatter.format(cpd.getEndDate()));
 
-		for (CPD cpd : cpds) {
-			values = new HashMap<String, Object>();
-			values.put("number", cpd.getMemberId());
-			values.put("courseName", cpd.getTitle());
-			values.put("date", cpd.getEndDate());
-			values.put("category", cpd.getCategory());
-			values.put("cpd", cpd.getCpdHours());
-			// create row to loop through
-			DocumentLine line = new DocumentLine("invoiceDetails", values);
+				if (cpd.getCategory().toString().equals("CATEGORY_A")) {
 
-			doc.addDetail(line);
+					cpdCategory = "Structured";
+					values.put("category", cpdCategory);
+
+				} else {
+
+					cpdCategory = "Un-strucured";
+					values.put("category", cpdCategory);
+				}
+
+				values.put("cpd", cpd.getCpdHours());
+
+				// create row to loop through
+				DocumentLine line = new DocumentLine("invoiceDetails", values);
+
+				doc.addDetail(line);
+			}
+
+			SimpleDateFormat formatter_ = new SimpleDateFormat("yyyy");
+
+			Hashtable<String, List<CPD>> cpdStatementSummary = new Hashtable<>();
+			Hashtable<String, List<CPD>> cpdStatementSummary2 = new Hashtable<>();
+
+			int cpdCount = cpds.size();
+
+
+			for (int i = 0; i < cpdCount; i++) {
+				List<CPD> cdpTableValues = new ArrayList<>();
+				// current cpd
+				CPD currentCpd = cpds.get(i);
+
+				for (CPD cpd : cpds) {
+
+					String currentCpdYear = formatter_.format(currentCpd.getEndDate());
+					String comparisonYear = formatter_.format(cpd.getEndDate());
+
+					if (currentCpdYear.equals(comparisonYear)) {
+						cdpTableValues.add(cpd);
+					}
+
+					// check if our hash tree is empty
+
+					if (cpdStatementSummary.isEmpty()) {
+						cpdStatementSummary2.put(currentCpdYear, cdpTableValues);
+					} else {
+						for (Map.Entry m : cpdStatementSummary.entrySet()) {
+							if (!m.getKey().equals(currentCpdYear)) {
+								cpdStatementSummary2.put(currentCpdYear, cdpTableValues);
+							}
+						}
+					}
+
+				}
+
+			}
+
+			// lets print the final hash table
+			for (Map.Entry m : cpdStatementSummary2.entrySet()) {
+				// a list to hold the key values that are cpds
+				List<CPD> hashTreeValues = (List<CPD>) m.getValue();
+
+				Double totalStructured = new Double(0);
+				Double totalUnstructured = new Double(0);
+
+				values = new HashMap<String, Object>();
+				values.put("year", m.getKey());
+
+				for (CPD cpdValue : hashTreeValues) {
+
+					if (cpdValue.getCategory().toString().equals("CATEGORY_A")) {
+						totalStructured = totalStructured + cpdValue.getCpdHours();
+					} else {
+						totalUnstructured = totalUnstructured + cpdValue.getCpdHours();
+					}
+				}
+
+				Double total = totalStructured + totalUnstructured;
+				
+				System.out.println("==total Structured "+ totalStructured);
+				System.out.println("==total totalUnstructured "+ totalUnstructured);
+
+				values.put("totalStructured", totalStructured);
+				values.put("totalUnstructured", totalUnstructured);
+				values.put("total", total);
+
+				// create row to loop through
+				DocumentLine line = new DocumentLine("cpdDetails", values);
+
+				doc.addDetail(line);
+			}
+
+			HTMLToPDFConvertor convertor = new HTMLToPDFConvertor();
+			InputStream is = GetReport.class.getClassLoader().getResourceAsStream("cpd-statement.html");
+			String html = IOUtils.toString(is);
+			byte[] data = convertor.convert(doc, html);
+
+			String name = userDto.getFullName() + " " + formatter_.format(new Date()) + ".pdf";
+
+			return data;
 		}
 
-		for (CPD cpd : cpds) {
-			values = new HashMap<String, Object>();
-			values.put("year", cpd.getCreated());
-			values.put("totalStructured", cpd.getTitle());
-			values.put("totalUnstructured", cpd.getEndDate());
-			values.put("category", cpd.getCategory());
-			values.put("total", cpd.getCpdHours());
+		// calculates the cpd totals in a given cpd list
+		public Double calculateCPDTotal(List<CPD> cpdList) {
+			Double total = new Double(0);
 
-			// create row to loop through
-			DocumentLine line = new DocumentLine("cpdDetails", values);
+			for (CPD cpd : cpdList) {
+				total = total + cpd.getCpdHours();
+			}
 
-			doc.addDetail(line);
+			return total;
 		}
-
-		HTMLToPDFConvertor convertor = new HTMLToPDFConvertor();
-		InputStream is = GetReport.class.getClassLoader().getResourceAsStream(
-				"cpd-statement.html");
-		String html = IOUtils.toString(is);
-		byte[] data = convertor.convert(doc, html);
-
-		String name = userDto.getFullName() + " "
-				+ formatter.format(new Date()) + ".pdf";
-
-		return data;
-	}
 }
