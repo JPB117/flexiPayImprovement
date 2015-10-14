@@ -16,6 +16,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import com.icpak.rest.models.base.PO;
 import com.icpak.rest.models.cpd.CPD;
 import com.icpak.rest.models.membership.Education;
+import com.icpak.rest.models.membership.GoodStandingCertificate;
 import com.icpak.rest.models.membership.TrainingAndExperience;
 import com.wordnik.swagger.annotations.ApiModel;
 
@@ -43,6 +44,10 @@ public class Attachment extends PO{
 	@Lob
 	private byte[] attachment;
 
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="goodstandingcertid")
+	private GoodStandingCertificate goodStandingCert;
+	
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="educationid")
 	private Education education;
@@ -129,5 +134,13 @@ public class Attachment extends PO{
 
 	public void setCpd(CPD cpd) {
 		this.cpd = cpd;
+	}
+
+	public GoodStandingCertificate getGoodStandingCert() {
+		return goodStandingCert;
+	}
+
+	public void setGoodStandingCert(GoodStandingCertificate goodStandingCert) {
+		this.goodStandingCert = goodStandingCert;
 	}
 }

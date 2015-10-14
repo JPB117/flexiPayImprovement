@@ -120,4 +120,9 @@ public class StatementDaoHelper {
         Statement poStatementInDb = statementDao.getByStatementId(statementId);
         statementDao.delete(poStatementInDb);
     }
+
+	public Double getAccountBalance(String memberRefId) {
+		Member member = statementDao.findByRefId(memberRefId, Member.class);
+		return statementDao.getBalanceCD(member.getMemberNo(), new Date()).getAmount();
+	}
 }

@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import com.google.inject.Inject;
 import com.icpak.rest.dao.helper.CPDDaoHelper;
+import com.icpak.servlet.upload.GetReport;
 import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.tests.base.AbstractDaoTest;
 
@@ -22,6 +23,22 @@ public class TestCPDDao extends AbstractDaoTest {
 
 	@Ignore
 	public void getCPD() throws ParseException {
+	
+	@Inject GetReport reporter;
+	
+	@Test
+	public void generateGoodStandingCert(){
+		
+	}
+	
+	@Ignore
+	public void getCPDHrs(){
+		double val = helper.getCPDHours(null);
+		System.err.println(val);
+	}
+
+	@Ignore
+	public void getCPD() {
 		String memberId = "pabGC3dh0OOzLzSC";
 		List<CPDDto> list = helper.getAllCPD("ALL", 0, 100,
 				formatter.parse("01/01/2000").getTime(), new Date().getTime());

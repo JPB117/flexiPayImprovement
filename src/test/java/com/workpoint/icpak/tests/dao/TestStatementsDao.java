@@ -25,22 +25,16 @@ import com.icpak.servlet.upload.GetReport;
 import com.itextpdf.text.DocumentException;
 import com.workpoint.icpak.tests.base.AbstractDaoTest;
 
-public class TestStatementsDao extends AbstractDaoTest {
+public class TestStatementsDao extends AbstractDaoTest{
 
-	@Inject
-	InvoiceDaoHelper helper;
-	@Inject
-	StatementDaoHelper statementHelper;
-	@Inject
-	GetReport reportServlet;
-	@Inject
-	CPDDao cpdDao;
-
+	@Inject InvoiceDaoHelper helper; 
+	@Inject StatementDaoHelper statementHelper;
+	@Inject GetReport reportServlet;
+	@Inject CPDDao cpdDao;
+	
 	@Ignore
-	public void generateReport() throws FileNotFoundException, IOException,
-			SAXException, ParserConfigurationException,
-			FactoryConfigurationError, DocumentException {
-		String memberRefId = "LLU0eoZpPuA4lfSU";
+	public void generateReport() throws FileNotFoundException, IOException, SAXException, ParserConfigurationException, FactoryConfigurationError, DocumentException{
+		String memberRefId= "LLU0eoZpPuA4lfSU";
 		Calendar c = Calendar.getInstance();
 		c.set(Calendar.DATE, 02);
 		c.set(Calendar.YEAR, 2009);

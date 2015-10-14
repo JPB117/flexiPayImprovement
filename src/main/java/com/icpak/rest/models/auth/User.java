@@ -114,6 +114,7 @@ public class User extends PO {
 
 	private String memberNo;
 	private String phoneNumber;
+	private String mobileNo;
 	private String residence;
 	private String address;
 	private String city;
@@ -325,6 +326,14 @@ public class User extends PO {
 	public void setMember(Member member) {
 		this.member = member;
 		member.setUser(this);
+	}
+
+	public String getMobileNo() {
+		return mobileNo;
+	}
+
+	public void setMobileNo(String mobileNo) {
+		this.mobileNo = mobileNo;
 	}
 
 }

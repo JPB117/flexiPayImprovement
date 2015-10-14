@@ -91,7 +91,7 @@
 											<div class="row">
 												<br />
 												<d:ActionLink ui:field="aPayNow"
-													styleName="btn btn-fill btn-success">Pay
+													styleName="hide btn btn-fill btn-success">Pay
 													Now</d:ActionLink>
 											</div>
 										</div>

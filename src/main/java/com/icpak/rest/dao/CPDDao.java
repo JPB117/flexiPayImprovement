@@ -198,6 +198,20 @@ public class CPDDao extends BaseDao {
 		return summary;
 	}
 
+<<<<<<< HEAD
+=======
+	public Double getCPDHours(String memberRefId) {
+		String sql = "select sum(cpdhours) cpdhours from cpd "
+				+ "where memberId= :memberId and status='Approved' limit 1 ";
+
+		Number value = (Number)getSingleResultOrNull(getEntityManager()
+				.createNativeQuery(sql).setParameter("memberId", memberRefId));
+
+		return value == null ? 0.0 : value.doubleValue();
+
+	}
+
+>>>>>>> 3584a508c74e98fb2d06960e95771bd690736171
 	public List<CPD> getAllCPDS(String memberRefId, Date startDate,
 			Date endDate, Integer offset, Integer limit) {
 

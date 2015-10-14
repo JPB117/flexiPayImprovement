@@ -84,4 +84,11 @@ public class MemberDao extends BaseDao {
 		return number.intValue();
 	}
 
+	public String getGoodStandingCertDocNumber(Long id) {
+		
+		return getSingleResultOrNull(getEntityManager()
+				.createNativeQuery("select documentNo from goodstandingcertificate where id=:id")
+				.setParameter("id", id));
+	}
+
 }
