@@ -1,18 +1,28 @@
 package com.icpak.rest.dao.helper;
 
+import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+
+import javax.mail.MessagingException;
 
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import com.icpak.rest.dao.BookingsDao;
 import com.icpak.rest.dao.InvoiceDao;
+import com.icpak.rest.dao.MemberDao;
 import com.icpak.rest.dao.TransactionsDao;
 import com.icpak.rest.models.event.Booking;
+import com.icpak.rest.models.event.Delegate;
+import com.icpak.rest.models.event.Event;
+import com.icpak.rest.models.membership.Member;
 import com.icpak.rest.models.trx.Invoice;
 import com.icpak.rest.models.trx.Transaction;
 import com.icpak.rest.util.SMSIntegration;
+import com.icpak.rest.utils.EmailServiceHelper;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.PaymentStatus;
 import com.workpoint.icpak.shared.trx.TransactionDto;
@@ -31,6 +41,8 @@ public class TransactionDaoHelper {
 
 	@Inject
 	SMSIntegration smsIntergration;
+	@Inject
+	MemberDao memberDao;
 
 	public String charge(String userId, Date chargeDate, String description,
 			Date dueDate, Double amount, String documentNo, String invoiceRef) {
@@ -79,7 +91,7 @@ public class TransactionDaoHelper {
 
 	public void receivePaymentFromInvoiceNo(String paymentRef,
 			String businessNo, String accountNo, String paymentMode,
-			String trxNumber) {
+			String trxNumber , String phoneNumber) {
 		InvoiceDto invoiceDto = invoiceDao.getInvoiceByDocumentNo(paymentRef);
 		Transaction trx = dao.findByRefId(invoiceDto.getTrxRefId(),
 				Transaction.class);
@@ -104,6 +116,13 @@ public class TransactionDaoHelper {
 		}
 
 		dao.save(trx);
+		
+		try {
+			sendPaymentConfirmationSMSAndEmail(phoneNumber , trxNumber , inv.getContactName() , booking);
+		} catch (UnsupportedEncodingException | MessagingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	}
 
@@ -117,6 +136,29 @@ public class TransactionDaoHelper {
 		}
 
 		return trxs;
+	}
+	
+	private void sendPaymentConfirmationSMSAndEmail(String phoneNumber , String transactionNumber , String senderName , 
+			Booking booking) throws UnsupportedEncodingException, MessagingException {
+		
+		String smsMessage = "Dear" + " " + senderName + ","
+				+ " your payment has been received by icpak. "
+				+ "Transaction Number " + transactionNumber+" "
+				+ ".Call us for any inquiries.";
+		
+		String finalPhoneNumber =phoneNumber.replace("254", "0");
+		
+		if (phoneNumber != null) {
+			smsIntergration.send(finalPhoneNumber,
+					smsMessage);
+		}
+		
+		if(booking.getContact().getEmail() != null){
+			String subject = "ICPAK EVENT PAYMENT CONFIRMATION";
+			EmailServiceHelper.sendEmail(smsMessage, subject, booking.getContact().getEmail());
+		}
+	
+
 	}
 
 }
