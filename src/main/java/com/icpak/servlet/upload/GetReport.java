@@ -3,6 +3,7 @@ package com.icpak.servlet.upload;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -26,6 +27,7 @@ import org.xml.sax.SAXException;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.inject.persist.Transactional;
 import com.icpak.rest.dao.AttachmentsDao;
 import com.icpak.rest.dao.CPDDao;
 import com.icpak.rest.dao.MemberDao;
@@ -35,21 +37,24 @@ import com.icpak.rest.dao.helper.StatementDaoHelper;
 import com.icpak.rest.dao.helper.UsersDaoHelper;
 import com.icpak.rest.models.auth.User;
 import com.icpak.rest.models.cpd.CPD;
+import com.icpak.rest.models.membership.GoodStandingCertificate;
 import com.icpak.rest.models.membership.Member;
 import com.icpak.rest.models.util.Attachment;
 import com.icpak.rest.utils.Doc;
 import com.icpak.rest.utils.DocumentLine;
 import com.icpak.rest.utils.HTMLToPDFConvertor;
 import com.itextpdf.text.DocumentException;
+import com.workpoint.icpak.server.util.DateUtils;
 import com.workpoint.icpak.shared.model.CPDDto;
+import com.workpoint.icpak.shared.model.MemberStanding;
 import com.workpoint.icpak.shared.model.UserDto;
-import com.workpoint.icpak.shared.model.statement.StatementDto;
 
 @Singleton
+@Transactional
 public class GetReport extends HttpServlet {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 
@@ -57,6 +62,8 @@ public class GetReport extends HttpServlet {
 
 	@Inject
 	UsersDaoHelper helper;
+	@Inject
+	MemberDao memberDao;
 	@Inject
 	UsersDao userDao;
 	@Inject
@@ -67,8 +74,6 @@ public class GetReport extends HttpServlet {
 	StatementDaoHelper statementDaoHelper;
 	@Inject
 	CPDDao CPDDao;
-	@Inject
-	MemberDao memberDao;
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
@@ -87,7 +92,9 @@ public class GetReport extends HttpServlet {
 			executeGet(req, resp);
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new RuntimeException(e);
+
+			writeError(resp, e.getMessage());
+			// throw new RuntimeException(e);
 		}
 	}
 
@@ -125,6 +132,10 @@ public class GetReport extends HttpServlet {
 
 		if (action.equalsIgnoreCase("DownloadCPDCert")) {
 			processCPDCertRequest(req, resp);
+		}
+
+		if (action.equalsIgnoreCase("DownloadCertGoodStanding")) {
+			processCertGoodStanding(req, resp);
 		}
 
 		if (action.equalsIgnoreCase("GETSTATEMENT")) {
@@ -296,6 +307,84 @@ public class GetReport extends HttpServlet {
 		processAttachmentRequest(resp, data, name);
 	}
 
+	private void processCertGoodStanding(HttpServletRequest req,
+			HttpServletResponse resp) throws IOException, SAXException,
+			ParserConfigurationException, FactoryConfigurationError,
+			DocumentException {
+
+		String memberId = req.getParameter("memberRefId");
+		if (memberId == null) {
+			writeError(resp,
+					"Member Id must be provied to generate this certificate");
+			return;
+		}
+
+		Member member = userDao.findByRefId(memberId, Member.class);
+		User user = member.getUser();
+
+		MemberStanding standing = cpdHelper.getMemberStanding(memberId);
+		if (standing.getStanding() == 0) {
+			for (String reason : standing.getReasons()) {
+				writeError(resp, reason);
+			}
+			return;
+		}
+
+		GoodStandingCertificate cert = new GoodStandingCertificate();
+		cert.setMember(member);
+		userDao.save(cert);
+		userDao.flush();
+		cert = userDao.findByRefId(cert.getRefId(),
+				GoodStandingCertificate.class); // reload?
+
+		// userDao.merge(cert);
+
+		if (cert.getId() == null) {
+			writeError(resp,
+					"Your Cert reference number was not generated, kindly contact ICPAK for help");
+			return;
+		}
+
+		Map<String, Object> values = new HashMap<String, Object>();
+		String refNo = cert.getId() + "";// memberDao.getGoodStandingCertDocNumber(cert.getId());
+
+		values.put("refNo", cert.getId());
+		values.put("letterDate", DateUtils.DATEFORMAT.format(new Date()));
+		values.put("memberName", user.toDto().getFullName());
+		values.put("memberNo", member.getMemberNo());
+		values.put("cpdHours", cpdHelper.getCPDHours(memberId));
+		values.put("firstName", user.getUserData().getFirstName());
+		Doc doc = new Doc(values);
+
+		HTMLToPDFConvertor convertor = new HTMLToPDFConvertor();
+		InputStream is = GetReport.class.getClassLoader().getResourceAsStream(
+				"goodstanding_certificate.html");
+		String html = IOUtils.toString(is);
+		byte[] data = convertor.convert(doc, html);
+
+		Attachment attachment = new Attachment();
+		attachment.setGoodStandingCert(cert);
+		attachment.setAttachment(data);
+		attachment.setContentType("application/pdf");
+		attachment.setSize(data.length);
+		userDao.save(attachment);
+
+		String name = "CertificateOfGoodStanding_" + refNo + ".pdf";
+
+		processAttachmentRequest(resp, data, name);
+	}
+
+	private void writeError(HttpServletResponse resp, String message) {
+		resp.setContentType("text/html");
+		try {
+			PrintWriter out = resp.getWriter();
+			out.print(message);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
 	private void processOutputDoc(HttpServletRequest req,
 			HttpServletResponse resp) {
 		String outdoc = req.getParameter("template");
@@ -372,8 +461,7 @@ public class GetReport extends HttpServlet {
 		// return;
 		// }
 		//
-		// log.debug("Attachment found for setting: ["+settingName+"], FileName
-		// = "+attachment.getName());
+		// log.debug("Attachment found for setting: ["+settingName+"], FileName = "+attachment.getName());
 		//
 		// byte[] bites = attachment.getAttachment();
 		//
@@ -624,5 +712,4 @@ public class GetReport extends HttpServlet {
 
 		return total;
 	}
-
 }
