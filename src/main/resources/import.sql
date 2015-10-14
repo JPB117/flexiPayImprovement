@@ -67,3 +67,9 @@ FOR EACH ROW
 SET NEW.ern= proc_generatedocnum('ERN', concat('BookingDelegate-',NEW.refId));
 
 
+DROP TRIGGER IF EXISTS generate_goodstandingcertrefno;
+CREATE TRIGGER generate_goodstandingcertrefno
+BEFORE INSERT ON Invoice
+FOR EACH ROW
+SET NEW.documentNo= proc_generatedocnum('GOODSTANDINGCERT', concat('ICPAK-GOODSTANDING-',NEW.refId));
+
