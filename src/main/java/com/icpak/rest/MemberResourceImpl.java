@@ -12,6 +12,7 @@ import javax.ws.rs.core.MediaType;
 import com.google.inject.Inject;
 import com.icpak.rest.dao.InvoiceDaoHelper;
 import com.icpak.rest.dao.helper.BookingsDaoHelper;
+import com.icpak.rest.dao.helper.CPDDaoHelper;
 import com.icpak.rest.dao.helper.MemberDaoHelper;
 import com.icpak.rest.factory.ResourceFactory;
 import com.wordnik.swagger.annotations.Api;
@@ -20,6 +21,7 @@ import com.wordnik.swagger.annotations.ApiParam;
 import com.workpoint.icpak.shared.api.MemberResource;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.MemberDto;
+import com.workpoint.icpak.shared.model.MemberStanding;
 import com.workpoint.icpak.shared.model.events.MemberBookingDto;
 
 @Path("members")
@@ -35,6 +37,8 @@ public class MemberResourceImpl implements MemberResource {
 
 	@Inject
 	MemberDaoHelper membersHelper;
+	
+	@Inject CPDDaoHelper cpdHelper;
 	
 	@Inject BookingsDaoHelper bookingsDaoHelper;
 
@@ -58,6 +62,14 @@ public class MemberResourceImpl implements MemberResource {
 	public MemberDto getMember(
 			@ApiParam(value = "memberId", required = true) @PathParam("memberId") String memberId) {
 		return membersHelper.getMemberById(memberId);
+	}
+	
+	@GET
+	@Path("/{memberId}/standing")
+	public MemberStanding getMemberStanding(
+			@ApiParam(value = "memberId", required = true) @PathParam("memberId") String memberId) {
+		
+		return cpdHelper.getMemberStanding(memberId);
 	}
 
 	@GET

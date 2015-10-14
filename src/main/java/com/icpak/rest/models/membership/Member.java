@@ -1,6 +1,11 @@
 package com.icpak.rest.models.membership;
 
+import java.util.Date;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -32,6 +37,19 @@ public class Member extends PO{
 	private static final long serialVersionUID = 1L;
 	private String userRefId;
 	private String memberNo;
+	private Date registrationDate;
+	
+	@Column(nullable=false, columnDefinition="int(1) not null default 0")
+	private int memberDisplinaryCase=0;
+	
+	/**
+	 * TODO - Link this to the membership approval process<br/>
+	 * - Also Link this to the membership annual renewal process.<br/>
+	 * - Check also whether Admin can deactivate account for whatever reason<br/>
+	 */
+	@Enumerated(EnumType.STRING)
+	private MembershipStatus memberShipStatus;
+	
 	
 	@OneToOne
 	@JoinColumn(name="userId")
@@ -79,5 +97,29 @@ public class Member extends PO{
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public Date getRegistrationDate() {
+		return registrationDate;
+	}
+
+	public void setRegistrationDate(Date registrationDate) {
+		this.registrationDate = registrationDate;
+	}
+
+	public MembershipStatus getMemberShipStatus() {
+		return memberShipStatus;
+	}
+
+	public void setMemberShipStatus(MembershipStatus memberShipStatus) {
+		this.memberShipStatus = memberShipStatus;
+	}
+
+	public boolean hasDisplinaryCase() {
+		return memberDisplinaryCase==1;
+	}
+
+	public void setMemberDisplinaryCase(boolean hasDisplinaryCase) {
+		this.memberDisplinaryCase = hasDisplinaryCase? 1: 0;
 	}
 }

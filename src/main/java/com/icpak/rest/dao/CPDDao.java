@@ -143,5 +143,15 @@ public class CPDDao extends BaseDao {
 		
 		return summary;
 	}
+	
+	public Double getCPDHours(String memberRefId){
+		String sql =  "select memberId, sum(cpdhours) cpdhours from cpd "
+				+ "where memberId= :memberId and status='Approved' ";
+		
+		Double value =  getSingleResultOrNull(getEntityManager()
+				.createNativeQuery(sql).setParameter("memberId", memberRefId));
+		
+		return value==null? 0.0: value;
+	}
 
 }
