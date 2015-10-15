@@ -17,76 +17,64 @@
 				ui:field="aShowFilter"></d:ActionLink>
 		</h3>
 
-		<g:HTMLPanel styleName="row hide" ui:field="panelDates">
-			<div class="col-lg-12">
-				<form class="form-inline">
-					<div class="form-group">
-						<label for="from">From:</label>
-						<d:DropDownList ui:field="lstFrom" styleName="form-control"></d:DropDownList>
-					</div>
-					<div class="form-group">
-						<label for="to">to:</label>
-						<d:DropDownList ui:field="lstTo" styleName="form-control"></d:DropDownList>
-					</div>
-				</form>
-			</div>
-		</g:HTMLPanel>
 
-		<g:HTMLPanel ui:field="panelDetail">
-			<div class="row">
+		<div class="main-content">
+			<g:HTMLPanel styleName="row hide" ui:field="panelDates">
 				<div class="col-lg-12">
-					<p:CPDHeader ui:field="headerContainer">
-					</p:CPDHeader>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-lg-12">
-					<g:HTMLPanel styleName="panel widget" ui:field="panelListing">
-						<div class="panel-heading">CPD Summary</div>
-						<div class="panel-body">
-							<div ui:field="divTab1Content" class="tab-pane fade in active">
-								<!-- Tabs -->
-								<t:TabPanel ui:field="divTabs" styleName="hide">
-								</t:TabPanel>
-							</div>
-
-							<div class="row">
-								<div class="col-lg-12">
-									<d:ActionLink ui:field="aCreate" styleName="btn btn-primary btn-fill">
-										<span class="fa fa-plus"></span>
-										Record CPD
-									</d:ActionLink>
-								</div>
-								<br />
-							</div>
-
-							<div class="row">
-								<div class="col-lg-12">
-									<table:CPDTable ui:field="tblView">
-									</table:CPDTable>
-								</div>
-							</div>
+					<form class="form-inline">
+						<div class="form-group">
+							<label for="from">From:</label>
+							<d:DropDownList ui:field="lstFrom" styleName="form-control"></d:DropDownList>
 						</div>
-					</g:HTMLPanel>
+						<div class="form-group">
+							<label for="to">to:</label>
+							<d:DropDownList ui:field="lstTo" styleName="form-control"></d:DropDownList>
+						</div>
+					</form>
 				</div>
-			</div>
-		</g:HTMLPanel>
+			</g:HTMLPanel>
 
+			<g:HTMLPanel ui:field="panelDetail">
+				<div class="row">
+					<div class="col-lg-12">
+						<p:CPDHeader ui:field="headerContainer">
+						</p:CPDHeader>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-lg-12">
+						<g:HTMLPanel styleName="panel widget" ui:field="panelListing">
+							<div class="panel-heading">CPD Summary</div>
+							<div class="panel-body">
+								<div ui:field="divTab1Content" class="tab-pane fade in active">
+									<!-- Tabs -->
+									<t:TabPanel ui:field="divTabs" styleName="hide">
+									</t:TabPanel>
+								</div>
 
-		<g:HTMLPanel styleName="hide">
-			<table class="table table-bordered table-striped">
-				<tbody>
-					<tr>
-						<td width="30%">
-							<Strong>Phone:</Strong>
-						</td>
-						<td>
-							<i ui:field="elPhone"></i>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-		</g:HTMLPanel>
+								<div class="row">
+									<div class="col-lg-12">
+										<d:ActionLink ui:field="aCreate" styleName="btn btn-primary btn-fill">
+											<span class="fa fa-plus"></span>
+											Record CPD
+										</d:ActionLink>
+									</div>
+									<br />
+								</div>
+
+								<div class="row">
+									<div class="col-lg-12">
+										<table:CPDTable ui:field="tblView">
+										</table:CPDTable>
+									</div>
+								</div>
+							</div>
+						</g:HTMLPanel>
+					</div>
+				</div>
+			</g:HTMLPanel>
+
+		</div>
 
 	</g:HTMLPanel>
 </ui:UiBinder>

@@ -38,7 +38,7 @@ public class TestCreditCard extends AbstractDaoTest {
 		// .authorizeCardTransaction(creditCardDetails);
 
 		// if (response.getStatusCode().equals("0000")) {
-		trxDaoHelper.receivePaymentFromInvoiceNo("INV-0033", "N/A", "N/A",
+		trxDaoHelper.receivePaymentUsingInvoiceNo("INV-0033", "N/A", "N/A",
 				"Credit/Debit Cards", "45626161");
 		// }
 

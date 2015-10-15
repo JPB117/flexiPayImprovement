@@ -77,7 +77,7 @@ public class TransactionDaoHelper {
 		dao.save(trx);
 	}
 
-	public void receivePaymentFromInvoiceNo(String paymentRef,
+	public void receivePaymentUsingInvoiceNo(String paymentRef,
 			String businessNo, String accountNo, String paymentMode,
 			String trxNumber) {
 		InvoiceDto invoiceDto = invoiceDao.getInvoiceByDocumentNo(paymentRef);

@@ -48,6 +48,7 @@ import com.workpoint.icpak.server.util.DateUtils;
 import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.shared.model.MemberStanding;
 import com.workpoint.icpak.shared.model.UserDto;
+import com.workpoint.icpak.shared.model.statement.StatementDto;
 
 @Singleton
 @Transactional
@@ -563,6 +564,8 @@ public class GetReport extends HttpServlet {
 	}
 
 	// generate member cpd statement pdf
+	SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+
 	public byte[] processMemberCPDStatementRequest(String memberRefId,
 			Date startDate, Date endDate) throws FileNotFoundException,
 			IOException, SAXException, ParserConfigurationException,
@@ -583,9 +586,11 @@ public class GetReport extends HttpServlet {
 		Map<String, Object> values = new HashMap<String, Object>();
 		values.put("memberNames", userDto.getFullName());
 		values.put("memberNo", user.getMemberNo());
+		values.put("startYear", formatter.format(startDate));
+		values.put("startYear", formatter.format(endDate));
 
 		Doc doc = new Doc(values);
-		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+
 		for (CPD cpd : cpds) {
 			String cpdCategory = null;
 			values = new HashMap<String, Object>();
@@ -593,19 +598,15 @@ public class GetReport extends HttpServlet {
 			values.put("courseName", cpd.getTitle());
 			values.put("date", formatter.format(cpd.getEndDate()));
 
-			if (cpd.getCategory() != null) {
-				if (cpd.getCategory().toString().equals("CATEGORY_A")) {
-
-					cpdCategory = "Structured";
-					values.put("category", cpdCategory);
-
-				} else {
-
-					cpdCategory = "Un-strucured";
-					values.put("category", cpdCategory);
-				}
+			if (cpd.getCategory() == null) {
+				cpdCategory = "No Category";
+				values.put("category", cpdCategory);
+			} else if (cpd.getCategory().toString().equals("CATEGORY_A")) {
+				cpdCategory = "Structured";
+				values.put("category", cpdCategory);
 			} else {
-				System.err.println("Cpd does not have a category");
+				cpdCategory = "Un-strucured";
+				values.put("category", cpdCategory);
 			}
 			values.put("cpd", cpd.getCpdHours());
 
@@ -666,7 +667,10 @@ public class GetReport extends HttpServlet {
 			values.put("year", m.getKey());
 
 			for (CPD cpdValue : hashTreeValues) {
-				if (cpdValue.getCategory().toString().equals("CATEGORY_A")) {
+				if (cpdValue.getCategory() == null) {
+
+				} else if (cpdValue.getCategory().toString()
+						.equals("CATEGORY_A")) {
 					totalStructured = totalStructured + cpdValue.getCpdHours();
 				} else {
 					totalUnstructured = totalUnstructured
