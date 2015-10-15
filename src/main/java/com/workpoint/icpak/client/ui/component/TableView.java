@@ -43,6 +43,9 @@ public class TableView extends Composite {
 	ActionLink aDownloadPdf;
 
 	@UiField
+	ActionLink aFilter;
+
+	@UiField
 	HTMLPanel panelSearch;
 	@UiField
 	HTMLPanel panelDates;
@@ -60,7 +63,7 @@ public class TableView extends Composite {
 	public TableView() {
 		initWidget(uiBinder.createAndBindUi(this));
 		setSearchSection(false);
-
+		setDatesVisible(false);
 	}
 
 	public void setHeaders(List<String> names) {
@@ -94,6 +97,7 @@ public class TableView extends Composite {
 	public Date getStartDate() {
 		return dtStartDate.getValueDate();
 	}
+
 	public Date getEndDate() {
 		return dtEndDate.getValueDate();
 	}
@@ -327,7 +331,16 @@ public class TableView extends Composite {
 		}
 	}
 
+	public void setInitialDates(Date startDate, Date endDate) {
+		dtStartDate.setValue(startDate);
+		dtEndDate.setValue(endDate);
+	}
+
 	public HasClickHandlers getDownloadPdf() {
 		return aDownloadPdf;
+	}
+
+	public HasClickHandlers getFilterButton() {
+		return aFilter;
 	}
 }

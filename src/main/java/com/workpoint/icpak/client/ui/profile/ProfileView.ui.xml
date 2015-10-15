@@ -14,10 +14,12 @@
 			User Profile
 		</h3>
 
-		<profile:ProfileWidget ui:field="divProfileContent"></profile:ProfileWidget>
+		<div class="main-content">
+			<profile:ProfileWidget ui:field="divProfileContent"></profile:ProfileWidget>
 
-		<g:HTMLPanel ui:field="divPasswordContent">
-			<password:PasswordWidget ui:field="panelPasswordWidget"></password:PasswordWidget>
-		</g:HTMLPanel>
+			<g:HTMLPanel ui:field="divPasswordContent">
+				<password:PasswordWidget ui:field="panelPasswordWidget"></password:PasswordWidget>
+			</g:HTMLPanel>
+		</div>
 	</g:HTMLPanel>
 </ui:UiBinder>

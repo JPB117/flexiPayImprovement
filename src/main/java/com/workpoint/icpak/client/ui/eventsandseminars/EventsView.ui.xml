@@ -15,40 +15,43 @@
 		<h3 class="ng-scope">
 			Events and Seminars Management
 		</h3>
-		<g:HTMLPanel styleName="row" ui:field="panelEvents">
-			<div class="col-sm-12">
-				<p:EventsHeader ui:field="headerContainer">
-				</p:EventsHeader>
-			</div>
-			<div class="panel panel-default">
-				<div class="panel-heading">All Event Details</div>
-				<div class="panel-body">
-					<div class="col-sm-12">
-						<table:EventsTable ui:field="tblView">
-						</table:EventsTable>
+
+		<div class="main-content">
+			<g:HTMLPanel styleName="row" ui:field="panelEvents">
+				<div class="col-sm-12">
+					<p:EventsHeader ui:field="headerContainer">
+					</p:EventsHeader>
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-heading">All Event Details</div>
+					<div class="panel-body">
+						<div class="col-sm-12">
+							<table:EventsTable ui:field="tblView">
+							</table:EventsTable>
+						</div>
 					</div>
 				</div>
-			</div>
-		</g:HTMLPanel>
+			</g:HTMLPanel>
 
 
-		<g:HTMLPanel styleName="row" ui:field="panelEventDrillDown">
-			<div class="col-sm-12">
-				<h4 class="info-text">
-					<span ui:field="spnEventTitle"></span>
-				</h4>
-				<hr />
-			</div>
-			<div class="panel panel-default">
-				<div class="panel-heading">Delegates</div>
-				<div class="panel-body">
-					<div class="col-sm-12">
-						<table2:DelegatesTable ui:field="tblDelegates">
-						</table2:DelegatesTable>
+			<g:HTMLPanel styleName="row" ui:field="panelEventDrillDown">
+				<div class="col-sm-12">
+					<h4 class="info-text">
+						<span ui:field="spnEventTitle"></span>
+					</h4>
+					<hr />
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-heading">Delegates</div>
+					<div class="panel-body">
+						<div class="col-sm-12">
+							<table2:DelegatesTable ui:field="tblDelegates">
+							</table2:DelegatesTable>
+						</div>
 					</div>
 				</div>
-			</div>
-		</g:HTMLPanel>
+			</g:HTMLPanel>
+		</div>
 
 	</g:HTMLPanel>
 </ui:UiBinder>

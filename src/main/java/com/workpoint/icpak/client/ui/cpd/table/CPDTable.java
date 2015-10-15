@@ -32,6 +32,7 @@ public class CPDTable extends Composite {
 		tblView.setAutoNumber(false);
 		tblView.setSearchSection(true);
 		tblView.setSearchVisible(false);
+		tblView.setDatesVisible(true);
 		createHeader(AppContext.isCurrentUserAdmin());
 	}
 
@@ -79,12 +80,21 @@ public class CPDTable extends Composite {
 	public Date getStartDate() {
 		return tblView.getStartDate();
 	}
+
 	public Date getEndDate() {
 		return tblView.getEndDate();
 	}
 
 	public void setNoRecords(int size) {
 		tblView.setNoRecords(size);
+	}
+
+	public void setInitialDates(Date startDate, Date endDate) {
+		tblView.setInitialDates(startDate, endDate);
+	}
+
+	public HasClickHandlers getFilterButton() {
+		return tblView.getFilterButton();
 	}
 
 }

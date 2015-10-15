@@ -30,7 +30,8 @@ public class TransactionsResourceImpl implements TransactionsResource {
 			@QueryParam("mpesaAmt") String mpesaAmt,
 			@QueryParam("msisdn") String phoneNumber) {
 
-		trxDaoHelper.receivePaymentFromInvoiceNo(paymentRef, businessNo, accountNo, paymentMode, trxNumber, phoneNumber);
+		trxDaoHelper.receivePaymentFromInvoiceNo(paymentRef, businessNo,
+				accountNo, paymentMode, trxNumber, phoneNumber);
 		return "SUCCESS";
 	}
 

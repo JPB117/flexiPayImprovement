@@ -8,8 +8,11 @@ package com.workpoint.icpak.client.ui.cpd.admin;
 //import com.workpoint.icpak.shared.responses.GetUserRequestResult;
 //import com.workpoint.icpak.shared.responses.SaveUserResponse;
 //import com.workpoint.icpak.shared.responses.UpdatePasswordResponse;
+import java.util.Date;
 import java.util.List;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -38,6 +41,8 @@ import com.workpoint.icpak.client.ui.home.HomePresenter;
 import com.workpoint.icpak.client.ui.popup.GenericPopupPresenter;
 import com.workpoint.icpak.client.ui.security.AdminGateKeeper;
 import com.workpoint.icpak.client.ui.security.LoginGateKeeper;
+import com.workpoint.icpak.client.ui.util.DateRange;
+import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.shared.api.MemberResource;
 import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.shared.model.CPDSummaryDto;
@@ -57,6 +62,14 @@ public class CPDManagementPresenter
 		PagingPanel getPagingPanel();
 
 		void bindSummary(CPDSummaryDto summary);
+
+		void setInitialDates(DateRange thisyear, Date date);
+
+		HasClickHandlers getFilterButton();
+
+		Date getStartDate();
+
+		Date getEndDate();
 
 	}
 
@@ -99,10 +112,22 @@ public class CPDManagementPresenter
 			}
 		});
 
+		getView().getFilterButton().addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				startDate = getView().getStartDate();
+				endDate = getView().getEndDate();
+				loadCPD(getView().getPagingPanel().getConfig().getOffset(),
+						getView().getPagingPanel().getConfig().getLimit());
+			}
+		});
+
 	}
 
 	@Inject
 	GenericPopupPresenter popup;
+	private Date startDate;
+	private Date endDate;
 
 	protected void saveRecord(CPDDto dto) {
 		if (dto.getRefId() != null) {
@@ -110,7 +135,7 @@ public class CPDManagementPresenter
 			memberDelegate.withCallback(new AbstractAsyncCallback<CPDDto>() {
 				@Override
 				public void onSuccess(CPDDto result) {
-					loadData();
+					loadData(startDate, endDate);
 				}
 			}).cpd(dto.getMemberRefId()).update(dto.getRefId(), dto);
 
@@ -121,10 +146,13 @@ public class CPDManagementPresenter
 	@Override
 	protected void onReveal() {
 		super.onReveal();
-		loadData();
+		getView().setInitialDates(DateRange.THISYEAR, new Date());
+		this.startDate = DateUtils.getDateByRange(DateRange.THISYEAR, false);
+		this.endDate = new Date();
+		loadData(startDate, endDate);
 	}
 
-	protected void loadData() {
+	protected void loadData(Date startDate, Date endDate) {
 		fireEvent(new ProcessingEvent());
 
 		memberDelegate.withCallback(new AbstractAsyncCallback<CPDSummaryDto>() {
@@ -132,7 +160,7 @@ public class CPDManagementPresenter
 			public void onSuccess(CPDSummaryDto summary) {
 				getView().bindSummary(summary);
 			}
-		}).cpd("ALL").getCPDSummary();
+		}).cpd("ALL").getCPDSummary(startDate.getTime(), endDate.getTime());
 
 		memberDelegate.withCallback(new AbstractAsyncCallback<Integer>() {
 			@Override
@@ -143,7 +171,7 @@ public class CPDManagementPresenter
 				PagingConfig config = panel.getConfig();
 				loadCPD(config.getOffset(), config.getLimit());
 			}
-		}).cpd("ALL").getCount();
+		}).cpd("ALL").getCount(startDate.getTime(), startDate.getTime());
 
 	}
 
@@ -155,7 +183,8 @@ public class CPDManagementPresenter
 				fireEvent(new ProcessingCompletedEvent());
 				getView().bindResults(result);
 			}
-		}).cpd("ALL").getAll(offset, limit);
+		}).cpd("ALL")
+				.getAll(offset, limit, startDate.getTime(), endDate.getTime());
 	}
 
 	String getApplicationRefId() {

@@ -11,11 +11,16 @@
 				</div>
 			</g:HTMLPanel>
 			<g:HTMLPanel ui:field="panelDates">
-				<div class="col-lg-2">
+				<div class="col-lg-3">
 					<d:DateField ui:field="dtStartDate" />
 				</div>
-				<div class="col-lg-2">
+				<div class="col-lg-3">
 					<d:DateField ui:field="dtEndDate" />
+				</div>
+				<div class="col-lg-1">
+					<d:ActionLink ui:field="aFilter" styleName="btn btn-fill btn-default">
+						Filter
+					</d:ActionLink>
 				</div>
 			</g:HTMLPanel>
 			<g:HTMLPanel styleName="pull-right action-buttons"

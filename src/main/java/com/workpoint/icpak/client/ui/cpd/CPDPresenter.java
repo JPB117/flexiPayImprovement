@@ -1,9 +1,12 @@
 package com.workpoint.icpak.client.ui.cpd;
 
+import java.util.Date;
 import java.util.List;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rest.delegates.client.ResourceDelegate;
@@ -33,6 +36,8 @@ import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
 import com.workpoint.icpak.client.ui.events.ProcessingEvent;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
 import com.workpoint.icpak.client.ui.security.MemberGateKeeper;
+import com.workpoint.icpak.client.ui.util.DateRange;
+import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.api.MemberResource;
 import com.workpoint.icpak.shared.model.CPDDto;
@@ -53,6 +58,14 @@ public class CPDPresenter extends
 
 		void bindSummary(CPDSummaryDto summary);
 
+		void setInitialDates(DateRange thisquarter, Date date);
+
+		HasClickHandlers getFilterButton();
+
+		Date getStartDate();
+
+		Date getEndDate();
+
 	}
 
 	@ProxyCodeSplit
@@ -70,6 +83,8 @@ public class CPDPresenter extends
 
 	protected final ResourceDelegate<MemberResource> memberDelegate;
 	protected final CurrentUser currentUser;
+	private Date startDate;
+	private Date endDate;
 
 	@Inject
 	public CPDPresenter(final EventBus eventBus, final ICPDView view,
@@ -86,7 +101,6 @@ public class CPDPresenter extends
 		super.onBind();
 		addRegisteredHandler(EditModelEvent.TYPE, this);
 		getView().getRecordButton().addClickHandler(new ClickHandler() {
-
 			@Override
 			public void onClick(ClickEvent event) {
 				showCreatePopup();
@@ -100,12 +114,14 @@ public class CPDPresenter extends
 			}
 		});
 
-		/*
-		 * getView().getFilterButton().addClickHandler(new ClickHandler() {
-		 * 
-		 * @Override public void onClick(ClickEvent event) { showCreatePopup();
-		 * } });
-		 */
+		getView().getFilterButton().addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				startDate = getView().getStartDate();
+				endDate = getView().getEndDate();
+				loadData(startDate, endDate);
+			}
+		});
 
 	}
 
@@ -188,7 +204,7 @@ public class CPDPresenter extends
 			memberDelegate.withCallback(new AbstractAsyncCallback<CPDDto>() {
 				@Override
 				public void onSuccess(CPDDto result) {
-					loadData();
+					loadData(startDate, endDate);
 				}
 			}).cpd(memberId).update(dto.getRefId(), dto);
 
@@ -196,7 +212,7 @@ public class CPDPresenter extends
 			memberDelegate.withCallback(new AbstractAsyncCallback<CPDDto>() {
 				@Override
 				public void onSuccess(CPDDto result) {
-					loadData();
+					loadData(startDate, endDate);
 				}
 			}).cpd(memberId).create(dto);
 		}
@@ -206,10 +222,13 @@ public class CPDPresenter extends
 	@Override
 	protected void onReveal() {
 		super.onReveal();
-		loadData();
+		getView().setInitialDates(DateRange.THISYEAR, new Date());
+		this.startDate = DateUtils.getDateByRange(DateRange.THISYEAR, false);
+		this.endDate = new Date();
+		loadData(startDate, new Date());
 	}
 
-	protected void loadData() {
+	protected void loadData(Date startDate, Date endDate) {
 		String memberId = currentUser.getUser().getRefId();
 		fireEvent(new ProcessingEvent());
 
@@ -218,7 +237,7 @@ public class CPDPresenter extends
 			public void onSuccess(CPDSummaryDto summary) {
 				getView().bindSummary(summary);
 			}
-		}).cpd(memberId).getCPDSummary();
+		}).cpd(memberId).getCPDSummary(startDate.getTime(), endDate.getTime());
 
 		memberDelegate.withCallback(new AbstractAsyncCallback<Integer>() {
 			@Override
@@ -230,7 +249,7 @@ public class CPDPresenter extends
 
 				loadCPD(config.getOffset(), config.getLimit());
 			}
-		}).cpd(AppContext.isCurrentUserAdmin() ? "ALL" : memberId).getCount();
+		}).cpd(memberId).getCount(startDate.getTime(), endDate.getTime());
 	}
 
 	protected void loadCPD(int offset, int limit) {
@@ -243,7 +262,7 @@ public class CPDPresenter extends
 				getView().bindResults(result);
 			}
 		}).cpd(AppContext.isCurrentUserAdmin() ? "ALL" : memberId)
-				.getAll(offset, limit);
+				.getAll(offset, limit, startDate.getTime(), endDate.getTime());
 	}
 
 	String getApplicationRefId() {

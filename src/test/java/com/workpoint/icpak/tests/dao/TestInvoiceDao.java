@@ -59,7 +59,7 @@ public class TestInvoiceDao extends AbstractDaoTest {
 
 	@Test
 	public void testPayment() {
-		trxHelper.receivePaymentFromInvoiceNo("INV-0030", "722722", "INV-0030",
+		trxHelper.receivePaymentUsingInvoiceNo("INV-0030", "722722", "INV-0030",
 				"", "JGV1SYJTR5");
 	}
 

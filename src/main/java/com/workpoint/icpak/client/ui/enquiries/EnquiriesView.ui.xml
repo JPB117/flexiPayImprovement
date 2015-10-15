@@ -10,53 +10,50 @@
 
 	<g:HTMLPanel ui:field="container"
 		styleName="content-wrapper ng-scope ng-fadeInUp">
-
 		<h3 class="ng-scope">
 			Enquiries
-			<span class="spnPeriod hide">(Jan 2015 - Dec 2015)</span>
-			<d:ActionLink styleName="fa fa-caret-down hide"
-				ui:field="aShowFilter"></d:ActionLink>
 		</h3>
+		<div class="main-content">
 
-		<g:HTMLPanel styleName="row hide" ui:field="panelDates">
-			<div class="col-lg-12">
-				<form class="form-inline">
-					<div class="form-group">
-						<label for="from">From:</label>
-						<d:DropDownList ui:field="lstFrom" styleName="form-control"></d:DropDownList>
-					</div>
-					<div class="form-group">
-						<label for="to">to:</label>
-						<d:DropDownList ui:field="lstTo" styleName="form-control"></d:DropDownList>
-					</div>
-				</form>
+			<g:HTMLPanel styleName="row hide" ui:field="panelDates">
+				<div class="col-lg-12">
+					<form class="form-inline">
+						<div class="form-group">
+							<label for="from">From:</label>
+							<d:DropDownList ui:field="lstFrom" styleName="form-control"></d:DropDownList>
+						</div>
+						<div class="form-group">
+							<label for="to">to:</label>
+							<d:DropDownList ui:field="lstTo" styleName="form-control"></d:DropDownList>
+						</div>
+					</form>
+				</div>
+			</g:HTMLPanel>
+
+			<div class="col-sm-12">
+				<d:ActionLink ui:field="aCreate" styleName="btn btn-primary btn-fill">
+					<span class="fa fa-plus"></span>
+					Create Enquiry
+				</d:ActionLink>
 			</div>
-		</g:HTMLPanel>
 
-		<div class="col-sm-12">
-			<d:ActionLink ui:field="aCreate" styleName="btn btn-primary btn-fill">
-				<span class="fa fa-plus"></span>
-				Create Enquiry
-			</d:ActionLink>
-		</div>
+			<br />
 
-		<br />
-
-		<g:HTMLPanel styleName="row">
-			<div class="col-lg-12">
-				<g:HTMLPanel styleName="panel widget" ui:field="panelListing">
-					<div class="panel-heading">Enquiries Listing:</div>
-					<div class="panel-body">
-						<div class="row">
-							<div class="col-lg-12">
-								<table:EnquiriesTable ui:field="tblView">
-								</table:EnquiriesTable>
+			<g:HTMLPanel styleName="row">
+				<div class="col-lg-12">
+					<g:HTMLPanel styleName="panel widget" ui:field="panelListing">
+						<div class="panel-heading">Enquiries Listing:</div>
+						<div class="panel-body">
+							<div class="row">
+								<div class="col-lg-12">
+									<table:EnquiriesTable ui:field="tblView">
+									</table:EnquiriesTable>
+								</div>
 							</div>
 						</div>
-					</div>
-				</g:HTMLPanel>
-			</div>
-		</g:HTMLPanel>
-
+					</g:HTMLPanel>
+				</div>
+			</g:HTMLPanel>
+		</div>
 	</g:HTMLPanel>
 </ui:UiBinder>

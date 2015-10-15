@@ -21,38 +21,39 @@
 			</h3>
 
 
-			<div class="row">
-				<div class="col-lg-12 tabbable {style.top-bar}">
-					<div class="row search-bar">
-						<div class="col-lg-3">
-							<d:DateField ui:field="dtStartDate" />
+			<div class="main-content">
+				<div class="row">
+					<div class="col-lg-12 tabbable {style.top-bar}">
+						<div class="row search-bar">
+							<div class="col-lg-3">
+								<d:DateField ui:field="dtStartDate" />
+							</div>
+							<div class="col-lg-3">
+								<d:DateField ui:field="dtEndDate" />
+							</div>
+							<div class="col-lg-1">
+								<d:ActionLink ui:field="aRefresh" styleName="btn btn-fill btn-default">
+									Filter
+								</d:ActionLink>
+							</div>
+							<div class="pull-right action-buttons">
+								<d:ActionLink ui:field="downloadPdf">
+									<i class="fa fa-file-pdf-o"></i>
+									Download as Pdf
+								</d:ActionLink>
+							</div>
 						</div>
-						<div class="col-lg-3">
-							<d:DateField ui:field="dtEndDate" />
-						</div>
-						<div class="col-lg-1">
-							<d:ActionLink ui:field="aRefresh" styleName="btn btn-fill btn-default">
-								Filter
-							</d:ActionLink>
-						</div>
-						<div class="pull-right action-buttons">
-							<d:ActionLink ui:field="downloadPdf">
-								<i class="fa fa-file-pdf-o"></i>
-								Download as Pdf
-							</d:ActionLink>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="panel widget">
+							<d:Grid ui:field="grid"></d:Grid>
 						</div>
 					</div>
 				</div>
 			</div>
-
-			<div class="row">
-				<div class="col-lg-12">
-					<div class="panel widget">
-						<d:Grid ui:field="grid"></d:Grid>
-					</div>
-				</div>
-			</div>
-
 
 		</g:HTMLPanel>
 	</g:HTMLPanel>

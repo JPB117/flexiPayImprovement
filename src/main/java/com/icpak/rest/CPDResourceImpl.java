@@ -25,84 +25,93 @@ import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.shared.model.CPDSummaryDto;
 
 @Api(value = "", description = "Handles CRUD on cpd data")
-public class CPDResourceImpl implements CPDResource{
+public class CPDResourceImpl implements CPDResource {
 
-		@Inject
-		CPDDaoHelper helper;
-		@Inject CPDDao cpdDao;
-		
-		private final String memberId;
-		
-		@Inject
-		public CPDResourceImpl(@Assisted String memberId) {
-			this.memberId = memberId;
-		}
-		
-		@GET
-		@Consumes(MediaType.APPLICATION_JSON)
-		@Produces(MediaType.APPLICATION_JSON)
-		@ApiOperation(value = "Get a list of all cpds", response = CPDDto.class, consumes = MediaType.APPLICATION_JSON)
-		public List<CPDDto> getAll(
-				@QueryParam("offset") Integer offset,
-				@QueryParam("limit") Integer limit) {
+	@Inject
+	CPDDaoHelper helper;
+	@Inject
+	CPDDao cpdDao;
 
-			return helper.getAllCPD(memberId,offset, limit);
-		}
-		
-		@GET
-		@Path("/summary")
-		@Produces(MediaType.APPLICATION_JSON)
-		@Consumes(MediaType.APPLICATION_JSON)
-		public CPDSummaryDto getCPDSummary(){
-			return helper.getCPDSummary(memberId);
-		}
-		
-		@GET
-		@Path("/count")
-		public Integer getCount() {
-			return helper.getCount(memberId);
-		}
+	private final String memberId;
 
-		@GET
-		@Path("/{cpdId}")
-		@Produces(MediaType.APPLICATION_JSON)
-		@ApiOperation(value = "Get a cpd by cpdId", response = CPDDto.class, consumes = MediaType.APPLICATION_JSON)
-		public CPDDto getById(
-				@ApiParam(value = "CPD Id of the cpd to fetch", required = true) @PathParam("cpdId") String cpdId) {
+	@Inject
+	public CPDResourceImpl(@Assisted String memberId) {
+		this.memberId = memberId;
+	}
 
-			CPDDto cpd = helper.getCPDFromMemberRefId(memberId,cpdId);
-			return cpd;
-		}
+	@GET
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "Get a list of all cpds", response = CPDDto.class, consumes = MediaType.APPLICATION_JSON)
+	public List<CPDDto> getAll(@QueryParam("offset") Integer offset,
+			@QueryParam("limit") Integer limit,
+			@QueryParam("startDate") Long startDate,
+			@QueryParam("endDate") Long endDate) {
 
-		@POST
-		@Consumes(MediaType.APPLICATION_JSON)
-		@Produces(MediaType.APPLICATION_JSON)
-		@ApiOperation(value = "Create a new cpd", response = CPDDto.class, consumes = MediaType.APPLICATION_JSON)
-		public CPDDto create(
-				CPDDto cpd) {
-			return helper.create(memberId,cpd);
-		}
+		return helper.getAllCPD(memberId, offset, limit, startDate, endDate);
+	}
 
-		@PUT
-		@Path("/{cpdId}")
-		@Consumes(MediaType.APPLICATION_JSON)
-		@Produces(MediaType.APPLICATION_JSON)
-		@ApiOperation(value = "Update an existing cpd", response = CPDDto.class, consumes = MediaType.APPLICATION_JSON, produces = MediaType.APPLICATION_JSON)
-		public CPDDto update(
-				@ApiParam(value = "CPD Id of the cpd to fetch", required = true) @PathParam("cpdId") String cpdId,
-				CPDDto cpd) {
+	@GET
+	@Path("/summary")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public CPDSummaryDto getCPDSummary(@QueryParam("startDate") Long startDate,
+			@QueryParam("endDate") Long endDate) {
+		return helper.getCPDSummary(memberId, startDate, endDate);
+	}
 
-			return helper.update(memberId,cpdId, cpd);
-			
-		}
+	@GET
+	@Path("/filteredcount")
+	public Integer getCount(@QueryParam("startDate") Long startDate,
+			@QueryParam("endDate") Long endDate) {
+		return helper.getCount(memberId, startDate, endDate);
+	}
 
-		@DELETE
-		@Path("/{cpdId}")
-		@Produces(MediaType.APPLICATION_JSON)
-		@ApiOperation(value = "Delete an existing cpd")
-		public void delete(
-				@ApiParam(value = "CPD Id of the cpd to fetch", required = true) @PathParam("cpdId") String cpdId) {
+	@GET
+	@Path("/{cpdId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "Get a cpd by cpdId", response = CPDDto.class, consumes = MediaType.APPLICATION_JSON)
+	public CPDDto getById(
+			@ApiParam(value = "CPD Id of the cpd to fetch", required = true) @PathParam("cpdId") String cpdId) {
 
-			helper.delete(memberId,cpdId);
-		}
+		CPDDto cpd = helper.getCPDFromMemberRefId(memberId, cpdId);
+		return cpd;
+	}
+
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "Create a new cpd", response = CPDDto.class, consumes = MediaType.APPLICATION_JSON)
+	public CPDDto create(CPDDto cpd) {
+		return helper.create(memberId, cpd);
+	}
+
+	@PUT
+	@Path("/{cpdId}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "Update an existing cpd", response = CPDDto.class, consumes = MediaType.APPLICATION_JSON, produces = MediaType.APPLICATION_JSON)
+	public CPDDto update(
+			@ApiParam(value = "CPD Id of the cpd to fetch", required = true) @PathParam("cpdId") String cpdId,
+			CPDDto cpd) {
+
+		return helper.update(memberId, cpdId, cpd);
+
+	}
+
+	@DELETE
+	@Path("/{cpdId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "Delete an existing cpd")
+	public void delete(
+			@ApiParam(value = "CPD Id of the cpd to fetch", required = true) @PathParam("cpdId") String cpdId) {
+
+		helper.delete(memberId, cpdId);
+	}
+
+	@GET
+	@Path("/count")
+	public Integer getCount() {
+		return helper.getCount(memberId, null, null);
+	}
 }

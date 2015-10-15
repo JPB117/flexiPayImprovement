@@ -22,6 +22,7 @@ import com.workpoint.icpak.client.ui.component.tabs.TabPanel.TabPosition;
 import com.workpoint.icpak.client.ui.cpd.header.CPDHeader;
 import com.workpoint.icpak.client.ui.cpd.table.CPDTable;
 import com.workpoint.icpak.client.ui.cpd.table.row.CPDTableRow;
+import com.workpoint.icpak.client.ui.util.DateRange;
 import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.model.CPDDto;
@@ -71,7 +72,6 @@ public class CPDManagementView extends ViewImpl implements
 		widget = binder.createAndBindUi(this);
 		headerContainer.setTitles("Total CPD Requests", "Total Processed",
 				"Total Pending");
-
 
 		divTabs.setPosition(TabPosition.PILLS);
 
@@ -184,5 +184,26 @@ public class CPDManagementView extends ViewImpl implements
 		headerContainer.setValues(
 				summary.getProcessedCount() + summary.getPendingCount(),
 				summary.getProcessedCount(), summary.getPendingCount());
+	}
+
+	@Override
+	public void setInitialDates(DateRange thisYear, Date endDate) {
+		tblView.setInitialDates(DateUtils.getDateByRange(thisYear, true),
+				endDate);
+	}
+
+	@Override
+	public HasClickHandlers getFilterButton() {
+		return tblView.getFilterButton();
+	}
+
+	@Override
+	public Date getEndDate() {
+		return tblView.getEndDate();
+	}
+
+	@Override
+	public Date getStartDate() {
+		return tblView.getStartDate();
 	}
 }

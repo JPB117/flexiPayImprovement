@@ -35,21 +35,24 @@ public class CPDDaoHelper {
 	EventsDao eventDao;
 	@Inject
 	UsersDao userDao;
-	
-	@Inject StatementDaoHelper statementHelper;
+	@Inject
+	StatementDaoHelper statementHelper;
 	@Inject
 	MemberDao memberDao;
 
 	static Logger logger = Logger.getLogger(CPDDaoHelper.class);
 
-	public List<CPDDto> getAllCPD(String memberId, Integer offset, Integer limit) {
+	public List<CPDDto> getAllCPD(String memberId, Integer offset,
+			Integer limit, Long startDate, Long endDate) {
 
 		List<CPD> cpds = null;
 
 		if (memberId != null && memberId.equals("ALL")) {
-			cpds = dao.getAllCPDs(offset, limit);
+			cpds = dao.getAllCPDs(offset, limit, new Date(startDate), new Date(
+					endDate));
 		} else {
-			cpds = dao.getAllCPDs(memberId, offset, limit);
+			cpds = dao.getAllCPDs(memberId, offset, limit, new Date(startDate),
+					new Date(endDate));
 		}
 
 		List<CPDDto> rtn = new ArrayList<>();
@@ -62,8 +65,10 @@ public class CPDDaoHelper {
 		return rtn;
 	}
 
-	public Integer getCount(String memberId) {
-		return dao.getCPDCount(memberId);
+	public Integer getCount(String memberId, Long startDate, Long endDate) {
+		System.err.println("memberId" + memberId);
+		return dao
+				.getCPDCount(memberId, new Date(startDate), new Date(endDate));
 	}
 
 	public CPDDto getCPD(String cpdId) {
@@ -151,120 +156,125 @@ public class CPDDaoHelper {
 		}
 	}
 
-	public CPDSummaryDto getCPDSummary(String memberRefId) {
+	public CPDSummaryDto getCPDSummary(String memberRefId, Long startDate,
+			Long endDate) {
 
 		CPDSummaryDto dto = null;
 
 		if (memberRefId.equals("ALL")) {
-			dto = dao.getCPDSummary();
+			dto = dao.getCPDSummary(new Date(startDate), new Date(endDate));
 		} else {
-			dto = dao.getCPDSummary(memberRefId);
+			dto = dao.getCPDSummary(memberRefId, new Date(startDate), new Date(
+					endDate));
 		}
 
 		return dto;
 	}
-	
+
 	/**
 	 * 
 	 * @param memberRefId
 	 * @return true if member meets all requirements
 	 */
-	public boolean isInGoodStanding(String memberRefId,List<String> messages){
+	public boolean isInGoodStanding(String memberRefId, List<String> messages) {
 		boolean isGenerate = true;
-		
+
 		Member member = dao.findByRefId(memberRefId, Member.class);
-		
+
 		/**
 		 * Membership status must be Active
 		 */
 		MembershipStatus status = member.getMemberShipStatus();
-		if(status!=null){
-			if(status!=MembershipStatus.ACTIVE){
+		if (status != null) {
+			if (status != MembershipStatus.ACTIVE) {
 				isGenerate = false;
-				messages.add("Membership status is "+status.name()+". "
+				messages.add("Membership status is "
+						+ status.name()
+						+ ". "
 						+ "ICPAK Membership must be Active to get the certificate of good standing.");
 			}
-		}else{
+		} else {
 			isGenerate = false;
 			messages.add("No valid member status found");
 		}
-		
+
 		/**
-		 * Account Information - Statement
-		 * Account balance must be <=100
+		 * Account Information - Statement Account balance must be <=100
 		 */
 		Double balance = statementHelper.getAccountBalance(memberRefId);
-		if(balance>100){
+		if (balance > 100) {
 			isGenerate = false;
 			messages.add("Member account balance must be less than Ksh100.");
 		}
-		
+
 		/**
-		 * Ongoing displinary case must be false
-		 * TODO: Managed by Admin, admin to set true or false
+		 * Ongoing displinary case must be false TODO: Managed by Admin, admin
+		 * to set true or false
 		 */
-		if(member.hasDisplinaryCase()){
+		if (member.hasDisplinaryCase()) {
 			isGenerate = false;
 			messages.add("Member must not have an ongoing displinary case for good standing");
 		}
-		
+
 		/**
-		 * CPD Hours Attended since registration<b>
-		 * 1 year or less : 0 hrs
-		 * >1 year and <= 2 year : 40 hrs
-		 * >2 year and <=3 year : 80 hrs
-		 * >3 year : 120 hrs
+		 * CPD Hours Attended since registration<b> 1 year or less : 0 hrs >1
+		 * year and <= 2 year : 40 hrs >2 year and <=3 year : 80 hrs >3 year :
+		 * 120 hrs
 		 * 
 		 */
 		Date registrationDate = member.getRegistrationDate();
 		double cpdHours = dao.getCPDHours(memberRefId);
-		if(registrationDate==null){
+		if (registrationDate == null) {
 			isGenerate = false;
 			messages.add("Your registration date cannot be found in the portal, kindly request "
 					+ "for your account update from the Administrator.");
-		}else{
+		} else {
 			Calendar regDate = Calendar.getInstance();
 			regDate.setTime(registrationDate);
-			
-			Double noOfYears = DateUtils.getYearsBetween(registrationDate, new Date());
-			if(noOfYears<=0.0){
-				//do nothing - all is well<=2
-			}else if(noOfYears<=2){
-				// >1 &&  <=2
-				if(cpdHours<40){
+
+			Double noOfYears = DateUtils.getYearsBetween(registrationDate,
+					new Date());
+			if (noOfYears <= 0.0) {
+				// do nothing - all is well<=2
+			} else if (noOfYears <= 2) {
+				// >1 && <=2
+				if (cpdHours < 40) {
 					isGenerate = false;
-					messages.add("You have been a member for more than "+noOfYears
-							+ ". You have done "+cpdHours+"/40 expected hours.");
+					messages.add("You have been a member for more than "
+							+ noOfYears + ". You have done " + cpdHours
+							+ "/40 expected hours.");
 				}
-			}else if(noOfYears<=3){
-				// >1 &&  <=2
-				if(cpdHours<80){
+			} else if (noOfYears <= 3) {
+				// >1 && <=2
+				if (cpdHours < 80) {
 					isGenerate = false;
-					messages.add("You have been a member for more than "+noOfYears
-							+ ". You have done "+cpdHours+"/80 expected hours.");
+					messages.add("You have been a member for more than "
+							+ noOfYears + ". You have done " + cpdHours
+							+ "/80 expected hours.");
 				}
-			}else{
-				// >1 &&  <=2
-				if(cpdHours<120){
+			} else {
+				// >1 && <=2
+				if (cpdHours < 120) {
 					isGenerate = false;
-					messages.add("You have been a member for more than "+noOfYears.intValue()
-							+ "years but have done "+cpdHours+" cpd hours out of 120 expected hours.");
+					messages.add("You have been a member for more than "
+							+ noOfYears.intValue() + "years but have done "
+							+ cpdHours
+							+ " cpd hours out of 120 expected hours.");
 				}
 			}
 		}
-		
-		
+
 		return isGenerate;
 	}
 
 	public MemberStanding getMemberStanding(String memberId) {
 		List<String> messages = new ArrayList<>();
 		boolean isInGoodStanding = isInGoodStanding(memberId, messages);
-		
+
 		MemberStanding standing = new MemberStanding();
-		standing.setStanding(isInGoodStanding? 1:0);
+		standing.setStanding(isInGoodStanding ? 1 : 0);
 		standing.setReasons(messages);
-		
+
 		return standing;
 	}
 

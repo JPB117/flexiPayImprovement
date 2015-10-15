@@ -1,5 +1,6 @@
 package com.workpoint.icpak.client.ui.cpd;
 
+import java.util.Date;
 import java.util.List;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -20,6 +21,8 @@ import com.workpoint.icpak.client.ui.component.tabs.TabPanel;
 import com.workpoint.icpak.client.ui.cpd.header.CPDHeader;
 import com.workpoint.icpak.client.ui.cpd.table.CPDTable;
 import com.workpoint.icpak.client.ui.cpd.table.row.CPDTableRow;
+import com.workpoint.icpak.client.ui.util.DateRange;
+import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.shared.model.CPDSummaryDto;
@@ -32,8 +35,6 @@ public class CPDView extends ViewImpl implements CPDPresenter.ICPDView {
 	TabPanel divTabs;
 	@UiField
 	HTMLPanel container;
-	@UiField
-	HTMLPanel panelDates;
 	@UiField
 	ActionLink aShowFilter;
 	@UiField
@@ -103,5 +104,26 @@ public class CPDView extends ViewImpl implements CPDPresenter.ICPDView {
 		headerContainer.setValues(
 				summary.getUnconfirmedCPD() + summary.getConfirmedCPD(),
 				summary.getConfirmedCPD(), summary.getUnconfirmedCPD());
+	}
+
+	@Override
+	public void setInitialDates(DateRange thisYear, Date endDate) {
+		tblView.setInitialDates(DateUtils.getDateByRange(thisYear, true),
+				endDate);
+	}
+
+	@Override
+	public HasClickHandlers getFilterButton() {
+		return tblView.getFilterButton();
+	}
+
+	@Override
+	public Date getEndDate() {
+		return tblView.getEndDate();
+	}
+
+	@Override
+	public Date getStartDate() {
+		return tblView.getStartDate();
 	}
 }

@@ -156,6 +156,7 @@ public class StatementsView extends ViewImpl implements
 		grid.addColumn(description, "Description", "150px");
 		grid.addColumn(memberNo, "Member No");
 		grid.addColumn(dueDate, "Due Date");
+
 	}
 
 	@Override
