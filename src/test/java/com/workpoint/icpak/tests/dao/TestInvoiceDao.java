@@ -18,7 +18,7 @@ import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.InvoiceLineDto;
 import com.workpoint.icpak.tests.base.AbstractDaoTest;
 
-public class TestInvoiceDao extends AbstractDaoTest {
+public class TestInvoiceDao extends AbstractDaoTestTestoTest {
 
 	@Inject
 	InvoiceDaoHelper invoiceHelper;
@@ -60,7 +60,7 @@ public class TestInvoiceDao extends AbstractDaoTest {
 	@Test
 	public void testPayment() {
 		trxHelper.receivePaymentUsingInvoiceNo("INV-0030", "722722", "INV-0030",
-				"", "JGV1SYJTR5");
+				"", "JGV1SYJTR5", null);
 	}
 
 	@Ignore
