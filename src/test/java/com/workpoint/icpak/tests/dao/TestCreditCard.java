@@ -6,7 +6,6 @@ import com.google.inject.Inject;
 import com.icpak.rest.dao.helper.TransactionDaoHelper;
 import com.workpoint.icpak.server.payment.CreditCardServiceImpl;
 import com.workpoint.icpak.shared.model.CreditCardDto;
-import com.workpoint.icpak.shared.model.CreditCardResponse;
 import com.workpoint.icpak.tests.base.AbstractDaoTest;
 
 /**

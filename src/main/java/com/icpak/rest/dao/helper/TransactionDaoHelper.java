@@ -1,9 +1,7 @@
 package com.icpak.rest.dao.helper;
 
 import java.io.UnsupportedEncodingException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -16,9 +14,6 @@ import com.icpak.rest.dao.InvoiceDao;
 import com.icpak.rest.dao.MemberDao;
 import com.icpak.rest.dao.TransactionsDao;
 import com.icpak.rest.models.event.Booking;
-import com.icpak.rest.models.event.Delegate;
-import com.icpak.rest.models.event.Event;
-import com.icpak.rest.models.membership.Member;
 import com.icpak.rest.models.trx.Invoice;
 import com.icpak.rest.models.trx.Transaction;
 import com.icpak.rest.util.SMSIntegration;
