@@ -96,7 +96,7 @@
 											</div>
 										</div>
 
-										<div ui:field="divMembershipStatus" class="hide">
+										<div ui:field="divMembershipStatus">
 											<div class="row">
 												Membership Status:
 												<span ui:field="spnMembershipStatus" class="label label-warning"></span>

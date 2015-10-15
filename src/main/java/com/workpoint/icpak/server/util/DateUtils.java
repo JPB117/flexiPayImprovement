@@ -3,8 +3,6 @@ package com.workpoint.icpak.server.util;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.workpoint.icpak.client.ui.util.DateRange;
-
 public class DateUtils {
 
 	static String datepattern = "dd/MM/yyyy";
