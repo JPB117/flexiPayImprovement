@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
 
@@ -76,6 +77,9 @@ public class BookingsDaoHelper {
 
 	@Inject
 	ApplicationSettings settings;
+	
+	@Inject
+	AccommodationsDaoHelper accommodationsDaoHelper;
 
 	public List<BookingDto> getAllBookings(String uriInfo, String eventId,
 			Integer offset, Integer limit) {
@@ -176,6 +180,10 @@ public class BookingsDaoHelper {
 
 		// dao.getEntityManager().merge(booking);
 		dto.setInvoiceRef(dao.getInvoiceRef(booking.getRefId()));
+		
+		//update accomodation spaces available
+		updateAccomodationEntry(event);
+		
 		return dto;
 	}
 
@@ -588,5 +596,18 @@ public class BookingsDaoHelper {
 	public List<MemberBookingDto> getMemberBookings(String memberRefId,
 			int offset, int limit) {
 		return dao.getMemberBookings(memberRefId, offset, limit);
+	}
+	
+	public void updateAccomodationEntry(Event event){
+		Set<Accommodation> accommodations = event.getAccommodation();
+		
+		for(Accommodation accommodation : accommodations){
+			Set<Delegate> delegates = accommodation.getDelegates();
+			int spacesOccupied = delegates.size();
+			accommodation.setSpaces(accommodation.getSpaces() - spacesOccupied);
+			
+			accommodationsDaoHelper.update(event.getRefId(), accommodation.getRefId(), accommodation.toDto());
+		}
+		
 	}
 }

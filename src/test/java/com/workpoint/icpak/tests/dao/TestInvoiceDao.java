@@ -18,7 +18,7 @@ import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.InvoiceLineDto;
 import com.workpoint.icpak.tests.base.AbstractDaoTest;
 
-public class TestInvoiceDao extends AbstractDaoTestTestoTest {
+public class TestInvoiceDao extends AbstractDaoTest {
 
 	@Inject
 	InvoiceDaoHelper invoiceHelper;
