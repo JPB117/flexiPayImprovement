@@ -11,10 +11,8 @@
 	<g:HTMLPanel ui:field="container"
 		styleName="content-wrapper ng-scope ng-fadeInUp">
 		<h3 class="ng-scope">
-			CPD Management Interface
-			<span class="spnPeriod hide">(Jan 2015 - Dec 2015)</span>
-			<d:ActionLink styleName="fa fa-caret-down hide"
-				ui:field="aShowFilter"></d:ActionLink>
+			CPD Management
+			<span class="spnPeriod"></span>
 		</h3>
 
 

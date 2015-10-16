@@ -42,9 +42,9 @@ public class HeaderView extends ViewImpl implements HeaderPresenter.IHeaderView 
 
 	@Override
 	public void setLoggedInUser(UserDto currentUser) {
-		spnLoggedInUser.setInnerText(currentUser.getFullName()+
-				(currentUser.getMemberNo()==null? "":
-					" (Reg "+currentUser.getMemberNo()+")"));
+		spnLoggedInUser.setInnerText(currentUser.getFullName()
+				+ (currentUser.getMemberNo() == null ? "" : " (m/No: "
+						+ currentUser.getMemberNo() + ")"));
 	}
 
 }

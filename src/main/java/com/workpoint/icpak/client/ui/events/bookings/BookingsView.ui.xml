@@ -13,7 +13,7 @@
 		styleName="content-wrapper ng-scope ng-fadeInUp">
 
 		<h3 class="ng-scope">
-			My Bookings
+			My Bookings(All Events Booked)
 		</h3>
 		<g:HTMLPanel styleName="row main-content" ui:field="panelEvents">
 			<div class="col-sm-12">
@@ -24,7 +24,8 @@
 				<div class="panel-heading">All Event I have Booked</div>
 				<div class="panel-body">
 					<div class="col-sm-12">
-						<d:TableView ui:field="tblEvents"></d:TableView>
+						<d:TableView ui:field="tblEvents" searchFieldVisible="true"
+							searchSectionVisible="true" actionsVisible="false"></d:TableView>
 					</div>
 				</div>
 			</div>

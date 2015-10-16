@@ -66,8 +66,6 @@ public class ProfilePresenter
 
 		int getActiveTab();
 
-		// ApplicationFormHeaderDto getBasicDetails();
-
 		boolean isValid();
 
 		void setEditMode(boolean editMode);
@@ -107,9 +105,9 @@ public class ProfilePresenter
 	}
 
 	@TabInfo(container = HomePresenter.class)
-	static TabData getTabLabel(MemberGateKeeper adminGatekeeper) {
+	static TabData getTabLabel(MemberGateKeeper memberGatekeeper) {
 		TabDataExt data = new TabDataExt("My Profile", "icon-user", 9,
-				adminGatekeeper, true);
+				memberGatekeeper, true);
 		return data;
 	}
 
@@ -367,13 +365,14 @@ public class ProfilePresenter
 
 		loadData(applicationRefId);
 		getView().setApplicationId(applicationRefId);
-		
-		memberDelegate.withCallback(new AbstractAsyncCallback<MemberStanding>() {
-			@Override
-			public void onSuccess(MemberStanding standing) {
-				getView().bindMemberStanding(standing);
-			}
-		}).getMemberStanding(getMemberId());
+
+		memberDelegate.withCallback(
+				new AbstractAsyncCallback<MemberStanding>() {
+					@Override
+					public void onSuccess(MemberStanding standing) {
+						getView().bindMemberStanding(standing);
+					}
+				}).getMemberStanding(getMemberId());
 
 	}
 
@@ -465,7 +464,7 @@ public class ProfilePresenter
 				: currentUser.getUser().getApplicationRefId();
 		return applicationRefId;
 	}
-	
+
 	String getMemberId() {
 		String applicationRefId = currentUser.getUser() == null ? null
 				: currentUser.getUser().getMemberRefId();
