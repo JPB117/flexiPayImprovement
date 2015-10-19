@@ -77,20 +77,6 @@ public class StatementsView extends ViewImpl implements
 
 		dtEndDate.addStyleName("end-date");
 
-		TextColumn<StatementDto> entryNo = new TextColumn<StatementDto>() {
-			@Override
-			public String getValue(StatementDto arg0) {
-				return arg0.getEntryNo();
-			}
-		};
-
-		TextColumn<StatementDto> ledgerNo = new TextColumn<StatementDto>() {
-			@Override
-			public String getValue(StatementDto arg0) {
-				return arg0.getCustLedgerEntryNo();
-			}
-		};
-
 		TextColumn<StatementDto> date = new TextColumn<StatementDto>() {
 			@Override
 			public String getValue(StatementDto arg0) {
@@ -131,13 +117,6 @@ public class StatementsView extends ViewImpl implements
 			}
 		};
 
-		TextColumn<StatementDto> memberNo = new TextColumn<StatementDto>() {
-			@Override
-			public String getValue(StatementDto arg0) {
-				return arg0.getCustomerNo();
-			}
-		};
-
 		TextColumn<StatementDto> dueDate = new TextColumn<StatementDto>() {
 			@Override
 			public String getValue(StatementDto arg0) {
@@ -147,14 +126,10 @@ public class StatementsView extends ViewImpl implements
 			}
 		};
 
-		grid.addColumn(entryNo, "Entry No");
-		grid.addColumn(ledgerNo, "Ledger No");
 		grid.addColumn(date, "Date");
 		grid.addColumn(type, "Doc Type");
-		grid.addColumn(docNo, "Doc No", "120px");
 		grid.addColumn(amount, "Amount");
 		grid.addColumn(description, "Description", "150px");
-		grid.addColumn(memberNo, "Member No");
 		grid.addColumn(dueDate, "Due Date");
 
 	}

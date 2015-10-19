@@ -14,6 +14,7 @@ import com.icpak.rest.dao.InvoiceDao;
 import com.icpak.rest.dao.MemberDao;
 import com.icpak.rest.dao.TransactionsDao;
 import com.icpak.rest.models.event.Booking;
+import com.icpak.rest.models.event.Delegate;
 import com.icpak.rest.models.trx.Invoice;
 import com.icpak.rest.models.trx.Transaction;
 import com.icpak.rest.util.SMSIntegration;
@@ -86,7 +87,7 @@ public class TransactionDaoHelper {
 
 	public void receivePaymentUsingInvoiceNo(String paymentRef,
 			String businessNo, String accountNo, String paymentMode,
-			String trxNumber , String phoneNumber) {
+			String trxNumber, String phoneNumber) {
 		InvoiceDto invoiceDto = invoiceDao.getInvoiceByDocumentNo(paymentRef);
 		Transaction trx = dao.findByRefId(invoiceDto.getTrxRefId(),
 				Transaction.class);
@@ -111,11 +112,11 @@ public class TransactionDaoHelper {
 		}
 
 		dao.save(trx);
-		
+
 		try {
-			sendPaymentConfirmationSMSAndEmail(phoneNumber , trxNumber , inv.getContactName() , booking);
+			sendPaymentConfirmationSMSAndEmail(phoneNumber, trxNumber,
+					inv.getContactName(), booking);
 		} catch (UnsupportedEncodingException | MessagingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -132,27 +133,32 @@ public class TransactionDaoHelper {
 
 		return trxs;
 	}
-	
-	private void sendPaymentConfirmationSMSAndEmail(String phoneNumber , String transactionNumber , String senderName , 
-			Booking booking) throws UnsupportedEncodingException, MessagingException {
-		
-		String smsMessage = "Dear" + " " + senderName + ","
-				+ " your payment has been received by icpak. "
-				+ "Transaction Number " + transactionNumber+" "
-				+ ".Call us for any inquiries.";
-		
-		String finalPhoneNumber =phoneNumber.replace("254", "0");
-		
-		if (phoneNumber != null) {
-			smsIntergration.send(finalPhoneNumber,
-					smsMessage);
+
+	private void sendPaymentConfirmationSMSAndEmail(String phoneNumber,
+			String transactionNumber, String senderName, Booking booking)
+			throws UnsupportedEncodingException, MessagingException {
+
+		if (booking != null) {
+			for (Delegate delegate : booking.getDelegates()) {
+				String smsMessage = "Dear" + " " + senderName + ","
+						+ " Thank-you for booking for the "
+						+ booking.getEvent().getName() + ". Your ERN No. is "
+						+ delegate.getErn();
+
+				String finalPhoneNumber = phoneNumber.replace("254", "0");
+
+				if (phoneNumber != null) {
+					smsIntergration.send(finalPhoneNumber, smsMessage);
+				}
+
+				if (booking.getContact().getEmail() != null) {
+					String subject = "PAYMENT CONFIRMATION FOR "
+							+ booking.getEvent().getName().toUpperCase();
+					EmailServiceHelper.sendEmail(smsMessage, subject,
+							delegate.getEmail());
+				}
+			}
 		}
-		
-		if(booking.getContact().getEmail() != null){
-			String subject = "ICPAK EVENT PAYMENT CONFIRMATION";
-			EmailServiceHelper.sendEmail(smsMessage, subject, booking.getContact().getEmail());
-		}
-	
 
 	}
 

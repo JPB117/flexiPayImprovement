@@ -8,7 +8,7 @@
 			<div class="row">
 				<div class="col-sm-12">
 					<d:ActionLink
-						styleName="btn btn-next btn-fill btn-default btn-wd btn-sm pull-right"
+						styleName="btn btn-next btn-fill btn-default btn-wd btn-sm pull-left"
 						ui:field="aEdit">
 						<i class="fa fa-pencil"></i>
 						Edit Details

@@ -8,8 +8,7 @@
 			<g:HTMLPanel styleName="row">
 				<div class="col-xs-12">
 					<div class="panel widget">
-						<div class="ember-view popovercontainer ribbon" disabled="false"
-							data-original-title="" title="">
+						<div class="ember-view popovercontainer ribbon hide">
 							<g:HTMLPanel styleName="ribbon-inner ribbon-draft"
 								ui:field="panelApplicationType">
 							</g:HTMLPanel>
@@ -44,11 +43,10 @@
 						</div>
 
 						<div class="panel-body">
-							<g:HTMLPanel ui:field="profileViewMode" styleName="row">
-								<div class="col-lg-2">
-									<br />
+							<g:HTMLPanel ui:field="profileViewMode" styleName="row profile-page">
+								<div class="col-lg-2 profile-picture">
 									<g:HTMLPanel ui:field="profileViewEditMode">
-										<div class="profile-page">
+										<div>
 											<g:FocusPanel ui:field="panelPicture">
 												<g:Image ui:field="imgUser" styleName="thumbnail col-sm-offset-1" />
 											</g:FocusPanel>
@@ -56,7 +54,7 @@
 									</g:HTMLPanel>
 								</div>
 
-								<div class="col-lg-10">
+								<div class="col-lg-6 profile-overview">
 									<g:HTMLPanel ui:field="panelProfile" styleName="col-md-12">
 										<up:Uploader ui:field="uploader" styleName="custom-file-input"></up:Uploader>
 									</g:HTMLPanel>
@@ -69,11 +67,19 @@
 											</h3>
 										</div>
 
-										<div class="row hide">
+										<div class="row">
 											<p class="text-muted">
-												<br />
 												<span ui:field="spnApplicationType"></span>
+												(
+												m/No:
+												<span ui:field="spnMembershipNo"></span>
+												)
 											</p>
+										</div>
+
+										<div class="row">
+											Membership Status:
+											<span ui:field="spnMembershipStatus" class="text-muted">Active</span>
 										</div>
 
 										<div class="row hide">
@@ -84,28 +90,30 @@
 
 										<div ui:field="divPayNow">
 											<div class="row">
-												Payment Status:
-												<span ui:field="spnPaymentStatus" class="label label-warning"></span>
-											</div>
-
-											<div class="row">
-												<br />
-												<d:ActionLink ui:field="aPayNow"
-													styleName="hide btn btn-fill btn-success">Pay
-													Now</d:ActionLink>
+												Account Balance:
+												<span ui:field="spnBalance"></span>
+												<d:ActionLink ui:field="aPayNow" styleName="hide"></d:ActionLink>
 											</div>
 										</div>
 
 										<div ui:field="divMembershipStatus">
 											<div class="row">
-												Membership Status:
-												<span ui:field="spnMembershipStatus" class="label label-warning"></span>
-											</div>
+												<br />
+												Account Status:
+												<div class="label label-success" ui:field="divAccountStatus">
+													<i class="fa fa-check hide" ui:field="iconSuccess"></i>
+													<i class="fa fa-times-circle hide" ui:field="iconFail"></i>
+													<span ui:field="spnAccountStatus">
+													</span>
+												</div>
+												<span ui:field="spnHelpIcon" class="hide fa fa-question-circle"
+													data-toggle="popover" data-trigger="hover" title="Reasons"></span>
 
-											<div class="row">
+												<br />
 												<br />
 												<d:ActionLink ui:field="aDownloadCert"
-													styleName="btn btn-fill btn-success">Download GoodStanding Certificate</d:ActionLink>
+													styleName="btn btn-success btn-fill">Download
+													Certificate</d:ActionLink>
 											</div>
 										</div>
 

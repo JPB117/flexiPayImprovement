@@ -8,6 +8,7 @@ import java.util.List;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.ErrorEvent;
@@ -77,10 +78,8 @@ public class ProfileWidget extends Composite {
 	HTMLPanel PanelProfileDisplay;
 	@UiField
 	HTMLPanel panelApplicationType;
-
 	@UiField
 	HTMLPanel divEditDropDown;
-
 	@UiField
 	HTMLPanel divSavePanel;
 
@@ -96,7 +95,21 @@ public class ProfileWidget extends Composite {
 	@UiField
 	Element spnNames;
 	@UiField
+	Element iconSuccess;
+	@UiField
+	Element iconFail;
+
+	@UiField
 	Element spnApplicationType;
+	@UiField
+	SpanElement spnMembershipNo;
+	@UiField
+	SpanElement spnAccountStatus;
+	@UiField
+	DivElement divAccountStatus;
+
+	@UiField
+	SpanElement spnHelpIcon;
 
 	@UiField
 	ProgressBar progressBar;
@@ -170,7 +183,6 @@ public class ProfileWidget extends Composite {
 		});
 
 		aDownloadCert.addClickHandler(new ClickHandler() {
-
 			@Override
 			public void onClick(ClickEvent arg0) {
 				UploadContext ctx = new UploadContext("getreport");
@@ -180,6 +192,7 @@ public class ProfileWidget extends Composite {
 				Window.open(ctx.toUrl(), "Certificate Of Good Standing", "");
 			}
 		});
+
 	}
 
 	public void setEditMode(boolean editMode) {
@@ -191,12 +204,9 @@ public class ProfileWidget extends Composite {
 		if (editMode) {
 			divEditDropDown.setVisible(true);
 			divSavePanel.setVisible(true);
-			divPayNow.removeClassName("hide");
-			// divProfileContent.setVisible(false);
 		} else {
 			divEditDropDown.setVisible(false);
 			divSavePanel.setVisible(false);
-			divPayNow.addClassName("hide");
 		}
 	}
 
@@ -246,6 +256,8 @@ public class ProfileWidget extends Composite {
 		ctx.setAction(UPLOADACTION.UPLOADUSERIMAGE);
 		uploader.setContext(ctx);
 
+		spnMembershipNo.setInnerText(user.getUser().getMemberNo());
+
 		setUserImage(user.getUser().getRefId());
 	}
 
@@ -255,17 +267,15 @@ public class ProfileWidget extends Composite {
 	}
 
 	public void setApplicationId(String applicationRefId) {
-		if (applicationRefId == null) {
-			aPayNow.removeStyleName("btn-success");
-			aPayNow.addStyleName("btn-warning");
-			aPayNow.setText("No Application Found");
-		} else {
-			aPayNow.addStyleName("btn-success");
-			aPayNow.removeStyleName("btn-warning");
-			aPayNow.setText("Pay Now");
-			aPayNow.setHref("#signup;applicationId=" + applicationRefId);
-		}
-
+		// if (applicationRefId == null) {
+		// aPayNow.removeStyleName("btn-success");
+		// aPayNow.addStyleName("btn-warning");
+		// aPayNow.setText("No Application Found");
+		// } else {
+		// aPayNow.removeStyleName("btn-warning");
+		// aPayNow.setText("Pay Now");
+		// aPayNow.setHref("#signup;applicationId=" + applicationRefId);
+		// }
 	}
 
 	public void clear() {
@@ -343,19 +353,25 @@ public class ProfileWidget extends Composite {
 
 	public void bindMemberStanding(MemberStanding standing) {
 		if (standing.getStanding() == 0) {
-			aDownloadCert.setText("Not In GoodStanding");
-			aDownloadCert.removeStyleName("btn-success");
-			aDownloadCert.addStyleName("btn-danger");
 			String info = "";
 			for (String reason : standing.getReasons()) {
 				info = info.concat(reason + "\n");
 			}
-			aDownloadCert.setTitle(info);
+			spnAccountStatus.setInnerText("Not In GoodStanding");
+			divAccountStatus.addClassName("label-danger");
+			divAccountStatus.removeClassName("label-success");
+			spnHelpIcon.setAttribute("data-content", info);
+			iconFail.removeClassName("hide");
+			iconSuccess.addClassName("hide");
+			aDownloadCert.setVisible(false);
 
 		} else {
-			aDownloadCert.addStyleName("btn-success");
-			aDownloadCert.removeStyleName("btn-danger");
-			aDownloadCert.setTitle("You are in good standing");
+			spnAccountStatus.setInnerText("In good standing");
+			divAccountStatus.addClassName("label-success");
+			divAccountStatus.removeClassName("label-danger");
+			iconFail.addClassName("hide");
+			iconSuccess.removeClassName("hide");
+			aDownloadCert.setVisible(true);
 		}
 	}
 
