@@ -76,11 +76,13 @@ public class EnquiriesDaoHelper {
 		Enquiries enquiryInDb  = dao.findByRefId(enquiryRefId, Enquiries.class);
 		
 		EnquiriesDialogue newEnquiriesDialogue = new EnquiriesDialogue();
-		newEnquiriesDialogue.setFromRefId(memberRefId);
+		newEnquiriesDialogue.setFromMemberRefId(memberRefId);
 		newEnquiriesDialogue.setText(responseMessage);
 		newEnquiriesDialogue.setEnquiry(enquiryInDb);
 		
 		enquiriesDialogueDao.save(newEnquiriesDialogue);
+		
+		result = "Success";
 		
 		return  result;
 	}

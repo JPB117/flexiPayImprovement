@@ -16,30 +16,12 @@ public class EnquiriesDialogue extends PO {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private String fromRefId;// repondednt to an inquiry
-	private String memberRefId;// owner of inquiry
+	private String fromMemberRefId;// repondednt to an inquiry
 	private String text;// the inqury response.
-	
+
 	@ManyToOne
 	@JoinColumn(name = "inquiry_id")
 	private Enquiries enquiry;
-	
-
-	public String getFromRefId() {
-		return fromRefId;
-	}
-
-	public void setFromRefId(String fromRefId) {
-		this.fromRefId = fromRefId;
-	}
-
-	public String getMemberRefId() {
-		return memberRefId;
-	}
-
-	public void setMemberRefId(String memberRefId) {
-		this.memberRefId = memberRefId;
-	}
 
 	public String getText() {
 		return text;
@@ -56,7 +38,13 @@ public class EnquiriesDialogue extends PO {
 	public void setEnquiry(Enquiries enquiry) {
 		this.enquiry = enquiry;
 	}
-	
-	
+
+	public String getFromMemberRefId() {
+		return fromMemberRefId;
+	}
+
+	public void setFromMemberRefId(String fromMemberRefId) {
+		this.fromMemberRefId = fromMemberRefId;
+	}
 
 }
