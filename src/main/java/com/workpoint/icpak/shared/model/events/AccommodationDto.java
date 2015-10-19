@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.workpoint.icpak.shared.model.Listable;
 import com.workpoint.icpak.shared.model.SerializableObj;
 
-public class AccommodationDto extends SerializableObj implements Listable{
+public class AccommodationDto extends SerializableObj implements Listable {
 
 	private String hotel;
 	private String description;
@@ -12,7 +12,8 @@ public class AccommodationDto extends SerializableObj implements Listable{
 	private Double fee;
 	private int nights;
 	private EventDto event;
-	
+	private int spaces;
+
 	public AccommodationDto() {
 	}
 
@@ -47,7 +48,7 @@ public class AccommodationDto extends SerializableObj implements Listable{
 
 	@JsonIgnore
 	public String getDisplayName() {
-		return hotel+"- Ksh "+fee;
+		return hotel + "- Ksh " + fee;
 	}
 
 	public EventDto getEvent() {
@@ -73,5 +74,13 @@ public class AccommodationDto extends SerializableObj implements Listable{
 	public void setType(AccommodationType type) {
 		this.type = type;
 	}
-	
+
+	public int getSpaces() {
+		return spaces;
+	}
+
+	public void setSpaces(int spaces) {
+		this.spaces = spaces;
+	}
+
 }

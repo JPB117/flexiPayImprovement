@@ -22,19 +22,20 @@ import com.workpoint.icpak.shared.model.events.AccommodationDto;
 import com.workpoint.icpak.shared.model.events.AccommodationType;
 
 /**
- * Event model 
+ * Event model
+ * 
  * @author duggan
  *
  */
 
-@ApiModel(value="Accommodation Model", description="Accommodation model - Pre-negotiated Accomodation for an event")
+@ApiModel(value = "Accommodation Model", description = "Accommodation model - Pre-negotiated Accomodation for an event")
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 
 @Entity
-@Table(name="accommodation")
-public class Accommodation extends PO{
+@Table(name = "accommodation")
+public class Accommodation extends PO {
 
 	/**
 	 * 
@@ -43,20 +44,22 @@ public class Accommodation extends PO{
 	private String hotel;
 	private String description;
 	private Double fee;
-	
-	@Column(name="accommodationType")
+
+	@Column(name = "accommodationType")
 	@Enumerated(EnumType.STRING)
 	private AccommodationType type = AccommodationType.HB;
-	private int nights=0;
-	
+	private int nights = 0;
+
+	private int spaces;
+
 	@XmlTransient
 	@ManyToOne
-	@JoinColumn(name="eventId")
+	@JoinColumn(name = "eventId")
 	private Event event;
-	
-	@OneToMany(mappedBy="accommodation")
+
+	@OneToMany(mappedBy = "accommodation")
 	private Set<Delegate> delegates = new HashSet<>();
-	
+
 	public Accommodation() {
 	}
 
@@ -87,17 +90,18 @@ public class Accommodation extends PO{
 	public AccommodationDto toDto() {
 		return toDto(false);
 	}
-	
+
 	public AccommodationDto toDto(boolean isIncludeEvent) {
-		AccommodationDto dto  = new AccommodationDto();
+		AccommodationDto dto = new AccommodationDto();
 		dto.setDescription(description);
 		dto.setFee(fee);
 		dto.setHotel(hotel);
 		dto.setNights(nights);
 		dto.setRefId(getRefId());
 		dto.setType(type);
-		if(isIncludeEvent){
-			if(getEvent()!=null){
+		dto.setSpaces(spaces);
+		if (isIncludeEvent) {
+			if (getEvent() != null) {
 				Event e = getEvent();
 				dto.setEvent(e.toDto(false));
 			}
@@ -110,9 +114,10 @@ public class Accommodation extends PO{
 		setFee(dto.getFee());
 		setHotel(dto.getHotel());
 		setNights(dto.getNights());
-		
-		if(type!=null)
-		setType(dto.getType());
+		setSpaces(dto.getSpaces());
+
+		if (type != null)
+			setType(dto.getType());
 	}
 
 	public Event getEvent() {
@@ -138,4 +143,21 @@ public class Accommodation extends PO{
 	public void setType(AccommodationType type) {
 		this.type = type;
 	}
+
+	public int getSpaces() {
+		return spaces;
+	}
+
+	public void setSpaces(int spaces) {
+		this.spaces = spaces;
+	}
+
+	public Set<Delegate> getDelegates() {
+		return delegates;
+	}
+
+	public void setDelegates(Set<Delegate> delegates) {
+		this.delegates = delegates;
+	}
+
 }
