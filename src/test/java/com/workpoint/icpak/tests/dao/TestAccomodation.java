@@ -19,11 +19,11 @@ public class TestAccomodation extends AbstractDaoTest {
 		String eventId = "PrjIf8x4RIDaPZIv";
 
 		AccommodationDto accommodationDto = new AccommodationDto();
-		accommodationDto.setHotel("Sunset");
+		accommodationDto.setHotel("Nyali");
 		accommodationDto.setDescription("Nice place to stay");
 		accommodationDto.setFee(new Double(25000));
 		accommodationDto.setNights(8);
-		accommodationDto.setSpaces(10);
+		accommodationDto.setSpaces(8);
 
 		AccommodationDto savedAccomodationDto = accommodationsDaoHelper.create(eventId, accommodationDto);
 

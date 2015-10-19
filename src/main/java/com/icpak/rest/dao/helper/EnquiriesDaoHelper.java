@@ -6,13 +6,17 @@ import java.util.List;
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import com.icpak.rest.dao.EnquiriesDao;
+import com.icpak.rest.dao.EnquiriesDialogueDao;
 import com.icpak.rest.models.util.Enquiries;
+import com.icpak.rest.models.util.EnquiriesDialogue;
 import com.workpoint.icpak.shared.model.EnquiriesDto;
 
 @Transactional
 public class EnquiriesDaoHelper {
 
 	@Inject EnquiriesDao dao;
+	
+	@Inject EnquiriesDialogueDao enquiriesDialogueDao;
 	
 	public List<EnquiriesDto> getAll(String memberRefId,Integer offset,
 			Integer limit){
@@ -64,5 +68,20 @@ public class EnquiriesDaoHelper {
 	public void delete(String memberId, String enquiryId) {
 		Enquiries e = dao.findByRefId(enquiryId, Enquiries.class);
 		dao.delete(e);
+	}
+	
+	public String respondToInquiry(String enquiryRefId , String memberRefId , String responseMessage){
+		String result = null;
+		
+		Enquiries enquiryInDb  = dao.findByRefId(enquiryRefId, Enquiries.class);
+		
+		EnquiriesDialogue newEnquiriesDialogue = new EnquiriesDialogue();
+		newEnquiriesDialogue.setFromRefId(memberRefId);
+		newEnquiriesDialogue.setText(responseMessage);
+		newEnquiriesDialogue.setEnquiry(enquiryInDb);
+		
+		enquiriesDialogueDao.save(newEnquiriesDialogue);
+		
+		return  result;
 	}
 }

@@ -1,11 +1,13 @@
 package com.icpak.rest.models.util;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.OneToMany;
 
 import com.icpak.rest.models.base.PO;
 import com.workpoint.icpak.shared.model.EnquiriesCategory;
@@ -25,6 +27,9 @@ public class Enquiries extends PO{
 	private String membershipNo;
 	private String emailAddress;
 	private String phone;
+	
+	@OneToMany(mappedBy = "enquiry")
+	private List<EnquiriesDialogue> dialogue;
 	
 	@Enumerated(EnumType.STRING)
 	private EnquiriesCategory category;
@@ -101,6 +106,15 @@ public class Enquiries extends PO{
 		this.memberRefId = memberRefId;
 	}
 	
+	
+	public List<EnquiriesDialogue> getDialogue() {
+		return dialogue;
+	}
+
+	public void setDialogue(List<EnquiriesDialogue> dialogue) {
+		this.dialogue = dialogue;
+	}
+
 	public void copyFrom(EnquiriesDto dto){
 		setCategory(dto.getCategory());
 		setEmailAddress(dto.getEmailAddress());
