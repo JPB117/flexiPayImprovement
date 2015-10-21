@@ -4,6 +4,7 @@ public enum MembershipStatus {
 
 	DRAFTED,
 	ACTIVE,
+	INACTIVE,
 	RETIRED,
 	DEREGISTERED
 }
