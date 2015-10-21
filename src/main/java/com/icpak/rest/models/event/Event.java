@@ -40,7 +40,6 @@ import com.workpoint.icpak.shared.model.events.EventDto;
 @Entity
 @Table(name = "event")
 public class Event extends PO {
-
 	/**	
 	 * 
 	 */

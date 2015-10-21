@@ -17,13 +17,13 @@ import com.icpak.rest.models.cpd.CPD;
 import com.icpak.rest.models.event.Delegate;
 import com.icpak.rest.models.event.Event;
 import com.icpak.rest.models.membership.Member;
-import com.icpak.rest.models.membership.MembershipStatus;
 import com.workpoint.icpak.server.util.DateUtils;
 import com.workpoint.icpak.shared.model.CPDCategory;
 import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.shared.model.CPDStatus;
 import com.workpoint.icpak.shared.model.CPDSummaryDto;
 import com.workpoint.icpak.shared.model.MemberStanding;
+import com.workpoint.icpak.shared.model.MembershipStatus;
 import com.workpoint.icpak.shared.model.events.AttendanceStatus;
 
 @Transactional
@@ -176,7 +176,8 @@ public class CPDDaoHelper {
 	 * @param memberRefId
 	 * @return true if member meets all requirements
 	 */
-	public boolean isInGoodStanding(String memberRefId, List<String> messages) {
+	public boolean isInGoodStanding(String memberRefId, List<String> messages,
+			MemberStanding standing) {
 		boolean isGenerate = true;
 
 		Member member = dao.findByRefId(memberRefId, Member.class);
@@ -185,13 +186,14 @@ public class CPDDaoHelper {
 		 * Membership status must be Active
 		 */
 		MembershipStatus status = member.getMemberShipStatus();
+		standing.setMembershipStatus(status);
 		if (status != null) {
 			if (status != MembershipStatus.ACTIVE) {
 				isGenerate = false;
-				messages.add("Membership status is "
+				messages.add("Your Membership status is <strong>"
 						+ status.name()
-						+ ". "
-						+ "ICPAK Membership must be Active to get the certificate of good standing.");
+						+ "</strong>. "
+						+ "Membership must be <strong>Active</strong> be in good standing.");
 			}
 		} else {
 			isGenerate = false;
@@ -202,6 +204,8 @@ public class CPDDaoHelper {
 		 * Account Information - Statement Account balance must be <=100
 		 */
 		Double balance = statementHelper.getAccountBalance(memberRefId);
+		standing.setMemberBalance(balance);
+
 		if (balance > 100) {
 			isGenerate = false;
 			messages.add("Member account balance must be less than Ksh100.");
@@ -269,9 +273,10 @@ public class CPDDaoHelper {
 
 	public MemberStanding getMemberStanding(String memberId) {
 		List<String> messages = new ArrayList<>();
-		boolean isInGoodStanding = isInGoodStanding(memberId, messages);
-
 		MemberStanding standing = new MemberStanding();
+		boolean isInGoodStanding = isInGoodStanding(memberId, messages,
+				standing);
+
 		standing.setStanding(isInGoodStanding ? 1 : 0);
 		standing.setReasons(messages);
 

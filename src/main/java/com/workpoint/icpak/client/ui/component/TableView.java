@@ -62,7 +62,7 @@ public class TableView extends Composite {
 
 	public TableView() {
 		initWidget(uiBinder.createAndBindUi(this));
-		setSearchSection(false);
+		setSearchSectionVisible(false);
 		setDatesVisible(false);
 	}
 
@@ -70,7 +70,7 @@ public class TableView extends Composite {
 		setHeaders(null, names);
 	}
 
-	public void setSearchVisible(boolean show) {
+	public void setSearchFieldVisible(boolean show) {
 		if (show) {
 			panelSearch.setVisible(true);
 		} else {
@@ -235,7 +235,7 @@ public class TableView extends Composite {
 		}
 	}
 
-	public void setSearchSection(Boolean status) {
+	public void setSearchSectionVisible(Boolean status) {
 		if (status) {
 			divSearch.removeClassName("hide");
 		} else {

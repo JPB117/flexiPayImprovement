@@ -38,8 +38,8 @@ public class BookingsView extends ViewImpl implements
 	@Inject
 	public BookingsView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
-		tblEvents.setHeaders(Arrays.asList("Date", "Event Name", "Location",
-				"Event Status", "CPD Hours", "Attendance", "Payment",
+		tblEvents.setHeaders(Arrays.asList("Event Dates", "Event Name",
+				"Event Location", "CPD Hours", "Payment Status",
 				"Accommodation"));
 	}
 
@@ -59,9 +59,7 @@ public class BookingsView extends ViewImpl implements
 							+ MONTHDAYYEARFORMAT.format(dto.getEndDate())),
 							new InlineLabel(dto.getEventName()),
 							new InlineLabel(dto.getLocation()),
-							new InlineLabel(dto.getEventStatus().name()),
 							new InlineLabel(dto.getCpdHours()),
-							setAttendance(dto.getAttendance()),
 							setPaymentStatus(dto.getPaymentStatus()),
 							new InlineLabel(dto.getAccommodation()));
 		}

@@ -30,8 +30,8 @@ public class CPDTable extends Composite {
 	public CPDTable() {
 		initWidget(uiBinder.createAndBindUi(this));
 		tblView.setAutoNumber(false);
-		tblView.setSearchSection(true);
-		tblView.setSearchVisible(false);
+		tblView.setSearchSectionVisible(true);
+		tblView.setSearchFieldVisible(false);
 		tblView.setDatesVisible(true);
 		createHeader(AppContext.isCurrentUserAdmin());
 	}

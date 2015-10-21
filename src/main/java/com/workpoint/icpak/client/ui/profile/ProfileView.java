@@ -69,7 +69,6 @@ public class ProfileView extends ViewImpl implements
 
 					}
 				});
-
 	}
 
 	@Override

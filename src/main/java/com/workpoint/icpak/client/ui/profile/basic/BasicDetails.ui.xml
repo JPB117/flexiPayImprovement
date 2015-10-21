@@ -3,12 +3,12 @@
 	xmlns:d='urn:import:com.workpoint.icpak.client.ui.component' xmlns:g="urn:import:com.google.gwt.user.client.ui"
 	xmlns:form='urn:import:com.workpoint.icpak.client.ui.membership.form'>
 	<g:HTMLPanel>
-
+		<br/>
 		<div class="row">
 			<div class="row">
 				<div class="col-sm-12">
 					<d:ActionLink
-						styleName="btn btn-next btn-fill btn-default btn-wd btn-sm pull-right"
+						styleName="btn btn-next btn-fill btn-default btn-wd btn-sm pull-left"
 						ui:field="aEdit">
 						<i class="fa fa-pencil"></i>
 						Edit Details

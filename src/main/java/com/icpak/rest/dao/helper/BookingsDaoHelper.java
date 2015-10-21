@@ -490,10 +490,9 @@ public class BookingsDaoHelper {
 			String endDate = new SimpleDateFormat("dd/MM/yyyy").format(event
 					.getEndDate());
 			String smsMemssage = "Dear" + " " + delegate.getSurname() + ","
-					+ booking.getContact().getContactName()
-					+ " has booked you for " + event.getName()
-					+ " held between " + startDate + " to " + endDate
-					+ ".Call us for any query.";
+					+ "Thank you for booking for the " + event.getName()
+					+ ". Your booking status is NOT PAID. Your ERN No. is "
+					+ delegate.getErn();
 
 			if (delegate.getMemberRefId() != null) {
 				Member member = memberDao.findByRefId(
@@ -562,26 +561,9 @@ public class BookingsDaoHelper {
 					Member.class);
 			Event event = dao
 					.findByRefId(delegateDto.getEventId(), Event.class);
-
-			String startDate = new SimpleDateFormat("dd/MM/yyyy").format(event
-					.getStartDate());
-			String endDate = new SimpleDateFormat("dd/MM/yyyy").format(event
-					.getEndDate());
-			String smsMemssage = "Dear"
-					+ " "
-					+ delegateDto.getSurname()
-					+ ",You have been marked as "
-					+ delegateDto.getAttendance().getDisplayName()
-							.toLowerCase()
-					+ " for "
-					+ event.getName()
-					+ " held between "
-					+ startDate
-					+ " to "
-					+ endDate
-					+ (delegateDto.getAttendance() == AttendanceStatus.ATTENDED ? ". You have earned "
-							+ event.getCpdHours() + " Hrs."
-							: "");
+			String smsMemssage = "Dear" + " " + delegateDto.getSurname()
+					+ ",Thank you for attending the " + event.getName() + "."
+					+ "Your ERN No. is " + delegate.getErn();
 			smsIntergration
 					.send(member.getUser().getPhoneNumber(), smsMemssage);
 		}

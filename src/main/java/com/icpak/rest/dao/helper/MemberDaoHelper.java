@@ -32,8 +32,8 @@ import com.icpak.rest.exceptions.ServiceException;
 import com.icpak.rest.models.ErrorCodes;
 import com.icpak.rest.models.auth.User;
 import com.icpak.rest.models.membership.Member;
-import com.icpak.rest.models.membership.MembershipStatus;
 import com.workpoint.icpak.shared.model.MemberDto;
+import com.workpoint.icpak.shared.model.MembershipStatus;
 
 @Transactional
 public class MemberDaoHelper {

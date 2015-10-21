@@ -179,7 +179,6 @@ public class LoginPresenter extends
 									onLoginCallSucceeded(result
 											.getCurrentUserDto());
 								}
-								getView().clearLoginProgress();
 							}
 
 							@Override

@@ -20,12 +20,11 @@ import com.icpak.rest.models.auth.User;
 import com.icpak.rest.models.base.PO;
 import com.wordnik.swagger.annotations.ApiModel;
 import com.workpoint.icpak.shared.model.MemberDto;
+import com.workpoint.icpak.shared.model.MembershipStatus;
 
 @ApiModel(value = "Member Model", description = "ICPAK Member Model")
-
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-
 @Entity
 @Table
 public class Member extends PO {
@@ -78,7 +77,6 @@ public class Member extends PO {
 		dto.setRefId(getRefId());
 		dto.setUserId(userRefId);
 		dto.setMemberNo(memberNo);
-
 		return dto;
 	}
 
@@ -130,7 +128,8 @@ public class Member extends PO {
 		return goodStandingCerts;
 	}
 
-	public void setGoodStandingCerts(Set<GoodStandingCertificate> goodStandingCerts) {
+	public void setGoodStandingCerts(
+			Set<GoodStandingCertificate> goodStandingCerts) {
 		this.goodStandingCerts = goodStandingCerts;
 	}
 
