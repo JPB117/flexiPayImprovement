@@ -16,9 +16,6 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
-
 import com.icpak.rest.models.auth.User;
 import com.icpak.rest.models.base.PO;
 import com.wordnik.swagger.annotations.ApiModel;
@@ -28,7 +25,6 @@ import com.workpoint.icpak.shared.model.MembershipStatus;
 @ApiModel(value = "Member Model", description = "ICPAK Member Model")
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-@JsonSerialize(include = Inclusion.NON_NULL)
 @Entity
 @Table
 public class Member extends PO {
@@ -40,6 +36,7 @@ public class Member extends PO {
 	private String userRefId;
 	private String memberNo;
 	private Date registrationDate;
+	private Date lastUpdate;
 
 	@Column(nullable = false, columnDefinition = "int(1) not null default 0")
 	private int memberDisplinaryCase = 0;
@@ -47,7 +44,8 @@ public class Member extends PO {
 	/**
 	 * TODO - Link this to the membership approval process<br/>
 	 * - Also Link this to the membership annual renewal process.<br/>
-	 * - Check also whether Admin can deactivate account for whatever reason<br/>
+	 * - Check also whether Admin can deactivate account for whatever reason
+	 * <br/>
 	 */
 	@Enumerated(EnumType.STRING)
 	private MembershipStatus memberShipStatus;
@@ -134,4 +132,13 @@ public class Member extends PO {
 			Set<GoodStandingCertificate> goodStandingCerts) {
 		this.goodStandingCerts = goodStandingCerts;
 	}
+
+	public Date getLastUpdate() {
+		return lastUpdate;
+	}
+
+	public void setLastUpdate(Date lastUpdate) {
+		this.lastUpdate = lastUpdate;
+	}
+
 }

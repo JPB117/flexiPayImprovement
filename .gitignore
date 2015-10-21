@@ -4,3 +4,4 @@ target/
 wladek_pom.xml
 src/main/resources/META-INF/persistence.xml
 *.pdf
+.settings/

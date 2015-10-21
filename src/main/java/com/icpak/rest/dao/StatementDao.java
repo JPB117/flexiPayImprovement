@@ -31,6 +31,15 @@ public class StatementDao extends BaseDao {
 
 		return statement;
 	}
+	
+	public Statement getByEntryNo(String entryNo, boolean throwExceptionIfNull) {
+
+		Statement statement = getSingleResultOrNull(getEntityManager()
+				.createQuery("from Statement u where u.entryNo=:entryNo")
+				.setParameter("entryNo", entryNo));
+		
+		return statement;
+	}
 
 	public void createStatement(Statement statement) {
 		save(statement);

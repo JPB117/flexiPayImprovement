@@ -11,7 +11,6 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
-import com.sun.jersey.api.json.JSONConfiguration;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 import com.workpoint.icpak.shared.model.ApplicationType;
 
@@ -45,10 +44,9 @@ public class LMSIntegrationUtil {
 	}
 
 	private LMSIntegrationUtil() throws IOException {
-		DefaultClientConfig config = new DefaultClientConfig(
-				JAXBProviderImpl.class);
-		config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING,
-				Boolean.TRUE);
+		DefaultClientConfig config = new DefaultClientConfig();
+//		config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING,
+//				Boolean.TRUE);
 		jclient = Client.create(config);
 		jclient.setConnectTimeout(15000);
 

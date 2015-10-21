@@ -42,12 +42,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlTransient;
 
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.icpak.rest.models.base.ExpandTokens;
 import com.icpak.rest.models.base.PO;
 import com.icpak.rest.models.membership.Member;
@@ -66,7 +65,6 @@ import com.workpoint.icpak.shared.model.auth.AccountStatus;
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlSeeAlso({ BioData.class })
-@JsonSerialize(include = Inclusion.NON_NULL)
 @Entity
 @Table(name = "user", indexes = { @Index(columnList = "username", name = "idx_users_username")
 // ,@Index(columnList = "email", name = "idx_users_email")

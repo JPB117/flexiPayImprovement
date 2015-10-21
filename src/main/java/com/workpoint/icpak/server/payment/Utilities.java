@@ -9,7 +9,7 @@ public class Utilities {
     public static String CLIENT_SECRET = "2mPBZIXpzRtRHNPN76Xe1kSk";
     public static String DEVELOPER_EMAIL_ADDRESS ="717736851971-to50m7t8dqd96nb1f8spss316hbadhk6@developer.gserviceaccount.com";
 
-    public static String REDIRECT_URI = "http://localhost:8080/mjet/invite/validate.jsp";
+    public static String ERP_URI = "http://41.139.138.165/members/memberdata.php";
     public static String ACCESS_TOKEN_REQUEST_URL = "https://accounts.google.com/o/oauth2/token";
     public static String charset = "UTF-8";
 
