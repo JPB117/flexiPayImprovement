@@ -2,6 +2,7 @@ package com.icpak.rest.dao.helper;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -65,6 +66,9 @@ public class UsersDaoHelper {
 	@Inject
 	ApplicationSettings settings;
 
+	@Inject
+	MemberDaoHelper memberDaoHelper;
+
 	/**
 	 * System User
 	 * 
@@ -96,7 +100,8 @@ public class UsersDaoHelper {
 
 	private void sendActivationEmail(User user) {
 		String subject = "Welcome to ICPAK Portal!";
-		String link = settings.getApplicationPath() + "#activateacc;uid="+user.getRefId();
+		String link = settings.getApplicationPath() + "#activateacc;uid="
+				+ user.getRefId();
 		String body = "Dear User,"
 				+ "<br/>An account has been created for you onthe ICPAK portal. "
 				+ "You will need to reset your password on the portal using the following details."
@@ -142,8 +147,8 @@ public class UsersDaoHelper {
 		po.setEmail(dto.getEmail());
 		// po.setPassword(dto.getPassword());
 
-		//We do not update password here :Duggan 21/09/2015 
-		//updatePassword(userId, dto.getPassword());
+		// We do not update password here :Duggan 21/09/2015
+		// updatePassword(userId, dto.getPassword());
 
 		if (po.getUserData() == null) {
 			po.setUserData(dto);
@@ -362,6 +367,20 @@ public class UsersDaoHelper {
 					action.getLoggedInCookie(), userDto);
 			userDto.setApplicationRefId(getApplicationRefId(userDto.getRefId()));
 			userDto.setMemberRefId(dao.getMemberRefId(userDto.getRefId()));
+
+			// Update Member Records and Statements
+			try {
+				memberDaoHelper.updateMemberRecord(userDto.getMemberRefId());
+			} catch (IllegalStateException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 		CurrentUserDto currentUserDto = new CurrentUserDto(isLoggedIn, userDto);

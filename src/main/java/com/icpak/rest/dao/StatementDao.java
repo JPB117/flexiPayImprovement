@@ -31,18 +31,13 @@ public class StatementDao extends BaseDao {
 
 		return statement;
 	}
-	
+
 	public Statement getByEntryNo(String entryNo, boolean throwExceptionIfNull) {
 
 		Statement statement = getSingleResultOrNull(getEntityManager()
 				.createQuery("from Statement u where u.entryNo=:entryNo")
 				.setParameter("entryNo", entryNo));
-		
-		if (throwExceptionIfNull && statement == null) {
-			throw new ServiceException(ErrorCodes.NOTFOUND, "Statement", "'"
-					+ entryNo + "'");
-		}
-		
+
 		return statement;
 	}
 
@@ -177,32 +172,32 @@ public class StatementDao extends BaseDao {
 	}
 
 	public StatementDto getBalanceCD(String memberNo, Date startDate) {
-		
-//		System.err.println("MemberNo = "+memberNo+" startDate="+startDate);
+
+		// System.err.println("MemberNo = "+memberNo+" startDate="+startDate);
 		String sql = "select sum(amount) from statement where customerNo=:memberNo ";
-		if(startDate!=null){
-			sql = sql+ "and postingDate<:startDate";
+		if (startDate != null) {
+			sql = sql + "and postingDate<:startDate";
 		}
-				
-				
-		Query query = getEntityManager().createNativeQuery(sql).setParameter("memberNo", memberNo);
-		if(startDate!=null){
+
+		Query query = getEntityManager().createNativeQuery(sql).setParameter(
+				"memberNo", memberNo);
+		if (startDate != null) {
 			query.setParameter("startDate", startDate);
 		}
-		
+
 		List<Double> rows = getResultList(query);
-		
-		StatementDto dto  = new StatementDto();
+
+		StatementDto dto = new StatementDto();
 		dto.setCustomerNo(memberNo);
 		dto.setDueDate(startDate);
 		dto.setDescription("Balance C/D");
 		dto.setDocumentType("Balance C/D");
 		dto.setPostingDate(startDate);
-		
-		for(Double value: rows){
-			dto.setAmount(value==null? 0.0 : value);
+
+		for (Double value : rows) {
+			dto.setAmount(value == null ? 0.0 : value);
 		}
-		
+
 		return dto;
 	}
 }

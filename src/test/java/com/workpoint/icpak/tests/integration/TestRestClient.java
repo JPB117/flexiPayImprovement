@@ -34,13 +34,13 @@ public class TestRestClient extends AbstractDaoTest{
 		UriBuilder l;
 	}
 	
-	@Ignore
+	@Test
 	public void testMemberRecord() throws JSONException, IllegalStateException, IOException, ParseException{
 		String memberRefId = "xi7Qdd8VbSQyGpiL";
 		memberDaoHelper.updateMemberRecord(memberRefId);
 	}
 	
-	@Test
+	@Ignore
 	public void testMemberStementRecord() throws JSONException, IllegalStateException, IOException, ParseException, URISyntaxException, com.amazonaws.util.json.JSONException{
 		String memberRefId = "P7Et9RjniWTAi2ik";
 		StatementDaoHelper.updateStatementsRecord(memberRefId);
