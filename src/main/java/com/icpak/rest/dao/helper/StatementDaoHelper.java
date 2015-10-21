@@ -159,10 +159,10 @@ public class StatementDaoHelper {
 		List<Statement> memberStatements = getMemberStatementsFromErp(memberInDb);
 
 		for (Statement statement : memberStatements) {
-			logger.info("=== >><<<<< === Ducument No from erp statements ==" + statement.getDocumentNo());
+			logger.info("=== >><<<<< === Ducument No from erp statements ==" + statement.getEntryNo());
 			
-			Statement statementInDb = statementDao.getByEntryNo(statement.getCustomerNo(), true);
-			
+			Statement statementInDb = statementDao.getByEntryNo(statement.getEntryNo(), true);
+						
 			if(statementInDb != null ){
 				
 				statementInDb.setEntryNo(statement.getEntryNo());

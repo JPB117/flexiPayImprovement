@@ -38,6 +38,11 @@ public class StatementDao extends BaseDao {
 				.createQuery("from Statement u where u.entryNo=:entryNo")
 				.setParameter("entryNo", entryNo));
 		
+		if (throwExceptionIfNull && statement == null) {
+			throw new ServiceException(ErrorCodes.NOTFOUND, "Statement", "'"
+					+ entryNo + "'");
+		}
+		
 		return statement;
 	}
 
