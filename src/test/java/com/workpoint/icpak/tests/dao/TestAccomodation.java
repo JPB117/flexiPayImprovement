@@ -16,7 +16,7 @@ public class TestAccomodation extends AbstractDaoTest {
 
 	@Test
 	public void testCreateAccomodation() {
-		String eventId = "PrjIf8x4RIDaPZIv";
+		String eventId = "Jx4Ca6HpOutf2ic7";
 
 		AccommodationDto accommodationDto = new AccommodationDto();
 		accommodationDto.setHotel("Nyali");

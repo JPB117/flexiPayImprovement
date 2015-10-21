@@ -85,8 +85,6 @@ public class CreateAccomodation extends Composite {
 		accommodation.setFee(new Double(txtPrice.getValue()));
 		accommodation.setHotel(txtHotelName.getValue());
 		accommodation.setNights(new Integer(txtNights.getValue()));
-		//accommodation.setDescription(txt);
-		
 		return accommodation;
 	}
 

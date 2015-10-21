@@ -153,7 +153,6 @@ public class StatementDaoHelper {
 	 * @throws JSONException
 	 */
 	public void updateStatementsRecord(String memberRefId) throws URISyntaxException, ParseException, JSONException {
-
 		Member memberInDb = statementDao.findByRefId(memberRefId, Member.class);
 
 		List<Statement> memberStatements = getMemberStatementsFromErp(memberInDb);
