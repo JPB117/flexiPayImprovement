@@ -3,6 +3,17 @@
 	xmlns:t='urn:import:com.workpoint.icpak.client.ui.component.tabs'
 	xmlns:d='urn:import:com.workpoint.icpak.client.ui.component' xmlns:g="urn:import:com.google.gwt.user.client.ui"
 	xmlns:up='urn:import:com.workpoint.icpak.client.ui.upload.custom'>
+	<ui:style>
+	.help-icon {
+		padding-left: 10px;
+		font-size: 18px;
+		color: gray;
+	}
+	
+	.help-icon:hover {
+		text-decoration: none;
+	}
+	</ui:style>
 	<g:HTMLPanel>
 		<g:HTMLPanel ui:field="divProfileContent" styleName="col-xs-12">
 			<g:HTMLPanel styleName="row">
@@ -91,7 +102,7 @@
 										<div ui:field="divPayNow">
 											<div class="row">
 												Account Balance:
-												<span ui:field="spnBalance"></span>
+												<span ui:field="spnBalance" class="text-muted"></span>
 												<d:ActionLink ui:field="aPayNow" styleName="hide"></d:ActionLink>
 											</div>
 										</div>
@@ -99,22 +110,25 @@
 										<div ui:field="divMembershipStatus">
 											<div class="row">
 												<br />
-												Account Status:
+												Standing Status:
 												<div class="label label-success" ui:field="divAccountStatus">
 													<i class="fa fa-check hide" ui:field="iconSuccess"></i>
 													<i class="fa fa-times-circle hide" ui:field="iconFail"></i>
 													<span ui:field="spnAccountStatus">
 													</span>
 												</div>
-												<span ui:field="spnHelpIcon" class="hide fa fa-question-circle"
-													data-toggle="popover" data-trigger="hover" title="Reasons"></span>
-
-												<br />
+												<a ui:field="spnHelpIcon"
+													class="hide fa fa-question-circle popover-icon {style.help-icon}"
+													data-toggle="popover" data-trigger="hover" title="Reasons for this:"></a>
+												<d:PopOver></d:PopOver>
+											</div>
+											<div class="row">
 												<br />
 												<d:ActionLink ui:field="aDownloadCert"
 													styleName="btn btn-success btn-fill">Download
 													Certificate</d:ActionLink>
 											</div>
+
 										</div>
 
 									</g:HTMLPanel>

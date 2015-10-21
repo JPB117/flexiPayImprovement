@@ -389,7 +389,6 @@ public class ProfilePresenter
 										o2.getDisplayName());
 							}
 						});
-
 						memberForm.setCountries(countries);
 						// getView().setCountries(countries);
 					};

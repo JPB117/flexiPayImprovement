@@ -3,7 +3,7 @@
 	xmlns:d='urn:import:com.workpoint.icpak.client.ui.component' xmlns:g="urn:import:com.google.gwt.user.client.ui"
 	xmlns:form='urn:import:com.workpoint.icpak.client.ui.membership.form'>
 	<g:HTMLPanel>
-
+		<br/>
 		<div class="row">
 			<div class="row">
 				<div class="col-sm-12">

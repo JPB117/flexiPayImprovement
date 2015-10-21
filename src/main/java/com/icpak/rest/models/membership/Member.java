@@ -23,17 +23,16 @@ import com.icpak.rest.models.auth.User;
 import com.icpak.rest.models.base.PO;
 import com.wordnik.swagger.annotations.ApiModel;
 import com.workpoint.icpak.shared.model.MemberDto;
+import com.workpoint.icpak.shared.model.MembershipStatus;
 
-@ApiModel(value="Member Model", description="ICPAK Member Model")
-
+@ApiModel(value = "Member Model", description = "ICPAK Member Model")
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-@JsonSerialize(include=Inclusion.NON_NULL)
-
+@JsonSerialize(include = Inclusion.NON_NULL)
 @Entity
 @Table
-public class Member extends PO{
-	
+public class Member extends PO {
+
 	/**
 	 * 
 	 */
@@ -41,10 +40,10 @@ public class Member extends PO{
 	private String userRefId;
 	private String memberNo;
 	private Date registrationDate;
-	
-	@Column(nullable=false, columnDefinition="int(1) not null default 0")
-	private int memberDisplinaryCase=0;
-	
+
+	@Column(nullable = false, columnDefinition = "int(1) not null default 0")
+	private int memberDisplinaryCase = 0;
+
 	/**
 	 * TODO - Link this to the membership approval process<br/>
 	 * - Also Link this to the membership annual renewal process.<br/>
@@ -52,21 +51,21 @@ public class Member extends PO{
 	 */
 	@Enumerated(EnumType.STRING)
 	private MembershipStatus memberShipStatus;
-	
-	@OneToMany(mappedBy="member")
+
+	@OneToMany(mappedBy = "member")
 	private Set<GoodStandingCertificate> goodStandingCerts = new HashSet<>();
-	
+
 	@OneToOne
-	@JoinColumn(name="userId")
+	@JoinColumn(name = "userId")
 	private User user;
 
 	public Member() {
 	}
-	
+
 	public Member(String userId) {
 		this.userRefId = userId;
 	}
-	
+
 	public String getUserRefId() {
 		return userRefId;
 	}
@@ -80,7 +79,6 @@ public class Member extends PO{
 		dto.setRefId(getRefId());
 		dto.setUserId(userRefId);
 		dto.setMemberNo(memberNo);
-		
 		return dto;
 	}
 
@@ -121,18 +119,19 @@ public class Member extends PO{
 	}
 
 	public boolean hasDisplinaryCase() {
-		return memberDisplinaryCase==1;
+		return memberDisplinaryCase == 1;
 	}
 
 	public void setMemberDisplinaryCase(boolean hasDisplinaryCase) {
-		this.memberDisplinaryCase = hasDisplinaryCase? 1: 0;
+		this.memberDisplinaryCase = hasDisplinaryCase ? 1 : 0;
 	}
 
 	public Set<GoodStandingCertificate> getGoodStandingCerts() {
 		return goodStandingCerts;
 	}
 
-	public void setGoodStandingCerts(Set<GoodStandingCertificate> goodStandingCerts) {
+	public void setGoodStandingCerts(
+			Set<GoodStandingCertificate> goodStandingCerts) {
 		this.goodStandingCerts = goodStandingCerts;
 	}
 }

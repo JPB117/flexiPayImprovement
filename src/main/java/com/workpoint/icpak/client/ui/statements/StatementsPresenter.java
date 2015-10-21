@@ -37,7 +37,7 @@ import com.workpoint.icpak.client.ui.component.Grid;
 import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
 import com.workpoint.icpak.client.ui.events.ProcessingEvent;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
-import com.workpoint.icpak.client.ui.security.LoginGateKeeper;
+import com.workpoint.icpak.client.ui.security.MemberGateKeeper;
 import com.workpoint.icpak.client.ui.util.DateRange;
 import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.api.MemberResource;
@@ -70,13 +70,13 @@ public class StatementsPresenter
 
 	@ProxyCodeSplit
 	@NameToken(NameTokens.statements)
-	@UseGatekeeper(LoginGateKeeper.class)
+	@UseGatekeeper(MemberGateKeeper.class)
 	public interface IStatementsProxy extends
 			TabContentProxyPlace<StatementsPresenter> {
 	}
 
 	@TabInfo(container = HomePresenter.class)
-	static TabData getTabLabel(LoginGateKeeper gateKeeper) {
+	static TabData getTabLabel(MemberGateKeeper gateKeeper) {
 		TabDataExt data = new TabDataExt("Statements", "fa fa-briefcase", 8,
 				gateKeeper, true);
 		return data;

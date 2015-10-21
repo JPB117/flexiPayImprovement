@@ -127,10 +127,9 @@ public class StatementsView extends ViewImpl implements
 		};
 
 		grid.addColumn(date, "Date");
-		grid.addColumn(type, "Doc Type");
-		grid.addColumn(amount, "Amount");
 		grid.addColumn(description, "Description", "150px");
-		grid.addColumn(dueDate, "Due Date");
+		grid.addColumn(amount, "Amount");
+		grid.addColumn(type, "Doc Type");
 
 	}
 

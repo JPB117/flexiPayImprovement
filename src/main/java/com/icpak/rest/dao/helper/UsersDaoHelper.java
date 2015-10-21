@@ -60,10 +60,8 @@ public class UsersDaoHelper {
 	TransactionsDao trxDao;
 	@Inject
 	Authenticator authenticator;
-
 	@Inject
 	UserSessionDao loginCookieDao;
-
 	@Inject
 	ApplicationSettings settings;
 

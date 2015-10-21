@@ -38,6 +38,7 @@ import com.workpoint.icpak.client.ui.profile.education.EducationDetails;
 import com.workpoint.icpak.client.ui.profile.specialization.SpecializationDetails;
 import com.workpoint.icpak.client.ui.profile.training.TrainingDetails;
 import com.workpoint.icpak.client.ui.upload.custom.Uploader;
+import com.workpoint.icpak.client.ui.util.NumberUtils;
 import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.model.ApplicationFormEducationalDto;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
@@ -104,12 +105,17 @@ public class ProfileWidget extends Composite {
 	@UiField
 	SpanElement spnMembershipNo;
 	@UiField
+	SpanElement spnMembershipStatus;
+	@UiField
+	SpanElement spnBalance;
+
+	@UiField
 	SpanElement spnAccountStatus;
 	@UiField
 	DivElement divAccountStatus;
 
 	@UiField
-	SpanElement spnHelpIcon;
+	Element spnHelpIcon;
 
 	@UiField
 	ProgressBar progressBar;
@@ -257,6 +263,7 @@ public class ProfileWidget extends Composite {
 		uploader.setContext(ctx);
 
 		spnMembershipNo.setInnerText(user.getUser().getMemberNo());
+		spnMembershipStatus.setInnerText(user.getUser().getMemberNo());
 
 		setUserImage(user.getUser().getRefId());
 	}
@@ -352,15 +359,25 @@ public class ProfileWidget extends Composite {
 	}
 
 	public void bindMemberStanding(MemberStanding standing) {
+		spnMembershipStatus.setInnerText(standing.getMembershipStatus()
+				.getDisplayName());
+
+		spnBalance.setInnerText(NumberUtils.CURRENCYFORMAT.format(standing
+				.getMemberBalance()));
+
 		if (standing.getStanding() == 0) {
-			String info = "";
+			String info = "<ul>";
 			for (String reason : standing.getReasons()) {
-				info = info.concat(reason + "\n");
+				info = info.concat("<li>");
+				info = info.concat(reason + "</li>");
 			}
+			info = info.concat("</ul>");
+
 			spnAccountStatus.setInnerText("Not In GoodStanding");
 			divAccountStatus.addClassName("label-danger");
 			divAccountStatus.removeClassName("label-success");
 			spnHelpIcon.setAttribute("data-content", info);
+			spnHelpIcon.removeClassName("hide");
 			iconFail.removeClassName("hide");
 			iconSuccess.addClassName("hide");
 			aDownloadCert.setVisible(false);
@@ -371,6 +388,10 @@ public class ProfileWidget extends Composite {
 			divAccountStatus.removeClassName("label-danger");
 			iconFail.addClassName("hide");
 			iconSuccess.removeClassName("hide");
+			spnHelpIcon
+					.setAttribute(
+							"data-content",
+							"Your account is in Good-Standing, You can download proceed to download the certificate for your own use.");
 			aDownloadCert.setVisible(true);
 		}
 	}
