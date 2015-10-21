@@ -86,4 +86,10 @@ public class EnquiriesDaoHelper {
 		
 		return  result;
 	}
+	
+	
+	public List<EnquiriesDialogue> getEnquiryDialogue(String enquiryRefId ){
+		Enquiries enquiryInDb  = dao.findByRefId(enquiryRefId, Enquiries.class);
+		return enquiryInDb.getDialogue();
+	}
 }
