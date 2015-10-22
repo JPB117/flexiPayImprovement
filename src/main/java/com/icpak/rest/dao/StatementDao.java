@@ -20,29 +20,21 @@ public class StatementDao extends BaseDao {
 
 	public Statement getByStatementId(String refId, boolean throwExceptionIfNull) {
 
-		Statement statement = getSingleResultOrNull(getEntityManager()
-				.createQuery("from Statement u where u.refId=:refId")
-				.setParameter("refId", refId));
+		Statement statement = getSingleResultOrNull(
+				getEntityManager().createQuery("from Statement u where u.refId=:refId").setParameter("refId", refId));
 
 		if (throwExceptionIfNull && statement == null) {
-			throw new ServiceException(ErrorCodes.NOTFOUND, "Statement", "'"
-					+ refId + "'");
+			throw new ServiceException(ErrorCodes.NOTFOUND, "Statement", "'" + refId + "'");
 		}
 
 		return statement;
 	}
-	
+
 	public Statement getByEntryNo(String entryNo, boolean throwExceptionIfNull) {
 
 		Statement statement = getSingleResultOrNull(getEntityManager()
-				.createQuery("from Statement u where u.entryNo=:entryNo")
-				.setParameter("entryNo", entryNo));
-		
-		if (throwExceptionIfNull && statement == null) {
-			throw new ServiceException(ErrorCodes.NOTFOUND, "Statement", "'"
-					+ entryNo + "'");
-		}
-		
+				.createQuery("from Statement u where u.entryNo=:entryNo").setParameter("entryNo", entryNo));
+
 		return statement;
 	}
 
@@ -55,8 +47,7 @@ public class StatementDao extends BaseDao {
 	}
 
 	public int getStatementCount() {
-		Number number = getSingleResultOrNull(getEntityManager()
-				.createNativeQuery("select count(*) from statement"));
+		Number number = getSingleResultOrNull(getEntityManager().createNativeQuery("select count(*) from statement"));
 
 		return number.intValue();
 	}
@@ -68,14 +59,13 @@ public class StatementDao extends BaseDao {
 	 * @param limit
 	 * @return
 	 */
-	public List<Statement> getAllStatements(Date startDate, Date endDate,
-			Integer offset, Integer limit) {
+	public List<Statement> getAllStatements(Date startDate, Date endDate, Integer offset, Integer limit) {
 		return getAllStatements(null, startDate, endDate, offset, limit);
 
 	}
 
-	public List<Statement> getAllStatements(String memberRegistrationNo,
-			Date startDate, Date endDate, Integer offset, Integer limit) {
+	public List<Statement> getAllStatements(String memberRegistrationNo, Date startDate, Date endDate, Integer offset,
+			Integer limit) {
 
 		StringBuffer sql = new StringBuffer("FROM Statement");
 
@@ -123,12 +113,12 @@ public class StatementDao extends BaseDao {
 		return getResultList(query, offset, limit);
 
 		// return getResultList(getEntityManager()
-		// .createQuery("FROM Statement where customerNo=:regNo order by postingdate desc")
+		// .createQuery("FROM Statement where customerNo=:regNo order by
+		// postingdate desc")
 		// .setParameter("regNo", memberRegistrationNo), offset, limit);
 	}
 
-	public Integer getStatementCount(String memberNo, Date startDate,
-			Date endDate) {
+	public Integer getStatementCount(String memberNo, Date startDate, Date endDate) {
 		Number count = null;
 
 		StringBuffer sql = new StringBuffer("select count(*) from statement");
@@ -177,32 +167,31 @@ public class StatementDao extends BaseDao {
 	}
 
 	public StatementDto getBalanceCD(String memberNo, Date startDate) {
-		
-//		System.err.println("MemberNo = "+memberNo+" startDate="+startDate);
+
+		// System.err.println("MemberNo = "+memberNo+" startDate="+startDate);
 		String sql = "select sum(amount) from statement where customerNo=:memberNo ";
-		if(startDate!=null){
-			sql = sql+ "and postingDate<:startDate";
+		if (startDate != null) {
+			sql = sql + "and postingDate<:startDate";
 		}
-				
-				
+
 		Query query = getEntityManager().createNativeQuery(sql).setParameter("memberNo", memberNo);
-		if(startDate!=null){
+		if (startDate != null) {
 			query.setParameter("startDate", startDate);
 		}
-		
+
 		List<Double> rows = getResultList(query);
-		
-		StatementDto dto  = new StatementDto();
+
+		StatementDto dto = new StatementDto();
 		dto.setCustomerNo(memberNo);
 		dto.setDueDate(startDate);
 		dto.setDescription("Balance C/D");
 		dto.setDocumentType("Balance C/D");
 		dto.setPostingDate(startDate);
-		
-		for(Double value: rows){
-			dto.setAmount(value==null? 0.0 : value);
+
+		for (Double value : rows) {
+			dto.setAmount(value == null ? 0.0 : value);
 		}
-		
+
 		return dto;
 	}
 }
