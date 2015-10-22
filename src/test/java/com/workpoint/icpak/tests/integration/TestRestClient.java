@@ -17,31 +17,35 @@ import com.icpak.rest.dao.helper.MemberDaoHelper;
 import com.icpak.rest.dao.helper.StatementDaoHelper;
 import com.workpoint.icpak.tests.base.AbstractDaoTest;
 
-public class TestRestClient extends AbstractDaoTest{
+public class TestRestClient extends AbstractDaoTest {
 	@Inject
 	MemberDaoHelper memberDaoHelper;
-	
-	@Inject StatementDaoHelper StatementDaoHelper;
+
+	@Inject
+	StatementDaoHelper StatementDaoHelper;
 
 	@Ignore
-	public void getMember(){
+	public void getMember() {
 		String url = "http://41.139.138.165/members/memberdata.php";
 		Map<String, String> params = new HashMap<>();
 		params.put("type", "member");
 		params.put("reg_no", "1");
-//		String json = new RestClient().executeHttpCall(url, params);
-//		System.err.println(json);
+		// String json = new RestClient().executeHttpCall(url, params);
+		// System.err.println(json);
 		UriBuilder l;
 	}
-	
+
 	@Test
-	public void testMemberRecord() throws JSONException, IllegalStateException, IOException, ParseException{
+	public void testMemberRecord() throws JSONException, IllegalStateException,
+			IOException, ParseException {
 		String memberRefId = "qQGQ7vCZv7nejy3l";
-		memberDaoHelper.updateMemberRecord(memberRefId);
+		// memberDaoHelper.updateMemberRecord(memberRefId);
 	}
-	
+
 	@Ignore
-	public void testMemberStementRecord() throws JSONException, IllegalStateException, IOException, ParseException, URISyntaxException, com.amazonaws.util.json.JSONException{
+	public void testMemberStementRecord() throws JSONException,
+			IllegalStateException, IOException, ParseException,
+			URISyntaxException, com.amazonaws.util.json.JSONException {
 		String memberRefId = "xi7Qdd8VbSQyGpiL";
 		StatementDaoHelper.updateStatementsRecord(memberRefId);
 	}

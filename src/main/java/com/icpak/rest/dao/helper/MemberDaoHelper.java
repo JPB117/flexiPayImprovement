@@ -156,21 +156,11 @@ public class MemberDaoHelper {
 						+ ((today.getTime() - memberInDb.getLastUpdate()
 								.getTime()) - (48 * 60 * 1000)));
 
-				if (today.getTime() - memberInDb.getLastUpdate().getTime() > 48 * 60 * 1000) {
-
-					logger.fatal(" ==== SUCCESS === Updated from ERP == ");
-
-					try {
-						// update member details
-						memberDao.updateMember(getErpRequest(memberInDb));
-						try {
-							statementDao.updateStatementsRecord(memberRefId);
-						} catch (JSONException e) {
-							e.printStackTrace();
-						}
-					} catch (URISyntaxException e) {
-						e.printStackTrace();
-					}
+				if (forceRefresh) {
+					makeErpRequest(memberInDb);
+				} else if (today.getTime()
+						- memberInDb.getLastUpdate().getTime() > 48 * 60 * 1000) {
+					makeErpRequest(memberInDb);
 				} else {
 					logger.fatal(" ==== FAILED === Last check is not greater than 2 days == ");
 				}
@@ -181,6 +171,23 @@ public class MemberDaoHelper {
 			ex.printStackTrace();
 		}
 
+	}
+
+	public void makeErpRequest(Member memberInDb) throws ParseException,
+			IllegalStateException, IOException {
+		logger.fatal(" ==== SUCCESS === Updated from ERP == ");
+
+		try {
+			// update member details
+			memberDao.updateMember(getErpRequest(memberInDb));
+			try {
+				statementDao.updateStatementsRecord(memberInDb.getRefId());
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public Member getErpRequest(Member memberInDb) throws URISyntaxException,
@@ -243,11 +250,11 @@ public class MemberDaoHelper {
 			memberInDb.setRegistrationDate(formatter.parse((jObject
 					.getString("Date Registered"))));
 
-			if (jObject.getString("Status") == "0") {
+			if (jObject.getInt("Status") == 0) {
 				memberInDb.setMemberShipStatus(MembershipStatus.ACTIVE);
 			}
 
-			if (jObject.getString("Status") == "1") {
+			if (jObject.getInt("Status") == 1) {
 				memberInDb.setMemberShipStatus(MembershipStatus.INACTIVE);
 			}
 

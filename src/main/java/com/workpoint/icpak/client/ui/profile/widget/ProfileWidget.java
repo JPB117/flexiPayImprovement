@@ -269,8 +269,11 @@ public class ProfileWidget extends Composite {
 
 		spnMembershipNo.setInnerText(user.getUser().getMemberNo());
 		spnMembershipStatus.setInnerText(user.getUser().getMemberNo());
-		spnLastUpdated.setInnerText(DateUtils.CREATEDFORMAT.format(user
-				.getUser().getLastDateUpdateFromErp()));
+		
+		if (user.getUser().getLastDateUpdateFromErp() != null) {
+			spnLastUpdated.setInnerText(DateUtils.CREATEDFORMAT.format(user
+					.getUser().getLastDateUpdateFromErp()));
+		}
 
 		setUserImage(user.getUser().getRefId());
 	}
@@ -304,10 +307,6 @@ public class ProfileWidget extends Composite {
 		return divTabs.getActiveTab();
 	}
 
-	// public ApplicationFormHeaderDto getBasicDetails() {
-	// return basicDetail.getApplicationForm();
-	// }
-
 	public HasClickHandlers getSaveBasicDetailsButton() {
 		return basicDetail.getSaveButton();
 	}
@@ -318,7 +317,6 @@ public class ProfileWidget extends Composite {
 
 	public boolean isValid() {
 		if (getActiveTab() == 0) {
-			// BasicDetails
 			return basicDetail.isValid();
 		}
 		return false;

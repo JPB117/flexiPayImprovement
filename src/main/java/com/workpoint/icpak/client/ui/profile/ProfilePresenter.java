@@ -191,9 +191,10 @@ public class ProfilePresenter
 		getView().getErpRefreshButton().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				loadDataFromErp();
+				loadDataFromErp(true);
 			}
 		});
+
 	}
 
 	public void showPopUp(final Widget passedForm) {
@@ -368,6 +369,7 @@ public class ProfilePresenter
 	}
 
 	private void loadData() {
+		// Window.alert("Passed ERP Check");
 		getView().bindCurrentUser(currentUser);
 		loadDataFromErp(false);
 
@@ -380,12 +382,14 @@ public class ProfilePresenter
 	 * forceRefresh - Set it to true if you want to Override
 	 */
 	private void loadDataFromErp(boolean forceRefesh) {
+		fireEvent(new ProcessingEvent());
 		memberDelegate.withCallback(new AbstractAsyncCallback<Boolean>() {
 			@Override
 			public void onSuccess(Boolean hasLoaded) {
+				fireEvent(new ProcessingCompletedEvent());
 				// TODO Reload All Member Information
 				if (hasLoaded) {
-					loadData();
+					loadData(getApplicationRefId());
 				} else {
 					Window.alert("There was a problem loading ERP Data");
 				}
