@@ -39,7 +39,7 @@ public interface MemberResource extends BaseResource {
 	@GET
 	@Path("/{memberId}/loadFromErp")
 	public Boolean getDataFromErp(@PathParam("memberId") String memberId,
-			@PathParam("forceRefresh") Boolean forceRefresh);
+			@QueryParam("forceRefresh") Boolean forceRefresh);
 
 	@Path("/{memberId}/statements")
 	public StatementsResource statements(@PathParam("memberId") String memberId);

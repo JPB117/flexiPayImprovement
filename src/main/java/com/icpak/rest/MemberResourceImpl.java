@@ -76,7 +76,7 @@ public class MemberResourceImpl implements MemberResource {
 	@Path("/{memberId}/loadFromErp")
 	public Boolean getDataFromErp(
 			@ApiParam(value = "memberId", required = true) @PathParam("memberId") String memberId,
-			@PathParam("forceRefresh") Boolean forceRefresh) {
+			@QueryParam("forceRefresh") Boolean forceRefresh) {
 		return membersHelper.loadFromErp(memberId, forceRefresh);
 	}
 

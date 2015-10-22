@@ -157,9 +157,13 @@ public class MemberDaoHelper {
 								.getTime()) - (48 * 60 * 1000)));
 
 				if (forceRefresh) {
+					logger.fatal(" ==== FORCE REFRESH === Forced to refresh == "
+							+ forceRefresh);
 					makeErpRequest(memberInDb);
 				} else if (today.getTime()
 						- memberInDb.getLastUpdate().getTime() > 48 * 60 * 1000) {
+					logger.fatal(" ==== FORCE REFRESH === Forced to refresh == "
+							+ forceRefresh);
 					makeErpRequest(memberInDb);
 				} else {
 					logger.fatal(" ==== FAILED === Last check is not greater than 2 days == ");

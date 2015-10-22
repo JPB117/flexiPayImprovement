@@ -38,8 +38,8 @@ public class TestRestClient extends AbstractDaoTest {
 	@Test
 	public void testMemberRecord() throws JSONException, IllegalStateException,
 			IOException, ParseException {
-		String memberRefId = "qQGQ7vCZv7nejy3l";
-		// memberDaoHelper.updateMemberRecord(memberRefId);
+		String memberRefId = "LCJ4fe1eoOdxwq69";
+		memberDaoHelper.updateMemberRecord(memberRefId, true);
 	}
 
 	@Ignore

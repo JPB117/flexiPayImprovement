@@ -269,8 +269,10 @@ public class ProfileWidget extends Composite {
 
 		spnMembershipNo.setInnerText(user.getUser().getMemberNo());
 		spnMembershipStatus.setInnerText(user.getUser().getMemberNo());
-		
+
+		// Window.alert(user.getUser().getLastDateUpdateFromErp() + "");
 		if (user.getUser().getLastDateUpdateFromErp() != null) {
+
 			spnLastUpdated.setInnerText(DateUtils.CREATEDFORMAT.format(user
 					.getUser().getLastDateUpdateFromErp()));
 		}

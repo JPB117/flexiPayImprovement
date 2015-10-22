@@ -289,7 +289,7 @@ public class User extends PO {
 		dto.setStatus(status);
 
 		if (member != null) {
-			dto.setLastUpdateFromErp(member.getLastUpdate());
+			dto.setLastDateUpdateFromErp(member.getLastUpdate());
 		}
 
 		List<RoleDto> dtos = new ArrayList<>();
