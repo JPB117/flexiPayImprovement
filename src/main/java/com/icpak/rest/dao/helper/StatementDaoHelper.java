@@ -236,36 +236,49 @@ public class StatementDaoHelper {
 
 		assert result != null;
 		res = result.toString();
-
-		JSONObject jo = new JSONObject(res);
-
-		logger.error(" ===>>><<<< === jo " + jo.names().length());
-
+		
 		/**
-		 * Loop through the array json object
+		 * Check if the erp server returns null string
 		 */
-		for (int i = 0; i < jo.names().length(); i++) {
-			JSONObject jObject = (JSONObject) jo.getJSONObject(jo.names().getString(i));
+		if(res.equals("null")){
+			
+			logger.error(" ===>>><<<< === NO STATEMENTS FROM ERP ===>><<<>>== ");
+			
+		}else{
+			JSONObject jo = new JSONObject(res);
 
-			Statement erpMemberStatement = new Statement();
-
-			erpMemberStatement.setEntryNo(jObject.getString("EntryNo_"));
-			erpMemberStatement.setCustLedgerEntryNo(jObject.getString("Cust_LedgerEntryNo_"));
-			erpMemberStatement.setEntryType(jObject.getString("EntryType"));
-			erpMemberStatement.setPostingDate(formatter.parse(jObject.getString("PostingDate")));
-			erpMemberStatement.setDocumentType(jObject.getString("DocumentType"));
-			erpMemberStatement.setDocumentNo(jObject.getString("DocumentNo_"));
-			erpMemberStatement.setAmount(new Double(jObject.getString("Amount")));
-			erpMemberStatement.setDescription(jObject.getString("description"));
-			erpMemberStatement.setCustomerNo(jObject.getString("CustomerNo_"));
-			erpMemberStatement.setDueDate(formatter.parse(jObject.getString("due_date")));
+			logger.error(" ===>>><<<< === jo " + jo.names().length());
 
 			/**
-			 * Add this statement to list
+			 * Loop through the array json object
 			 */
-			memberStatements.add(erpMemberStatement);
+			for (int i = 0; i < jo.names().length(); i++) {
+				JSONObject jObject = (JSONObject) jo.getJSONObject(jo.names().getString(i));
 
+				Statement erpMemberStatement = new Statement();
+
+				erpMemberStatement.setEntryNo(jObject.getString("EntryNo_"));
+				erpMemberStatement.setCustLedgerEntryNo(jObject.getString("Cust_LedgerEntryNo_"));
+				erpMemberStatement.setEntryType(jObject.getString("EntryType"));
+				erpMemberStatement.setPostingDate(formatter.parse(jObject.getString("PostingDate")));
+				erpMemberStatement.setDocumentType(jObject.getString("DocumentType"));
+				erpMemberStatement.setDocumentNo(jObject.getString("DocumentNo_"));
+				erpMemberStatement.setAmount(new Double(jObject.getString("Amount")));
+				erpMemberStatement.setDescription(jObject.getString("description"));
+				erpMemberStatement.setCustomerNo(jObject.getString("CustomerNo_"));
+				erpMemberStatement.setDueDate(formatter.parse(jObject.getString("due_date")));
+
+				/**
+				 * Add this statement to list
+				 */
+				memberStatements.add(erpMemberStatement);
+
+			}
 		}
+		
+		logger.error(" ===>>><<<< === result " + res);
+
+		
 
 		return memberStatements;
 	}
