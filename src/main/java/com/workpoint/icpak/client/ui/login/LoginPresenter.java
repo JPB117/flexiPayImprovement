@@ -205,8 +205,6 @@ public class LoginPresenter extends
 		if (currentUserDto.isLoggedIn()) {
 			currentUser.fromCurrentUserDto(currentUserDto);
 			fireEvent(new ContextLoadedEvent(currentUser.getUser(), null));
-			
-			
 
 			redirectToLoggedOnPage();
 		} else {
