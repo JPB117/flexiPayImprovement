@@ -196,4 +196,9 @@ public class ProfileView extends ViewImpl implements
 		divProfileContent.bindMemberStanding(standing);
 	}
 
+	@Override
+	public HasClickHandlers getErpRefreshButton() {
+		return divProfileContent.getRefreshButton();
+	}
+
 }

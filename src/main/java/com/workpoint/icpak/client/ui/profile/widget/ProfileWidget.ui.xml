@@ -90,7 +90,14 @@
 
 										<div class="row">
 											Membership Status:
-											<span ui:field="spnMembershipStatus" class="text-muted">Active</span>
+											<span ui:field="spnMembershipStatus" class="text-muted">
+												Active
+												(last Updated:
+												<span ui:field="spnLastUpdated"></span>
+												)
+												<d:ActionLink ui:field="aRefresh"></d:ActionLink>
+											</span>
+
 										</div>
 
 										<div class="row hide">

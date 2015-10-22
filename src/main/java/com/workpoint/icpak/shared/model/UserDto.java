@@ -2,6 +2,7 @@ package com.workpoint.icpak.shared.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -26,6 +27,7 @@ public class UserDto extends SerializableObj implements Listable, Serializable {
 	private int inbox;
 	private AccountStatus status = AccountStatus.NEWACC;
 	private String phoneNumber;
+	private Date lastDateUpdateFromErp;
 
 	public UserDto() {
 	}
@@ -41,11 +43,11 @@ public class UserDto extends SerializableObj implements Listable, Serializable {
 	public String getName() {
 		return name;
 	}
-	
+
 	public String getPhoneNumber() {
 		return phoneNumber;
 	}
-	
+
 	public String getEmail() {
 		return email;
 	}
@@ -197,5 +199,13 @@ public class UserDto extends SerializableObj implements Listable, Serializable {
 
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
+	}
+
+	public void setLastUpdateFromErp(Date lastDateUpdateFromErp) {
+		this.lastDateUpdateFromErp = lastDateUpdateFromErp;
+	}
+
+	public Date getLastDateUpdateFromErp() {
+		return lastDateUpdateFromErp;
 	}
 }

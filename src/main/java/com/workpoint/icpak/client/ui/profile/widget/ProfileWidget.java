@@ -38,6 +38,7 @@ import com.workpoint.icpak.client.ui.profile.education.EducationDetails;
 import com.workpoint.icpak.client.ui.profile.specialization.SpecializationDetails;
 import com.workpoint.icpak.client.ui.profile.training.TrainingDetails;
 import com.workpoint.icpak.client.ui.upload.custom.Uploader;
+import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.client.ui.util.NumberUtils;
 import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.model.ApplicationFormEducationalDto;
@@ -83,6 +84,10 @@ public class ProfileWidget extends Composite {
 	HTMLPanel divEditDropDown;
 	@UiField
 	HTMLPanel divSavePanel;
+	@UiField
+	SpanElement spnLastUpdated;
+	@UiField
+	ActionLink aRefresh;
 
 	@UiField
 	Uploader uploader;
@@ -264,6 +269,8 @@ public class ProfileWidget extends Composite {
 
 		spnMembershipNo.setInnerText(user.getUser().getMemberNo());
 		spnMembershipStatus.setInnerText(user.getUser().getMemberNo());
+		spnLastUpdated.setInnerText(DateUtils.CREATEDFORMAT.format(user
+				.getUser().getLastDateUpdateFromErp()));
 
 		setUserImage(user.getUser().getRefId());
 	}
@@ -394,6 +401,10 @@ public class ProfileWidget extends Composite {
 							"Your account is in Good-Standing, You can download proceed to download the certificate for your own use.");
 			aDownloadCert.setVisible(true);
 		}
+	}
+
+	public HasClickHandlers getRefreshButton() {
+		return aRefresh;
 	}
 
 }

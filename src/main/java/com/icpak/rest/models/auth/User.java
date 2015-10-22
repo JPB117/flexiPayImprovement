@@ -46,7 +46,6 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.icpak.rest.models.base.ExpandTokens;
 import com.icpak.rest.models.base.PO;
 import com.icpak.rest.models.membership.Member;
@@ -88,18 +87,16 @@ public class User extends PO {
 	// @Index(name="idx_users_email")
 	private String email;
 
-	@Basic(optional = true) //Allow an initial user with no password to be created
+	@Basic(optional = true)
+	// Allow an initial user with no password to be created
 	@Column(length = 255)
 	private String password;
 
 	@JsonIgnore
 	@XmlTransient
-	@ManyToMany(cascade = { CascadeType.DETACH,
-            CascadeType.MERGE,
-            CascadeType.REFRESH,
-            CascadeType.PERSIST})
-	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "userid"),
-	inverseJoinColumns = @JoinColumn(name = "roleid"))
+	@ManyToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE,
+			CascadeType.REFRESH, CascadeType.PERSIST })
+	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = @JoinColumn(name = "roleid"))
 	@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 	private Set<Role> roles = new HashSet<Role>();
 
@@ -290,6 +287,10 @@ public class User extends PO {
 		dto.setPhoneNumber(phoneNumber);
 		dto.setRefId(refId);
 		dto.setStatus(status);
+
+		if (member != null) {
+			dto.setLastUpdateFromErp(member.getLastUpdate());
+		}
 
 		List<RoleDto> dtos = new ArrayList<>();
 		if (getRoles() != null) {

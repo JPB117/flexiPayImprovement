@@ -2,7 +2,7 @@ package com.workpoint.icpak.shared.model;
 
 public enum MembershipStatus {
 	DRAFTED("Drafted"), ACTIVE("Active"), RETIRED("Retired"), DEREGISTERED(
-			"De-Registered") , INACTIVE("In Active");
+			"De-Registered") , INACTIVE("In-Active");
 
 	private String displayName;
 

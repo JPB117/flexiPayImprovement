@@ -93,6 +93,8 @@ public class ProfilePresenter
 		void bindSpecializations(List<ApplicationFormSpecializationDto> result);
 
 		void bindMemberStanding(MemberStanding standing);
+
+		HasClickHandlers getErpRefreshButton();
 	}
 
 	private final CurrentUser currentUser;
@@ -186,6 +188,12 @@ public class ProfilePresenter
 					}
 				});
 
+		getView().getErpRefreshButton().addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				loadDataFromErp();
+			}
+		});
 	}
 
 	public void showPopUp(final Widget passedForm) {
@@ -361,11 +369,31 @@ public class ProfilePresenter
 
 	private void loadData() {
 		getView().bindCurrentUser(currentUser);
-		String applicationRefId = getApplicationRefId();
+		loadDataFromErp(false);
 
+		String applicationRefId = getApplicationRefId();
 		loadData(applicationRefId);
 		getView().setApplicationId(applicationRefId);
+	}
 
+	/*
+	 * forceRefresh - Set it to true if you want to Override
+	 */
+	private void loadDataFromErp(boolean forceRefesh) {
+		memberDelegate.withCallback(new AbstractAsyncCallback<Boolean>() {
+			@Override
+			public void onSuccess(Boolean hasLoaded) {
+				// TODO Reload All Member Information
+				if (hasLoaded) {
+					loadData();
+				} else {
+					Window.alert("There was a problem loading ERP Data");
+				}
+			}
+		}).getDataFromErp(getMemberId(), forceRefesh);
+	}
+
+	private void loadGoodStanding() {
 		memberDelegate.withCallback(
 				new AbstractAsyncCallback<MemberStanding>() {
 					@Override
@@ -373,7 +401,6 @@ public class ProfilePresenter
 						getView().bindMemberStanding(standing);
 					}
 				}).getMemberStanding(getMemberId());
-
 	}
 
 	private void loadData(String applicationRefId) {
@@ -399,6 +426,7 @@ public class ProfilePresenter
 			loadEducation();
 			loadTrainings();
 			loadSpecializations();
+			loadGoodStanding();
 
 		} else {
 			// Window.alert("User refId not sent in this request!");

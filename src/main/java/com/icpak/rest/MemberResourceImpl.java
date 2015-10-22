@@ -37,8 +37,10 @@ public class MemberResourceImpl implements MemberResource {
 
 	@Inject
 	MemberDaoHelper membersHelper;
-	@Inject CPDDaoHelper cpdHelper;
-	@Inject BookingsDaoHelper bookingsDaoHelper;
+	@Inject
+	CPDDaoHelper cpdHelper;
+	@Inject
+	BookingsDaoHelper bookingsDaoHelper;
 
 	@GET
 	@ApiOperation(value = "Retrieve all active members")
@@ -61,13 +63,21 @@ public class MemberResourceImpl implements MemberResource {
 			@ApiParam(value = "memberId", required = true) @PathParam("memberId") String memberId) {
 		return membersHelper.getMemberById(memberId);
 	}
-	
+
 	@GET
 	@Path("/{memberId}/standing")
 	public MemberStanding getMemberStanding(
 			@ApiParam(value = "memberId", required = true) @PathParam("memberId") String memberId) {
-		
+
 		return cpdHelper.getMemberStanding(memberId);
+	}
+
+	@GET
+	@Path("/{memberId}/loadFromErp")
+	public Boolean getDataFromErp(
+			@ApiParam(value = "memberId", required = true) @PathParam("memberId") String memberId,
+			@PathParam("forceRefresh") Boolean forceRefresh) {
+		return membersHelper.loadFromErp(memberId, forceRefresh);
 	}
 
 	@GET
@@ -100,7 +110,7 @@ public class MemberResourceImpl implements MemberResource {
 
 		return helper.getAllInvoices(memberId, 0, 50);
 	}
-	
+
 	@Path("/{memberId}/statements")
 	public StatementResourceImpl statements(
 			@PathParam("memberId") String memberId) {
@@ -117,14 +127,14 @@ public class MemberResourceImpl implements MemberResource {
 			@PathParam("memberId") String memberId) {
 		return resourceFactory.createEnquiriesResource(memberId);
 	}
-	
+
 	@GET
 	@Path("/{memberId}/bookings")
-	public List<MemberBookingDto> getMemberBookings(@PathParam("memberId") String memberId,
-			@QueryParam("offset") Integer offset, @QueryParam("limit") Integer limit){
-		return bookingsDaoHelper.getMemberBookings(memberId,offset,limit);
+	public List<MemberBookingDto> getMemberBookings(
+			@PathParam("memberId") String memberId,
+			@QueryParam("offset") Integer offset,
+			@QueryParam("limit") Integer limit) {
+		return bookingsDaoHelper.getMemberBookings(memberId, offset, limit);
 	}
-	
-	
 
 }

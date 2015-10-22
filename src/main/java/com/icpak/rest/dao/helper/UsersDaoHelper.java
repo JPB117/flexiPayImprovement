@@ -11,6 +11,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
+import javax.mail.MessagingException;
+import javax.ws.rs.core.UriInfo;
+
+import com.google.inject.Inject;
+import com.google.inject.persist.Transactional;
 import com.icpak.rest.BaseResource;
 import com.icpak.rest.dao.RolesDao;
 import com.icpak.rest.dao.TransactionsDao;
@@ -363,24 +368,6 @@ public class UsersDaoHelper {
 			userDto.setApplicationRefId(getApplicationRefId(userDto.getRefId()));
 			userDto.setMemberRefId(dao.getMemberRefId(userDto.getRefId()));
 
-			// Update Member Records and Statements - Only update if the User is
-			// a member;
-
-			if (!userDto.isAdmin()) {
-				try {
-					memberDaoHelper
-							.updateMemberRecord(userDto.getMemberRefId());
-				} catch (IllegalStateException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
 		}
 
 		CurrentUserDto currentUserDto = new CurrentUserDto(isLoggedIn, userDto);
