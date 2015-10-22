@@ -25,13 +25,13 @@ public class TestLoginAuth extends AbstractDaoTest{
 	public void generatePass(){
 	}
 	
-	@Ignore
+	@Test
 	public void authenticate(){
-		User user =  usersDao.getUserByUsernameOrMemberNo("kimani@wira.io");
+		User user =  usersDao.getUserByUsernameOrMemberNo("1832");
 		assert user!=null;
 		
 		LogInResult result = helper.execLogin(
-				new LogInAction("kimani@wira.io", "pass"));
+				new LogInAction("1832", "pass"));
 		Assert.assertTrue(result.getCurrentUserDto().getUser() != null);
 		Assert.assertTrue(result.getCurrentUserDto().isLoggedIn());
 	}

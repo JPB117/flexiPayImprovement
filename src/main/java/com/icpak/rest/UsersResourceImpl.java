@@ -244,7 +244,6 @@ public class UsersResourceImpl implements UsersResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public LogInResult execLogin(LogInAction loginData) {
-
 		return helper.execLogin(loginData);
 	}
 

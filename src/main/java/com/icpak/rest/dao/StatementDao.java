@@ -21,7 +21,8 @@ public class StatementDao extends BaseDao {
 	public Statement getByStatementId(String refId, boolean throwExceptionIfNull) {
 
 		Statement statement = getSingleResultOrNull(
-				getEntityManager().createQuery("from Statement u where u.refId=:refId").setParameter("refId", refId));
+				getEntityManager().createQuery("from Statement u where u.refId=:refId")
+				.setParameter("refId", refId));
 
 		if (throwExceptionIfNull && statement == null) {
 			throw new ServiceException(ErrorCodes.NOTFOUND, "Statement", "'" + refId + "'");
@@ -33,7 +34,8 @@ public class StatementDao extends BaseDao {
 	public Statement getByEntryNo(String entryNo, boolean throwExceptionIfNull) {
 
 		Statement statement = getSingleResultOrNull(getEntityManager()
-				.createQuery("from Statement u where u.entryNo=:entryNo").setParameter("entryNo", entryNo));
+				.createQuery("from Statement u where u.entryNo=:entryNo")
+				.setParameter("entryNo", entryNo));
 
 		return statement;
 	}
@@ -174,7 +176,9 @@ public class StatementDao extends BaseDao {
 			sql = sql + "and postingDate<:startDate";
 		}
 
-		Query query = getEntityManager().createNativeQuery(sql).setParameter("memberNo", memberNo);
+		Query query = getEntityManager().createNativeQuery(sql).setParameter(
+				"memberNo", memberNo);
+
 		if (startDate != null) {
 			query.setParameter("startDate", startDate);
 		}

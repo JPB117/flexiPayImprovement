@@ -37,9 +37,7 @@ public class MemberResourceImpl implements MemberResource {
 
 	@Inject
 	MemberDaoHelper membersHelper;
-	
 	@Inject CPDDaoHelper cpdHelper;
-	
 	@Inject BookingsDaoHelper bookingsDaoHelper;
 
 	@GET
@@ -126,5 +124,7 @@ public class MemberResourceImpl implements MemberResource {
 			@QueryParam("offset") Integer offset, @QueryParam("limit") Integer limit){
 		return bookingsDaoHelper.getMemberBookings(memberId,offset,limit);
 	}
+	
+	
 
 }

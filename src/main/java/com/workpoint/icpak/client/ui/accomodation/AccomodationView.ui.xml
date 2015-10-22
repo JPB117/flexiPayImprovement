@@ -15,27 +15,28 @@
 		</h3>
 
 		<g:HTMLPanel styleName="row" ui:field="panelEvents">
-			<div class="col-sm-12">
-				<d:ActionLink ui:field="aCreate" styleName="btn btn-primary btn-fill">
-					<span class="fa fa-plus"></span>
-					Create
-				</d:ActionLink>
-			</div>
+			<div class="main-content">
+				<div class="col-sm-12">
+					<d:ActionLink ui:field="aCreate" styleName="btn btn-primary btn-fill">
+						<span class="fa fa-plus"></span>
+						Create
+					</d:ActionLink>
+				</div>
 
-			<br />
+				<br />
 
-			<div class="col-sm-12">
-				<div class="panel panel-default">
-					<div class="panel-heading">Accomodations</div>
-					<div class="panel-body">
-						<div class="col-sm-12">
-							<table:AccomodationTable ui:field="tblView">
-							</table:AccomodationTable>
+				<div class="col-sm-12">
+					<div class="panel panel-default">
+						<div class="panel-heading">Accomodations</div>
+						<div class="panel-body">
+							<div class="col-sm-12">
+								<table:AccomodationTable ui:field="tblView">
+								</table:AccomodationTable>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-
 		</g:HTMLPanel>
 
 
