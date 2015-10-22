@@ -136,7 +136,7 @@ public class MemberDaoHelper {
 		try {
 			Date today = new Date();
 
-			if (memberInDb.getLastUpdate() == null) {
+			if (memberInDb.getLastUpdate() == null) {																						
 				try {
 					// update member details
 					memberDao.updateMember(getErpRequest(memberInDb));
@@ -236,14 +236,14 @@ public class MemberDaoHelper {
 			memberInDb.setLastUpdate(new Date());
 			memberInDb.setRegistrationDate(formatter.parse((jObject.getString("Date Registered"))));
 
-			if (jObject.getString("Status") == "0") {
+			if (jObject.getInt("Status") == 0) {
 				memberInDb.setMemberShipStatus(MembershipStatus.ACTIVE);
 			}
 
-			if (jObject.getString("Status") == "1") {
+			if (jObject.getInt("Status") == 1) {
 				memberInDb.setMemberShipStatus(MembershipStatus.INACTIVE);
 			}
-
+	
 			System.out.println("======<<<<<>>>>>>>==== + Response ====" + jObject.getString("Post Code"));
 
 		} catch (JSONException e) {
