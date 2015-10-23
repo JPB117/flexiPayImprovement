@@ -29,6 +29,8 @@ public class UserDto extends SerializableObj implements Listable, Serializable {
 	private String phoneNumber;
 	private Date lastDateUpdateFromErp;
 
+	
+
 	public UserDto() {
 	}
 
@@ -200,8 +202,8 @@ public class UserDto extends SerializableObj implements Listable, Serializable {
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
-
-	public void setLastUpdateFromErp(Date lastDateUpdateFromErp) {
+	
+	public void setLastDateUpdateFromErp(Date lastDateUpdateFromErp) {
 		this.lastDateUpdateFromErp = lastDateUpdateFromErp;
 	}
 

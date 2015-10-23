@@ -84,5 +84,18 @@ public class RolesDao extends BaseDao {
 				+ "r.isActive=1 order by name").setParameter("permissions",permission.getName()),
 				offset, limit);
 	}
+	
+
+	public Role getByRoleName(String name, boolean isThrowExceptionIfNull) {
+		Role role = getSingleResultOrNull(getEntityManager().createQuery(
+				"from Role u where u.name=:name").setParameter("name",
+						name));
+		
+		if(role==null && isThrowExceptionIfNull){
+			throw new ServiceException(ErrorCodes.NOTFOUND, "Role", "'"+name+"'");
+		}
+		
+		return role;
+	}
 
 }

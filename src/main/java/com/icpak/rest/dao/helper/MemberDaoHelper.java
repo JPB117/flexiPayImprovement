@@ -266,7 +266,7 @@ public class MemberDaoHelper {
 			memberUser.setMobileNo(jObject.getString("Mobile No_"));
 			memberUser.setPostalCode(jObject.getString("Post Code"));
 			memberUser.setPhoneNumber(jObject.getString("Phone No_"));
-			
+
 			/*
 			 * update this member user in db
 			 */

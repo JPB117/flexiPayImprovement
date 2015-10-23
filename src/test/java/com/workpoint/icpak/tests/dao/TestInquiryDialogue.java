@@ -1,5 +1,6 @@
 package com.workpoint.icpak.tests.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -9,6 +10,8 @@ import org.junit.Test;
 import com.google.inject.Inject;
 import com.icpak.rest.dao.helper.EnquiriesDaoHelper;
 import com.icpak.rest.models.util.EnquiriesDialogue;
+import com.workpoint.icpak.shared.model.EnquiriesCategory;
+import com.workpoint.icpak.shared.model.EnquiriesDto;
 import com.workpoint.icpak.tests.base.AbstractDaoTest;
 
 public class TestInquiryDialogue extends AbstractDaoTest {
@@ -29,7 +32,7 @@ public class TestInquiryDialogue extends AbstractDaoTest {
 		logger.debug(" ====== >><<<<<<<<======= dialogue message " + result);
 	}
 
-	@Test
+	@Ignore
 	public void testGetEnquiries() {
 		String enquiryRefId = "GPqar5cNe9lAHJsD";
 
@@ -40,6 +43,21 @@ public class TestInquiryDialogue extends AbstractDaoTest {
 			logger.debug(" ====== >><<<<<<<<======= dialogue message "
 					+ dialogue.getText());
 		}
+	}
+	
+	@Test
+	public void testCreateEnquiry(){
+		String memberRefId = "LLU0eoZpPuA4lfSU";
+		
+		EnquiriesDto enquiriesDto = new EnquiriesDto();
+		enquiriesDto.setDate(new Date());
+		enquiriesDto.setEmailAddress("wladek.airo@gmail.com");
+		enquiriesDto.setMessage("Test Mail");
+		enquiriesDto.setFullNames("Wladek");
+		enquiriesDto.setPhone("0705712841");
+		enquiriesDto.setCategory(EnquiriesCategory.COMMENT);
+		
+		enquiriesDaoHelper.create(memberRefId, enquiriesDto);
 	}
 
 }
