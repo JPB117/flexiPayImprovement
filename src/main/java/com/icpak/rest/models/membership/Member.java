@@ -37,6 +37,11 @@ public class Member extends PO {
 	private String memberNo;
 	private Date registrationDate;
 	private Date lastUpdate;
+	private String date;
+	private String practisingNo;
+	private String customerType;
+	private Date practisingCertDate;
+	private String setPracisingNo;
 
 	@Column(nullable = false, columnDefinition = "int(1) not null default 0")
 	private int memberDisplinaryCase = 0;
@@ -128,8 +133,7 @@ public class Member extends PO {
 		return goodStandingCerts;
 	}
 
-	public void setGoodStandingCerts(
-			Set<GoodStandingCertificate> goodStandingCerts) {
+	public void setGoodStandingCerts(Set<GoodStandingCertificate> goodStandingCerts) {
 		this.goodStandingCerts = goodStandingCerts;
 	}
 
@@ -139,6 +143,54 @@ public class Member extends PO {
 
 	public void setLastUpdate(Date lastUpdate) {
 		this.lastUpdate = lastUpdate;
+	}
+
+	public String getDate() {
+		return date;
+	}
+
+	public void setDate(String date) {
+		this.date = date;
+	}
+
+	public String getPractisingNo() {
+		return practisingNo;
+	}
+
+	public void setPractisingNo(String practisingNo) {
+		this.practisingNo = practisingNo;
+	}
+
+	public String getCustomerType() {
+		return customerType;
+	}
+
+	public void setCustomerType(String customerType) {
+		this.customerType = customerType;
+	}
+
+	public Date getPractisingCertDate() {
+		return practisingCertDate;
+	}
+
+	public void setPractisingCertDate(Date practisingCertDate) {
+		this.practisingCertDate = practisingCertDate;
+	}
+
+	public int getMemberDisplinaryCase() {
+		return memberDisplinaryCase;
+	}
+
+	public void setMemberDisplinaryCase(int memberDisplinaryCase) {
+		this.memberDisplinaryCase = memberDisplinaryCase;
+	}
+
+	public String getSetPracisingNo() {
+		return setPracisingNo;
+	}
+
+	public void setSetPracisingNo(String setPracisingNo) {
+		this.setPracisingNo = setPracisingNo;
 	}
 
 }

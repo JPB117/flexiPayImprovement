@@ -74,8 +74,7 @@ public class MemberDaoHelper {
 		memberDao.delete(member);
 	}
 
-	public List<MemberDto> getAllMembers(Integer offset, Integer limit,
-			String uriInfo, String searchTerm) {
+	public List<MemberDto> getAllMembers(Integer offset, Integer limit, String uriInfo, String searchTerm) {
 
 		if (searchTerm != null) {
 			return memberDao.getAllMembers(offset, limit, searchTerm);
@@ -116,8 +115,7 @@ public class MemberDaoHelper {
 		Member member = memberDao.findByRefId(memberId, Member.class);
 
 		if (member == null) {
-			throw new ServiceException(ErrorCodes.NOTFOUND, "'" + memberId
-					+ "'");
+			throw new ServiceException(ErrorCodes.NOTFOUND, "'" + memberId + "'");
 		}
 
 		return member.toDto();
@@ -153,13 +151,17 @@ public class MemberDaoHelper {
 				}
 			} else {
 				logger.fatal(" ==== Date difference === "
-						+ ((today.getTime() - memberInDb.getLastUpdate()
-								.getTime()) - (48 * 60 * 1000)));
+						+ ((today.getTime() - memberInDb.getLastUpdate().getTime()) - (48 * 60 * 1000)));
 
 				if (forceRefresh) {
+
+					logger.fatal(" ==== Force refresh == " + forceRefresh);
+
 					makeErpRequest(memberInDb);
-				} else if (today.getTime()
-						- memberInDb.getLastUpdate().getTime() > 48 * 60 * 1000) {
+				} else if (today.getTime() - memberInDb.getLastUpdate().getTime() > 48 * 60 * 1000) {
+
+					logger.fatal(" ==== Force refresh == " + forceRefresh);
+
 					makeErpRequest(memberInDb);
 				} else {
 					logger.fatal(" ==== FAILED === Last check is not greater than 2 days == ");
@@ -173,8 +175,7 @@ public class MemberDaoHelper {
 
 	}
 
-	public void makeErpRequest(Member memberInDb) throws ParseException,
-			IllegalStateException, IOException {
+	public void makeErpRequest(Member memberInDb) throws ParseException, IllegalStateException, IOException {
 		logger.fatal(" ==== SUCCESS === Updated from ERP == ");
 
 		try {
@@ -190,16 +191,15 @@ public class MemberDaoHelper {
 		}
 	}
 
-	public Member getErpRequest(Member memberInDb) throws URISyntaxException,
-			IllegalStateException, IOException, ParseException {
+	public Member getErpRequest(Member memberInDb)
+			throws URISyntaxException, IllegalStateException, IOException, ParseException {
 		final HttpClient httpClient = new DefaultHttpClient();
 		final List<NameValuePair> qparams = new ArrayList<NameValuePair>();
 
 		qparams.add(new BasicNameValuePair("type", "member"));
 		qparams.add(new BasicNameValuePair("reg_no", memberInDb.getMemberNo()));
 
-		final URI uri = URIUtils.createURI("http", "41.139.138.165/", -1,
-				"members/memberdata.php",
+		final URI uri = URIUtils.createURI("http", "41.139.138.165/", -1, "members/memberdata.php",
 				URLEncodedUtils.format(qparams, "UTF-8"), null);
 		final HttpGet request = new HttpGet();
 		request.setURI(uri);
@@ -213,8 +213,7 @@ public class MemberDaoHelper {
 			request.setHeader("accept", "text/html");
 			response = httpClient.execute(request);
 
-			BufferedReader rd = new BufferedReader(new InputStreamReader(
-					response.getEntity().getContent()));
+			BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 
 			result = new StringBuffer();
 
@@ -247,8 +246,10 @@ public class MemberDaoHelper {
 			jObject = new JSONObject(res);
 
 			memberInDb.setLastUpdate(new Date());
-			memberInDb.setRegistrationDate(formatter.parse((jObject
-					.getString("Date Registered"))));
+			memberInDb.setRegistrationDate(formatter.parse((jObject.getString("Date Registered"))));
+			memberInDb.setPractisingCertDate(formatter.parse((jObject.getString("Practicing Cert Date"))));
+			memberInDb.setPractisingNo(jObject.getString("Practising No_"));
+			memberInDb.setCustomerType(jObject.getString("Customer Type"));
 
 			if (jObject.getInt("Status") == 0) {
 				memberInDb.setMemberShipStatus(MembershipStatus.ACTIVE);
@@ -258,8 +259,20 @@ public class MemberDaoHelper {
 				memberInDb.setMemberShipStatus(MembershipStatus.INACTIVE);
 			}
 
-			System.out.println("======<<<<<>>>>>>>==== + Response ===="
-					+ jObject.getString("Post Code"));
+			User memberUser = memberInDb.getUser();
+
+			memberUser.setAddress(jObject.getString("Address"));
+			memberUser.setEmail(jObject.getString("E-Mail"));
+			memberUser.setMobileNo(jObject.getString("Mobile No_"));
+			memberUser.setPostalCode(jObject.getString("Post Code"));
+			memberUser.setPhoneNumber(jObject.getString("Phone No_"));
+			
+			/*
+			 * update this member user in db
+			 */
+			userDao.updateUser(memberUser);
+
+			System.out.println("======<<<<<>>>>>>>==== + Response ====" + jObject.getString("Post Code"));
 
 		} catch (JSONException e) {
 			e.printStackTrace();

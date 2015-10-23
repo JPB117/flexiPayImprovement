@@ -66,7 +66,7 @@ import com.workpoint.icpak.shared.model.auth.AccountStatus;
 @XmlSeeAlso({ BioData.class })
 @Entity
 @Table(name = "user", indexes = { @Index(columnList = "username", name = "idx_users_username")
-// ,@Index(columnList = "email", name = "idx_users_email")
+		// ,@Index(columnList = "email", name = "idx_users_email")
 })
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class User extends PO {
@@ -94,17 +94,15 @@ public class User extends PO {
 
 	@JsonIgnore
 	@XmlTransient
-	@ManyToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE,
-			CascadeType.REFRESH, CascadeType.PERSIST })
-	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = @JoinColumn(name = "roleid"))
+	@ManyToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST })
+	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "userid") , inverseJoinColumns = @JoinColumn(name = "roleid") )
 	@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 	private Set<Role> roles = new HashSet<Role>();
 
 	@Embedded
 	private BioData userData = null;
 
-	@OneToOne(mappedBy = "user", cascade = { CascadeType.PERSIST,
-			CascadeType.REMOVE })
+	@OneToOne(mappedBy = "user", cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
 	private Member member;
 
 	private String memberNo;
@@ -114,6 +112,8 @@ public class User extends PO {
 	private String address;
 	private String city;
 	private String nationality;
+	private String address2;
+	private String postalCode;
 
 	@Enumerated(EnumType.STRING)
 	private AccountStatus status = AccountStatus.NEWACC;
@@ -262,6 +262,14 @@ public class User extends PO {
 		this.address = address;
 	}
 
+	public String getAddress2() {
+		return address2;
+	}
+
+	public void setAddress2(String address2) {
+		this.address2 = address2;
+	}
+
 	public String getCity() {
 		return city;
 	}
@@ -333,6 +341,22 @@ public class User extends PO {
 
 	public void setMobileNo(String mobileNo) {
 		this.mobileNo = mobileNo;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getPostalCode() {
+		return postalCode;
+	}
+
+	public void setPostalCode(String postalCode) {
+		this.postalCode = postalCode;
 	}
 
 }

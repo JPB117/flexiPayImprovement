@@ -1,5 +1,7 @@
 package com.workpoint.icpak.shared.model;
 
+import java.util.Date;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class MemberDto extends SerializableObj implements Listable {
@@ -15,6 +17,9 @@ public class MemberDto extends SerializableObj implements Listable {
 	private String lastName;
 	private String firstName;
 	private String title;
+	private String practisingNo;
+	private String customerType;
+	private Date practisingCertDate;
 
 
 	public MemberDto() {
@@ -100,6 +105,30 @@ public class MemberDto extends SerializableObj implements Listable {
 		}
 
 		return other.getRefId().equals(getRefId());
+	}
+
+	public String getPractisingNo() {
+		return practisingNo;
+	}
+
+	public void setPractisingNo(String practisingNo) {
+		this.practisingNo = practisingNo;
+	}
+
+	public String getCustomerType() {
+		return customerType;
+	}
+
+	public void setCustomerType(String customerType) {
+		this.customerType = customerType;
+	}
+
+	public Date getPractisingCertDate() {
+		return practisingCertDate;
+	}
+
+	public void setPractisingCertDate(Date practisingCertDate) {
+		this.practisingCertDate = practisingCertDate;
 	}
 
 
