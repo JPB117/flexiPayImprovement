@@ -272,9 +272,6 @@ public class ApplicationFormHeader extends PO {
 
 	private String residence;
 
-	// @Transient
-	// private ApplicationCategory category;
-	//
 	public ApplicationFormHeader() {
 	}
 
@@ -296,6 +293,14 @@ public class ApplicationFormHeader extends PO {
 
 	public Date getDate() {
 		return date;
+	}
+
+	public ApplicationStatus getApplicationStatus() {
+		return applicationStatus;
+	}
+
+	public void setApplicationStatus(ApplicationStatus applicationStatus) {
+		this.applicationStatus = applicationStatus;
 	}
 
 	public void setDate(Date date) {
@@ -927,7 +932,7 @@ public class ApplicationFormHeader extends PO {
 		setPostCode(dto.getPostCode());
 		setEmployer(dto.getEmployer());
 		setMemberNo(dto.getMemberNo());
-
+		setApplicationStatus(dto.getApplicationStatus());
 		setDob(dto.getDob());
 		setCountry(dto.getCountry());
 		setGender(dto.getGender());
@@ -954,6 +959,7 @@ public class ApplicationFormHeader extends PO {
 		dto.setCountry(country);
 		dto.setGender(gender);
 		dto.setResidence(residence);
+		dto.setApplicationStatus(applicationStatus);
 	}
 
 	public String getInvoiceRef() {

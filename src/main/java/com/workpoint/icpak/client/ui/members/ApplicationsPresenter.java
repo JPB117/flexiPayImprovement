@@ -47,9 +47,11 @@ public class ApplicationsPresenter
 	public interface IApplicationsView extends View {
 
 		void bindApplications(List<ApplicationFormHeaderDto> result);
+
 		void setCount(Integer aCount);
 
 		PagingPanel getPagingPanel();
+
 		void bindSummary(ApplicationSummaryDto summary);
 
 	}
@@ -72,8 +74,8 @@ public class ApplicationsPresenter
 	private ResourceDelegate<ApplicationFormResource> applicationDelegate;
 
 	@Inject
-	public ApplicationsPresenter(final EventBus eventBus, final IApplicationsView view,
-			final IApplicationsProxy proxy,
+	public ApplicationsPresenter(final EventBus eventBus,
+			final IApplicationsView view, final IApplicationsProxy proxy,
 			ResourceDelegate<ApplicationFormResource> applicationDelegate,
 			final CurrentUser currentUser) {
 		super(eventBus, view, proxy, HomePresenter.SLOT_SetTabContent);
@@ -102,13 +104,14 @@ public class ApplicationsPresenter
 	}
 
 	private void loadData() {
-		
-		applicationDelegate.withCallback(new AbstractAsyncCallback<ApplicationSummaryDto>() {
-			@Override
-			public void onSuccess(ApplicationSummaryDto result) {
-				getView().bindSummary(result);
-			}
-		}).getSummary();
+
+		applicationDelegate.withCallback(
+				new AbstractAsyncCallback<ApplicationSummaryDto>() {
+					@Override
+					public void onSuccess(ApplicationSummaryDto result) {
+						getView().bindSummary(result);
+					}
+				}).getSummary();
 		applicationDelegate.withCallback(new AbstractAsyncCallback<Integer>() {
 			@Override
 			public void onSuccess(Integer aCount) {
@@ -179,7 +182,7 @@ public class ApplicationsPresenter
 			loadProfileDetails(headerDto.getRefId());
 
 			profileWidget.setEditMode(false);
-			
+
 			AppManager.showPopUp("View Profile Info", profileWidget, null,
 					"Done");
 		}

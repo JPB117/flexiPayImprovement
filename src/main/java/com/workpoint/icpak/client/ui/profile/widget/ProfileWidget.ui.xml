@@ -78,28 +78,30 @@
 											</h3>
 										</div>
 
-										<div class="row">
-											<p class="text-muted">
-												<span ui:field="spnApplicationType"></span>
-												(
-												m/No:
-												<span ui:field="spnMembershipNo"></span>
-												)
-											</p>
+										<div class="row" ui:field="divMembershipNo">
+											<span class="text-muted" ui:field="spnApplicationType">
+												<p class="text-muted">
+													(
+													m/No:
+													<span ui:field="spnMembershipNo"></span>
+													)
+												</p>
+											</span>
 										</div>
 
 										<div class="row">
 											Membership Status:
 											<span ui:field="spnMembershipStatus" class="text-muted">
-												Active
 											</span>
 
-											<span class="muted">
-												(last Update:
-												<span ui:field="spnLastUpdated"></span>
+											<span ui:field="spnErpSection">
+												<span class="muted">
+													(last Update:
+													<span ui:field="spnLastUpdated"></span>
+												</span>
+												<d:ActionLink ui:field="aRefresh">Refresh</d:ActionLink>
+												)
 											</span>
-											<d:ActionLink ui:field="aRefresh">Refresh</d:ActionLink>
-											)
 
 										</div>
 
@@ -117,7 +119,7 @@
 											</div>
 										</div>
 
-										<div ui:field="divMembershipStatus">
+										<div ui:field="divStandingStatus">
 											<div class="row">
 												<br />
 												Standing Status:

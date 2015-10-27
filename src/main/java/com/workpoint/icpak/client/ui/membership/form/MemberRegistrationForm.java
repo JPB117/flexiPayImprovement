@@ -8,7 +8,6 @@ import java.util.List;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 import com.workpoint.icpak.client.ui.component.DateField;
@@ -40,12 +39,13 @@ public class MemberRegistrationForm extends Composite {
 	TextField txtAddress;
 	@UiField
 	TextField txtPostalCode;
-	
-	@UiField DateField dtDOB;
+
+	@UiField
+	DateField dtDOB;
 
 	@UiField
 	DropDownList<Gender> lstGender;
-	
+
 	@UiField
 	DropDownList<Country> lstCountry;
 
@@ -106,25 +106,24 @@ public class MemberRegistrationForm extends Composite {
 				isValid = false;
 				issuesPanel.addError("Address is required");
 			}
-			
-			if (lstGender.getValue()==null) {
+
+			if (lstGender.getValue() == null) {
 				isValid = false;
 				issuesPanel.addError("Gender is required");
 			}
-		} else if (counter == 1) {
-			if (type == null) {
-				Window.alert("Kindly select your category..");
+
+			if (!isEmailValid) {
 				isValid = false;
 			}
 		}
 
-		if (!isValid && isEmailValid) {
+		if (!isValid) {
 			issuesPanel.removeStyleName("hide");
 		} else {
 			issuesPanel.addStyleName("hide");
 		}
 
-		return isValid && isEmailValid;
+		return isValid;
 	}
 
 	public TextField getEmail() {
@@ -138,13 +137,14 @@ public class MemberRegistrationForm extends Composite {
 		dto.setEmail(txtEmailAddress.getValue());
 		dto.setEmployer(txtEmployer.getValue());
 		dto.setCity1(txtCity.getValue());
-		dto.setCountry(lstCountry.getValue()==null? "": lstCountry.getValue().getDisplayName());
+		dto.setCountry(lstCountry.getValue() == null ? "" : lstCountry
+				.getValue().getDisplayName());
 		dto.setAddress1(txtAddress.getValue());
 		dto.setTelephone1(txtPhone.getValue());
 		dto.setPostCode(txtPostalCode.getValue());
 		dto.setApplicationType(type);
 		dto.setDob(dtDOB.getValueDate());
-		//dto.setTimezone(TimeZone.createTimeZone(timeZoneOffsetInMinutes));
+		// dto.setTimezone(TimeZone.createTimeZone(timeZoneOffsetInMinutes));
 		dto.setGender(lstGender.getValue());
 		return dto;
 	}
@@ -156,6 +156,8 @@ public class MemberRegistrationForm extends Composite {
 			issuesPanel.addError("e-Mail " + txtEmailAddress.getValue()
 					+ " is already registered");
 			issuesPanel.removeStyleName("hide");
+		} else {
+			issuesPanel.addStyleName("hide");
 		}
 	}
 
@@ -173,7 +175,7 @@ public class MemberRegistrationForm extends Composite {
 		txtEmailAddress.setValue(application.getEmail());
 		txtEmployer.setValue(application.getEmployer());
 		txtCity.setValue(application.getCity1());
-		//lstCountry.setValue(application.getCountry());
+		// lstCountry.setValue(application.getCountry());
 		dtDOB.setValue(application.getDob());
 		lstGender.setValue(application.getGender());
 		txtPhone.setValue(application.getTelephone1());
@@ -193,7 +195,7 @@ public class MemberRegistrationForm extends Composite {
 		txtPostalCode.setValue(null);
 		type = null;
 	}
-	
+
 	public void setCountries(List<Country> countries) {
 		lstCountry.setItems(countries);
 		for (Country c : countries) {

@@ -13,8 +13,8 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
@@ -23,6 +23,7 @@ import com.workpoint.icpak.client.ui.component.IssuesPanel;
 import com.workpoint.icpak.client.ui.component.TextField;
 import com.workpoint.icpak.client.ui.events.registration.proforma.ProformaInvoice;
 import com.workpoint.icpak.client.ui.membership.form.MemberRegistrationForm;
+import com.workpoint.icpak.client.ui.util.NumberUtils;
 import com.workpoint.icpak.shared.model.ApplicationCategoryDto;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 import com.workpoint.icpak.shared.model.ApplicationType;
@@ -53,7 +54,7 @@ public class MemberRegistrationView extends ViewImpl implements
 	HTMLPanel divContent;
 
 	@UiField
-	Frame framePayment;
+	HTMLPanel panelPayment;
 
 	@UiField
 	ActionLink aNext;
@@ -87,6 +88,8 @@ public class MemberRegistrationView extends ViewImpl implements
 	DivElement divAssociate;
 	@UiField
 	DivElement divOverseas;
+	@UiField
+	IssuesPanel issuesPanel;
 
 	@UiField
 	LIElement liTab1;
@@ -97,8 +100,6 @@ public class MemberRegistrationView extends ViewImpl implements
 	@UiField
 	LIElement liTab4;
 
-	@UiField
-	IssuesPanel issuesPanelCategory;
 	@UiField
 	SpanElement spnNonPracticingFee;
 	@UiField
@@ -127,9 +128,6 @@ public class MemberRegistrationView extends ViewImpl implements
 	@UiField
 	SpanElement spnSelected;
 
-	// @UiField
-	// SpanElement spnNames;
-
 	@UiField
 	ProformaInvoice proformaInv;
 
@@ -150,11 +148,9 @@ public class MemberRegistrationView extends ViewImpl implements
 		public void onClick(ClickEvent event) {
 			Anchor selected = (Anchor) event.getSource();
 			selectedName = selected.getName();
-
 			selectCategory(selected);
 		}
 	};
-	
 
 	@Inject
 	public MemberRegistrationView(final Binder binder) {
@@ -287,7 +283,7 @@ public class MemberRegistrationView extends ViewImpl implements
 	}
 
 	public ApplicationFormHeaderDto getApplicationForm() {
-		
+
 		return memberRegistrationForm.getApplicationForm();
 	}
 
@@ -339,38 +335,45 @@ public class MemberRegistrationView extends ViewImpl implements
 
 	@Override
 	public boolean isValid() {
-		return memberRegistrationForm.isValid();
+		boolean isValid = true;
+		issuesPanel.clear();
+		if (counter == 0) {
+			isValid = memberRegistrationForm.isValid();
+		} else if (counter == 1) {
+			if (type == null) {
+				issuesPanel
+						.addError("Kindly select your category before Submitting..");
+				isValid = false;
+			}
+		}
+
+		return isValid;
 	}
 
 	public void setCategories(List<ApplicationCategoryDto> dtos) {
 		for (ApplicationCategoryDto dto : dtos) {
 			switch (dto.getType()) {
 			case NON_PRACTISING:
-				spnNonPracticingFee.setInnerText(dto.getApplicationAmount()
-						+ "");
-				spnNonPracticingSubscription.setInnerText(dto
-						.getRenewalAmount() + "");
+				spnNonPracticingFee.setInnerText(NumberUtils.CURRENCYFORMAT
+						.format(dto.getApplicationAmount()) + "");
+				spnNonPracticingSubscription
+						.setInnerText(NumberUtils.CURRENCYFORMAT.format(dto
+								.getRenewalAmount()) + "");
 				spnNonPracticingCondition.setInnerText(dto.getDescription());
 				break;
-			case PRACTISING:
-
-				spnPracticingFee.setInnerText(dto.getApplicationAmount() + "");
-				spnPracticingSubscription.setInnerText(dto.getRenewalAmount()
-						+ "");
-				spnPracticingCondition.setInnerText(dto.getDescription());
-				break;
 			case OVERSEAS:
-
-				spnOverseasFee.setInnerText(dto.getApplicationAmount() + "");
-				spnOverseasSubscription.setInnerText(dto.getRenewalAmount()
-						+ "");
+				spnOverseasFee.setInnerText(NumberUtils.CURRENCYFORMAT
+						.format(dto.getApplicationAmount()) + "");
+				spnOverseasSubscription.setInnerText(NumberUtils.CURRENCYFORMAT
+						.format(dto.getRenewalAmount()) + "");
 				spnOverseasCondition.setInnerText(dto.getDescription());
 				break;
 			case ASSOCIATE:
-
-				spnAssociateFee.setInnerText(dto.getApplicationAmount() + "");
-				spnAssociateSubscription.setInnerText(dto.getRenewalAmount()
-						+ "");
+				spnAssociateFee.setInnerText(NumberUtils.CURRENCYFORMAT
+						.format(dto.getApplicationAmount()) + "");
+				spnAssociateSubscription
+						.setInnerText(NumberUtils.CURRENCYFORMAT.format(dto
+								.getRenewalAmount()) + "");
 				spnAssociateCondition.setInnerText(dto.getDescription());
 				break;
 			}
@@ -379,13 +382,6 @@ public class MemberRegistrationView extends ViewImpl implements
 
 	@Override
 	public void bindTransaction(InvoiceDto invoice) {
-		// 197.248.4.221
-		String url = "http://197.248.4.221:8080/flexiPay#websiteClient;"
-				+ "businessNo=722722;" + "refId=" + invoice.getRefId() + ";"
-				+ "orgName=ICPAK;" + "amount=" + invoice.getInvoiceAmount() + ";"
-				+ "accountNo=" + invoice.getDocumentNo();
-
-		framePayment.setUrl(url);
 	}
 
 	@Override
@@ -430,8 +426,9 @@ public class MemberRegistrationView extends ViewImpl implements
 
 	@Override
 	public void showError(String error) {
-		issuesPanelCategory.clear();
-		issuesPanelCategory.addError(error);
+		issuesPanel.clear();
+		issuesPanel.addError(error);
+		issuesPanel.removeStyleName("hide");
 	}
 
 	@Override
@@ -459,6 +456,17 @@ public class MemberRegistrationView extends ViewImpl implements
 	@Override
 	public void setCountries(List<Country> countries) {
 		memberRegistrationForm.setCountries(countries);
+	}
+
+	@Override
+	public void setInSlot(Object slot, IsWidget content) {
+		if (slot == MemberRegistrationPresenter.PAYMENTS_SLOT) {
+			panelPayment.clear();
+			if (content != null) {
+				panelPayment.add(content);
+			}
+			super.setInSlot(slot, content);
+		}
 	}
 
 }
