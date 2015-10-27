@@ -70,6 +70,14 @@ public class AccomodationTableRow extends RowWidget {
 			}
 		});
 		
+		aDelete.addClickHandler(new ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent arg0) {
+				AppContext.fireEvent(new EditModelEvent(accomodation,true));
+			}
+		});
+		
 	}
 
 	public AccomodationTableRow(AccommodationDto accommodation) {

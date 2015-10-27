@@ -104,6 +104,12 @@ public class EventsDao extends BaseDao {
 				.createQuery("FROM Accommodation"));
 	}
 	
+	public List<Accommodation> getAllAccommodations(String eventId) {
+		Event event = findByRefId(eventId, Event.class);
+		return getResultList(getEntityManager()
+				.createQuery("FROM Accommodation a where a.event=:event order by a.hotel")
+				.setParameter("event", event));
+	}
 	
 	public EventSummaryDto getEventsSummary(){
 		String sql = "select count(*),dateStatus from "

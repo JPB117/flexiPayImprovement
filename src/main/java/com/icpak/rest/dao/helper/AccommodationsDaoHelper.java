@@ -23,8 +23,7 @@ public class AccommodationsDaoHelper {
 		if(eventId.equals("ALL")){
 			accommodations = dao.getAllAccommodations();
 		}else{
-			Event event = dao.findByRefId(eventId, Event.class);
-			accommodations = event.getAccommodation();
+			accommodations = dao.getAllAccommodations(eventId);
 		}
 		
 		List<AccommodationDto> dtos = new ArrayList<>();

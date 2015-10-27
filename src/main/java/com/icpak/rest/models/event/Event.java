@@ -200,7 +200,7 @@ public class Event extends PO {
 	}
 
 	public EventDto toDto() {
-		return toDto(true);
+		return toDto(false);
 	}
 
 	public EventDto toDto(boolean includeAccommodation) {
