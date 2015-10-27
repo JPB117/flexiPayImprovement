@@ -136,7 +136,7 @@ public class EventsDao extends BaseDao {
 		String sql = "select count(*) from delegate where "
 				+ "accommodationid=(select id from accommodation where refId=:accommodationRefId)";
 		
-		Query query = getEntityManager().createNamedQuery(sql)
+		Query query = getEntityManager().createNativeQuery(sql)
 				.setParameter("accommodationRefId", accommodationRefId);
 		Number number = getSingleResultOrNull(query);
 		return number.intValue();

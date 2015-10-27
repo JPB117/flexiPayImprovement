@@ -128,4 +128,19 @@ public class DelegateDto extends SerializableObj {
 	public void setErn(String ern) {
 		this.ern = ern;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof DelegateDto) || obj == null) {
+			return false;
+		}
+		
+		DelegateDto other = (DelegateDto) obj;
+		if (other.getRefId() != null && getRefId() != null) {
+			return other.getRefId().equals(getRefId());
+		}
+
+		return super.equals(obj);
+	}
+	
 }

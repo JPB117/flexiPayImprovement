@@ -15,6 +15,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
+import com.workpoint.icpak.client.ui.grid.AggregationGridRow;
 import com.workpoint.icpak.shared.model.Listable;
 
 public class DropDownList<T extends Listable> extends Composite implements HasValueChangeHandlers<T>,HasValue<T>{
@@ -31,6 +32,8 @@ public class DropDownList<T extends Listable> extends Composite implements HasVa
 	private String nullText = "--Select--";
 	
 	T value = null;
+
+	private AggregationGridRow aggregationGridRow;
 	
 	public DropDownList() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -152,5 +155,14 @@ public class DropDownList<T extends Listable> extends Composite implements HasVa
 	@Override
 	public void setValue(T value, boolean fireEvents) {
 		setValue(value);
+	}
+
+	public AggregationGridRow getParentRow() {
+		return aggregationGridRow;
+	}
+	
+	public void setParentRow(AggregationGridRow aggregationGridRow) {
+		this.aggregationGridRow = aggregationGridRow;
+
 	}
 }

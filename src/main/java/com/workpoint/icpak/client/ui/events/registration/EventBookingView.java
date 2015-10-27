@@ -5,7 +5,9 @@ import static com.workpoint.icpak.client.ui.util.StringUtils.isNullOrEmpty;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Element;
@@ -54,8 +56,7 @@ import com.workpoint.icpak.shared.model.events.ContactDto;
 import com.workpoint.icpak.shared.model.events.DelegateDto;
 import com.workpoint.icpak.shared.model.events.EventDto;
 
-public class EventBookingView extends ViewImpl implements
-		EventBookingPresenter.MyView {
+public class EventBookingView extends ViewImpl implements EventBookingPresenter.MyView {
 
 	private final Widget widget;
 
@@ -159,78 +160,16 @@ public class EventBookingView extends ViewImpl implements
 	private List<LIElement> liElements = new ArrayList<LIElement>();
 	private List<PageElement> pageElements = new ArrayList<PageElement>();
 
-	DataMapper mapper = new DataMapper() {
-		@Override
-		public List<DataModel> getDataModels(List objs) {
-			List<DataModel> models = new ArrayList<DataModel>();
-			for (Object o : objs) {
-				models.add(getModel(o));
-			}
-			return models;
-		}
-
-		@Override
-		public DataModel getModel(Object obj) {
-			DelegateDto dto = (DelegateDto) obj;
-			MemberDto member = new MemberDto();
-			if (dto.getMemberRefId() == null) {
-				member = null;
-			} else {
-				member.setRefId(dto.getMemberRefId());
-				member.setMemberNo(dto.getMemberId());
-				member.setFirstName(dto.getOtherNames());
-				member.setLastName(dto.getSurname());
-			}
-
-			DataModel model = new DataModel();
-			model.setId(dto.getRefId());
-			model.set("memberNo", member);
-			model.set("title", dto.getTitle()==null? null: Title.valueOf(dto.getTitle()));
-			model.set("surname", dto.getSurname());
-			model.set("otherNames", dto.getOtherNames());
-			model.set("email", dto.getEmail());
-			model.set("accommodation", dto.getAccommodation());
-			return model;
-		}
-
-		@Override
-		public DelegateDto getData(DataModel model) {
-			DelegateDto dto = new DelegateDto();
-
-			if (model.isEmpty()) {
-				return null;
-			}
-
-			MemberDto memberDto = model.get("memberNo") == null ? null
-					: ((MemberDto) model.get("memberNo"));
-			dto.setRefId(model.getId()==null? null: model.getId().toString());
-			dto.setMemberId(memberDto == null ? null : memberDto.getMemberNo());
-			dto.setMemberRefId(memberDto == null ? null : memberDto.getRefId());
-			dto.setTitle(model.get("title") == null ? null : model.get("title")
-					.toString());
-			dto.setSurname(model.get("surname") == null ? null : model.get(
-					"surname").toString());
-			dto.setOtherNames(model.get("otherNames") == null ? null : model
-					.get("otherNames").toString());
-			dto.setEmail(model.get("email") == null ? null : model.get("email")
-					.toString());
-			dto.setAccommodation(model.get("accommodation") == null ? null
-					: (AccommodationDto) model.get("accommodation"));
-
-			return dto;
-		}
-	};
-
 	int counter = 0;
+	Map<String, DelegateDto> finalDelRefIds = new HashMap<String, DelegateDto>();
 
 	public interface Binder extends UiBinder<Widget, EventBookingView> {
 	}
 
-	ColumnConfig memberColumn = new ColumnConfig("memberNo", "Member No",
-			DataType.SELECTAUTOCOMPLETE, "", "form-control");
+	ColumnConfig memberColumn = new ColumnConfig("memberNo", "Member No", DataType.SELECTAUTOCOMPLETE, "",
+			"form-control");
 
-	ColumnConfig accommodationConfig = new ColumnConfig("accommodation",
-			"Accommodation", DataType.SELECTBASIC);
+	ColumnConfig accommodationConfig = new ColumnConfig("accommodation", "Accommodation", DataType.SELECTBASIC);
 
 	@Inject
 	public EventBookingView(final Binder binder) {
@@ -240,16 +179,13 @@ public class EventBookingView extends ViewImpl implements
 		List<ColumnConfig> configs = new ArrayList<ColumnConfig>();
 		configs.add(memberColumn);
 
-		ColumnConfig config = new ColumnConfig("title", "Title",
-				DataType.SELECTBASIC, "", "form-control");
+		ColumnConfig config = new ColumnConfig("title", "Title", DataType.SELECTBASIC, "", "form-control");
 		config.setDropDownItems(Arrays.asList(Title.values()));
 
 		configs.add(config);
-		config = new ColumnConfig("surname", "First Name:", DataType.STRING,
-				"", "form-control");
+		config = new ColumnConfig("surname", "First Name:", DataType.STRING, "", "form-control");
 		configs.add(config);
-		config = new ColumnConfig("otherNames", "Other Names:",
-				DataType.STRING, "", "form-control");
+		config = new ColumnConfig("otherNames", "Other Names:", DataType.STRING, "", "form-control");
 		configs.add(config);
 
 		// config = new ColumnConfig("email", "Email Address", DataType.STRING,
@@ -259,6 +195,48 @@ public class EventBookingView extends ViewImpl implements
 		configs.add(accommodationConfig);
 
 		tblDelegates.setColumnConfigs(configs);
+
+		accommodationConfig.addValueChangeHandler(new ValueChangeHandler<Listable>() {
+			@Override
+			public void onValueChange(ValueChangeEvent<Listable> event) {
+				if (event.getValue() == null) {
+					return;
+				}
+
+				// Window.alert("Accommodations selection change");
+				Widget source = (Widget) event.getSource();
+				DropDownList<AccommodationDto> field = (DropDownList) source;
+				AggregationGridRow row = field.getParentRow();
+				DelegateDto delegate = mapper.getData(row.getData());
+				DelegateDto saved = finalDelRefIds.get(delegate.getRefId());
+				
+				AccommodationDto dto = (AccommodationDto) event.getValue();
+				if(saved!=null && saved.getAccommodation()!=null 
+						&& saved.getAccommodation().equals(dto)){
+					return;
+				}
+				
+				if (dto.getTotalBooking() > dto.getSpaces()) {
+					Window.alert("No spaces available in '" + dto.getHotel() + "'");
+					field.setValue(null);
+					return;
+				}
+
+				List<DelegateDto> delegates = getDelegates();
+				int count = 0;
+				for (DelegateDto d : delegates) {
+					if (d.getAccommodation() != null && d.getAccommodation().equals(dto)) {
+						++count;
+					}
+				}
+
+				if ((dto.getTotalBooking() + count) > dto.getSpaces()) {
+					Window.alert("No more spaces available in '" + dto.getHotel() + "'");
+					field.setValue(null);
+					return;
+				}
+			}
+		});
 
 		memberColumn.addValueChangeHandler(new ValueChangeHandler<Listable>() {
 			@Override
@@ -310,10 +288,8 @@ public class EventBookingView extends ViewImpl implements
 
 		// Div Elements
 		pageElements.add(new PageElement(divPackage, "Proceed", liTab1));
-		pageElements.add(new PageElement(divCategories, "Submit", "Back",
-				liTab2));
-		pageElements
-				.add(new PageElement(divProforma, "Proceed to Pay", liTab3));
+		pageElements.add(new PageElement(divCategories, "Submit", "Back", liTab2));
+		pageElements.add(new PageElement(divProforma, "Proceed to Pay", liTab3));
 		pageElements.add(new PageElement(divPayment, "Finish", "Back", liTab4));
 
 		setActive(liElements.get(counter), pageElements.get(counter));
@@ -377,8 +353,7 @@ public class EventBookingView extends ViewImpl implements
 	private void clearAll() {
 		for (PageElement pageElement : pageElements) {
 			if (pageElement.isComplete()) {
-				pageElement.getLiElement().getFirstChildElement()
-						.getFirstChildElement().removeClassName("hide");
+				pageElement.getLiElement().getFirstChildElement().getFirstChildElement().removeClassName("hide");
 			} else {
 				pageElement.getLiElement().removeClassName("active");
 			}
@@ -439,8 +414,7 @@ public class EventBookingView extends ViewImpl implements
 			}
 		} else if (counter == 1) {
 			if (getDelegates().size() == 0) {
-				issuesPanel
-						.addError("You must enter at least 1 delegate for this event");
+				issuesPanel.addError("You must enter at least 1 delegate for this event");
 				isValid = false;
 			}
 
@@ -566,17 +540,19 @@ public class EventBookingView extends ViewImpl implements
 			spnStartDate.setInnerText(DateUtils.DATEFORMAT.format(startDate));
 			if (event.getEndDate() != null) {
 				Date endDate = new Date(event.getEndDate());
-				spnDuration.setInnerText(DateUtils.getTimeDifference(startDate,
-						endDate));
+				spnDuration.setInnerText(DateUtils.getTimeDifference(startDate, endDate));
 			}
 
-			spnDays2Go.setInnerText(DateUtils.getTimeDifference(new Date(),
-					startDate));
+			spnDays2Go.setInnerText(DateUtils.getTimeDifference(new Date(), startDate));
 		}
 
+		// bindAccommodations(event.getAccommodation());
+	}
+
+	public void bindAccommodations(List<AccommodationDto> accommodation) {
 		List<Listable> accommodations = new ArrayList<Listable>();
 		if (accommodations != null) {
-			for (AccommodationDto acc : event.getAccommodation()) {
+			for (AccommodationDto acc : accommodation) {
 				accommodations.add(acc);
 			}
 			accommodationConfig.setDropDownItems(accommodations);
@@ -598,7 +574,12 @@ public class EventBookingView extends ViewImpl implements
 		}
 
 		if (booking.getDelegates() != null) {
-			List<DataModel> models =  mapper.getDataModels(booking.getDelegates());
+
+			for (DelegateDto d : booking.getDelegates()) {
+				finalDelRefIds.put(d.getRefId(), d);
+			}
+
+			List<DataModel> models = mapper.getDataModels(booking.getDelegates());
 			tblDelegates.setData(models);
 		}
 
@@ -660,5 +641,73 @@ public class EventBookingView extends ViewImpl implements
 	public void setInvoiceResult(InvoiceDto invoice) {
 		panelPayment.setInvoiceResult(invoice);
 	}
+
+	
+	
+	
+	
+	
+	
+	
+	
+	/**
+	 * DELEGATE DATA MAPPER 
+	 */
+	DataMapper mapper = new DataMapper() {
+		@Override
+		public List<DataModel> getDataModels(List objs) {
+			List<DataModel> models = new ArrayList<DataModel>();
+			for (Object o : objs) {
+				models.add(getModel(o));
+			}
+			return models;
+		}
+
+		@Override
+		public DataModel getModel(Object obj) {
+			DelegateDto dto = (DelegateDto) obj;
+			MemberDto member = new MemberDto();
+			if (dto.getMemberRefId() == null) {
+				member = null;
+			} else {
+				member.setRefId(dto.getMemberRefId());
+				member.setMemberNo(dto.getMemberId());
+				member.setFirstName(dto.getOtherNames());
+				member.setLastName(dto.getSurname());
+			}
+
+			DataModel model = new DataModel();
+			model.setId(dto.getRefId());
+			model.set("memberNo", member);
+			model.set("title", dto.getTitle() == null ? null : Title.valueOf(dto.getTitle()));
+			model.set("surname", dto.getSurname());
+			model.set("otherNames", dto.getOtherNames());
+			model.set("email", dto.getEmail());
+			model.set("accommodation", dto.getAccommodation());
+			return model;
+		}
+
+		@Override
+		public DelegateDto getData(DataModel model) {
+			DelegateDto dto = new DelegateDto();
+
+			if (model.isEmpty()) {
+				return null;
+			}
+
+			MemberDto memberDto = model.get("memberNo") == null ? null : ((MemberDto) model.get("memberNo"));
+			dto.setRefId(model.getId() == null ? null : model.getId().toString());
+			dto.setMemberId(memberDto == null ? null : memberDto.getMemberNo());
+			dto.setMemberRefId(memberDto == null ? null : memberDto.getRefId());
+			dto.setTitle(model.get("title") == null ? null : model.get("title").toString());
+			dto.setSurname(model.get("surname") == null ? null : model.get("surname").toString());
+			dto.setOtherNames(model.get("otherNames") == null ? null : model.get("otherNames").toString());
+			dto.setEmail(model.get("email") == null ? null : model.get("email").toString());
+			dto.setAccommodation(
+					model.get("accommodation") == null ? null : (AccommodationDto) model.get("accommodation"));
+
+			return dto;
+		}
+	};
 
 }
