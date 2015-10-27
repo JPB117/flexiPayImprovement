@@ -31,6 +31,8 @@ public class CreateAccomodation extends Composite {
 	@UiField
 	TextField txtNights;
 	@UiField
+	TextField txtSpace;
+	@UiField
 	TextField txtPrice;
 	@UiField
 	DropDownList<EventDto> lstEvent;
@@ -46,7 +48,7 @@ public class CreateAccomodation extends Composite {
 		issues.clear();
 		if (isNullOrEmpty(txtHotelName.getValue())) {
 			isValid = false;
-			issues.addError("Title is mandatory");
+			issues.addError("Hotel name is mandatory");
 		}
 		if (isNullOrEmpty(txtNights.getValue())) {
 			isValid = false;
@@ -55,6 +57,10 @@ public class CreateAccomodation extends Composite {
 		if (isNullOrEmpty(txtPrice.getValue())) {
 			isValid = false;
 			issues.addError("Price Information is mandatory");
+		}
+		if (isNullOrEmpty(txtSpace.getValue())) {
+			isValid = false;
+			issues.addError("Space information is mandatory");
 		}
 		if (lstEvent.getValue() == null) {
 			isValid = false;
@@ -69,6 +75,7 @@ public class CreateAccomodation extends Composite {
 			txtHotelName.setValue(accomodation.getHotel());
 			txtNights.setValue(accomodation.getNights() + "");
 			txtPrice.setValue(accomodation.getFee() + "");
+			txtSpace.setValue(accomodation.getSpaces() + "");
 			if(accomodation.getEvent()!=null){
 				lstEvent.setValue(accomodation.getEvent());
 			}
@@ -85,6 +92,7 @@ public class CreateAccomodation extends Composite {
 		accommodation.setFee(new Double(txtPrice.getValue()));
 		accommodation.setHotel(txtHotelName.getValue());
 		accommodation.setNights(new Integer(txtNights.getValue()));
+		accommodation.setSpaces(new Integer(txtSpace.getValue()));
 		return accommodation;
 	}
 

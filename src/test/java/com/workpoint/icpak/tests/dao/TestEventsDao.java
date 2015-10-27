@@ -1,6 +1,5 @@
 package com.workpoint.icpak.tests.dao;
 
-import java.util.Date;
 import java.util.List;
 
 import org.junit.Assert;
@@ -36,8 +35,8 @@ public class TestEventsDao extends AbstractDaoTest {
 		EventDto event = new EventDto();
 		event.setName("The Financial Reporting Workshop: Mt. Kenya Branch, Nyeri");
 		event.setDescription("");
-		event.setStartDate(new Date().getTime());
-		event.setEndDate(new Date().getTime());
+		event.setStartDate("2015-05-30 08:00:00");
+		event.setEndDate("2015-06-04 08:00:00");
 		event.setNonMemberPrice(30000.00);
 		event.setMemberPrice(20000.00);
 		event.setVenue("GreenHills Hotel, Nyeri");

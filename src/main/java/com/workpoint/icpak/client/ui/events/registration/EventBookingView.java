@@ -186,7 +186,7 @@ public class EventBookingView extends ViewImpl implements
 			model.set("surname", dto.getSurname());
 			model.set("otherNames", dto.getOtherNames());
 			model.set("email", dto.getEmail());
-			model.set("accomodation", dto.getAccommodation());
+			model.set("accommodation", dto.getAccommodation());
 			return model;
 		}
 
@@ -200,6 +200,7 @@ public class EventBookingView extends ViewImpl implements
 
 			MemberDto memberDto = model.get("memberNo") == null ? null
 					: ((MemberDto) model.get("memberNo"));
+			dto.setRefId(model.getId()==null? null: model.getId().toString());
 			dto.setMemberId(memberDto == null ? null : memberDto.getMemberNo());
 			dto.setMemberRefId(memberDto == null ? null : memberDto.getRefId());
 			dto.setTitle(model.get("title") == null ? null : model.get("title")
@@ -550,10 +551,10 @@ public class EventBookingView extends ViewImpl implements
 
 		if (event.getStartDate() != null) {
 
-			Date startDate = new Date(event.getStartDate());
+			Date startDate = DateUtils.parse(event.getStartDate(), DateUtils.FULLTIMESTAMP);
 			spnStartDate.setInnerText(DateUtils.DATEFORMAT.format(startDate));
 			if (event.getEndDate() != null) {
-				Date endDate = new Date(event.getEndDate());
+				Date endDate = DateUtils.parse(event.getEndDate(), DateUtils.FULLTIMESTAMP);
 				spnDuration.setInnerText(DateUtils.getTimeDifference(startDate,
 						endDate));
 			}

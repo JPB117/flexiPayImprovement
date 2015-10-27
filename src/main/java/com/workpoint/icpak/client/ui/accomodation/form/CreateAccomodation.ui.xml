@@ -33,6 +33,12 @@
 							placeholder="Hotel Pricing" value="" required="true">
 						</d:TextField>
 					</div>
+					<div class="col-lg-6">
+						<label for="firstname">Spaces:</label>
+						<d:TextField ui:field="txtSpace" styleName="form-control"
+							placeholder="Spaces available" value="" required="true">
+						</d:TextField>
+					</div>
 				</div>
 			</div>
 

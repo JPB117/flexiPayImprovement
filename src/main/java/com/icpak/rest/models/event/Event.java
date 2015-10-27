@@ -20,6 +20,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 import com.icpak.rest.models.base.PO;
 import com.wordnik.swagger.annotations.ApiModel;
+import com.workpoint.icpak.server.util.DateUtils;
 import com.workpoint.icpak.shared.model.EventStatus;
 import com.workpoint.icpak.shared.model.EventType;
 import com.workpoint.icpak.shared.model.events.AccommodationDto;
@@ -211,10 +212,11 @@ public class Event extends PO {
 		dto.setCategoryName(categoryName);
 
 		if (endDate != null)
-			dto.setEndDate(endDate.getTime());
+			dto.setEndDate(DateUtils.format(endDate, DateUtils.FULLTIMESTAMP));
 
-		if (startDate != null)
-			dto.setStartDate(startDate.getTime());
+		if (startDate != null){
+			dto.setStartDate(DateUtils.format(startDate, DateUtils.FULLTIMESTAMP));
+		}
 		dto.setMemberPrice(memberPrice);
 		dto.setName(name);
 		dto.setNonMemberPrice(nonMemberPrice);
@@ -242,10 +244,10 @@ public class Event extends PO {
 		setDescription(dto.getDescription());
 
 		if (dto.getEndDate() != null)
-			setEndDate(new Date(dto.getEndDate()));
+			setEndDate(DateUtils.parse(dto.getEndDate(), DateUtils.FULLTIMESTAMP));
 
 		if (dto.getStartDate() != null)
-			setStartDate(new Date(dto.getStartDate()));
+			setStartDate(DateUtils.parse(dto.getStartDate(), DateUtils.FULLTIMESTAMP));
 
 		setMemberPrice(dto.getMemberPrice());
 		setName(dto.getName());
