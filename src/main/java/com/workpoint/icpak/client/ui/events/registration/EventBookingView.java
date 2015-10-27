@@ -189,7 +189,7 @@ public class EventBookingView extends ViewImpl implements
 			model.set("surname", dto.getSurname());
 			model.set("otherNames", dto.getOtherNames());
 			model.set("email", dto.getEmail());
-			model.set("accomodation", dto.getAccommodation());
+			model.set("accommodation", dto.getAccommodation());
 			return model;
 		}
 
@@ -203,6 +203,7 @@ public class EventBookingView extends ViewImpl implements
 
 			MemberDto memberDto = model.get("memberNo") == null ? null
 					: ((MemberDto) model.get("memberNo"));
+			dto.setRefId(model.getId()==null? null: model.getId().toString());
 			dto.setMemberId(memberDto == null ? null : memberDto.getMemberNo());
 			dto.setMemberRefId(memberDto == null ? null : memberDto.getRefId());
 			dto.setTitle(model.get("title") == null ? null : model.get("title")

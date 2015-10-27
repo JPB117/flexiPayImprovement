@@ -3,11 +3,12 @@ package com.workpoint.icpak.tests.dao;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
+ 
 import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.inject.Inject;
+import com.icpak.rest.dao.BookingsDao;
 import com.icpak.rest.dao.EventsDao;
 import com.icpak.rest.dao.helper.BookingsDaoHelper;
 import com.icpak.rest.dao.helper.CPDDaoHelper;
@@ -27,6 +28,8 @@ public class TestBookingDao extends AbstractDaoTest {
 	CPDDaoHelper daoHelper;
 	@Inject
 	EventsDao eventDao;
+	@Inject
+	BookingsDao bookingDao;
 
 	@Ignore
 	public void getTrx() {
@@ -50,7 +53,7 @@ public class TestBookingDao extends AbstractDaoTest {
 
 	}
 
-	@Test
+	@Ignore
 	public void createBooking() {
 		BookingDto dto = new BookingDto();
 
@@ -81,5 +84,11 @@ public class TestBookingDao extends AbstractDaoTest {
 		// dto.setCurrency(currency);
 		bookingsHelper.createBooking("PrjIf8x4RIDaPZIv", dto);
 
+	}
+	
+	@Test
+	public void testDeleteInvoiceFrombooking(){
+		String bookingRefid="RVfeXiMtWWETmQRi";
+		bookingDao.deleteAllBookingInvoice(bookingRefid);
 	}
 }

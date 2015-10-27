@@ -9,7 +9,6 @@
 			GrandTotal
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td">
-			120,000
 		</g:HTMLPanel>
 	</g:HTMLPanel>
 </ui:UiBinder> 

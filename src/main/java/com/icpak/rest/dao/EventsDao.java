@@ -131,5 +131,15 @@ public class EventsDao extends BaseDao {
 		return summary;
 	
 	}
+	
+	public int getAccommodationBookingCount(String accommodationRefId){
+		String sql = "select count(*) from delegate where "
+				+ "accommodationid=(select id from accommodation where refId=:accommodationRefId)";
+		
+		Query query = getEntityManager().createNamedQuery(sql)
+				.setParameter("accommodationRefId", accommodationRefId);
+		Number number = getSingleResultOrNull(query);
+		return number.intValue();
+	}
 
 }

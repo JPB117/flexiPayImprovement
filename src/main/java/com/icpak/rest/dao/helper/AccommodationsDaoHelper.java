@@ -29,7 +29,9 @@ public class AccommodationsDaoHelper {
 		
 		List<AccommodationDto> dtos = new ArrayList<>();
 		for(Accommodation a: accommodations){
-			dtos.add(a.toDto(true));
+			AccommodationDto dto = a.toDto(true);
+			dto.setTotalBooking(dao.getAccommodationBookingCount(a.getRefId()));
+			dtos.add(dto);
 		}
 		
 		return dtos;
