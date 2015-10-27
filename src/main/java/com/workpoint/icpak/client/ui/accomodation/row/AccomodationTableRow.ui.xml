@@ -10,6 +10,8 @@
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divNights">
 		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td" ui:field="divSpaces">
+		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divPrice">
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td">

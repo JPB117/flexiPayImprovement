@@ -44,6 +44,8 @@ public class AccomodationTableRow extends RowWidget {
 	
 	@UiField
 	HTMLPanel divPrice;
+	@UiField
+	HTMLPanel divSpaces;
 
 	
 	AccommodationDto accomodation;
@@ -74,6 +76,7 @@ public class AccomodationTableRow extends RowWidget {
 		divEventName.add(new InlineLabel(event.getName()));
 		aHotelName.setText(accommodation.getHotel());
 		divNights.add(new InlineLabel(accommodation.getNights()+""));
+		divSpaces.add(new InlineLabel(accommodation.getSpaces()+""));
 //		divNights.add(new InlineLabel(DateUtils.getTimeDifference(
 //				new Date(event.getStartDate()), new Date(event.getEndDate()))));
 		divPrice.add(new InlineLabel(NUMBERFORMAT.format(accommodation.getFee())));
