@@ -8,6 +8,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Widget;
@@ -46,6 +47,8 @@ public class AccomodationTableRow extends RowWidget {
 	HTMLPanel divPrice;
 	@UiField
 	HTMLPanel divSpaces;
+	@UiField
+	HTMLPanel divOccupied;
 
 	
 	AccommodationDto accomodation;
@@ -76,12 +79,23 @@ public class AccomodationTableRow extends RowWidget {
 		divEventName.add(new InlineLabel(event.getName()));
 		aHotelName.setText(accommodation.getHotel());
 		divNights.add(new InlineLabel(accommodation.getNights()+""));
-		divSpaces.add(new InlineLabel(accommodation.getSpaces()+""));
+		
+		divOccupied.add(new InlineLabel((accommodation.getSpaces() - accommodation.getTotalBooking())+""));
 //		divNights.add(new InlineLabel(DateUtils.getTimeDifference(
 //				new Date(event.getStartDate()), new Date(event.getEndDate()))));
 		divPrice.add(new InlineLabel(NUMBERFORMAT.format(accommodation.getFee())));
 		
+		boolean hasAvailableSpace = accomodation.getSpaces() > accommodation.getTotalBooking();
+		
+		HTML html = new HTML(+accommodation.getSpaces()+"");
+		if(hasAvailableSpace){
+			html.getElement().getStyle().setColor("green");
+		}else{
+			html.getElement().getStyle().setColor("red");
+		}
+		divSpaces.add(html);
 	}
+	
 	
 
 }

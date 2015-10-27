@@ -12,6 +12,8 @@
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divSpaces">
 		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td" ui:field="divOccupied">
+		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divPrice">
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td">

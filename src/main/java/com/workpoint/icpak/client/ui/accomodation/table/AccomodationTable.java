@@ -15,11 +15,9 @@ import com.workpoint.icpak.client.ui.component.TableView;
 
 public class AccomodationTable extends Composite {
 
-	private static TransactionTableUiBinder uiBinder = GWT
-			.create(TransactionTableUiBinder.class);
+	private static TransactionTableUiBinder uiBinder = GWT.create(TransactionTableUiBinder.class);
 
-	interface TransactionTableUiBinder extends
-			UiBinder<Widget, AccomodationTable> {
+	interface TransactionTableUiBinder extends UiBinder<Widget, AccomodationTable> {
 	}
 
 	@UiField
@@ -40,6 +38,7 @@ public class AccomodationTable extends Composite {
 		th.add(new TableHeader("Hotel Name:"));
 		th.add(new TableHeader("Nights:"));
 		th.add(new TableHeader("Spaces:"));
+		th.add(new TableHeader("Availble:"));
 		th.add(new TableHeader("Price:"));
 		th.add(new TableHeader("Action:"));
 
