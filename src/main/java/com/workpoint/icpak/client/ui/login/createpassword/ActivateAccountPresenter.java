@@ -189,15 +189,6 @@ public class ActivateAccountPresenter
 		Window.alert("Reset Password Instructions have been sent to your email");
 		placeManager.revealPlace(new PlaceRequest.Builder().nameToken(
 				NameTokens.login).build());
-		// AppManager.showPopUp("Reset Password",
-		// "Reset Password Instructions have been sent to your email",
-		// new OnOptionSelected() {
-		//
-		// @Override
-		// public void onSelect(String name) {
-		//
-		// }
-		// }, "Ok");
 	}
 
 	protected void executeLogin(String email, String password) {

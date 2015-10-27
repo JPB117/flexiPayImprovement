@@ -65,6 +65,8 @@ import com.workpoint.icpak.client.ui.notifications.NotificationsPresenter;
 import com.workpoint.icpak.client.ui.notifications.NotificationsView;
 import com.workpoint.icpak.client.ui.offences.OffencesPresenter;
 import com.workpoint.icpak.client.ui.offences.OffencesView;
+import com.workpoint.icpak.client.ui.payment.PaymentPresenter;
+import com.workpoint.icpak.client.ui.payment.PaymentView;
 import com.workpoint.icpak.client.ui.popup.GenericPopupPresenter;
 import com.workpoint.icpak.client.ui.popup.GenericPopupView;
 import com.workpoint.icpak.client.ui.profile.ProfilePresenter;
@@ -105,7 +107,7 @@ public class ClientModule extends AbstractPresenterModule {
 
 		// SECURITY
 		bind(CurrentUser.class).asEagerSingleton();
-		 
+
 		requestStaticInjection(AppContext.class);
 		requestStaticInjection(AppManager.class);
 
@@ -132,10 +134,9 @@ public class ClientModule extends AbstractPresenterModule {
 				MemberRegistrationPresenter.MyProxy.class);
 
 		bindPresenter(InvoiceListPresenter.class,
-				InvoiceListPresenter.IInvoiceView.class,
-				InvoiceListView.class,
+				InvoiceListPresenter.IInvoiceView.class, InvoiceListView.class,
 				InvoiceListPresenter.IInvoiceProxy.class);
-		
+
 		bindPresenter(StatementsPresenter.class,
 				StatementsPresenter.IStatementsView.class,
 				StatementsView.class,
@@ -156,9 +157,10 @@ public class ClientModule extends AbstractPresenterModule {
 
 		bindPresenter(EventsPresenter.class, EventsPresenter.IEventsView.class,
 				EventsView.class, EventsPresenter.IEventsProxy.class);
-		
-		bindPresenter(BookingsPresenter.class, BookingsPresenter.IBookingsView.class,
-				BookingsView.class, BookingsPresenter.IBookingsProxy.class);
+
+		bindPresenter(BookingsPresenter.class,
+				BookingsPresenter.IBookingsView.class, BookingsView.class,
+				BookingsPresenter.IBookingsProxy.class);
 
 		bindPresenter(EventBookingPresenter.class,
 				EventBookingPresenter.MyView.class, EventBookingView.class,
@@ -170,15 +172,15 @@ public class ClientModule extends AbstractPresenterModule {
 
 		bindPresenter(CPDPresenter.class, CPDPresenter.ICPDView.class,
 				CPDView.class, CPDPresenter.ICPDProxy.class);
-		
-		bindPresenter(CPDManagementPresenter.class, CPDManagementPresenter.ICPDManagementView.class,
-				CPDManagementView.class, CPDManagementPresenter.ICPDManagementProxy.class);
-		
-//		bindPresenter(CPDManagementPresenter.class, CPDManagementPresenter.ICPDManagementView.class,
-//				CPDView.class, CPDManagementPresenter.ICPDManagementProxy.class);
+
+		bindPresenter(CPDManagementPresenter.class,
+				CPDManagementPresenter.ICPDManagementView.class,
+				CPDManagementView.class,
+				CPDManagementPresenter.ICPDManagementProxy.class);
 
 		bindPresenter(ApplicationsPresenter.class,
-				ApplicationsPresenter.IApplicationsView.class, ApplicationsView.class,
+				ApplicationsPresenter.IApplicationsView.class,
+				ApplicationsView.class,
 				ApplicationsPresenter.IApplicationsProxy.class);
 
 		bindPresenter(ErrorPagePresenter.class,
@@ -222,7 +224,7 @@ public class ClientModule extends AbstractPresenterModule {
 
 		bindPresenter(UserPresenter.class, UserPresenter.MyView.class,
 				UserView.class, UserPresenter.MyProxy.class);
-		
+
 		bindPresenterWidget(ReportsPresenter.class,
 				ReportsPresenter.MyView.class, ReportsView.class);
 
@@ -245,18 +247,15 @@ public class ClientModule extends AbstractPresenterModule {
 				ProfilePresenter.IProfileView.class, ProfileView.class,
 				ProfilePresenter.IProfileProxy.class);
 
-		/*bindPresenterWidget(PieChartPresenter.class,
-				PieChartPresenter.IPieChartView.class, PieChartView.class);
-
-		bindPresenterWidget(LineGraphPresenter.class,
-				LineGraphPresenter.ILineGraphView.class, LineGraphView.class);*/
-
 		bindPresenter(SettingsPresenter.class,
 				SettingsPresenter.ISettingsView.class, SettingsView.class,
 				SettingsPresenter.MyProxy.class);
 
 		bindPresenterWidget(TableDataPresenter.class,
 				TableDataPresenter.ITableDataView.class, TableDataView.class);
+
+		bindPresenterWidget(PaymentPresenter.class,
+				PaymentPresenter.MyView.class, PaymentView.class);
 
 		bind(TabPanel.class);
 

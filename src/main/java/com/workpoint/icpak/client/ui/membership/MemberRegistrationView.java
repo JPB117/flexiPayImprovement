@@ -321,13 +321,7 @@ public class MemberRegistrationView extends ViewImpl implements
 	public void setMiddleHeight() {
 		int totalHeight = Window.getClientHeight();
 		int topHeight = divHeaderContainer.getOffsetHeight();
-		// int footerHeight = divFooter.getOffsetHeight();
-		// int topicsHeight = divHeaderContainer.getOffsetHeight();
 		int middleHeight = totalHeight - topHeight;
-
-		// Window.alert("\nTotalHeight:" + totalHeight + "MiddleHeight>>"
-		// + middleHeight + "TopHeight" + topHeight);
-
 		if (middleHeight > 0) {
 			divContent.setHeight(middleHeight + "px");
 		}

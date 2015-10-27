@@ -28,7 +28,7 @@ public class InvoiceDaoHelper {
 		InvoiceDto dto = invoice.toDto();
 
 		for (InvoiceLineDto line : dto.getLines()) {
-			//For Events Only
+			// For Events Only
 			String eventDelegateRefId = line.getEventDelegateRefId();
 			if (eventDelegateRefId != null) {
 				Delegate delegate = bookingsDao.findByRefId(eventDelegateRefId,
@@ -40,8 +40,12 @@ public class InvoiceDaoHelper {
 						: delegate.getAccommodation().toDto());
 			}
 		}
-
 		return dto;
+	}
+
+	public InvoiceDto checkInvoicePaymentStatus(String invoiceRef) {
+		List<InvoiceDto> dtos = dao.checkInvoicePaymentStatus(invoiceRef);
+		return dtos.get(0);
 	}
 
 	public InvoiceDto save(InvoiceDto dto) {
@@ -88,17 +92,17 @@ public class InvoiceDaoHelper {
 		return getInvoiceCount(null);
 	}
 
-//	public List<InvoiceDto> getAllInvoicesForMember(String memberId) {
-//
-//		List<Invoice> invoices = dao.getAllInvoicesForMember(memberId);
-//		List<InvoiceDto> dtos = new ArrayList<>();
-//
-//		for (Invoice invoice : invoices) {
-//			dtos.add(invoice.toDto());
-//		}
-//
-//		return dtos;
-//	}
+	// public List<InvoiceDto> getAllInvoicesForMember(String memberId) {
+	//
+	// List<Invoice> invoices = dao.getAllInvoicesForMember(memberId);
+	// List<InvoiceDto> dtos = new ArrayList<>();
+	//
+	// for (Invoice invoice : invoices) {
+	// dtos.add(invoice.toDto());
+	// }
+	//
+	// return dtos;
+	// }
 
 	public Integer getInvoiceCount(String memberId) {
 		return dao.getInvoiceCount(memberId);
@@ -108,22 +112,25 @@ public class InvoiceDaoHelper {
 		// TODO Auto-generated method stub
 		return dao.getSummary(memberId);
 	}
-	
-	public void insertIds(){
-		Query query = dao.getEntityManager().createNativeQuery("select id from cpd");
+
+	public void insertIds() {
+		Query query = dao.getEntityManager().createNativeQuery(
+				"select id from cpd");
 		List<BigInteger> array = query.getResultList();
-		
-		int i=0;
-		for(BigInteger col: array){
+
+		int i = 0;
+		for (BigInteger col : array) {
 			int val = col.intValue();
 			i++;
-			Query updateQuery = dao.getEntityManager().createNativeQuery("update cpd set refId=:refId "
-					+ "where id=:id")
+			Query updateQuery = dao
+					.getEntityManager()
+					.createNativeQuery(
+							"update cpd set refId=:refId " + "where id=:id")
 					.setParameter("refId", IDUtils.generateId())
 					.setParameter("id", val);
 			updateQuery.executeUpdate();
-			
-			if(i%1000==0){
+
+			if (i % 1000 == 0) {
 				System.out.println(i);
 			}
 		}

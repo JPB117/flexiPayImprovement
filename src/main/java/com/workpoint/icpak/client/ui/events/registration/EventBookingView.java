@@ -13,15 +13,14 @@ import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
@@ -37,11 +36,8 @@ import com.workpoint.icpak.client.ui.grid.ColumnConfig;
 import com.workpoint.icpak.client.ui.grid.DataMapper;
 import com.workpoint.icpak.client.ui.grid.DataModel;
 import com.workpoint.icpak.client.ui.membership.PageElement;
-import com.workpoint.icpak.client.ui.payment.PaymentWidget;
 import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.shared.model.Country;
-import com.workpoint.icpak.shared.model.CreditCardDto;
-import com.workpoint.icpak.shared.model.CreditCardResponse;
 import com.workpoint.icpak.shared.model.DataType;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.Listable;
@@ -69,16 +65,13 @@ public class EventBookingView extends ViewImpl implements
 	HTMLPanel divFooter;
 
 	@UiField
-	PaymentWidget panelPayment;
+	HTMLPanel panelPayment;
 
 	@UiField
 	Element divHeaderTopics;
 
 	@UiField
 	HTMLPanel divContent;
-
-	@UiField
-	Frame framePayment;
 
 	@UiField
 	Anchor aNext;
@@ -155,6 +148,7 @@ public class EventBookingView extends ViewImpl implements
 	ProformaInvoice proformaInv;
 	@UiField
 	DivElement divContainer;
+	int counter = 0;
 
 	private List<LIElement> liElements = new ArrayList<LIElement>();
 	private List<PageElement> pageElements = new ArrayList<PageElement>();
@@ -185,7 +179,10 @@ public class EventBookingView extends ViewImpl implements
 			DataModel model = new DataModel();
 			model.setId(dto.getRefId());
 			model.set("memberNo", member);
-			model.set("title", dto.getTitle()==null? null: Title.valueOf(dto.getTitle()));
+			model.set(
+					"title",
+					dto.getTitle() == null ? null : Title.valueOf(dto
+							.getTitle()));
 			model.set("surname", dto.getSurname());
 			model.set("otherNames", dto.getOtherNames());
 			model.set("email", dto.getEmail());
@@ -220,8 +217,6 @@ public class EventBookingView extends ViewImpl implements
 		}
 	};
 
-	int counter = 0;
-
 	public interface Binder extends UiBinder<Widget, EventBookingView> {
 	}
 
@@ -250,10 +245,6 @@ public class EventBookingView extends ViewImpl implements
 		config = new ColumnConfig("otherNames", "Other Names:",
 				DataType.STRING, "", "form-control");
 		configs.add(config);
-
-		// config = new ColumnConfig("email", "Email Address", DataType.STRING,
-		// "", "form-control");
-		// configs.add(config);
 
 		configs.add(accommodationConfig);
 
@@ -313,7 +304,8 @@ public class EventBookingView extends ViewImpl implements
 				liTab2));
 		pageElements
 				.add(new PageElement(divProforma, "Proceed to Pay", liTab3));
-		pageElements.add(new PageElement(divPayment, "Finish", "Back", liTab4));
+		pageElements.add(new PageElement(divPayment, "Go to My Bookings",
+				"Back", liTab4));
 
 		setActive(liElements.get(counter), pageElements.get(counter));
 
@@ -332,6 +324,7 @@ public class EventBookingView extends ViewImpl implements
 		showMyAccountLink(counter);
 		removeActive(liElements.get(counter), pageElements.get(counter));
 		setActive(liElements.get(counter), pageElements.get(counter));
+		
 	}
 
 	protected void showMyAccountLink(int counter) {
@@ -459,10 +452,6 @@ public class EventBookingView extends ViewImpl implements
 		}
 		return isValid;
 
-	}
-
-	public boolean isPaymentValid() {
-		return panelPayment.isValid();
 	}
 
 	@Override
@@ -597,7 +586,8 @@ public class EventBookingView extends ViewImpl implements
 		}
 
 		if (booking.getDelegates() != null) {
-			List<DataModel> models =  mapper.getDataModels(booking.getDelegates());
+			List<DataModel> models = mapper.getDataModels(booking
+					.getDelegates());
 			tblDelegates.setData(models);
 		}
 
@@ -608,13 +598,6 @@ public class EventBookingView extends ViewImpl implements
 		proformaInv.clearRows();
 		proformaInv.setInvoice(invoice);
 
-		if (invoice.getInvoiceAmount() != null) {
-			panelPayment.setAmount(invoice.getInvoiceAmount().toString());
-		}
-
-		if (invoice.getDocumentNo() != null) {
-			panelPayment.bindTransaction(invoice);
-		}
 	}
 
 	@Override
@@ -636,28 +619,15 @@ public class EventBookingView extends ViewImpl implements
 		return memberColumn;
 	}
 
-	public HasClickHandlers getPayButton() {
-		return panelPayment.getCardPayButton();
-	}
-
-	public CreditCardDto getCreditCardDetails() {
-		return panelPayment.getCardDetails();
-	}
-
 	@Override
-	public void setCardResponse(CreditCardResponse response) {
-		panelPayment.setCardResponse(response);
-
-	}
-
-	@Override
-	public HasClickHandlers getMpesaCompleteButton() {
-		return panelPayment.getMpesaCompleteButton();
-	}
-
-	@Override
-	public void setInvoiceResult(InvoiceDto invoice) {
-		panelPayment.setInvoiceResult(invoice);
+	public void setInSlot(Object slot, IsWidget content) {
+		if (slot == EventBookingPresenter.PAYMENTS_SLOT) {
+			panelPayment.clear();
+			if (content != null) {
+				panelPayment.add(content);
+			}
+			super.setInSlot(slot, content);
+		}
 	}
 
 }

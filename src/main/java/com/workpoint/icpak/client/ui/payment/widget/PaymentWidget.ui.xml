@@ -189,7 +189,8 @@
 							<div class="row">
 								<div class="col-sm-9">
 									<d:ActionLink ui:field="aPay" styleName="btn btn-gold btn-fill">
-										Pay</d:ActionLink>
+										Submit
+										Details</d:ActionLink>
 								</div>
 							</div>
 						</div>

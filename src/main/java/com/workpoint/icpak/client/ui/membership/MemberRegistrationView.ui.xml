@@ -51,13 +51,6 @@
 										</a>
 									</li>
 
-									<!-- <li style="width: 20%;" ui:field="liTab3"> -->
-									<!-- <a> -->
-									<!-- <span class="fa fa-check-circle hide"></span> -->
-									<!-- 3 - Password Configuration -->
-									<!-- </a> -->
-									<!-- </li> -->
-
 									<li style="width: 25%;" ui:field="liTab3">
 										<a>
 											<span class="fa fa-check-circle hide"></span>

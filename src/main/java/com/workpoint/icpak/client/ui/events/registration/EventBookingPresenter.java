@@ -6,7 +6,7 @@ import java.util.List;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.inject.Inject;
@@ -14,11 +14,13 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rest.delegates.client.ResourceDelegate;
 import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.View;
+import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.NoGatekeeper;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
+import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.workpoint.icpak.client.place.NameTokens;
@@ -26,25 +28,29 @@ import com.workpoint.icpak.client.service.AbstractAsyncCallback;
 import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.AutoCompleteField;
 import com.workpoint.icpak.client.ui.component.autocomplete.ServerOracle;
+import com.workpoint.icpak.client.ui.events.PaymentCompletedEvent;
+import com.workpoint.icpak.client.ui.events.PaymentCompletedEvent.PaymentCompletedHandler;
+import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
+import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent.ProcessingCompletedHandler;
+import com.workpoint.icpak.client.ui.events.ProcessingEvent;
+import com.workpoint.icpak.client.ui.events.ProcessingEvent.ProcessingHandler;
 import com.workpoint.icpak.client.ui.grid.ColumnConfig;
+import com.workpoint.icpak.client.ui.payment.PaymentPresenter;
 import com.workpoint.icpak.shared.api.CountriesResource;
-import com.workpoint.icpak.shared.api.CreditCardResource;
 import com.workpoint.icpak.shared.api.EventsResource;
 import com.workpoint.icpak.shared.api.InvoiceResource;
 import com.workpoint.icpak.shared.api.MemberResource;
 //import com.workpoint.icpak.shared.api.EventsResource;
 import com.workpoint.icpak.shared.model.Country;
-import com.workpoint.icpak.shared.model.CreditCardDto;
-import com.workpoint.icpak.shared.model.CreditCardResponse;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.MemberDto;
 import com.workpoint.icpak.shared.model.events.BookingDto;
 import com.workpoint.icpak.shared.model.events.EventDto;
 
-//import com.workpoint.icpak.shared.model.events.BookingDto;
-
 public class EventBookingPresenter extends
-		Presenter<EventBookingPresenter.MyView, EventBookingPresenter.MyProxy> {
+		Presenter<EventBookingPresenter.MyView, EventBookingPresenter.MyProxy>
+		implements ProcessingHandler, ProcessingCompletedHandler,
+		PaymentCompletedHandler {
 
 	public interface MyView extends View {
 		boolean isValid();
@@ -76,18 +82,6 @@ public class EventBookingPresenter extends
 		void showmask(boolean processing);
 
 		ColumnConfig getMemberColumnConfig();
-
-		HasClickHandlers getPayButton();
-
-		CreditCardDto getCreditCardDetails();
-
-		boolean isPaymentValid();
-
-		void setCardResponse(CreditCardResponse response);
-
-		HasClickHandlers getMpesaCompleteButton();
-
-		void setInvoiceResult(InvoiceDto result);
 	}
 
 	@ProxyCodeSplit
@@ -99,15 +93,18 @@ public class EventBookingPresenter extends
 	@Inject
 	PlaceManager placeManager;
 
+	@Inject
+	PaymentPresenter paymentPresenter;
+
+	@ContentSlot
+	public static final Type<RevealContentHandler<?>> PAYMENTS_SLOT = new Type<RevealContentHandler<?>>();
+
 	private String eventId;
 	private String bookingId;
-	private InvoiceDto invoice;
 
 	private ResourceDelegate<CountriesResource> countriesResource;
 
 	private ResourceDelegate<EventsResource> eventsResource;
-
-	private ResourceDelegate<CreditCardResource> creditCardResource;
 
 	private ResourceDelegate<InvoiceResource> invoiceResource;
 
@@ -119,14 +116,12 @@ public class EventBookingPresenter extends
 			ResourceDelegate<CountriesResource> countriesResource,
 			ResourceDelegate<EventsResource> eventsResource,
 			ResourceDelegate<InvoiceResource> invoiceResource,
-			ResourceDelegate<CreditCardResource> creditCardResource,
 			ResourceDelegate<MemberResource> membersDelegate) {
 		super(eventBus, view, proxy);
 		this.countriesResource = countriesResource;
 		this.eventsResource = eventsResource;
 		this.invoiceResource = invoiceResource;
 		this.membersDelegate = membersDelegate;
-		this.creditCardResource = creditCardResource;
 	}
 
 	@Override
@@ -137,6 +132,9 @@ public class EventBookingPresenter extends
 	@Override
 	protected void onBind() {
 		super.onBind();
+		addRegisteredHandler(ProcessingEvent.TYPE, this);
+		addRegisteredHandler(ProcessingCompletedEvent.TYPE, this);
+		addRegisteredHandler(PaymentCompletedEvent.TYPE, this);
 
 		getView().getMemberColumnConfig().setLoader(
 				new AutoCompleteField.Loader() {
@@ -166,7 +164,8 @@ public class EventBookingPresenter extends
 						dto.setEventRefId(eventId);
 						submit(dto);
 					} else if (getView().getCounter() == 3) {
-						  
+						getView().getANext().addStyleName("hide");
+						getView().getANext().setHref("#booking");
 					} else {
 						getView().next();
 					}
@@ -178,45 +177,6 @@ public class EventBookingPresenter extends
 			}
 		});
 
-		getView().getPayButton().addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				if (getView().isPaymentValid()) {
-					getView().showmask(true);
-					creditCardResource.withCallback(
-							new AbstractAsyncCallback<CreditCardResponse>() {
-								@Override
-								public void onSuccess(
-										CreditCardResponse response) {
-									getView().showmask(false);
-									getView().setCardResponse(response);
-
-								}
-							}).postPayment(getView().getCreditCardDetails());
-				}
-			}
-		});
-
-		getView().getMpesaCompleteButton().addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				getView().showmask(true);
-				invoiceResource.withCallback(
-						new AbstractAsyncCallback<InvoiceDto>() {
-							@Override
-							public void onSuccess(InvoiceDto result) {
-								getView().showmask(false);
-								getView().setInvoiceResult(result);
-							}
-
-							@Override
-							public void onFailure(Throwable caught) {
-								super.onFailure(caught);
-
-							}
-						}).getInvoice(invoice.getRefId());
-			}
-		});
 	}
 
 	protected void submit(BookingDto dto) {
@@ -294,6 +254,8 @@ public class EventBookingPresenter extends
 		}).getById(eventId);
 
 		if (bookingId != null) {
+			getView().next();
+			getView().next();
 			getView().setActivePage(2);
 			eventsResource
 					.withCallback(new AbstractAsyncCallback<BookingDto>() {
@@ -312,15 +274,22 @@ public class EventBookingPresenter extends
 	}
 
 	protected void getInvoice(String invoiceRef, final boolean moveNext) {
-
 		invoiceResource.withCallback(new AbstractAsyncCallback<InvoiceDto>() {
-
 			@Override
 			public void onSuccess(InvoiceDto invoice) {
-				EventBookingPresenter.this.invoice = invoice;
 				getView().bindInvoice(invoice);
-				if (moveNext)
+				if (invoice.getInvoiceAmount() != null) {
+					paymentPresenter.setAmount(invoice.getInvoiceAmount()
+							.toString());
+				}
+
+				if (invoice.getDocumentNo() != null) {
+					paymentPresenter.bindTransaction(invoice);
+				}
+
+				if (moveNext) {
 					getView().next();
+				}
 			}
 
 			@Override
@@ -336,6 +305,23 @@ public class EventBookingPresenter extends
 	protected void onReset() {
 		super.onReset();
 		getView().setMiddleHeight();
+		setInSlot(PAYMENTS_SLOT, paymentPresenter);
+
+	}
+
+	@Override
+	public void onProcessingCompleted(ProcessingCompletedEvent event) {
+		getView().showmask(false);
+	}
+
+	@Override
+	public void onProcessing(ProcessingEvent event) {
+		getView().showmask(true);
+	}
+
+	@Override
+	public void onPaymentCompleted(PaymentCompletedEvent event) {
+		getView().getANext().removeStyleName("hide");
 	}
 
 }
