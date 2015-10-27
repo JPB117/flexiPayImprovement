@@ -13,6 +13,7 @@ public class AccommodationDto extends SerializableObj implements Listable {
 	private int nights;
 	private EventDto event;
 	private int spaces;
+	private int totalBooking;
 
 	public AccommodationDto() {
 	}
@@ -81,6 +82,14 @@ public class AccommodationDto extends SerializableObj implements Listable {
 
 	public void setSpaces(int spaces) {
 		this.spaces = spaces;
+	}
+
+	public int getTotalBooking() {
+		return totalBooking;
+	}
+
+	public void setTotalBooking(int accommodationBookingCount) {
+		this.totalBooking = accommodationBookingCount;
 	}
 
 }

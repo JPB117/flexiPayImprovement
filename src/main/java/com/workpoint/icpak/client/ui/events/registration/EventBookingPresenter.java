@@ -312,7 +312,7 @@ public class EventBookingPresenter extends
 	}
 
 	protected void getInvoice(String invoiceRef, final boolean moveNext) {
-
+		
 		invoiceResource.withCallback(new AbstractAsyncCallback<InvoiceDto>() {
 
 			@Override

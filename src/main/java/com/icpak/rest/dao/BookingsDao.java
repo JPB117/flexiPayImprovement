@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Query;
+
+import org.apache.log4j.Logger;
+
 import com.icpak.rest.exceptions.ServiceException;
 import com.icpak.rest.models.ErrorCodes;
 import com.icpak.rest.models.event.Booking;
@@ -13,6 +17,7 @@ import com.workpoint.icpak.shared.model.events.AttendanceStatus;
 import com.workpoint.icpak.shared.model.events.MemberBookingDto;
 
 public class BookingsDao extends BaseDao {
+	Logger logger = Logger.getLogger(BookingsDao.class);
 
 	public Booking getByBookingId(String refId) {
 		
@@ -71,6 +76,26 @@ public class BookingsDao extends BaseDao {
 				.createNativeQuery("select refId from Invoice where bookingRefId=:bookingRefId")
 				.setParameter("bookingRefId", bookingRefId));
 		
+	}
+	
+	public void deleteAllBookingInvoice(String bookingRefId){
+		logger.error("Deleteing invoice line ====== ><><<>>>>>>>>===");
+		Query deleteQuery = getEntityManager().createNativeQuery(
+	            "delete from InvoiceLine "
+	            + "where invoiceId in ( "
+	                + "select d.id from Invoice d "
+	                + "where d.bookingRefId = :bookingRefId)");
+	        deleteQuery.setParameter("bookingRefId", bookingRefId);
+	        deleteQuery.executeUpdate();
+	        
+	        logger.error("Deleteing invoice ====== ><><<>>>>>>>>===");
+	        deleteQuery = getEntityManager().createNativeQuery(
+		            "delete from Invoice "
+		            + "where bookingRefId = :bookingRefId");
+		        deleteQuery.setParameter("bookingRefId", bookingRefId);
+		        deleteQuery.executeUpdate();
+		        
+		        logger.error("Deleteing Success ====== ><><<>>>>>>>>===");
 	}
 	
 	
