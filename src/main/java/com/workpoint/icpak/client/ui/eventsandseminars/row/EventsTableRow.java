@@ -2,6 +2,7 @@ package com.workpoint.icpak.client.ui.eventsandseminars.row;
 
 import static com.workpoint.icpak.client.ui.util.DateUtils.DATEFORMAT;
 import static com.workpoint.icpak.client.ui.util.NumberUtils.NUMBERFORMAT;
+import static com.workpoint.icpak.client.ui.util.StringUtils.*;
 
 import java.util.Date;
 
@@ -13,6 +14,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Widget;
 import com.workpoint.icpak.client.ui.component.RowWidget;
+import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.shared.model.events.EventDto;
 
 public class EventsTableRow extends RowWidget {
@@ -55,8 +57,10 @@ public class EventsTableRow extends RowWidget {
 	public EventsTableRow(EventDto event) {
 		this();
 		
-		Date startDate = event.getStartDate()==null? null : new Date(event.getStartDate());
-		Date endDate = event.getEndDate()==null? null : new Date(event.getEndDate());
+		Date startDate = isNullOrEmpty(event.getStartDate())? null : 
+			DateUtils.parse(event.getStartDate(), DateUtils.FULLTIMESTAMP);
+		Date endDate = isNullOrEmpty(event.getEndDate())? null : 
+			DateUtils.parse(event.getEndDate(), DateUtils.FULLTIMESTAMP);
 		
 		String dates = startDate==null? "" : DATEFORMAT.format(startDate)+"-"+
 				endDate==null? "" : DATEFORMAT.format(endDate);

@@ -18,9 +18,10 @@ public class DateUtils {
 	static String Time = "hh:mm a";
 	static String MonthTime = "MMM d, hh:mm a";
 	static String shortTimeStamp = "yyyy-MM-dd";
+	static String fullTimeStamp = "yyyy-MM-dd hh:mm:ss";
 
 	public static final SimpleDateFormat CREATEDFORMAT = getFormat(createdpattern);
-	
+
 	public static final SimpleDateFormat DATEFORMAT = getFormat(datepattern);
 	public static final SimpleDateFormat DATEFORMAT_SYS = getFormat(datepattern_sys);
 	public static final SimpleDateFormat SHORTTIMESTAMP = getFormat(shortTimeStamp);
@@ -33,19 +34,20 @@ public class DateUtils {
 	public static final SimpleDateFormat MONTHTIME = getFormat(MonthTime);
 	public static final SimpleDateFormat MONTHFORMAT = getFormat(monthPattern);
 	public static final SimpleDateFormat MONTHONLYFORMAT = getFormat(monthOnlyPattern);
-	
+	public static final SimpleDateFormat FULLTIMESTAMP = getFormat(fullTimeStamp);
+
 	static long minInMillis = 60 * 1000;
 	static long hourInMillis = 60 * minInMillis;
 	static long dayInMillis = 24 * hourInMillis;
-	static long monthInMillis = 30 *  dayInMillis;
+	static long monthInMillis = 30 * dayInMillis;
 	static long yearInMillis = 12 * monthInMillis;
 
 	public static int getDaysBetween(Date startDate, Date endDate) {
-		int days = (int) ((endDate.getTime()-startDate.getTime())/dayInMillis);
-		
+		int days = (int) ((endDate.getTime() - startDate.getTime()) / dayInMillis);
+
 		return days;
 	}
-	
+
 	/**
 	 * Assumes a 30 day month
 	 * 
@@ -54,12 +56,12 @@ public class DateUtils {
 	 * @return
 	 */
 	public static int getMonthsBetween(Date startDate, Date endDate) {
-		int months = (int) ((endDate.getTime()-startDate.getTime())/monthInMillis);
+		int months = (int) ((endDate.getTime() - startDate.getTime()) / monthInMillis);
 		return months;
 	}
-	
+
 	public static double getYearsBetween(Date startDate, Date endDate) {
-		double years = (double) ((endDate.getTime()-startDate.getTime())/yearInMillis);
+		double years = (double) ((endDate.getTime() - startDate.getTime()) / yearInMillis);
 		return years;
 	}
 
@@ -87,6 +89,26 @@ public class DateUtils {
 	public static Date addDays(Date created, int days) {
 
 		return new Date(created.getTime() + dayInMillis * days);
+	}
+
+	public static String format(Date date, SimpleDateFormat formatter) {
+		if (date == null) {
+			return null;
+		}
+		return formatter.format(date);
+	}
+
+	public static Date parse(String date, SimpleDateFormat formatter) {
+		if (date == null || date.isEmpty()) {
+			return null;
+		}
+		
+		try {
+			return formatter.parse(date);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+
 	}
 
 }

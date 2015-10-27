@@ -209,13 +209,12 @@ public class EventBookingView extends ViewImpl implements EventBookingPresenter.
 				AggregationGridRow row = field.getParentRow();
 				DelegateDto delegate = mapper.getData(row.getData());
 				DelegateDto saved = finalDelRefIds.get(delegate.getRefId());
-				
+
 				AccommodationDto dto = (AccommodationDto) event.getValue();
-				if(saved!=null && saved.getAccommodation()!=null 
-						&& saved.getAccommodation().equals(dto)){
+				if (saved != null && saved.getAccommodation() != null && saved.getAccommodation().equals(dto)) {
 					return;
 				}
-				
+
 				if (dto.getTotalBooking() > dto.getSpaces()) {
 					Window.alert("No spaces available in '" + dto.getHotel() + "'");
 					field.setValue(null);
@@ -536,10 +535,10 @@ public class EventBookingView extends ViewImpl implements EventBookingPresenter.
 
 		if (event.getStartDate() != null) {
 
-			Date startDate = new Date(event.getStartDate());
+			Date startDate = DateUtils.parse(event.getStartDate(), DateUtils.FULLTIMESTAMP);
 			spnStartDate.setInnerText(DateUtils.DATEFORMAT.format(startDate));
 			if (event.getEndDate() != null) {
-				Date endDate = new Date(event.getEndDate());
+				Date endDate = DateUtils.parse(event.getEndDate(), DateUtils.FULLTIMESTAMP);
 				spnDuration.setInnerText(DateUtils.getTimeDifference(startDate, endDate));
 			}
 
@@ -642,16 +641,8 @@ public class EventBookingView extends ViewImpl implements EventBookingPresenter.
 		panelPayment.setInvoiceResult(invoice);
 	}
 
-	
-	
-	
-	
-	
-	
-	
-	
 	/**
-	 * DELEGATE DATA MAPPER 
+	 * DELEGATE DATA MAPPER
 	 */
 	DataMapper mapper = new DataMapper() {
 		@Override

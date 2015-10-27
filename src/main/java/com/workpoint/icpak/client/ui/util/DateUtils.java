@@ -24,6 +24,7 @@ public class DateUtils {
 	static String Time = "hh:mm a";
 	static String MonthTime = "MMM d, hh:mm a";
 	static String shortTimeStamp = "yyyy-MM-dd";
+	static String fullTimeStamp = "yyyy-MM-dd hh:mm:ss";
 
 	public static final DateTimeFormat CREATEDFORMAT = DateTimeFormat
 			.getFormat(createdpattern);
@@ -51,6 +52,8 @@ public class DateUtils {
 			.getFormat(monthPattern);
 	public static final DateTimeFormat MONTHONLYFORMAT = DateTimeFormat
 			.getFormat(monthOnlyPattern);
+	public static final DateTimeFormat FULLTIMESTAMP = DateTimeFormat
+			.getFormat(fullTimeStamp);
 
 	static long dayInMillis = 24 * 3600 * 1000;
 	static long hourInMillis = 3600 * 1000;
@@ -283,4 +286,26 @@ public class DateUtils {
 		String todayText = SHORTTIMESTAMP.format(passedDate);
 		return SHORTTIMESTAMP.parse(todayText);
 	}
+	
+	
+	public static String format(Date date, DateTimeFormat formatter) {
+		if (date == null) {
+			return null;
+		}
+		return formatter.format(date);
+	}
+
+	public static Date parse(String date, DateTimeFormat formatter) {
+		if (date == null || date.isEmpty()) {
+			return null;
+		}
+		
+		try {
+			return formatter.parse(date);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+
+	}
+
 }
