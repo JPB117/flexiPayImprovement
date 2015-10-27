@@ -9,14 +9,28 @@ import com.workpoint.icpak.shared.model.EventType;
 import com.workpoint.icpak.shared.model.Listable;
 import com.workpoint.icpak.shared.model.SerializableObj;
 
+/**
+ * Event DTO 
+ * <p>
+ * For simplicity, all dates will be transmitted as strings and parsed by corresponding recipients
+ * <br/>
+ * The utilized format for the dates is yyyy-MM-dd hh:mm:ss
+ *	<p>
+ * @author duggan
+ *
+ */
 public class EventDto extends SerializableObj implements Listable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String name;
 	private String description;
 	private Integer cpdHours;
 	private String venue;
-	private Long startDate;
-	private Long endDate;
+	private String startDate;
+	private String endDate;
 	private EventStatus status;
 	private EventType type;
 	private Double memberPrice;
@@ -128,19 +142,19 @@ public class EventDto extends SerializableObj implements Listable{
 		this.totalUnpaid = totalUnpaid;
 	}
 
-	public Long getStartDate() {
+	public String getStartDate() {
 		return startDate;
 	}
 
-	public void setStartDate(Long startDate) {
+	public void setStartDate(String startDate) {
 		this.startDate = startDate;
 	}
 
-	public Long getEndDate() {
+	public String getEndDate() {
 		return endDate;
 	}
 
-	public void setEndDate(Long endDate) {
+	public void setEndDate(String endDate) {
 		this.endDate = endDate;
 	}
 

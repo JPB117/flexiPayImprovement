@@ -561,10 +561,10 @@ public class EventBookingView extends ViewImpl implements
 
 		if (event.getStartDate() != null) {
 
-			Date startDate = new Date(event.getStartDate());
+			Date startDate = DateUtils.parse(event.getStartDate(), DateUtils.FULLTIMESTAMP);
 			spnStartDate.setInnerText(DateUtils.DATEFORMAT.format(startDate));
 			if (event.getEndDate() != null) {
-				Date endDate = new Date(event.getEndDate());
+				Date endDate = DateUtils.parse(event.getEndDate(), DateUtils.FULLTIMESTAMP);
 				spnDuration.setInnerText(DateUtils.getTimeDifference(startDate,
 						endDate));
 			}
