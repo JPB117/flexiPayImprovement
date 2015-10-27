@@ -5,7 +5,9 @@ import static com.workpoint.icpak.client.ui.util.StringUtils.isNullOrEmpty;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Element;
@@ -153,70 +155,7 @@ public class EventBookingView extends ViewImpl implements
 	private List<LIElement> liElements = new ArrayList<LIElement>();
 	private List<PageElement> pageElements = new ArrayList<PageElement>();
 
-	DataMapper mapper = new DataMapper() {
-		@Override
-		public List<DataModel> getDataModels(List objs) {
-			List<DataModel> models = new ArrayList<DataModel>();
-			for (Object o : objs) {
-				models.add(getModel(o));
-			}
-			return models;
-		}
-
-		@Override
-		public DataModel getModel(Object obj) {
-			DelegateDto dto = (DelegateDto) obj;
-			MemberDto member = new MemberDto();
-			if (dto.getMemberRefId() == null) {
-				member = null;
-			} else {
-				member.setRefId(dto.getMemberRefId());
-				member.setMemberNo(dto.getMemberId());
-				member.setFirstName(dto.getOtherNames());
-				member.setLastName(dto.getSurname());
-			}
-
-			DataModel model = new DataModel();
-			model.setId(dto.getRefId());
-			model.set("memberNo", member);
-			model.set(
-					"title",
-					dto.getTitle() == null ? null : Title.valueOf(dto
-							.getTitle()));
-			model.set("surname", dto.getSurname());
-			model.set("otherNames", dto.getOtherNames());
-			model.set("email", dto.getEmail());
-			model.set("accommodation", dto.getAccommodation());
-			return model;
-		}
-
-		@Override
-		public DelegateDto getData(DataModel model) {
-			DelegateDto dto = new DelegateDto();
-
-			if (model.isEmpty()) {
-				return null;
-			}
-
-			MemberDto memberDto = model.get("memberNo") == null ? null
-					: ((MemberDto) model.get("memberNo"));
-			dto.setRefId(model.getId()==null? null: model.getId().toString());
-			dto.setMemberId(memberDto == null ? null : memberDto.getMemberNo());
-			dto.setMemberRefId(memberDto == null ? null : memberDto.getRefId());
-			dto.setTitle(model.get("title") == null ? null : model.get("title")
-					.toString());
-			dto.setSurname(model.get("surname") == null ? null : model.get(
-					"surname").toString());
-			dto.setOtherNames(model.get("otherNames") == null ? null : model
-					.get("otherNames").toString());
-			dto.setEmail(model.get("email") == null ? null : model.get("email")
-					.toString());
-			dto.setAccommodation(model.get("accommodation") == null ? null
-					: (AccommodationDto) model.get("accommodation"));
-
-			return dto;
-		}
-	};
+	Map<String, DelegateDto> finalDelRefIds = new HashMap<String, DelegateDto>();
 
 	public interface Binder extends UiBinder<Widget, EventBookingView> {
 	}
@@ -250,6 +189,54 @@ public class EventBookingView extends ViewImpl implements
 		configs.add(accommodationConfig);
 
 		tblDelegates.setColumnConfigs(configs);
+
+		accommodationConfig
+				.addValueChangeHandler(new ValueChangeHandler<Listable>() {
+					@Override
+					public void onValueChange(ValueChangeEvent<Listable> event) {
+						if (event.getValue() == null) {
+							return;
+						}
+
+						// Window.alert("Accommodations selection change");
+						Widget source = (Widget) event.getSource();
+						DropDownList<AccommodationDto> field = (DropDownList) source;
+						AggregationGridRow row = field.getParentRow();
+						DelegateDto delegate = mapper.getData(row.getData());
+						DelegateDto saved = finalDelRefIds.get(delegate
+								.getRefId());
+
+						AccommodationDto dto = (AccommodationDto) event
+								.getValue();
+						if (saved != null && saved.getAccommodation() != null
+								&& saved.getAccommodation().equals(dto)) {
+							return;
+						}
+
+						if (dto.getTotalBooking() > dto.getSpaces()) {
+							Window.alert("No spaces available in '"
+									+ dto.getHotel() + "'");
+							field.setValue(null);
+							return;
+						}
+
+						List<DelegateDto> delegates = getDelegates();
+						int count = 0;
+						for (DelegateDto d : delegates) {
+							if (d.getAccommodation() != null
+									&& d.getAccommodation().equals(dto)) {
+								++count;
+							}
+						}
+
+						if ((dto.getTotalBooking() + count) > dto.getSpaces()) {
+							Window.alert("No more spaces available in '"
+									+ dto.getHotel() + "'");
+							field.setValue(null);
+							return;
+						}
+					}
+				});
 
 		memberColumn.addValueChangeHandler(new ValueChangeHandler<Listable>() {
 			@Override
@@ -325,7 +312,7 @@ public class EventBookingView extends ViewImpl implements
 		showMyAccountLink(counter);
 		removeActive(liElements.get(counter), pageElements.get(counter));
 		setActive(liElements.get(counter), pageElements.get(counter));
-		
+
 	}
 
 	protected void showMyAccountLink(int counter) {
@@ -551,10 +538,12 @@ public class EventBookingView extends ViewImpl implements
 
 		if (event.getStartDate() != null) {
 
-			Date startDate = DateUtils.parse(event.getStartDate(), DateUtils.FULLTIMESTAMP);
+			Date startDate = DateUtils.parse(event.getStartDate(),
+					DateUtils.FULLTIMESTAMP);
 			spnStartDate.setInnerText(DateUtils.DATEFORMAT.format(startDate));
 			if (event.getEndDate() != null) {
-				Date endDate = DateUtils.parse(event.getEndDate(), DateUtils.FULLTIMESTAMP);
+				Date endDate = DateUtils.parse(event.getEndDate(),
+						DateUtils.FULLTIMESTAMP);
 				spnDuration.setInnerText(DateUtils.getTimeDifference(startDate,
 						endDate));
 			}
@@ -563,9 +552,13 @@ public class EventBookingView extends ViewImpl implements
 					startDate));
 		}
 
+		// bindAccommodations(event.getAccommodation());
+	}
+
+	public void bindAccommodations(List<AccommodationDto> accommodation) {
 		List<Listable> accommodations = new ArrayList<Listable>();
 		if (accommodations != null) {
-			for (AccommodationDto acc : event.getAccommodation()) {
+			for (AccommodationDto acc : accommodation) {
 				accommodations.add(acc);
 			}
 			accommodationConfig.setDropDownItems(accommodations);
@@ -587,6 +580,11 @@ public class EventBookingView extends ViewImpl implements
 		}
 
 		if (booking.getDelegates() != null) {
+
+			for (DelegateDto d : booking.getDelegates()) {
+				finalDelRefIds.put(d.getRefId(), d);
+			}
+
 			List<DataModel> models = mapper.getDataModels(booking
 					.getDelegates());
 			tblDelegates.setData(models);
@@ -630,5 +628,74 @@ public class EventBookingView extends ViewImpl implements
 			super.setInSlot(slot, content);
 		}
 	}
+
+	/**
+	 * DELEGATE DATA MAPPER
+	 */
+	DataMapper mapper = new DataMapper() {
+		@Override
+		public List<DataModel> getDataModels(List objs) {
+			List<DataModel> models = new ArrayList<DataModel>();
+			for (Object o : objs) {
+				models.add(getModel(o));
+			}
+			return models;
+		}
+
+		@Override
+		public DataModel getModel(Object obj) {
+			DelegateDto dto = (DelegateDto) obj;
+			MemberDto member = new MemberDto();
+			if (dto.getMemberRefId() == null) {
+				member = null;
+			} else {
+				member.setRefId(dto.getMemberRefId());
+				member.setMemberNo(dto.getMemberId());
+				member.setFirstName(dto.getOtherNames());
+				member.setLastName(dto.getSurname());
+			}
+
+			DataModel model = new DataModel();
+			model.setId(dto.getRefId());
+			model.set("memberNo", member);
+			model.set(
+					"title",
+					dto.getTitle() == null ? null : Title.valueOf(dto
+							.getTitle()));
+			model.set("surname", dto.getSurname());
+			model.set("otherNames", dto.getOtherNames());
+			model.set("email", dto.getEmail());
+			model.set("accommodation", dto.getAccommodation());
+			return model;
+		}
+
+		@Override
+		public DelegateDto getData(DataModel model) {
+			DelegateDto dto = new DelegateDto();
+
+			if (model.isEmpty()) {
+				return null;
+			}
+
+			MemberDto memberDto = model.get("memberNo") == null ? null
+					: ((MemberDto) model.get("memberNo"));
+			dto.setRefId(model.getId() == null ? null : model.getId()
+					.toString());
+			dto.setMemberId(memberDto == null ? null : memberDto.getMemberNo());
+			dto.setMemberRefId(memberDto == null ? null : memberDto.getRefId());
+			dto.setTitle(model.get("title") == null ? null : model.get("title")
+					.toString());
+			dto.setSurname(model.get("surname") == null ? null : model.get(
+					"surname").toString());
+			dto.setOtherNames(model.get("otherNames") == null ? null : model
+					.get("otherNames").toString());
+			dto.setEmail(model.get("email") == null ? null : model.get("email")
+					.toString());
+			dto.setAccommodation(model.get("accommodation") == null ? null
+					: (AccommodationDto) model.get("accommodation"));
+
+			return dto;
+		}
+	};
 
 }

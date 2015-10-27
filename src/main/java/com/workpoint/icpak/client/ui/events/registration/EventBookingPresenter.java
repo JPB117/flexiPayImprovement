@@ -44,6 +44,7 @@ import com.workpoint.icpak.shared.api.MemberResource;
 import com.workpoint.icpak.shared.model.Country;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.MemberDto;
+import com.workpoint.icpak.shared.model.events.AccommodationDto;
 import com.workpoint.icpak.shared.model.events.BookingDto;
 import com.workpoint.icpak.shared.model.events.EventDto;
 
@@ -82,6 +83,8 @@ public class EventBookingPresenter extends
 		void showmask(boolean processing);
 
 		ColumnConfig getMemberColumnConfig();
+
+		void bindAccommodations(List<AccommodationDto> result);
 	}
 
 	@ProxyCodeSplit
@@ -252,6 +255,15 @@ public class EventBookingPresenter extends
 				super.onFailure(caught);
 			}
 		}).getById(eventId);
+
+		eventsResource
+				.withCallback(
+						new AbstractAsyncCallback<List<AccommodationDto>>() {
+							@Override
+							public void onSuccess(List<AccommodationDto> result) {
+								getView().bindAccommodations(result);
+							}
+						}).accommodations(eventId).getAll(0, 100);
 
 		if (bookingId != null) {
 			getView().next();

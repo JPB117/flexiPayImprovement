@@ -10,6 +10,14 @@
 			<div class="form-group">
 				<div class="row">
 					<div class="col-xs-12">
+						<label for="from">Event:</label>
+						<g:InlineLabel ui:field="spnEvent"></g:InlineLabel>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="row">
+					<div class="col-xs-12">
 						<label for="firstname">Hotel Name:</label>
 						<d:TextField ui:field="txtHotelName" styleName="form-control"
 							placeholder="Hotel Name" value="" required="true">
@@ -38,15 +46,6 @@
 						<d:TextField ui:field="txtSpace" styleName="form-control"
 							placeholder="Spaces available" value="" required="true">
 						</d:TextField>
-					</div>
-				</div>
-			</div>
-
-			<div class="form-group">
-				<div class="row">
-					<div class="col-xs-12">
-						<label for="from">Event:</label>
-						<d:DropDownList ui:field="lstEvent"></d:DropDownList>
 					</div>
 				</div>
 			</div>

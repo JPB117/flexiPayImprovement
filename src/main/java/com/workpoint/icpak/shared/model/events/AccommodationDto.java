@@ -49,7 +49,10 @@ public class AccommodationDto extends SerializableObj implements Listable {
 
 	@JsonIgnore
 	public String getDisplayName() {
-		return hotel + "- Ksh " + fee;
+		return hotel + "-"
+				+ ((totalBooking >= spaces) ? " No Accommodation"
+						// "<span style=\"color:red;\">No Accommodation</span>"
+						: " 	" + (spaces - totalBooking) + " spaces @Ksh" + fee);
 	}
 
 	public EventDto getEvent() {
@@ -90,6 +93,20 @@ public class AccommodationDto extends SerializableObj implements Listable {
 
 	public void setTotalBooking(int accommodationBookingCount) {
 		this.totalBooking = accommodationBookingCount;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof AccommodationDto) || obj == null) {
+			return false;
+		}
+		
+		AccommodationDto other = (AccommodationDto) obj;
+		if (other.getRefId() != null && getRefId() != null) {
+			return other.getRefId().equals(getRefId());
+		}
+
+		return super.equals(obj);
 	}
 
 }

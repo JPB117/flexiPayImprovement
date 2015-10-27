@@ -15,6 +15,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
 import com.workpoint.icpak.client.ui.component.AutoCompleteField;
+import com.workpoint.icpak.client.ui.component.DropDownList;
 import com.workpoint.icpak.client.ui.component.RowWidget;
 
 public class AggregationGridRow extends RowWidget {
@@ -61,6 +62,9 @@ public class AggregationGridRow extends RowWidget {
 				Widget widget = config.createWidget(model.get(config.getKey()));
 				if(widget instanceof AutoCompleteField){
 					((AutoCompleteField)widget).setParentRow(this);
+				}
+				if(widget instanceof DropDownList){
+					((DropDownList)widget).setParentRow(this);
 				}
 				columnWigetMap.put(config, (HasValue) widget);
 				if (config.isAggregationColumn()) {

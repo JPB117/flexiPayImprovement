@@ -2,16 +2,19 @@ package com.workpoint.icpak.client.ui.accomodation.form;
 
 import static com.workpoint.icpak.client.ui.util.StringUtils.isNullOrEmpty;
 
+import java.util.Date;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Widget;
 import com.workpoint.icpak.client.ui.component.DropDownList;
 import com.workpoint.icpak.client.ui.component.IssuesPanel;
 import com.workpoint.icpak.client.ui.component.TextField;
+import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.shared.model.events.AccommodationDto;
 import com.workpoint.icpak.shared.model.events.EventDto;
 
@@ -34,10 +37,13 @@ public class CreateAccomodation extends Composite {
 	TextField txtSpace;
 	@UiField
 	TextField txtPrice;
+
 	@UiField
-	DropDownList<EventDto> lstEvent;
+	InlineLabel spnEvent;
 
 	private AccommodationDto accomodation;
+
+	private EventDto event;
 
 	public CreateAccomodation() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -62,10 +68,7 @@ public class CreateAccomodation extends Composite {
 			isValid = false;
 			issues.addError("Space information is mandatory");
 		}
-		if (lstEvent.getValue() == null) {
-			isValid = false;
-			issues.addError("Event is mandatory");
-		}
+
 		return isValid;
 	}
 
@@ -76,19 +79,17 @@ public class CreateAccomodation extends Composite {
 			txtNights.setValue(accomodation.getNights() + "");
 			txtPrice.setValue(accomodation.getFee() + "");
 			txtSpace.setValue(accomodation.getSpaces() + "");
-			if(accomodation.getEvent()!=null){
-				lstEvent.setValue(accomodation.getEvent());
-			}
+			setEvent(accomodation.getEvent());
 		}
 	}
 
 	public AccommodationDto getAccomodationDetails() {
 		AccommodationDto accommodation = new AccommodationDto();
-		if(this.accomodation!=null){
+		if (this.accomodation != null) {
 			accommodation = this.accomodation;
 		}
-		
-		accommodation.setEvent(lstEvent.getValue());
+
+		accommodation.setEvent(event);
 		accommodation.setFee(new Double(txtPrice.getValue()));
 		accommodation.setHotel(txtHotelName.getValue());
 		accommodation.setNights(new Integer(txtNights.getValue()));
@@ -96,7 +97,15 @@ public class CreateAccomodation extends Composite {
 		return accommodation;
 	}
 
-	public void setEvents(List<EventDto> events) {
-		lstEvent.setItems(events);
+	public void setEvent(EventDto event) {
+		this.event = event;
+
+		Date startDate = DateUtils.parse(event.getStartDate(),
+				DateUtils.FULLTIMESTAMP);
+		Date endDate = DateUtils.parse(event.getEndDate(),
+				DateUtils.FULLTIMESTAMP);
+		spnEvent.setText(event.getName() + " ("
+				+ DateUtils.format(startDate, DateUtils.DATEFORMAT) + " - "
+				+ DateUtils.format(endDate, DateUtils.DATEFORMAT) + ")");
 	}
 }

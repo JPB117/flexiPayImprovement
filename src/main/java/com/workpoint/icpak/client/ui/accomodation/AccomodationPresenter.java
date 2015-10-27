@@ -1,10 +1,14 @@
 package com.workpoint.icpak.client.ui.accomodation;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rest.delegates.client.ResourceDelegate;
@@ -20,9 +24,11 @@ import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.workpoint.icpak.client.place.NameTokens;
 import com.workpoint.icpak.client.service.AbstractAsyncCallback;
 import com.workpoint.icpak.client.ui.AppManager;
+import com.workpoint.icpak.client.ui.OnOptionSelected;
 import com.workpoint.icpak.client.ui.OptionControl;
 import com.workpoint.icpak.client.ui.accomodation.form.CreateAccomodation;
 import com.workpoint.icpak.client.ui.admin.TabDataExt;
+import com.workpoint.icpak.client.ui.component.DropDownList;
 import com.workpoint.icpak.client.ui.events.EditModelEvent;
 import com.workpoint.icpak.client.ui.events.EditModelEvent.EditModelHandler;
 import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
@@ -43,7 +49,13 @@ public class AccomodationPresenter
 	public interface IAccomodationView extends View {
 		HasClickHandlers getCreateButton();
 
+		DropDownList<EventDto> getEventList();
+
 		void bindAccommodations(List<AccommodationDto> accommodations);
+
+		void setEvents(List<EventDto> events);
+
+		void showCreate(boolean b);
 	}
 
 	@ProxyCodeSplit
@@ -82,6 +94,21 @@ public class AccomodationPresenter
 			}
 		});
 
+		getView().getEventList().addValueChangeHandler(
+				new ValueChangeHandler<EventDto>() {
+
+					@Override
+					public void onValueChange(ValueChangeEvent<EventDto> event) {
+						if (event.getValue() == null) {
+							getView().bindAccommodations(
+									new ArrayList<AccommodationDto>());
+							return;
+						}
+
+						loadAccommodations(event.getValue().getRefId());
+					}
+				});
+
 		/*
 		 * getEditButton().addClickHandler(new ClickHandler() {
 		 * 
@@ -94,11 +121,10 @@ public class AccomodationPresenter
 	@Override
 	public void prepareFromRequest(PlaceRequest request) {
 		super.prepareFromRequest(request);
-		loadAccommodations();
 		loadEvents();
 	}
 
-	private void loadAccommodations() {
+	private void loadAccommodations(String eventId) {
 		eventResource
 				.withCallback(
 						new AbstractAsyncCallback<List<AccommodationDto>>() {
@@ -107,23 +133,28 @@ public class AccomodationPresenter
 									List<AccommodationDto> accommodations) {
 								getView().bindAccommodations(accommodations);
 							}
-						}).accommodations("ALL").getAll(0, 100);
+						}).accommodations(eventId).getAll(0, 100);
 
 	}
-	
-	private void loadEvents(){
+
+	private void loadEvents() {
 		eventResource.withCallback(new AbstractAsyncCallback<List<EventDto>>() {
 
 			@Override
 			public void onSuccess(List<EventDto> events) {
-				AccomodationPresenter.this.events = events;
+				getView().setEvents(events);
+				if (events.size() > 0) {
+					getView().getEventList().setValue(events.get(0));
+					loadAccommodations(events.get(0).getRefId());
+					getView().showCreate(true);
+				}
 			}
 		}).getAll(0, 100);
 	}
 
 	protected void showPopUp(AccommodationDto dto) {
 		final CreateAccomodation newAccomodation = new CreateAccomodation();
-		newAccomodation.setEvents(events);
+		newAccomodation.setEvent(getView().getEventList().getValue());
 		newAccomodation.setAccomodationDetails(dto);
 
 		AppManager.showPopUp("Create Accommodation",
@@ -132,9 +163,10 @@ public class AccomodationPresenter
 					public void onSelect(String name) {
 						if (name.equals("Save")) {
 							if (newAccomodation.isValid()) {
-								AccommodationDto accommodation =newAccomodation.getAccomodationDetails();
-								saveAccommodation(accommodation.getEvent().getRefId(), 
-										accommodation);
+								AccommodationDto accommodation = newAccomodation
+										.getAccomodationDetails();
+								saveAccommodation(accommodation.getEvent()
+										.getRefId(), accommodation);
 								hide();
 							}
 						}
@@ -142,39 +174,69 @@ public class AccomodationPresenter
 				}, "Save");
 	}
 
-	protected void saveAccommodation(String eventId,final AccommodationDto accomodation) {
-		
+	protected void saveAccommodation(final String eventId,
+			final AccommodationDto accomodation) {
+
 		fireEvent(new ProcessingEvent());
-		if(accomodation.getRefId()!=null){
-			
-			eventResource.withCallback(new AbstractAsyncCallback<AccommodationDto>() {
-				@Override
-				public void onSuccess(AccommodationDto result) {
-					fireEvent(new ProcessingCompletedEvent());
-					loadAccommodations();
-				}
-			}).accommodations(eventId)
-			.update(accomodation.getRefId(), accomodation);
-			
-		}else{
-			
-			eventResource.withCallback(new AbstractAsyncCallback<AccommodationDto>() {
-				@Override
-				public void onSuccess(AccommodationDto result) {
-					//fireEvent(new ProcessingCompletedEvent());
-					loadAccommodations();
-				}
-				
-			}).accommodations(eventId)
-			.create(accomodation);
+		if (accomodation.getRefId() != null) {
+
+			eventResource
+					.withCallback(
+							new AbstractAsyncCallback<AccommodationDto>() {
+								@Override
+								public void onSuccess(AccommodationDto result) {
+									fireEvent(new ProcessingCompletedEvent());
+									loadAccommodations(eventId);
+								}
+							}).accommodations(eventId)
+					.update(accomodation.getRefId(), accomodation);
+
+		} else {
+
+			eventResource
+					.withCallback(
+							new AbstractAsyncCallback<AccommodationDto>() {
+								@Override
+								public void onSuccess(AccommodationDto result) {
+									// fireEvent(new
+									// ProcessingCompletedEvent());
+									loadAccommodations(eventId);
+								}
+
+							}).accommodations(eventId).create(accomodation);
 		}
-		
+
 	}
 
 	@Override
 	public void onEditModel(EditModelEvent event) {
 		if (event.getModel() instanceof AccommodationDto) {
-			showPopUp((AccommodationDto) (event.getModel()));
+			final AccommodationDto dto = (AccommodationDto) event.getModel();
+			if (event.isDelete() && dto.getRefId() != null) {
+				AppManager.showPopUp("Delete Accommodation",
+						"Delete Accommodation " + dto.getHotel() + "?",
+						new OnOptionSelected() {
+
+							@Override
+							public void onSelect(String name) {
+								if (name.equals("Yes")) {
+									deleteAccommodation(dto);
+								}
+							}
+						}, "Yes", "Cancel");
+			} else {
+				showPopUp((AccommodationDto) (event.getModel()));
+			}
 		}
+	}
+
+	protected void deleteAccommodation(final AccommodationDto dto) {
+		eventResource.withCallback(new AbstractAsyncCallback<Void>() {
+			@Override
+			public void onSuccess(Void arg0) {
+				loadAccommodations(dto.getEvent().getRefId());
+			}
+		}).accommodations(dto.getEvent().getRefId()).delete(dto.getRefId());
+
 	}
 }

@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS docnums (
-  casenumber varchar(20) NOT NULL,
+  casenumber varchar(60) NOT NULL,
   doctype varchar(45) NOT NULL,
   docno varchar(20) NOT NULL,
   PRIMARY KEY (casenumber,doctype)
@@ -69,7 +69,9 @@ SET NEW.ern= proc_generatedocnum('ERN', concat('BookingDelegate-',NEW.refId));
 
 DROP TRIGGER IF EXISTS generate_goodstandingcertrefno;
 CREATE TRIGGER generate_goodstandingcertrefno
-BEFORE INSERT ON Invoice
+BEFORE INSERT ON GoodStandingCertificate
 FOR EACH ROW
 SET NEW.documentNo= proc_generatedocnum('GOODSTANDINGCERT', concat('ICPAK-GOODSTANDING-',NEW.refId));
+
+
 
