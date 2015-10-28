@@ -73,6 +73,11 @@ public abstract class AbstractAsyncCallback<T> implements RestCallback<T> {
 				|| code == 304) {
 			return;
 		}
+		
+		boolean isContinue =  handleCustomError(aResponse);
+		if(!isContinue){
+			return;
+		}
 
 		String message = aResponse.getStatusText();
 		if (code == 500) {
@@ -106,5 +111,14 @@ public abstract class AbstractAsyncCallback<T> implements RestCallback<T> {
 				.fireEvent(
 						new ErrorEvent("Code=" + code + "; "
 								+ aResponse.getText(), 0L));
+	}
+
+	/**
+	 * 
+	 * @param aResponse
+	 * @return true to allow Super Class to show error popups
+	 */
+	public boolean handleCustomError(Response aResponse) {
+		return true;
 	}
 }

@@ -6,7 +6,10 @@ import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.Query;
+
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -47,8 +50,8 @@ public class BaseDao {
 		}catch(Exception e){
 			if(!(e instanceof NoResultException)){
 				e.printStackTrace();
+				throw new ServiceException(ErrorCodes.DBERROR, ExceptionUtils.getRootCauseMessage(e));
 			}
-			
 		}
 		
 		return value;
