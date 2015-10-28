@@ -1,0 +1,25 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:d='urn:import:com.workpoint.icpak.client.ui.component'
+	xmlns:form='urn:import:com.workpoint.icpak.client.ui.profile.specialization.form'
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+
+	<g:HTMLPanel styleName="row">
+		<div class="col-sm-12">
+			<d:ActionLink styleName="btn btn-next btn-fill btn-primary btn-wd btn-sm"
+				ui:field="aAdd">
+				<i class="fa fa-plus"></i>
+				Add Specialization
+			</d:ActionLink>
+		</div>
+		<br />
+
+		<g:HTMLPanel ui:field="panelTable">
+			<div class="col-sm-12">
+				<form:SpecializationRegistrationForm
+					ui:field="formSpecialization"></form:SpecializationRegistrationForm>
+			</div>
+		</g:HTMLPanel>
+
+	</g:HTMLPanel>
+</ui:UiBinder> 

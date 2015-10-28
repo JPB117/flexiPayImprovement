@@ -1,0 +1,38 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.workpoint.icpak.client.ui.component">
+
+	<g:HTMLPanel styleName="tr" ui:field="row">
+		<g:HTMLPanel styleName="td" ui:field="divEventName">
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td" ui:field="divHotelName">
+			<g:Anchor ui:field="aHotelName"></g:Anchor>
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td" ui:field="divNights">
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td" ui:field="divSpaces">
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td" ui:field="divOccupied">
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td" ui:field="divPrice">
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td">
+			<div class="dropdown">
+				<a class="btn btn-default btn-fill dropdown-toggle" id="dropdownMenu1"
+					data-toggle="dropdown" aria-expanded="true">
+					-Select-
+					<span class="caret"></span>
+				</a>
+				<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+					<li>
+						<d:ActionLink ui:field="aEdit">Edit</d:ActionLink>
+					</li>
+					<li>
+						<d:ActionLink ui:field="aDelete">Delete
+						</d:ActionLink>
+					</li>
+				</ul>
+			</div>
+		</g:HTMLPanel>
+	</g:HTMLPanel>
+</ui:UiBinder> 

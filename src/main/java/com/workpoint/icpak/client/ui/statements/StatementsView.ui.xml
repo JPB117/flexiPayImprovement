@@ -1,0 +1,60 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui' ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
+	xmlns:d='urn:import:com.workpoint.icpak.client.ui.component'
+	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
+	ui:generateLocales='default'>
+
+	<ui:style>
+	.top-bar {
+		margin: 0px 15px;
+		width: 99%;
+	}
+	</ui:style>
+
+	<g:HTMLPanel styleName="set-full-height">
+		<g:HTMLPanel styleName="content-wrapper ng-scope ng-fadeInUp"
+			ui:field="divMainContainer">
+			<h3 class="ng-scope">
+				Statements
+			</h3>
+
+
+			<div class="main-content">
+				<div class="row">
+					<div class="col-lg-12 tabbable {style.top-bar}">
+						<div class="row search-bar">
+							<div class="col-lg-3">
+								<d:DateField ui:field="dtStartDate" />
+							</div>
+							<div class="col-lg-3">
+								<d:DateField ui:field="dtEndDate" />
+							</div>
+							<div class="col-lg-1">
+								<d:ActionLink ui:field="aRefresh" styleName="btn btn-fill btn-default">
+									Filter
+								</d:ActionLink>
+							</div>
+							<div class="pull-right action-buttons">
+								<d:ActionLink ui:field="downloadPdf">
+									<i class="fa fa-file-pdf-o"></i>
+									Download as Pdf
+								</d:ActionLink>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="panel widget">
+							<d:Grid ui:field="grid"></d:Grid>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</g:HTMLPanel>
+	</g:HTMLPanel>
+</ui:UiBinder>

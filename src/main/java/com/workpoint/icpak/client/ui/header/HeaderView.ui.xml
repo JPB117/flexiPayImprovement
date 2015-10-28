@@ -1,0 +1,78 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui' ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
+	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
+	ui:generateLocales='default'>
+
+	<g:HTMLPanel ui:field="divNavbar">
+		<header class="topnavbar-wrapper ng-scope">
+			<!-- START Top Navbar -->
+			<nav role="navigation" class="navbar topnavbar ng-scope">
+
+				<div class="navbar-header">
+					<a href="#/" class="navbar-brand">
+						<div class="brand-logo">
+							<img class="img-responsive"
+								src="http://www2.icpak.com/wp-content/uploads/2015/03/LogoWhitebg.png" />
+						</div>
+						<div class="brand-logo-collapsed">
+							<img src="img/icpak_logo.png" class="img-responsive" />
+						</div>
+					</a>
+				</div>
+
+
+				<div class="nav-wrapper">
+					<!-- START Right Navbar -->
+					<ul class="nav navbar-nav navbar-right">
+						<!-- Search icon -->
+						<li class="hide">
+							<a href="#" search-open="search-open">
+								<em class="icon-magnifier"></em>
+							</a>
+						</li>
+
+						<li dropdown="" class="dropdown dropdown-list hide">
+							<a dropdown-toggle="" aria-haspopup="true" aria-expanded="false">
+								<em class="icon-bell"></em>
+								<div class="label label-danger">11</div>
+							</a>
+							<!-- START Dropdown menu -->
+						</li>
+						<!-- END Alert menu -->
+
+						<li>
+							<a href="#profile">
+								<em class="fa fa-user"></em>
+								<span ui:field="spnLoggedInUser"></span>
+							</a>
+						</li>
+
+						<!-- START Contacts button -->
+						<li>
+							<g:Anchor ui:field="aLogout">
+								<em class="fa fa-power-off"></em>
+								LogOut
+							</g:Anchor>
+						</li>
+						<!-- END Contacts menu -->
+					</ul>
+					<!-- END Right Navbar -->
+				</div>
+				<!-- START Search form -->
+				<form role="search" action="search.html"
+					class="navbar-form ng-pristine ng-valid hide">
+					<div class="form-group has-feedback">
+						<input type="text" placeholder="Type and hit enter.." class="form-control" />
+						<div search-dismiss="search-dismiss" class="fa fa-times form-control-feedback"></div>
+					</div>
+					<button type="submit" class="hidden btn btn-default">Submit</button>
+				</form>
+				<!-- END Search form -->
+			</nav>
+			<!-- END Top Navbar -->
+
+		</header>
+	</g:HTMLPanel>
+</ui:UiBinder>

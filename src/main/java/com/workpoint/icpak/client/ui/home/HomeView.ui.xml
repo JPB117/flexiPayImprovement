@@ -1,0 +1,47 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui' ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
+	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
+	xmlns:d='urn:import:com.workpoint.icpak.client.ui.component' xmlns:tab='urn:import:com.workpoint.icpak.client.ui.home'
+	ui:generateLocales='default'>
+
+	<g:HTMLPanel styleName="set-full-height">
+		<aside ng-include="'app/views/partials/sidebar.html'"
+			ng-controller="SidebarController" class="aside ng-scope">
+			<!-- Inline template with sidebar items markup and ng-directives -->
+
+			<script type="text/ng-template" id="sidebar-renderer.html"
+				class="ng-scope">
+				<span ng-if="item.heading">{{(item.translate | translate) || item.text}}</span>
+				<a ng-if="!item.heading" ng-href="{{$state.href(item.sref, item.params)}}"
+					title="{{item.text}}">
+					<em ng-if="item.icon" class="{{item.icon}}"></em>
+					<div ng-if="item.alert" ng-class="item.label || 'label label-success'"
+						class="pull-right">{{item.alert}}</div>
+					<span>{{(item.translate | translate) || item.text}}</span>
+				</a>
+				<ul ng-if="item.submenu" collapse="isCollapse(pIndex)" ng-init="addCollapse(pIndex, item)"
+					class="nav sidebar-subnav">
+					<li class="sidebar-subnav-header">{{(item.translate | translate) || item.text}}</li>
+					<li ng-repeat="item in item.submenu" ng-include="'sidebar-renderer.html'"
+						ng-class="getMenuItemPropClasses(item)" ng-init="pIndex=(pIndex+'-'+$index); inSubmenu = true"
+						ng-click="toggleCollapse(pIndex)"></li>
+				</ul>
+			</script>
+
+
+			<div class="aside-inner ng-scope">
+				<nav class="sidebar" ng-transclude="" sidebar=""
+					sidebar-anyclick-close="">
+					<!-- START sidebar nav -->
+					<tab:HomeTabPanel ui:field="tabPanel"></tab:HomeTabPanel>
+					<!-- END sidebar nav -->
+				</nav>
+			</div>
+		</aside>
+		<section class="ng-scope" ui:field="panelContent">
+			<g:HTMLPanel ui:field="tabContent" styleName="set-full-height"></g:HTMLPanel>
+		</section>
+	</g:HTMLPanel><!--End of Container -->
+
+</ui:UiBinder>

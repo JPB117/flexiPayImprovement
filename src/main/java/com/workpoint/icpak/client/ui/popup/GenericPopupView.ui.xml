@@ -1,0 +1,28 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d='urn:import:com.workpoint.icpak.client.ui.component'>
+
+	<g:PopupPanel ui:field="popUpPanel" glassEnabled="true"
+		styleName="modal" modal="true" width="85%">
+		<g:HTMLPanel styleName="modal-content">
+			<g:HTMLPanel styleName="modal-header">
+				<h5>
+					<i class="icon-cogs"></i>
+					<strong>
+						<span ui:field="spnHeader" />
+					</strong>
+					<g:Anchor ui:field="aClose">
+						<i class="fa fa-close pull-right" />
+					</g:Anchor>
+				</h5>
+			</g:HTMLPanel>
+			<g:HTMLPanel ui:field="panelBody" styleName="modal-body">
+			</g:HTMLPanel>
+
+			<g:HTMLPanel styleName="modal-footer">
+				<g:HTMLPanel ui:field="panelButtons" styleName="row-fluid">
+				</g:HTMLPanel>
+			</g:HTMLPanel>
+		</g:HTMLPanel>
+	</g:PopupPanel>
+</ui:UiBinder>

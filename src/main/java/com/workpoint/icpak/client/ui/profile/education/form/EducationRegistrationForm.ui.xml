@@ -1,0 +1,145 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d='urn:import:com.workpoint.icpak.client.ui.component'
+	xmlns:up='urn:import:com.workpoint.icpak.client.ui.upload.custom'>
+	<g:HTMLPanel styleName="col-md-12">
+
+		<div class="row">
+			<div class="col-sm-12">
+				<d:IssuesPanel ui:field="issues"></d:IssuesPanel>
+			</div>
+
+			<div class="form-group">
+				<div class="row">
+					<div class="col-xs-6">
+						<label for="institution">Institution Name</label>
+						<d:TextField type="text" ui:field="txtInstitution"
+							class="form-control" placeholder="Enter Institution Name" value=""
+							required="true">
+						</d:TextField>
+					</div>
+					<div class="col-xs-6">
+						<label for="exambody">Examination Body</label>
+						<d:TextField type="text" ui:field="txtExaminingBody"
+							class="form-control" placeholder="Enter Examination Body" value=""
+							required="true"></d:TextField>
+					</div>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="row">
+					<div class="col-xs-6">
+						<label for="startdate">Start Date</label>
+						<d:DateField ui:field="dtStartDate" placeholder="Enter Start Date"
+							required="true">
+						</d:DateField>
+					</div>
+					<div class="col-xs-6">
+						<label for="class">Date Completed</label>
+						<d:DateField ui:field="dtDateCompleted" placeholder="Enter End Date"
+							required="true">
+						</d:DateField>
+					</div>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="row">
+					<div class="col-xs-6">
+						<label for="enddate">Section Passed</label>
+						<d:TextField type="text" ui:field="txtSectionsPassed"
+							class="form-control" placeholder="Enter Section passed" value=""
+							required="true">
+						</d:TextField>
+					</div>
+					<div class="col-xs-6">
+						<label for="award">Registration Number</label>
+						<d:TextField type="text" ui:field="txtRegistrationNo"
+							class="form-control" placeholder="Enter Start Date" value=""
+							required="true">
+						</d:TextField>
+					</div>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="row">
+					<div class="col-xs-6">
+						<label for="enddate">Class / Division</label>
+						<d:TextField type="text" ui:field="txtClassOrDivision"
+							class="form-control" placeholder="Enter Class or Division" value=""
+							required="true">
+						</d:TextField>
+					</div>
+					<div class="col-xs-6">
+						<label for="enddate">Award</label>
+						<d:TextField type="text" ui:field="txtAward" class="form-control"
+							placeholder="Enter Award" value="" required="true">
+						</d:TextField>
+					</div>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="row">
+					<div class="col-xs-6">
+						<label for="enddate">Education Type:</label>
+						<d:TextField type="text" ui:field="txtEduType" class="form-control"
+							placeholder="Enter Education Type" value="" required="true">
+						</d:TextField>
+					</div>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="row">
+					<div class="col-xs-12">
+						<label for="enddate">Attachments:</label>
+						<p class="text-small text-muted">
+							Provide copies of all parts of the local (KASNEB) CPA
+							examination
+							certificates.
+							<a data-toggle="collapse" data-target="#eventInfo"
+								aria-expanded="false" aria-controls="#eventInfo">
+								read more>>
+							</a>
+
+							<div class="collapse" id="eventInfo">
+								<div class="col-sm-12">
+									Where an applicant has not received a
+									certificate,
+									he/she should provide a copy of the congratulatory
+									letter from
+									KASNEB and all the result notification slips.
+									Holders
+									of foreign
+									accountancy qualifications will be required to
+									submit
+									copies of
+									their membership certificates from their foreign
+									institutes and a
+									copy of the letter from KASNEB confirming that
+									they have sat and
+									passed the recommended local examination
+									papers.
+									Certification of
+									copies may be done at the ICPAK offices
+									(free of
+									charge) upon
+									presentation of the originals.
+								</div>
+							</div>
+
+						</p>
+					</div>
+
+					<br />
+
+					<up:Uploader ui:field="uploader" styleName="custom-file-input"></up:Uploader>
+				</div>
+			</div>
+		</div>
+	</g:HTMLPanel>
+
+</ui:UiBinder> 

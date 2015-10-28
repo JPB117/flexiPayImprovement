@@ -1,0 +1,330 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui' ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
+	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
+	xmlns:d='urn:import:com.workpoint.icpak.client.ui.component'
+	xmlns:payment='urn:import:com.workpoint.icpak.client.ui.payment'
+	xmlns:grid='urn:import:com.workpoint.icpak.client.ui.grid'
+	xmlns:proforma='urn:import:com.workpoint.icpak.client.ui.events.registration.proforma'
+	ui:generateLocales='default'>
+
+	<g:HTMLPanel ui:field="divMainContainer">
+		<g:HTMLPanel ui:field="divHeaderContainer" styleName="top-header">
+			<nav class="navbar">
+				<div class="container">
+					<div class="navbar-header" style="width: 100%; text-align: center;">
+						<a class="brand">
+							<img src="img/icpak_logo.png" width="150px" />
+						</a>
+					</div>
+				</div>
+			</nav>
+		</g:HTMLPanel>
+
+		<g:HTMLPanel styleName="image-container set-full-height"
+			ui:field="divContent">
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-11 col-md-offset-1">
+						<g:HTMLPanel>
+							<!-- Wizard container -->
+							<div class="wizard-container" ui:field="divContainer">
+								<div class="card wizard-card ct-wizard-gold">
+									<div class="wizard-header">
+										<h3>
+											Event Registration Centre
+											<br />
+										</h3>
+									</div>
+
+									<ul class="nav nav-pills" ui:field="divHeaderTopics">
+										<li class="active" style="width: 25%;" ui:field="liTab1">
+											<a>
+												<span class="fa fa-check-circle hide"></span>
+												1 - Event Details
+											</a>
+										</li>
+										<li style="width: 25%;" ui:field="liTab2">
+											<a>
+												<span class="fa fa-check-circle hide"></span>
+												2 - Delegates Attending
+											</a>
+										</li>
+										<li style="width: 25%;" ui:field="liTab3">
+											<a>
+												<span class="fa fa-check-circle hide"></span>
+												3 - Proforma Invoice
+											</a>
+										</li>
+										<li style="width:25%;" ui:field="liTab4">
+											<a>
+												<span class="fa fa-check-circle hide"></span>
+												4 - Make Payment
+											</a>
+										</li>
+									</ul>
+
+									<!-- Tab Content 1 -->
+									<g:HTMLPanel styleName="tab-content">
+										<div class="tab-pane active" ui:field="divPackage">
+											<div class="row">
+
+												<div class="col-sm-12">
+													<h4 class="info-text">
+														<span ui:field="spnEventName">P.A.C Event</span>
+													</h4>
+													<hr />
+												</div>
+
+												<div class="col-sm-12">
+													<a data-toggle="collapse" data-target="#eventInfo"
+														aria-expanded="false" aria-controls="#eventInfo">
+														show event information
+													</a>
+
+													<div class="collapse" id="eventInfo">
+														<div class="col-sm-12">
+															<div class="well row">
+																<div class="col-sm-6">
+																	<strong>Starting Date:</strong>
+																	<span ui:field="spnStartDate"></span>
+																	(
+																	<span ui:field="spnDays2Go"></span>
+																	)
+
+																</div>
+																<div class="col-sm-6">
+																	<strong>Duration</strong>
+																	<span ui:field="spnDuration"></span>
+																</div>
+															</div>
+														</div>
+													</div>
+													<d:IssuesPanel ui:field="issuesPanel"
+														styleName="hide alert alert-danger"></d:IssuesPanel>
+												</div>
+
+												<div class="col-sm-12">
+													<div class="form-group">
+														<div class="row">
+															<div class="col-xs-6">
+																<label for="firstname">Company:</label>
+																<d:TextField ui:field="txtCompanyName"
+																	styleName="form-control" placeholder="Company Name"
+																	value="" required="true">
+																</d:TextField>
+															</div>
+
+															<div class="col-xs-6">
+																<label for="phone">Office Line:</label>
+																<d:TextField ui:field="txtPhone" styleName="form-control"
+																	placeholder="Office Name" value="" required="true">
+																</d:TextField>
+															</div>
+
+														</div>
+													</div>
+
+													<div class="form-group">
+														<div class="row">
+															<div class="col-xs-6">
+																<label for="emailaddress">Postal Address</label>
+																<d:TextField ui:field="txtAddress"
+																	styleName="form-control" placeholder="Enter Address"
+																	value="" required="true">
+																</d:TextField>
+															</div>
+
+															<div class="col-xs-6">
+																<label for="applicationCategory">Postal Code</label>
+
+																<d:TextField ui:field="txtPostalCode"
+																	styleName="form-control" placeholder="Enter Postal Code"
+																	value="" required="true">
+																</d:TextField>
+															</div>
+														</div>
+													</div>
+
+
+													<div class="form-group">
+														<div class="row">
+															<div class="col-xs-6">
+																<label for="emailaddress">Country:</label>
+																<d:DropDownList ui:field="lstCountry"
+																	styleName="form-control">
+																</d:DropDownList>
+															</div>
+
+															<div class="col-xs-6">
+																<label for="applicationCategory">Town/City</label>
+																<d:TextField ui:field="txtCity" styleName="form-control"
+																	placeholder="Enter Town/City" value="" required="true">
+																</d:TextField>
+															</div>
+														</div>
+													</div>
+
+													<div class="form-group">
+														<div class="row">
+															<div class="col-xs-6">
+																<label for="contactPerson">Contact Person:</label>
+																<d:TextField ui:field="txtContactPerson"
+																	styleName="form-control" placeholder="Contact Person"
+																	value="" required="true">
+																</d:TextField>
+																<p class="text-warning">if self-sponsored, please enter your name</p>
+															</div>
+															<div class="col-xs-6">
+																<label for="contactPerson">Contact Email:</label>
+																<d:TextField ui:field="txtContactEmail"
+																	type="email" styleName="form-control" placeholder="Email address"
+																	value="" required="true">
+																</d:TextField>
+																<p class="text-warning">Please note that this is the email address
+																	where
+																	the proforma invoice will be sent</p>
+															</div>
+														</div>
+													</div>
+
+												</div>
+											</div>
+										</div>
+
+										<div class="tab-pane" ui:field="divCategories">
+											<g:HTMLPanel styleName="row">
+												<div class="col-sm-12">
+													<h4 class="info-text">
+														<span ui:field="spnSelected">Fill In the Delegates to Attend:</span>
+													</h4>
+													<hr />
+												</div>
+
+												<div class="col-sm-12">
+													<div class="dropdown">
+														<a class="btn btn-primary btn-fill dropdown-toggle" id="dropdownMenu1"
+															data-toggle="dropdown" aria-expanded="true">
+															Add Delegate
+															<span class="caret"></span>
+														</a>
+														<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+															<li>
+																<d:ActionLink ui:field="aAddMember">Member</d:ActionLink>
+															</li>
+															<li>
+																<d:ActionLink ui:field="aAddNonMember">Non-Member</d:ActionLink>
+															</li>
+														</ul>
+													</div>
+												</div>
+
+												<div class="col-sm-12">
+													<d:IssuesPanel ui:field="issuesPanelDelegate"
+														styleName="hide alert alert-danger"></d:IssuesPanel>
+												</div>
+												<br />
+
+												<div class="col-sm-12">
+													<grid:AggregationGrid ui:field="tblDelegates"></grid:AggregationGrid>
+												</div>
+
+												<br />
+											</g:HTMLPanel>
+										</div>
+
+
+										<div class="tab-pane" ui:field="divProforma">
+											<div class="row">
+												<div class="col-xs-12">
+													<div class="panel panel-default hide">
+														<div class="panel-heading">
+															<span ui:field="spnNames">Kimani Muriranja</span>
+														</div>
+
+														<div class="panel-body">
+															Your application has successfully saved and your
+															temporary
+															account. Also note that a Proforma
+															invoice and
+															temporary
+															password
+															has been sent
+															to
+															your email
+															address for
+															your
+															reference.
+															<br />
+
+															You can choose between the following:
+															<ol>
+																<li>
+																	Complete your payment now - Click
+																	<strong> Proceed To Payment</strong>
+																	and complete the registration.
+																	<br />
+																</li>
+
+																<li>
+																	Complete your payment later - Click
+																	<strong> Proceed To My Account(Pay Later).</strong>
+																</li>
+															</ol>
+														</div>
+													</div>
+
+													<div class="row">
+														<proforma:ProformaInvoice
+															ui:field="proformaInv"></proforma:ProformaInvoice>
+													</div>
+												</div>
+											</div>
+										</div>
+
+										<div class="tab-pane" ui:field="divPayment">
+											<div class="row">
+												<div class="col-md-12">
+													<g:HTMLPanel ui:field="panelPayment"></g:HTMLPanel>
+												</div>
+											</div>
+										</div>
+
+										<div class="wizard-footer">
+											<div class="pull-right">
+												<d:ActionLink styleName='hide' ui:field="aAccount"
+													href="#bookings">Pay Later
+												</d:ActionLink>
+
+												<g:Anchor
+													styleName='btn btn-next btn-fill btn-gold btn-wd
+										btn-sm hide'
+													ui:field="aNext">Proceed
+												</g:Anchor>
+											</div>
+											<div class="pull-left">
+												<g:Anchor
+													styleName='btn btn-previous btn-fill btn-default btn-wd btn-sm hide'
+													ui:field="aBack">Back
+												</g:Anchor>
+											</div>
+
+											<div class="clearfix"></div>
+										</div>
+									</g:HTMLPanel>
+								</div>
+							</div>
+						</g:HTMLPanel>
+					</div>
+				</div>
+			</div>
+		</g:HTMLPanel>
+
+		<g:HTMLPanel styleName="footer" ui:field="divFooter">
+			<div class="container">
+				<footer>Copyright ICPAK 2015</footer>
+			</div>
+		</g:HTMLPanel>
+	</g:HTMLPanel>
+
+</ui:UiBinder>

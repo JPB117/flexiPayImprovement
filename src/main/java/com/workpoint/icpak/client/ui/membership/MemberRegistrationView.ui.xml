@@ -1,0 +1,341 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui' ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
+	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
+	xmlns:d='urn:import:com.workpoint.icpak.client.ui.component'
+	xmlns:form='urn:import:com.workpoint.icpak.client.ui.membership.form'
+	xmlns:proforma='urn:import:com.workpoint.icpak.client.ui.events.registration.proforma'
+	xmlns:password='urn:import:com.workpoint.icpak.client.ui.profile.password'
+	ui:generateLocales='default'>
+
+	<g:HTMLPanel ui:field="divMainContainer">
+
+		<g:HTMLPanel ui:field="divHeaderContainer" styleName="top-header">
+			<nav class="navbar">
+				<div class="container">
+					<div class="navbar-header" style="width: 100%; text-align: center;">
+						<a class="brand">
+							<img src="img/icpak_logo.png" width="150px" />
+						</a>
+					</div>
+				</div>
+			</nav>
+		</g:HTMLPanel>
+
+		<g:HTMLPanel styleName="image-container set-full-height"
+			ui:field="divContent">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-11 col-md-offset-1">
+						<!-- Wizard container -->
+						<div class="wizard-container" ui:field="divContainer">
+							<div class="card wizard-card ct-wizard-gold">
+								<div class="wizard-header">
+									<h3>
+										Member Registration Center
+										<br />
+									</h3>
+								</div>
+
+								<ul class="nav nav-pills">
+									<li class="active" style="width: 25%;" ui:field="liTab1">
+										<a>
+											<span class="fa fa-check-circle hide"></span>
+											1 - Personal Information
+										</a>
+									</li>
+									<li style="width: 25%;" ui:field="liTab2">
+										<a>
+											<span class="fa fa-check-circle hide"></span>
+											2 - Membership Category
+										</a>
+									</li>
+
+									<li style="width: 25%;" ui:field="liTab3">
+										<a>
+											<span class="fa fa-check-circle hide"></span>
+											3 - Proforma Invoice
+										</a>
+									</li>
+									<li style="width:25%;" ui:field="liTab4">
+										<a>
+											<span class="fa fa-check-circle hide"></span>
+											4 - Make Payment
+										</a>
+									</li>
+								</ul>
+
+								<!-- Tab Content 1 -->
+								<div class="">
+
+								</div>
+
+
+								<div class="tab-content">
+									<div class="tab-pane active" ui:field="divPackage">
+										<div class="row">
+											<form:MemberRegistrationForm
+												ui:field="memberRegistrationForm"></form:MemberRegistrationForm>
+										</div>
+									</div>
+
+									<div class="tab-pane" ui:field="divPasswordConfiguration">
+										<div class="row">
+											<password:PasswordWidget></password:PasswordWidget>
+										</div>
+									</div>
+
+									<div class="tab-pane" ui:field="divCategories">
+										<div class="row">
+											<div class="col-xs-12">
+												<div class="col-sm-12">
+													<h4 class="info-text">
+														<span ui:field="spnSelected">Select Category:</span>
+													</h4>
+													<hr />
+												</div>
+
+												<div class="col-sm-12">
+													<d:IssuesPanel ui:field="issuesPanel"
+														styleName="hide alert alert-danger"></d:IssuesPanel>
+												</div>
+
+												<div class="pricing-table col-xs-4" ui:field="divNonPracticing">
+													<div class="panel panel-primary" style="border:none;">
+														<div class="controle-header panel-heading panel-heading-landing">
+															<h1 class="panel-title panel-title-landing">Non-Practicing</h1>
+														</div>
+
+														<div class="panel-body panel-body-landing">
+															<table class="table">
+																<tr>
+																	<td width="50px">
+																		<i class="fa fa-check"></i>
+																	</td>
+																	<td>
+																		Application Fee:
+																		<span ui:field="spnNonPracticingFee"></span>
+																	</td>
+																</tr>
+																<tr>
+																	<td width="50px">
+																		<i class="fa fa-check"></i>
+																	</td>
+																	<td>
+																		Annual subscription:
+																		<span ui:field="spnNonPracticingSubscription"></span>
+																	</td>
+																</tr>
+																<tr>
+																	<td width="50px">
+																		<i class="fa fa-check"></i>
+																	</td>
+																	<td>
+																		<span ui:field="spnNonPracticingCondition"></span>
+																	</td>
+																</tr>
+															</table>
+														</div>
+														<div class="panel-footer panel-footer-landing">
+															<g:Anchor styleName="btn btn-price btn-block btn-success"
+																ui:field="aNonPractising" name="NonPractising">SELECT
+															</g:Anchor>
+														</div>
+													</div>
+												</div>
+
+												<div class="pricing-table col-xs-3 hide" ui:field="divPractising">
+													<div class="panel panel-primary" style="border:none;">
+														<div class="controle-header panel-heading panel-heading-landing">
+															<h1 class="panel-title panel-title-landing">Practicing
+																Member</h1>
+														</div>
+
+														<div class="panel-body panel-body-landing">
+															<table class="table">
+																<tr>
+																	<td width="50px">
+																		<i class="fa fa-check"></i>
+																	</td>
+																	<td>
+																		Application Fee:
+																		<span ui:field="spnPracticingFee"></span>
+																	</td>
+																</tr>
+																<tr>
+																	<td width="50px">
+																		<i class="fa fa-check"></i>
+																	</td>
+																	<td>
+																		Annual subscription:
+																		<span ui:field="spnPracticingSubscription"></span>
+																	</td>
+																</tr>
+																<tr>
+																	<td width="50px">
+																		<i class="fa fa-check"></i>
+																	</td>
+																	<td>
+																		<span ui:field="spnPracticingCondition"></span>
+																	</td>
+																</tr>
+															</table>
+														</div>
+														<div class="panel-footer panel-footer-landing">
+															<g:Anchor styleName="btn btn-price btn-block btn-success"
+																ui:field="aPractising" name="Practising">SELECT</g:Anchor>
+														</div>
+													</div>
+												</div>
+
+												<div class="pricing-table col-xs-4" ui:field="divOverseas">
+													<div class="panel panel-primary" style="border:none;">
+														<div class="controle-header panel-heading panel-heading-landing">
+															<h1 class="panel-title panel-title-landing">OverSeas Member</h1>
+														</div>
+
+														<div class="panel-body panel-body-landing">
+															<table class="table">
+																<tr>
+																	<td width="50px">
+																		<i class="fa fa-check"></i>
+																	</td>
+																	<td>
+																		Application Fee:
+																		<span ui:field="spnOverseasFee"></span>
+																	</td>
+																</tr>
+																<tr>
+																	<td width="50px">
+																		<i class="fa fa-check"></i>
+																	</td>
+																	<td>
+																		Annual subscription:
+																		<span ui:field="spnOverseasSubscription"></span>
+																	</td>
+																</tr>
+																<tr>
+																	<td width="50px">
+																		<i class="fa fa-check"></i>
+																	</td>
+																	<td>
+																		<span ui:field="spnOverseasCondition"></span>
+																	</td>
+																</tr>
+															</table>
+														</div>
+														<div class="panel-footer panel-footer-landing">
+															<g:Anchor styleName="btn btn-price btn-block btn-success"
+																ui:field="aOverseas" name="Overseas">SELECT</g:Anchor>
+														</div>
+													</div>
+												</div>
+
+												<div class="pricing-table col-xs-4" ui:field="divAssociate">
+													<div class="panel panel-primary" style="border:none;">
+														<div class="controle-header panel-heading panel-heading-landing">
+															<h1 class="panel-title panel-title-landing">Associate</h1>
+														</div>
+
+														<div class="panel-body panel-body-landing">
+															<table class="table">
+																<tr>
+																	<td width="50px">
+																		<i class="fa fa-check"></i>
+																	</td>
+																	<td>
+																		Application Fee:
+																		<span ui:field="spnAssociateFee"></span>
+																	</td>
+																</tr>
+																<tr>
+																	<td width="50px">
+																		<i class="fa fa-check"></i>
+																	</td>
+																	<td>
+																		Annual subscription:
+																		<span ui:field="spnAssociateSubscription"></span>
+																	</td>
+																</tr>
+																<tr>
+																	<td width="50px">
+																		<i class="fa fa-check"></i>
+																	</td>
+																	<td>
+																		<span ui:field="spnAssociateCondition"></span>
+																	</td>
+																</tr>
+															</table>
+														</div>
+														<div class="panel-footer panel-footer-landing">
+															<g:Anchor styleName="btn btn-price btn-block btn-success"
+																ui:field="aAssociate" name="Associate">SELECT</g:Anchor>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+
+
+									<div class="tab-pane" ui:field="divProforma">
+										<div class="row">
+											<div class="col-xs-12">
+												<br />
+												<div class="row">
+													<div class="alert alert-success">Below is your proforma Invoice. The same
+														invoice has also been submitted to your email address.</div>
+													<proforma:ProformaInvoice
+														ui:field="proformaInv"></proforma:ProformaInvoice>
+												</div>
+
+											</div>
+										</div>
+									</div>
+
+									<div class="tab-pane" ui:field="divPayment">
+										<div class="row">
+											<div class="col-md-12">
+												<g:HTMLPanel ui:field="panelPayment"></g:HTMLPanel>
+											</div>
+										</div>
+									</div>
+
+
+									<div class="wizard-footer">
+										<div class="pull-right">
+											<d:ActionLink styleName='hide' ui:field="aAccount"
+												href="#activateacc">Pay Later,Continue to My Account
+											</d:ActionLink>
+											<d:ActionLink
+												styleName='btn btn-next btn-fill btn-gold btn-wd
+										btn-sm hide'
+												ui:field="aNext">
+												Proceed
+											</d:ActionLink>
+										</div>
+										<div class="pull-left">
+											<d:ActionLink
+												styleName='btn btn-previous btn-fill btn-default btn-wd btn-sm hide'
+												ui:field="aBack">Back
+											</d:ActionLink>
+										</div>
+
+										<div class="clearfix"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</g:HTMLPanel>
+
+		<g:HTMLPanel styleName="footer" ui:field="divFooter">
+			<div class="container">
+				<footer>Copyright ICPAK 2015</footer>
+			</div>
+		</g:HTMLPanel>
+	</g:HTMLPanel>
+
+</ui:UiBinder>

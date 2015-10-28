@@ -1,0 +1,22 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.workpoint.icpak.client.ui.component">
+
+	<g:HTMLPanel styleName="tr" ui:field="row">
+		<g:HTMLPanel styleName="td" ui:field="divDate">
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td" ui:field="divEventName">
+			<g:Anchor ui:field="aEventName"></g:Anchor>
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td" ui:field="divEventLocation">
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td" ui:field="divCPDHours">
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td" ui:field="divDelegates">
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td" ui:field="divPaidAmount">
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td" ui:field="divUnPaidAmount">
+		</g:HTMLPanel>
+	</g:HTMLPanel>
+</ui:UiBinder> 

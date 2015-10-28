@@ -1,0 +1,26 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.workpoint.icpak.client.ui.component">
+
+	<g:HTMLPanel styleName="tr" ui:field="row">
+		<g:HTMLPanel styleName="td" ui:field="divDate">
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td" ui:field="divContact">
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td" ui:field="divDocNum">
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td" ui:field="divDescription">
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td hide" ui:field="divDueDate">
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td" ui:field="divAmount">
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td" ui:field="divPaymentMode">
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td hide" ui:field="divBalance">
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td" ui:field="divStatus">
+			<span ui:field="spnStatus"></span>
+		</g:HTMLPanel>
+	</g:HTMLPanel>
+</ui:UiBinder> 

@@ -1,0 +1,27 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.workpoint.icpak.client.ui.component">
+
+	<d:BulletListPanel styleName="nav ng-scope" ui:field="linksPanel">
+		<!-- START user info -->
+		<d:BulletPanel styleName="has-user-block">
+			<g:HTMLPanel ui:field="userDiv" styleName="ng-scope collapse">
+				<div class="item user-block">
+					<!-- User picture -->
+					<div class="user-block-picture">
+						<div class="user-block-status">
+							<img ng-src="app/img/user/02.jpg" alt="Avatar" width="60"
+								height="60" class="img-thumbnail img-circle" src="app/img/user/02.jpg" />
+							<div class="circle circle-success circle-lg"></div>
+						</div>
+					</div>
+					<!-- Name and Job -->
+					<div class="user-block-info">
+						<span class="user-block-name ng-binding">Welcome John</span>
+						<span class="user-block-role ng-binding">ng-developer</span>
+					</div>
+				</div>
+			</g:HTMLPanel>
+		</d:BulletPanel>
+	</d:BulletListPanel>
+</ui:UiBinder> 

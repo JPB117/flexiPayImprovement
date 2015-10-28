@@ -1,0 +1,165 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:t='urn:import:com.workpoint.icpak.client.ui.component.tabs'
+	xmlns:d='urn:import:com.workpoint.icpak.client.ui.component' xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:up='urn:import:com.workpoint.icpak.client.ui.upload.custom'>
+	<ui:style>
+	.help-icon {
+		padding-left: 10px;
+		font-size: 18px;
+		color: gray;
+	}
+	
+	.help-icon:hover {
+		text-decoration: none;
+	}
+	</ui:style>
+	<g:HTMLPanel>
+		<g:HTMLPanel ui:field="divProfileContent" styleName="col-xs-12">
+			<g:HTMLPanel styleName="row">
+				<div class="col-xs-12">
+					<div class="panel widget">
+						<div class="ember-view popovercontainer ribbon hide">
+							<g:HTMLPanel styleName="ribbon-inner ribbon-draft"
+								ui:field="panelApplicationType">
+							</g:HTMLPanel>
+						</div>
+						<div class="panel-header">
+							<g:HTMLPanel styleName="dropdown pull-right"
+								ui:field="divEditDropDown">
+								<a class="btn btn-default dropdown-toggle" id="dropdownMenu1"
+									data-toggle="dropdown" aria-expanded="true">
+									Edit
+									<span class="caret"></span>
+								</a>
+								<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+									<li>
+										<d:ActionLink ui:field="aEditPicture">
+											Change Profile Picture
+										</d:ActionLink>
+									</li>
+									<li>
+										<d:ActionLink ui:field="aChangePassword">
+											Change Password
+										</d:ActionLink>
+									</li>
+								</ul>
+							</g:HTMLPanel>
+
+							<g:HTMLPanel ui:field="divSavePanel">
+								<d:ActionLink ui:field="aSaveChanges"
+									styleName="btn btn-primary btn-fill pull-right">Save
+									Changes</d:ActionLink>
+							</g:HTMLPanel>
+						</div>
+
+						<div class="panel-body">
+							<g:HTMLPanel ui:field="profileViewMode" styleName="row profile-page">
+								<div class="col-lg-2 profile-picture">
+									<g:HTMLPanel ui:field="profileViewEditMode">
+										<div>
+											<g:FocusPanel ui:field="panelPicture">
+												<g:Image ui:field="imgUser" styleName="thumbnail col-sm-offset-1" />
+											</g:FocusPanel>
+										</div>
+									</g:HTMLPanel>
+								</div>
+
+								<div class="col-lg-6 profile-overview">
+									<g:HTMLPanel ui:field="panelProfile" styleName="col-md-12">
+										<up:Uploader ui:field="uploader" styleName="custom-file-input"></up:Uploader>
+									</g:HTMLPanel>
+
+									<g:HTMLPanel ui:field="PanelProfileDisplay"
+										styleName="col-md-12">
+										<div class="row">
+											<h3 class="m0">
+												<span ui:field="spnNames"></span>
+											</h3>
+										</div>
+
+										<div class="row" ui:field="divMembershipNo">
+											<span class="text-muted" ui:field="spnApplicationType">
+												<p class="text-muted">
+													(
+													m/No:
+													<span ui:field="spnMembershipNo"></span>
+													)
+												</p>
+											</span>
+										</div>
+
+										<div class="row">
+											Membership Status:
+											<span ui:field="spnMembershipStatus" class="text-muted">
+											</span>
+
+											<span ui:field="spnErpSection">
+												<span class="muted">
+													(last Update:
+													<span ui:field="spnLastUpdated"></span>
+												</span>
+												<d:ActionLink ui:field="aRefresh">Refresh</d:ActionLink>
+												)
+											</span>
+
+										</div>
+
+										<div class="row hide">
+											<div class="col-md-4 p0">
+												<d:ProgressBar ui:field="progressBar"></d:ProgressBar>
+											</div>
+										</div>
+
+										<div ui:field="divPayNow">
+											<div class="row">
+												Account Balance:
+												<span ui:field="spnBalance" class="text-muted"></span>
+												<d:ActionLink ui:field="aPayNow" styleName="hide"></d:ActionLink>
+											</div>
+										</div>
+
+										<div ui:field="divStandingStatus">
+											<div class="row">
+												<br />
+												Standing Status:
+												<div class="label label-success" ui:field="divAccountStatus">
+													<i class="fa fa-check hide" ui:field="iconSuccess"></i>
+													<i class="fa fa-times-circle hide" ui:field="iconFail"></i>
+													<span ui:field="spnAccountStatus">
+													</span>
+												</div>
+												<a ui:field="spnHelpIcon"
+													class="hide fa fa-question-circle popover-icon {style.help-icon}"
+													data-toggle="popover" data-trigger="hover" title="Reasons for this:"></a>
+												<d:PopOver></d:PopOver>
+											</div>
+											<div class="row">
+												<br />
+												<d:ActionLink ui:field="aDownloadCert"
+													styleName="btn btn-success btn-fill">Download
+													Certificate</d:ActionLink>
+											</div>
+
+										</div>
+
+									</g:HTMLPanel>
+								</div>
+							</g:HTMLPanel>
+
+							<br />
+
+							<!-- Tabs -->
+							<div class="row">
+								<div class="col-xs-12">
+									<t:TabPanel ui:field="divTabs">
+									</t:TabPanel>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</g:HTMLPanel>
+		</g:HTMLPanel>
+	</g:HTMLPanel>
+</ui:UiBinder> 

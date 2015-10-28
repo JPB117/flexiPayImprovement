@@ -1,0 +1,37 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui' xmlns:v='urn:import:com.workpoint.icpak.client.ui.component'
+	ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
+	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
+	xmlns:password='urn:import:com.workpoint.icpak.client.ui.profile.password'
+
+	ui:generateLocales='default'>
+	<g:HTMLPanel>
+		<div>
+			<nav class="navbar">
+				<div class="container">
+					<div class="navbar-header" style="width: 100%; text-align: center;">
+						<a class="brand">
+							<img src="img/icpak_logo.png" width="150px" />
+						</a>
+					</div>
+				</div>
+			</nav>
+		</div>
+
+		<g:HTMLPanel styleName="image-container set-full-height">
+			<g:HTMLPanel styleName="login-bg">
+				<g:HTMLPanel styleName="wizard-container col-md-6 col-md-offset-3">
+					<g:HTMLPanel styleName="card wizard-card ct-wizard-gold"
+						ui:field="loadingbox">
+						<div class="">
+							<password:PasswordWidget ui:field="panelPasswordWidget"></password:PasswordWidget>
+						</div>
+					</g:HTMLPanel>
+				</g:HTMLPanel>
+			</g:HTMLPanel>
+		</g:HTMLPanel>
+
+	</g:HTMLPanel>
+</ui:UiBinder>

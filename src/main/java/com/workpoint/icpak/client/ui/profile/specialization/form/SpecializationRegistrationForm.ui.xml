@@ -1,0 +1,131 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d='urn:import:com.workpoint.icpak.client.ui.component'>
+	<g:HTMLPanel styleName="col-md-12">
+
+		<div class="row">
+			<div class="col-sm-12">
+				<d:IssuesPanel ui:field="issues"></d:IssuesPanel>
+
+				<div ui:field="divHeader">
+					<h4 class="info-text">Check your specialization below</h4>
+					<hr />
+				</div>
+
+				<div class="row">
+					<div class="col-sm-3">
+						<h5>Practice</h5>
+						<div class="checkbox">
+							<label>
+								<g:CheckBox ui:field="aAudit"> Auditing</g:CheckBox>
+							</label>
+						</div>
+
+						<div class="checkbox">
+							<label>
+								<g:CheckBox ui:field="aTaxation"> Taxation</g:CheckBox>
+							</label>
+						</div>
+
+						<div class="checkbox">
+							<label>
+								<g:CheckBox ui:field="aFinancial"> Financial Consulting</g:CheckBox>
+							</label>
+						</div>
+
+						<div class="checkbox">
+							<label>
+								<g:CheckBox  ui:field="aHRConsultancy"> HR Consultancy</g:CheckBox>
+							</label>
+						</div>
+					</div>
+
+					<div class="col-sm-3">
+						<h5>Commerce and Industry</h5>
+						<div class="checkbox">
+							<label>
+								<g:CheckBox  ui:field="aBanking"> Banking</g:CheckBox>
+							</label>
+						</div>
+
+						<div class="checkbox">
+							<label>
+								<g:CheckBox  ui:field="aFinance"> Finance</g:CheckBox>
+							</label>
+						</div>
+
+						<div class="checkbox">
+							<label>
+								<g:CheckBox  ui:field="aInsurance"> Insurance</g:CheckBox>
+							</label>
+						</div>
+
+						<div class="checkbox">
+							<label>
+								<g:CheckBox  ui:field="aManufacturing"> Manufacturing</g:CheckBox>
+							</label>
+						</div>
+
+						<div class="checkbox">
+							<label>
+								<g:CheckBox  ui:field="aHotel"> Hotel</g:CheckBox>
+							</label>
+						</div>
+
+						<div class="checkbox">
+							<label>
+								<g:CheckBox  ui:field="aOther"> Other service industry</g:CheckBox>
+							</label>
+						</div>
+					</div>
+
+					<div class="col-sm-3">
+						<h5>Public Sector</h5>
+						<div class="checkbox">
+							<label>
+								<g:CheckBox  ui:field="aCentral"> Central Government</g:CheckBox>
+							</label>
+						</div>
+
+						<div class="checkbox">
+							<label>
+								<g:CheckBox  ui:field="aLocal"> Local Government</g:CheckBox>
+							</label>
+						</div>
+
+						<div class="checkbox">
+							<label>
+								<g:CheckBox  ui:field="aState"> State Corporation</g:CheckBox>
+							</label>
+						</div>
+
+						<div class="checkbox">
+							<label>
+								<g:CheckBox  ui:field="aCooperative"> Co-operative</g:CheckBox>
+							</label>
+						</div>
+					</div>
+
+					<div class="col-sm-3">
+						<h5>Training</h5>
+						<div class="checkbox">
+							<label>
+								<g:CheckBox  ui:field="aEducation"> Education or Academia</g:CheckBox>
+							</label>
+						</div>
+
+						<div class="checkbox">
+							<label>
+								<g:CheckBox  ui:field="aNGOs"> NGOs</g:CheckBox>
+							</label>
+						</div>
+					</div>
+
+				</div>
+
+			</div>
+
+		</div>
+	</g:HTMLPanel>
+
+</ui:UiBinder> 

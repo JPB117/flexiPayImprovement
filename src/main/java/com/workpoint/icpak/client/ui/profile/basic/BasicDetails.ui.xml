@@ -1,0 +1,125 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:d='urn:import:com.workpoint.icpak.client.ui.component' xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:form='urn:import:com.workpoint.icpak.client.ui.membership.form'>
+	<g:HTMLPanel>
+		<br/>
+		<div class="row">
+			<div class="row">
+				<div class="col-sm-12">
+					<d:ActionLink
+						styleName="btn btn-next btn-fill btn-default btn-wd btn-sm pull-left"
+						ui:field="aEdit">
+						<i class="fa fa-pencil"></i>
+						Edit Details
+					</d:ActionLink>
+				</div>
+			</div>
+
+			<div class="row">
+				<g:HTMLPanel styleName="col-xs-12" ui:field="panelDisplay">
+					<table class="table table-bordered table-striped">
+						<tbody>
+							<tr>
+								<td width="30%">
+									<Strong>Phone:</Strong>
+								</td>
+								<td>
+									<i ui:field="elPhone"></i>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<Strong>Email:</Strong>
+								</td>
+								<td>
+									<i ui:field="elEmail"></i>
+								</td>
+							</tr>
+
+							<tr>
+								<td>
+									<Strong>Date Of Birth:</Strong>
+								</td>
+								<td>
+									<i ui:field="elDob"></i>
+								</td>
+							</tr>
+
+							<tr>
+								<td>
+									<Strong>Gender:</Strong>
+								</td>
+								<td>
+									<i ui:field="elSex"></i>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<Strong>Employer Name:</Strong>
+								</td>
+								<td ui:field="elEmployer"></td>
+							</tr>
+
+							<tr>
+								<td>
+									<Strong>Residence:</Strong>
+								</td>
+								<td>
+									<i ui:field="elResidence"></i>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<Strong>Address:</Strong>
+								</td>
+								<td>
+									<i ui:field="elAddress"></i>
+								</td>
+							</tr>
+
+							<tr>
+								<td>
+									<Strong>Postal Code:</Strong>
+								</td>
+								<td>
+									<i ui:field="elPostalCode"></i>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<Strong>Country:</Strong>
+								</td>
+								<td>
+									<i ui:field="elCountry"></i>
+								</td>
+							</tr>
+
+							<tr>
+								<td>
+									<Strong>Town/City:</Strong>
+								</td>
+								<td>
+									<i ui:field="elCity"></i>
+								</td>
+							</tr>
+
+						</tbody>
+					</table>
+				</g:HTMLPanel>
+			</div>
+
+			<g:HTMLPanel styleName="col-xs-12 hide" ui:field="panelEditMode">
+				<form:MemberRegistrationForm ui:field="panelRegistration"></form:MemberRegistrationForm>
+				<div class="fieldset">
+					<d:ActionLink ui:field="aSave"
+						styleName="btn btn-primary pull-left btn-fill">Save</d:ActionLink>
+					<d:ActionLink ui:field="aCancel"
+						styleName="btn btn-default pull-right btn-fill">Cancel</d:ActionLink>
+				</div>
+
+			</g:HTMLPanel>
+		</div>
+
+	</g:HTMLPanel>
+</ui:UiBinder> 

@@ -1,0 +1,64 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui' xmlns:v='urn:import:com.workpoint.icpak.client.ui.component'
+	ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
+	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
+	ui:generateLocales='default'>
+	<g:HTMLPanel>
+		<div>
+			<nav class="navbar">
+				<div class="container">
+					<div class="navbar-header" style="width: 100%; text-align: center;">
+						<a class="brand">
+							<img src="img/icpak_logo.png" width="150px" />
+						</a>
+					</div>
+				</div>
+			</nav>
+		</div>
+		<g:HTMLPanel styleName="image-container set-full-height">
+			<g:HTMLPanel styleName="login-bg">
+				<g:HTMLPanel styleName="row-fluid login-wrapper">
+					<g:HTMLPanel styleName="span4 box" ui:field="loadingbox">
+						<div class="content-wrap">
+							<h6>PORTAL Log in</h6>
+							<span class="hide loadingtext" ui:field="loading">
+								<i class="icon-spinner icon-spin icon-large"></i>
+								Logging In...
+							</span>
+							<v:IssuesPanel ui:field="issues" styleName="alert alert-danger"
+								role="alert">
+							</v:IssuesPanel>
+
+							<fieldset>
+								<div class="form-group">
+									<g:TextBox ui:field="username" styleName="form-control"></g:TextBox>
+								</div>
+
+								<div class="form-group">
+									<g:PasswordTextBox ui:field="password"
+										styleName="form-control"></g:PasswordTextBox>
+								</div>
+								<div class="remember">
+									<input id="remember-me" type="checkbox"></input>
+									<label for="remember-me">Keep me Signed In</label>
+								</div>
+								<g:Anchor ui:field="aLogin" styleName="btn btn-lg btn-success btn-block">Log in</g:Anchor>
+
+								<div class="row">
+									<br />
+									<a href="#activateacc;r=forgot">Forgot password</a>
+									<br />
+									New Member ?
+									<a href="#signup">Register here</a>
+								</div>
+
+							</fieldset>
+						</div>
+					</g:HTMLPanel>
+				</g:HTMLPanel>
+			</g:HTMLPanel>
+		</g:HTMLPanel>
+	</g:HTMLPanel>
+</ui:UiBinder>

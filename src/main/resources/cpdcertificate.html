@@ -1,0 +1,77 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+html {
+	width: 100%;
+	height: 100%;
+}
+
+body {
+	background:
+		url("http://localhost:8080/icpakportal/images/cpdcertificate.jpg")
+		no-repeat left top;
+	background-size: 1115px 790px;
+}
+
+.gold {
+	color: #CCAE0F;
+	font-weight: 200;
+}
+
+.names {
+	position: absolute;
+	left: 300px;
+	top: 390px;
+	width: 645px;
+	height: 29px;
+	text-align: center;
+}
+
+.event-details {
+	position: absolute;
+	left: 408px;
+	top: 433px;
+	width: 422px;
+	height: 117px;
+	text-align: center;
+	top: 433px;
+	width: 422px;
+	height: 117px;
+}
+
+.approver {
+	position: absolute;
+	left: 220px;
+	top: 519px;
+	width: 260px;
+	font-size: 14px;
+}
+
+@page {
+	size: 11.69in 8.27in;
+	margin: 0px;
+	padding: 0px;
+}
+</style>
+<title>CPD Certificate</title>
+</head>
+
+<body>
+	<p class="gold event-details">For attending the @@eventName held
+		between @@eventDates at @@eventVenue</p>
+
+	<h2 class="names">CPA @@memberName</h2>
+
+	<div class="approver">
+		<div class="gold">
+			<span>CPA Michael Njoroge</span><br /> <span>Manager,
+				Training and Development</span><br /> <span>Date Issued:
+				@@dateIssued</span><br /> <span>Earned CPD Hours: @@cpdHours</span><br />
+		</div>
+		<br /> <img
+			src="http://localhost:8080/icpakportal/images/certificate_signature.png"
+			style="width: 200px;" />
+	</div>
+</body>
+</html>

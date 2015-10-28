@@ -1,0 +1,20 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui' ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
+	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
+	ui:generateLocales='default'>
+
+	<!-- g:HTMLPanel styleName="main-body full-page" -->
+	<g:HTMLPanel styleName="set-full-height">
+		<div data-ui-view="" data-autoscroll="false" class="wrapper ng-scope">
+			<g:HTMLPanel ui:field="pHeader">
+			</g:HTMLPanel>
+			<!-- Domain Specific View goes here -->
+			<g:HTMLPanel styleName="set-full-height" ui:field="panelContent">
+				<g:HTMLPanel ui:field="pContainer" styleName="set-full-height">
+				</g:HTMLPanel>
+			</g:HTMLPanel>
+		</div>
+	</g:HTMLPanel>
+</ui:UiBinder>
