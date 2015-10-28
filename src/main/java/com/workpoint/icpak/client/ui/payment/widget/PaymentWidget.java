@@ -156,6 +156,10 @@ public class PaymentWidget extends Composite {
 		issuesPanel.clear();
 
 		// Window.alert("Counter:"+counter);
+		if (isNullOrEmpty(txtAmount.getValue())) {
+			isValid = false;
+			issuesPanel.addError("Amount is required!");
+		}
 		if (isNullOrEmpty(txtCardHolderName.getValue())) {
 			isValid = false;
 			issuesPanel.addError("Card Holder name is required");
@@ -185,7 +189,6 @@ public class PaymentWidget extends Composite {
 			isValid = false;
 			issuesPanel.addError("Address is Mandatory");
 		}
-		// show/hide isValid Panel
 		if (isValid) {
 			issuesPanel.addStyleName("hide");
 		} else {
@@ -206,6 +209,8 @@ public class PaymentWidget extends Composite {
 	public void bindTransaction(InvoiceDto invoice) {
 		this.paymentRefId = invoice.getDocumentNo();
 		spnAccountNo.setInnerText(invoice.getDocumentNo());// MPESA Payment
+		spnAmount.setInnerText(NumberUtils.CURRENCYFORMAT.format(invoice
+				.getInvoiceAmount()));
 	}
 
 	public void setCardResponse(CreditCardResponse response) {

@@ -103,8 +103,8 @@ public class UsersDaoHelper {
 		String link = settings.getApplicationPath() + "#activateacc;uid="
 				+ user.getRefId();
 		String body = "Dear User,"
-				+ "<br/>An account has been created for you onthe ICPAK portal. "
-				+ "You will need to reset your password on the portal using the following details."
+				+ "<br/>An account has been created for you on the ICPAK portal. "
+				+ "You will need to create your password on the portal using the following details."
 				+ "<p/>Username: " + user.getEmail() + "<br/>Click this link "
 				+ link + " to reset your account." + "<p>Thank you";
 
@@ -470,7 +470,7 @@ public class UsersDaoHelper {
 						+ "<a href='"
 						+ resetUrl
 						+ "'>Reset Your Password</a> and follow onscreen instructions."
-						+ "This email can be ignored if you did not request a password reset. The link is only "
+						+ "This email can be ignored if you did not request a password reset on the portal. The link is only "
 						+ "available for a short time";
 
 		try {
