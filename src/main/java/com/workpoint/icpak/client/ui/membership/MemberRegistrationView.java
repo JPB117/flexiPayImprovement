@@ -469,4 +469,8 @@ public class MemberRegistrationView extends ViewImpl implements
 		}
 	}
 
+	@Override
+	public MemberRegistrationForm getRegistrationForm() {
+		return memberRegistrationForm;
+	}
 }

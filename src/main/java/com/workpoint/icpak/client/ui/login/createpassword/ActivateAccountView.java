@@ -85,4 +85,9 @@ public class ActivateAccountView extends ViewImpl implements
 		panelPasswordWidget.showProcessing(showProcessing);
 	}
 
+	@Override
+	public void addError(String message) {
+		panelPasswordWidget.addError(message);
+	}
+
 }
