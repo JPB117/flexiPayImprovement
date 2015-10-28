@@ -14,10 +14,10 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.log4j.Logger;
 
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
-import com.icpak.rest.IDUtils;
 import com.icpak.rest.dao.BookingsDao;
 import com.icpak.rest.dao.EventsDao;
 import com.icpak.rest.dao.InvoiceDaoHelper;
@@ -41,7 +41,6 @@ import com.icpak.rest.utils.EmailServiceHelper;
 import com.icpak.rest.utils.HTMLToPDFConvertor;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.InvoiceLineDto;
-import com.workpoint.icpak.shared.model.events.AttendanceStatus;
 import com.workpoint.icpak.shared.model.events.BookingDto;
 import com.workpoint.icpak.shared.model.events.ContactDto;
 import com.workpoint.icpak.shared.model.events.DelegateDto;
@@ -80,6 +79,8 @@ public class BookingsDaoHelper {
 
 	@Inject
 	AccommodationsDaoHelper accommodationsDaoHelper;
+	
+	Logger log = Logger.getLogger(BookingsDaoHelper.class);
 
 	public List<BookingDto> getAllBookings(String uriInfo, String eventId, Integer offset, Integer limit) {
 
@@ -443,13 +444,13 @@ public class BookingsDaoHelper {
 
 			if (delegate.getMemberRefId() != null) {
 				Member member = memberDao.findByRefId(delegate.getMemberRefId(), Member.class);
-				System.err.println("Sending SMS to " + member.getUser().getPhoneNumber());
+				log.debug("Sending SMS to " + member.getUser().getPhoneNumber());
 
 				if (member.getUser().getPhoneNumber() != null) {
 					smsIntergration.send(member.getUser().getPhoneNumber(), smsMemssage);
 				}
 			} else {
-				System.err.println("Non-member cannot be send sms..");
+				log.debug("Non-member cannot be send sms..");
 			}
 		}
 
@@ -468,7 +469,6 @@ public class BookingsDaoHelper {
 			Accommodation accommodation = dao.findByRefId(delegateDto.getAccommodation().getRefId(),
 					Accommodation.class);
 			if (accommodation != null) {
-				accommodation.setSpaces(accommodation.getSpaces() - 1);
 				d.setAccommodation(accommodation);
 				dao.save(accommodation);
 			}
@@ -537,16 +537,4 @@ public class BookingsDaoHelper {
 		return dao.getMemberBookings(memberRefId, offset, limit);
 	}
 
-	public void updateAccomodationEntry(Event event) {
-		Set<Accommodation> accommodations = event.getAccommodation();
-
-		for (Accommodation accommodation : accommodations) {
-			Set<Delegate> delegates = accommodation.getDelegates();
-			int spacesOccupied = delegates.size();
-			accommodation.setSpaces(accommodation.getSpaces() - spacesOccupied);
-
-			accommodationsDaoHelper.update(event.getRefId(), accommodation.getRefId(), accommodation.toDto());
-		}
-
-	}
 }
