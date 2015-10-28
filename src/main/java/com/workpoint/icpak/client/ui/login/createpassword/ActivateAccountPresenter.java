@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -58,6 +59,8 @@ public class ActivateAccountPresenter
 		String getEmail();
 
 		void showProcessing(boolean b);
+
+		void addError(String message);
 
 	}
 
@@ -150,6 +153,33 @@ public class ActivateAccountPresenter
 								public void onSuccess(UserDto result) {
 									getView().showProcessing(false);
 									sendResetEmail(result.getRefId());
+								}
+
+								public boolean handleCustomError(
+										com.google.gwt.http.client.Response aResponse) {
+									int code = aResponse.getStatusCode();
+									String message = aResponse.getText();
+									if (code == 404) {
+										/*
+										 * The record does not exist in the database
+										 */
+										return true;
+									}
+
+									/*
+									 * Something went wrong on the server side
+									 * while checking if the email exists esp.
+									 * duplicate entries errors
+									 * (NonUniqueResultExceptions)
+									 */
+									
+									/*
+									 * Add an error message
+									 */
+									getView().addError(message);
+
+									//let this be handled by the the onFailure below
+									return false;
 								}
 
 								public void onFailure(Throwable caught) {
