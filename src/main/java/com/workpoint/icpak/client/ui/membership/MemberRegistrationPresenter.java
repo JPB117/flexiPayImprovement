@@ -37,6 +37,13 @@ import com.workpoint.icpak.client.ui.component.TextField;
 import com.workpoint.icpak.client.ui.error.ErrorPresenter;
 import com.workpoint.icpak.client.ui.events.ErrorEvent;
 import com.workpoint.icpak.client.ui.events.ErrorEvent.ErrorHandler;
+import com.workpoint.icpak.client.ui.events.PaymentCompletedEvent;
+import com.workpoint.icpak.client.ui.events.PaymentCompletedEvent.PaymentCompletedHandler;
+import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
+import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent.ProcessingCompletedHandler;
+import com.workpoint.icpak.client.ui.events.ProcessingEvent;
+import com.workpoint.icpak.client.ui.events.ProcessingEvent.ProcessingHandler;
+import com.workpoint.icpak.client.ui.payment.PaymentPresenter;
 import com.workpoint.icpak.shared.api.ApplicationFormResource;
 import com.workpoint.icpak.shared.api.CategoriesResource;
 import com.workpoint.icpak.shared.api.CountriesResource;
@@ -51,7 +58,8 @@ import com.workpoint.icpak.shared.model.UserDto;
 public class MemberRegistrationPresenter
 		extends
 		Presenter<MemberRegistrationPresenter.MyView, MemberRegistrationPresenter.MyProxy>
-		implements ErrorHandler {
+		implements ErrorHandler, PaymentCompletedHandler, ProcessingHandler,
+		ProcessingCompletedHandler {
 
 	public interface MyView extends View {
 		ApplicationFormHeaderDto getApplicationForm();
@@ -100,10 +108,12 @@ public class MemberRegistrationPresenter
 	}
 
 	@ContentSlot
-	public static final Type<RevealContentHandler<?>> DOCPOPUP_SLOT = new Type<RevealContentHandler<?>>();
+	public static final Type<RevealContentHandler<?>> PAYMENTS_SLOT = new Type<RevealContentHandler<?>>();
 
 	@Inject
 	PlaceManager placeManager;
+	@Inject
+	PaymentPresenter paymentPresenter;
 
 	IndirectProvider<ErrorPresenter> errorFactory;
 
@@ -148,6 +158,9 @@ public class MemberRegistrationPresenter
 	protected void onBind() {
 		super.onBind();
 		addRegisteredHandler(ErrorEvent.TYPE, this);
+		addRegisteredHandler(ProcessingEvent.TYPE, this);
+		addRegisteredHandler(ProcessingCompletedEvent.TYPE, this);
+		addRegisteredHandler(PaymentCompletedEvent.TYPE, this);
 
 		getView().getEmail().addValueChangeHandler(
 				new ValueChangeHandler<String>() {
@@ -162,14 +175,13 @@ public class MemberRegistrationPresenter
 		getView().getANext().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				// Window.alert("Next:" + getView().getCounter());
 				if (getView().isValid() || applicationRefId != null) {
 					if (getView().getCounter() == 1) {
-						// User has selected a category and clicked submit
 						submit(getView().getApplicationForm());
 					} else if (getView().getCounter() == 2) {
 						if (invoice != null) {
 							getView().bindTransaction(invoice);
+							paymentPresenter.bindTransaction(invoice);
 							getView().next();
 						} else {
 							Window.alert("Invoice details are null!");
@@ -245,6 +257,8 @@ public class MemberRegistrationPresenter
 			@Override
 			public void onFailure(Throwable caught) {
 				getView().showmask(false);
+
+				Window.alert("There was a problem when submitting your data. Contact Us for more details..");
 				removeError();
 				super.onFailure(caught);
 			}
@@ -311,6 +325,8 @@ public class MemberRegistrationPresenter
 				}).getAll();
 
 		if (applicationRefId != null) {
+			getView().next();
+			getView().next();
 			getView().setCounter(2);
 			loadApplication(applicationRefId);
 		}
@@ -341,6 +357,21 @@ public class MemberRegistrationPresenter
 	protected void onReset() {
 		super.onReset();
 		getView().setMiddleHeight();
+		setInSlot(PAYMENTS_SLOT, paymentPresenter);
 	}
 
+	@Override
+	public void onPaymentCompleted(PaymentCompletedEvent event) {
+		getView().getANext().setHref("#login");
+	}
+
+	@Override
+	public void onProcessingCompleted(ProcessingCompletedEvent event) {
+		getView().showmask(false);
+	}
+
+	@Override
+	public void onProcessing(ProcessingEvent event) {
+		getView().showmask(true);
+	}
 }

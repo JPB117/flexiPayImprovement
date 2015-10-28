@@ -20,6 +20,7 @@ import com.workpoint.icpak.shared.model.ApplicationFormSpecializationDto;
 import com.workpoint.icpak.shared.model.ApplicationFormTrainingDto;
 import com.workpoint.icpak.shared.model.Country;
 import com.workpoint.icpak.shared.model.MemberStanding;
+import com.workpoint.icpak.shared.model.auth.ApplicationStatus;
 
 public class ProfileView extends ViewImpl implements
 		ProfilePresenter.IProfileView {
@@ -199,6 +200,11 @@ public class ProfileView extends ViewImpl implements
 	@Override
 	public HasClickHandlers getErpRefreshButton() {
 		return divProfileContent.getRefreshButton();
+	}
+
+	@Override
+	public void setApplicationStaus(ApplicationStatus applicationStatus) {
+		divProfileContent.setApplicationStatus(applicationStatus);
 	}
 
 }

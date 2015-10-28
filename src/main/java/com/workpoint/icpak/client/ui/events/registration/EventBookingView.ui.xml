@@ -285,9 +285,7 @@
 										<div class="tab-pane" ui:field="divPayment">
 											<div class="row">
 												<div class="col-md-12">
-													<g:Frame ui:field="framePayment" height="590px"
-														styleName="hide" width="100%"></g:Frame>
-													<payment:PaymentWidget ui:field="panelPayment"></payment:PaymentWidget>
+													<g:HTMLPanel ui:field="panelPayment"></g:HTMLPanel>
 												</div>
 											</div>
 										</div>

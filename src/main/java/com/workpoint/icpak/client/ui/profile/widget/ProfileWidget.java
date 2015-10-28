@@ -47,6 +47,7 @@ import com.workpoint.icpak.shared.model.ApplicationFormSpecializationDto;
 import com.workpoint.icpak.shared.model.ApplicationFormTrainingDto;
 import com.workpoint.icpak.shared.model.Country;
 import com.workpoint.icpak.shared.model.MemberStanding;
+import com.workpoint.icpak.shared.model.auth.ApplicationStatus;
 
 public class ProfileWidget extends Composite {
 
@@ -106,8 +107,6 @@ public class ProfileWidget extends Composite {
 	Element iconFail;
 
 	@UiField
-	Element spnApplicationType;
-	@UiField
 	SpanElement spnMembershipNo;
 	@UiField
 	SpanElement spnMembershipStatus;
@@ -115,10 +114,19 @@ public class ProfileWidget extends Composite {
 	SpanElement spnBalance;
 
 	@UiField
+	SpanElement spnApplicationType;
+
+	@UiField
 	SpanElement spnAccountStatus;
 	@UiField
 	DivElement divAccountStatus;
+	@UiField
+	DivElement divMembershipNo;
+	@UiField
+	DivElement divStandingStatus;
 
+	@UiField
+	SpanElement spnErpSection;
 	@UiField
 	Element spnHelpIcon;
 
@@ -407,4 +415,17 @@ public class ProfileWidget extends Composite {
 		return aRefresh;
 	}
 
+	public void setApplicationStatus(ApplicationStatus applicationStatus) {
+		if (applicationStatus == ApplicationStatus.PENDING) {
+			spnMembershipNo.getParentElement().addClassName("hide");
+			spnMembershipStatus.setInnerText("Pending");
+			spnErpSection.addClassName("hide");
+			divStandingStatus.addClassName("hide");
+		} else {
+			spnMembershipNo.getParentElement().removeClassName("hide");
+			spnErpSection.removeClassName("hide");
+			divStandingStatus.removeClassName("hide");
+		}
+
+	}
 }

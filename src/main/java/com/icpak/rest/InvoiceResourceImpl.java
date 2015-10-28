@@ -33,10 +33,10 @@ public class InvoiceResourceImpl implements InvoiceResource {
 	public Integer getCount() {
 		return helper.getInvoiceCount();
 	}
-	
+
 	@GET
 	@Path("/{memberId}/summary")
-	public InvoiceSummary getSummary(@PathParam("memberId") String memberId){
+	public InvoiceSummary getSummary(@PathParam("memberId") String memberId) {
 		return helper.getSummary(memberId);
 	}
 
@@ -54,6 +54,14 @@ public class InvoiceResourceImpl implements InvoiceResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public InvoiceDto getInvoice(@PathParam("invoiceref") String invoiceRef) {
 		return helper.getInvoice(invoiceRef);
+	}
+
+	@Path("checkpayment/{invoiceref}")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public InvoiceDto checkPaymentStatus(
+			@PathParam("invoiceref") String invoiceRef) {
+		return helper.checkInvoicePaymentStatus(invoiceRef);
 	}
 
 }

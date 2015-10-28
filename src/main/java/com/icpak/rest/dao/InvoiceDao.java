@@ -77,6 +77,66 @@ public class InvoiceDao extends BaseDao {
 		return statements;
 	}
 
+	public List<InvoiceDto> checkInvoicePaymentStatus(String invoiceRefId) {
+		StringBuffer sqlBuffer = new StringBuffer("select i.refId, "
+				+ "i.amount as invoiceAmount,i.date as invoiceDate,"
+				+ "i.documentNo,i.description,i.contactName,"
+				+ "t.date,t.dueDate,t.status,"
+				+ "t.paymentMode,t.amount,t.memberId " + "from Invoice i "
+				+ "left join Transaction t on (i.refId=t.invoiceRef) "
+				+ "where i.isActive=1 ");
+
+		Query query = null;
+		sqlBuffer.append("and i.refId=:invoiceRef");
+		sqlBuffer.append(" order by i.id desc");
+		query = getEntityManager().createNativeQuery(sqlBuffer.toString())
+				.setParameter("invoiceRef", invoiceRefId);
+
+		List<Object[]> rows = getResultList(query);
+		List<InvoiceDto> statements = new ArrayList<>();
+
+		for (Object[] row : rows) {
+			int i = 0;
+			Object value = null;
+
+			String refId = (value = row[i++]) == null ? null : value.toString();
+			Double invoiceAmount = (value = row[i++]) == null ? null
+					: new Double(value.toString());
+
+			Date invoiceDate = (value = row[i++]) == null ? null : (Date) value;
+
+			String documentNo = (value = row[i++]) == null ? null : value
+					.toString();
+
+			String description = (value = row[i++]) == null ? null : value
+					.toString();
+
+			String contactName = (value = row[i++]) == null ? null : value
+					.toString();
+
+			Date transactionDate = (value = row[i++]) == null ? null
+					: (Date) value;
+			Date dueDate = (value = row[i++]) == null ? null : (Date) value;
+			String paymentStatus = (value = row[i++]) == null ? null : value
+					.toString();
+			String paymentMode = (value = row[i++]) == null ? null : value
+					.toString();
+			Double transactionAmount = (value = row[i++]) == null ? null
+					: new Double(value.toString());
+			String userRefId = (value = row[i++]) == null ? null : value
+					.toString();
+
+			InvoiceDto statement = new InvoiceDto(refId, invoiceAmount,
+					documentNo, description, invoiceDate, transactionDate,
+					dueDate, paymentStatus, paymentMode, transactionAmount,
+					userRefId, contactName);
+			statements.add(statement);
+
+		}
+
+		return statements;
+	}
+
 	public InvoiceDto getInvoiceByDocumentNo(String docNo) {
 		StringBuffer sqlBuffer = new StringBuffer(
 				"select i.refId, "
@@ -114,12 +174,13 @@ public class InvoiceDao extends BaseDao {
 
 			String trxRefId = (value = row[i++]) == null ? null : value
 					.toString();
-			
-			String bookingRefId =  (value = row[i++]) == null ? null : value
+
+			String bookingRefId = (value = row[i++]) == null ? null : value
 					.toString();
 
 			InvoiceDto dbInvoice = new InvoiceDto(refId, invoiceAmount,
-					documentNo, description, invoiceDate, contactName, trxRefId,bookingRefId);
+					documentNo, description, invoiceDate, contactName,
+					trxRefId, bookingRefId);
 
 			invoice = dbInvoice;
 		}

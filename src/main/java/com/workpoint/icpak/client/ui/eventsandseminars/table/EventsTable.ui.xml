@@ -4,7 +4,7 @@
 	xmlns:d="urn:import:com.workpoint.icpak.client.ui.component">
 	<g:HTMLPanel>
 		<d:PagingTable ui:field="tblView" striped="false" isGrid="false"
-			bordered="true" autoNumber="true" styleName="table-programs">
+			bordered="true" autoNumber="true" searchSectionVisible="true" searchFieldVisible="true">
 		</d:PagingTable>
 	</g:HTMLPanel>
 </ui:UiBinder>

@@ -46,6 +46,7 @@ import com.workpoint.icpak.shared.model.ApplicationFormSpecializationDto;
 import com.workpoint.icpak.shared.model.ApplicationFormTrainingDto;
 import com.workpoint.icpak.shared.model.Country;
 import com.workpoint.icpak.shared.model.MemberStanding;
+import com.workpoint.icpak.shared.model.auth.ApplicationStatus;
 
 public class ProfilePresenter
 		extends
@@ -95,6 +96,8 @@ public class ProfilePresenter
 		void bindMemberStanding(MemberStanding standing);
 
 		HasClickHandlers getErpRefreshButton();
+
+		void setApplicationStaus(ApplicationStatus applicationStatus);
 	}
 
 	private final CurrentUser currentUser;
@@ -135,6 +138,7 @@ public class ProfilePresenter
 	EducationRegistrationForm educationForm = new EducationRegistrationForm();
 	TrainingRegistrationForm trainingForm = new TrainingRegistrationForm();
 	SpecializationRegistrationForm specializationForm = new SpecializationRegistrationForm();
+	protected ApplicationStatus applicationStatus;
 
 	@Override
 	protected void onBind() {
@@ -156,7 +160,6 @@ public class ProfilePresenter
 								} else {
 									hide();
 								}
-
 							}
 						}, "Save", "Cancel");
 			}
@@ -371,6 +374,7 @@ public class ProfilePresenter
 	private void loadData() {
 		// Window.alert("Passed ERP Check");
 		getView().bindCurrentUser(currentUser);
+
 		loadDataFromErp(false);
 
 		String applicationRefId = getApplicationRefId();
@@ -409,7 +413,6 @@ public class ProfilePresenter
 
 	private void loadData(String applicationRefId) {
 		getView().clear();
-
 		countriesResource.withCallback(
 				new AbstractAsyncCallback<List<Country>>() {
 					public void onSuccess(List<Country> countries) {
@@ -430,8 +433,9 @@ public class ProfilePresenter
 			loadEducation();
 			loadTrainings();
 			loadSpecializations();
-			loadGoodStanding();
-
+			if (applicationStatus == ApplicationStatus.APPROVED) {
+				loadGoodStanding();
+			}
 		} else {
 			// Window.alert("User refId not sent in this request!");
 		}
@@ -449,8 +453,10 @@ public class ProfilePresenter
 					public void onSuccess(ApplicationFormHeaderDto result) {
 						memberForm.bind(result);
 						getView().bindBasicDetails(result);
-
-						// Window.alert("Binded Basic data");
+						ProfilePresenter.this.applicationStatus = result
+								.getApplicationStatus();
+						getView().setApplicationStaus(applicationStatus);
+						Window.alert(applicationStatus + "");
 					}
 				}).getById(applicationRefId);
 	}

@@ -8,6 +8,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
 
 import com.icpak.rest.models.membership.ApplicationCategory;
+import com.workpoint.icpak.shared.model.auth.ApplicationStatus;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -104,6 +105,12 @@ public class ApplicationFormHeaderDto extends SerializableObj {
 	private String memberNo;
 	private Integer percCompletion; // Percentage completion
 	private String timezone;
+
+	private ApplicationStatus applicationStatus;
+
+	public ApplicationStatus getApplicationStatus() {
+		return applicationStatus;
+	}
 
 	public ApplicationFormHeaderDto() {
 	}
@@ -796,6 +803,11 @@ public class ApplicationFormHeaderDto extends SerializableObj {
 
 	public void setTimezone(String timezone) {
 		this.timezone = timezone;
+	}
+
+	public void setApplicationStatus(ApplicationStatus applicationStatus) {
+		this.applicationStatus = applicationStatus;
+
 	}
 
 }

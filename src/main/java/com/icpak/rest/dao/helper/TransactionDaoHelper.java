@@ -87,10 +87,25 @@ public class TransactionDaoHelper {
 
 	public void receivePaymentUsingInvoiceNo(String paymentRef,
 			String businessNo, String accountNo, String paymentMode,
-			String trxNumber, String phoneNumber) {
+			String trxNumber, String phoneNumber, String amount) {
 		InvoiceDto invoiceDto = invoiceDao.getInvoiceByDocumentNo(paymentRef);
 		Transaction trx = dao.findByRefId(invoiceDto.getTrxRefId(),
 				Transaction.class);
+
+		// Ensure that payments are equal
+		// if (invoiceDto.getInvoiceAmount() != Double.valueOf(amount)) {
+		// String smsMessage = " Thank-you for payment to ICPAK."
+		// + "However, the amount sent doesn't match with you Invoice amount. "
+		// + "Please send the correct amount to process your invoice";
+		//
+		// String finalPhoneNumber = phoneNumber.replace("254", "0");
+		// if (phoneNumber != null) {
+		// smsIntergration.send(finalPhoneNumber, smsMessage);
+		// }
+		// return;
+		// }
+
+		// Update of Transaction Details
 		trx.setAccountNo(accountNo);
 		trx.setPaymentMode((paymentMode == null || paymentMode.equals("") ? "MPESA"
 				: paymentMode));
@@ -142,7 +157,8 @@ public class TransactionDaoHelper {
 			for (Delegate delegate : booking.getDelegates()) {
 				String smsMessage = "Dear" + " " + senderName + ","
 						+ " Thank-you for booking for the "
-						+ booking.getEvent().getName() + ". Your ERN No. is "
+						+ booking.getEvent().getName()
+						+ ".Your booking status is PAID. Your ERN No. is "
 						+ delegate.getErn();
 
 				String finalPhoneNumber = phoneNumber.replace("254", "0");

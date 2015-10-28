@@ -116,7 +116,6 @@ public class ActivateAccountPresenter
 				public void onSuccess(UserDto user) {
 					ActivateAccountPresenter.this.user = user;
 					getView().bindUser(user);
-
 				}
 			}).getById(userId);
 		}
@@ -133,9 +132,8 @@ public class ActivateAccountPresenter
 					if (user != null) {
 						usersDelegate.withoutCallback().changePassword(
 								user.getRefId(), getView().getPassword());
-
+						Window.alert("Your Password has been saved successfully..,You will be now taken to Login Page.");
 						postUserToLMS(user.getRefId());
-
 					}
 				}
 			}
@@ -151,7 +149,6 @@ public class ActivateAccountPresenter
 								@Override
 								public void onSuccess(UserDto result) {
 									getView().showProcessing(false);
-									// Send Email address
 									sendResetEmail(result.getRefId());
 								}
 
@@ -165,13 +162,16 @@ public class ActivateAccountPresenter
 		});
 	}
 
+	/*
+	 * Integration with LMS;
+	 */
 	protected void postUserToLMS(String refId) {
 		getView().showProcessing(true);
 		usersDelegate.withCallback(new AbstractAsyncCallback<String>() {
 			@Override
 			public void onSuccess(String result) {
 				getView().showProcessing(false);
-				Window.alert(result);
+				// Window.alert(result);
 				placeManager.revealPlace(new PlaceRequest.Builder().nameToken(
 						NameTokens.login).build());
 			}
@@ -189,15 +189,6 @@ public class ActivateAccountPresenter
 		Window.alert("Reset Password Instructions have been sent to your email");
 		placeManager.revealPlace(new PlaceRequest.Builder().nameToken(
 				NameTokens.login).build());
-		// AppManager.showPopUp("Reset Password",
-		// "Reset Password Instructions have been sent to your email",
-		// new OnOptionSelected() {
-		//
-		// @Override
-		// public void onSelect(String name) {
-		//
-		// }
-		// }, "Ok");
 	}
 
 	protected void executeLogin(String email, String password) {
