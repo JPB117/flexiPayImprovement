@@ -1,0 +1,11 @@
+# Created by .ignore support plugin (hsz.mobi)
+target/
+.idea/
+wladek_pom.xml
+src/main/resources/META-INF/persistence.xml
+*.pdf
+.settings/
+/bin/
+.classpath
+.gitignore
+.project
