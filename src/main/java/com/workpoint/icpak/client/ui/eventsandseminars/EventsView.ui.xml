@@ -37,6 +37,8 @@
 			<g:HTMLPanel styleName="row" ui:field="panelEventDrillDown">
 				<div class="col-sm-12">
 					<h4 class="info-text">
+						<a href="#events">Back to Events</a>
+						/
 						<span ui:field="spnEventTitle"></span>
 					</h4>
 					<hr />

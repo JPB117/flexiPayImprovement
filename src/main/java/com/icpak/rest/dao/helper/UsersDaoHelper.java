@@ -474,7 +474,7 @@ public class UsersDaoHelper {
 				+ "Your password has been successfully reset. "
 				+ "<a href='"
 				+ resetUrl
-				+ "'>Click Here</a> to set a new password and follow on screen instructions.<br/>"
+				+ "'>Click Here to Create Password</a><br/>"
 				+ "This email can be ignored if you did not request a password reset on the portal. The link is only "
 				+ "available for a short time";
 

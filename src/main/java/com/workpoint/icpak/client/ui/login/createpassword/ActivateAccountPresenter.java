@@ -6,7 +6,10 @@ import java.util.logging.Logger;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.http.client.Response;
+import com.google.gwt.event.dom.client.HasKeyDownHandlers;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -64,6 +67,14 @@ public class ActivateAccountPresenter
 
 		void addError(String message);
 
+		void showMessage(String errorMessage, String errorType);
+
+		HasClickHandlers getProceedToLogin();
+
+		HasKeyDownHandlers getPasswordTextField();
+
+		HasKeyDownHandlers getEmailTextField();
+
 	}
 
 	@ProxyCodeSplit
@@ -78,6 +89,9 @@ public class ActivateAccountPresenter
 
 	@Inject
 	PlaceManager placeManager;
+
+	// Loaded Page from Presenter
+	private String reason;
 
 	private final CurrentUser currentUser;
 	private ResourceDelegate<UsersResource> usersDelegate;
@@ -98,10 +112,47 @@ public class ActivateAccountPresenter
 		this.sessionResource = sessionResource;
 	}
 
+	KeyDownHandler keyHandler = new KeyDownHandler() {
+		@Override
+		public void onKeyDown(KeyDownEvent event) {
+			if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+				if (reason.equals("activate")) {
+					doSendActivation();
+				} else if (reason.equals("forgot")) {
+					doResendActivation();
+				}
+			}
+		}
+	};
+
+	private KeyDownHandler changePasswordKeyHandler = new KeyDownHandler() {
+		@Override
+		public void onKeyDown(KeyDownEvent event) {
+			if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+				doChangePassword();
+			}
+		}
+	};
+
 	@Override
 	protected void revealInParent() {
 		RevealRootLayoutContentEvent.fire(this, this);
 		// RevealContentEvent.fire(this, MainPagePresenter.CONTENT_SLOT, this);
+	}
+
+	protected void doChangePassword() {
+		if (getView().isValid()) {
+			if (user != null) {
+				usersDelegate.withoutCallback().changePassword(user.getRefId(),
+						getView().getPassword());
+				getView()
+						.showMessage(
+								"Your Password has been saved successfully..,"
+										+ "You will be now taken to Login Page to Proceed.",
+								"success");
+				postUserToLMS(user.getRefId());
+			}
+		}
 	}
 
 	@Override
@@ -110,6 +161,7 @@ public class ActivateAccountPresenter
 		String reason = request.getParameter("r", null);
 
 		if (reason != null) {
+			this.reason = reason;
 			getView().changeWidget(reason);
 		} else if (userId == null) {
 			return;
@@ -132,95 +184,139 @@ public class ActivateAccountPresenter
 	@Override
 	protected void onBind() {
 		super.onBind();
+
+		getView().getEmailTextField().addKeyDownHandler(keyHandler);
+		getView().getPasswordTextField().addKeyDownHandler(
+				changePasswordKeyHandler);
+
 		getView().getSubmit().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				if (getView().isValid()) {
-					if (user != null) {
-						usersDelegate.withoutCallback().changePassword(
-								user.getRefId(), getView().getPassword());
-						Window.alert("Your Password has been saved successfully..,"
-								+ "You will be now taken to Login Page to Proceed.");
-						postUserToLMS(user.getRefId());
-					}
-				}
+				doChangePassword();
 			}
 		});
 
 		getView().getSendActivationLink().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				if (!getView().getEmail().isEmpty()) {
-					getView().showProcessing(true);
-					usersDelegate.withCallback(
-							new AbstractAsyncCallback<UserDto>() {
-								@Override
-								public void onSuccess(UserDto result) {
-									getView().showProcessing(false);
-									sendActivationLink(result.getRefId());
-								}
-
-								public void onFailure(Throwable caught) {
-									getView().showProcessing(false);
-									Window.alert("Your Email Address was not found. Kindly contact ICPAK Support "
-											+ "to update your Email");
-								};
-							}).getById(getView().getEmail());
-				}
+				doSendActivation();
 			}
 		});
 
 		getView().getResendButton().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				if (!getView().getEmail().isEmpty()) {
-					getView().showProcessing(true);
-					usersDelegate.withCallback(
-							new AbstractAsyncCallback<UserDto>() {
-								@Override
-								public void onSuccess(UserDto result) {
-									getView().showProcessing(false);
-									sendResetEmail(result.getRefId());
-								}
-
-								public boolean handleCustomError(
-										com.google.gwt.http.client.Response aResponse) {
-									int code = aResponse.getStatusCode();
-									String message = aResponse.getText();
-									if (code == 404) {
-										/*
-										 * The record does not exist in the
-										 * database
-										 */
-										return true;
-									}
-
-									/*
-									 * Something went wrong on the server side
-									 * while checking if the email exists esp.
-									 * duplicate entries errors
-									 * (NonUniqueResultExceptions)
-									 */
-
-									/*
-									 * Add an error message
-									 */
-									getView().addError(message);
-
-									// let this be handled by the the onFailure
-									// below
-									return false;
-								}
-
-								public void onFailure(Throwable caught) {
-									getView().showProcessing(false);
-									Window.alert("Your Email Address was not found. Kindly contact ICPAK Support "
-											+ "to update your Email");
-								};
-							}).getById(getView().getEmail());
-				}
+				doResendActivation();
 			}
 		});
+	}
+
+	protected void doResendActivation() {
+		if (!getView().getEmail().isEmpty()) {
+			getView().showProcessing(true);
+			usersDelegate.withCallback(new AbstractAsyncCallback<UserDto>() {
+				private boolean customErrorThrown;
+
+				@Override
+				public void onSuccess(UserDto result) {
+					getView().showProcessing(false);
+					sendResetEmail(result.getRefId());
+				}
+
+				public boolean handleCustomError(
+						com.google.gwt.http.client.Response aResponse) {
+					int code = aResponse.getStatusCode();
+					String message = aResponse.getText();
+					if (code == 404) {
+						/*
+						 * The record does not exist in the database
+						 */
+						return true;
+					}
+
+					/*
+					 * Something went wrong on the server side while checking if
+					 * the email exists esp. duplicate entries errors
+					 * (NonUniqueResultExceptions)
+					 */
+
+					/*
+					 * Add an error message
+					 */
+					getView()
+							.showMessage(
+									"Your email exist more than once."
+											+ " Contact Administrator to correct. (Error code:500)",
+									"error");
+					// let this be handled by the the onFailure
+					// below
+					customErrorThrown = true;
+					return false;
+				}
+
+				public void onFailure(Throwable caught) {
+					getView().showProcessing(false);
+					if (!customErrorThrown)
+						getView().showMessage(
+								"Your Email Address was not found. Kindly contact ICPAK Support "
+										+ "to update your Email", "error");
+				};
+			}).getById(getView().getEmail());
+		}
+	}
+
+	public void doSendActivation() {
+		if (!getView().getEmail().isEmpty()) {
+			getView().showProcessing(true);
+			usersDelegate.withCallback(new AbstractAsyncCallback<UserDto>() {
+				private boolean customErrorThrown = false;
+
+				@Override
+				public void onSuccess(UserDto result) {
+					getView().showProcessing(false);
+					sendActivationLink(result.getRefId());
+				}
+
+				public boolean handleCustomError(
+						com.google.gwt.http.client.Response aResponse) {
+					int code = aResponse.getStatusCode();
+					String message = aResponse.getText();
+					if (code == 404) {
+						/*
+						 * The record does not exist in the database
+						 */
+						return true;
+					}
+
+					/*
+					 * Something went wrong on the server side while checking if
+					 * the email exists esp. duplicate entries errors
+					 * (NonUniqueResultExceptions)
+					 */
+
+					/*
+					 * Add an error message
+					 */
+					getView()
+							.showMessage(
+									"Your email exist more than once in our records."
+											+ " Contact Us to correct. (Error code:500)",
+									"error");
+					// let this be handled by the the onFailure
+					// below
+					customErrorThrown = true;
+					return false;
+				}
+
+				public void onFailure(Throwable caught) {
+					getView().showProcessing(false);
+					if (!customErrorThrown)
+						getView().showMessage(
+								"Your Email Address was not found. Kindly contact ICPAK Support "
+										+ "to update your Email", "error");
+				};
+			}).getById(getView().getEmail());
+		}
 	}
 
 	/*
@@ -247,16 +343,32 @@ public class ActivateAccountPresenter
 
 	private void sendResetEmail(String userRefId) {
 		usersDelegate.withoutCallback().resetAccount(userRefId);
-		Window.alert("Reset Password Instructions have been sent to your email");
-		placeManager.revealPlace(new PlaceRequest.Builder().nameToken(
-				NameTokens.login).build());
+		getView().showMessage(
+				"Reset Password Instructions have been sent to your email",
+				"success");
+		getView().getProceedToLogin().addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				placeManager.revealPlace(new PlaceRequest.Builder().nameToken(
+						NameTokens.login).build());
+			}
+		});
+
 	}
 
 	private void sendActivationLink(String userRefId) {
 		usersDelegate.withoutCallback().sendActivationEmail(userRefId);
-		Window.alert("Your Activation Instructions have been sent to your email");
-		placeManager.revealPlace(new PlaceRequest.Builder().nameToken(
-				NameTokens.login).build());
+		getView().showMessage(
+				"Your Activation Instructions have been sent to your email",
+				"success");
+
+		getView().getProceedToLogin().addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				placeManager.revealPlace(new PlaceRequest.Builder().nameToken(
+						NameTokens.login).build());
+			}
+		});
 	}
 
 	protected void executeLogin(String email, String password) {
