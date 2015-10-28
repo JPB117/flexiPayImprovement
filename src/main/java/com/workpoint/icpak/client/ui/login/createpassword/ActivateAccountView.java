@@ -71,6 +71,10 @@ public class ActivateAccountView extends ViewImpl implements
 		return panelPasswordWidget.getResendButton();
 	}
 
+	public HasClickHandlers getSendActivationLink() {
+		return panelPasswordWidget.getSendActivationLink();
+	}
+
 	@Override
 	public String getEmail() {
 		return panelPasswordWidget.getEmail();

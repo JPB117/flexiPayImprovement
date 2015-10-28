@@ -35,6 +35,9 @@ public class PasswordWidget extends Composite {
 	ActionLink aResendAct;
 
 	@UiField
+	ActionLink aSendActivation;
+
+	@UiField
 	IssuesPanel issues;
 	@UiField
 	TextField txtEmail;
@@ -119,6 +122,10 @@ public class PasswordWidget extends Composite {
 		}
 	}
 
+	public HasClickHandlers getSendActivationLink() {
+		return aSendActivation;
+	}
+
 	public void showProcessing(boolean isProcessing) {
 		if (isProcessing) {
 			aResendAct.getElement().setAttribute("disabled", "dsiabled");
@@ -146,15 +153,16 @@ public class PasswordWidget extends Composite {
 			divPassword.addClassName("hide");
 			aResendAct.removeStyleName("hide");
 			aSave.addStyleName("hide");
+			aSendActivation.addStyleName("hide");
 		} else if (reason.equals("activate")) {
 			this.doValidation = false;
 			spnInfo.setInnerText("Enter the E-mail you used to do registration, and email will be sent with Activation Instructions.");
 			txtEmail.getElement().removeAttribute("disabled");
 			divConfirmPassword.addClassName("hide");
 			divPassword.addClassName("hide");
-			aResendAct.removeStyleName("hide");
+			aResendAct.addStyleName("hide");
 			aSave.addStyleName("hide");
-			aResendAct.setText("Send Activation Email");
+			aSendActivation.removeStyleName("hide");
 		} else {
 			this.doValidation = true;
 			spnInfo.setInnerText("This page allows you to create your password that you will use to access your account.");
@@ -163,6 +171,7 @@ public class PasswordWidget extends Composite {
 			divPassword.removeClassName("hide");
 			aResendAct.addStyleName("hide");
 			aSave.removeStyleName("hide");
+			aSendActivation.addStyleName("hide");
 		}
 	}
 

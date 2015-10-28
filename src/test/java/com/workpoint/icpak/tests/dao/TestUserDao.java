@@ -49,12 +49,17 @@ public class TestUserDao extends AbstractDaoTest {
 		Assert.assertNotNull(saved.getRefId());
 	}
 
-	@Test
+	@Ignore
 	public void getUser() {
 		User user = usersDao.findByUserId("cJJooj0U1kizZ9bY");
 		UserDto userDto = new UserDto();
 		userDto = user.toDto();
 		System.err.println(userDto.getLastDateUpdateFromErp());
+	}
+
+	@Test
+	public void testEmails() {
+		helper.resetAccount("30ZDpATQxFXx9WR7");
 	}
 
 }
