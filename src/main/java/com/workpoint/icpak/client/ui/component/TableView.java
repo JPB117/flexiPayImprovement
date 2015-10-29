@@ -10,6 +10,7 @@ import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasKeyDownHandlers;
+import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
@@ -20,7 +21,8 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class TableView extends Composite {
 
-	private static TableViewUiBinder uiBinder = GWT.create(TableViewUiBinder.class);
+	private static TableViewUiBinder uiBinder = GWT
+			.create(TableViewUiBinder.class);
 
 	interface TableViewUiBinder extends UiBinder<Widget, TableView> {
 	}
@@ -133,7 +135,8 @@ public class TableView extends Composite {
 
 			// add to row
 			if (header.getWidth() != null) {
-				th.getElement().getStyle().setWidth(header.getWidth(), Unit.PCT);
+				th.getElement().getStyle()
+						.setWidth(header.getWidth(), Unit.PCT);
 			}
 
 			if (header.getStyleName() != null) {
@@ -293,7 +296,8 @@ public class TableView extends Composite {
 		count = 0;
 	}
 
-	public void createHeader(String name, String width, String labelStyle, String thStyle) {
+	public void createHeader(String name, String width, String labelStyle,
+			String thStyle) {
 		HTMLPanel th = new HTMLPanel("");
 		th.addStyleName("th");
 		if (thStyle != null) {
@@ -343,12 +347,12 @@ public class TableView extends Composite {
 	public HasClickHandlers getFilterButton() {
 		return aFilter;
 	}
-	
-	public String getSearchValue(){
+
+	public String getSearchValue() {
 		return txtSearch.getValue();
 	}
-	
-	public HasKeyDownHandlers getSearchKeyDownHander(){
+
+	public HasValueChangeHandlers<String> getSearchKeyDownHander() {
 		return txtSearch;
 	}
 }

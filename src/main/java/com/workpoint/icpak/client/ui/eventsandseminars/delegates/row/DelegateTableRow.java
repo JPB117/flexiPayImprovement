@@ -114,12 +114,12 @@ public class DelegateTableRow extends RowWidget {
 
 	}
 
-	public DelegateTableRow(BookingDto dto, DelegateDto delegate) {
+	public DelegateTableRow(DelegateDto delegate) {
 		this(delegate.getMemberNo(), delegate.getTitle(),
 				delegate.getSurname(), delegate.getOtherNames(), delegate
 						.getEmail(), null);
-		delegate.setBookingId(dto.getRefId());
-		delegate.setEventRefId(dto.getEventRefId());
+		delegate.setBookingId(delegate.getBookingId());
+		delegate.setEventRefId(delegate.getEventRefId());
 		this.delegate = delegate;
 
 		if (delegate.getAccommodation() != null) {
@@ -127,7 +127,7 @@ public class DelegateTableRow extends RowWidget {
 					.getHotel() + ""));
 		}
 
-		setPaymentStatus(dto.getPaymentStatus());
+		setPaymentStatus(delegate.getPaymentStatus());
 		setAttendance(delegate.getAttendance());
 	}
 

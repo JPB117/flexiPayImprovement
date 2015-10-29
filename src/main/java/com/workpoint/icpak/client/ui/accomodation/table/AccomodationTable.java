@@ -17,16 +17,19 @@ import com.workpoint.icpak.client.ui.component.TableView;
 
 public class AccomodationTable extends Composite {
 
-	private static TransactionTableUiBinder uiBinder = GWT.create(TransactionTableUiBinder.class);
+	private static TransactionTableUiBinder uiBinder = GWT
+			.create(TransactionTableUiBinder.class);
 
-	interface TransactionTableUiBinder extends UiBinder<Widget, AccomodationTable> {
+	interface TransactionTableUiBinder extends
+			UiBinder<Widget, AccomodationTable> {
 	}
 
 	@UiField
 	TableView tblView;
 	CheckBox selected = null;
 	boolean isSalesTable = false;
-	@UiField Element spnEmptyText;
+	@UiField
+	Element spnEmptyText;
 
 	public AccomodationTable() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -36,7 +39,7 @@ public class AccomodationTable extends Composite {
 
 	public void createHeader() {
 		List<TableHeader> th = new ArrayList<TableHeader>();
-		th.add(new TableHeader("Event Name:"));
+		// th.add(new TableHeader("Event Name:"));
 		th.add(new TableHeader("Hotel Name:"));
 		th.add(new TableHeader("Nights:"));
 		th.add(new TableHeader("Spaces:"));
@@ -63,8 +66,8 @@ public class AccomodationTable extends Composite {
 	public void setAutoNumber(boolean autoNumber) {
 		tblView.setAutoNumber(false);
 	}
-	
-	public void showEmptyText(boolean show, String emptyText){
+
+	public void showEmptyText(boolean show, String emptyText) {
 		UIObject.setVisible(spnEmptyText, show);
 		spnEmptyText.setInnerText(emptyText);
 	}

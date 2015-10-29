@@ -23,11 +23,6 @@ public class TestEventsDao extends AbstractDaoTest {
 	@Ignore
 	public void testCrud() {
 		createEvent();
-
-		// retrieveEvents();
-		// getById();
-		// delete();
-		// retrieveEventsAfterDelete();
 	}
 
 	@Ignore
@@ -53,10 +48,7 @@ public class TestEventsDao extends AbstractDaoTest {
 	@Ignore
 	public void retrieveEvents() {
 		List<EventDto> events = helper.getAllEvents("", 0, 10);
-
 		System.err.println("Event Size>>>" + events.size());
-
-		// Assert.assertSame(events.size(), 2);
 	}
 
 	@Ignore

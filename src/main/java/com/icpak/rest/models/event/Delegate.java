@@ -113,12 +113,12 @@ public class Delegate extends PO {
 
 	public void copyFrom(DelegateDto delegateDto) {
 		setEmail(delegateDto.getEmail());
-
 		setMemberRegistrationNo(delegateDto.getMemberNo());
 		setMemberRefId(delegateDto.getMemberRefId());
 		setOtherNames(delegateDto.getOtherNames());
 		setSurname(delegateDto.getSurname());
 		setTitle(delegateDto.getTitle());
+		setErn(delegateDto.getErn());
 
 		if (delegateDto.getAttendance() != null)
 			setAttendance(delegateDto.getAttendance());

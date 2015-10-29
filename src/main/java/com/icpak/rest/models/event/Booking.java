@@ -73,7 +73,6 @@ public class Booking extends PO{
 	@OneToMany(mappedBy="booking",fetch=FetchType.LAZY,cascade={CascadeType.PERSIST, 
 			CascadeType.REMOVE, CascadeType.MERGE, CascadeType.REFRESH})
 	private Collection<Delegate> delegates = new HashSet<>();
-	
 	@ManyToOne
 	private Event event;
 	

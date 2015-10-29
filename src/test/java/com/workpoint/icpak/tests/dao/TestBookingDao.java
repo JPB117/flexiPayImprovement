@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-
 import org.apache.log4j.Logger;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -23,7 +22,7 @@ import com.workpoint.icpak.shared.model.events.DelegateDto;
 import com.workpoint.icpak.tests.base.AbstractDaoTest;
 
 public class TestBookingDao extends AbstractDaoTest {
-	
+
 	Logger logger = Logger.getLogger(TestBookingDao.class);
 
 	@Inject
@@ -77,29 +76,44 @@ public class TestBookingDao extends AbstractDaoTest {
 
 		List<DelegateDto> delegates = new ArrayList<>();
 		DelegateDto delegate = new DelegateDto();
-		delegate.setEmail("kim@wira.io");
+		delegate.setEmail("tomkim@wira.io");
 		delegate.setOtherNames("Kimani");
 		delegate.setSurname("Tom");
 		delegate.setMemberNo("10000");
-		// delegate.setMemberRefId("LCJ4fe1eoOdxwq69");
 		delegates.add(delegate);
 		dto.setDelegates(delegates);
 
 		// dto.setCurrency(currency);
-		bookingsHelper.createBooking("PrjIf8x4RIDaPZIv", dto);
+		BookingDto booking = bookingsHelper.createBooking("PrjIf8x4RIDaPZIv",
+				dto);
 
+		System.err.println(">>" + booking.getEventRefId());
+		System.err.println(">>" + booking.getRefId());
 	}
-	
+
 	@Ignore
-	public void testDeleteInvoiceFrombooking(){
-		String bookingRefid="RVfeXiMtWWETmQRi";
+	public void testDeleteInvoiceFrombooking() {
+		String bookingRefid = "RVfeXiMtWWETmQRi";
 		bookingDao.deleteAllBookingInvoice(bookingRefid);
 	}
-	
+
 	@Test
-	public void testSearch(){
-		for(DelegateDto delegateDto : bookingsHelper.getAllDelegates("", "PrjIf8x4RIDaPZIv", null, 1000,"Tom")){
-			logger.error("===<<<>>>>>>>>> Delegate found >>>>>>>" + delegateDto.getEmail());
-		}
+	public void testSearch() {
+		List<DelegateDto> delegates = bookingsHelper.getAllDelegates("",
+				"PrjIf8x4RIDaPZIv", null, 1000, "Kim");
+		System.err.println(delegates.size());
+
+	}
+
+	@Ignore
+	public void testSearchCount() {
+		System.err.println(bookingsHelper.getDelegatesCount("PrjIf8x4RIDaPZIv",
+				"Tom"));
+	}
+
+	@Ignore
+	public void testSearchEvents() {
+		System.err.println(eventDao.getAllEvents(0, 1000, null, "Fina").size());
+		System.err.println(eventDao.getSearchEventCount("Fin"));
 	}
 }

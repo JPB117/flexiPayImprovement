@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.HasKeyDownHandlers;
+import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -81,12 +82,10 @@ public class EventsView extends ViewImpl implements EventsPresenter.IEventsView 
 	}
 
 	@Override
-	public void bindBookings(List<BookingDto> bookings) {
+	public void bindDelegates(List<DelegateDto> delegates) {
 		tblDelegates.clearRows();
-		for (BookingDto dto : bookings) {
-			for (DelegateDto delegate : dto.getDelegates()) {
-				tblDelegates.createRow(new DelegateTableRow(dto, delegate));
-			}
+		for (DelegateDto dto : delegates) {
+			tblDelegates.createRow(new DelegateTableRow(dto));
 		}
 	}
 
@@ -102,24 +101,25 @@ public class EventsView extends ViewImpl implements EventsPresenter.IEventsView 
 
 	@Override
 	public void bindEventSummary(EventSummaryDto eventSummary) {
-		headerContainer.setCounts(eventSummary.getClosed() + eventSummary.getOpen(), eventSummary.getClosed(),
-				eventSummary.getOpen());
+		headerContainer.setCounts(
+				eventSummary.getClosed() + eventSummary.getOpen(),
+				eventSummary.getClosed(), eventSummary.getOpen());
 	}
 
 	public String getSearchValue() {
 		return tblView.getSearchValue();
 	}
 
-	public HasKeyDownHandlers getSearchKeyDownHander(){
-		return tblView.getSearchKeyDownHander();
+	public HasValueChangeHandlers<String> getDelegateSearchValueChangeHandler() {
+		return tblDelegates.getDelegateSearchKeyDownHander();
 	}
-	
+
 	public String getDelegateSearchValue() {
-		return tblView.getSearchValue();
+		return tblDelegates.getDelegateSearchValue();
 	}
 
 	@Override
-	public HasKeyDownHandlers getDelegateSearchKeyDownHander() {
+	public HasValueChangeHandlers<String> getSearchValueChangeHander() {
 		return tblView.getSearchKeyDownHander();
 	}
 

@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasKeyDownHandlers;
+import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.CheckBox;
@@ -71,7 +72,7 @@ public class EventsTable extends Composite {
 		return tblView.getSearchValue();
 	}
 
-	public HasKeyDownHandlers getSearchKeyDownHander() {
+	public HasValueChangeHandlers<String> getSearchKeyDownHander() {
 		return tblView.getSearchKeyDownHander();
 	}
 }

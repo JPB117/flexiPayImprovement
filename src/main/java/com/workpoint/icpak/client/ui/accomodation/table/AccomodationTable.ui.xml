@@ -3,7 +3,7 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.workpoint.icpak.client.ui.component">
 	<g:HTMLPanel>
 		<d:TableView ui:field="tblView" striped="false" isGrid="false"
-			bordered="true" autoNumber="true" styleName="table-programs">
+			bordered="true" autoNumber="true">
 		</d:TableView>
 		<span ui:field="spnEmptyText"></span>
 	</g:HTMLPanel>

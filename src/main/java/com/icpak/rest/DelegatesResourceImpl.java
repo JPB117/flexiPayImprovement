@@ -53,7 +53,7 @@ public class DelegatesResourceImpl implements DelegatesResource {
 	@GET
 	@Path("/searchCount")
 	public Integer getSearchCount(@QueryParam("searchTerm") String searchTerm){
-		return helper.getEventBookingCount(eventId , searchTerm);
+		return helper.getDelegatesCount(eventId , searchTerm);
 	}
 
 }
