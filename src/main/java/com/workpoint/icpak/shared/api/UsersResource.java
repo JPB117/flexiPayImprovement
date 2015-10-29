@@ -54,6 +54,10 @@ public interface UsersResource extends BaseResource {
 	@Path("/{userId}/account-status/activate")
 	public void activateAccount(@PathParam("userId") String userId);
 
+	@GET
+	@Path("/sendActivationEmail/{userId}")
+	public void sendActivationEmail(@PathParam("userId") String userId);
+
 	@POST
 	@Path("/{userId}/password")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -67,7 +71,8 @@ public interface UsersResource extends BaseResource {
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	public UserDto create(UserDto user,@QueryParam("isSendEmail") boolean isSendEmail);
+	public UserDto create(UserDto user,
+			@QueryParam("isSendEmail") boolean isSendEmail);
 
 	@PUT
 	@Path("/{userId}")

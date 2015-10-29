@@ -61,13 +61,13 @@
 								<li>
 									5. Enter Account no.
 									<strong>
-										<span ui:field="spnAccountNo">ICPAK34567</span>
+										<span ui:field="spnAccountNo"></span>
 									</strong>
 								</li>
 								<li>
 									6. Enter the Amount KES
 									<strong>
-										<span ui:field="spnAmount">Ksh. 2,500/=</span>
+										<span ui:field="spnAmount"></span>
 									</strong>
 								</li>
 								<li>

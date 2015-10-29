@@ -2,7 +2,6 @@ package com.icpak.rest.dao.helper;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -76,7 +75,6 @@ public class UsersDaoHelper {
 	 * @return
 	 */
 	public UserDto create(UserDto dto) {
-
 		return create(dto, true);
 	}
 
@@ -98,15 +96,22 @@ public class UsersDaoHelper {
 		return user.toDto();
 	}
 
+	public void sendActivationEmail(String userId) {
+		User user = dao.findByUserId(userId);
+		sendActivationEmail(user);
+	}
+
 	private void sendActivationEmail(User user) {
 		String subject = "Welcome to ICPAK Portal!";
 		String link = settings.getApplicationPath() + "#activateacc;uid="
 				+ user.getRefId();
-		String body = "Dear User,"
-				+ "<br/>An account has been created for you onthe ICPAK portal. "
-				+ "You will need to reset your password on the portal using the following details."
-				+ "<p/>Username: " + user.getEmail() + "<br/>Click this link "
-				+ link + " to reset your account." + "<p>Thank you";
+		String body = "Dear "
+				+ user.getUserData().getFullNames()
+				+ ","
+				+ "<br/>An account has been created for you on the ICPAK portal. "
+				+ "You will need to create your password on the portal using the following details."
+				+ "<p/><a href=" + link + ">Click this link </a>"
+				+ " to create your password." + "<p>Thank you";
 
 		try {
 			EmailServiceHelper.sendEmail(body, subject,
@@ -462,16 +467,18 @@ public class UsersDaoHelper {
 		String resetUrl = settings.getApplicationPath() + "/#activateacc;uid="
 				+ userId;
 
-		String body = "Password Reset Instructions For: <br/>" + "<div>"
-				+ "Name: " + user.getUserData().getFullNames()
-				+ "<br/>Member No: " + user.getMemberNo() == null ? "N/A"
-				: user.getMemberNo()
-						+ "</div>"
-						+ "<a href='"
-						+ resetUrl
-						+ "'>Reset Your Password</a> and follow onscreen instructions."
-						+ "This email can be ignored if you did not request a password reset. The link is only "
-						+ "available for a short time";
+		assert (user != null);
+		String body = "Dear "
+				+ user.getUserData().getFirstName()
+				+ ",<br/>"
+				+ "Your password has been successfully reset. "
+				+ "<a href='"
+				+ resetUrl
+				+ "'>Click Here to Create Password</a><br/>"
+				+ "This email can be ignored if you did not request a password reset on the portal. The link is only "
+				+ "available for a short time";
+
+		// System.err.println(">>>>>" + body);
 
 		try {
 			EmailServiceHelper.sendEmail(body, subject,
@@ -484,5 +491,4 @@ public class UsersDaoHelper {
 
 		}
 	}
-
 }
