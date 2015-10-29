@@ -94,7 +94,7 @@
 											<span ui:field="spnMembershipStatus" class="text-muted">
 											</span>
 
-											<span ui:field="spnErpSection">
+											<span ui:field="spnRefreshSection">
 												<span class="muted">
 													(last Update:
 													<span ui:field="spnLastUpdated"></span>

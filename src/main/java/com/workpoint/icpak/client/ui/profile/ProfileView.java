@@ -207,4 +207,8 @@ public class ProfileView extends ViewImpl implements
 		divProfileContent.setApplicationStatus(applicationStatus);
 	}
 
+	@Override
+	public void showBasicMember(boolean show) {
+		divProfileContent.showBasicMember(show);
+	}
 }

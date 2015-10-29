@@ -35,8 +35,10 @@ import com.workpoint.icpak.client.ui.membership.form.MemberRegistrationForm;
 import com.workpoint.icpak.client.ui.profile.education.form.EducationRegistrationForm;
 import com.workpoint.icpak.client.ui.profile.specialization.form.SpecializationRegistrationForm;
 import com.workpoint.icpak.client.ui.profile.training.form.TrainingRegistrationForm;
+import com.workpoint.icpak.client.ui.security.BasicMemberGateKeeper;
 import com.workpoint.icpak.client.ui.security.LoginGateKeeper;
 import com.workpoint.icpak.client.ui.security.MemberGateKeeper;
+import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.api.ApplicationFormResource;
 import com.workpoint.icpak.shared.api.CountriesResource;
 import com.workpoint.icpak.shared.api.MemberResource;
@@ -98,21 +100,23 @@ public class ProfilePresenter
 		HasClickHandlers getErpRefreshButton();
 
 		void setApplicationStaus(ApplicationStatus applicationStatus);
+
+		void showBasicMember(boolean show);
 	}
 
 	private final CurrentUser currentUser;
 
 	@ProxyCodeSplit
 	@NameToken(NameTokens.profile)
-	@UseGatekeeper(LoginGateKeeper.class)
+	@UseGatekeeper(BasicMemberGateKeeper.class)
 	public interface IProfileProxy extends
 			TabContentProxyPlace<ProfilePresenter> {
 	}
 
 	@TabInfo(container = HomePresenter.class)
-	static TabData getTabLabel(MemberGateKeeper memberGatekeeper) {
+	static TabData getTabLabel(BasicMemberGateKeeper basicGatekeeper) {
 		TabDataExt data = new TabDataExt("My Profile", "icon-user", 9,
-				memberGatekeeper, true);
+				basicGatekeeper, true);
 		return data;
 	}
 
@@ -375,7 +379,12 @@ public class ProfilePresenter
 		// Window.alert("Passed ERP Check");
 		getView().bindCurrentUser(currentUser);
 
-		loadDataFromErp(false);
+		if (AppContext.isCurrentUserMember()) {
+			getView().showBasicMember(false);
+			loadDataFromErp(false);
+		} else {
+			getView().showBasicMember(true);
+		}
 
 		String applicationRefId = getApplicationRefId();
 		loadData(applicationRefId);
@@ -433,9 +442,7 @@ public class ProfilePresenter
 			loadEducation();
 			loadTrainings();
 			loadSpecializations();
-			if (applicationStatus == ApplicationStatus.APPROVED) {
-				loadGoodStanding();
-			}
+			loadGoodStanding();
 		} else {
 			// Window.alert("User refId not sent in this request!");
 		}
@@ -456,7 +463,6 @@ public class ProfilePresenter
 						ProfilePresenter.this.applicationStatus = result
 								.getApplicationStatus();
 						getView().setApplicationStaus(applicationStatus);
-						Window.alert(applicationStatus + "");
 					}
 				}).getById(applicationRefId);
 	}

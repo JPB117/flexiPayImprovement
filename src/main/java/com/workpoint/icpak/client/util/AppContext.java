@@ -210,4 +210,8 @@ public class AppContext {
 		return user;
 	}
 
+	public static boolean isCurrentUserMember() {
+		return user.getUser().getMemberNo()!=null;
+	}
+
 }

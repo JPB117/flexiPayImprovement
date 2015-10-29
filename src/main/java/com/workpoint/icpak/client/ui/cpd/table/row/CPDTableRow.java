@@ -140,7 +140,7 @@ public class CPDTableRow extends RowWidget {
 			aEdit.setVisible(false);
 			aActions.setVisible(false);
 			divAction.add(spnNoAction);
-		} else if (dto.getOrganizer().equals("ICPAK")) {
+		} else if (dto.getStatus() == CPDStatus.Approved) {
 			aEdit.setVisible(false);
 		} else {
 			aDownloadCert.setVisible(true);

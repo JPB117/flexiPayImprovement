@@ -126,7 +126,7 @@ public class ProfileWidget extends Composite {
 	DivElement divStandingStatus;
 
 	@UiField
-	SpanElement spnErpSection;
+	SpanElement spnRefreshSection;
 	@UiField
 	Element spnHelpIcon;
 
@@ -377,8 +377,12 @@ public class ProfileWidget extends Composite {
 		spnMembershipStatus.setInnerText(standing.getMembershipStatus()
 				.getDisplayName());
 
-		spnBalance.setInnerText(NumberUtils.CURRENCYFORMAT.format(standing
-				.getMemberBalance()));
+		if (standing.getMemberBalance() == null) {
+			spnBalance.setInnerText(NumberUtils.CURRENCYFORMAT.format(0.0));
+		} else {
+			spnBalance.setInnerText(NumberUtils.CURRENCYFORMAT.format(standing
+					.getMemberBalance()));
+		}
 
 		if (standing.getStanding() == 0) {
 			String info = "<ul>";
@@ -415,17 +419,23 @@ public class ProfileWidget extends Composite {
 		return aRefresh;
 	}
 
+	/*
+	 * TODO: Delete this method
+	 */
 	public void setApplicationStatus(ApplicationStatus applicationStatus) {
-		if (applicationStatus == ApplicationStatus.PENDING) {
+	}
+
+	public void showBasicMember(boolean show) {
+		if (show) {
+			spnBalance.setInnerText(NumberUtils.CURRENCYFORMAT.format(0.0));
 			spnMembershipNo.getParentElement().addClassName("hide");
 			spnMembershipStatus.setInnerText("Pending");
-			spnErpSection.addClassName("hide");
+			spnRefreshSection.addClassName("hide");
 			divStandingStatus.addClassName("hide");
 		} else {
 			spnMembershipNo.getParentElement().removeClassName("hide");
-			spnErpSection.removeClassName("hide");
+			spnRefreshSection.removeClassName("hide");
 			divStandingStatus.removeClassName("hide");
 		}
-
 	}
 }
