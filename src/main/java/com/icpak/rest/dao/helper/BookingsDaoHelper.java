@@ -309,6 +309,7 @@ public class BookingsDaoHelper {
 				memberInvoice.setQuantity(qty);
 				memberInvoice.setUnitPrice(delegate.getAmount());
 				memberInvoice.setTotalAmount(qty * delegate.getAmount());
+
 				amount += delegate.getAmount();// memberInvoice.getTotalAmount();
 			} else {
 				String description = "%s - %s fees for %d non-members: %s";

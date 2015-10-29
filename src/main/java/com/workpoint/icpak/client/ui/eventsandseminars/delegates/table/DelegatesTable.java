@@ -80,5 +80,4 @@ public class DelegatesTable extends Composite {
 	public HasKeyDownHandlers getDelegateSearchKeyDownHander() {
 		return tblView.getSearchKeyDownHander();
 	}
-
 }

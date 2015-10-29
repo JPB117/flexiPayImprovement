@@ -18,6 +18,7 @@ public interface ResourceFactory {
 	public EducationResourceImpl createEducationResource(String applicationId);
 
 	public TrainingsResourceImpl createTrainingsResource(String applicationId);
+	
 	public SpecializationsResourceImpl createSpecializationResource(String applicationId);
 
 	public CPDResourceImpl createCPDResource(String memberId);

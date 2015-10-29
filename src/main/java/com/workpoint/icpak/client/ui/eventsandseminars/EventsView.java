@@ -33,7 +33,6 @@ public class EventsView extends ViewImpl implements EventsPresenter.IEventsView 
 
 	@UiField
 	HTMLPanel panelEventDrillDown;
-
 	@UiField
 	SpanElement spnEventTitle;
 	@UiField
@@ -44,7 +43,6 @@ public class EventsView extends ViewImpl implements EventsPresenter.IEventsView 
 	DelegatesTable tblDelegates;
 
 	public interface Binder extends UiBinder<Widget, EventsView> {
-
 	}
 
 	@Inject
@@ -85,7 +83,6 @@ public class EventsView extends ViewImpl implements EventsPresenter.IEventsView 
 	@Override
 	public void bindBookings(List<BookingDto> bookings) {
 		tblDelegates.clearRows();
-
 		for (BookingDto dto : bookings) {
 			for (DelegateDto delegate : dto.getDelegates()) {
 				tblDelegates.createRow(new DelegateTableRow(dto, delegate));

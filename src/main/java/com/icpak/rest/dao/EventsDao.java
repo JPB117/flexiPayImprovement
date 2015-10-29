@@ -29,7 +29,7 @@ public class EventsDao extends BaseDao {
 		if (throwExceptionIfNull && event == null) {
 			throw new ServiceException(ErrorCodes.NOTFOUND, "Event", "'" + refId + "'");
 		}
-
+		
 		return event;
 	}
 

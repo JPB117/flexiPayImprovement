@@ -99,6 +99,7 @@ public class EventsPresenter extends Presenter<EventsPresenter.IEventsView, Even
 	static TabData getTabLabel(AdminGateKeeper gateKeeper) {
 		String tabName = "Events & Seminars";
 		;
+		
 		TabDataExt data = new TabDataExt(tabName, "fa fa-tags", 2, gateKeeper, true);
 		return data;
 	}
@@ -152,13 +153,12 @@ public class EventsPresenter extends Presenter<EventsPresenter.IEventsView, Even
 
 	private void loadData() {
 		fireEvent(new ProcessingEvent());
-
 		eventsDelegate.withCallback(new AbstractAsyncCallback<EventSummaryDto>() {
 			public void onSuccess(EventSummaryDto result) {
 				getView().bindEventSummary(result);
 			};
 		}).getEventsSummary();
-
+		
 		if (eventId != null) {
 			// Load Bookings
 			eventsDelegate.withCallback(new AbstractAsyncCallback<Integer>() {
@@ -265,7 +265,7 @@ public class EventsPresenter extends Presenter<EventsPresenter.IEventsView, Even
 	private void save(DelegateDto model) {
 		// Window.alert("Called " + model.getMemberId());
 		assert model.getBookingId() != null && model.getEventRefId() != null;
-		fireEvent(new ProcessingEvent());
+        fireEvent(new ProcessingEvent());
 		eventsDelegate.withCallback(new AbstractAsyncCallback<DelegateDto>() {
 			@Override
 			public void onSuccess(DelegateDto result) {

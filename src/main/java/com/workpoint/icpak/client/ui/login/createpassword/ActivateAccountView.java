@@ -80,5 +80,4 @@ public class ActivateAccountView extends ViewImpl implements
 	public void showProcessing(boolean showProcessing) {
 		panelPasswordWidget.showProcessing(showProcessing);
 	}
-
 }

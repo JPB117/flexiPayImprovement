@@ -24,7 +24,6 @@ public class BookingsDao extends BaseDao {
 	Logger logger = Logger.getLogger(BookingsDao.class);
 
 	public Booking getByBookingId(String refId) {
-
 		Booking booking = getSingleResultOrNull(
 				getEntityManager().createQuery("from Booking u where u.refId=:refId").setParameter("refId", refId));
 		if (booking == null) {
@@ -143,7 +142,7 @@ public class BookingsDao extends BaseDao {
 			dto.setStartDate(startDate);
 			memberEvents.add(dto);
 		}
-
+		
 		return memberEvents;
 	}
 
@@ -242,5 +241,4 @@ public class BookingsDao extends BaseDao {
 		}
 		return delegateList;
 	}
-
 }

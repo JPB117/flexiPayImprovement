@@ -40,7 +40,6 @@ public class DelegateDto extends SerializableObj {
 	}
 
 	private String hotel;
-
 	public DelegateDto() {
 	}
 

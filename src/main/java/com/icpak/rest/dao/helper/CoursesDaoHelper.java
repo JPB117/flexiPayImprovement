@@ -28,6 +28,7 @@ public class CoursesDaoHelper {
 		if(eventType!=null){
 			type = EventType.valueOf(eventType);
 		}
+		
 		List<Event> list = dao.getAllEvents(offset, limit, type, eventType);
 		List<CourseDto> eventsList = new ArrayList<>();
 		

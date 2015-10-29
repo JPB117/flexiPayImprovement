@@ -63,7 +63,7 @@ public class EventsResourceImpl implements EventsResource {
 		return helper.getCount(searchTerm);
 	}
 
-	@Path("/type/{eventType}")
+@Path("/type/{eventType}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Retrieve all active Events by Event Type")

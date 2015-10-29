@@ -469,4 +469,9 @@ public class MemberRegistrationView extends ViewImpl implements
 		}
 	}
 
+	@Override
+	public MemberRegistrationForm getRegistrationForm() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

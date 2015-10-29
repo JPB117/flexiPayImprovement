@@ -58,7 +58,6 @@ public class ActivateAccountPresenter
 		String getEmail();
 
 		void showProcessing(boolean b);
-
 	}
 
 	@ProxyCodeSplit
@@ -151,7 +150,7 @@ public class ActivateAccountPresenter
 									getView().showProcessing(false);
 									sendResetEmail(result.getRefId());
 								}
-
+								
 								public void onFailure(Throwable caught) {
 									getView().showProcessing(false);
 									Window.alert("Your Email Address was not found. Kindly contact ICPAK Support to update your Email");

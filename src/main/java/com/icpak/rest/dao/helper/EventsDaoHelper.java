@@ -65,7 +65,6 @@ public class EventsDaoHelper {
 		dao.save(event);
 		dto.setRefId(event.getRefId());
 		assert event.getId() != null;
-
 		return event.toDto();
 	}
 
@@ -84,5 +83,4 @@ public class EventsDaoHelper {
 	public Integer getCount(String searchTerm) {
 		return dao.getSearchEventCount(searchTerm);
 	}
-
 }

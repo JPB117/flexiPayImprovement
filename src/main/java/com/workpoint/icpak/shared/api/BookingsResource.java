@@ -21,7 +21,7 @@ public interface BookingsResource extends BaseResource{
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<BookingDto> getAll(@QueryParam("offset") Integer offset,
-			@QueryParam("limit") Integer limit , @QueryParam("searchTerm") String searchTerm);
+			@QueryParam("limit") Integer limit);
 
 	@GET
 	@Path("/{bookingId}")
@@ -60,9 +60,5 @@ public interface BookingsResource extends BaseResource{
 	public DelegateDto updateDelegate(@PathParam("bookingId") String bookingId,
 			@PathParam("delegateId") String delegateId,
 			DelegateDto delegate);
-
-	@GET
-	@Path("/searchCount")
-	public Integer getSearchCount(@QueryParam("searchTerm") String searchTerm);
 
 }

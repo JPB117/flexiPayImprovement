@@ -8,7 +8,7 @@ public enum ErrorCodes implements ErrorCode {
 	SERVER_ERROR("500","{0} : {1}", Status.INTERNAL_SERVER_ERROR), //e.g {ResourceCollectionModel.class} : {Collection Total Count is null}
 	ILLEGAL_ARGUMENT("422","Illegal argument {0} '{1}' not expected", Status.BAD_REQUEST),//e.g {Permission} {SomeNonExistentPermission} not expected
 	DUPLICATEVALUE("500", "Duplicate value error, {0} must be unique.",Status.INTERNAL_SERVER_ERROR),
-	UNAUTHORIZEDACCESS("401", "Unauthorized", Status.UNAUTHORIZED)
+	UNAUTHORIZEDACCESS("401", "Unauthorized", Status.UNAUTHORIZED);
 	;
 
 	private String code;

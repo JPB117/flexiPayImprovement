@@ -7,7 +7,6 @@ import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
-
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.icpak.rest.exceptions.ServiceException;
@@ -48,7 +47,6 @@ public class BaseDao {
 			if(!(e instanceof NoResultException)){
 				e.printStackTrace();
 			}
-			
 		}
 		
 		return value;

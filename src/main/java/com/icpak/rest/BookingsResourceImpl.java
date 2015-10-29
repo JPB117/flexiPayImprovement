@@ -45,10 +45,10 @@ public class BookingsResourceImpl implements BookingsResource {
 	@ApiOperation(value = "Retrieve all active bookings")
 	public List<BookingDto> getAll(
 			@ApiParam(value = "Starting point to fetch") @QueryParam("offset") Integer offset,
-			@ApiParam(value = "No of Items to fetch") @QueryParam("limit") Integer limit , @QueryParam("searchTerm") String searchTerm) {
+			@ApiParam(value = "No of Items to fetch") @QueryParam("limit") Integer limit) {
 		String uri = "";
 		List<BookingDto> dtos = helper.getAllBookings(uri, eventId, offset,
-				limit , searchTerm);
+				limit, "");
 		return dtos;
 	}
 	
@@ -148,12 +148,6 @@ public class BookingsResourceImpl implements BookingsResource {
 			DelegateDto delegate){
 		
 		return helper.updateDelegate(bookingId, delegateId, delegate);
-	}
-	
-	@GET
-	@Path("/searchCount")
-	public Integer getSearchCount(@QueryParam("searchTerm") String searchTerm){
-		return helper.getEventBookingCount(eventId , searchTerm);
 	}
 
 }
