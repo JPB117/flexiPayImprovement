@@ -205,4 +205,9 @@ public class MemberRegistrationForm extends Composite {
 			}
 		}
 	}
+
+	public void addError(String message) {
+		issuesPanel.addError(message);
+	}
+
 }

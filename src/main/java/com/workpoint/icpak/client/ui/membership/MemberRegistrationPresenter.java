@@ -10,6 +10,7 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.GwtEvent.Type;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.inject.Inject;
@@ -43,6 +44,7 @@ import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
 import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent.ProcessingCompletedHandler;
 import com.workpoint.icpak.client.ui.events.ProcessingEvent;
 import com.workpoint.icpak.client.ui.events.ProcessingEvent.ProcessingHandler;
+import com.workpoint.icpak.client.ui.membership.form.MemberRegistrationForm;
 import com.workpoint.icpak.client.ui.payment.PaymentPresenter;
 import com.workpoint.icpak.shared.api.ApplicationFormResource;
 import com.workpoint.icpak.shared.api.CategoriesResource;
@@ -99,6 +101,8 @@ public class MemberRegistrationPresenter
 		void bindTransaction(InvoiceDto invoice);
 
 		void setCountries(List<Country> countries);
+
+		MemberRegistrationForm getRegistrationForm();
 	}
 
 	@ProxyCodeSplit
@@ -298,6 +302,36 @@ public class MemberRegistrationPresenter
 			@Override
 			public void onSuccess(UserDto result) {
 				getView().setEmailValid(false);
+			}
+
+			@Override
+			public boolean handleCustomError(Response aResponse) {
+				int code = aResponse.getStatusCode();
+				String message = aResponse.getText();
+				if (code == 404) {
+					getView().setEmailValid(true); // The email address does not
+													// exist in our database as
+													// expected
+					return false;
+				}
+
+				/*
+				 * Something went wrong on the server side while checking if the
+				 * email exists esp. duplicate entries errors
+				 * (NonUniqueResultExceptions)
+				 */
+				
+				/* 
+				 * Do not allow the user to continue lest they input duplicate records
+				 */
+				getView().setEmailValid(false);
+				
+				/*
+				 * Add an error message 
+				 */
+				getView().getRegistrationForm().addError(message);
+
+				return false;
 			}
 		}).getById(email);
 	}
