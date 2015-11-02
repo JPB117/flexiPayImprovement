@@ -33,7 +33,7 @@
 				<br />
 
 				<g:HTMLPanel styleName="panel widget" ui:field="panelListing">
-					<div class="panel-heading">CPD Summary</div>
+					<div class="panel-heading">All System Users</div>
 					<div class="panel-body">
 						<ul id="mytab" class="nav nav-tabs">
 							<li class="active" ui:field="liUser">
@@ -61,6 +61,7 @@
 											<div class="th">Other Names:</div>
 											<div class="th">Email</div>
 											<div class="th">Group</div>
+											<div class="th">LMS Status</div>
 											<div class="th">Action</div>
 										</div>
 									</div>

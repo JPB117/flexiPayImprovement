@@ -145,11 +145,22 @@ public class ActivateAccountPresenter
 			if (user != null) {
 				usersDelegate.withoutCallback().changePassword(user.getRefId(),
 						getView().getPassword());
-				getView()
-						.showMessage(
-								"Your Password has been saved successfully..,"
-										+ "You will be now taken to Login Page to Proceed.",
-								"success");
+				getView().showMessage(
+						"Your Password has been saved successfully"
+								+ ".You can proceed to Login and use it.",
+						"success");
+
+				getView().getProceedToLogin().addClickHandler(
+						new ClickHandler() {
+							@Override
+							public void onClick(ClickEvent event) {
+								placeManager
+										.revealPlace(new PlaceRequest.Builder()
+												.nameToken(NameTokens.login)
+												.build());
+							}
+						});
+
 				postUserToLMS(user.getRefId());
 			}
 		}
@@ -326,11 +337,8 @@ public class ActivateAccountPresenter
 		getView().showProcessing(true);
 		usersDelegate.withCallback(new AbstractAsyncCallback<String>() {
 			@Override
-			public void onSuccess(String result) {
+			public void onSuccess(String message) {
 				getView().showProcessing(false);
-				// Window.alert(result);
-				placeManager.revealPlace(new PlaceRequest.Builder().nameToken(
-						NameTokens.login).build());
 			}
 
 			@Override
@@ -338,7 +346,7 @@ public class ActivateAccountPresenter
 				getView().showProcessing(false);
 				super.onFailure(caught);
 			}
-		}).postUserLMS(refId);
+		}).postUserLMS(refId, getView().getPassword());
 	}
 
 	private void sendResetEmail(String userRefId) {

@@ -7,6 +7,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.apache.log4j.Logger;
 
+import com.amazonaws.util.json.JSONObject;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
@@ -29,7 +30,6 @@ public class LMSIntegrationUtil {
 	 * Jersey Client
 	 */
 	private Client jclient;
-
 	private static LMSIntegrationUtil util = null;
 
 	public static LMSIntegrationUtil getInstance() throws IOException {
@@ -37,6 +37,8 @@ public class LMSIntegrationUtil {
 			synchronized (logger) {
 				if (util == null) {
 					util = new LMSIntegrationUtil();
+					logger.error(">>>>>>Util Class:"
+							+ util.getResourceUri("/registter"));
 				}
 			}
 		}
@@ -45,8 +47,8 @@ public class LMSIntegrationUtil {
 
 	private LMSIntegrationUtil() throws IOException {
 		DefaultClientConfig config = new DefaultClientConfig();
-//		config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING,
-//				Boolean.TRUE);
+		// config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING,
+		// Boolean.TRUE);
 		jclient = Client.create(config);
 		jclient.setConnectTimeout(15000);
 
@@ -90,18 +92,19 @@ public class LMSIntegrationUtil {
 			throw new RuntimeException(e);
 		}
 
+		T response = null;
+
 		if (clientResponse.getClientResponseStatus() != ClientResponse.Status.OK) {
 			throw new RuntimeException(clientResponse.getEntity(String.class));
+			// response = (T) clientResponse.getEntity(String.class);
+		} else {
+			response = clientResponse.getEntity(returnTypeClazz);
 		}
-
-		T response = null;
-		response = clientResponse.getEntity(returnTypeClazz);
-
 		return response;
 
 	}
 
-	public <T> T executeLMSCall(String resourcePath, Object payLoad,
+	public <T> LMSResponse executeLMSCall(String resourcePath, Object payLoad,
 			final Class<T> returnTypeClazz) throws IOException {
 
 		Client client = Client.create();
@@ -112,7 +115,9 @@ public class LMSIntegrationUtil {
 		}
 
 		logger.info("Submitting payload to " + getResourceUri(resourcePath)
-				+ " ;payLoad " + payLoad);
+				+ " ;payLoad " + payLoad.toString());
+		JSONObject json = new JSONObject(payLoad);
+		System.err.println(">>>>>>>>" + json);
 
 		WebResource resource = client.resource(getResourceUri(resourcePath));
 
@@ -121,18 +126,22 @@ public class LMSIntegrationUtil {
 				.accept(MediaType.APPLICATION_JSON)
 				.post(ClientResponse.class, payLoad);
 
+		LMSResponse response = new LMSResponse();
 		if (clientResponse.getClientResponseStatus() != ClientResponse.Status.OK) {
-			throw new RuntimeException(clientResponse.getEntity(String.class));
+			response.setMessage(clientResponse.getEntity(String.class));
+			response.setStatus("Failed");
+			logger.error(response);
+		} else {
+			response.setMessage(clientResponse.getEntity(String.class));
+			response.setStatus("Success");
 		}
-
-		T response = null;
-		response = clientResponse.getEntity(returnTypeClazz);
-
 		return response;
-
 	}
 
 	private String getResourceUri(String resourcePath) {
+		if (baseUri == null) {
+			logger.error(">>> base uri cannot be null");
+		}
 		return baseUri + (resourcePath.startsWith("/") ? "" : "/")
 				+ resourcePath;
 	}

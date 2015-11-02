@@ -3,14 +3,20 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
 	xmlns:g='urn:import:com.google.gwt.user.client.ui' ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
+	xmlns:d='urn:import:com.workpoint.icpak.client.ui.component'
 	ui:generateLocales='default'>
 
 	<g:HTMLPanel styleName="tr">
-		<g:HTMLPanel ui:field="panelMemberNo" styleName="td"></g:HTMLPanel>	
+		<g:HTMLPanel ui:field="panelMemberNo" styleName="td"></g:HTMLPanel>
 		<g:HTMLPanel ui:field="panelFirstName" styleName="td"></g:HTMLPanel>
 		<g:HTMLPanel ui:field="panelLastName" styleName="td"></g:HTMLPanel>
 		<g:HTMLPanel ui:field="panelEmail" styleName="td"></g:HTMLPanel>
 		<g:HTMLPanel ui:field="panelGroups" styleName="td"></g:HTMLPanel>
+		<g:HTMLPanel ui:field="panelLMSStatus" styleName="td">
+			<span ui:field="spnLMSStatus" class="label" data-toggle="popover"
+				data-trigger="hover" title="Reasons for this:"></span>
+			<d:PopOver></d:PopOver>
+		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td">
 			<div class="action-commands">
 				<g:Anchor styleName="btn btn-success" ui:field="aEdit">

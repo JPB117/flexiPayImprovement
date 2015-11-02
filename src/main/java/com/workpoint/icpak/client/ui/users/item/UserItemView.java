@@ -1,5 +1,6 @@
 package com.workpoint.icpak.client.ui.users.item;
 
+import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -27,6 +28,8 @@ public class UserItemView extends ViewImpl implements UserItemPresenter.MyView {
 	HTMLPanel panelGroups;
 	@UiField
 	HTMLPanel panelMemberNo;
+	@UiField
+	SpanElement spnLMSStatus;
 
 	@UiField
 	Anchor aEdit;
@@ -58,6 +61,19 @@ public class UserItemView extends ViewImpl implements UserItemPresenter.MyView {
 
 		if (user.getGroups() != null) {
 			panelGroups.getElement().setInnerText(user.getGroupsAsString());
+		}
+
+		if (user.getLmsStatus() != null) {
+			spnLMSStatus.setInnerText(user.getLmsStatus());
+			if (user.getLmsStatus().equals("Success")) {
+				spnLMSStatus.setClassName("label label-success popover-icon");
+			} else {
+				spnLMSStatus.setClassName("label label-danger popover-icon");
+			}
+			if (user.getLmsResponse() != null) {
+				spnLMSStatus
+						.setAttribute("data-content", user.getLmsResponse());
+			}
 		}
 
 	}

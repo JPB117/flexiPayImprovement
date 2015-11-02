@@ -8,10 +8,11 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Logger;
 
 import javax.mail.MessagingException;
 import javax.ws.rs.core.UriInfo;
+
+import org.apache.log4j.Logger;
 
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
@@ -36,6 +37,7 @@ import com.icpak.rest.security.authentication.Authenticator;
 import com.icpak.rest.util.ApplicationSettings;
 import com.icpak.rest.utils.EmailServiceHelper;
 import com.workpoint.icpak.server.integration.lms.LMSIntegrationUtil;
+import com.workpoint.icpak.server.integration.lms.LMSResponse;
 import com.workpoint.icpak.shared.lms.LMSMemberDto;
 import com.workpoint.icpak.shared.model.Gender;
 import com.workpoint.icpak.shared.model.RoleDto;
@@ -119,7 +121,7 @@ public class UsersDaoHelper {
 					Arrays.asList(user.getUserData().getFullNames()));
 
 		} catch (Exception e) {
-			logger.warning("Activation Email for " + user.getEmail()
+			logger.info("Activation Email for " + user.getEmail()
 					+ " failed. Cause: " + e.getMessage());
 			e.printStackTrace();
 			// throw new Run
@@ -418,37 +420,48 @@ public class UsersDaoHelper {
 
 	}
 
-	public String postUserToLMS(String userId) throws IOException {
-		User user = dao.findByUserId(userId);
+	public String postUserToLMS(String userRefId, String password)
+			throws IOException {
+		User user = dao.findByUserId(userRefId);
 		LMSMemberDto dto = new LMSMemberDto();
 		dto.setFirstName(user.getUserData().getFirstName());
 		dto.setLastName(user.getUserData().getLastName());
 		dto.setGender((user.getUserData().getGender() == Gender.MALE ? Gender.MALE
 				.getCode() : Gender.FEMALE.getCode()));
-		dto.setMobileNo(user.getPhoneNumber());
-		dto.setPassword(user.getPassword());
+		if (user.getPhoneNumber() != null) {
+			dto.setMobileNo(user.getPhoneNumber());
+		} else {
+			dto.setMobileNo("0722333333");
+		}
+		dto.setPassword(password);
 		dto.setTimeZone("E. Africa Standard Time");
 		dto.setTitle(Title.Mr.getCode());
 		if (user.getUserData().getDob() != null) {
-			dto.setDOB(new SimpleDateFormat("dd-mm-yyyy").format(user
+			dto.setDOB(new SimpleDateFormat("dd-MM-yyyy").format(user
 					.getUserData().getDob()));
 		} else {
-			dto.setDOB(new SimpleDateFormat("dd-mm-yyyy").format(new Date()));
+			dto.setDOB(new SimpleDateFormat("dd-MM-yyyy").format(new Date()));
 		}
 		if (user.getMemberNo() != null) {
-			dto.setUserName(user.getMemberNo() + "@wira.io");
-			// dto.setUserName(user.getMemberNo());
+			dto.setUserName(user.getMemberNo());
 			dto.setMembershipID(user.getMemberNo());
 		} else if (user.getEmail() != null) {
 			dto.setUserName(user.getEmail());
 			dto.setMembershipID("");
 		}
+
 		dto.setRefID(user.getRefId());
 
-		String response = LMSIntegrationUtil.getInstance().executeLMSCall(
-				"/Account/Register", dto, String.class);
-		// messages -for testing
-		return response;
+		LMSResponse response = LMSIntegrationUtil.getInstance().executeLMSCall(
+				"/account/register", dto, String.class);
+		logger.info("LMS Response::" + response.getMessage());
+		logger.info("LMS Status::" + response.getStatus());
+
+		user.setLmsResponse(response.getMessage());
+		user.setLmsStatus(response.getStatus());
+		update(dto.getRefID(), user);
+
+		return response.getStatus();
 	}
 
 	public void activateAccount(String userId, AccountStatus activated) {
@@ -485,7 +498,7 @@ public class UsersDaoHelper {
 					Arrays.asList(user.getEmail()),
 					Arrays.asList(user.getUserData().getFirstName()));
 		} catch (UnsupportedEncodingException | MessagingException e) {
-			logger.warning("Send Reset Email Failed: email= " + user.getEmail()
+			logger.info("Send Reset Email Failed: email= " + user.getEmail()
 					+ ", refId= " + user.getRefId());
 			e.printStackTrace();
 

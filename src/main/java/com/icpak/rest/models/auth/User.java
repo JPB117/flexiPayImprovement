@@ -66,7 +66,7 @@ import com.workpoint.icpak.shared.model.auth.AccountStatus;
 @XmlSeeAlso({ BioData.class })
 @Entity
 @Table(name = "user", indexes = { @Index(columnList = "username", name = "idx_users_username")
-		// ,@Index(columnList = "email", name = "idx_users_email")
+// ,@Index(columnList = "email", name = "idx_users_email")
 })
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class User extends PO {
@@ -94,15 +94,17 @@ public class User extends PO {
 
 	@JsonIgnore
 	@XmlTransient
-	@ManyToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST })
-	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "userid") , inverseJoinColumns = @JoinColumn(name = "roleid") )
+	@ManyToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE,
+			CascadeType.REFRESH, CascadeType.PERSIST })
+	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = @JoinColumn(name = "roleid"))
 	@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 	private Set<Role> roles = new HashSet<Role>();
 
 	@Embedded
 	private BioData userData = null;
 
-	@OneToOne(mappedBy = "user", cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
+	@OneToOne(mappedBy = "user", cascade = { CascadeType.PERSIST,
+			CascadeType.REMOVE })
 	private Member member;
 
 	private String memberNo;
@@ -114,6 +116,8 @@ public class User extends PO {
 	private String nationality;
 	private String address2;
 	private String postalCode;
+	private String lmsStatus;
+	private String lmsResponse;
 
 	@Enumerated(EnumType.STRING)
 	private AccountStatus status = AccountStatus.NEWACC;
@@ -209,7 +213,8 @@ public class User extends PO {
 		BioData bio = new BioData();
 		bio.setFirstName(dto.getName());
 		bio.setLastName(dto.getSurname());
-		// bio.setGender(dto.get);
+		setLmsResponse(dto.getLmsResponse());
+		setLmsStatus(dto.getLmsStatus());
 		setUserData(bio);
 	}
 
@@ -295,6 +300,8 @@ public class User extends PO {
 		dto.setPhoneNumber(phoneNumber);
 		dto.setRefId(refId);
 		dto.setStatus(status);
+		dto.setLmsResponse(lmsResponse);
+		dto.setLmsStatus(lmsStatus);
 
 		if (member != null) {
 			dto.setLastDateUpdateFromErp(member.getLastUpdate());
@@ -357,6 +364,22 @@ public class User extends PO {
 
 	public void setPostalCode(String postalCode) {
 		this.postalCode = postalCode;
+	}
+
+	public String getLmsStatus() {
+		return lmsStatus;
+	}
+
+	public void setLmsStatus(String lmsStatus) {
+		this.lmsStatus = lmsStatus;
+	}
+
+	public String getLmsResponse() {
+		return lmsResponse;
+	}
+
+	public void setLmsResponse(String lmsResponse) {
+		this.lmsResponse = lmsResponse;
 	}
 
 }

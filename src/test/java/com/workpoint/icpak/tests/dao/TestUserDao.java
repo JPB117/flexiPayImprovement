@@ -1,5 +1,7 @@
 package com.workpoint.icpak.tests.dao;
 
+import java.io.IOException;
+
 import javax.inject.Inject;
 
 import org.junit.Assert;
@@ -57,9 +59,14 @@ public class TestUserDao extends AbstractDaoTest {
 		System.err.println(userDto.getLastDateUpdateFromErp());
 	}
 
-	@Test
+	@Ignore
 	public void testEmails() {
 		helper.resetAccount("30ZDpATQxFXx9WR7");
+	}
+
+	@Test
+	public void testLMS() throws IOException {
+		helper.postUserToLMS("bf4j7WfaMDBph6nP","pass");
 	}
 
 }

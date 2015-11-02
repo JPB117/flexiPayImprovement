@@ -296,14 +296,13 @@ public class UsersResourceImpl implements UsersResource {
 	@Path("/{userId}/lmsPost")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public String postUserLMS(@PathParam("userId") String userId) {
-		return "Success";
-		// try {
-		// //return helper.postUserToLMS(userId);
-		// return "";
-		// } catch (IOException e) {
-		// return e.getStackTrace().toString();
-		// }
+	public String postUserLMS(@PathParam("userId") String userId,
+			@PathParam("password") String password) {
+		// return "Success";
+		try {
+			return helper.postUserToLMS(userId, password);
+		} catch (IOException e) {
+			return e.getStackTrace().toString();
+		}
 	}
-
 }

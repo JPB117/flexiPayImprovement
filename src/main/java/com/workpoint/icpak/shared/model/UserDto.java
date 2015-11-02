@@ -28,8 +28,8 @@ public class UserDto extends SerializableObj implements Listable, Serializable {
 	private AccountStatus status = AccountStatus.NEWACC;
 	private String phoneNumber;
 	private Date lastDateUpdateFromErp;
-
-	
+	private String lmsStatus;
+	private String lmsResponse;
 
 	public UserDto() {
 	}
@@ -202,12 +202,28 @@ public class UserDto extends SerializableObj implements Listable, Serializable {
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
-	
+
 	public void setLastDateUpdateFromErp(Date lastDateUpdateFromErp) {
 		this.lastDateUpdateFromErp = lastDateUpdateFromErp;
 	}
 
 	public Date getLastDateUpdateFromErp() {
 		return lastDateUpdateFromErp;
+	}
+
+	public String getLmsStatus() {
+		return lmsStatus;
+	}
+
+	public void setLmsStatus(String lmsStatus) {
+		this.lmsStatus = lmsStatus;
+	}
+
+	public String getLmsResponse() {
+		return lmsResponse;
+	}
+
+	public void setLmsResponse(String lmsResponse) {
+		this.lmsResponse = lmsResponse;
 	}
 }

@@ -65,7 +65,7 @@ public class TestApplicationForm extends AbstractDaoTest {
 
 	@Test
 	public void getCount() throws IOException {
-		System.err.println("Response>>"
-				+ usersDaoHelper.postUserToLMS("50LMW3Qrv3SsLySW"));
+//		System.err.println("Response>>"
+//				+ usersDaoHelper.postUserToLMS("50LMW3Qrv3SsLySW"));
 	}
 }

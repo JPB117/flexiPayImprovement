@@ -67,7 +67,8 @@ public interface UsersResource extends BaseResource {
 	@POST
 	@Path("/{userId}/lmsPost")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public String postUserLMS(@PathParam("userId") String userId);
+	public String postUserLMS(@PathParam("userId") String userId,
+			@PathParam("password") String password);
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
