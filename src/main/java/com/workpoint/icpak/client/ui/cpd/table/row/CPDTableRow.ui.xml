@@ -37,6 +37,9 @@
 						<d:ActionLink ui:field="aEdit">Edit</d:ActionLink>
 					</li>
 					<li>
+						<d:ActionLink ui:field="aDelete">Delete</d:ActionLink>
+					</li>
+					<li>
 						<d:ActionLink ui:field="aDownloadCert">Download Certificate</d:ActionLink>
 					</li>
 					<li>

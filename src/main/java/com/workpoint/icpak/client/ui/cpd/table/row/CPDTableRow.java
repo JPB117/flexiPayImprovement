@@ -22,8 +22,7 @@ import com.workpoint.icpak.shared.model.CPDStatus;
 
 public class CPDTableRow extends RowWidget {
 
-	private static ActivitiesTableRowUiBinder uiBinder = GWT
-			.create(ActivitiesTableRowUiBinder.class);
+	private static ActivitiesTableRowUiBinder uiBinder = GWT.create(ActivitiesTableRowUiBinder.class);
 
 	interface ActivitiesTableRowUiBinder extends UiBinder<Widget, CPDTableRow> {
 	}
@@ -56,7 +55,8 @@ public class CPDTableRow extends RowWidget {
 
 	@UiField
 	ActionLink aEdit;
-
+	@UiField
+	ActionLink aDelete;
 	@UiField
 	ActionLink aMember;
 
@@ -83,8 +83,15 @@ public class CPDTableRow extends RowWidget {
 		aDownloadCert.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				AppContext.fireEvent(new TableActionEvent(dto,
-						TableActionType.DOWNLOADCERT));
+				AppContext.fireEvent(new TableActionEvent(dto, TableActionType.DOWNLOADCERT));
+			}
+		});
+		
+		aDelete.addClickHandler(new ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent arg0) {
+				AppContext.fireEvent(new TableActionEvent(dto, TableActionType.DELETECPD));
 			}
 		});
 	}
@@ -101,26 +108,22 @@ public class CPDTableRow extends RowWidget {
 		}
 
 		if ((dto.getStartDate() != null)) {
-			divStartDate.add(new InlineLabel(DateUtils.DATEFORMAT.format(dto
-					.getStartDate())));
+			divStartDate.add(new InlineLabel(DateUtils.DATEFORMAT.format(dto.getStartDate())));
 		}
 
 		if (dto.getEndDate() != null) {
-			divEndDate.add(new InlineLabel(DateUtils.DATEFORMAT.format(dto
-					.getEndDate())));
+			divEndDate.add(new InlineLabel(DateUtils.DATEFORMAT.format(dto.getEndDate())));
 		}
 
 		divCourseName.add(new InlineLabel(dto.getTitle()));
 		divOrganiser.add(new InlineLabel(dto.getOrganizer()));
 
 		if (dto.getCategory() != null)
-			divCategory
-					.add(new InlineLabel(dto.getCategory().getDisplayName()));
+			divCategory.add(new InlineLabel(dto.getCategory().getDisplayName()));
 
 		divCPD.add(new InlineLabel(dto.getCpdHours() + " hrs"));
 
-		CPDStatus status = dto.getStatus() == null ? CPDStatus.Unconfirmed
-				: dto.getStatus();
+		CPDStatus status = dto.getStatus() == null ? CPDStatus.Unconfirmed : dto.getStatus();
 
 		spnStatus.setInnerText(status.name());
 		if (status.equals(CPDStatus.Unconfirmed)) {
@@ -134,8 +137,14 @@ public class CPDTableRow extends RowWidget {
 		}
 
 		InlineLabel spnNoAction = new InlineLabel("No Action Possible");
-		if (dto.getStatus() == CPDStatus.Approved
-				&& dto.getCategory() == CPDCategory.CATEGORY_D) {
+		
+		if(dto.getStatus() == CPDStatus.Unconfirmed){
+			aDelete.setVisible(true);
+		}else{
+			aDelete.setVisible(false);
+		}
+		
+		if (dto.getStatus() == CPDStatus.Approved && dto.getCategory() == CPDCategory.CATEGORY_D) {
 			aDownloadCert.setVisible(false);
 			aEdit.setVisible(false);
 			aActions.setVisible(false);
@@ -149,8 +158,7 @@ public class CPDTableRow extends RowWidget {
 			spnNoAction.setVisible(false);
 		}
 
-		final String url = "getreport?action=downloadcpdcert&cpdRefId="
-				+ dto.getRefId();
+		final String url = "getreport?action=downloadcpdcert&cpdRefId=" + dto.getRefId();
 		final String wintitle = "CPD Certificate for event " + dto.getTitle();
 		aDownloadCert.addClickHandler(new ClickHandler() {
 			@Override
@@ -162,7 +170,7 @@ public class CPDTableRow extends RowWidget {
 	}
 
 	public enum TableActionType {
-		DOWNLOADCERT
+		DOWNLOADCERT,DELETECPD
 	}
 
 }
