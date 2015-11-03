@@ -55,7 +55,12 @@ public class AppManager {
 			// AS WELL AS DYNAMIC STYLING BY PASSING BUTTON STYLES TO THIS
 			// MECHANISM
 			aLnk.setHTML(text);
-			aLnk.setStyleName("btn btn-default btn-fill pull-right");
+
+			if (text.equals("Save")) {
+				aLnk.setStyleName("btn btn-primary btn-fill pull-right");
+			} else {
+				aLnk.setStyleName("btn btn-default btn-fill pull-right");
+			}
 
 			aLnk.addClickHandler(new ClickHandler() {
 

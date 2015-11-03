@@ -34,7 +34,7 @@ import com.workpoint.icpak.shared.model.events.EventDto;
  *
  */
 
-@ApiModel(value = "Events Model", description = "An event represents an ICPAK Event/Seminar/Webinar/Course")
+@ApiModel(value = "Events Model", description = "An event represents an ICPAK Event/Course")
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlSeeAlso({ Booking.class, Accommodation.class })
@@ -65,8 +65,13 @@ public class Event extends PO {
 	private Double memberPrice;
 	@Column(nullable = false)
 	private Double nonMemberPrice;
-	@Column(nullable = false)
+	/*
+	 * Incase this throws an Exception; ALTER TABLE tbl_name MODIFY columnA
+	 * varchar(6) NULL DEFAULT NULL;
+	 */
 	private Double associatePrice;
+
+	private Integer lmsCourseId;
 
 	private String code;
 
@@ -214,8 +219,9 @@ public class Event extends PO {
 		if (endDate != null)
 			dto.setEndDate(DateUtils.format(endDate, DateUtils.FULLTIMESTAMP));
 
-		if (startDate != null){
-			dto.setStartDate(DateUtils.format(startDate, DateUtils.FULLTIMESTAMP));
+		if (startDate != null) {
+			dto.setStartDate(DateUtils.format(startDate,
+					DateUtils.FULLTIMESTAMP));
 		}
 		dto.setMemberPrice(memberPrice);
 		dto.setName(name);
@@ -242,12 +248,13 @@ public class Event extends PO {
 	public void copyFrom(EventDto dto) {
 		setCpdHours(dto.getCpdHours());
 		setDescription(dto.getDescription());
-
 		if (dto.getEndDate() != null)
-			setEndDate(DateUtils.parse(dto.getEndDate(), DateUtils.FULLTIMESTAMP));
+			setEndDate(DateUtils.parse(dto.getEndDate(),
+					DateUtils.FULLTIMESTAMP));
 
 		if (dto.getStartDate() != null)
-			setStartDate(DateUtils.parse(dto.getStartDate(), DateUtils.FULLTIMESTAMP));
+			setStartDate(DateUtils.parse(dto.getStartDate(),
+					DateUtils.FULLTIMESTAMP));
 
 		setMemberPrice(dto.getMemberPrice());
 		setName(dto.getName());
@@ -257,6 +264,10 @@ public class Event extends PO {
 		setType(dto.getType());
 		setVenue(dto.getVenue());
 		setCategoryName(dto.getCategoryName());
+
+		if (dto.getCourseId() != null) {
+			setLmsCourseId(dto.getCourseId());
+		}
 
 		if (dto.getAccommodation() != null) {
 			List<Accommodation> accommodations = new ArrayList<>();
@@ -286,39 +297,33 @@ public class Event extends PO {
 		dto.setRefId(getRefId());
 		dto.setCpdHours(cpdHours);
 		dto.setDescription(description);
-
-		if (endDate != null)
-			dto.setEndDate(endDate.getTime());
-
-		if (startDate != null)
-			dto.setStartDate(startDate.getTime());
 		dto.setMemberPrice(memberPrice);
 		dto.setName(name);
 		dto.setNonMemberPrice(nonMemberPrice);
 		dto.setStatus(status);
 		dto.setType(type);
 		dto.setVenue(venue);
-
+		dto.setCourseId(lmsCourseId);
 		return dto;
 	}
 
 	public void copyFromCourse(CourseDto dto) {
 		setCpdHours(dto.getCpdHours());
 		setDescription(dto.getDescription());
-
-		if (dto.getEndDate() != null)
-			setEndDate(new Date(dto.getEndDate()));
-
-		if (dto.getStartDate() != null)
-			setStartDate(new Date(dto.getStartDate()));
-
 		setMemberPrice(dto.getMemberPrice());
+		if (dto.getEndDate() != null)
+			setEndDate(DateUtils.parse(dto.getEndDate(),
+					DateUtils.SHORTTIMESTAMP));
+		if (dto.getStartDate() != null)
+			setStartDate(DateUtils.parse(dto.getStartDate(),
+					DateUtils.SHORTTIMESTAMP));
 		setName(dto.getName());
 		setNonMemberPrice(dto.getNonMemberPrice());
 		setStatus(dto.getStatus());
 		setType(dto.getType());
 		setVenue(dto.getVenue());
 		setCode(dto.getCode());
+		setLmsCourseId(dto.getCourseId());
 	}
 
 	public String getCode() {
@@ -351,6 +356,14 @@ public class Event extends PO {
 
 	public void setAssociatePrice(Double associatePrice) {
 		this.associatePrice = associatePrice;
+	}
+
+	public Integer getLmsCourseId() {
+		return lmsCourseId;
+	}
+
+	public void setLmsCourseId(Integer lmsCourseId) {
+		this.lmsCourseId = lmsCourseId;
 	}
 
 }

@@ -10,16 +10,17 @@ import com.workpoint.icpak.shared.model.Listable;
 import com.workpoint.icpak.shared.model.SerializableObj;
 
 /**
- * Event DTO 
+ * Event DTO
  * <p>
- * For simplicity, all dates will be transmitted as strings and parsed by corresponding recipients
- * <br/>
+ * For simplicity, all dates will be transmitted as strings and parsed by
+ * corresponding recipients <br/>
  * The utilized format for the dates is yyyy-MM-dd hh:mm:ss
- *	<p>
+ * <p>
+ * 
  * @author duggan
  *
  */
-public class EventDto extends SerializableObj implements Listable{
+public class EventDto extends SerializableObj implements Listable {
 
 	/**
 	 * 
@@ -41,6 +42,7 @@ public class EventDto extends SerializableObj implements Listable{
 	private int delegateCount;
 	private Double totalPaid;
 	private Double totalUnpaid;
+	private Integer courseId;
 
 	public EventDto() {
 		accommodation = new ArrayList<AccommodationDto>();
@@ -162,18 +164,18 @@ public class EventDto extends SerializableObj implements Listable{
 	public String getDisplayName() {
 		return name;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
-		if(!(obj instanceof EventDto)){
+		if (!(obj instanceof EventDto)) {
 			return false;
 		}
-		
-		EventDto other = (EventDto)obj;
-		if(other.getRefId()==null || getRefId()==null){
+
+		EventDto other = (EventDto) obj;
+		if (other.getRefId() == null || getRefId() == null) {
 			return false;
 		}
-		
+
 		return other.getRefId().equals(getRefId());
 	}
 
@@ -191,6 +193,14 @@ public class EventDto extends SerializableObj implements Listable{
 
 	public void setAssociatePrice(Double associatePrice) {
 		this.associatePrice = associatePrice;
+	}
+
+	public Integer getCourseId() {
+		return courseId;
+	}
+
+	public void setCourseId(Integer courseId) {
+		this.courseId = courseId;
 	}
 
 }

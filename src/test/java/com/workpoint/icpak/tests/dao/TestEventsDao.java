@@ -7,8 +7,10 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.inject.Inject;
+import com.icpak.rest.dao.helper.CoursesDaoHelper;
 import com.icpak.rest.dao.helper.EventsDaoHelper;
 import com.workpoint.icpak.shared.model.EventType;
+import com.workpoint.icpak.shared.model.events.CourseDto;
 import com.workpoint.icpak.shared.model.events.EventDto;
 import com.workpoint.icpak.tests.base.AbstractDaoTest;
 
@@ -16,6 +18,9 @@ public class TestEventsDao extends AbstractDaoTest {
 
 	@Inject
 	EventsDaoHelper helper;
+
+	@Inject
+	CoursesDaoHelper courseHelper;
 
 	String eventId1;
 	String eventId2;
@@ -42,7 +47,6 @@ public class TestEventsDao extends AbstractDaoTest {
 		eventId1 = event.getRefId();
 
 		System.out.println("Event Id::" + eventId1);
-
 	}
 
 	@Ignore
@@ -71,11 +75,31 @@ public class TestEventsDao extends AbstractDaoTest {
 		List<EventDto> events = helper.getAllEvents("", 0, 10);
 		Assert.assertSame(events.size(), 0);
 	}
-	
+
 	@Test
-	public void testSerch(){
-		List<EventDto> searchResults = helper.getAllEvents("", null, 100, null, "F");
-		for(EventDto e : searchResults){
+	public void createCourse() {
+		CourseDto course = new CourseDto();
+		course.setName("Taxation Course");
+		course.setDescription("");
+		course.setStartDate("2015-12-01");
+		course.setEndDate("2015-12-30");
+		course.setNonMemberPrice(30000.00);
+		course.setMemberPrice(20000.00);
+		course.setVenue("GreenHills Hotel, Nyeri");
+		course.setType(EventType.COURSE);
+		course.setCpdHours(14);
+		courseHelper.createEvent(course);
+		eventId1 = course.getRefId();
+
+		System.out.println("Event Id::" + eventId1);
+
+	}
+
+	@Ignore
+	public void testSerch() {
+		List<EventDto> searchResults = helper.getAllEvents("", null, 100, null,
+				"F");
+		for (EventDto e : searchResults) {
 			System.err.println("Event Size>>>" + e.getCategoryName());
 		}
 	}
