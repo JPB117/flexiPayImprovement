@@ -46,6 +46,7 @@ import com.icpak.rest.utils.HTMLToPDFConvertor;
 import com.itextpdf.text.DocumentException;
 import com.workpoint.icpak.server.util.DateUtils;
 import com.workpoint.icpak.shared.model.CPDDto;
+import com.workpoint.icpak.shared.model.CPDStatus;
 import com.workpoint.icpak.shared.model.MemberStanding;
 import com.workpoint.icpak.shared.model.UserDto;
 import com.workpoint.icpak.shared.model.statement.StatementDto;
@@ -581,17 +582,26 @@ public class GetReport extends HttpServlet {
 		List<CPD> cpds = CPDDao.getAllCPDS(memberRefId,
 				startDate == null ? null : startDate, endDate == null ? null
 						: endDate, 0, 1000);
-		log.info("CPD Records Count = " + cpds.size());
+		List<CPD> sortedCpd = new ArrayList<>();
+		
+		for(CPD cpd : cpds){
+			if(!cpd.getStatus().equals(CPDStatus.Unconfirmed)){
+				sortedCpd.add(cpd);
+			}
+		}
+		
+		log.info("CPD Records Count = " + sortedCpd.size());
 
 		Map<String, Object> values = new HashMap<String, Object>();
 		values.put("memberNames", userDto.getFullName());
 		values.put("memberNo", user.getMemberNo());
 		values.put("startYear", formatter.format(startDate));
-		values.put("startYear", formatter.format(endDate));
+		values.put("endYear", formatter.format(endDate));
 
 		Doc doc = new Doc(values);
 
-		for (CPD cpd : cpds) {
+		for (CPD cpd : sortedCpd) {
+			
 			String cpdCategory = null;
 			values = new HashMap<String, Object>();
 			values.put("number", "CPD-" + cpd.getId());
@@ -621,14 +631,14 @@ public class GetReport extends HttpServlet {
 		Hashtable<String, List<CPD>> cpdStatementSummary = new Hashtable<>();
 		Hashtable<String, List<CPD>> cpdStatementSummary2 = new Hashtable<>();
 
-		int cpdCount = cpds.size();
+		int cpdCount = sortedCpd.size();
 
 		for (int i = 0; i < cpdCount; i++) {
 			List<CPD> cdpTableValues = new ArrayList<>();
 			// current cpd
-			CPD currentCpd = cpds.get(i);
+			CPD currentCpd = sortedCpd.get(i);
 
-			for (CPD cpd : cpds) {
+			for (CPD cpd : sortedCpd) {
 
 				String currentCpdYear = formatter_.format(currentCpd
 						.getEndDate());
