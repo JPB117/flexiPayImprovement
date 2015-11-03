@@ -266,10 +266,8 @@ public class ApplicationFormHeader extends PO {
 
 	@Enumerated(EnumType.STRING)
 	private ApplicationStatus applicationStatus = ApplicationStatus.PENDING;
-
 	private String invoiceRef;
 	private String userRefId;
-
 	private String residence;
 
 	public ApplicationFormHeader() {
@@ -937,6 +935,7 @@ public class ApplicationFormHeader extends PO {
 		setCountry(dto.getCountry());
 		setGender(dto.getGender());
 		setResidence(dto.getResidence());
+		setIdNumber(dto.getIdNumber());
 	}
 
 	public void copyInto(ApplicationFormHeaderDto dto) {
@@ -960,6 +959,7 @@ public class ApplicationFormHeader extends PO {
 		dto.setGender(gender);
 		dto.setResidence(residence);
 		dto.setApplicationStatus(applicationStatus);
+		dto.setIdNumber(idNumber);
 	}
 
 	public String getInvoiceRef() {

@@ -37,6 +37,7 @@ import com.workpoint.icpak.shared.model.ApplicationSummaryDto;
 import com.workpoint.icpak.shared.model.ApplicationType;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.InvoiceLineDto;
+import com.workpoint.icpak.shared.model.auth.ApplicationStatus;
 
 @Transactional
 public class ApplicationFormDaoHelper {
@@ -51,8 +52,9 @@ public class ApplicationFormDaoHelper {
 	InvoiceDaoHelper invoiceHelper;
 	@Inject
 	TransactionDaoHelper trxHelper;
-	
-	@Inject ApplicationSettings settings;
+
+	@Inject
+	ApplicationSettings settings;
 
 	public void createApplication(ApplicationFormHeaderDto application) {
 
@@ -64,6 +66,7 @@ public class ApplicationFormDaoHelper {
 		// Copy into PO
 		ApplicationFormHeader po = new ApplicationFormHeader();
 		po.copyFrom(application);
+		po.setApplicationStatus(ApplicationStatus.PENDING);
 
 		// Create Temp User
 		User user = createTempUser(po);
@@ -121,7 +124,7 @@ public class ApplicationFormDaoHelper {
 			values.put("quoteNo", application.getId());
 			values.put("date", application.getDate());
 			values.put("firstName", application.getOtherNames());
-			//http://localhost:8080/icpakportal/#eventBooking;eventId=Jx4Ca6HpOutf2ic7;bookingId=ttDzH7OkgAHk5CSk
+			// http://localhost:8080/icpakportal/#eventBooking;eventId=Jx4Ca6HpOutf2ic7;bookingId=ttDzH7OkgAHk5CSk
 			values.put("DocumentURL", settings.getApplicationPath());
 			values.put("userRefId", user.getRefId());
 			values.put("email", application.getEmail());
@@ -160,9 +163,9 @@ public class ApplicationFormDaoHelper {
 					Arrays.asList(application.getSurname() + " "
 							+ application.getOtherNames()), attachment);
 
-			trxHelper.charge(user.getMember()==null? null: user.getMember().getRefId(),
-					new Date(), subject, null,
-					invoice.getInvoiceAmount(), documentNo, invoice.getRefId());
+			trxHelper.charge(user.getMember() == null ? null : user.getMember()
+					.getRefId(), new Date(), subject, null, invoice
+					.getInvoiceAmount(), documentNo, invoice.getRefId());
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -194,16 +197,13 @@ public class ApplicationFormDaoHelper {
 		dto.setContactName(application.getSurname() + " "
 				+ application.getOtherNames());
 		dto.setDate(new Date().getTime());
-		
-		
-		dto.addLine(new InvoiceLineDto(
-				dto.getContactName()+", "+
-				"'"+category.getType().getDisplayName()+"' member registration fee", category
-				.getApplicationAmount(), category.getApplicationAmount()));
+
+		dto.addLine(new InvoiceLineDto(dto.getContactName() + ", " + "'"
+				+ category.getType().getDisplayName()
+				+ "' member registration fee", category.getApplicationAmount(),
+				category.getApplicationAmount()));
 
 		dto = invoiceHelper.save(dto);
-		
-		
 
 		return dto;
 	}
@@ -318,12 +318,12 @@ public class ApplicationFormDaoHelper {
 	}
 
 	public ApplicationSummaryDto getApplicationSummary() {
-		
+
 		return applicationDao.getApplicationsSummary();
 	}
-	
-	public void forwardToLMS(Member member){
-		
+
+	public void forwardToLMS(Member member) {
+
 	}
 
 }

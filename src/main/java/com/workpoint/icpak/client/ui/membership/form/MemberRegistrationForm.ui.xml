@@ -111,8 +111,26 @@
 						<d:DropDownList ui:field="lstCountry" styleName="form-control">
 						</d:DropDownList>
 					</div>
+
+					<div class="col-xs-6">
+						<label for="emailaddress">Residence:</label>
+						<d:TextField ui:field="txtResidence" styleName="form-control">
+						</d:TextField>
+					</div>
 				</div>
 			</div>
+
+
+			<div class="form-group">
+				<div class="row">
+					<div class="col-xs-6">
+						<label for="emailaddress">Id Number:</label>
+						<d:TextField ui:field="txtIdNo" styleName="form-control">
+						</d:TextField>
+					</div>
+				</div>
+			</div>
+
 		</div>
 	</g:HTMLPanel>
 </ui:UiBinder> 

@@ -6,6 +6,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
+import com.workpoint.icpak.client.ui.util.NumberUtils;
 
 public class MembersHeader extends Composite {
 
@@ -27,11 +28,15 @@ public class MembersHeader extends Composite {
 	public MembersHeader() {
 		initWidget(uiBinder.createAndBindUi(this));
 	}
-	
-	public void setValues(int totalApplications, int totalProcessed, int totalPending){
-		spnTotalApplication.setInnerText(totalApplications+"");
-		spnTotalProcessed.setInnerText(totalProcessed+"");
-		spnTotalPending.setInnerText(totalPending+"");
+
+	public void setValues(int totalApplications, int totalProcessed,
+			int totalPending) {
+		spnTotalApplication.setInnerText(NumberUtils.NUMBERFORMAT
+				.format(totalApplications) + "");
+		spnTotalProcessed.setInnerText(NumberUtils.NUMBERFORMAT
+				.format(totalProcessed) + "");
+		spnTotalPending.setInnerText(NumberUtils.NUMBERFORMAT
+				.format(totalPending) + "");
 	}
 
 }

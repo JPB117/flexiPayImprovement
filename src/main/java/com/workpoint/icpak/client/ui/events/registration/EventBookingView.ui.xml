@@ -71,7 +71,7 @@
 
 												<div class="col-sm-12">
 													<h4 class="info-text">
-														<span ui:field="spnEventName">P.A.C Event</span>
+														<span ui:field="spnEventName"></span>
 													</h4>
 													<hr />
 												</div>

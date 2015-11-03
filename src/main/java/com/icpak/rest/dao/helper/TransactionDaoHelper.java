@@ -7,14 +7,18 @@ import java.util.List;
 
 import javax.mail.MessagingException;
 
+import org.apache.log4j.Logger;
+
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
+import com.icpak.rest.dao.ApplicationFormDao;
 import com.icpak.rest.dao.BookingsDao;
 import com.icpak.rest.dao.InvoiceDao;
 import com.icpak.rest.dao.MemberDao;
 import com.icpak.rest.dao.TransactionsDao;
 import com.icpak.rest.models.event.Booking;
 import com.icpak.rest.models.event.Delegate;
+import com.icpak.rest.models.membership.ApplicationFormHeader;
 import com.icpak.rest.models.trx.Invoice;
 import com.icpak.rest.models.trx.Transaction;
 import com.icpak.rest.util.SMSIntegration;
@@ -28,17 +32,18 @@ public class TransactionDaoHelper {
 
 	@Inject
 	TransactionsDao dao;
-
 	@Inject
 	InvoiceDao invoiceDao;
-
 	@Inject
 	BookingsDao bookingDao;
+	@Inject
+	ApplicationFormDao applicationDao;
 
 	@Inject
 	SMSIntegration smsIntergration;
 	@Inject
 	MemberDao memberDao;
+	Logger logger = Logger.getLogger(TransactionDaoHelper.class.getName());
 
 	public String charge(String userId, Date chargeDate, String description,
 			Date dueDate, Double amount, String documentNo, String invoiceRef) {
@@ -89,6 +94,7 @@ public class TransactionDaoHelper {
 			String businessNo, String accountNo, String paymentMode,
 			String trxNumber, String phoneNumber, String amount) {
 		InvoiceDto invoiceDto = invoiceDao.getInvoiceByDocumentNo(paymentRef);
+		System.err.println("Invoice Ref>>" + invoiceDto.getInvoiceRefId());
 		Transaction trx = dao.findByRefId(invoiceDto.getTrxRefId(),
 				Transaction.class);
 
@@ -112,35 +118,55 @@ public class TransactionDaoHelper {
 		trx.setTrxNumber(trxNumber);
 		trx.setBusinessNo(businessNo);
 		trx.setStatus(PaymentStatus.PAID);
+		dao.save(trx);
 
 		Invoice inv = new Invoice();
 		inv.copyFrom(invoiceDto);
 
 		Booking booking = new Booking();
-		System.err.println("Booking Ref>>>" + inv.getBookingRefId());
 		booking = dao.findByRefId(inv.getBookingRefId(), Booking.class, false);
+
 		if (booking != null) {
+			/*
+			 * This is temporary: - You should check this from Transaction
+			 * Object to get the payment info
+			 */
+
+			if (invoiceDto != null) {
+				System.err.println("Looking for a booking record....");
+			}
+
 			booking.setPaymentStatus(PaymentStatus.PAID);
 			booking.setPaymentDate(new Date());
 			booking.setPaymentMode(paymentMode);
 			booking.setPaymentRef(paymentRef);
-		}
+			try {
+				sendPaymentConfirmationSMSAndEmail(phoneNumber, trxNumber,
+						inv.getContactName(), booking);
+			} catch (UnsupportedEncodingException | MessagingException e) {
+				e.printStackTrace();
+			}
+		} else {
+			// Get the Application if this payment was for Member
+			// Registration
+			System.err.println("Looking for application using Invoice Ref::"
+					+ invoiceDto.getInvoiceRefId());
+			ApplicationFormHeader application = applicationDao
+					.getApplicationByInvoiceRef(invoiceDto.getInvoiceRefId());
+			// assert (application != null);
+			try {
+				sendPaymentConfirmationSMSAndEmail(phoneNumber, trxNumber,
+						inv.getContactName(), application);
+			} catch (UnsupportedEncodingException | MessagingException e) {
+				e.printStackTrace();
+			}
 
-		dao.save(trx);
-
-		try {
-			sendPaymentConfirmationSMSAndEmail(phoneNumber, trxNumber,
-					inv.getContactName(), booking);
-		} catch (UnsupportedEncodingException | MessagingException e) {
-			e.printStackTrace();
 		}
 
 	}
 
 	public List<TransactionDto> getTransactions(String userId) {
-
 		List<Transaction> transactions = dao.getTransactions(userId);
-
 		List<TransactionDto> trxs = new ArrayList<>();
 		for (Transaction t : transactions) {
 			trxs.add(t.toDto());
@@ -150,10 +176,10 @@ public class TransactionDaoHelper {
 	}
 
 	private void sendPaymentConfirmationSMSAndEmail(String phoneNumber,
-			String transactionNumber, String senderName, Booking booking)
+			String transactionNumber, String senderName, Object paymentType)
 			throws UnsupportedEncodingException, MessagingException {
-
-		if (booking != null) {
+		if (paymentType != null && paymentType instanceof Booking) {
+			Booking booking = (Booking) paymentType;
 			for (Delegate delegate : booking.getDelegates()) {
 				String smsMessage = "Dear" + " " + senderName + ","
 						+ " Thank-you for booking for the "
@@ -162,9 +188,9 @@ public class TransactionDaoHelper {
 						+ delegate.getErn();
 
 				String finalPhoneNumber = phoneNumber.replace("254", "0");
-
 				if (phoneNumber != null) {
 					smsIntergration.send(finalPhoneNumber, smsMessage);
+					logger.error("sending sms to :" + finalPhoneNumber);
 				}
 
 				if (booking.getContact().getEmail() != null) {
@@ -174,8 +200,36 @@ public class TransactionDaoHelper {
 							delegate.getEmail());
 				}
 			}
+		} else if (paymentType != null
+				&& paymentType instanceof ApplicationFormHeader) {
+			ApplicationFormHeader application = (ApplicationFormHeader) paymentType;
+
+			String smsMessage = "Dear" + " " + application.getSurname() + ","
+					+ " Thank-you for payment for your member registration. "
+					+ "Your account payment status is now PAID.";
+			String finalPhoneNumber = phoneNumber.replace("254", "0");
+
+			if (phoneNumber != null) {
+				smsIntergration.send(finalPhoneNumber, smsMessage);
+				logger.error("sending sms to :" + finalPhoneNumber);
+			}
+
+			if (application.getTelephone1() != null) {
+				smsIntergration.send(application.getTelephone1(), smsMessage);
+				logger.error("sending sms to :" + finalPhoneNumber);
+			}
+
+			if (application.getEmail() != null) {
+				String subject = "PAYMENT CONFIRMATION FOR "
+						+ application.getSurname().toUpperCase()
+						+ " MEMBER SUBSCRIPTION ";
+				EmailServiceHelper.sendEmail(smsMessage, subject,
+						application.getEmail());
+			}
+
+		} else {
+			logger.error("No notification sent since neither booking nor application was found for this payment");
 		}
 
 	}
-
 }

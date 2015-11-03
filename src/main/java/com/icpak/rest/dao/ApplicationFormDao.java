@@ -48,10 +48,11 @@ public class ApplicationFormDao extends BaseDao {
 
 		Number number = null;
 
-		number = getSingleResultOrNull(getEntityManager().createNativeQuery(
-				"select count(*) from `Application Form Header` "
-						+ "where isactive=1 and applicationStatus=:status order by id desc")
-						.setParameter("status", ApplicationStatus.PENDING));
+		number = getSingleResultOrNull(getEntityManager()
+				.createNativeQuery(
+						"select count(*) from `Application Form Header` "
+								+ "where isactive=1 and applicationStatus=:status order by id desc")
+				.setParameter("status", ApplicationStatus.PENDING));
 
 		return number.intValue();
 	}
@@ -166,29 +167,39 @@ public class ApplicationFormDao extends BaseDao {
 				.setParameter("specialization", specialization)
 				.setParameter("refId", applicationRefId));
 	}
-	
-	public ApplicationSummaryDto getApplicationsSummary(){
+
+	public ApplicationSummaryDto getApplicationsSummary() {
 		String sql = "select count(*), applicationStatus from `Application Form Header` group by applicationStatus";
-		
-		List<Object[]> rows =  getResultList(getEntityManager().createNativeQuery(sql));
-		
+
+		List<Object[]> rows = getResultList(getEntityManager()
+				.createNativeQuery(sql));
+
 		ApplicationSummaryDto summary = new ApplicationSummaryDto();
-		
-		for(Object[] row: rows){
-			int i=0;
-			Object value=null;
-			Integer count = (value=row[i++])==null? null: ((Number)value).intValue();
-			String status=(value=row[i++])==null? null: value.toString();
-			
-			if(ApplicationStatus.valueOf(status)==ApplicationStatus.APPROVED){
+
+		for (Object[] row : rows) {
+			int i = 0;
+			Object value = null;
+			Integer count = (value = row[i++]) == null ? null
+					: ((Number) value).intValue();
+			String status = (value = row[i++]) == null ? null : value
+					.toString();
+
+			if (ApplicationStatus.valueOf(status) == ApplicationStatus.APPROVED) {
 				summary.setProcessedCount(count);
-			}else{
+			} else {
 				summary.setPendingCount(count);
 			}
 		}
-		
+
 		return summary;
-		
+
+	}
+
+	public ApplicationFormHeader getApplicationByInvoiceRef(String invoiceRefId) {
+		return getSingleResultOrNull(getEntityManager()
+				.createQuery(
+						"FROM ApplicationFormHeader h where h.invoiceRef=:invoiceRefId")
+				.setParameter("invoiceRefId", invoiceRefId));
 	}
 
 }

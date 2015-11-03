@@ -50,7 +50,7 @@
 								</li>
 								<li>
 									3. Select
-									<strong ui:field="spnServiceLabel">Buy Goods and Services</strong>
+									<strong ui:field="spnServiceLabel">Paybill Option</strong>
 									option
 								</li>
 								<li>

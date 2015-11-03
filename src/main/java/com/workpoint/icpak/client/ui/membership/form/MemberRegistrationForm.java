@@ -39,7 +39,10 @@ public class MemberRegistrationForm extends Composite {
 	TextField txtAddress;
 	@UiField
 	TextField txtPostalCode;
-
+	@UiField
+	TextField txtResidence;
+	@UiField
+	TextField txtIdNo;
 	@UiField
 	DateField dtDOB;
 
@@ -144,8 +147,9 @@ public class MemberRegistrationForm extends Composite {
 		dto.setPostCode(txtPostalCode.getValue());
 		dto.setApplicationType(type);
 		dto.setDob(dtDOB.getValueDate());
-		// dto.setTimezone(TimeZone.createTimeZone(timeZoneOffsetInMinutes));
 		dto.setGender(lstGender.getValue());
+		dto.setResidence(txtResidence.getValue());
+		dto.setIdNumber(txtIdNo.getValue());
 		return dto;
 	}
 
@@ -175,12 +179,13 @@ public class MemberRegistrationForm extends Composite {
 		txtEmailAddress.setValue(application.getEmail());
 		txtEmployer.setValue(application.getEmployer());
 		txtCity.setValue(application.getCity1());
-		// lstCountry.setValue(application.getCountry());
 		dtDOB.setValue(application.getDob());
 		lstGender.setValue(application.getGender());
 		txtPhone.setValue(application.getTelephone1());
 		txtAddress.setValue(application.getAddress1());
 		txtPostalCode.setValue(application.getPostCode());
+		txtResidence.setValue(application.getResidence());
+		txtIdNo.setValue(application.getIdNumber());
 		type = application.getApplicationType();
 	}
 
