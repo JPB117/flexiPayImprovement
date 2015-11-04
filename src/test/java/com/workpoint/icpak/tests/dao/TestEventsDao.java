@@ -30,13 +30,13 @@ public class TestEventsDao extends AbstractDaoTest {
 		createEvent();
 	}
 
-	@Ignore
+	@Test
 	public void createEvent() {
 		EventDto event = new EventDto();
 		event.setName("The Financial Reporting Workshop: Mt. Kenya Branch, Nyeri");
 		event.setDescription("");
-		event.setStartDate("2015-05-30 08:00:00");
-		event.setEndDate("2015-06-04 08:00:00");
+		event.setStartDate("2015-11-06");
+		event.setEndDate("2015-11-06");
 		event.setNonMemberPrice(30000.00);
 		event.setMemberPrice(20000.00);
 		event.setVenue("GreenHills Hotel, Nyeri");
@@ -76,7 +76,7 @@ public class TestEventsDao extends AbstractDaoTest {
 		Assert.assertSame(events.size(), 0);
 	}
 
-	@Test
+	@Ignore
 	public void createCourse() {
 		CourseDto course = new CourseDto();
 		course.setName("Taxation Course");
