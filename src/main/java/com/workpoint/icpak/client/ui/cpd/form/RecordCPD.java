@@ -7,10 +7,14 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.workpoint.icpak.client.model.UploadContext;
@@ -21,6 +25,7 @@ import com.workpoint.icpak.client.ui.component.DropDownList;
 import com.workpoint.icpak.client.ui.component.IssuesPanel;
 import com.workpoint.icpak.client.ui.component.TextField;
 import com.workpoint.icpak.client.ui.upload.custom.Uploader;
+import com.workpoint.icpak.shared.model.AttachmentDto;
 import com.workpoint.icpak.shared.model.CPDCategory;
 import com.workpoint.icpak.shared.model.CPDDto;
 
@@ -66,6 +71,12 @@ public class RecordCPD extends Composite {
 	HTMLPanel panelUploader;
 
 	@UiField
+	HTMLPanel panelUpload;
+
+	@UiField
+	HTMLPanel panelPreviousAttachments;
+
+	@UiField
 	DropDownList<CPDCategory> lstCategory;
 
 	private CPDDto dto;
@@ -79,7 +90,7 @@ public class RecordCPD extends Composite {
 			categories.add(cat);
 		}
 		lstCategory.setItems(categories);
-		//uploader.setAutoSubmit(false);
+		// uploader.setAutoSubmit(false);
 	}
 
 	public void showUploadPanel(boolean showForm) {
@@ -97,8 +108,9 @@ public class RecordCPD extends Composite {
 		UploadContext context = new UploadContext();
 		context.setContext("cpdRefId", getCPD().getRefId());
 		context.setAction(UPLOADACTION.UPLOADCPD);
-		context.setAccept(Arrays.asList("doc","pdf","jpg","jpeg","png","docx"));
-		uploader.setContext(context);	
+		context.setAccept(Arrays.asList("doc", "pdf", "jpg", "jpeg", "png",
+				"docx"));
+		uploader.setContext(context);
 	}
 
 	public boolean isValid() {
@@ -138,21 +150,15 @@ public class RecordCPD extends Composite {
 	}
 
 	public CPDDto getCPD() {
-
 		CPDDto dto = new CPDDto();
 		if (this.dto != null) {
 			dto = this.dto;
 		}
-
 		dto.setCategory(lstCategory.getValue());
-		// dto.setCpdHours();
 		dto.setEndDate(dtEndDate.getValueDate());
-		// dto.setMemberId(memberId);
 		dto.setOrganizer(txtOrganizer.getValue());
 		dto.setStartDate(dtStartDate.getValueDate());
-		// dto.setStatus();
 		dto.setTitle(txtTitle.getValue());
-
 		return dto;
 	}
 
@@ -161,16 +167,57 @@ public class RecordCPD extends Composite {
 		if (dto == null) {
 			return;
 		}
-
 		lstCategory.setValue(dto.getCategory());
 		dtEndDate.setValue(dto.getEndDate());
 		dtStartDate.setValue(dto.getStartDate());
 		txtTitle.setValue(dto.getTitle());
 		txtOrganizer.setValue(dto.getOrganizer());
+
+		// Window.alert("Attachment Size::" + dto.getAttachments().size());
+
+		if (dto.getAttachments() != null) {
+			for (final AttachmentDto attachment : dto.getAttachments()) {
+				final UploadContext ctx = new UploadContext("getreport");
+				ctx.setAction(UPLOADACTION.GETATTACHMENT);
+				ctx.setContext("refId", attachment.getRefId());
+
+				ActionLink link = new ActionLink(attachment.getAttachmentName());
+				link.addClickHandler(new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {
+						Window.open(ctx.toUrl(),
+								attachment.getAttachmentName(), "");
+					}
+				});
+				panelPreviousAttachments.add(new HTML("<br/>"));
+				panelPreviousAttachments.add(link);
+			}
+		}
 	}
 
 	public HasClickHandlers getStartUploadButton() {
 		return aStartUpload;
+	}
+
+	public void setViewMode(boolean isViewMode) {
+		if (isViewMode) {
+			lstCategory.getElement().getFirstChildElement()
+					.setAttribute("disabled", "disabled");
+			dtEndDate.setDisabled(true);
+			dtStartDate.setDisabled(true);
+			txtTitle.getElement().setAttribute("disabled", "disabled");
+			txtOrganizer.getElement().setAttribute("disabled", "disabled");
+			aPreviousForm.setVisible(false);
+			panelUpload.setVisible(false);
+		} else {
+			lstCategory.getElement().getFirstChildElement()
+					.removeAttribute("disabled");
+			dtEndDate.setDisabled(false);
+			dtStartDate.setDisabled(false);
+			txtTitle.getElement().removeAttribute("disabled");
+			txtOrganizer.getElement().removeAttribute("disabled");
+			panelUpload.setVisible(true);
+		}
 	}
 
 }

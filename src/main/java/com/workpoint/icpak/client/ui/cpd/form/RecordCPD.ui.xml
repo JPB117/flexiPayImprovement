@@ -91,7 +91,7 @@
 					<div class="col-lg-6">
 						<label for="firstname">Category:</label>
 						<d:DropDownList ui:field="lstCategory"></d:DropDownList>
-						<p class="text-info">Refer to Categories listing in the previous page</p>
+						<p class="text-muted">(Refer to Categories listing in the previous page)</p>
 					</div>
 				</div>
 			</div>
@@ -110,6 +110,15 @@
 						<div id="datetimepicker1" class="date">
 							<d:DateField ui:field="dtEndDate"></d:DateField>
 						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="row">
+					<div class="col-xs-6">
+						<label for="endDate">Previous Attachments:</label>
+						<g:HTMLPanel ui:field="panelPreviousAttachments"></g:HTMLPanel>
 					</div>
 				</div>
 			</div>

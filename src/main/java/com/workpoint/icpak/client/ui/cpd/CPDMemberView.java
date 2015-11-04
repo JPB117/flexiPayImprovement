@@ -27,7 +27,7 @@ import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.shared.model.CPDSummaryDto;
 
-public class CPDView extends ViewImpl implements CPDPresenter.ICPDView {
+public class CPDMemberView extends ViewImpl implements CPDMemberPresenter.ICPDView {
 
 	private final Widget widget;
 
@@ -44,13 +44,12 @@ public class CPDView extends ViewImpl implements CPDPresenter.ICPDView {
 	@UiField
 	ActionLink aCreate;
 
-	public interface Binder extends UiBinder<Widget, CPDView> {
+	public interface Binder extends UiBinder<Widget, CPDMemberView> {
 	}
 
 	@Inject
-	public CPDView(final Binder binder) {
+	public CPDMemberView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
-
 		tblView.getDownloadButton().addClickHandler(new ClickHandler() {
 
 			@Override
