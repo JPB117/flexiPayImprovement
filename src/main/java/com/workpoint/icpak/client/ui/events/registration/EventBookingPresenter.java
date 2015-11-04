@@ -48,10 +48,8 @@ import com.workpoint.icpak.shared.model.events.AccommodationDto;
 import com.workpoint.icpak.shared.model.events.BookingDto;
 import com.workpoint.icpak.shared.model.events.EventDto;
 
-public class EventBookingPresenter extends
-		Presenter<EventBookingPresenter.MyView, EventBookingPresenter.MyProxy>
-		implements ProcessingHandler, ProcessingCompletedHandler,
-		PaymentCompletedHandler {
+public class EventBookingPresenter extends Presenter<EventBookingPresenter.MyView, EventBookingPresenter.MyProxy>
+		implements ProcessingHandler, ProcessingCompletedHandler, PaymentCompletedHandler {
 
 	public interface MyView extends View {
 		boolean isValid();
@@ -114,12 +112,9 @@ public class EventBookingPresenter extends
 	private ResourceDelegate<MemberResource> membersDelegate;
 
 	@Inject
-	public EventBookingPresenter(final EventBus eventBus, final MyView view,
-			final MyProxy proxy,
-			ResourceDelegate<CountriesResource> countriesResource,
-			ResourceDelegate<EventsResource> eventsResource,
-			ResourceDelegate<InvoiceResource> invoiceResource,
-			ResourceDelegate<MemberResource> membersDelegate) {
+	public EventBookingPresenter(final EventBus eventBus, final MyView view, final MyProxy proxy,
+			ResourceDelegate<CountriesResource> countriesResource, ResourceDelegate<EventsResource> eventsResource,
+			ResourceDelegate<InvoiceResource> invoiceResource, ResourceDelegate<MemberResource> membersDelegate) {
 		super(eventBus, view, proxy);
 		this.countriesResource = countriesResource;
 		this.eventsResource = eventsResource;
@@ -139,23 +134,19 @@ public class EventBookingPresenter extends
 		addRegisteredHandler(ProcessingCompletedEvent.TYPE, this);
 		addRegisteredHandler(PaymentCompletedEvent.TYPE, this);
 
-		getView().getMemberColumnConfig().setLoader(
-				new AutoCompleteField.Loader() {
+		getView().getMemberColumnConfig().setLoader(new AutoCompleteField.Loader() {
+			@Override
+			public void onLoad(final ServerOracle source, final String query) {
+				query.replaceAll("/", "%");
+				membersDelegate.withCallback(new AbstractAsyncCallback<List<MemberDto>>() {
 					@Override
-					public void onLoad(final ServerOracle source,
-							final String query) {
-						query.replaceAll("/", "%");
-						membersDelegate.withCallback(
-								new AbstractAsyncCallback<List<MemberDto>>() {
-									@Override
-									public void onSuccess(
-											List<MemberDto> members) {
-										source.setValues(members);
-									}
-
-								}).search(query, 0, 30);
+					public void onSuccess(List<MemberDto> members) {
+						source.setValues(members);
 					}
-				});
+
+				}).search(query, 0, 30);
+			}
+		});
 
 		getView().getANext().addClickHandler(new ClickHandler() {
 			@Override
@@ -185,26 +176,26 @@ public class EventBookingPresenter extends
 	protected void submit(BookingDto dto) {
 		getView().showmask(true);
 
-		if (bookingId != null) {
-			eventsResource
-					.withCallback(new AbstractAsyncCallback<BookingDto>() {
-						@Override
-						public void onSuccess(BookingDto booking) {
-							getView().showmask(false);
-							bindBooking(booking);
-						}
-					}).bookings(eventId).update(bookingId, dto);
-
+		Window.alert(bookingId);
+		if (bookingId == null) {
+			eventsResource.withCallback(new AbstractAsyncCallback<BookingDto>() {
+				@Override
+				public void onSuccess(BookingDto booking) {
+					getView().showmask(false);
+					bindBooking(booking);
+				}
+			}).bookings(eventId).create(dto);
 		} else {
-			eventsResource
-					.withCallback(new AbstractAsyncCallback<BookingDto>() {
-						@Override
-						public void onSuccess(BookingDto booking) {
-							getView().showmask(false);
-							bindBooking(booking);
-						}
-					}).bookings(eventId).create(dto);
+			eventsResource.withCallback(new AbstractAsyncCallback<BookingDto>() {
+				@Override
+				public void onSuccess(BookingDto booking) {
+					getView().showmask(false);
+					bindBooking(booking);
+				}
+			}).bookings(eventId).update(bookingId, dto);
+
 		}
+
 	}
 
 	protected void bindBooking(BookingDto booking) {
@@ -219,20 +210,18 @@ public class EventBookingPresenter extends
 		eventId = request.getParameter("eventId", "9J4oKtW898RyOClP");
 		bookingId = request.getParameter("bookingId", null);
 
-		countriesResource.withCallback(
-				new AbstractAsyncCallback<List<Country>>() {
-					public void onSuccess(List<Country> countries) {
-						Collections.sort(countries, new Comparator<Country>() {
-							@Override
-							public int compare(Country o1, Country o2) {
-								return o1.getDisplayName().compareTo(
-										o2.getDisplayName());
-							}
-						});
+		countriesResource.withCallback(new AbstractAsyncCallback<List<Country>>() {
+			public void onSuccess(List<Country> countries) {
+				Collections.sort(countries, new Comparator<Country>() {
+					@Override
+					public int compare(Country o1, Country o2) {
+						return o1.getDisplayName().compareTo(o2.getDisplayName());
+					}
+				});
 
-						getView().setCountries(countries);
-					};
-				}).getAll();
+				getView().setCountries(countries);
+			};
+		}).getAll();
 
 		eventsResource.withCallback(new AbstractAsyncCallback<EventDto>() {
 			@Override
@@ -245,38 +234,33 @@ public class EventBookingPresenter extends
 
 				StringBuffer buffer = new StringBuffer();
 				for (StackTraceElement elem : caught.getStackTrace()) {
-					buffer.append(elem.getLineNumber() + ">>"
-							+ elem.getClassName() + ">>" + elem.getMethodName());
+					buffer.append(elem.getLineNumber() + ">>" + elem.getClassName() + ">>" + elem.getMethodName());
 				}
 
-				Window.alert(caught + " " + caught.getMessage() + " "
-						+ caught.getStackTrace().toString());
+				Window.alert(caught + " " + caught.getMessage() + " " + caught.getStackTrace().toString());
 
 				super.onFailure(caught);
 			}
 		}).getById(eventId);
 
-		eventsResource
-				.withCallback(
-						new AbstractAsyncCallback<List<AccommodationDto>>() {
-							@Override
-							public void onSuccess(List<AccommodationDto> result) {
-								getView().bindAccommodations(result);
-							}
-						}).accommodations(eventId).getAll(0, 100);
+		eventsResource.withCallback(new AbstractAsyncCallback<List<AccommodationDto>>() {
+			@Override
+			public void onSuccess(List<AccommodationDto> result) {
+				getView().bindAccommodations(result);
+			}
+		}).accommodations(eventId).getAll(0, 100);
 
 		if (bookingId != null) {
 			getView().next();
 			getView().next();
 			getView().setActivePage(2);
-			eventsResource
-					.withCallback(new AbstractAsyncCallback<BookingDto>() {
-						@Override
-						public void onSuccess(BookingDto booking) {
-							getView().bindBooking(booking);
-							getInvoice(booking.getInvoiceRef(), false);
-						}
-					}).bookings(eventId).getById(bookingId);
+			eventsResource.withCallback(new AbstractAsyncCallback<BookingDto>() {
+				@Override
+				public void onSuccess(BookingDto booking) {
+					getView().bindBooking(booking);
+					getInvoice(booking.getInvoiceRef(), false);
+				}
+			}).bookings(eventId).getById(bookingId);
 		}
 
 	}
@@ -290,9 +274,10 @@ public class EventBookingPresenter extends
 			@Override
 			public void onSuccess(InvoiceDto invoice) {
 				getView().bindInvoice(invoice);
+				eventsResource.withoutCallback().bookings(eventId).sendAlert(bookingId);
+
 				if (invoice.getInvoiceAmount() != null) {
-					paymentPresenter.setAmount(invoice.getInvoiceAmount()
-							.toString());
+					paymentPresenter.setAmount(invoice.getInvoiceAmount().toString());
 				}
 
 				if (invoice.getDocumentNo() != null) {

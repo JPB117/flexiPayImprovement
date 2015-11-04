@@ -56,7 +56,7 @@ public class TestBookingDao extends AbstractDaoTest {
 
 	}
 
-	@Ignore
+	@Test
 	public void createBooking() {
 		BookingDto dto = new BookingDto();
 
@@ -86,9 +86,13 @@ public class TestBookingDao extends AbstractDaoTest {
 		// dto.setCurrency(currency);
 		BookingDto booking = bookingsHelper.createBooking("PrjIf8x4RIDaPZIv",
 				dto);
+		
+		
 
-		System.err.println(">>" + booking.getEventRefId());
-		System.err.println(">>" + booking.getRefId());
+		System.err.println(">> event RefId" + booking.getEventRefId());
+		System.err.println(">> BOoking RefId" + booking.getRefId());
+		
+		bookingsHelper.sendProInvoice(booking.getRefId());
 	}
 
 	@Ignore
@@ -97,7 +101,7 @@ public class TestBookingDao extends AbstractDaoTest {
 		bookingDao.deleteAllBookingInvoice(bookingRefid);
 	}
 
-	@Test
+	@Ignore
 	public void testSearch() {
 		List<DelegateDto> delegates = bookingsHelper.getAllDelegates("",
 				"PrjIf8x4RIDaPZIv", null, 1000, "Kim");

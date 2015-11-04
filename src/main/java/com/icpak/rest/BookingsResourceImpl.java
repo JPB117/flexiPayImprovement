@@ -103,7 +103,6 @@ public class BookingsResourceImpl implements BookingsResource {
 			@ApiParam(value = "Booking for which payment is being made") @PathParam("bookingId") String bookingId,
 			@ApiParam(value = "Payment Mode") @QueryParam("paymentMode") String paymentMode,
 			@ApiParam(value = "Payment referenceNo") @QueryParam("paymentRef") String paymentRef) {
-		// TODO
 		String uri = "";
 
 		BookingDto dto = helper.processPayment(eventId, bookingId, paymentMode,
@@ -148,6 +147,14 @@ public class BookingsResourceImpl implements BookingsResource {
 			DelegateDto delegate){
 		
 		return helper.updateDelegate(bookingId, delegateId, delegate);
+	}
+
+	@POST
+	@Path("/{bookingId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "Send Pro invoice mail and sms")
+	public void sendAlert(@PathParam("bookingId") String bookingId) {
+		helper.sendProInvoice(bookingId);
 	}
 
 }
