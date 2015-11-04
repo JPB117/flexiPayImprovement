@@ -51,6 +51,8 @@ public class BasicDetails extends Composite {
 	@UiField
 	Element elCity;
 	@UiField
+	Element elIdNo;
+	@UiField
 	Anchor aSave;
 	@UiField
 	Anchor aCancel;
@@ -85,23 +87,21 @@ public class BasicDetails extends Composite {
 		elPostalCode.setInnerText(result.getPostCode());
 		elCountry.setInnerText(result.getCountry());
 		elCity.setInnerText(result.getCity1());
-		
+
 		if (result.getGender() != null) {
 			elSex.setInnerText(result.getGender().name());
 		}
-		
+
 		if (result.getDob() != null) {
 			elDob.setInnerText(DateUtils.DATEFORMAT.format(result.getDob()));
 		}
 
-		
-
-		//panelRegistration.bind(result);
+		// panelRegistration.bind(result);
 	}
 
-//	public ApplicationFormHeaderDto getApplicationForm() {
-//		return panelRegistration.getApplicationForm();
-//	}
+	// public ApplicationFormHeaderDto getApplicationForm() {
+	// return panelRegistration.getApplicationForm();
+	// }
 
 	public HasClickHandlers getSaveButton() {
 		return aSave;
@@ -132,7 +132,7 @@ public class BasicDetails extends Composite {
 		elCity.setInnerText(null);
 
 		panelRegistration.clear();
-				
+
 	}
 
 	public void setCountries(List<Country> countries) {

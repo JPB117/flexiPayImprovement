@@ -6,15 +6,19 @@ import com.workpoint.icpak.shared.model.EventType;
 import com.workpoint.icpak.shared.model.Listable;
 import com.workpoint.icpak.shared.model.SerializableObj;
 
-public class CourseDto extends SerializableObj implements Listable{
+public class CourseDto extends SerializableObj implements Listable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String name;
 	private String description;
 	private String code;
 	private Integer cpdHours;
 	private String venue;
-	private Long startDate;
-	private Long endDate;
+	private String startDate;
+	private String endDate;
 	private EventStatus status;
 	private EventType type;
 	private Double memberPrice;
@@ -22,6 +26,7 @@ public class CourseDto extends SerializableObj implements Listable{
 	private int delegateCount;
 	private Double totalPaid;
 	private Double totalUnpaid;
+	private Integer courseId;
 
 	public CourseDto() {
 	}
@@ -114,38 +119,22 @@ public class CourseDto extends SerializableObj implements Listable{
 		this.totalUnpaid = totalUnpaid;
 	}
 
-	public Long getStartDate() {
-		return startDate;
-	}
-
-	public void setStartDate(Long startDate) {
-		this.startDate = startDate;
-	}
-
-	public Long getEndDate() {
-		return endDate;
-	}
-
-	public void setEndDate(Long endDate) {
-		this.endDate = endDate;
-	}
-
 	@JsonIgnore
 	public String getDisplayName() {
 		return name;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
-		if(!(obj instanceof CourseDto)){
+		if (!(obj instanceof CourseDto)) {
 			return false;
 		}
-		
-		CourseDto other = (CourseDto)obj;
-		if(other.getRefId()==null || getRefId()==null){
+
+		CourseDto other = (CourseDto) obj;
+		if (other.getRefId() == null || getRefId() == null) {
 			return false;
 		}
-		
+
 		return other.getRefId().equals(getRefId());
 	}
 
@@ -155,6 +144,30 @@ public class CourseDto extends SerializableObj implements Listable{
 
 	public void setCode(String code) {
 		this.code = code;
+	}
+
+	public String getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(String startDate) {
+		this.startDate = startDate;
+	}
+
+	public String getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
+	}
+
+	public Integer getCourseId() {
+		return courseId;
+	}
+
+	public void setCourseId(Integer courseId) {
+		this.courseId = courseId;
 	}
 
 }

@@ -36,8 +36,6 @@ import com.workpoint.icpak.client.ui.profile.education.form.EducationRegistratio
 import com.workpoint.icpak.client.ui.profile.specialization.form.SpecializationRegistrationForm;
 import com.workpoint.icpak.client.ui.profile.training.form.TrainingRegistrationForm;
 import com.workpoint.icpak.client.ui.security.BasicMemberGateKeeper;
-import com.workpoint.icpak.client.ui.security.LoginGateKeeper;
-import com.workpoint.icpak.client.ui.security.MemberGateKeeper;
 import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.api.ApplicationFormResource;
 import com.workpoint.icpak.shared.api.CountriesResource;
@@ -376,9 +374,6 @@ public class ProfilePresenter
 	}
 
 	private void loadData() {
-		// Window.alert("Passed ERP Check");
-		getView().bindCurrentUser(currentUser);
-
 		if (AppContext.isCurrentUserMember()) {
 			getView().showBasicMember(false);
 			loadDataFromErp(false);
@@ -401,9 +396,8 @@ public class ProfilePresenter
 			public void onSuccess(Boolean hasLoaded) {
 				fireEvent(new ProcessingCompletedEvent());
 				// TODO Reload All Member Information
-				if (hasLoaded) {
-					loadData(getApplicationRefId());
-				} else {
+				loadData(getApplicationRefId());
+				if (!hasLoaded) {
 					Window.alert("There was a problem loading ERP Data");
 				}
 			}
@@ -422,6 +416,7 @@ public class ProfilePresenter
 
 	private void loadData(String applicationRefId) {
 		getView().clear();
+		getView().bindCurrentUser(currentUser);
 		countriesResource.withCallback(
 				new AbstractAsyncCallback<List<Country>>() {
 					public void onSuccess(List<Country> countries) {
