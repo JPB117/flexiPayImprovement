@@ -44,17 +44,13 @@ public class Transaction extends PO{
 	
 	@Enumerated(EnumType.STRING)
 	private PaymentStatus status=PaymentStatus.NOTPAID;
-	
 	//MPESA
 	private String businessNo;
 	private String accountNo;
-	
 	//MPESA, VISA, MasterCard
 	private String trxNumber;
-	
 	//Document Specific
 	private String documentNo;
-	
 	private String invoiceRef;
 	
 	public Transaction() {

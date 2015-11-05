@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -63,6 +64,12 @@ public class RecordCPD extends Composite {
 
 	@UiField
 	Uploader uploader;
+
+	@UiField
+	DivElement divCpdHours;
+
+	@UiField
+	TextField txtCPDHours;
 
 	@UiField
 	ActionLink aStartUpload;
@@ -172,6 +179,7 @@ public class RecordCPD extends Composite {
 		dtStartDate.setValue(dto.getStartDate());
 		txtTitle.setValue(dto.getTitle());
 		txtOrganizer.setValue(dto.getOrganizer());
+		txtCPDHours.setValue(Double.toString(dto.getCpdHours()));
 
 		// Window.alert("Attachment Size::" + dto.getAttachments().size());
 
@@ -209,6 +217,7 @@ public class RecordCPD extends Composite {
 			txtOrganizer.getElement().setAttribute("disabled", "disabled");
 			aPreviousForm.setVisible(false);
 			panelUpload.setVisible(false);
+			divCpdHours.removeClassName("hide");
 		} else {
 			lstCategory.getElement().getFirstChildElement()
 					.removeAttribute("disabled");
@@ -217,7 +226,7 @@ public class RecordCPD extends Composite {
 			txtTitle.getElement().removeAttribute("disabled");
 			txtOrganizer.getElement().removeAttribute("disabled");
 			panelUpload.setVisible(true);
+			divCpdHours.addClassName("hide");
 		}
 	}
-
 }
