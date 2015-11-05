@@ -27,13 +27,10 @@ public class PagingPanel extends Composite {
 	SpanElement spnPageEnd;
 	@UiField
 	SpanElement spnTotal;
-
 	@UiField
 	SpanElement spnTotalPages;
-
 	@UiField
 	IntegerField txtPageNo;
-
 	@UiField
 	ActionLink aNext;
 	@UiField

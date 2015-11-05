@@ -94,7 +94,6 @@ public class TransactionDaoHelper {
 			String businessNo, String accountNo, String paymentMode,
 			String trxNumber, String phoneNumber, String amount) {
 		InvoiceDto invoiceDto = invoiceDao.getInvoiceByDocumentNo(paymentRef);
-		System.err.println("Invoice Ref>>" + invoiceDto.getInvoiceRefId());
 		Transaction trx = dao.findByRefId(invoiceDto.getTrxRefId(),
 				Transaction.class);
 
@@ -193,7 +192,7 @@ public class TransactionDaoHelper {
 					logger.error("sending sms to :" + finalPhoneNumber);
 				}
 
-				if (booking.getContact().getEmail() != null) {
+				if (delegate.getEmail() != null) {
 					String subject = "PAYMENT CONFIRMATION FOR "
 							+ booking.getEvent().getName().toUpperCase();
 					EmailServiceHelper.sendEmail(smsMessage, subject,

@@ -10,26 +10,27 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Widget;
+import com.workpoint.icpak.client.ui.AppManager;
+import com.workpoint.icpak.client.ui.OptionControl;
 import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.RowWidget;
 import com.workpoint.icpak.client.ui.events.EditModelEvent;
 import com.workpoint.icpak.client.ui.events.TableActionEvent;
 import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.client.util.AppContext;
-import com.workpoint.icpak.shared.model.CPDCategory;
 import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.shared.model.CPDStatus;
 
 public class CPDTableRow extends RowWidget {
 
-	private static ActivitiesTableRowUiBinder uiBinder = GWT.create(ActivitiesTableRowUiBinder.class);
+	private static ActivitiesTableRowUiBinder uiBinder = GWT
+			.create(ActivitiesTableRowUiBinder.class);
 
 	interface ActivitiesTableRowUiBinder extends UiBinder<Widget, CPDTableRow> {
 	}
 
 	@UiField
 	HTMLPanel row;
-
 	@UiField
 	HTMLPanel divCourseName;
 	@UiField
@@ -46,29 +47,26 @@ public class CPDTableRow extends RowWidget {
 	HTMLPanel divEndDate;
 	@UiField
 	HTMLPanel divAction;
-
 	@UiField
 	ActionLink aDownloadCert;
-
 	@UiField
 	ActionLink aActions;
-
 	@UiField
 	ActionLink aEdit;
+	@UiField
+	ActionLink aView;
+	@UiField
+	SpanElement spnNoAction;
 	@UiField
 	ActionLink aDelete;
 	@UiField
 	ActionLink aMember;
-
 	@UiField
 	HTMLPanel divMember;
-
 	@UiField
-	ActionLink aAttended;
-
+	ActionLink aApprove;
 	@UiField
-	ActionLink aNotAttended;
-
+	ActionLink aReject;
 	private CPDDto dto;
 
 	public CPDTableRow() {
@@ -80,18 +78,70 @@ public class CPDTableRow extends RowWidget {
 			}
 		});
 
+		aApprove.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				AppManager.showPopUp("Confirm Approval",
+						"Are you sure you want to Approve this CPD?",
+						new OptionControl() {
+							@Override
+							public void onSelect(String name) {
+								// Window.alert("Called" + name);
+								if (name.equals("Confirm")) {
+									dto.setStatus(CPDStatus.Approved);
+									AppContext.fireEvent(new TableActionEvent(
+											dto, TableActionType.APPROVECPD));
+									hide();
+								} else {
+									hide();
+								}
+
+							}
+						}, "Confirm", "Cancel");
+
+			}
+		});
+
+		aReject.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				AppManager.showPopUp("Confirm Approval",
+						"Are you sure you want to Approve this CPD?",
+						new OptionControl() {
+							@Override
+							public void onSelect(String name) {
+								if (name.equals("Confirm")) {
+									dto.setStatus(CPDStatus.Rejected);
+									AppContext.fireEvent(new TableActionEvent(
+											dto, TableActionType.REJECTCPD));
+								}
+								hide();
+							}
+						}, "Confirm", "Cancel");
+			}
+		});
+
+		aView.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				AppContext.fireEvent(new TableActionEvent(dto,
+						TableActionType.VIEWCPD));
+			}
+		});
+
 		aDownloadCert.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				AppContext.fireEvent(new TableActionEvent(dto, TableActionType.DOWNLOADCERT));
+				AppContext.fireEvent(new TableActionEvent(dto,
+						TableActionType.DOWNLOADCERT));
 			}
 		});
-		
+
 		aDelete.addClickHandler(new ClickHandler() {
-			
 			@Override
 			public void onClick(ClickEvent arg0) {
-				AppContext.fireEvent(new TableActionEvent(dto, TableActionType.DELETECPD));
+				AppContext.fireEvent(new TableActionEvent(dto,
+						TableActionType.DELETECPD));
 			}
 		});
 	}
@@ -108,57 +158,40 @@ public class CPDTableRow extends RowWidget {
 		}
 
 		if ((dto.getStartDate() != null)) {
-			divStartDate.add(new InlineLabel(DateUtils.DATEFORMAT.format(dto.getStartDate())));
+			divStartDate.add(new InlineLabel(DateUtils.DATEFORMAT.format(dto
+					.getStartDate())));
 		}
 
 		if (dto.getEndDate() != null) {
-			divEndDate.add(new InlineLabel(DateUtils.DATEFORMAT.format(dto.getEndDate())));
+			divEndDate.add(new InlineLabel(DateUtils.DATEFORMAT.format(dto
+					.getEndDate())));
 		}
 
 		divCourseName.add(new InlineLabel(dto.getTitle()));
 		divOrganiser.add(new InlineLabel(dto.getOrganizer()));
 
 		if (dto.getCategory() != null)
-			divCategory.add(new InlineLabel(dto.getCategory().getDisplayName()));
+			divCategory
+					.add(new InlineLabel(dto.getCategory().getDisplayName()));
 
 		divCPD.add(new InlineLabel(dto.getCpdHours() + " hrs"));
 
-		CPDStatus status = dto.getStatus() == null ? CPDStatus.Unconfirmed : dto.getStatus();
+		CPDStatus status = dto.getStatus() == null ? CPDStatus.Unconfirmed
+				: dto.getStatus();
 
 		spnStatus.setInnerText(status.name());
-		if (status.equals(CPDStatus.Unconfirmed)) {
-			spnStatus.removeClassName("label-success");
-			spnStatus.addClassName("label-warning");
-		}
-
-		if (!AppContext.isCurrentUserAdmin()) {
-			aAttended.addStyleName("hide");
-			aNotAttended.addStyleName("hide");
-		}
-
-		InlineLabel spnNoAction = new InlineLabel("No Action Possible");
-		
-		if(dto.getStatus() == CPDStatus.Unconfirmed){
-			aDelete.setVisible(true);
-		}else{
-			aDelete.setVisible(false);
-		}
-		
-		if (dto.getStatus() == CPDStatus.Approved && dto.getCategory() == CPDCategory.CATEGORY_D) {
-			aDownloadCert.setVisible(false);
-			aEdit.setVisible(false);
-			aActions.setVisible(false);
-			divAction.add(spnNoAction);
-		} else if (dto.getStatus() == CPDStatus.Approved) {
-			aEdit.setVisible(false);
+		if (status.equals(CPDStatus.Approved)) {
+			spnStatus.removeClassName("label-danger");
+			spnStatus.addClassName("label-success");
 		} else {
-			aDownloadCert.setVisible(true);
-			aEdit.setVisible(true);
-			aActions.setVisible(true);
-			spnNoAction.setVisible(false);
+			spnStatus.removeClassName("label-success");
+			spnStatus.addClassName("label-danger");
 		}
 
-		final String url = "getreport?action=downloadcpdcert&cpdRefId=" + dto.getRefId();
+		setActionButtons();
+
+		final String url = "getreport?action=downloadcpdcert&cpdRefId="
+				+ dto.getRefId();
 		final String wintitle = "CPD Certificate for event " + dto.getTitle();
 		aDownloadCert.addClickHandler(new ClickHandler() {
 			@Override
@@ -169,8 +202,46 @@ public class CPDTableRow extends RowWidget {
 
 	}
 
+	private void setActionButtons() {
+		clear();
+
+		boolean isViewVisible = AppContext.isCurrentUserAdmin();
+		boolean isEditVisible = AppContext.isCurrentUserMember()
+				&& !(dto.getOrganizer().equals("ICPAK"))
+				&& dto.getStatus() == CPDStatus.Unconfirmed;
+		boolean isDeleteVisible = AppContext.isCurrentUserMember()
+				&& dto.getStatus() == CPDStatus.Unconfirmed
+				&& !(dto.getOrganizer().equals("ICPAK"));
+		boolean isApproveRejectVisible = (dto.getStatus() == CPDStatus.Unconfirmed)
+				&& AppContext.isCurrentUserAdmin();
+		boolean isDownloadVisible = AppContext.isCurrentUserMember()
+				&& (dto.getOrganizer().equals("ICPAK"))
+				&& dto.getStatus() == CPDStatus.Approved;
+		boolean isNoActionVisible = AppContext.isCurrentUserMember()
+				&& (!isEditVisible && !isDownloadVisible && !isDeleteVisible);
+		aEdit.setVisible(isEditVisible);
+		aView.setVisible(isViewVisible);
+		aDelete.setVisible(isDeleteVisible);
+		aDownloadCert.setVisible(isDownloadVisible);
+		aApprove.setVisible(isApproveRejectVisible);
+		aReject.setVisible(isApproveRejectVisible);
+		if (isNoActionVisible) {
+			spnNoAction.removeClassName("hide");
+		}
+	}
+
+	private void clear() {
+		aEdit.setVisible(false);
+		aView.setVisible(false);
+		aDelete.setVisible(false);
+		aDownloadCert.setVisible(false);
+		aApprove.setVisible(false);
+		aReject.setVisible(false);
+		spnNoAction.addClassName("hide");
+	}
+
 	public enum TableActionType {
-		DOWNLOADCERT,DELETECPD
+		DOWNLOADCERT, DELETECPD, VIEWCPD, APPROVECPD, REJECTCPD
 	}
 
 }

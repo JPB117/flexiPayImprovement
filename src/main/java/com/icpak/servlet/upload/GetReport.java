@@ -511,21 +511,34 @@ public class GetReport extends HttpServlet {
 
 	}
 
+	/**
+	 * http://domain:port/icpakportal/
+	 * 
+	 * @param req
+	 * @param resp
+	 */
 	private void processAttachmentRequest(HttpServletRequest req,
 			HttpServletResponse resp) {
-		String id = req.getParameter("attachmentId");
-		if (id == null)
+		String refId = req.getParameter("refId");
+		if (refId == null) {
+			writeError(resp, "RefId is required to download attachment");
 			return;
+		}
+
+		Attachment a = attachmentDao.findByRefId(refId, Attachment.class);
+		if (a == null) {
+			writeError(resp, "Attachment with id '" + refId
+					+ "' could not be found");
+		}
 
 		// LocalAttachment attachment = DB.getAttachmentDao().getAttachmentById(
 		// Long.parseLong(id));
 
-		// processAttachmentRequest(resp, attachment);
+		processAttachmentRequest(resp, a);
 	}
 
 	private void processAttachmentRequest(HttpServletResponse resp,
 			Attachment attachment) {
-
 		resp.setContentType(attachment.getContentType());
 		processAttachmentRequest(resp, attachment.getAttachment(),
 				attachment.getName());
@@ -542,10 +555,8 @@ public class GetReport extends HttpServlet {
 			resp.setHeader("Content-disposition", "attachment;filename=\""
 					+ name);
 		}
-
 		resp.setContentLength(data.length);
 		writeOut(resp, data);
-
 	}
 
 	private void writeOut(HttpServletResponse resp, byte[] data) {
@@ -583,13 +594,13 @@ public class GetReport extends HttpServlet {
 				startDate == null ? null : startDate, endDate == null ? null
 						: endDate, 0, 1000);
 		List<CPD> sortedCpd = new ArrayList<>();
-		
-		for(CPD cpd : cpds){
-			if(!cpd.getStatus().equals(CPDStatus.Unconfirmed)){
+
+		for (CPD cpd : cpds) {
+			if (!cpd.getStatus().equals(CPDStatus.Unconfirmed)) {
 				sortedCpd.add(cpd);
 			}
 		}
-		
+
 		log.info("CPD Records Count = " + sortedCpd.size());
 
 		Map<String, Object> values = new HashMap<String, Object>();
@@ -601,7 +612,7 @@ public class GetReport extends HttpServlet {
 		Doc doc = new Doc(values);
 
 		for (CPD cpd : sortedCpd) {
-			
+
 			String cpdCategory = null;
 			values = new HashMap<String, Object>();
 			values.put("number", "CPD-" + cpd.getId());

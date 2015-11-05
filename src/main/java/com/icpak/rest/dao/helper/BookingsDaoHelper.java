@@ -79,8 +79,8 @@ public class BookingsDaoHelper {
 	@Inject
 	AccommodationsDaoHelper accommodationsDaoHelper;
 
-	public List<BookingDto> getAllBookings(String uriInfo, String eventId, Integer offset, Integer limit,
-			String searchTerm) {
+	public List<BookingDto> getAllBookings(String uriInfo, String eventId,
+			Integer offset, Integer limit, String searchTerm) {
 		List<Booking> list = null;
 		List<BookingDto> clones = new ArrayList<>();
 
@@ -100,9 +100,10 @@ public class BookingsDaoHelper {
 		return clones;
 	}
 
-	public List<DelegateDto> getAllDelegates(String uriInfo, String eventId, Integer offset, Integer limit,
-			String searchTerm) {
-		List<DelegateDto> delegateDtos = dao.getAllDelegates(eventId, offset, limit, searchTerm);
+	public List<DelegateDto> getAllDelegates(String uriInfo, String eventId,
+			Integer offset, Integer limit, String searchTerm) {
+		List<DelegateDto> delegateDtos = dao.getAllDelegates(eventId, offset,
+				limit, searchTerm);
 
 		return delegateDtos;
 	}
@@ -178,28 +179,30 @@ public class BookingsDaoHelper {
 	}
 
 	public void sendProInvoice(String bookingRefId) {
-
 		assert bookingRefId != null;
-
 		sendDelegateSMS(bookingRefId);
 
 		Booking bookingInDb = dao.findByRefId(bookingRefId, Booking.class);
 		InvoiceDto invoice = generateInvoice(bookingInDb);
 		Event event = bookingInDb.getEvent();
-		String subject = bookingInDb.getEvent().getName() + "' Event Registration";
+		String subject = bookingInDb.getEvent().getName()
+				+ "' Event Registration";
 		SimpleDateFormat formatter = new SimpleDateFormat("MMM d Y");
 		try {
 			Map<String, Object> emailValues = new HashMap<String, Object>();
 			emailValues.put("companyName", invoice.getCompanyName());
 			emailValues.put("companyAddress", invoice.getCompanyAddress());
-			emailValues.put("companyLocation", bookingInDb.getContact().getPhysicalAddress());
-			emailValues.put("contactPhone", bookingInDb.getContact().getPhysicalAddress());
+			emailValues.put("companyLocation", bookingInDb.getContact()
+					.getPhysicalAddress());
+			emailValues.put("contactPhone", bookingInDb.getContact()
+					.getPhysicalAddress());
 
 			emailValues.put("quoteNo", invoice.getDocumentNo());
 			emailValues.put("date", invoice.getDate());
 			emailValues.put("firstName", invoice.getContactName());
 			emailValues.put("eventName", bookingInDb.getEvent().getName());
-			emailValues.put("eventStartDate", formatter.format(bookingInDb.getEvent().getStartDate()));
+			emailValues.put("eventStartDate",
+					formatter.format(bookingInDb.getEvent().getStartDate()));
 			emailValues.put("DocumentURL", settings.getApplicationPath());
 			emailValues.put("email", bookingInDb.getContact().getEmail());
 			emailValues.put("eventId", bookingInDb.getEvent().getRefId());
@@ -213,7 +216,8 @@ public class BookingsDaoHelper {
 			for (Delegate delegate : delegates) {
 				counter++;
 				emailValues.put("counter", counter);
-				emailValues.put("delegateNames", delegate.getSurname() + " " + delegate.getOtherNames());
+				emailValues.put("delegateNames", delegate.getSurname() + " "
+						+ delegate.getOtherNames());
 
 				if (delegate.getMemberRegistrationNo() != null) {
 					emailValues.put("memberType", "Member");
@@ -222,10 +226,14 @@ public class BookingsDaoHelper {
 				}
 				emailValues.put("ernNo", delegate.getErn());
 
-				emailValues.put("accomodationName", (delegate.getAccommodation() == null ? "None"
-						: delegate.getAccommodation().getHotel() + " " + delegate.getAccommodation().getNights()));
+				emailValues.put("accomodationName", (delegate
+						.getAccommodation() == null ? "None" : delegate
+						.getAccommodation().getHotel()
+						+ " "
+						+ delegate.getAccommodation().getNights()));
 
-				DocumentLine docLine = new DocumentLine("accomadationDetails", emailValues);
+				DocumentLine docLine = new DocumentLine("accomadationDetails",
+						emailValues);
 				emailDocument.addDetail(docLine);
 			}
 
@@ -235,34 +243,45 @@ public class BookingsDaoHelper {
 				line.put("description", dto.getDescription());
 				line.put("unitPrice", dto.getUnitPrice());
 				line.put("amount", dto.getTotalAmount());
-				proformaDocument.addDetail(new DocumentLine("invoiceDetails", line));
+				proformaDocument.addDetail(new DocumentLine("invoiceDetails",
+						line));
 			}
 			emailValues.put("totalAmount", invoice.getInvoiceAmount());
 
 			// PDF Invoice Generation
-			InputStream inv = EmailServiceHelper.class.getClassLoader().getResourceAsStream("proforma-invoice.html");
+			InputStream inv = EmailServiceHelper.class.getClassLoader()
+					.getResourceAsStream("proforma-invoice.html");
 			String invoiceHTML = IOUtils.toString(inv);
-			byte[] invoicePDF = new HTMLToPDFConvertor().convert(proformaDocument, new String(invoiceHTML));
+			byte[] invoicePDF = new HTMLToPDFConvertor().convert(
+					proformaDocument, new String(invoiceHTML));
 			Attachment attachment = new Attachment();
 			attachment.setAttachment(invoicePDF);
-			attachment.setName("ProForma Invoice_" + bookingInDb.getContact().getContactName() + ".pdf");
+			attachment.setName("ProForma Invoice_"
+					+ bookingInDb.getContact().getContactName() + ".pdf");
 
 			// Email Template parse and map variables
-			InputStream is = EmailServiceHelper.class.getClassLoader().getResourceAsStream("booking-email.html");
+			InputStream is = EmailServiceHelper.class.getClassLoader()
+					.getResourceAsStream("booking-email.html");
 			String html = IOUtils.toString(is);
 			html = new DocumentHTMLMapper().map(emailDocument, html);
 
 			EmailServiceHelper.sendEmail(html, "RE: ICPAK '" + subject,
 					Arrays.asList(bookingInDb.getContact().getEmail()),
-					Arrays.asList(bookingInDb.getContact().getContactName()), attachment);
+					Arrays.asList(bookingInDb.getContact().getContactName()),
+					attachment);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		String trxRef = trxHelper.charge(bookingInDb.getMemberId(), bookingInDb.getBookingDate(), subject,
-				event.getStartDate(), invoice.getInvoiceAmount(), "Booking #" + bookingInDb.getId(),
+		String trxRef = trxHelper.charge(bookingInDb.getMemberId(),
+				bookingInDb.getBookingDate(), subject, event.getStartDate(),
+				invoice.getInvoiceAmount(), "Booking #" + bookingInDb.getId(),
 				invoice.getRefId());
+		invoice.setTrxRefId(trxRef);
+
+		invoiceHelper.update(invoice.getRefId(), invoice);
+
 	}
 
 	public InvoiceDto generateInvoice(Booking booking) {
@@ -279,7 +298,8 @@ public class BookingsDaoHelper {
 		Collections.sort(delegates, new Comparator<Delegate>() {
 			@Override
 			public int compare(Delegate o1, Delegate o2) {
-				return o1.getMemberRegistrationNo() == null ? -1 : o2.getMemberRegistrationNo() == null ? 1 : 0;
+				return o1.getMemberRegistrationNo() == null ? -1 : o2
+						.getMemberRegistrationNo() == null ? 1 : 0;
 			}
 		});
 
@@ -301,13 +321,15 @@ public class BookingsDaoHelper {
 			if (delegate.getMemberRegistrationNo() != null) {
 				String description = "%s - %s fees for %d members: %s";
 				memberInvoice.setMemberNames(memberInvoice.getMemberNames()
-						.concat((memberInvoice.getMemberNames().isEmpty() ? "" : ", ") + delegate.toString()));
+						.concat((memberInvoice.getMemberNames().isEmpty() ? ""
+								: ", ") + delegate.toString()));
 
 				int qty = memberInvoice.getQuantity() + 1;
 
 				memberInvoice.setEventDelegateRefId(delegate.getRefId());
-				description = String.format(description, event.getName(), event.getType().getDisplayName(), qty,
-						memberInvoice.getMemberNames());
+				description = String.format(description, event.getName(), event
+						.getType().getDisplayName(), qty, memberInvoice
+						.getMemberNames());
 				memberInvoice.setDescription(description);
 				memberInvoice.setQuantity(qty);
 				memberInvoice.setUnitPrice(delegate.getAmount());
@@ -319,11 +341,15 @@ public class BookingsDaoHelper {
 				int qty = nonMemberInvoice.getQuantity() + 1;
 				nonMemberInvoice.setEventDelegateRefId(delegate.getRefId());
 
-				nonMemberInvoice.setMemberNames(nonMemberInvoice.getMemberNames()
-						.concat((nonMemberInvoice.getMemberNames().isEmpty() ? "" : ", ") + delegate.toString()));
+				nonMemberInvoice
+						.setMemberNames(nonMemberInvoice.getMemberNames()
+								.concat((nonMemberInvoice.getMemberNames()
+										.isEmpty() ? "" : ", ")
+										+ delegate.toString()));
 
-				description = String.format(description, event.getName(), event.getType().getDisplayName(), qty,
-						nonMemberInvoice.getMemberNames());
+				description = String.format(description, event.getName(), event
+						.getType().getDisplayName(), qty, nonMemberInvoice
+						.getMemberNames());
 				nonMemberInvoice.setDescription(description);
 				nonMemberInvoice.setQuantity(qty);
 				nonMemberInvoice.setUnitPrice(delegate.getAmount());
@@ -333,45 +359,59 @@ public class BookingsDaoHelper {
 
 			if (delegate.getAccommodation() != null) {
 				if (delegate.getMemberRegistrationNo() != null) {
-					InvoiceLineDto line = memberRefLineMap.get(delegate.getAccommodation().getRefId());
+					InvoiceLineDto line = memberRefLineMap.get(delegate
+							.getAccommodation().getRefId());
 					if (line == null) {
 						line = new InvoiceLineDto();
 						line.setMemberNames("");
-						memberRefLineMap.put(delegate.getAccommodation().getRefId(), line);
+						memberRefLineMap.put(delegate.getAccommodation()
+								.getRefId(), line);
 					}
 
-					String description = "%s - Accommodation at %s %d Nights HB " + "for %d members: %s";
-					line.setMemberNames(line.getMemberNames().concat(", " + delegate.toString()));
+					String description = "%s - Accommodation at %s %d Nights HB "
+							+ "for %d members: %s";
+					line.setMemberNames(line.getMemberNames().concat(
+							", " + delegate.toString()));
 					int qty = line.getQuantity() + 1;
 
 					line.setEventDelegateRefId(delegate.getRefId());
-					description = String.format(description, event.getName(), delegate.getAccommodation().getHotel(),
-							delegate.getAccommodation().getNights(), qty, line.getMemberNames());
+					description = String.format(description, event.getName(),
+							delegate.getAccommodation().getHotel(), delegate
+									.getAccommodation().getNights(), qty, line
+									.getMemberNames());
 					line.setDescription(description);
 					line.setQuantity(qty);
 					line.setUnitPrice(delegate.getAccommodation().getFee());
-					line.setTotalAmount(qty * delegate.getAccommodation().getFee());
+					line.setTotalAmount(qty
+							* delegate.getAccommodation().getFee());
 					amount += delegate.getAccommodation().getFee();// line.getTotalAmount();
 				} else {
 
-					InvoiceLineDto line = nonMemberRefLineMap.get(delegate.getAccommodation().getRefId());
+					InvoiceLineDto line = nonMemberRefLineMap.get(delegate
+							.getAccommodation().getRefId());
 					if (line == null) {
 						line = new InvoiceLineDto();
 						line.setMemberNames("");
-						nonMemberRefLineMap.put(delegate.getAccommodation().getRefId(), line);
+						nonMemberRefLineMap.put(delegate.getAccommodation()
+								.getRefId(), line);
 					}
 
-					String description = "%s - Accommodation at %s %d Nights HB " + "for %d members: %s";
-					line.setMemberNames(line.getMemberNames().concat(", " + delegate.toString()));
+					String description = "%s - Accommodation at %s %d Nights HB "
+							+ "for %d members: %s";
+					line.setMemberNames(line.getMemberNames().concat(
+							", " + delegate.toString()));
 					int qty = line.getQuantity() + 1;
 
 					line.setEventDelegateRefId(delegate.getRefId());
-					description = String.format(description, event.getName(), delegate.getAccommodation().getHotel(),
-							delegate.getAccommodation().getNights(), qty, line.getMemberNames());
+					description = String.format(description, event.getName(),
+							delegate.getAccommodation().getHotel(), delegate
+									.getAccommodation().getNights(), qty, line
+									.getMemberNames());
 					line.setDescription(description);
 					line.setQuantity(qty);
 					line.setUnitPrice(delegate.getAccommodation().getFee());
-					line.setTotalAmount(qty * delegate.getAccommodation().getFee());
+					line.setTotalAmount(qty
+							* delegate.getAccommodation().getFee());
 					amount += delegate.getAccommodation().getFee();// line.getTotalAmount();
 				}
 
@@ -404,7 +444,8 @@ public class BookingsDaoHelper {
 		return invoice;
 	}
 
-	public BookingDto updateBooking(String eventId, String bookingId, BookingDto dto) {
+	public BookingDto updateBooking(String eventId, String bookingId,
+			BookingDto dto) {
 		dto.setRefId(bookingId);
 		return createBooking(eventId, dto);
 
@@ -451,17 +492,24 @@ public class BookingsDaoHelper {
 		delegateList.addAll(delegates);
 
 		for (Delegate delegate : delegateList) {
-			String startDate = new SimpleDateFormat("dd/MM/yyyy").format(event.getStartDate());
-			String endDate = new SimpleDateFormat("dd/MM/yyyy").format(event.getEndDate());
-			String smsMemssage = "Dear" + " " + delegate.getSurname() + "," + "Thank you for booking for the "
-					+ event.getName() + ". Your booking status is NOT PAID. Your ERN No. is " + delegate.getErn();
+			String startDate = new SimpleDateFormat("dd/MM/yyyy").format(event
+					.getStartDate());
+			String endDate = new SimpleDateFormat("dd/MM/yyyy").format(event
+					.getEndDate());
+			String smsMemssage = "Dear" + " " + delegate.getSurname() + ","
+					+ "Thank you for booking for the " + event.getName()
+					+ ". Your booking status is NOT PAID. Your ERN No. is "
+					+ delegate.getErn();
 
 			if (delegate.getMemberRefId() != null) {
-				Member member = memberDao.findByRefId(delegate.getMemberRefId(), Member.class);
-				System.err.println("Sending SMS to " + member.getUser().getPhoneNumber());
+				Member member = memberDao.findByRefId(
+						delegate.getMemberRefId(), Member.class);
+				System.err.println("Sending SMS to "
+						+ member.getUser().getPhoneNumber());
 
 				if (member.getUser().getPhoneNumber() != null) {
-					smsIntergration.send(member.getUser().getPhoneNumber(), smsMemssage);
+					smsIntergration.send(member.getUser().getPhoneNumber(),
+							smsMemssage);
 				}
 			} else {
 				System.err.println("Non-member cannot be send sms..");
@@ -480,8 +528,8 @@ public class BookingsDaoHelper {
 		// assert delegate.getMemberRegistrationNo()!=null;
 
 		if (delegateDto.getAccommodation() != null) {
-			Accommodation accommodation = dao.findByRefId(delegateDto.getAccommodation().getRefId(),
-					Accommodation.class);
+			Accommodation accommodation = dao.findByRefId(delegateDto
+					.getAccommodation().getRefId(), Accommodation.class);
 			if (accommodation != null) {
 				accommodation.setSpaces(accommodation.getSpaces() - 1);
 				d.setAccommodation(accommodation);
@@ -509,7 +557,8 @@ public class BookingsDaoHelper {
 		dao.delete(booking);
 	}
 
-	public BookingDto processPayment(String eventId, String bookingId, String paymentMode, String paymentRef) {
+	public BookingDto processPayment(String eventId, String bookingId,
+			String paymentMode, String paymentRef) {
 		Booking booking = dao.getByBookingId(bookingId);
 		// Check if payment ref already exists
 		boolean exists = dao.isPaymentValid(paymentRef);
@@ -528,17 +577,23 @@ public class BookingsDaoHelper {
 		return booking.toDto();
 	}
 
-	public DelegateDto updateDelegate(String bookingId, String delegateId, DelegateDto delegateDto) {
+	public DelegateDto updateDelegate(String bookingId, String delegateId,
+			DelegateDto delegateDto) {
 
 		Delegate delegate = dao.findByRefId(delegateId, Delegate.class);
 
-		if (delegate.getMemberRefId() != null && delegate.getAttendance() != delegateDto.getAttendance()) {
+		if (delegate.getMemberRefId() != null
+				&& delegate.getAttendance() != delegateDto.getAttendance()) {
 			// send and SMS
-			Member member = dao.findByRefId(delegate.getMemberRefId(), Member.class);
-			Event event = dao.findByRefId(delegateDto.getEventRefId(), Event.class);
-			String smsMemssage = "Dear" + " " + delegateDto.getSurname() + ",Thank you for attending the "
-					+ event.getName() + "." + "Your ERN No. is " + delegate.getErn();
-			smsIntergration.send(member.getUser().getPhoneNumber(), smsMemssage);
+			Member member = dao.findByRefId(delegate.getMemberRefId(),
+					Member.class);
+			Event event = dao.findByRefId(delegateDto.getEventRefId(),
+					Event.class);
+			String smsMemssage = "Dear" + " " + delegateDto.getSurname()
+					+ ",Thank you for attending the " + event.getName() + "."
+					+ "Your ERN No. is " + delegate.getErn();
+			smsIntergration
+					.send(member.getUser().getPhoneNumber(), smsMemssage);
 		}
 		delegate.setAttendance(delegateDto.getAttendance());
 		dao.save(delegate);
@@ -548,7 +603,8 @@ public class BookingsDaoHelper {
 		return delegate.toDto();
 	}
 
-	public List<MemberBookingDto> getMemberBookings(String memberRefId, int offset, int limit) {
+	public List<MemberBookingDto> getMemberBookings(String memberRefId,
+			int offset, int limit) {
 		return dao.getMemberBookings(memberRefId, offset, limit);
 	}
 
@@ -560,7 +616,8 @@ public class BookingsDaoHelper {
 			int spacesOccupied = delegates.size();
 			accommodation.setSpaces(accommodation.getSpaces() - spacesOccupied);
 
-			accommodationsDaoHelper.update(event.getRefId(), accommodation.getRefId(), accommodation.toDto());
+			accommodationsDaoHelper.update(event.getRefId(),
+					accommodation.getRefId(), accommodation.toDto());
 		}
 
 	}

@@ -1,7 +1,9 @@
 package com.icpak.rest.models.cpd;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -22,6 +24,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import com.icpak.rest.models.base.PO;
 import com.icpak.rest.models.util.Attachment;
 import com.wordnik.swagger.annotations.ApiModel;
+import com.workpoint.icpak.shared.model.AttachmentDto;
 import com.workpoint.icpak.shared.model.CPDCategory;
 import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.shared.model.CPDStatus;
@@ -122,7 +125,14 @@ public class CPD extends PO {
 		dto.setTitle(title);
 		dto.setEventId(eventId);
 		dto.setEventLocation(eventLocation);
-
+		List<AttachmentDto> attachmentDtos = new ArrayList<AttachmentDto>();
+		for (Attachment attachment : attachments) {
+			AttachmentDto attachmentDto = new AttachmentDto();
+			attachmentDto.setAttachmentName(attachment.getName());
+			attachmentDto.setRefId(attachment.getRefId());
+			attachmentDtos.add(attachmentDto);
+		}
+		dto.setAttachments(attachmentDtos);
 		return dto;
 	}
 

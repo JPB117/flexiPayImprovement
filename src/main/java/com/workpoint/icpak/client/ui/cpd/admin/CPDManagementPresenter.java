@@ -14,6 +14,7 @@ import java.util.List;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rest.delegates.client.ResourceDelegate;
@@ -29,14 +30,21 @@ import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.workpoint.icpak.client.place.NameTokens;
 import com.workpoint.icpak.client.security.CurrentUser;
 import com.workpoint.icpak.client.service.AbstractAsyncCallback;
+import com.workpoint.icpak.client.ui.AppManager;
+import com.workpoint.icpak.client.ui.OnOptionSelected;
+import com.workpoint.icpak.client.ui.OptionControl;
 import com.workpoint.icpak.client.ui.admin.TabDataExt;
 import com.workpoint.icpak.client.ui.component.PagingConfig;
 import com.workpoint.icpak.client.ui.component.PagingLoader;
 import com.workpoint.icpak.client.ui.component.PagingPanel;
+import com.workpoint.icpak.client.ui.cpd.form.RecordCPD;
+import com.workpoint.icpak.client.ui.cpd.table.row.CPDTableRow.TableActionType;
 import com.workpoint.icpak.client.ui.events.EditModelEvent;
 import com.workpoint.icpak.client.ui.events.EditModelEvent.EditModelHandler;
 import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
 import com.workpoint.icpak.client.ui.events.ProcessingEvent;
+import com.workpoint.icpak.client.ui.events.TableActionEvent;
+import com.workpoint.icpak.client.ui.events.TableActionEvent.TableActionHandler;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
 import com.workpoint.icpak.client.ui.popup.GenericPopupPresenter;
 import com.workpoint.icpak.client.ui.security.AdminGateKeeper;
@@ -45,12 +53,13 @@ import com.workpoint.icpak.client.ui.util.DateRange;
 import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.shared.api.MemberResource;
 import com.workpoint.icpak.shared.model.CPDDto;
+import com.workpoint.icpak.shared.model.CPDStatus;
 import com.workpoint.icpak.shared.model.CPDSummaryDto;
 
 public class CPDManagementPresenter
 		extends
 		Presenter<CPDManagementPresenter.ICPDManagementView, CPDManagementPresenter.ICPDManagementProxy>
-		implements EditModelHandler {
+		implements EditModelHandler, TableActionHandler {
 
 	public interface ICPDManagementView extends View {
 		HasClickHandlers getRecordButton();
@@ -104,6 +113,7 @@ public class CPDManagementPresenter
 	protected void onBind() {
 		super.onBind();
 		addRegisteredHandler(EditModelEvent.TYPE, this);
+		addRegisteredHandler(TableActionEvent.TYPE, this);
 
 		getView().getPagingPanel().setLoader(new PagingLoader() {
 			@Override
@@ -129,9 +139,73 @@ public class CPDManagementPresenter
 	private Date startDate;
 	private Date endDate;
 
+	protected void showForm() {
+		showForm(null);
+	}
+
+	protected void showForm(final CPDDto model) {
+		showForm(model, false);
+	}
+
+	protected void showForm(final CPDDto model, boolean isViewMode) {
+		final RecordCPD cpdRecord = new RecordCPD();
+		cpdRecord.setCPD(model);
+		cpdRecord.getStartUploadButton().addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				if (cpdRecord.getCPD().getRefId() == null) {
+					// not saved
+					if (cpdRecord.isValid()) {
+						String memberId = currentUser.getUser().getRefId();
+						memberDelegate
+								.withCallback(
+										new AbstractAsyncCallback<CPDDto>() {
+											@Override
+											public void onSuccess(CPDDto result) {
+												cpdRecord.setCPD(result);
+												cpdRecord.showUploadPanel(true);
+											}
+										}).cpd(memberId)
+								.create(cpdRecord.getCPD());
+					}
+				} else {
+					cpdRecord.showUploadPanel(true);
+				}
+			}
+		});
+		cpdRecord.showForm(true);
+
+		cpdRecord.setViewMode(isViewMode);
+
+		AppManager.showPopUp("Record CPD Wizard", cpdRecord.asWidget(),
+				new OptionControl() {
+					@Override
+					public void onSelect(String name) {
+						if (name.equals("Save")) {
+							if (cpdRecord.isValid()) {
+								saveRecord(cpdRecord.getCPD());
+								hide();
+							}
+						} else if (name.equals("Previous")) {
+							showInstructions(model);
+						} else if (name.equals("Approve")) {
+							CPDDto dto = cpdRecord.getCPD();
+							dto.setStatus(CPDStatus.Approved);
+							saveRecord(dto);
+							hide();
+						} else if (name.equals("Reject")) {
+							CPDDto dto = cpdRecord.getCPD();
+							dto.setStatus(CPDStatus.Rejected);
+							saveRecord(dto);
+							hide();
+						}
+					}
+				}, (isViewMode == true ? "Reject" : "Previous"),
+				(isViewMode == true ? "Approve" : "Save"));
+	}
+
 	protected void saveRecord(CPDDto dto) {
 		if (dto.getRefId() != null) {
-			// Update
 			memberDelegate.withCallback(new AbstractAsyncCallback<CPDDto>() {
 				@Override
 				public void onSuccess(CPDDto result) {
@@ -140,7 +214,25 @@ public class CPDManagementPresenter
 			}).cpd(dto.getMemberRefId()).update(dto.getRefId(), dto);
 
 		}
+	}
 
+	private void showInstructions() {
+		showInstructions(null);
+	}
+
+	private void showInstructions(final CPDDto model) {
+		final RecordCPD cpdRecord = new RecordCPD();
+		cpdRecord.setCPD(model);
+		cpdRecord.showForm(false);
+		AppManager.showPopUp("Record CPD Wizard", cpdRecord.asWidget(),
+				new OnOptionSelected() {
+					@Override
+					public void onSelect(String name) {
+						if (name.equals("Next")) {
+							showForm(model);
+						}
+					}
+				}, "Next");
 	}
 
 	@Override
@@ -202,7 +294,21 @@ public class CPDManagementPresenter
 
 	@Override
 	public void onEditModel(EditModelEvent event) {
+	}
 
+	@Override
+	public void onTableAction(TableActionEvent event) {
+		if (event.getAction() == TableActionType.APPROVECPD) {
+			Window.alert("Approve action called!");
+			final CPDDto dto = (CPDDto) event.getModel();
+			saveRecord(dto);
+		} else if (event.getAction() == TableActionType.REJECTCPD) {
+			final CPDDto dto = (CPDDto) event.getModel();
+			saveRecord(dto);
+		} else if (event.getAction() == TableActionType.VIEWCPD) {
+			final CPDDto dto = (CPDDto) event.getModel();
+			showForm(dto, true);
+		}
 	}
 
 }

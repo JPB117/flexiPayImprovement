@@ -79,19 +79,15 @@ public class TestBookingDao extends AbstractDaoTest {
 		delegate.setEmail("tomkim@wira.io");
 		delegate.setOtherNames("Kimani");
 		delegate.setSurname("Tom");
-		delegate.setMemberNo("10000");
+		delegate.setMemberNo("1");
 		delegates.add(delegate);
 		dto.setDelegates(delegates);
 
 		// dto.setCurrency(currency);
-		BookingDto booking = bookingsHelper.createBooking("PrjIf8x4RIDaPZIv",
+		BookingDto booking = bookingsHelper.createBooking("1tny6HBSFgGvyLSo",
 				dto);
-		
-		
-
 		System.err.println(">> event RefId" + booking.getEventRefId());
-		System.err.println(">> BOoking RefId" + booking.getRefId());
-		
+		System.err.println(">> Booking RefId" + booking.getRefId());
 		bookingsHelper.sendProInvoice(booking.getRefId());
 	}
 

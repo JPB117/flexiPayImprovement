@@ -1,6 +1,7 @@
 package com.workpoint.icpak.shared.model;
 
 import java.util.Date;
+import java.util.List;
 
 public class CPDDto extends SerializableObj {
 
@@ -21,6 +22,7 @@ public class CPDDto extends SerializableObj {
 	private String eventId;
 	private String eventLocation;
 	private String memberRegistrationNo;
+	private List<AttachmentDto> attachments;
 
 	public CPDDto() {
 	}
@@ -127,5 +129,13 @@ public class CPDDto extends SerializableObj {
 
 	public void setMemberRegistrationNo(String memberRegistrationNo) {
 		this.memberRegistrationNo = memberRegistrationNo;
+	}
+
+	public List<AttachmentDto> getAttachments() {
+		return attachments;
+	}
+
+	public void setAttachments(List<AttachmentDto> attachments) {
+		this.attachments = attachments;
 	}
 }

@@ -34,7 +34,13 @@
 
 				<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
 					<li>
+						<span ui:field="spnNoAction" style="padding:10px">No Action Possible</span>
+					</li>
+					<li>
 						<d:ActionLink ui:field="aEdit">Edit</d:ActionLink>
+					</li>
+					<li>
+						<d:ActionLink ui:field="aView">View</d:ActionLink>
 					</li>
 					<li>
 						<d:ActionLink ui:field="aDelete">Delete</d:ActionLink>
@@ -43,10 +49,10 @@
 						<d:ActionLink ui:field="aDownloadCert">Download Certificate</d:ActionLink>
 					</li>
 					<li>
-						<d:ActionLink ui:field="aAttended">Approved</d:ActionLink>
+						<d:ActionLink ui:field="aApprove">Approve</d:ActionLink>
 					</li>
 					<li>
-						<d:ActionLink ui:field="aNotAttended">Rejected</d:ActionLink>
+						<d:ActionLink ui:field="aReject">Reject</d:ActionLink>
 					</li>
 				</ul>
 			</div>

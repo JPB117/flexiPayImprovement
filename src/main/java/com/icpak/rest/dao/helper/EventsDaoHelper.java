@@ -52,7 +52,6 @@ public class EventsDaoHelper {
 	}
 
 	public EventDto getEventById(String eventId) {
-
 		Event event = dao.getByEventId(eventId);
 		return event.toDto();
 	}

@@ -66,8 +66,8 @@ public class Event extends PO {
 	@Column(nullable = false)
 	private Double nonMemberPrice;
 	/*
-	 * Incase this throws an Exception; ALTER TABLE tbl_name MODIFY columnA
-	 * varchar(6) NULL DEFAULT NULL;
+	 * Incase this throws an Exception; ALTER TABLE tbl_name MODIFY
+	 * associatePrice varchar(6) NULL DEFAULT NULL;
 	 */
 	private Double associatePrice;
 
@@ -250,11 +250,11 @@ public class Event extends PO {
 		setDescription(dto.getDescription());
 		if (dto.getEndDate() != null)
 			setEndDate(DateUtils.parse(dto.getEndDate(),
-					DateUtils.FULLTIMESTAMP));
+					DateUtils.SHORTTIMESTAMP));
 
 		if (dto.getStartDate() != null)
 			setStartDate(DateUtils.parse(dto.getStartDate(),
-					DateUtils.FULLTIMESTAMP));
+					DateUtils.SHORTTIMESTAMP));
 
 		setMemberPrice(dto.getMemberPrice());
 		setName(dto.getName());
