@@ -54,7 +54,7 @@ public class CPD extends PO {
 	private CPDStatus status = CPDStatus.Unconfirmed;
 
 	@Column(length = 20)
-	private String memberId;
+	private String memberRefId;
 	@Column(length = 20)
 	private String memberRegistrationNo;
 	private String eventId;
@@ -100,7 +100,7 @@ public class CPD extends PO {
 			setStatus(dto.getStatus());
 
 		setCategory(dto.getCategory());
-		setMemberId(dto.getMemberRefId());
+		setMemberRefId(dto.getMemberRefId());
 		setOrganizer(dto.getOrganizer());
 		setTitle(dto.getTitle());
 		setEventId(dto.getEventId());
@@ -111,7 +111,7 @@ public class CPD extends PO {
 	public CPDDto toDTO() {
 		CPDDto dto = new CPDDto();
 		dto.setCreated(getCreated());
-		dto.setMemberRefId(memberId);
+		dto.setMemberRefId(memberRefId);
 		dto.setRefId(getRefId());
 		dto.setCategory(category);
 		dto.setCpdHours(cpdHours);
@@ -150,12 +150,12 @@ public class CPD extends PO {
 		this.category = category;
 	}
 
-	public String getMemberId() {
-		return memberId;
+	public String getMemberRefId() {
+		return memberRefId;
 	}
 
-	public void setMemberId(String memberId) {
-		this.memberId = memberId;
+	public void setMemberRefId(String memberRefId) {
+		this.memberRefId = memberRefId;
 	}
 
 	public String getEventId() {

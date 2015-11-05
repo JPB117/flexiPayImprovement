@@ -58,7 +58,7 @@ public class CPDDaoHelper {
 		List<CPDDto> rtn = new ArrayList<>();
 		for (CPD cpd : cpds) {
 			CPDDto dto = cpd.toDTO();
-			dto.setFullNames(userDao.getFullNames(cpd.getMemberId()));
+			dto.setFullNames(userDao.getFullNames(cpd.getMemberRefId()));
 			rtn.add(dto);
 		}
 
@@ -90,7 +90,7 @@ public class CPDDaoHelper {
 
 		CPD cpd = new CPD();
 		cpd.copyFrom(cpdDto);
-		cpd.setMemberId(memberId);
+		cpd.setMemberRefId(memberId);
 		dao.save(cpd);
 
 		CPDDto rtn = cpd.toDTO();
@@ -101,7 +101,7 @@ public class CPDDaoHelper {
 	public CPDDto update(String memberId, String cpdId, CPDDto cpd) {
 		CPD poCPD = dao.findByCPDId(cpdId);
 		poCPD.copyFrom(cpd);
-		poCPD.setMemberId(memberId);
+		poCPD.setMemberRefId(memberId);
 		dao.save(poCPD);
 
 		CPDDto rtn = poCPD.toDTO();
@@ -302,7 +302,7 @@ public class CPDDaoHelper {
 
 		List<CPDDto> cpdDtos = new ArrayList<>();
 		for (CPD cpd : cpds) {
-			logger.debug("CPD memberr id " + cpd.getMemberId());
+			logger.debug("CPD memberr id " + cpd.getMemberRefId());
 			cpdDtos.add(cpd.toDTO());
 		}
 
