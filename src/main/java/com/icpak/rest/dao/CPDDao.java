@@ -32,7 +32,7 @@ public class CPDDao extends BaseDao {
 		return getAllCPDs(null, offSet, limit, startDate, endDate);
 	}
 
-	public List<CPD> getAllCPDs(String memberId, Integer offSet, Integer limit,
+	public List<CPD> getAllCPDs(String memberRefId, Integer offSet, Integer limit,
 			Date startDate, Date endDate) {
 		StringBuffer sql = new StringBuffer("FROM CPD");
 
@@ -59,15 +59,15 @@ public class CPDDao extends BaseDao {
 			sql.append(" endDate<=:endDate");
 		}
 
-		if (memberId != null && !memberId.equals("ALL")) {
+		if (memberRefId != null && !memberRefId.equals("ALL")) {
 			if (isFirstParam) {
 				isFirstParam = false;
 				sql.append(" where");
 			} else {
 				sql.append(" and ");
 			}
-			params.put("memberId", memberId);
-			sql.append(" memberId=:memberId");
+			params.put("memberRefId", memberRefId);
+			sql.append(" memberRefId=:memberRefId");
 		}
 		sql.append(" and isActive=1");
 		sql.append(" order by startDate asc");
@@ -84,11 +84,11 @@ public class CPDDao extends BaseDao {
 		createCPD(cpd);
 	}
 
-	public int getCPDCount(String memberId, Date startDate, Date endDate) {
+	public int getCPDCount(String memberRefId, Date startDate, Date endDate) {
 
 		Number number = null;
-		if (memberId != null) {
-			if (memberId.equals("ALL")) {
+		if (memberRefId != null) {
+			if (memberRefId.equals("ALL")) {
 				number = getSingleResultOrNull(getEntityManager()
 						.createNativeQuery(
 								"select count(*) from cpd c "
@@ -98,15 +98,15 @@ public class CPDDao extends BaseDao {
 			} else {
 				number = getSingleResultOrNull(getEntityManager()
 						.createNativeQuery(
-								"select count(*) from cpd c inner join Member m on (c.memberId=m.refId) "
+								"select count(*) from cpd c inner join Member m on (c.memberRefId=m.refId) "
 										+ "where c.isactive=1 and m.refId=:refId and startDate>=:startDate and endDate<:endDate")
 						.setParameter("startDate", startDate)
 						.setParameter("endDate", endDate)
-						.setParameter("refId", memberId));
+						.setParameter("refId", memberRefId));
 			}
 		} else {
 			throw new ServiceException(ErrorCodes.ILLEGAL_ARGUMENT, "CPD",
-					"'MemberId'");
+					"'MemberRefId'");
 		}
 
 		return number.intValue();
@@ -128,29 +128,29 @@ public class CPDDao extends BaseDao {
 		return cpd;
 	}
 
-	public void deleteCPDByMemberAndEvent(String memberId, String eventId) {
+	public void deleteCPDByMemberAndEvent(String memberRefId, String eventId) {
 
-		delete(getCPDByMemberAndEvent(memberId, eventId));
+		delete(getCPDByMemberAndEvent(memberRefId, eventId));
 	}
 
-	public CPD getCPDByMemberAndEvent(String memberId, String eventId) {
+	public CPD getCPDByMemberAndEvent(String memberRefId, String eventId) {
 		CPD cpd = getSingleResultOrNull(getEntityManager()
 				.createQuery(
-						"from CPD u where u.memberId=:memberId and u.eventId=:eventId")
-				.setParameter("memberId", memberId)
+						"from CPD u where u.memberRefId=:memberRefId and u.eventId=:eventId")
+				.setParameter("memberRefId", memberRefId)
 				.setParameter("eventId", eventId));
 
 		return cpd;
 	}
 
-	public CPDSummaryDto getCPDSummary(String memberId, Date startDate,
+	public CPDSummaryDto getCPDSummary(String memberRefId, Date startDate,
 			Date endDate) {
 		String sql = "select sum(cpdHours), status from cpd where "
-				+ "memberId=:memberId and startDate>=:startDate "
+				+ "memberRefId=:memberRefId and startDate>=:startDate "
 				+ "and endDate<=:endDate group by status";
 
 		List<Object[]> rows = getResultList(getEntityManager()
-				.createNativeQuery(sql).setParameter("memberId", memberId)
+				.createNativeQuery(sql).setParameter("memberRefId", memberRefId)
 				.setParameter("startDate", startDate)
 				.setParameter("endDate", endDate));
 
@@ -203,10 +203,10 @@ public class CPDDao extends BaseDao {
 
 	public Double getCPDHours(String memberRefId) {
 		String sql = "select sum(cpdhours) cpdhours from cpd "
-				+ "where memberId= :memberId and status='Approved' limit 1 ";
+				+ "where memberRefId= :memberRefId and status='Approved' limit 1 ";
 
 		Number value = (Number) getSingleResultOrNull(getEntityManager()
-				.createNativeQuery(sql).setParameter("memberId", memberRefId));
+				.createNativeQuery(sql).setParameter("memberRefId", memberRefId));
 
 		return value == null ? 0.0 : value.doubleValue();
 
@@ -252,7 +252,7 @@ public class CPDDao extends BaseDao {
 				sql.append(" and ");
 			}
 			params.put("memberRefId", memberRefId);
-			sql.append(" memberId=:memberRefId");
+			sql.append(" memberRefId=:memberRefId");
 		}
 
 		sql.append(" order by startDate desc");
