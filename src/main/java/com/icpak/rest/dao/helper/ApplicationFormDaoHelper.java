@@ -88,15 +88,38 @@ public class ApplicationFormDaoHelper {
 		po.copyInto(application);
 	}
 
+	public void createApplicationFromImport(ApplicationFormHeaderDto application) {
+
+		if (application.getRefId() != null) {
+			updateApplication(application.getRefId(), application);
+			return;
+		}
+
+		// Copy into PO
+		ApplicationFormHeader po = new ApplicationFormHeader();
+		po.copyFrom(application);
+		po.setApplicationStatus(ApplicationStatus.APPROVED);
+
+		// Create Temp User
+		User user = createTempUser(po);
+		po.setUserRefId(user.getRefId());
+
+		// Save Data
+		applicationDao.createApplication(po);
+
+		// Copy into DTO
+		po.copyInto(application);
+	}
+
 	private User createTempUser(ApplicationFormHeader application) {
 		User po = new User();
 		po.setEmail(application.getEmail());
-		// po.setUsername(user.getUsername());
 		po.setRefId(application.getRefId());
 		po.setAddress(application.getAddress1());
 		po.setCity(application.getCity1());
 		po.setNationality(application.getNationality());
 		po.setMemberNo(application.getMemberNo());
+		po.setPhoneNumber(application.getMobileNo());
 
 		BioData bioData = new BioData();
 		bioData.setFirstName(application.getOtherNames());

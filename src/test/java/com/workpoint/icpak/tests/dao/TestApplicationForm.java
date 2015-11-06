@@ -36,11 +36,12 @@ public class TestApplicationForm extends AbstractDaoTest {
 		System.err.println("Invoice >> " + header.getInvoiceRef());
 	}
 
-	@Ignore
+	@Test
 	public void Import() {
-		List<ApplicationFormHeaderDto> members = helper.importMembers(0, 20000);
+		List<ApplicationFormHeaderDto> members = helper
+				.importMembers(0, 500000);
 		for (ApplicationFormHeaderDto dto : members) {
-			helper.createApplication(dto);
+			helper.createApplicationFromImport(dto);
 		}
 	}
 
@@ -55,17 +56,15 @@ public class TestApplicationForm extends AbstractDaoTest {
 
 	@Ignore
 	public void getUser() {
-
 		List<UserDto> users = usersDaoHelper.getAllUsers(0, 20, "");
-
 		for (UserDto user : users) {
 			System.err.println("Names:" + user.getMemberNo());
 		}
 	}
 
-	@Test
+	@Ignore
 	public void getCount() throws IOException {
-//		System.err.println("Response>>"
-//				+ usersDaoHelper.postUserToLMS("50LMW3Qrv3SsLySW"));
+		// System.err.println("Response>>"
+		// + usersDaoHelper.postUserToLMS("50LMW3Qrv3SsLySW"));
 	}
 }

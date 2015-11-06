@@ -55,6 +55,11 @@ public class TestBookingDao extends AbstractDaoTest {
 		}
 
 	}
+	@Ignore
+	public void testGenerateEmail() {
+		bookingsHelper.sendProInvoice("C6lcgHyPYUDCcUBi");
+	}
+
 
 	@Test
 	public void createBooking() {
@@ -84,7 +89,7 @@ public class TestBookingDao extends AbstractDaoTest {
 		dto.setDelegates(delegates);
 
 		// dto.setCurrency(currency);
-		BookingDto booking = bookingsHelper.createBooking("1tny6HBSFgGvyLSo",
+		BookingDto booking = bookingsHelper.createBooking("PrjIf8x4RIDaPZIv ",
 				dto);
 		System.err.println(">> event RefId" + booking.getEventRefId());
 		System.err.println(">> Booking RefId" + booking.getRefId());

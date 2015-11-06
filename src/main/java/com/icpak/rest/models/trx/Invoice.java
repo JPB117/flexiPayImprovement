@@ -1,3 +1,4 @@
+
 package com.icpak.rest.models.trx;
 
 import java.util.Date;
@@ -7,6 +8,7 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import com.icpak.rest.models.base.PO;
 import com.workpoint.icpak.shared.model.InvoiceDto;
@@ -32,7 +34,7 @@ public class Invoice extends PO {
 	@OneToMany(mappedBy = "invoice", cascade = { CascadeType.PERSIST,
 			CascadeType.REMOVE })
 	private Set<InvoiceLine> lines = new LinkedHashSet<InvoiceLine>();
-
+	
 	public Invoice() {
 	}
 

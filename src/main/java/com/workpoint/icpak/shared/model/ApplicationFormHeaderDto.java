@@ -20,6 +20,7 @@ public class ApplicationFormHeaderDto extends SerializableObj {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	private Title title;
 	private String applicationNo;
 	private Date date;
 	private Date created;
@@ -36,6 +37,8 @@ public class ApplicationFormHeaderDto extends SerializableObj {
 	private String address3;
 	private String telephone1;
 	private String telephone2;
+	private String mobileNumber;
+	private Date practicingCertDate;
 	private ApplicationType applicationType;
 	private String receiptNo;
 	private Date receiptDate;
@@ -808,6 +811,30 @@ public class ApplicationFormHeaderDto extends SerializableObj {
 	public void setApplicationStatus(ApplicationStatus applicationStatus) {
 		this.applicationStatus = applicationStatus;
 
+	}
+
+	public String getMobileNumber() {
+		return mobileNumber;
+	}
+
+	public void setMobileNumber(String mobileNumber) {
+		this.mobileNumber = mobileNumber;
+	}
+
+	public Date getPracticingCertDate() {
+		return practicingCertDate;
+	}
+
+	public void setPracticingCertDate(Date practicingCertDate) {
+		this.practicingCertDate = practicingCertDate;
+	}
+
+	public Title getTitle() {
+		return title;
+	}
+
+	public void setTitle(Title title) {
+		this.title = title;
 	}
 
 }

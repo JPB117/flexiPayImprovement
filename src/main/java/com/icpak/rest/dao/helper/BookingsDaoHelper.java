@@ -14,8 +14,10 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
+
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
+import com.gwtplatform.dispatch.rest.rebind.utils.Logger;
 import com.icpak.rest.dao.BookingsDao;
 import com.icpak.rest.dao.EventsDao;
 import com.icpak.rest.dao.InvoiceDaoHelper;
@@ -180,11 +182,11 @@ public class BookingsDaoHelper {
 
 	public void sendProInvoice(String bookingRefId) {
 		assert bookingRefId != null;
-		sendDelegateSMS(bookingRefId);
 
 		Booking bookingInDb = dao.findByRefId(bookingRefId, Booking.class);
 		InvoiceDto invoice = generateInvoice(bookingInDb);
 		Event event = bookingInDb.getEvent();
+
 		String subject = bookingInDb.getEvent().getName()
 				+ "' Event Registration";
 		SimpleDateFormat formatter = new SimpleDateFormat("MMM d Y");
@@ -270,18 +272,11 @@ public class BookingsDaoHelper {
 					Arrays.asList(bookingInDb.getContact().getContactName()),
 					attachment);
 
+			sendDelegateSMS(bookingRefId);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		String trxRef = trxHelper.charge(bookingInDb.getMemberId(),
-				bookingInDb.getBookingDate(), subject, event.getStartDate(),
-				invoice.getInvoiceAmount(), "Booking #" + bookingInDb.getId(),
-				invoice.getRefId());
-		invoice.setTrxRefId(trxRef);
-
-		invoiceHelper.update(invoice.getRefId(), invoice);
-
 	}
 
 	public InvoiceDto generateInvoice(Booking booking) {
@@ -439,6 +434,12 @@ public class BookingsDaoHelper {
 		invoice.setPhoneNumber(booking.getContact().getTelephoneNumbers());
 		invoice.setBookingRefId(booking.getRefId());
 
+		System.err.println("Invoice RefID>>" + invoice.getRefId());
+		trxHelper.charge(booking.getMemberId(), booking.getBookingDate(),
+				event.getName() + " Event Booking", event.getStartDate(),
+				invoice.getInvoiceAmount(), "Booking #" + booking.getId(),
+				invoice.getRefId());
+
 		invoice = invoiceHelper.save(invoice);
 
 		return invoice;
@@ -508,8 +509,13 @@ public class BookingsDaoHelper {
 						+ member.getUser().getPhoneNumber());
 
 				if (member.getUser().getPhoneNumber() != null) {
-					smsIntergration.send(member.getUser().getPhoneNumber(),
-							smsMemssage);
+					try {
+						smsIntergration.send(member.getUser().getPhoneNumber(),
+								smsMemssage);
+					} catch (RuntimeException e) {
+						System.err.println("Invalid Phone Number...!");
+						e.printStackTrace();
+					}
 				}
 			} else {
 				System.err.println("Non-member cannot be send sms..");

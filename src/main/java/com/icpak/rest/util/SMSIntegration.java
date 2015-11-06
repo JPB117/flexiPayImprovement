@@ -72,7 +72,7 @@ public class SMSIntegration {
 			if (message == null || message.isEmpty()) {
 				return "Failed: SMS Message cannot be empty";
 			}
-			
+
 			JSONArray resp = gateway.sendMessage(to, message, from, 1);
 
 			JSONObject object = resp.getJSONObject(0);
@@ -83,7 +83,8 @@ public class SMSIntegration {
 			String cost = object.getString("cost");
 
 			if (!status.equals("Success")) {
-				throw new RuntimeException("SMS Failed: " + status);
+				System.err.println("SMS Failed: " + status);
+				// throw new RuntimeException("SMS Failed: " + status);
 			}
 			System.err.println(resp);
 		} catch (Exception e) {

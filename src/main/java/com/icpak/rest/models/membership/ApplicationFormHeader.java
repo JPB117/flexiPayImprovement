@@ -13,6 +13,7 @@ import com.icpak.rest.models.base.PO;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 import com.workpoint.icpak.shared.model.ApplicationType;
 import com.workpoint.icpak.shared.model.Gender;
+import com.workpoint.icpak.shared.model.Title;
 import com.workpoint.icpak.shared.model.auth.ApplicationStatus;
 
 @Entity
@@ -26,6 +27,9 @@ public class ApplicationFormHeader extends PO {
 
 	@Column(name = "`timestamp`", columnDefinition = "timestamp  default current_timestamp")
 	private Timestamp timestamp;
+
+	@Enumerated(EnumType.STRING)
+	private Title title;
 
 	@Column(name = "`Application No_`")
 	private String applicationNo;
@@ -263,6 +267,42 @@ public class ApplicationFormHeader extends PO {
 
 	@Column(name = "`Application Method`", length = 10)
 	private int applicationMethod;
+
+	private Date PracticingCertDate;
+	private String AlternatePhoneNo;
+	private String MobileNo;
+
+	public Title getTitle() {
+		return title;
+	}
+
+	public void setTitle(Title title) {
+		this.title = title;
+	}
+
+	public Date getPracticingCertDate() {
+		return PracticingCertDate;
+	}
+
+	public void setPracticingCertDate(Date practicingCertDate) {
+		PracticingCertDate = practicingCertDate;
+	}
+
+	public String getAlternatePhoneNo() {
+		return AlternatePhoneNo;
+	}
+
+	public void setAlternatePhoneNo(String alternatePhoneNo) {
+		AlternatePhoneNo = alternatePhoneNo;
+	}
+
+	public String getMobileNo() {
+		return MobileNo;
+	}
+
+	public void setMobileNo(String mobileNo) {
+		MobileNo = mobileNo;
+	}
 
 	@Enumerated(EnumType.STRING)
 	private ApplicationStatus applicationStatus = ApplicationStatus.PENDING;
@@ -936,6 +976,8 @@ public class ApplicationFormHeader extends PO {
 		setGender(dto.getGender());
 		setResidence(dto.getResidence());
 		setIdNumber(dto.getIdNumber());
+		setMobileNo(dto.getMobileNumber());
+		setPracticingCertDate(dto.getPracticingCertDate());
 	}
 
 	public void copyInto(ApplicationFormHeaderDto dto) {

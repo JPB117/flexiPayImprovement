@@ -47,8 +47,8 @@ public class TransactionDaoHelper {
 
 	public String charge(String userId, Date chargeDate, String description,
 			Date dueDate, Double amount, String documentNo, String invoiceRef) {
+		
 		Transaction trx = new Transaction();
-		trx.setRefId(invoiceRef);
 		trx.setInvoiceRef(invoiceRef);
 		trx.setAmount(amount);
 		trx.setDate(chargeDate);
