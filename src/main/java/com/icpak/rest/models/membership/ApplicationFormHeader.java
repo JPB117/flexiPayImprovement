@@ -159,7 +159,7 @@ public class ApplicationFormHeader extends PO {
 	@Column(name = "`Settlement Type`", length = 20)
 	private String settlementType;
 
-	@Column(name = "`ID Number`", length = 8)
+	@Column(name = "`ID Number`", length = 20)
 	private String idNumber;
 
 	@Column(name = "`Date Sent for Approval`", columnDefinition = "datetime")

@@ -1,9 +1,11 @@
 package com.workpoint.icpak.tests.dao;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.inject.Inject;
 
+import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -19,6 +21,7 @@ import com.workpoint.icpak.shared.model.UserDto;
 import com.workpoint.icpak.tests.base.AbstractDaoTest;
 
 public class TestUserDao extends AbstractDaoTest {
+	Logger logger = Logger.getLogger(TestUserDao.class);
 
 	@Inject
 	UsersDaoHelper helper;
@@ -64,9 +67,21 @@ public class TestUserDao extends AbstractDaoTest {
 		helper.resetAccount("30ZDpATQxFXx9WR7");
 	}
 
-	@Test
+	@Ignore
 	public void testLMS() throws IOException {
 		helper.postUserToLMS("bf4j7WfaMDBph6nP","pass");
+	}
+	
+	@Test
+	public void updatePwd(){
+		List<User> users = usersDao.getAllUsers();
+		logger.error("== Users found = "+ users.size());
+		int count = 1 ;
+		for(User u : users){
+			logger.error("== Updating password user = "+ count);
+			helper.updatePassword(u.getRefId(), "pass");
+			count++;
+		}
 	}
 
 }

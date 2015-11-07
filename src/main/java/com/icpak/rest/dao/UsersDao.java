@@ -72,6 +72,12 @@ public class UsersDao extends BaseDao {
 						+ " order by username").setParameter("role", role),
 				offSet, limit);
 	}
+	
+	public List<User> getAllUsers() {
+			String query = "from User u order by username";
+
+			return getResultList(getEntityManager().createQuery(query));
+	}
 
 	public void updateUser(User user) {
 		createUser(user);
