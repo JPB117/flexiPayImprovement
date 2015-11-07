@@ -52,16 +52,13 @@ public class CPD extends PO {
 	private String organizer;
 	private CPDCategory category;
 	private Double cpdHours;
-
 	@Enumerated(EnumType.STRING)
 	private CPDStatus status = CPDStatus.Unconfirmed;
-
 	@Column(length = 20)
 	private String memberRefId;
 	@Column(length = 20)
 	private String memberRegistrationNo;
 	private String eventId;
-
 	@OneToMany(mappedBy = "cpd", fetch = FetchType.LAZY, cascade = { CascadeType.REMOVE })
 	private Set<Attachment> attachments = new HashSet<>();
 
