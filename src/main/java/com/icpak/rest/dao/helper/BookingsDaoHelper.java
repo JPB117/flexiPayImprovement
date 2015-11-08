@@ -173,6 +173,7 @@ public class BookingsDaoHelper {
 		return dto;
 	}
 
+
 	private void deleteExistingInvoices(String bookingId) {
 		if (bookingId == null)
 			return;
@@ -434,7 +435,6 @@ public class BookingsDaoHelper {
 		invoice.setPhoneNumber(booking.getContact().getTelephoneNumbers());
 		invoice.setBookingRefId(booking.getRefId());
 
-		System.err.println("Invoice RefID>>" + invoice.getRefId());
 		trxHelper.charge(booking.getMemberId(), booking.getBookingDate(),
 				event.getName() + " Event Booking", event.getStartDate(),
 				invoice.getInvoiceAmount(), "Booking #" + booking.getId(),

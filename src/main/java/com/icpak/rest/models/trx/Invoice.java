@@ -1,4 +1,3 @@
-
 package com.icpak.rest.models.trx;
 
 import java.util.Date;
@@ -6,6 +5,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -29,12 +29,13 @@ public class Invoice extends PO {
 	private Double amount;
 	private String bookingRefId;
 	private String memberId; // Invoice owner
+	@Column(length = 5000)
 	private String description;
 
 	@OneToMany(mappedBy = "invoice", cascade = { CascadeType.PERSIST,
 			CascadeType.REMOVE })
 	private Set<InvoiceLine> lines = new LinkedHashSet<InvoiceLine>();
-	
+
 	public Invoice() {
 	}
 
@@ -145,7 +146,7 @@ public class Invoice extends PO {
 		setCompanyAddress(dto.getCompanyAddress());
 		setCompanyName(dto.getCompanyName());
 		setContactName(dto.getContactName());
-		setDate(dto.getDate()==null? null : new Date(dto.getDate()));
+		setDate(dto.getDate() == null ? null : new Date(dto.getDate()));
 		setPhoneNumber(dto.getPhoneNumber());
 		setDocumentNo(dto.getDocumentNo());
 		setBookingRefId(dto.getBookingRefId());

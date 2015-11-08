@@ -65,22 +65,15 @@ public class Event extends PO {
 	private Double memberPrice;
 	@Column(nullable = false)
 	private Double nonMemberPrice;
-	/*
-	 * Incase this throws an Exception; ALTER TABLE tbl_name MODIFY
-	 * associatePrice varchar(6) NULL DEFAULT NULL;
-	 */
 	private Double associatePrice;
-
 	private Integer lmsCourseId;
-
 	private String code;
-
 	private Date registrationDate;
+	private Integer oldSystemId;
 
 	@XmlTransient
 	@OneToMany(mappedBy = "event")
 	Set<Booking> bookings = new HashSet<>();
-
 	@OneToMany(mappedBy = "event", cascade = { CascadeType.PERSIST,
 			CascadeType.REMOVE })
 	Set<Accommodation> accommodation = new HashSet<>();
@@ -364,6 +357,14 @@ public class Event extends PO {
 
 	public void setLmsCourseId(Integer lmsCourseId) {
 		this.lmsCourseId = lmsCourseId;
+	}
+
+	public Integer getOldSystemId() {
+		return oldSystemId;
+	}
+
+	public void setOldSystemId(Integer oldSystemId) {
+		this.oldSystemId = oldSystemId;
 	}
 
 }
