@@ -20,7 +20,6 @@ import com.workpoint.icpak.shared.model.events.BookingDto;
 import com.workpoint.icpak.shared.model.events.ContactDto;
 import com.workpoint.icpak.shared.model.events.DelegateDto;
 import com.workpoint.icpak.shared.model.events.MemberBookingDto;
-import com.icpak.rest.models.event.Event;
 
 public class BookingsDao extends BaseDao {
 	Logger logger = Logger.getLogger(BookingsDao.class);
@@ -188,10 +187,9 @@ public class BookingsDao extends BaseDao {
 
 		// System.err.println("Delegates Total>>>" + delegates.size());
 		booking.setDelegates(delegates);
+		daoHelper.createBooking(eventRefId, booking);
 
 		return delegates.size();
-		// daoHelper.createBooking(eventRefId, booking);
-		// return booking;
 	}
 
 	public List<Booking> getAllBookings(String eventId, Integer offSet,
@@ -353,17 +351,17 @@ public class BookingsDao extends BaseDao {
 			number = getSingleResultOrNull(query);
 
 		} else {
-			
+
 			String sql = "select count(*) "
 					+ "from delegate d inner join booking b on (d.booking_id=b.id) "
 					+ "inner join event e on (b.event_id=e.id) "
 					+ "left join accommodation a on (a.eventId=e.id) "
 					+ "where e.refId=:eventRefId";
 
-			number = getSingleResultOrNull(getEntityManager().createNativeQuery(sql)
-					.setParameter("eventRefId", eventId));
+			number = getSingleResultOrNull(getEntityManager()
+					.createNativeQuery(sql).setParameter("eventRefId", eventId));
 		}
-		
+
 		logger.error("=== Delegate Count ==== " + number.intValue());
 
 		return number.intValue();
@@ -394,7 +392,7 @@ public class BookingsDao extends BaseDao {
 
 		Query query = getEntityManager().createNativeQuery(sql).setParameter(
 				"eventRefId", passedRefId);
-		
+
 		if (searchTerm != null && !searchTerm.isEmpty()) {
 			query.setParameter("searchTerm", "%" + searchTerm + "%");
 		}
