@@ -20,6 +20,7 @@ import com.workpoint.icpak.shared.model.events.BookingDto;
 import com.workpoint.icpak.shared.model.events.ContactDto;
 import com.workpoint.icpak.shared.model.events.DelegateDto;
 import com.workpoint.icpak.shared.model.events.MemberBookingDto;
+import com.icpak.rest.models.event.Event;
 
 public class BookingsDao extends BaseDao {
 	Logger logger = Logger.getLogger(BookingsDao.class);
@@ -336,12 +337,12 @@ public class BookingsDao extends BaseDao {
 					+ "where e.refId=:eventRefId";
 
 			sql = sql.concat(" and "
-					+ "d.memberRegistrationNo like :searchTerm or "
+					+ "(d.memberRegistrationNo like :searchTerm or "
 					+ "a.hotel like :searchTerm or "
 					+ "d.title like :searchTerm or "
 					+ "d.email like :searchTerm or "
 					+ "d.otherNames like :searchTerm or "
-					+ "d.ern like :searchTerm");
+					+ "d.ern like :searchTerm)");
 
 			Query query = getEntityManager().createNativeQuery(sql)
 					.setParameter("eventRefId", eventId);
@@ -352,16 +353,25 @@ public class BookingsDao extends BaseDao {
 			number = getSingleResultOrNull(query);
 
 		} else {
+			
+			String sql = "select count(*) "
+					+ "from delegate d inner join booking b on (d.booking_id=b.id) "
+					+ "inner join event e on (b.event_id=e.id) "
+					+ "left join accommodation a on (a.eventId=e.id) "
+					+ "where e.refId=:eventRefId";
 
-			number = getSingleResultOrNull(getEntityManager().createQuery(
-					"select count(*) from  Delegate where isactive=1"));
+			number = getSingleResultOrNull(getEntityManager().createNativeQuery(sql)
+					.setParameter("eventRefId", eventId));
 		}
+		
+		logger.error("=== Delegate Count ==== " + number.intValue());
 
 		return number.intValue();
 	}
 
 	public List<DelegateDto> getAllDelegates(String passedRefId,
 			Integer offset, Integer limit, String searchTerm) {
+		logger.error("==>>>>>>>>>>>>>>><<<<<<<<<<<>> eventRefId " + passedRefId);
 
 		List<DelegateDto> delegateList = new ArrayList<>();
 
@@ -375,17 +385,16 @@ public class BookingsDao extends BaseDao {
 
 		if (searchTerm != null && !searchTerm.isEmpty()) {
 			sql = sql.concat(" and "
-					+ "d.memberRegistrationNo like :searchTerm or "
+					+ "(d.memberRegistrationNo like :searchTerm or "
 					+ "a.hotel like :searchTerm or "
-					+ "d.title like :searchTerm or "
 					+ "d.email like :searchTerm or "
 					+ "d.otherNames like :searchTerm or "
-					+ "d.ern like :searchTerm");
+					+ "d.ern like :searchTerm)");
 		}
 
 		Query query = getEntityManager().createNativeQuery(sql).setParameter(
 				"eventRefId", passedRefId);
-
+		
 		if (searchTerm != null && !searchTerm.isEmpty()) {
 			query.setParameter("searchTerm", "%" + searchTerm + "%");
 		}

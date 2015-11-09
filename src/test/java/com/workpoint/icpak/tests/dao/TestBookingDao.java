@@ -101,7 +101,7 @@ public class TestBookingDao extends AbstractDaoTest {
 		// bookingsHelper.generateInvoice(bookingModel);
 	}
 
-	@Test
+	@Ignore
 	public void TestImportBookings() {
 		bookingDao.importAllEvents();
 	}
@@ -115,15 +115,17 @@ public class TestBookingDao extends AbstractDaoTest {
 	@Ignore
 	public void testSearch() {
 		List<DelegateDto> delegates = bookingsHelper.getAllDelegates("",
-				"PrjIf8x4RIDaPZIv", null, 1000, "Kim");
+				"Jx4Ca6HpOutf2ic7", null, 1000, "ki");
+		System.err.println(bookingsHelper.getDelegatesCount("Jx4Ca6HpOutf2ic7",
+				"ki"));
 		System.err.println(delegates.size());
 
 	}
 
-	@Ignore
+	@Test
 	public void testSearchCount() {
-		System.err.println(bookingsHelper.getDelegatesCount("PrjIf8x4RIDaPZIv",
-				"Tom"));
+		System.err.println(bookingsHelper.getDelegatesCount("Jx4Ca6HpOutf2ic7",
+				"ki"));
 	}
 
 	@Ignore

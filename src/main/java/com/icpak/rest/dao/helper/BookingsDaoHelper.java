@@ -14,10 +14,10 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.log4j.Logger;
 
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
-import com.gwtplatform.dispatch.rest.rebind.utils.Logger;
 import com.icpak.rest.dao.BookingsDao;
 import com.icpak.rest.dao.EventsDao;
 import com.icpak.rest.dao.InvoiceDaoHelper;
@@ -50,6 +50,8 @@ import com.workpoint.icpak.shared.model.events.MemberBookingDto;
 @Transactional
 public class BookingsDaoHelper {
 
+	Logger logger  = Logger.getLogger(BookingsDaoHelper.class);
+	
 	@Inject
 	BookingsDao dao;
 	@Inject
@@ -627,6 +629,7 @@ public class BookingsDaoHelper {
 	}
 
 	public Integer getDelegatesCount(String eventId, String searchTerm) {
+		logger.error("== Counting delegates ===" );
 		return dao.getDelegateCount(eventId, searchTerm);
 	}
 }
