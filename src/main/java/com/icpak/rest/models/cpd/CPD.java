@@ -53,6 +53,7 @@ public class CPD extends PO {
 	private CPDCategory category;
 	private Double cpdHours;
 
+	@Column(nullable=false, length=1)
 	@Enumerated(EnumType.STRING)
 	private CPDStatus status = CPDStatus.Unconfirmed;
 

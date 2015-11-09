@@ -61,7 +61,7 @@ public class TestBookingDao extends AbstractDaoTest {
 	}
 
 
-	@Test
+	@Ignore
 	public void createBooking() {
 		BookingDto dto = new BookingDto();
 
@@ -102,7 +102,7 @@ public class TestBookingDao extends AbstractDaoTest {
 		bookingDao.deleteAllBookingInvoice(bookingRefid);
 	}
 
-	@Ignore
+	@Test
 	public void testSearch() {
 		List<DelegateDto> delegates = bookingsHelper.getAllDelegates("",
 				"PrjIf8x4RIDaPZIv", null, 1000, "Kim");

@@ -19,6 +19,7 @@ import com.workpoint.icpak.shared.model.events.AttendanceStatus;
 import com.workpoint.icpak.shared.model.events.DelegateDto;
 import com.workpoint.icpak.shared.model.events.DelegateType;
 import com.workpoint.icpak.shared.model.events.MemberBookingDto;
+import com.icpak.rest.models.event.Event;
 
 public class BookingsDao extends BaseDao {
 	Logger logger = Logger.getLogger(BookingsDao.class);
@@ -203,12 +204,12 @@ public class BookingsDao extends BaseDao {
 					+ "where e.refId=:eventRefId";
 
 			sql = sql.concat(" and "
-					+ "d.memberRegistrationNo like :searchTerm or "
+					+ "(d.memberRegistrationNo like :searchTerm or "
 					+ "a.hotel like :searchTerm or "
 					+ "d.title like :searchTerm or "
 					+ "d.email like :searchTerm or "
 					+ "d.otherNames like :searchTerm or "
-					+ "d.ern like :searchTerm");
+					+ "d.ern like :searchTerm)");
 
 			Query query = getEntityManager().createNativeQuery(sql)
 					.setParameter("eventRefId", eventId);
@@ -229,6 +230,7 @@ public class BookingsDao extends BaseDao {
 
 	public List<DelegateDto> getAllDelegates(String passedRefId,
 			Integer offset, Integer limit, String searchTerm) {
+		logger.error("==>>>>>>>>>>>>>>><<<<<<<<<<<>> eventRefId " + passedRefId);
 
 		List<DelegateDto> delegateList = new ArrayList<>();
 
@@ -242,16 +244,17 @@ public class BookingsDao extends BaseDao {
 
 		if (searchTerm != null && !searchTerm.isEmpty()) {
 			sql = sql.concat(" and "
-					+ "d.memberRegistrationNo like :searchTerm or "
+					+ "(d.memberRegistrationNo like :searchTerm or "
 					+ "a.hotel like :searchTerm or "
-					+ "d.title like :searchTerm or "
 					+ "d.email like :searchTerm or "
 					+ "d.otherNames like :searchTerm or "
-					+ "d.ern like :searchTerm");
+					+ "d.ern like :searchTerm)");
 		}
 
 		Query query = getEntityManager().createNativeQuery(sql).setParameter(
 				"eventRefId", passedRefId);
+		
+		logger.error("==>>>>>>>>>>>>>>><<<<<<<<<<<>> QUERY " + query.getParameters());
 
 		if (searchTerm != null && !searchTerm.isEmpty()) {
 			query.setParameter("searchTerm", "%" + searchTerm + "%");
