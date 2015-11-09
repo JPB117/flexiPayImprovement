@@ -345,10 +345,18 @@ public class BookingsDao extends BaseDao {
 			number = getSingleResultOrNull(query);
 
 		} else {
+			
+			String sql = "select count(*) "
+					+ "from delegate d inner join booking b on (d.booking_id=b.id) "
+					+ "inner join event e on (b.event_id=e.id) "
+					+ "left join accommodation a on (a.eventId=e.id) "
+					+ "where e.refId=:eventRefId";
 
-			number = getSingleResultOrNull(getEntityManager().createQuery(
-					"select count(*) from  Delegate where isactive=1"));
+			number = getSingleResultOrNull(getEntityManager().createNativeQuery(sql)
+					.setParameter("eventRefId", eventId));
 		}
+		
+		logger.error("=== Delegate Count ==== " + number.intValue());
 
 		return number.intValue();
 	}
@@ -379,8 +387,6 @@ public class BookingsDao extends BaseDao {
 		Query query = getEntityManager().createNativeQuery(sql).setParameter(
 				"eventRefId", passedRefId);
 		
-		logger.error("==>>>>>>>>>>>>>>><<<<<<<<<<<>> QUERY " + query.getParameters());
-
 		if (searchTerm != null && !searchTerm.isEmpty()) {
 			query.setParameter("searchTerm", "%" + searchTerm + "%");
 		}
