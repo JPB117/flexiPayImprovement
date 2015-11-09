@@ -69,19 +69,24 @@ public class TestUserDao extends AbstractDaoTest {
 
 	@Ignore
 	public void testLMS() throws IOException {
-		helper.postUserToLMS("bf4j7WfaMDBph6nP","pass");
+		helper.postUserToLMS("bf4j7WfaMDBph6nP", "pass");
 	}
-	
-	@Test
-	public void updatePwd(){
+
+	@Ignore
+	public void updatePwd() {
 		List<User> users = usersDao.getAllUsers();
-		logger.error("== Users found = "+ users.size());
-		int count = 1 ;
-		for(User u : users){
-			logger.error("== Updating password user = "+ count);
+		logger.error("== Users found = " + users.size());
+		int count = 1;
+		for (User u : users) {
+			logger.error("== Updating password user = " + count);
 			helper.updatePassword(u.getRefId(), "pass");
 			count++;
 		}
+	}
+
+	@Test
+	public void testLMSIntergration() throws IOException {
+		helper.postUserToLMS("iypUNLFxbsEFMJLB", "pass");
 	}
 
 }

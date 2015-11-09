@@ -131,6 +131,11 @@ public class LMSIntegrationUtil {
 			response.setMessage(clientResponse.getEntity(String.class));
 			response.setStatus("Failed");
 			logger.error(response);
+		} else if (clientResponse.getClientResponseStatus() == ClientResponse.Status.OK
+				&& (clientResponse.getEntity(String.class)).isEmpty()) {
+			response.setMessage("No Response from LMS...");
+			response.setStatus("Failed");
+			logger.error(response);
 		} else {
 			response.setMessage(clientResponse.getEntity(String.class));
 			response.setStatus("Success");

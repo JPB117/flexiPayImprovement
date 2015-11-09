@@ -298,7 +298,6 @@ public class UsersResourceImpl implements UsersResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public String postUserLMS(@PathParam("userId") String userId,
 			@PathParam("password") String password) {
-		// return "Success";
 		try {
 			return helper.postUserToLMS(userId, password);
 		} catch (IOException e) {

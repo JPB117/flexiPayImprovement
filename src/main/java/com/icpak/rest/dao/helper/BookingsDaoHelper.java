@@ -173,7 +173,6 @@ public class BookingsDaoHelper {
 		return dto;
 	}
 
-
 	private void deleteExistingInvoices(String bookingId) {
 		if (bookingId == null)
 			return;
@@ -410,9 +409,6 @@ public class BookingsDaoHelper {
 							* delegate.getAccommodation().getFee());
 					amount += delegate.getAccommodation().getFee();// line.getTotalAmount();
 				}
-
-				// delegate.getAccommodation().getRefId();
-
 			}
 		}
 
@@ -435,13 +431,15 @@ public class BookingsDaoHelper {
 		invoice.setPhoneNumber(booking.getContact().getTelephoneNumbers());
 		invoice.setBookingRefId(booking.getRefId());
 
+		invoice = invoiceHelper.save(invoice);
+
+		System.err.println("Invoice RefId>>>" + invoice.getRefId());
+
+		// Create a Charge Record
 		trxHelper.charge(booking.getMemberId(), booking.getBookingDate(),
 				event.getName() + " Event Booking", event.getStartDate(),
 				invoice.getInvoiceAmount(), "Booking #" + booking.getId(),
 				invoice.getRefId());
-
-		invoice = invoiceHelper.save(invoice);
-
 		return invoice;
 	}
 

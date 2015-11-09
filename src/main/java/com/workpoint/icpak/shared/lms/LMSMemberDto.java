@@ -18,6 +18,7 @@ public class LMSMemberDto {
 	private String mobileNo;
 	private String userName;
 	private String password;
+	private String emailID;
 	private String DOB;
 	private int gender; // Male : 22, Female : 23
 	private String timeZone = "";
@@ -114,5 +115,13 @@ public class LMSMemberDto {
 
 	public void setRefID(String refId) {
 		this.refID = refId;
+	}
+
+	public String getEmailID() {
+		return emailID;
+	}
+
+	public void setEmailID(String emailID) {
+		this.emailID = emailID;
 	}
 }

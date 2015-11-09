@@ -13,6 +13,7 @@ import com.icpak.rest.dao.BookingsDao;
 import com.icpak.rest.dao.EventsDao;
 import com.icpak.rest.dao.helper.BookingsDaoHelper;
 import com.icpak.rest.dao.helper.CPDDaoHelper;
+import com.icpak.rest.models.event.Booking;
 import com.icpak.rest.models.event.Delegate;
 import com.workpoint.icpak.shared.model.PaymentStatus;
 import com.workpoint.icpak.shared.model.events.AttendanceStatus;
@@ -90,9 +91,14 @@ public class TestBookingDao extends AbstractDaoTest {
 		// dto.setCurrency(currency);
 		BookingDto booking = bookingsHelper.createBooking("PrjIf8x4RIDaPZIv ",
 				dto);
-		System.err.println(">> event RefId" + booking.getEventRefId());
-		System.err.println(">> Booking RefId" + booking.getRefId());
+
+		System.err.println(booking.getRefId());
+
 		bookingsHelper.sendProInvoice(booking.getRefId());
+		// Booking bookingModel = new Booking();
+		// bookingModel.copyFrom(booking);
+
+		// bookingsHelper.generateInvoice(bookingModel);
 	}
 
 	@Test
