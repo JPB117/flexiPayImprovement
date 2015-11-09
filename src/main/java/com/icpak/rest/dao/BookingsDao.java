@@ -8,21 +8,25 @@ import javax.persistence.Query;
 
 import org.apache.log4j.Logger;
 
+import com.google.inject.Inject;
+import com.icpak.rest.dao.helper.BookingsDaoHelper;
 import com.icpak.rest.exceptions.ServiceException;
 import com.icpak.rest.models.ErrorCodes;
 import com.icpak.rest.models.event.Booking;
-import com.icpak.rest.models.event.Delegate;
 import com.workpoint.icpak.shared.model.EventStatus;
 import com.workpoint.icpak.shared.model.PaymentStatus;
-import com.workpoint.icpak.shared.model.events.AccommodationDto;
 import com.workpoint.icpak.shared.model.events.AttendanceStatus;
+import com.workpoint.icpak.shared.model.events.BookingDto;
+import com.workpoint.icpak.shared.model.events.ContactDto;
 import com.workpoint.icpak.shared.model.events.DelegateDto;
-import com.workpoint.icpak.shared.model.events.DelegateType;
 import com.workpoint.icpak.shared.model.events.MemberBookingDto;
 import com.icpak.rest.models.event.Event;
 
 public class BookingsDao extends BaseDao {
 	Logger logger = Logger.getLogger(BookingsDao.class);
+
+	@Inject
+	BookingsDaoHelper daoHelper;
 
 	public Booking getByBookingId(String refId) {
 		Booking booking = getSingleResultOrNull(getEntityManager().createQuery(
@@ -59,6 +63,127 @@ public class BookingsDao extends BaseDao {
 
 		return getResultList(getEntityManager().createQuery(query)
 				.setParameter("searchTerm", searchTerm), offSet, limit);
+	}
+
+	public void importAllEvents() {
+		List<Object[]> rows = getResultList(getEntityManager()
+				.createNativeQuery(
+						"select oldSystemId,refId from icpakdb.event where oldSystemId IS NOT NULL"));
+		for (Object[] row : rows) {
+			int i = 0;
+			Object value = null;
+			BookingDto booking = new BookingDto();
+			Integer seminarId = (value = row[i++]) == null ? null
+					: (Integer) value;
+			String eventRefId = (value = row[i++]) == null ? null : value
+					.toString();
+			importDistinctSponsor(seminarId, booking, eventRefId);
+
+			System.err.println("Importing Seminar Id>>" + seminarId);
+		}
+
+	}
+
+	public void importDistinctSponsor(Integer seminarId, BookingDto booking,
+			String eventRefId) {
+		List<Object[]> rows = getResultList(getEntityManager()
+				.createNativeQuery(
+						"SELECT b.s_name,b.booking_date,b.payment_mode,b.s_country,"
+								+ "b.s_address,b.s_town,b.s_telephone,b.contact,b.s_email,b.code "
+								+ "FROM icpakco_main.bookings b WHERE b.seminar_id = :seminarId")
+				.setParameter("seminarId", seminarId));
+
+		for (Object[] row : rows) {
+			int i = 0;
+			Object value = null;
+			String sponsorName = (value = row[i++]) == null ? null : value
+					.toString();
+			Date bookingDate = (value = row[i++]) == null ? null : (Date) value;
+			booking.setBookingDate(bookingDate.getTime());
+			String paymentMode = (value = row[i++]) == null ? null : value
+					.toString();
+			if (paymentMode != null) {
+				booking.setPaymentMode(paymentMode);
+				booking.setPaymentStatus(PaymentStatus.PAID);
+			}
+			String sponsorCountry = (value = row[i++]) == null ? null : value
+					.toString();
+			String sponsorAddress = (value = row[i++]) == null ? null : value
+					.toString();
+			String sponsorTown = (value = row[i++]) == null ? null : value
+					.toString();
+			String sponsorTelephone = (value = row[i++]) == null ? null : value
+					.toString();
+			String sponsorContact = (value = row[i++]) == null ? null : value
+					.toString();
+			String sponsorEmail = (value = row[i++]) == null ? null : value
+					.toString();
+			String postalCode = (value = row[i++]) == null ? null : value
+					.toString();
+
+			ContactDto contact = new ContactDto();
+			contact.setAddress(sponsorAddress);
+			contact.setCity(sponsorTown);
+			contact.setCompany(sponsorName);
+			contact.setContactName(sponsorContact);
+			contact.setCountry(sponsorCountry);
+			contact.setEmail(sponsorEmail);
+			contact.setPostCode(postalCode);
+			contact.setTelephoneNumbers(sponsorTelephone);
+			booking.setContact(contact);
+
+			System.err.println("Company Name>>" + contact.getCompany());
+			importDelegates(sponsorName, booking, eventRefId);
+		}
+	}
+
+	public BookingDto importDelegates(String sponsorName, BookingDto booking,
+			String eventRefId) {
+		List<Object[]> rows = getResultList(getEntityManager()
+				.createNativeQuery(
+						"SELECT b.title,b.surname,b.othernames,b.is_member,b.reg_no,"
+								+ "b.email,b.accomodation,b.accomodation_days"
+								+ " FROM icpakco_main.bookings b WHERE b.s_name = :sponsorName")
+				.setParameter("sponsorName", sponsorName));
+
+		List<DelegateDto> delegates = new ArrayList<>();
+
+		for (Object[] row : rows) {
+			DelegateDto delegate = new DelegateDto();
+			int i = 0;
+			Object value = null;
+			String delegateTitle = (value = row[i++]) == null ? null : value
+					.toString();
+			delegate.setTitle(delegateTitle);
+			String delegateSurName = (value = row[i++]) == null ? null : value
+					.toString();
+			delegate.setSurname(delegateSurName);
+			String delegateOtherName = (value = row[i++]) == null ? null
+					: value.toString();
+			delegate.setOtherNames(delegateOtherName);
+			String isMember = (value = row[i++]) == null ? null
+					: (String) value;
+			String delegateMemberNo = (value = row[i++]) == null ? null : value
+					.toString();
+			if (isMember != null && isMember.equals("1")) {
+				delegate.setMemberNo(delegateMemberNo);
+			}
+			String delegateEmail = (value = row[i++]) == null ? null : value
+					.toString();
+			delegate.setEmail(delegateEmail);
+			String delegateAccomodation = (value = row[i++]) == null ? null
+					: value.toString();
+			String delegateAccomodationDays = (value = row[i++]) == null ? null
+					: value.toString();
+			delegates.add(delegate);
+		}
+
+		System.err.println("Delegates Total>>>" + delegates.size());
+		booking.setDelegates(delegates);
+
+		daoHelper.createBooking(eventRefId, booking);
+
+		return booking;
 	}
 
 	public List<Booking> getAllBookings(String eventId, Integer offSet,

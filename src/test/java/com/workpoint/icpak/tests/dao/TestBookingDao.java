@@ -55,16 +55,19 @@ public class TestBookingDao extends AbstractDaoTest {
 		}
 
 	}
+
 	@Ignore
 	public void testGenerateEmail() {
 		bookingsHelper.sendProInvoice("C6lcgHyPYUDCcUBi");
 	}
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 81e8cf4d26b6cdefbbfa2df65aff92e12d02232b
 	@Ignore
 	public void createBooking() {
 		BookingDto dto = new BookingDto();
-
 		dto.setStatus("");
 		dto.setPaymentStatus(PaymentStatus.NOTPAID);
 		dto.setBookingDate(new Date().getTime());
@@ -94,6 +97,11 @@ public class TestBookingDao extends AbstractDaoTest {
 		System.err.println(">> event RefId" + booking.getEventRefId());
 		System.err.println(">> Booking RefId" + booking.getRefId());
 		bookingsHelper.sendProInvoice(booking.getRefId());
+	}
+
+	@Test
+	public void TestImportBookings() {
+		bookingDao.importAllEvents();
 	}
 
 	@Ignore

@@ -9,7 +9,6 @@ http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistenc
 		<class>com.icpak.rest.models.auth.User</class>
 		<class>com.icpak.rest.models.event.Event</class>
 		<properties>
-
 			<!-- Overriding MYSQL5Dialect to solve this issue https://hibernate.atlassian.net/browse/HHH-8796 -->
 			<!-- property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/ -->
 			<property name="hibernate.dialect" value="com.icpak.rest.hibernate_ext.MYSQL5Dialect" />

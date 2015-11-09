@@ -213,6 +213,7 @@ public class User extends PO {
 		BioData bio = new BioData();
 		bio.setFirstName(dto.getName());
 		bio.setLastName(dto.getSurname());
+		setMemberNo(dto.getMemberNo());
 		setLmsResponse(dto.getLmsResponse());
 		setLmsStatus(dto.getLmsStatus());
 		setUserData(bio);

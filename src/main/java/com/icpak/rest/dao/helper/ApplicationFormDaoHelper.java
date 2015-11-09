@@ -94,7 +94,6 @@ public class ApplicationFormDaoHelper {
 			updateApplication(application.getRefId(), application);
 			return;
 		}
-
 		// Copy into PO
 		ApplicationFormHeader po = new ApplicationFormHeader();
 		po.copyFrom(application);
@@ -120,7 +119,6 @@ public class ApplicationFormDaoHelper {
 		po.setNationality(application.getNationality());
 		po.setMemberNo(application.getMemberNo());
 		po.setPhoneNumber(application.getMobileNo());
-
 		BioData bioData = new BioData();
 		bioData.setFirstName(application.getOtherNames());
 		bioData.setLastName(application.getSurname());

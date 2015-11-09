@@ -38,9 +38,9 @@ public class TestApplicationForm extends AbstractDaoTest {
 
 	@Test
 	public void Import() {
-		List<ApplicationFormHeaderDto> members = helper
-				.importMembers(0, 500000);
+		List<ApplicationFormHeaderDto> members = helper.importMembers(0, 30000);
 		for (ApplicationFormHeaderDto dto : members) {
+			// System.err.println("Member No>>>" + dto.getMemberNo());
 			helper.createApplicationFromImport(dto);
 		}
 	}
