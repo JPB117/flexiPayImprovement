@@ -74,14 +74,15 @@ public class TestUserDao extends AbstractDaoTest {
 	
 	@Test
 	public void updatePwd(){
-		List<User> users = usersDao.getAllUsers();
-		logger.error("== Users found = "+ users.size());
+//		List<User> users = usersDao.getAllUsers();
+//		logger.error("== Users found = "+ users.size());
 		int count = 1 ;
-		for(User u : users){
-			logger.error("== Updating password user = "+ count);
-			helper.updatePassword(u.getRefId(), "pass");
-			count++;
-		}
+		helper.updatePassword("LCJ4fe1eoOdxwq69", "pass");
+//		for(User u : users){
+//			logger.error("== Updating password user = "+ count);
+//			helper.updatePassword("LCJ4fe1eoOdxwq69", "pass");
+//			count++;
+//		}
 	}
 
 }

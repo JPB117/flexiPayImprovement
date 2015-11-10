@@ -1,5 +1,6 @@
 package com.icpak.rest.dao;
 
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -265,5 +266,42 @@ public class CPDDao extends BaseDao {
 		return getResultList(query, offset, limit);
 
 	}
+	
+	public List<CPD> searchCPD(String searchTerm ,Integer offset, Integer limit) {
+		
+		String sql = "select c.startdate,c.enddate, concat(u.firstName,' ',u.lastName),"
+				+ "c.title,c.organizer,c.category,c.cpdhours,c.status "
+				+ "from cpd c "
+				+ "inner join member m on (c.memberRefId=m.refId) "
+				+ "inner join user u on (u.id=m.userId) "
+				+ "where "
+				+ "u.firstName like :searchTerm or "
+				+ "u.lastName like :searchTerm or "
+				+ "concat(u.firstName,' ',u.lastName) like :searchTerm"
+				+ "c.title like :searchTerm or "
+				+ "c.organizer like :searchTerm";
+		
+		Query query = getEntityManager().createNativeQuery(sql).setParameter("searchTerm", searchTerm);
 
+		return getResultList(query, offset, limit);
+
+	}
+	
+public BigInteger cpdSearchCount(String searchTerm ,Integer offset, Integer limit) {
+		
+		String sql = "select count(*) "
+				+ "from cpd c "
+				+ "inner join member m on (c.memberRefId=m.refId) "
+				+ "inner join user u on (u.id=m.userId) "
+				+ "where "
+				+ "u.firstName like :searchTerm or "
+				+ "u.lastName like :searchTerm or "
+				+ "concat(u.firstName,' ',u.lastName) like :searchTerm"
+				+ "c.title like :searchTerm or "
+				+ "c.organizer like :searchTerm";
+		
+		Query query = getEntityManager().createNativeQuery(sql).setParameter("searchTerm", searchTerm);
+
+		return getSingleResultOrNull(query);
+	}
 }
