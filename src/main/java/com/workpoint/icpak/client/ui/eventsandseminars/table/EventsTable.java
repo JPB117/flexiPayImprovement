@@ -43,8 +43,8 @@ public class EventsTable extends Composite {
 		th.add(new TableHeader("Location"));
 		th.add(new TableHeader("CPD Hours"));
 		th.add(new TableHeader("Total Delegates"));
-		th.add(new TableHeader("Paid Amount(Kshs.)"));
-		th.add(new TableHeader("Un-Paid Amount(Kshs.)"));
+		th.add(new TableHeader("Total Paid"));
+		th.add(new TableHeader("Total UnPaid"));
 
 		tblView.setTableHeaders(th);
 	}

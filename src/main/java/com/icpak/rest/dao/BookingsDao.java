@@ -48,8 +48,9 @@ public class BookingsDao extends BaseDao {
 
 		if (searchTerm.isEmpty()) {
 			return getResultList(
-					getEntityManager().createQuery(
-							"from Booking where isActive=1 order by created"),
+					getEntityManager()
+							.createQuery(
+									"from Booking where isActive=1 order by startDate desc"),
 					offSet, limit);
 		}
 
@@ -59,16 +60,17 @@ public class BookingsDao extends BaseDao {
 				+ "e.description like :searchTerm or "
 				+ "e.venue like :searchTerm or "
 				+ "e.categoryName like :searchTerm or "
-				+ "e.type like :searchTerm " + ")" + "order by e.name";
+				+ "e.type like :searchTerm " + ")"
+				+ " order by e.startDate desc";
 
 		return getResultList(getEntityManager().createQuery(query)
 				.setParameter("searchTerm", searchTerm), offSet, limit);
 	}
 
 	public void importAllEvents() {
+		String sqlQuery = "select oldSystemId,refId from icpakdb.event where oldSystemId IS NOT NULL";
 		// String sqlQuery =
-		// "select oldSystemId,refId from icpakdb.event where oldSystemId IS NOT NULL";
-		String sqlQuery = "select oldSystemId,refId from icpakdb.event where oldSystemId=465";
+		// "select oldSystemId,refId from icpakdb.event where oldSystemId=465";
 		List<Object[]> rows = getResultList(getEntityManager()
 				.createNativeQuery(sqlQuery));
 		for (Object[] row : rows) {
@@ -206,7 +208,7 @@ public class BookingsDao extends BaseDao {
 
 		// System.err.println("Delegates Total>>>" + delegates.size());
 		booking.setDelegates(delegates);
-		// daoHelper.createBooking(eventRefId, booking);
+		daoHelper.createBooking(eventRefId, booking);
 
 		return delegates.size();
 	}

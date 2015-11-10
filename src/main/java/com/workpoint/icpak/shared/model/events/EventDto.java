@@ -21,7 +21,6 @@ import com.workpoint.icpak.shared.model.SerializableObj;
  *
  */
 public class EventDto extends SerializableObj implements Listable {
-
 	/**
 	 * 
 	 */
@@ -42,6 +41,8 @@ public class EventDto extends SerializableObj implements Listable {
 	private int delegateCount;
 	private Double totalPaid;
 	private Double totalUnpaid;
+	private Integer paidCount;
+	private Integer unPaidCount;
 	private Integer courseId;
 
 	public EventDto() {
@@ -201,6 +202,22 @@ public class EventDto extends SerializableObj implements Listable {
 
 	public void setCourseId(Integer courseId) {
 		this.courseId = courseId;
+	}
+
+	public Integer getUnPaidCount() {
+		return unPaidCount;
+	}
+
+	public void setUnPaidCount(Integer unPaidCount) {
+		this.unPaidCount = unPaidCount;
+	}
+
+	public Integer getPaidCount() {
+		return paidCount;
+	}
+
+	public void setPaidCount(Integer paidCount) {
+		this.paidCount = paidCount;
 	}
 
 }

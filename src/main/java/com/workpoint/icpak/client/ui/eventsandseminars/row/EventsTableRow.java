@@ -71,13 +71,13 @@ public class EventsTableRow extends RowWidget {
 		divDelegates.add(new InlineLabel(event.getDelegateCount() + ""));
 		divEventLocation.add(new InlineLabel(event.getVenue()));
 		divPaidAmount.add(new InlineLabel(NUMBERFORMAT.format(event
-				.getTotalPaid()) + ""));
+				.getPaidCount()) + ""));
 		divUnPaidAmount.add(new InlineLabel(NUMBERFORMAT.format(event
-				.getTotalUnpaid()) + ""));
+				.getUnPaidCount()) + ""));
 		divCPDHours.add(new InlineLabel(event.getCpdHours() + ""));
 		String courseId = ((event.getCourseId() != null) ? "(Course Id:"
 				+ event.getCourseId() + ")" : "");
-		aEventName.setText(event.getName());
+		aEventName.setText(event.getName() + courseId);
 		aEventName.setHref("#events;eventId=" + event.getRefId());
 	}
 

@@ -206,4 +206,24 @@ public class EventsDao extends BaseDao {
 		return number.intValue();
 	}
 
+	public Integer getDelegateUnPaidCount(Long eventId) {
+		String sql = "SELECT count(*) FROM icpakdb.delegate d "
+				+ "inner join booking b on (d.booking_id = b.id) "
+				+ "where paymentStatus='NOTPAID' and b.event_id=:eventId";
+		Query query = getEntityManager().createNativeQuery(sql).setParameter(
+				"eventId", eventId);
+		Number number = getSingleResultOrNull(query);
+		return number.intValue();
+	}
+
+	public Integer getDelegatePaidCount(Long eventId) {
+		String sql = "SELECT count(*) FROM icpakdb.delegate d "
+				+ "inner join booking b on (d.booking_id = b.id) "
+				+ "where paymentStatus='PAID' and b.event_id=:eventId";
+		Query query = getEntityManager().createNativeQuery(sql).setParameter(
+				"eventId", eventId);
+		Number number = getSingleResultOrNull(query);
+		return number.intValue();
+	}
+
 }

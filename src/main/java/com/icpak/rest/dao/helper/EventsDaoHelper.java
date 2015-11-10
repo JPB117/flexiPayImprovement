@@ -22,11 +22,13 @@ public class EventsDaoHelper {
 		return getAllEvents(uri, offset, limit, null);
 	}
 
-	public List<EventDto> getAllEvents(String uri, Integer offset, Integer limit, String eventType) {
+	public List<EventDto> getAllEvents(String uri, Integer offset,
+			Integer limit, String eventType) {
 		return getAllEvents(uri, offset, limit, eventType, "");
 	}
 
-	public List<EventDto> getAllEvents(String uri, Integer offset, Integer limit, String eventType, String searchTerm) {
+	public List<EventDto> getAllEvents(String uri, Integer offset,
+			Integer limit, String eventType, String searchTerm) {
 		EventType type = null;
 		if (eventType != null) {
 			type = EventType.valueOf(eventType);
@@ -38,8 +40,12 @@ public class EventsDaoHelper {
 			EventDto event = e.toDto();
 			// int[] counts = dao.getEventCounts();
 			event.setDelegateCount(dao.getDelegateCount(e.getRefId()));
-			event.setTotalPaid(dao.getTotalEventAmount(e.getRefId(), PaymentStatus.PAID));
-			event.setTotalUnpaid(dao.getTotalEventAmount(e.getRefId(), PaymentStatus.NOTPAID));
+			event.setPaidCount(dao.getDelegatePaidCount(e.getId()));
+			event.setUnPaidCount(dao.getDelegateUnPaidCount(e.getId()));
+			event.setTotalPaid(dao.getTotalEventAmount(e.getRefId(),
+					PaymentStatus.PAID));
+			event.setTotalUnpaid(dao.getTotalEventAmount(e.getRefId(),
+					PaymentStatus.NOTPAID));
 			event.setUri(uri + "/" + event.getRefId());
 			eventsList.add(event);
 		}
