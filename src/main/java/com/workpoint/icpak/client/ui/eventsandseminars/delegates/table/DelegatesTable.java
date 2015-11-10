@@ -15,6 +15,7 @@ import com.workpoint.icpak.client.ui.component.PagingPanel;
 import com.workpoint.icpak.client.ui.component.PagingTable;
 import com.workpoint.icpak.client.ui.component.TableHeader;
 import com.workpoint.icpak.client.ui.eventsandseminars.delegates.row.DelegateTableRow;
+import com.workpoint.icpak.shared.model.EventType;
 
 public class DelegatesTable extends Composite {
 
@@ -27,7 +28,6 @@ public class DelegatesTable extends Composite {
 	@UiField
 	PagingTable tblView;
 	CheckBox selected = null;
-	boolean isSalesTable = false;
 
 	public DelegatesTable() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -69,11 +69,11 @@ public class DelegatesTable extends Composite {
 	public void setAutoNumber(boolean autoNumber) {
 		tblView.setAutoNumber(false);
 	}
-	
-	public PagingPanel getPagingPanel(){
+
+	public PagingPanel getPagingPanel() {
 		return tblView.getPagingPanel();
 	}
-	
+
 	public String getDelegateSearchValue() {
 		return tblView.getSearchValue();
 	}

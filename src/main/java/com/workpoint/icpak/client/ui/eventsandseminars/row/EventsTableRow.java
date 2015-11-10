@@ -15,6 +15,7 @@ import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Widget;
 import com.workpoint.icpak.client.ui.component.RowWidget;
 import com.workpoint.icpak.client.ui.util.DateUtils;
+import com.workpoint.icpak.shared.model.EventType;
 import com.workpoint.icpak.shared.model.events.EventDto;
 
 public class EventsTableRow extends RowWidget {
@@ -37,6 +38,8 @@ public class EventsTableRow extends RowWidget {
 	@UiField
 	HTMLPanel divEventLocation;
 	@UiField
+	HTMLPanel divEventType;
+	@UiField
 	HTMLPanel divPaidAmount;
 	@UiField
 	HTMLPanel divUnPaidAmount;
@@ -44,34 +47,46 @@ public class EventsTableRow extends RowWidget {
 	HTMLPanel divCPDHours;
 	@UiField
 	Anchor aEventName;
-	
 
 	public EventsTableRow() {
 		initWidget(uiBinder.createAndBindUi(this));
-		
+
 		String url = "#events;eventId=254";
 		aEventName.setHref(url);
 	}
 
-
 	public EventsTableRow(EventDto event) {
 		this();
-		
-		Date startDate = isNullOrEmpty(event.getStartDate())? null : 
-			DateUtils.parse(event.getStartDate(), DateUtils.FULLTIMESTAMP);
-		Date endDate = isNullOrEmpty(event.getEndDate())? null : 
-			DateUtils.parse(event.getEndDate(), DateUtils.FULLTIMESTAMP);
-		
-		String dates = startDate==null? "" : DATEFORMAT.format(startDate)+"-"+
-				endDate==null? "" : DATEFORMAT.format(endDate);
+
+		Date startDate = isNullOrEmpty(event.getStartDate()) ? null : DateUtils
+				.parse(event.getStartDate(), DateUtils.FULLTIMESTAMP);
+		Date endDate = isNullOrEmpty(event.getEndDate()) ? null : DateUtils
+				.parse(event.getEndDate(), DateUtils.FULLTIMESTAMP);
+
+		String dates = startDate == null ? "" : DATEFORMAT.format(startDate)
+				+ "-" + endDate == null ? "" : DATEFORMAT.format(endDate);
 		divDate.add(new InlineLabel(dates));
-		divDelegates.add(new InlineLabel(event.getDelegateCount()+""));
+		setEventType(event.getType());
+		divEventType.add(new InlineLabel(event.getType().getDisplayName()));
+		divDelegates.add(new InlineLabel(event.getDelegateCount() + ""));
 		divEventLocation.add(new InlineLabel(event.getVenue()));
-		divPaidAmount.add(new InlineLabel(NUMBERFORMAT.format(event.getTotalPaid())+""));
-		divUnPaidAmount.add(new InlineLabel(NUMBERFORMAT.format(event.getTotalUnpaid())+""));
-		divCPDHours.add(new InlineLabel(event.getCpdHours()+""));
+		divPaidAmount.add(new InlineLabel(NUMBERFORMAT.format(event
+				.getTotalPaid()) + ""));
+		divUnPaidAmount.add(new InlineLabel(NUMBERFORMAT.format(event
+				.getTotalUnpaid()) + ""));
+		divCPDHours.add(new InlineLabel(event.getCpdHours() + ""));
+		String courseId = ((event.getCourseId() != null) ? "(Course Id:"
+				+ event.getCourseId() + ")" : "");
 		aEventName.setText(event.getName());
-		aEventName.setHref("#events;eventId="+event.getRefId());
+		aEventName.setHref("#events;eventId=" + event.getRefId());
 	}
 
+	private void setEventType(EventType eventType) {
+		InlineLabel label = new InlineLabel(eventType.getDisplayName());
+		if (eventType == EventType.COURSE) {
+			label.setStyleName("label label-fill label-default");
+		} else {
+			label.setStyleName("label label-fill label-success");
+		}
+	}
 }

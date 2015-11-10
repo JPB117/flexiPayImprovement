@@ -452,6 +452,7 @@ public class UsersDaoHelper {
 
 		if (user.getEmail() != null) {
 			dto.setUserName(user.getEmail());
+			dto.setEmailID(user.getEmail());
 		}
 		dto.setRefID(user.getRefId());
 		LMSResponse response = LMSIntegrationUtil.getInstance().executeLMSCall(

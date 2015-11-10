@@ -32,10 +32,13 @@
 				</a>
 				<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
 					<li>
-						<d:ActionLink ui:field="aAttended">Attended</d:ActionLink>
+						<d:ActionLink ui:field="aEnrol">Enrol in LMS</d:ActionLink>
 					</li>
 					<li>
-						<d:ActionLink ui:field="aNotAttended">Not-Attended</d:ActionLink>
+						<d:ActionLink ui:field="aAttended">Mark as Attended</d:ActionLink>
+					</li>
+					<li>
+						<d:ActionLink ui:field="aNotAttended">Mark as Not-Attended</d:ActionLink>
 					</li>
 				</ul>
 			</div>

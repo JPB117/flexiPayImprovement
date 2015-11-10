@@ -8,6 +8,8 @@
 		<g:HTMLPanel styleName="td" ui:field="divEventName">
 			<g:Anchor ui:field="aEventName"></g:Anchor>
 		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td" ui:field="divEventType">
+		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divEventLocation">
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divCPDHours">

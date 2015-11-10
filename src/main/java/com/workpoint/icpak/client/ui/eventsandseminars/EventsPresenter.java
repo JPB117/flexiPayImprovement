@@ -35,7 +35,8 @@ import com.workpoint.icpak.shared.model.EventSummaryDto;
 import com.workpoint.icpak.shared.model.events.DelegateDto;
 import com.workpoint.icpak.shared.model.events.EventDto;
 
-public class EventsPresenter extends Presenter<EventsPresenter.IEventsView, EventsPresenter.IEventsProxy>
+public class EventsPresenter extends
+		Presenter<EventsPresenter.IEventsView, EventsPresenter.IEventsProxy>
 		implements EditModelHandler {
 
 	public interface IEventsView extends View {
@@ -85,8 +86,9 @@ public class EventsPresenter extends Presenter<EventsPresenter.IEventsView, Even
 
 	@TabInfo(container = HomePresenter.class)
 	static TabData getTabLabel(AdminGateKeeper gateKeeper) {
-		String tabName = "Events & Seminars";
-		TabDataExt data = new TabDataExt(tabName, "fa fa-tags", 2, gateKeeper, true);
+		String tabName = "Events & Courses";
+		TabDataExt data = new TabDataExt(tabName, "fa fa-tags", 2, gateKeeper,
+				true);
 		return data;
 	}
 
@@ -94,7 +96,8 @@ public class EventsPresenter extends Presenter<EventsPresenter.IEventsView, Even
 	private String eventId;
 
 	@Inject
-	public EventsPresenter(final EventBus eventBus, final IEventsView view, final IEventsProxy proxy,
+	public EventsPresenter(final EventBus eventBus, final IEventsView view,
+			final IEventsProxy proxy,
 			ResourceDelegate<EventsResource> eventsDelegate) {
 		super(eventBus, view, proxy, HomePresenter.SLOT_SetTabContent);
 		this.eventsDelegate = eventsDelegate;
@@ -107,7 +110,6 @@ public class EventsPresenter extends Presenter<EventsPresenter.IEventsView, Even
 		getView().getEventsPagingPanel().setLoader(new PagingLoader() {
 			@Override
 			public void onLoad(int offset, int limit) {
-
 				loadEvents(offset, limit, "");
 			}
 		});
@@ -119,8 +121,10 @@ public class EventsPresenter extends Presenter<EventsPresenter.IEventsView, Even
 			}
 		});
 
-		getView().getSearchValueChangeHander().addValueChangeHandler(eventsValueChangeHandler);
-		getView().getDelegateSearchValueChangeHandler().addValueChangeHandler(delegateTableValueChangeHandler);
+		getView().getSearchValueChangeHander().addValueChangeHandler(
+				eventsValueChangeHandler);
+		getView().getDelegateSearchValueChangeHandler().addValueChangeHandler(
+				delegateTableValueChangeHandler);
 	}
 
 	@Override
@@ -140,11 +144,12 @@ public class EventsPresenter extends Presenter<EventsPresenter.IEventsView, Even
 
 	private void loadData() {
 		fireEvent(new ProcessingEvent());
-		eventsDelegate.withCallback(new AbstractAsyncCallback<EventSummaryDto>() {
-			public void onSuccess(EventSummaryDto result) {
-				getView().bindEventSummary(result);
-			};
-		}).getEventsSummary();
+		eventsDelegate.withCallback(
+				new AbstractAsyncCallback<EventSummaryDto>() {
+					public void onSuccess(EventSummaryDto result) {
+						getView().bindEventSummary(result);
+					};
+				}).getEventsSummary();
 
 		if (eventId != null) {
 			// Load Bookings
@@ -185,13 +190,14 @@ public class EventsPresenter extends Presenter<EventsPresenter.IEventsView, Even
 	protected void loadDelegates(int offset, int limit, String searchTerm) {
 		fireEvent(new ProcessingEvent());
 
-		eventsDelegate.withCallback(new AbstractAsyncCallback<List<DelegateDto>>() {
-			@Override
-			public void onSuccess(List<DelegateDto> delegates) {
-				fireEvent(new ProcessingCompletedEvent());
-				getView().bindDelegates(delegates);
-			}
-		}).delegates(eventId).getAll(offset, limit, searchTerm);
+		eventsDelegate
+				.withCallback(new AbstractAsyncCallback<List<DelegateDto>>() {
+					@Override
+					public void onSuccess(List<DelegateDto> delegates) {
+						fireEvent(new ProcessingCompletedEvent());
+						getView().bindDelegates(delegates);
+					}
+				}).delegates(eventId).getAll(offset, limit, searchTerm);
 	}
 
 	protected void loadDelegatesCount(final String searchTerm) {
@@ -230,13 +236,14 @@ public class EventsPresenter extends Presenter<EventsPresenter.IEventsView, Even
 
 	protected void loadEvents(int offset, int limit, String searchTerm) {
 		fireEvent(new ProcessingEvent());
-		eventsDelegate.withCallback(new AbstractAsyncCallback<List<EventDto>>() {
-			@Override
-			public void onSuccess(List<EventDto> events) {
-				fireEvent(new ProcessingCompletedEvent());
-				getView().bindEvents(events);
-			}
-		}).getAll(offset, limit, searchTerm);
+		eventsDelegate.withCallback(
+				new AbstractAsyncCallback<List<EventDto>>() {
+					@Override
+					public void onSuccess(List<EventDto> events) {
+						fireEvent(new ProcessingCompletedEvent());
+						getView().bindEvents(events);
+					}
+				}).getAll(offset, limit, searchTerm);
 	}
 
 	@Override
@@ -254,7 +261,8 @@ public class EventsPresenter extends Presenter<EventsPresenter.IEventsView, Even
 			public void onSuccess(DelegateDto result) {
 				fireEvent(new ProcessingCompletedEvent());
 			}
-		}).bookings(model.getEventRefId()).updateDelegate(model.getBookingId(), model.getRefId(), model);
+		}).bookings(model.getEventRefId())
+				.updateDelegate(model.getBookingId(), model.getRefId(), model);
 	}
 
 }

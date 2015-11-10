@@ -43,6 +43,8 @@ public class EventsView extends ViewImpl implements EventsPresenter.IEventsView 
 	@UiField
 	DelegatesTable tblDelegates;
 
+	private EventDto event;
+
 	public interface Binder extends UiBinder<Widget, EventsView> {
 	}
 
@@ -78,6 +80,7 @@ public class EventsView extends ViewImpl implements EventsPresenter.IEventsView 
 
 	@Override
 	public void bindEvent(EventDto event) {
+		this.event = event;
 		spnEventTitle.setInnerText(event.getName());
 	}
 
@@ -85,7 +88,7 @@ public class EventsView extends ViewImpl implements EventsPresenter.IEventsView 
 	public void bindDelegates(List<DelegateDto> delegates) {
 		tblDelegates.clearRows();
 		for (DelegateDto dto : delegates) {
-			tblDelegates.createRow(new DelegateTableRow(dto));
+			tblDelegates.createRow(new DelegateTableRow(dto, event.getType()));
 		}
 	}
 

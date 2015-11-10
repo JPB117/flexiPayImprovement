@@ -16,6 +16,7 @@ import com.workpoint.icpak.client.ui.component.RowWidget;
 import com.workpoint.icpak.client.ui.component.TextField;
 import com.workpoint.icpak.client.ui.events.EditModelEvent;
 import com.workpoint.icpak.client.util.AppContext;
+import com.workpoint.icpak.shared.model.EventType;
 import com.workpoint.icpak.shared.model.PaymentStatus;
 import com.workpoint.icpak.shared.model.events.AttendanceStatus;
 import com.workpoint.icpak.shared.model.events.BookingDto;
@@ -32,7 +33,6 @@ public class DelegateTableRow extends RowWidget {
 
 	@UiField
 	HTMLPanel row;
-
 	@UiField
 	HTMLPanel divMemberNo;
 	@UiField
@@ -62,6 +62,8 @@ public class DelegateTableRow extends RowWidget {
 	private Integer rowId;
 
 	@UiField
+	ActionLink aEnrol;
+	@UiField
 	ActionLink aAttended;
 	@UiField
 	ActionLink aNotAttended;
@@ -82,6 +84,13 @@ public class DelegateTableRow extends RowWidget {
 			@Override
 			public void onClick(ClickEvent event) {
 				onAttendanceChanged(AttendanceStatus.NOTATTENDED);
+			}
+		});
+
+		aEnrol.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				onAttendanceChanged(AttendanceStatus.ENROLLED);
 			}
 		});
 	}
@@ -114,7 +123,7 @@ public class DelegateTableRow extends RowWidget {
 
 	}
 
-	public DelegateTableRow(DelegateDto delegate) {
+	public DelegateTableRow(DelegateDto delegate, EventType eventType) {
 		this(delegate.getMemberNo(), delegate.getTitle(),
 				delegate.getSurname(), delegate.getOtherNames(), delegate
 						.getEmail(), null);
@@ -129,12 +138,26 @@ public class DelegateTableRow extends RowWidget {
 
 		setPaymentStatus(delegate.getPaymentStatus());
 		setAttendance(delegate.getAttendance());
+		setActionButtons(eventType);
+	}
+
+	private void setActionButtons(EventType eventType) {
+		if (eventType == EventType.COURSE) {
+			aEnrol.setVisible(true);
+			aAttended.setVisible(false);
+			aNotAttended.setVisible(false);
+		} else {
+			aEnrol.setVisible(false);
+			aAttended.setVisible(true);
+			aNotAttended.setVisible(true);
+		}
 	}
 
 	private void setAttendance(AttendanceStatus attendance) {
 		if (attendance != null) {
 			spnAttendance.setInnerText(attendance.getDisplayName());
-			if (attendance == AttendanceStatus.NOTATTENDED) {
+			if (attendance == AttendanceStatus.NOTATTENDED
+					|| attendance == AttendanceStatus.NOTENROLLED) {
 				spnAttendance.removeClassName("label-success");
 				spnAttendance.addClassName("label-danger");
 			} else {

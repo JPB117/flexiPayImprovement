@@ -45,24 +45,24 @@ public class EventsDao extends BaseDao {
 		if (searchTerm == null) {
 			searchTerm = "";
 		}
-		
+
 		if (searchTerm.isEmpty()) {
 			logger.error("===== Empty search term ======= ");
 
 			if (type == null) {
 
 				return getResultList(
-						getEntityManager().createQuery(
-								"from Event where isActive=1 order by name"),
+						getEntityManager()
+								.createQuery(
+										"from Event where isActive=1 order by startDate DESC"),
 						offSet, limit);
 
 			}
 
-			return getResultList(
-					getEntityManager().createQuery(
-							"from Event where type=:type "
-									+ "and isActive=1 order by name")
-							.setParameter("type", type), offSet, limit);
+			return getResultList(getEntityManager().createQuery(
+					"from Event where type=:type "
+							+ "and isActive=1 order by name startDate DESC")
+					.setParameter("type", type), offSet, limit);
 		}
 
 		String query = "from Event e where isActive=1 and "
@@ -70,7 +70,8 @@ public class EventsDao extends BaseDao {
 				+ "e.description like :searchTerm or "
 				+ "e.venue like :searchTerm or "
 				+ "e.categoryName like :searchTerm or "
-				+ "e.type like :searchTerm " + ")" + "order by e.name";
+				+ "e.type like :searchTerm " + ")"
+				+ "order by e.startDate DESC";
 
 		logger.error("===== Executing search  ======= ");
 

@@ -21,8 +21,12 @@ public class DelegateDto extends SerializableObj {
 	private DelegateType delegateType;
 	private String bookingId;
 	private String eventRefId;
+	public String courseId;
 	private String ern;
 	private PaymentStatus paymentStatus;
+	private String hotel;
+	private String lmsResponse;
+
 	public PaymentStatus getPaymentStatus() {
 		return paymentStatus;
 	}
@@ -39,7 +43,6 @@ public class DelegateDto extends SerializableObj {
 		this.hotel = hotel;
 	}
 
-	private String hotel;
 	public DelegateDto() {
 	}
 
@@ -127,6 +130,14 @@ public class DelegateDto extends SerializableObj {
 		return memberNo;
 	}
 
+	public String getCourseId() {
+		return courseId;
+	}
+
+	public void setCourseId(String courseId) {
+		this.courseId = courseId;
+	}
+
 	public void setMemberNo(String memberNo) {
 		this.memberNo = memberNo;
 	}
@@ -146,13 +157,13 @@ public class DelegateDto extends SerializableObj {
 	public void setErn(String ern) {
 		this.ern = ern;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof DelegateDto) || obj == null) {
 			return false;
 		}
-		
+
 		DelegateDto other = (DelegateDto) obj;
 		if (other.getRefId() != null && getRefId() != null) {
 			return other.getRefId().equals(getRefId());
@@ -160,5 +171,13 @@ public class DelegateDto extends SerializableObj {
 
 		return super.equals(obj);
 	}
-	
+
+	public String getLmsResponse() {
+		return lmsResponse;
+	}
+
+	public void setLmsResponse(String lmsResponse) {
+		this.lmsResponse = lmsResponse;
+	}
+
 }

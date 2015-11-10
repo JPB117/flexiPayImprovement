@@ -12,6 +12,7 @@ import com.google.inject.Inject;
 import com.icpak.rest.dao.helper.BookingsDaoHelper;
 import com.icpak.rest.exceptions.ServiceException;
 import com.icpak.rest.models.ErrorCodes;
+import com.icpak.rest.models.event.Accommodation;
 import com.icpak.rest.models.event.Booking;
 import com.workpoint.icpak.shared.model.EventStatus;
 import com.workpoint.icpak.shared.model.PaymentStatus;
@@ -67,7 +68,7 @@ public class BookingsDao extends BaseDao {
 	public void importAllEvents() {
 		// String sqlQuery =
 		// "select oldSystemId,refId from icpakdb.event where oldSystemId IS NOT NULL";
-		String sqlQuery = "select oldSystemId,refId from icpakdb.event where oldSystemId=424";
+		String sqlQuery = "select oldSystemId,refId from icpakdb.event where oldSystemId=465";
 		List<Object[]> rows = getResultList(getEntityManager()
 				.createNativeQuery(sqlQuery));
 		for (Object[] row : rows) {
@@ -89,15 +90,18 @@ public class BookingsDao extends BaseDao {
 			String eventRefId) {
 		List<Object[]> rows = getResultList(getEntityManager()
 				.createNativeQuery(
-						"SELECT distinct(b.s_name) as sponsorName,b.booking_date,b.payment_mode,b.s_country,"
+						"SELECT distinct(batch_ID) as batchId,s_name,b.booking_date,b.payment_mode,b.s_country,"
 								+ "b.s_address,b.s_town,b.s_telephone,b.contact,b.s_email,b.code "
-								+ "FROM icpakco_main.bookings b WHERE b.seminar_id = :seminarId group by sponsorName")
+								+ "FROM icpakco_main.bookings b WHERE b.seminar_id = :seminarId group by b.batch_ID")
 				.setParameter("seminarId", seminarId));
 
 		int totalDelegateCount = 0;
+		int totalSponsorCount = 0;
 		for (Object[] row : rows) {
 			int i = 0;
 			Object value = null;
+			Integer batchId = (value = row[i++]) == null ? null
+					: (Integer) value;
 			String sponsorName = (value = row[i++]) == null ? null : value
 					.toString();
 			Date bookingDate = (value = row[i++]) == null ? null : (Date) value;
@@ -135,21 +139,27 @@ public class BookingsDao extends BaseDao {
 			booking.setContact(contact);
 
 			// System.err.println("Company Name>>" + contact.getCompany());
-			totalDelegateCount += importDelegates(sponsorName, booking,
-					eventRefId, seminarId);
+			totalDelegateCount += importDelegates(batchId, booking, eventRefId,
+					seminarId);
+			totalSponsorCount++;
 		}
+
+		System.err.println("Total Sponsor Count:::" + totalSponsorCount);
 		System.err.println("Total Delegate Count:::" + totalDelegateCount);
 
 	}
 
-	public Integer importDelegates(String sponsorName, BookingDto booking,
+	public Integer importDelegates(Integer batchId, BookingDto booking,
 			String eventRefId, Integer seminarId) {
 		List<Object[]> rows = getResultList(getEntityManager()
 				.createNativeQuery(
 						"SELECT b.title,b.surname,b.othernames,b.is_member,b.reg_no,"
-								+ "b.email,b.accomodation,b.accomodation_days"
-								+ " FROM icpakco_main.bookings b WHERE b.s_name = :sponsorName and seminar_id=:seminarId")
-				.setParameter("sponsorName", sponsorName)
+								+ "b.email,a.refId,b.accomodation,b.accomodation_days "
+								+ "FROM icpakco_main.bookings b left join icpakdb.accommodation a "
+								+ "on (a.hotel = b.accomodation) "
+								+ "WHERE b.batch_ID = :batchId and "
+								+ "seminar_id=:seminarId")
+				.setParameter("batchId", batchId)
 				.setParameter("seminarId", seminarId));
 
 		List<DelegateDto> delegates = new ArrayList<>();
@@ -177,6 +187,15 @@ public class BookingsDao extends BaseDao {
 			String delegateEmail = (value = row[i++]) == null ? null : value
 					.toString();
 			delegate.setEmail(delegateEmail);
+			String accomodationRefId = (value = row[i++]) == null ? null
+					: value.toString();
+			if (accomodationRefId != null) {
+				Accommodation accomodation = findByRefId(accomodationRefId,
+						Accommodation.class);
+				delegate.setAccommodation(accomodation.toDto());
+				System.err.println("Accomodation for " + delegate.getSurname()
+						+ " " + accomodation.getHotel());
+			}
 			String delegateAccomodation = (value = row[i++]) == null ? null
 					: value.toString();
 			String delegateAccomodationDays = (value = row[i++]) == null ? null
@@ -187,7 +206,7 @@ public class BookingsDao extends BaseDao {
 
 		// System.err.println("Delegates Total>>>" + delegates.size());
 		booking.setDelegates(delegates);
-		daoHelper.createBooking(eventRefId, booking);
+		// daoHelper.createBooking(eventRefId, booking);
 
 		return delegates.size();
 	}

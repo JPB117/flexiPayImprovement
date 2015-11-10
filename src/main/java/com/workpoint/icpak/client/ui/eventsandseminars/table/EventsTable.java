@@ -18,7 +18,8 @@ import com.workpoint.icpak.client.ui.eventsandseminars.row.EventsTableRow;
 
 public class EventsTable extends Composite {
 
-	private static TransactionTableUiBinder uiBinder = GWT.create(TransactionTableUiBinder.class);
+	private static TransactionTableUiBinder uiBinder = GWT
+			.create(TransactionTableUiBinder.class);
 
 	interface TransactionTableUiBinder extends UiBinder<Widget, EventsTable> {
 	}
@@ -38,6 +39,7 @@ public class EventsTable extends Composite {
 		List<TableHeader> th = new ArrayList<TableHeader>();
 		th.add(new TableHeader("Dates"));
 		th.add(new TableHeader("Event Name"));
+		th.add(new TableHeader("Event Type"));
 		th.add(new TableHeader("Location"));
 		th.add(new TableHeader("CPD Hours"));
 		th.add(new TableHeader("Total Delegates"));

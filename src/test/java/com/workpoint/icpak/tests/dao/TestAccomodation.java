@@ -25,9 +25,13 @@ public class TestAccomodation extends AbstractDaoTest {
 		accommodationDto.setNights(8);
 		accommodationDto.setSpaces(8);
 
-		AccommodationDto savedAccomodationDto = accommodationsDaoHelper.create(eventId, accommodationDto);
-
+		AccommodationDto savedAccomodationDto = accommodationsDaoHelper.create(
+				eventId, accommodationDto);
 		logger.debug(" ==== >><<<<<< ====" + savedAccomodationDto.getName());
+
+	}
+
+	public void testImportAccomodation() {
 
 	}
 }

@@ -1,5 +1,6 @@
 package com.icpak.rest.dao.helper;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -16,6 +17,8 @@ import java.util.Set;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 
+import com.amazonaws.util.json.JSONException;
+import com.amazonaws.util.json.JSONObject;
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import com.icpak.rest.dao.BookingsDao;
@@ -39,6 +42,8 @@ import com.icpak.rest.utils.DocumentHTMLMapper;
 import com.icpak.rest.utils.DocumentLine;
 import com.icpak.rest.utils.EmailServiceHelper;
 import com.icpak.rest.utils.HTMLToPDFConvertor;
+import com.workpoint.icpak.server.integration.lms.LMSIntegrationUtil;
+import com.workpoint.icpak.server.integration.lms.LMSResponse;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.InvoiceLineDto;
 import com.workpoint.icpak.shared.model.events.AttendanceStatus;
@@ -50,27 +55,22 @@ import com.workpoint.icpak.shared.model.events.MemberBookingDto;
 @Transactional
 public class BookingsDaoHelper {
 
-	Logger logger  = Logger.getLogger(BookingsDaoHelper.class);
-	
+	Logger logger = Logger.getLogger(BookingsDaoHelper.class);
+
 	@Inject
 	BookingsDao dao;
 	@Inject
 	UsersDao userDao;
-
 	@Inject
 	MemberDao memberDao;
 	@Inject
 	MemberDaoHelper memberDaoHelper;
-
 	@Inject
 	EventsDao eventDao;
-
 	@Inject
 	CPDDaoHelper cpdDao;
-
 	@Inject
 	InvoiceDaoHelper invoiceHelper;
-
 	@Inject
 	TransactionDaoHelper trxHelper;
 
@@ -595,11 +595,10 @@ public class BookingsDaoHelper {
 					Member.class);
 			Event event = dao.findByRefId(delegateDto.getEventRefId(),
 					Event.class);
-			String smsMemssage = "Dear" + " " + delegateDto.getSurname()
+			String smsMessage = "Dear" + " " + delegateDto.getSurname()
 					+ ",Thank you for attending the " + event.getName() + "."
 					+ "Your ERN No. is " + delegate.getErn();
-			smsIntergration
-					.send(member.getUser().getPhoneNumber(), smsMemssage);
+			smsIntergration.send(member.getUser().getPhoneNumber(), smsMessage);
 		}
 		delegate.setAttendance(delegateDto.getAttendance());
 		dao.save(delegate);
@@ -629,7 +628,29 @@ public class BookingsDaoHelper {
 	}
 
 	public Integer getDelegatesCount(String eventId, String searchTerm) {
-		logger.error("== Counting delegates ===" );
+		logger.error("== Counting delegates ===");
 		return dao.getDelegateCount(eventId, searchTerm);
+	}
+
+	public void enrolDelegateToLMS(List<DelegateDto> delegates, String bookingId)
+			throws JSONException, IOException {
+		for (DelegateDto delegate : delegates) {
+			JSONObject json = new JSONObject();
+			json.append("membershipID", delegate.getMemberNo());
+			json.append("courseId", delegate.getCourseId());
+			LMSResponse response = LMSIntegrationUtil.getInstance()
+					.executeLMSCall("/Course/EnrollCourse", json, String.class);
+			logger.info("LMS Response::" + response.getMessage());
+			logger.info("LMS Status::" + response.getStatus());
+			delegate.setLmsResponse(response.getMessage());
+			if (response.getStatus().equals("Success")) {
+				delegate.setAttendance(AttendanceStatus.ENROLLED);
+			}
+			Delegate delegateInDb = dao.findByRefId(delegate.getRefId(),
+					Delegate.class);
+			updateDelegate(bookingId, String.valueOf(delegateInDb.getId()),
+					delegate);
+		}
+
 	}
 }

@@ -50,7 +50,6 @@ public class Delegate extends PO {
 	private Accommodation accommodation;
 
 	private Double amount;
-
 	private AttendanceStatus attendance = AttendanceStatus.NOTATTENDED;
 
 	public String getMemberRegistrationNo() {
