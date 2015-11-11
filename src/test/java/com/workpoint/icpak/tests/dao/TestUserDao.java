@@ -30,7 +30,7 @@ public class TestUserDao extends AbstractDaoTest {
 	@Inject
 	UsersDao usersDao;
 
-	@Test
+	@Ignore
 	public void hashPassword() {
 		System.out.println(usersDao.encrypt("pass"));
 	}

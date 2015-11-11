@@ -5,7 +5,8 @@ public enum CPDCategory implements Listable{
 	CATEGORY_A("Category A"),
 	CATEGORY_B("Category B"),
 	CATEGORY_C("Category C"),
-	CATEGORY_D("Category D");
+	CATEGORY_D("Category D"),
+	NO_CATEGORY("No category");
 	
 	
 	private String displayName;

@@ -50,6 +50,7 @@ public class CPD extends PO {
 	private Date endDate;
 	private String title;
 	private String organizer;
+	@Enumerated(EnumType.STRING)
 	private CPDCategory category;
 	private Double cpdHours;
 	@Enumerated(EnumType.STRING)
