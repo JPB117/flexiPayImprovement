@@ -437,7 +437,7 @@ public class BookingsDao extends BaseDao {
 
 		List<DelegateDto> delegateList = new ArrayList<>();
 
-		String sql = "select d.refId,d.memberRegistrationNo,d.ern,"
+		String sql = "select d.refId,d.memberRefId,d.memberRegistrationNo,d.ern,"
 				+ "d.title,d.otherNames,a.hotel,b.paymentStatus,"
 				+ "d.attendance,d.surname,d.email,e.refid,d.booking_id "
 				+ "from delegate d inner join booking b on (d.booking_id=b.id) "
@@ -468,6 +468,8 @@ public class BookingsDao extends BaseDao {
 			int i = 0;
 			Object value = null;
 
+			String refId = (value = o[i++]) == null ? null : value
+					.toString();
 			String memberRefId = (value = o[i++]) == null ? null : value
 					.toString();
 			String memberNo = (value = o[i++]) == null ? null : value
@@ -489,6 +491,8 @@ public class BookingsDao extends BaseDao {
 					: (BigInteger) value;
 
 			DelegateDto delegateDto = new DelegateDto();
+			
+			delegateDto.setRefId(refId);
 			delegateDto.setMemberRefId(memberRefId);
 			delegateDto.setMemberNo(memberNo);
 			delegateDto.setTitle(title);
