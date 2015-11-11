@@ -2,12 +2,11 @@ package com.workpoint.icpak.shared.model;
 
 import java.io.Serializable;
 
-public enum PaymentStatus implements Serializable, Listable {
-	NOTPAID("Not Paid"), PAID("Paid");
-
+public enum PaymentMode implements Serializable, Listable {
+	MPESA("M-Pesa"), CARDS("Cards"), CHEQUE("Cheque");
 	private String displayName;
 
-	PaymentStatus(String displayName) {
+	PaymentMode(String displayName) {
 		this.displayName = displayName;
 	}
 

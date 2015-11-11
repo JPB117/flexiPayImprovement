@@ -43,8 +43,8 @@ public class TestEventsDao extends AbstractDaoTest {
 		event.setType(EventType.EVENT);
 		event.setCategoryName("Conferences");
 		event.setCpdHours(14);
-		//helper.createEvent(event);
-		helper.getAllEvents(null, 0, 1000);
+		// helper.createEvent(event);
+		helper.getAllEvents(null, 0, 10);
 		eventId1 = event.getRefId();
 
 		System.out.println("Event Id::" + eventId1);

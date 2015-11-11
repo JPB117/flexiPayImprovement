@@ -10,6 +10,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -30,55 +31,55 @@ import com.workpoint.icpak.shared.model.events.DelegateDto;
 import com.workpoint.icpak.shared.model.events.EnrollmentDto;
 
 /**
- * Booking Model 
+ * Booking Model
+ * 
  * @author duggan
  *
  */
-@ApiModel(value="A Booking Model", description="Represents a booking of an event by a user")
-
+@ApiModel(value = "A Booking Model", description = "Represents a booking of an event by a user")
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlSeeAlso({Delegate.class, Contact.class})
-
+@XmlSeeAlso({ Delegate.class, Contact.class })
 @Entity
-@Table(name="booking")
-public class Booking extends PO{
+@Table(name = "booking")
+public class Booking extends PO {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	@Embedded
 	private Contact contact;
-	
-	private String paymentMode;//MPesa, VISA etc
+
+	private String paymentMode;// MPesa, VISA etc
 	private String currency;
-	private Date bookingDate=new Date();
-	private String userId; //Member who made the booking
-	
+	private Date bookingDate = new Date();
+	private String userId; // Member who made the booking
+
 	@Transient
 	private String eventId;
-	
-	private String status; //DRAFT/ PAID
+
+	private String status; // DRAFT/ PAID
 	private int delegatesCount;
 
-	//Payment
-	@Column(unique=true)
-	private String paymentRef; //TrxNumber
+	// Payment
+	@Column(unique = true)
+	private String paymentRef; // TrxNumber
 	private Date paymentDate;
 	private Double amountDue;
-	private PaymentStatus paymentStatus= PaymentStatus.NOTPAID;
-	
-	@OneToMany(mappedBy="booking",fetch=FetchType.LAZY,cascade={CascadeType.PERSIST, 
-			CascadeType.REMOVE, CascadeType.MERGE, CascadeType.REFRESH})
+	private PaymentStatus paymentStatus = PaymentStatus.NOTPAID;
+
+	@OneToMany(mappedBy = "booking", fetch = FetchType.LAZY, cascade = {
+			CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE,
+			CascadeType.REFRESH })
 	private Collection<Delegate> delegates = new HashSet<>();
 	@ManyToOne
 	private Event event;
-	
-	private Date registrationDate= new Date();
-	private String memberId; //For Courses, may not have delegates
-		
+
+	private Date registrationDate = new Date();
+	private String memberId; // For Courses, may not have delegates
+
 	public Date getBookingDate() {
 		return bookingDate;
 	}
@@ -119,8 +120,8 @@ public class Booking extends PO{
 		this.event = event;
 	}
 
-	public Booking clone(String ... expand){
-		
+	public Booking clone(String... expand) {
+
 		Booking booking = new Booking();
 		booking.setBookingDate(bookingDate);
 		booking.setRefId(getRefId());
@@ -128,44 +129,43 @@ public class Booking extends PO{
 		booking.setPaymentRef(paymentRef);
 		booking.setPaymentDate(paymentDate);
 		booking.setPaymentMode(paymentMode);
-		
-		//booking.setContact(contact);
+
+		// booking.setContact(contact);
 		booking.setCurrency(currency);
-		if(delegates!=null)
-		for(Delegate delegate: delegates){
-			booking.addDelegate(delegate);
-		}
-		
+		if (delegates != null)
+			for (Delegate delegate : delegates) {
+				booking.addDelegate(delegate);
+			}
+
 		booking.setDelegatesCount(delegatesCount);
 		booking.setEvent(event);
-		//booking.setUser(user.clone());
+		// booking.setUser(user.clone());
 		booking.setEventId(eventId);
-		
-		if(expand!=null)
-		for(String token: expand){
-			if(token.equals("user")){
-				
+
+		if (expand != null)
+			for (String token : expand) {
+				if (token.equals("user")) {
+
+				}
+
+				if (token.equals("event")) {
+
+				}
+
+				if (token.equalsIgnoreCase(ExpandTokens.META.name())) {
+					// booking.setCreated(created);
+					// booking.setCreatedBy(createdBy);
+				}
+
 			}
-			
-			if(token.equals("event")){
-				
-			}
-			
-			if(token.equalsIgnoreCase(ExpandTokens.META.name())){
-//				booking.setCreated(created);
-//				booking.setCreatedBy(createdBy);
-			}
-			
-			
-		}
-		
+
 		return booking;
 	}
 
 	private void addDelegate(Delegate delegate) {
 		delegates.add(delegate);
 	}
-	
+
 	public String getPaymentMode() {
 		return paymentMode;
 	}
@@ -196,7 +196,7 @@ public class Booking extends PO{
 
 	public void setDelegates(Collection<Delegate> delegates) {
 		this.delegates.clear();
-		for(Delegate delegate: delegates){
+		for (Delegate delegate : delegates) {
 			this.delegates.add(delegate);
 			delegate.setBooking(this);
 		}
@@ -228,46 +228,46 @@ public class Booking extends PO{
 	}
 
 	public BookingDto toDto() {
-		
+
 		BookingDto dto = new BookingDto();
 		dto.setAmountDue(amountDue);
-		
-		if(bookingDate!=null)
+
+		if (bookingDate != null)
 			dto.setBookingDate(bookingDate.getTime());
-		
+
 		dto.setContact(contact.toDto());
 		dto.setCurrency(currency);
-		
-		if(getDelegates()!=null){
+
+		if (getDelegates() != null) {
 			List<DelegateDto> dtos = new ArrayList<>();
-			for(Delegate delegate: delegates){
+			for (Delegate delegate : delegates) {
 				dtos.add(delegate.toDto());
 			}
 			dto.setDelegates(dtos);
 		}
-		
-		
-		if(getEvent()!=null){
+
+		if (getEvent() != null) {
 			dto.setEventRefId(getEvent().getRefId());
 		}
 
-		if(paymentDate!=null)
-		dto.setPaymentDate(paymentDate.getTime());
+		if (paymentDate != null)
+			dto.setPaymentDate(paymentDate.getTime());
 		dto.setPaymentMode(paymentMode);
 		dto.setPaymentRef(paymentRef);
 		dto.setPaymentStatus(paymentStatus);
 		dto.setRefId(getRefId());
 		dto.setStatus(status);
-		
+
 		return dto;
 	}
 
 	public void copyFrom(BookingDto dto) {
-		
-		
-		setBookingDate(dto.getBookingDate()==null? null : new Date(dto.getBookingDate()));
+		setBookingDate(dto.getBookingDate() == null ? null : new Date(
+				dto.getBookingDate()));
+		setPaymentStatus(dto.getPaymentStatus());
 		setPaymentMode(dto.getPaymentMode());
-		setPaymentDate(dto.getPaymentDate()==null? null: new Date(dto.getPaymentDate()));
+		setPaymentDate(dto.getPaymentDate() == null ? null : new Date(
+				dto.getPaymentDate()));
 		setStatus(dto.getStatus());
 		setCurrency(dto.getCurrency());
 	}
@@ -292,19 +292,19 @@ public class Booking extends PO{
 		EnrollmentDto dto = new EnrollmentDto();
 		dto.setAmountDue(amountDue);
 		dto.setRegistrationDate(registrationDate);
-		
-		if(bookingDate!=null)
+
+		if (bookingDate != null)
 			dto.setBookingDate(bookingDate.getTime());
-		
+
 		dto.setContact(contact.toDto());
 		dto.setCurrency(currency);
-		
-		if(getEvent()!=null){
+
+		if (getEvent() != null) {
 			dto.setEventRefId(getEvent().getRefId());
 		}
 
-		if(paymentDate!=null)
-		dto.setPaymentDate(paymentDate.getTime());
+		if (paymentDate != null)
+			dto.setPaymentDate(paymentDate.getTime());
 		dto.setPaymentMode(paymentMode);
 		dto.setPaymentRef(paymentRef);
 		dto.setPaymentStatus(paymentStatus);
@@ -315,9 +315,11 @@ public class Booking extends PO{
 	}
 
 	public void copyFrom(EnrollmentDto dto) {
-		setBookingDate(dto.getBookingDate()==null? null : new Date(dto.getBookingDate()));
+		setBookingDate(dto.getBookingDate() == null ? null : new Date(
+				dto.getBookingDate()));
 		setPaymentMode(dto.getPaymentMode());
-		setPaymentDate(dto.getPaymentDate()==null? null: new Date(dto.getPaymentDate()));
+		setPaymentDate(dto.getPaymentDate() == null ? null : new Date(
+				dto.getPaymentDate()));
 		setStatus(dto.getStatus());
 		setCurrency(dto.getCurrency());
 		setMemberId(dto.getMemberId());

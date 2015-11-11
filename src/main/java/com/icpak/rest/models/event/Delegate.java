@@ -36,21 +36,53 @@ public class Delegate extends PO {
 	private String surname;
 	private String otherNames;
 	private String email;
-
 	@Transient
 	private String bookingId;
-
 	@ManyToOne
 	@JoinColumn(name = "booking_id")
 	@XmlTransient
 	private Booking booking;
-
 	@ManyToOne
 	@JoinColumn(name = "accommodationId")
-	private Accommodation accommodation;
-
 	private Double amount;
 	private AttendanceStatus attendance = AttendanceStatus.NOTATTENDED;
+	private Accommodation accommodation;
+	private String receiptNo;
+	private String lpoNo;
+	private int isCredit;
+	private String clearanceNo;
+
+	public String getBookingId() {
+		return bookingId;
+	}
+
+	public void setBookingId(String bookingId) {
+		this.bookingId = bookingId;
+	}
+
+	public String getReceiptNo() {
+		return receiptNo;
+	}
+
+	public void setReceiptNo(String receiptNo) {
+		this.receiptNo = receiptNo;
+	}
+
+	public String getLpoNo() {
+		return lpoNo;
+	}
+
+	public void setLpoNo(String lpoNo) {
+		this.lpoNo = lpoNo;
+	}
+
+	public int getIsCredit() {
+		return isCredit;
+	}
+
+	public void setIsCredit(int isCredit) {
+		this.isCredit = isCredit;
+	}
 
 	public String getMemberRegistrationNo() {
 		return memberRegistrationNo;
@@ -118,9 +150,12 @@ public class Delegate extends PO {
 		setSurname(delegateDto.getSurname());
 		setTitle(delegateDto.getTitle());
 		setErn(delegateDto.getErn());
-
 		if (delegateDto.getAttendance() != null)
 			setAttendance(delegateDto.getAttendance());
+		setIsCredit(delegateDto.getIsCredit());
+		setLpoNo(delegateDto.getLpoNo());
+		setReceiptNo(delegateDto.getLpoNo());
+		setClearanceNo(delegateDto.getClearanceNo());
 	}
 
 	public DelegateDto toDto() {
@@ -136,10 +171,12 @@ public class Delegate extends PO {
 		if (getAccommodation() != null) {
 			dto.setAccommodation(getAccommodation().toDto());
 		}
-
 		dto.setAttendance(attendance);
 		dto.setAmount(amount);
-
+		dto.setIsCredit(isCredit);
+		dto.setLpoNo(lpoNo);
+		dto.setReceiptNo(receiptNo);
+		dto.setClearanceNo(clearanceNo);
 		return dto;
 	}
 
@@ -187,6 +224,14 @@ public class Delegate extends PO {
 
 	public void setErn(String ern) {
 		this.ern = ern;
+	}
+
+	public String getClearanceNo() {
+		return clearanceNo;
+	}
+
+	public void setClearanceNo(String clearanceNo) {
+		this.clearanceNo = clearanceNo;
 	}
 
 }

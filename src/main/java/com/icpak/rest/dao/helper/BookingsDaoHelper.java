@@ -435,7 +435,7 @@ public class BookingsDaoHelper {
 
 		invoice = invoiceHelper.save(invoice);
 
-		System.err.println("Invoice RefId>>>" + invoice.getRefId());
+		// System.err.println("Invoice RefId>>>" + invoice.getRefId());
 
 		// Create a Charge Record
 		trxHelper.charge(booking.getMemberId(), booking.getBookingDate(),

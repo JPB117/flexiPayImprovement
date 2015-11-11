@@ -15,6 +15,7 @@ import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.RowWidget;
 import com.workpoint.icpak.client.ui.component.TextField;
 import com.workpoint.icpak.client.ui.events.EditModelEvent;
+import com.workpoint.icpak.client.ui.eventsandseminars.delegates.updatepayment.UpdatePaymentWidget;
 import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.model.EventType;
 import com.workpoint.icpak.shared.model.PaymentStatus;
@@ -66,6 +67,8 @@ public class DelegateTableRow extends RowWidget {
 	@UiField
 	ActionLink aAttended;
 	@UiField
+	ActionLink aUpdatePayment;
+	@UiField
 	ActionLink aNotAttended;
 
 	private DelegateDto delegate;
@@ -93,6 +96,24 @@ public class DelegateTableRow extends RowWidget {
 				onAttendanceChanged(AttendanceStatus.ENROLLED);
 			}
 		});
+
+		aUpdatePayment.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				updatePaymentInfo();
+			}
+		});
+	}
+
+	protected void updatePaymentInfo() {
+		AppManager.showPopUp("Update Payment Info", new UpdatePaymentWidget(
+				delegate), new OnOptionSelected() {
+			@Override
+			public void onSelect(String name) {
+				if (name.equals("Save")) {
+				}
+			}
+		}, "Save", "Cancel");
 	}
 
 	protected void onAttendanceChanged(final AttendanceStatus attendanceStatus) {

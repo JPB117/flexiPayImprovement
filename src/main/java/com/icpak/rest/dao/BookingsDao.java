@@ -68,9 +68,9 @@ public class BookingsDao extends BaseDao {
 	}
 
 	public void importAllEvents() {
-		String sqlQuery = "select oldSystemId,refId from icpakdb.event where oldSystemId IS NOT NULL";
 		// String sqlQuery =
-		// "select oldSystemId,refId from icpakdb.event where oldSystemId=465";
+		// "select oldSystemId,refId from icpakdb.event where oldSystemId IS NOT NULL";
+		String sqlQuery = "select oldSystemId,refId from icpakdb.event where oldSystemId=424";
 		List<Object[]> rows = getResultList(getEntityManager()
 				.createNativeQuery(sqlQuery));
 		for (Object[] row : rows) {
@@ -97,8 +97,11 @@ public class BookingsDao extends BaseDao {
 								+ "FROM icpakco_main.bookings b WHERE b.seminar_id = :seminarId group by b.batch_ID")
 				.setParameter("seminarId", seminarId));
 
-		int totalDelegateCount = 0;
 		int totalSponsorCount = 0;
+		int totalDelegateCount = 0;
+		int totalPaidCount = 0;
+		int totalUnpaidCount = 0;
+		int[] resultArray = new int[10];
 		for (Object[] row : rows) {
 			int i = 0;
 			Object value = null;
@@ -108,12 +111,6 @@ public class BookingsDao extends BaseDao {
 					.toString();
 			Date bookingDate = (value = row[i++]) == null ? null : (Date) value;
 			booking.setBookingDate(bookingDate.getTime());
-			String paymentMode = (value = row[i++]) == null ? null : value
-					.toString();
-			if (paymentMode != null) {
-				booking.setPaymentMode(paymentMode);
-				booking.setPaymentStatus(PaymentStatus.PAID);
-			}
 			String sponsorCountry = (value = row[i++]) == null ? null : value
 					.toString();
 			String sponsorAddress = (value = row[i++]) == null ? null : value
@@ -141,22 +138,28 @@ public class BookingsDao extends BaseDao {
 			booking.setContact(contact);
 
 			// System.err.println("Company Name>>" + contact.getCompany());
-			totalDelegateCount += importDelegates(batchId, booking, eventRefId,
+			resultArray = importDelegates(batchId, booking, eventRefId,
 					seminarId);
+			totalDelegateCount += resultArray[0];
+			totalPaidCount += resultArray[1];
+			totalUnpaidCount += resultArray[2];
 			totalSponsorCount++;
 		}
 
 		System.err.println("Total Sponsor Count:::" + totalSponsorCount);
 		System.err.println("Total Delegate Count:::" + totalDelegateCount);
+		System.err.println("Total Paid Counter:::" + totalPaidCount);
+		System.err.println("Total UnPaid Counter:::" + totalUnpaidCount);
 
 	}
 
-	public Integer importDelegates(Integer batchId, BookingDto booking,
+	public int[] importDelegates(Integer batchId, BookingDto booking,
 			String eventRefId, Integer seminarId) {
 		List<Object[]> rows = getResultList(getEntityManager()
 				.createNativeQuery(
 						"SELECT b.title,b.surname,b.othernames,b.is_member,b.reg_no,"
-								+ "b.email,a.refId,b.accomodation,b.accomodation_days "
+								+ "b.email,a.refId,b.accomodation,b.accomodation_days,b.payment_mode,"
+								+ "b.receipt,b.lpo,b.credit,b.clearance_no  "
 								+ "FROM icpakco_main.bookings b left join icpakdb.accommodation a "
 								+ "on (a.hotel = b.accomodation) "
 								+ "WHERE b.batch_ID = :batchId and "
@@ -165,7 +168,8 @@ public class BookingsDao extends BaseDao {
 				.setParameter("seminarId", seminarId));
 
 		List<DelegateDto> delegates = new ArrayList<>();
-
+		int paidCounter = 0;
+		int unPaidCounter = 0;
 		for (Object[] row : rows) {
 			DelegateDto delegate = new DelegateDto();
 			int i = 0;
@@ -195,22 +199,60 @@ public class BookingsDao extends BaseDao {
 				Accommodation accomodation = findByRefId(accomodationRefId,
 						Accommodation.class);
 				delegate.setAccommodation(accomodation.toDto());
-				System.err.println("Accomodation for " + delegate.getSurname()
-						+ " " + accomodation.getHotel());
+				// System.err.println("Accomodation for " +
+				// delegate.getSurname()
+				// + " " + accomodation.getHotel());
 			}
 			String delegateAccomodation = (value = row[i++]) == null ? null
 					: value.toString();
 			String delegateAccomodationDays = (value = row[i++]) == null ? null
 					: value.toString();
 			delegate.setAttendance(AttendanceStatus.NOTATTENDED);
+
+			String paymentMode = (value = row[i++]) == null ? null : value
+					.toString();
+			// System.err.println("PaymentMode>>>" + paymentMode);
+			if (paymentMode != null) {
+				if (!paymentMode.equals("N/A") || !paymentMode.isEmpty()) {
+					paidCounter++;
+					booking.setPaymentMode(paymentMode);
+					booking.setPaymentStatus(PaymentStatus.PAID);
+				} else {
+					unPaidCounter++;
+					booking.setPaymentStatus(PaymentStatus.NOTPAID);
+				}
+			} else {
+				unPaidCounter++;
+				booking.setPaymentStatus(PaymentStatus.NOTPAID);
+			}
+
+			String receiptNo = (value = row[i++]) == null ? null : value
+					.toString();
+			delegate.setReceiptNo(receiptNo);
+			String isCredit = (value = row[i++]) == null ? null : value
+					.toString();
+			if (isCredit != null && !isCredit.isEmpty()) {
+				delegate.setIsCredit(1);
+			} else {
+				delegate.setIsCredit(0);
+			}
+
+			String lpoNo = (value = row[i++]) == null ? null : value.toString();
+			delegate.setLpoNo(lpoNo);
+			String clearanceNo = (value = row[i++]) == null ? null : value
+					.toString();
+			delegate.setClearanceNo(clearanceNo);
 			delegates.add(delegate);
 		}
 
-		// System.err.println("Delegates Total>>>" + delegates.size());
 		booking.setDelegates(delegates);
 		daoHelper.createBooking(eventRefId, booking);
 
-		return delegates.size();
+		int[] results = new int[3];
+		results[0] = delegates.size();
+		results[1] = paidCounter;
+		results[2] = unPaidCounter;
+		return results;
 	}
 
 	public List<Booking> getAllBookings(String eventId, Integer offSet,

@@ -2,6 +2,7 @@ package com.workpoint.icpak.shared.model.events;
 
 import com.workpoint.icpak.shared.model.PaymentStatus;
 import com.workpoint.icpak.shared.model.SerializableObj;
+import com.workpoint.icpak.shared.trx.TransactionDto;
 
 public class DelegateDto extends SerializableObj {
 
@@ -18,21 +19,42 @@ public class DelegateDto extends SerializableObj {
 	private AccommodationDto accommodation;
 	private Double amount;
 	private AttendanceStatus attendance;
+	private TransactionDto transaction;
 	private DelegateType delegateType;
 	private String bookingId;
 	private String eventRefId;
+	private PaymentStatus paymentStatus;
 	public String courseId;
 	private String ern;
-	private PaymentStatus paymentStatus;
 	private String hotel;
 	private String lmsResponse;
+	private String clearanceNo;
+	private String receiptNo;
+	private String lpoNo;
+	private int isCredit;
 
-	public PaymentStatus getPaymentStatus() {
-		return paymentStatus;
+	public String getReceiptNo() {
+		return receiptNo;
 	}
 
-	public void setPaymentStatus(PaymentStatus paymentStatus) {
-		this.paymentStatus = paymentStatus;
+	public void setReceiptNo(String receiptNo) {
+		this.receiptNo = receiptNo;
+	}
+
+	public String getLpoNo() {
+		return lpoNo;
+	}
+
+	public void setLpoNo(String lpoNo) {
+		this.lpoNo = lpoNo;
+	}
+
+	public int getIsCredit() {
+		return isCredit;
+	}
+
+	public void setIsCredit(int isCredit) {
+		this.isCredit = isCredit;
 	}
 
 	public String getHotel() {
@@ -178,6 +200,30 @@ public class DelegateDto extends SerializableObj {
 
 	public void setLmsResponse(String lmsResponse) {
 		this.lmsResponse = lmsResponse;
+	}
+
+	public String getClearanceNo() {
+		return clearanceNo;
+	}
+
+	public void setClearanceNo(String clearanceNo) {
+		this.clearanceNo = clearanceNo;
+	}
+
+	public TransactionDto getTransaction() {
+		return transaction;
+	}
+
+	public void setTransaction(TransactionDto transaction) {
+		this.transaction = transaction;
+	}
+
+	public PaymentStatus getPaymentStatus() {
+		return paymentStatus;
+	}
+
+	public void setPaymentStatus(PaymentStatus paymentStatus) {
+		this.paymentStatus = paymentStatus;
 	}
 
 }

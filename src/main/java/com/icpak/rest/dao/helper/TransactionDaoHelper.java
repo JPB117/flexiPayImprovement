@@ -24,6 +24,7 @@ import com.icpak.rest.models.trx.Transaction;
 import com.icpak.rest.util.SMSIntegration;
 import com.icpak.rest.utils.EmailServiceHelper;
 import com.workpoint.icpak.shared.model.InvoiceDto;
+import com.workpoint.icpak.shared.model.PaymentMode;
 import com.workpoint.icpak.shared.model.PaymentStatus;
 import com.workpoint.icpak.shared.trx.TransactionDto;
 
@@ -47,7 +48,7 @@ public class TransactionDaoHelper {
 
 	public String charge(String userId, Date chargeDate, String description,
 			Date dueDate, Double amount, String documentNo, String invoiceRef) {
-		
+
 		Transaction trx = new Transaction();
 		trx.setInvoiceRef(invoiceRef);
 		trx.setAmount(amount);
@@ -68,7 +69,7 @@ public class TransactionDaoHelper {
 			String accountNo, String paymentMode, String trxNumber) {
 		Transaction trx = dao.findByRefId(paymentRef, Transaction.class);
 		trx.setAccountNo(accountNo);
-		trx.setPaymentMode(paymentMode);
+		trx.setPaymentMode(PaymentMode.valueOf(paymentMode));
 		trx.setTrxNumber(trxNumber);
 		trx.setBusinessNo(businessNo);
 		trx.setStatus(PaymentStatus.PAID);
@@ -112,8 +113,8 @@ public class TransactionDaoHelper {
 
 		// Update of Transaction Details
 		trx.setAccountNo(accountNo);
-		trx.setPaymentMode((paymentMode == null || paymentMode.equals("") ? "MPESA"
-				: paymentMode));
+		trx.setPaymentMode((paymentMode == null || paymentMode.equals("") ? PaymentMode.MPESA
+				: PaymentMode.MPESA));
 		trx.setTrxNumber(trxNumber);
 		trx.setBusinessNo(businessNo);
 		trx.setStatus(PaymentStatus.PAID);
