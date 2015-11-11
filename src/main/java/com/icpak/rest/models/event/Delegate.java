@@ -42,10 +42,10 @@ public class Delegate extends PO {
 	@JoinColumn(name = "booking_id")
 	@XmlTransient
 	private Booking booking;
-	@ManyToOne
-	@JoinColumn(name = "accommodationId")
 	private Double amount;
 	private AttendanceStatus attendance = AttendanceStatus.NOTATTENDED;
+	@ManyToOne
+	@JoinColumn(name = "accommodationId")
 	private Accommodation accommodation;
 	private String receiptNo;
 	private String lpoNo;
@@ -150,8 +150,9 @@ public class Delegate extends PO {
 		setSurname(delegateDto.getSurname());
 		setTitle(delegateDto.getTitle());
 		setErn(delegateDto.getErn());
-		if (delegateDto.getAttendance() != null)
+		if (delegateDto.getAttendance() != null) {
 			setAttendance(delegateDto.getAttendance());
+		}
 		setIsCredit(delegateDto.getIsCredit());
 		setLpoNo(delegateDto.getLpoNo());
 		setReceiptNo(delegateDto.getLpoNo());
@@ -168,6 +169,7 @@ public class Delegate extends PO {
 		dto.setErn(ern);
 		dto.setSurname(surname);
 		dto.setTitle(title);
+		dto.setBookingId(bookingId);
 		if (getAccommodation() != null) {
 			dto.setAccommodation(getAccommodation().toDto());
 		}

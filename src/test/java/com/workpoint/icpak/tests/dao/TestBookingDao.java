@@ -49,8 +49,7 @@ public class TestBookingDao extends AbstractDaoTest {
 	@Ignore
 	public void getBooking() {
 
-		BookingDto dto = bookingsHelper.getBookingById("Jx4Ca6HpOutf2ic7",
-				"Ac920rNN12ILqKFN");
+		BookingDto dto = bookingsHelper.getBookingById("Jx4Ca6HpOutf2ic7", "Ac920rNN12ILqKFN");
 		for (DelegateDto delegate : dto.getDelegates()) {
 			delegate.getAccommodation();
 		}
@@ -89,19 +88,27 @@ public class TestBookingDao extends AbstractDaoTest {
 		dto.setDelegates(delegates);
 
 		// dto.setCurrency(currency);
-		BookingDto booking = bookingsHelper.createBooking("PrjIf8x4RIDaPZIv ",
-				dto);
+		// BookingDto booking = bookingsHelper.createBooking("PrjIf8x4RIDaPZIv
+		// ",
+		// dto);
+		//
+		// System.err.println(booking.getRefId());
 
-		System.err.println(booking.getRefId());
-
-		bookingsHelper.sendProInvoice(booking.getRefId());
+		// bookingsHelper.sendProInvoice(booking.getRefId());
 		// Booking bookingModel = new Booking();
 		// bookingModel.copyFrom(booking);
 
 		// bookingsHelper.generateInvoice(bookingModel);
+
+		List<DelegateDto> delegateDtos = bookingsHelper.getAllDelegates(null, "Jx4Ca6HpOutf2ic7", null, 1000,
+				"wainaina");
+
+		for (DelegateDto delegateDto : delegateDtos) {
+			logger.error(" booking ref id " + delegateDto.getBookingId());
+		}
 	}
 
-	@Test
+	@Ignore
 	public void TestImportBookings() {
 		bookingDao.importAllEvents();
 	}
@@ -114,18 +121,15 @@ public class TestBookingDao extends AbstractDaoTest {
 
 	@Ignore
 	public void testSearch() {
-		List<DelegateDto> delegates = bookingsHelper.getAllDelegates("",
-				"Jx4Ca6HpOutf2ic7", null, 1000, "ki");
-		System.err.println(bookingsHelper.getDelegatesCount("Jx4Ca6HpOutf2ic7",
-				"ki"));
+		List<DelegateDto> delegates = bookingsHelper.getAllDelegates("", "Jx4Ca6HpOutf2ic7", null, 1000, "ki");
+		System.err.println(bookingsHelper.getDelegatesCount("Jx4Ca6HpOutf2ic7", "ki"));
 		System.err.println(delegates.size());
 
 	}
 
 	@Ignore
 	public void testSearchCount() {
-		System.err.println(bookingsHelper.getDelegatesCount("Jx4Ca6HpOutf2ic7",
-				"ki"));
+		System.err.println(bookingsHelper.getDelegatesCount("Jx4Ca6HpOutf2ic7", "ki"));
 	}
 
 	@Ignore
@@ -138,4 +142,20 @@ public class TestBookingDao extends AbstractDaoTest {
 		System.err.println(eventDao.getAllEvents(0, 1000, null, "Fina").size());
 		System.err.println(eventDao.getSearchEventCount("Fin"));
 	}
+
+	@Test
+	public void testUpdate(){
+		
+		Delegate delInDb = eventDao.findByRefId("ZOrfIhI5IBnVvuNn", Delegate.class);
+		DelegateDto delegate  = delInDb.toDto();
+		
+		delegate.setClearanceNo("fdasfda");
+		delegate.setLpoNo("fdadfa");
+		delegate.setReceiptNo("fdasfda");
+		delegate.setIsCredit(1);
+		delegate.setAttendance(AttendanceStatus.ATTENDED);
+		delegate.setEventRefId("Jx4Ca6HpOutf2ic7");
+		
+		bookingsHelper.updateDelegate(null,"jmHm6KVeeZm8iiPh",delegate);
+		}
 }

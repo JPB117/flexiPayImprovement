@@ -590,7 +590,7 @@ public class GetReport extends HttpServlet {
 				cpdCategory = "Structured";
 				values.put("category", cpdCategory);
 			} else {
-				cpdCategory = "Un-strucured";
+				cpdCategory = "Un-structured";
 				values.put("category", cpdCategory);
 			}
 			values.put("cpd", cpd.getCpdHours());

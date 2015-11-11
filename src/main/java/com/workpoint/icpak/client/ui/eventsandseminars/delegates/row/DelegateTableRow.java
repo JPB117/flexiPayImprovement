@@ -6,6 +6,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Widget;
@@ -25,11 +26,9 @@ import com.workpoint.icpak.shared.model.events.DelegateDto;
 
 public class DelegateTableRow extends RowWidget {
 
-	private static ActivitiesTableRowUiBinder uiBinder = GWT
-			.create(ActivitiesTableRowUiBinder.class);
+	private static ActivitiesTableRowUiBinder uiBinder = GWT.create(ActivitiesTableRowUiBinder.class);
 
-	interface ActivitiesTableRowUiBinder extends
-			UiBinder<Widget, DelegateTableRow> {
+	interface ActivitiesTableRowUiBinder extends UiBinder<Widget, DelegateTableRow> {
 	}
 
 	@UiField
@@ -106,19 +105,22 @@ public class DelegateTableRow extends RowWidget {
 	}
 
 	protected void updatePaymentInfo() {
-		AppManager.showPopUp("Update Payment Info", new UpdatePaymentWidget(
-				delegate), new OnOptionSelected() {
+		final UpdatePaymentWidget paymentWidget = new UpdatePaymentWidget(delegate);
+
+		AppManager.showPopUp("Update Payment Info", paymentWidget, new OnOptionSelected() {
 			@Override
 			public void onSelect(String name) {
 				if (name.equals("Save")) {
+					DelegateDto d = paymentWidget.getDelegate();
+					AppContext.fireEvent(new EditModelEvent(paymentWidget.getDelegate()));
 				}
 			}
 		}, "Save", "Cancel");
 	}
 
 	protected void onAttendanceChanged(final AttendanceStatus attendanceStatus) {
-		AppManager.showPopUp("Confirm", "Confirm " + delegate.getSurname()
-				+ " " + attendanceStatus.getDisplayName() + " this event?",
+		AppManager.showPopUp("Confirm",
+				"Confirm " + delegate.getSurname() + " " + attendanceStatus.getDisplayName() + " this event?",
 				new OnOptionSelected() {
 					@Override
 					public void onSelect(String name) {
@@ -132,8 +134,8 @@ public class DelegateTableRow extends RowWidget {
 
 	}
 
-	public DelegateTableRow(String memberNo, String title, String surName,
-			String otherNames, String email, Integer rowId) {
+	public DelegateTableRow(String memberNo, String title, String surName, String otherNames, String email,
+			Integer rowId) {
 		this();
 		divMemberNo.getElement().setInnerHTML(memberNo);
 		divTitle.getElement().setInnerHTML(title);
@@ -145,16 +147,15 @@ public class DelegateTableRow extends RowWidget {
 	}
 
 	public DelegateTableRow(DelegateDto delegate, EventType eventType) {
-		this(delegate.getMemberNo(), delegate.getTitle(),
-				delegate.getSurname(), delegate.getOtherNames(), delegate
-						.getEmail(), null);
+		this(delegate.getMemberNo(), delegate.getTitle(), delegate.getSurname(), delegate.getOtherNames(),
+				delegate.getEmail(), null);
+		// Window.alert(delegate.getBookingId());
 		delegate.setBookingId(delegate.getBookingId());
 		delegate.setEventRefId(delegate.getEventRefId());
 		this.delegate = delegate;
 
 		if (delegate.getAccommodation() != null) {
-			divAccomodation.add(new InlineLabel(delegate.getAccommodation()
-					.getHotel() + ""));
+			divAccomodation.add(new InlineLabel(delegate.getAccommodation().getHotel() + ""));
 		}
 
 		setPaymentStatus(delegate.getPaymentStatus());
@@ -177,8 +178,7 @@ public class DelegateTableRow extends RowWidget {
 	private void setAttendance(AttendanceStatus attendance) {
 		if (attendance != null) {
 			spnAttendance.setInnerText(attendance.getDisplayName());
-			if (attendance == AttendanceStatus.NOTATTENDED
-					|| attendance == AttendanceStatus.NOTENROLLED) {
+			if (attendance == AttendanceStatus.NOTATTENDED || attendance == AttendanceStatus.NOTENROLLED) {
 				spnAttendance.removeClassName("label-success");
 				spnAttendance.addClassName("label-danger");
 			} else {
@@ -199,9 +199,8 @@ public class DelegateTableRow extends RowWidget {
 
 	}
 
-	public void InsertParameters(TextField memberNo, TextField title,
-			TextField surName, TextField otherNames, TextField email,
-			Integer rowId) {
+	public void InsertParameters(TextField memberNo, TextField title, TextField surName, TextField otherNames,
+			TextField email, Integer rowId) {
 		divMemberNo.add(memberNo);
 		divTitle.add(title);
 		divSurName.add(surName);

@@ -14,8 +14,7 @@ import com.workpoint.icpak.shared.model.events.DelegateDto;
 
 public class UpdatePaymentWidget extends Composite {
 
-	private static UpdatePaymentWidgetUiBinder uiBinder = GWT
-			.create(UpdatePaymentWidgetUiBinder.class);
+	private static UpdatePaymentWidgetUiBinder uiBinder = GWT.create(UpdatePaymentWidgetUiBinder.class);
 
 	@UiField
 	DropDownList<PaymentStatus> lstPaymentStatus;
@@ -28,27 +27,41 @@ public class UpdatePaymentWidget extends Composite {
 	@UiField
 	CheckBox chckIsCredit;
 	@UiField
-	TextField txtLPO;
+	TextField txtLPONo;
 
 	private DelegateDto delegate;
 
-	interface UpdatePaymentWidgetUiBinder extends
-			UiBinder<Widget, UpdatePaymentWidget> {
+	interface UpdatePaymentWidgetUiBinder extends UiBinder<Widget, UpdatePaymentWidget> {
 	}
 
 	public UpdatePaymentWidget(DelegateDto delegate) {
 		this.delegate = delegate;
 		initWidget(uiBinder.createAndBindUi(this));
+		setDelegateValues(delegate);
 	}
 
 	public DelegateDto getDelegate() {
-		DelegateDto delegate = new DelegateDto();
-		// delegate.setPaymentStatus(lstPaymentStatus.getValue());
-		return null;
+		delegate.setReceiptNo(txtReceiptNo.getValue());
+		delegate.setClearanceNo(txtClearanceNo.getValue());
+		delegate.setLpoNo(txtLPONo.getValue());
+		if (chckIsCredit.getValue()) {
+			delegate.setIsCredit(1);
+		} else {
+			delegate.setIsCredit(0);
+		}
+
+		return delegate;
 	}
 
-	public void setDelegateValues() {
-
+	public void setDelegateValues(DelegateDto delegate) {
+		txtReceiptNo.setValue(delegate.getReceiptNo());
+		txtClearanceNo.setValue(delegate.getClearanceNo());
+		txtLPONo.setValue(delegate.getLpoNo());
+		if (delegate.getIsCredit() == 1) {
+			chckIsCredit.setValue(true);
+		} else {
+			chckIsCredit.setValue(false);
+		}
 	}
 
 }

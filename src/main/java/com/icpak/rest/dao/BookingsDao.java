@@ -1,5 +1,6 @@
 package com.icpak.rest.dao;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -438,7 +439,7 @@ public class BookingsDao extends BaseDao {
 
 		String sql = "select d.refId,d.memberRegistrationNo,d.ern,"
 				+ "d.title,d.otherNames,a.hotel,b.paymentStatus,"
-				+ "d.attendance,d.surname,d.email,e.refid "
+				+ "d.attendance,d.surname,d.email,e.refid,d.booking_id "
 				+ "from delegate d inner join booking b on (d.booking_id=b.id) "
 				+ "inner join event e on (b.event_id=e.id) "
 				+ "left join accommodation a on (a.eventId=e.id) "
@@ -484,6 +485,7 @@ public class BookingsDao extends BaseDao {
 			String email = (value = o[i++]) == null ? null : value.toString();
 			String eventRefId = (value = o[i++]) == null ? null : value
 					.toString();
+			BigInteger bookingId = (value = o[i++]) == null ? null : (BigInteger)value;
 
 			DelegateDto delegateDto = new DelegateDto();
 			delegateDto.setMemberRefId(memberRefId);
@@ -492,6 +494,7 @@ public class BookingsDao extends BaseDao {
 			delegateDto.setOtherNames(otherNames);
 			delegateDto.setHotel(hotel);
 			delegateDto.setErn(ern);
+			delegateDto.setBookingId(bookingId.toString());
 
 			if (paymentStatus == 1) {
 				delegateDto.setPaymentStatus(PaymentStatus.PAID);

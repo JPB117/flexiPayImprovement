@@ -4,7 +4,7 @@
 	<g:HTMLPanel>
 		<div class="col-sm-12">
 
-			<div class="form-group">
+			<div class="form-group hide">
 				<div class="row">
 					<div class="col-xs-6">
 						<label for="firstname">Payment Status:</label>
