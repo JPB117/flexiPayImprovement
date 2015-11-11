@@ -69,9 +69,9 @@ public class BookingsDao extends BaseDao {
 	}
 
 	public void importAllEvents() {
+		String sqlQuery = "select oldSystemId,refId from icpakdb.event where oldSystemId IS NOT NULL";
 		// String sqlQuery =
-		// "select oldSystemId,refId from icpakdb.event where oldSystemId IS NOT NULL";
-		String sqlQuery = "select oldSystemId,refId from icpakdb.event where oldSystemId=424";
+		// "select oldSystemId,refId from icpakdb.event where oldSystemId=424";
 		List<Object[]> rows = getResultList(getEntityManager()
 				.createNativeQuery(sqlQuery));
 		for (Object[] row : rows) {
@@ -485,7 +485,8 @@ public class BookingsDao extends BaseDao {
 			String email = (value = o[i++]) == null ? null : value.toString();
 			String eventRefId = (value = o[i++]) == null ? null : value
 					.toString();
-			BigInteger bookingId = (value = o[i++]) == null ? null : (BigInteger)value;
+			BigInteger bookingId = (value = o[i++]) == null ? null
+					: (BigInteger) value;
 
 			DelegateDto delegateDto = new DelegateDto();
 			delegateDto.setMemberRefId(memberRefId);

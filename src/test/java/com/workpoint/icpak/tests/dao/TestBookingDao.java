@@ -108,7 +108,7 @@ public class TestBookingDao extends AbstractDaoTest {
 		}
 	}
 
-	@Ignore
+	@Test
 	public void TestImportBookings() {
 		bookingDao.importAllEvents();
 	}
@@ -143,7 +143,7 @@ public class TestBookingDao extends AbstractDaoTest {
 		System.err.println(eventDao.getSearchEventCount("Fin"));
 	}
 
-	@Test
+	@Ignore
 	public void testUpdate(){
 		
 		Delegate delInDb = eventDao.findByRefId("ZOrfIhI5IBnVvuNn", Delegate.class);
