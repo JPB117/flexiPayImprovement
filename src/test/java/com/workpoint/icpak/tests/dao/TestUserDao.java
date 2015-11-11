@@ -30,7 +30,7 @@ public class TestUserDao extends AbstractDaoTest {
 	@Inject
 	UsersDao usersDao;
 
-	@Test
+	@Ignore
 	public void hashPassword() {
 		System.out.println(usersDao.encrypt("pass"));
 	}
@@ -77,7 +77,7 @@ public class TestUserDao extends AbstractDaoTest {
 //		List<User> users = usersDao.getAllUsers();
 //		logger.error("== Users found = "+ users.size());
 		int count = 1 ;
-		helper.updatePassword("LCJ4fe1eoOdxwq69", "pass");
+		helper.updatePassword("gNtLJ03iEfS3LCac", "pass");
 //		for(User u : users){
 //			logger.error("== Updating password user = "+ count);
 //			helper.updatePassword("LCJ4fe1eoOdxwq69", "pass");

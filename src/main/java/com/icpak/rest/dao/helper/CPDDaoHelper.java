@@ -1,9 +1,12 @@
 package com.icpak.rest.dao.helper;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import javax.persistence.Query;
 
 import org.apache.log4j.Logger;
 
@@ -42,17 +45,14 @@ public class CPDDaoHelper {
 
 	static Logger logger = Logger.getLogger(CPDDaoHelper.class);
 
-	public List<CPDDto> getAllCPD(String memberId, Integer offset,
-			Integer limit, Long startDate, Long endDate) {
+	public List<CPDDto> getAllCPD(String memberId, Integer offset, Integer limit, Long startDate, Long endDate) {
 
 		List<CPD> cpds = null;
 
 		if (memberId != null && memberId.equals("ALL")) {
-			cpds = dao.getAllCPDs(offset, limit, new Date(startDate), new Date(
-					endDate));
+			cpds = dao.getAllCPDs(offset, limit, new Date(startDate), new Date(endDate));
 		} else {
-			cpds = dao.getAllCPDs(memberId, offset, limit, new Date(startDate),
-					new Date(endDate));
+			cpds = dao.getAllCPDs(memberId, offset, limit, new Date(startDate), new Date(endDate));
 		}
 
 		List<CPDDto> rtn = new ArrayList<>();
@@ -67,15 +67,13 @@ public class CPDDaoHelper {
 
 	public Integer getCount(String memberId, Long startDate, Long endDate) {
 		System.err.println("memberId" + memberId);
-		return dao
-				.getCPDCount(memberId, new Date(startDate), new Date(endDate));
+		return dao.getCPDCount(memberId, new Date(startDate), new Date(endDate));
 	}
 
 	public CPDDto getCPD(String cpdId) {
 		CPD cpd = dao.findByCPDId(cpdId);
 		CPDDto rtn = cpd.toDTO();
-		rtn.setFullNames(userDao.getNamesBymemberNo(cpd
-				.getMemberRegistrationNo()));
+		rtn.setFullNames(userDao.getNamesBymemberNo(cpd.getMemberRegistrationNo()));
 		return rtn;
 	}
 
@@ -113,14 +111,12 @@ public class CPDDaoHelper {
 		dao.delete(dao.findByCPDId(cpdId));
 	}
 
-	public void updateCPDFromAttendance(Delegate delegate,
-			AttendanceStatus attendance) {
+	public void updateCPDFromAttendance(Delegate delegate, AttendanceStatus attendance) {
 		if (delegate.getMemberRefId() == null) {
 			return;
 		}
 
-		Member member = dao
-				.findByRefId(delegate.getMemberRefId(), Member.class);
+		Member member = dao.findByRefId(delegate.getMemberRefId(), Member.class);
 		Event event = delegate.getBooking().getEvent();
 		String memberRefId = delegate.getMemberRefId();
 
@@ -156,16 +152,14 @@ public class CPDDaoHelper {
 		}
 	}
 
-	public CPDSummaryDto getCPDSummary(String memberRefId, Long startDate,
-			Long endDate) {
+	public CPDSummaryDto getCPDSummary(String memberRefId, Long startDate, Long endDate) {
 
 		CPDSummaryDto dto = null;
 
 		if (memberRefId.equals("ALL")) {
 			dto = dao.getCPDSummary(new Date(startDate), new Date(endDate));
 		} else {
-			dto = dao.getCPDSummary(memberRefId, new Date(startDate), new Date(
-					endDate));
+			dto = dao.getCPDSummary(memberRefId, new Date(startDate), new Date(endDate));
 		}
 
 		return dto;
@@ -176,8 +170,7 @@ public class CPDDaoHelper {
 	 * @param memberRefId
 	 * @return true if member meets all requirements
 	 */
-	public boolean isInGoodStanding(String memberRefId, List<String> messages,
-			MemberStanding standing) {
+	public boolean isInGoodStanding(String memberRefId, List<String> messages, MemberStanding standing) {
 		boolean isGenerate = true;
 
 		Member member = dao.findByRefId(memberRefId, Member.class);
@@ -190,9 +183,7 @@ public class CPDDaoHelper {
 		if (status != null) {
 			if (status != MembershipStatus.ACTIVE) {
 				isGenerate = false;
-				messages.add("Your Membership status is <strong>"
-						+ status.name()
-						+ "</strong>. "
+				messages.add("Your Membership status is <strong>" + status.name() + "</strong>. "
 						+ "Membership must be <strong>Active</strong> be in good standing.");
 			}
 		} else {
@@ -236,34 +227,29 @@ public class CPDDaoHelper {
 			Calendar regDate = Calendar.getInstance();
 			regDate.setTime(registrationDate);
 
-			Double noOfYears = DateUtils.getYearsBetween(registrationDate,
-					new Date());
+			Double noOfYears = DateUtils.getYearsBetween(registrationDate, new Date());
 			if (noOfYears <= 0.0) {
 				// do nothing - all is well<=2
 			} else if (noOfYears <= 2) {
 				// >1 && <=2
 				if (cpdHours < 40) {
 					isGenerate = false;
-					messages.add("You have been a member for more than "
-							+ noOfYears + ". You have done " + cpdHours
+					messages.add("You have been a member for more than " + noOfYears + ". You have done " + cpdHours
 							+ "/40 expected hours.");
 				}
 			} else if (noOfYears <= 3) {
 				// >1 && <=2
 				if (cpdHours < 80) {
 					isGenerate = false;
-					messages.add("You have been a member for more than "
-							+ noOfYears + ". You have done " + cpdHours
+					messages.add("You have been a member for more than " + noOfYears + ". You have done " + cpdHours
 							+ "/80 expected hours.");
 				}
 			} else {
 				// >1 && <=2
 				if (cpdHours < 120) {
 					isGenerate = false;
-					messages.add("You have been a member for more than "
-							+ noOfYears.intValue() + "years but have done "
-							+ cpdHours
-							+ " cpd hours out of 120 expected hours.");
+					messages.add("You have been a member for more than " + noOfYears.intValue() + "years but have done "
+							+ cpdHours + " cpd hours out of 120 expected hours.");
 				}
 			}
 		}
@@ -274,8 +260,7 @@ public class CPDDaoHelper {
 	public MemberStanding getMemberStanding(String memberId) {
 		List<String> messages = new ArrayList<>();
 		MemberStanding standing = new MemberStanding();
-		boolean isInGoodStanding = isInGoodStanding(memberId, messages,
-				standing);
+		boolean isInGoodStanding = isInGoodStanding(memberId, messages, standing);
 
 		standing.setStanding(isInGoodStanding ? 1 : 0);
 		standing.setReasons(messages);
@@ -293,11 +278,11 @@ public class CPDDaoHelper {
 	}
 
 	// get a list of cpds filtered by date currently logged in member
-	public List<CPDDto> getAllMemberCpd(String memberRefId, Date startDate,
-			Date endDate, Integer limit, Integer offset) {
+	public List<CPDDto> getAllMemberCpd(String memberRefId, Date startDate, Date endDate, Integer limit,
+			Integer offset) {
 
-		List<CPD> cpds = dao.getAllCPDS(memberRefId, startDate, endDate,
-				offset == null ? 0 : offset, limit == null ? 1000 : limit);
+		List<CPD> cpds = dao.getAllCPDS(memberRefId, startDate, endDate, offset == null ? 0 : offset,
+				limit == null ? 1000 : limit);
 		logger.info("CPD Records Count = " + cpds.size());
 
 		List<CPDDto> cpdDtos = new ArrayList<>();
@@ -308,6 +293,15 @@ public class CPDDaoHelper {
 
 		return cpdDtos;
 
+	}
+
+	public List<CPDDto> searchCPD(String searchTerm, Integer offset, Integer limit) {
+		return dao.searchCPD(searchTerm, offset, limit);
+	}
+	
+	public Integer cpdSearchCount(String searchTerm) {
+		BigInteger count  = dao.cpdSearchCount(searchTerm);
+		return count.intValue();
 	}
 
 }
