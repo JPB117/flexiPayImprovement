@@ -106,7 +106,6 @@ public class DelegateTableRow extends RowWidget {
 
 	protected void updatePaymentInfo() {
 		final UpdatePaymentWidget paymentWidget = new UpdatePaymentWidget(delegate);
-
 		AppManager.showPopUp("Update Payment Info", paymentWidget, new OnOptionSelected() {
 			@Override
 			public void onSelect(String name) {
