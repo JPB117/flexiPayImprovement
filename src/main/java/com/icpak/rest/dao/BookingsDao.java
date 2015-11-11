@@ -20,7 +20,6 @@ import com.workpoint.icpak.shared.model.events.BookingDto;
 import com.workpoint.icpak.shared.model.events.ContactDto;
 import com.workpoint.icpak.shared.model.events.DelegateDto;
 import com.workpoint.icpak.shared.model.events.MemberBookingDto;
-import com.icpak.rest.models.event.Event;
 
 public class BookingsDao extends BaseDao {
 	Logger logger = Logger.getLogger(BookingsDao.class);
@@ -66,9 +65,11 @@ public class BookingsDao extends BaseDao {
 	}
 
 	public void importAllEvents() {
+		// String sqlQuery =
+		// "select oldSystemId,refId from icpakdb.event where oldSystemId IS NOT NULL";
+		String sqlQuery = "select oldSystemId,refId from icpakdb.event where oldSystemId=424";
 		List<Object[]> rows = getResultList(getEntityManager()
-				.createNativeQuery(
-						"select oldSystemId,refId from icpakdb.event where oldSystemId IS NOT NULL"));
+				.createNativeQuery(sqlQuery));
 		for (Object[] row : rows) {
 			int i = 0;
 			Object value = null;
@@ -79,7 +80,7 @@ public class BookingsDao extends BaseDao {
 					.toString();
 			importDistinctSponsor(seminarId, booking, eventRefId);
 
-			System.err.println("Importing Seminar Id>>" + seminarId);
+			// System.err.println("Importing Seminar Id>>" + seminarId);
 		}
 
 	}
@@ -88,11 +89,12 @@ public class BookingsDao extends BaseDao {
 			String eventRefId) {
 		List<Object[]> rows = getResultList(getEntityManager()
 				.createNativeQuery(
-						"SELECT b.s_name,b.booking_date,b.payment_mode,b.s_country,"
+						"SELECT distinct(b.s_name) as sponsorName,b.booking_date,b.payment_mode,b.s_country,"
 								+ "b.s_address,b.s_town,b.s_telephone,b.contact,b.s_email,b.code "
-								+ "FROM icpakco_main.bookings b WHERE b.seminar_id = :seminarId")
+								+ "FROM icpakco_main.bookings b WHERE b.seminar_id = :seminarId group by sponsorName")
 				.setParameter("seminarId", seminarId));
 
+		int totalDelegateCount = 0;
 		for (Object[] row : rows) {
 			int i = 0;
 			Object value = null;
@@ -132,19 +134,23 @@ public class BookingsDao extends BaseDao {
 			contact.setTelephoneNumbers(sponsorTelephone);
 			booking.setContact(contact);
 
-			System.err.println("Company Name>>" + contact.getCompany());
-			importDelegates(sponsorName, booking, eventRefId);
+			// System.err.println("Company Name>>" + contact.getCompany());
+			totalDelegateCount += importDelegates(sponsorName, booking,
+					eventRefId, seminarId);
 		}
+		System.err.println("Total Delegate Count:::" + totalDelegateCount);
+
 	}
 
-	public BookingDto importDelegates(String sponsorName, BookingDto booking,
-			String eventRefId) {
+	public Integer importDelegates(String sponsorName, BookingDto booking,
+			String eventRefId, Integer seminarId) {
 		List<Object[]> rows = getResultList(getEntityManager()
 				.createNativeQuery(
 						"SELECT b.title,b.surname,b.othernames,b.is_member,b.reg_no,"
 								+ "b.email,b.accomodation,b.accomodation_days"
-								+ " FROM icpakco_main.bookings b WHERE b.s_name = :sponsorName")
-				.setParameter("sponsorName", sponsorName));
+								+ " FROM icpakco_main.bookings b WHERE b.s_name = :sponsorName and seminar_id=:seminarId")
+				.setParameter("sponsorName", sponsorName)
+				.setParameter("seminarId", seminarId));
 
 		List<DelegateDto> delegates = new ArrayList<>();
 
@@ -175,15 +181,15 @@ public class BookingsDao extends BaseDao {
 					: value.toString();
 			String delegateAccomodationDays = (value = row[i++]) == null ? null
 					: value.toString();
+			delegate.setAttendance(AttendanceStatus.NOTATTENDED);
 			delegates.add(delegate);
 		}
 
-		System.err.println("Delegates Total>>>" + delegates.size());
+		// System.err.println("Delegates Total>>>" + delegates.size());
 		booking.setDelegates(delegates);
-
 		daoHelper.createBooking(eventRefId, booking);
 
-		return booking;
+		return delegates.size();
 	}
 
 	public List<Booking> getAllBookings(String eventId, Integer offSet,
@@ -345,17 +351,17 @@ public class BookingsDao extends BaseDao {
 			number = getSingleResultOrNull(query);
 
 		} else {
-			
+
 			String sql = "select count(*) "
 					+ "from delegate d inner join booking b on (d.booking_id=b.id) "
 					+ "inner join event e on (b.event_id=e.id) "
 					+ "left join accommodation a on (a.eventId=e.id) "
 					+ "where e.refId=:eventRefId";
 
-			number = getSingleResultOrNull(getEntityManager().createNativeQuery(sql)
-					.setParameter("eventRefId", eventId));
+			number = getSingleResultOrNull(getEntityManager()
+					.createNativeQuery(sql).setParameter("eventRefId", eventId));
 		}
-		
+
 		logger.error("=== Delegate Count ==== " + number.intValue());
 
 		return number.intValue();
@@ -386,7 +392,7 @@ public class BookingsDao extends BaseDao {
 
 		Query query = getEntityManager().createNativeQuery(sql).setParameter(
 				"eventRefId", passedRefId);
-		
+
 		if (searchTerm != null && !searchTerm.isEmpty()) {
 			query.setParameter("searchTerm", "%" + searchTerm + "%");
 		}

@@ -214,6 +214,9 @@ public class UsersDaoHelper {
 		Member member = new Member(user.getRefId());
 		member.setRefId(user.getRefId());
 		member.setUser(user);
+		if (user.getMemberNo() != null) {
+			member.setMemberNo(user.getMemberNo());
+		}
 		dao.save(member);
 	}
 
@@ -442,21 +445,19 @@ public class UsersDaoHelper {
 		} else {
 			dto.setDOB(new SimpleDateFormat("dd-MM-yyyy").format(new Date()));
 		}
+
 		if (user.getMemberNo() != null) {
-			dto.setUserName(user.getMemberNo());
 			dto.setMembershipID(user.getMemberNo());
-		} else if (user.getEmail() != null) {
-			dto.setUserName(user.getEmail());
-			dto.setMembershipID("");
 		}
 
+		if (user.getEmail() != null) {
+			dto.setUserName(user.getEmail());
+		}
 		dto.setRefID(user.getRefId());
-
 		LMSResponse response = LMSIntegrationUtil.getInstance().executeLMSCall(
 				"/account/register", dto, String.class);
 		logger.info("LMS Response::" + response.getMessage());
 		logger.info("LMS Status::" + response.getStatus());
-
 		user.setLmsResponse(response.getMessage());
 		user.setLmsStatus(response.getStatus());
 		update(dto.getRefID(), user);
