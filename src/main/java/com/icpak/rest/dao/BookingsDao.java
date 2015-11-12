@@ -93,7 +93,7 @@ public class BookingsDao extends BaseDao {
 			String eventRefId) {
 		List<Object[]> rows = getResultList(getEntityManager()
 				.createNativeQuery(
-						"SELECT distinct(batch_ID) as batchId,s_name,b.booking_date,b.payment_mode,b.s_country,"
+						"SELECT distinct(batch_ID) as batchId,s_name,b.booking_date,b.s_country,"
 								+ "b.s_address,b.s_town,b.s_telephone,b.contact,b.s_email,b.code "
 								+ "FROM icpakco_main.bookings b WHERE b.seminar_id = :seminarId group by b.batch_ID")
 				.setParameter("seminarId", seminarId));
@@ -248,6 +248,8 @@ public class BookingsDao extends BaseDao {
 
 		booking.setDelegates(delegates);
 		daoHelper.createBooking(eventRefId, booking);
+
+		daoHelper.sendProInvoice(booking.getRefId());
 
 		int[] results = new int[3];
 		results[0] = delegates.size();
@@ -468,8 +470,7 @@ public class BookingsDao extends BaseDao {
 			int i = 0;
 			Object value = null;
 
-			String refId = (value = o[i++]) == null ? null : value
-					.toString();
+			String refId = (value = o[i++]) == null ? null : value.toString();
 			String memberRefId = (value = o[i++]) == null ? null : value
 					.toString();
 			String memberNo = (value = o[i++]) == null ? null : value
@@ -491,7 +492,7 @@ public class BookingsDao extends BaseDao {
 					: (BigInteger) value;
 
 			DelegateDto delegateDto = new DelegateDto();
-			
+
 			delegateDto.setRefId(refId);
 			delegateDto.setMemberRefId(memberRefId);
 			delegateDto.setMemberNo(memberNo);
