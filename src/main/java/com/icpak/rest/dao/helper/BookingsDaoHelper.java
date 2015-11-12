@@ -269,15 +269,15 @@ public class BookingsDaoHelper {
 			String html = IOUtils.toString(is);
 			html = new DocumentHTMLMapper().map(emailDocument, html);
 
+			 EmailServiceHelper.sendEmail(html, "RE: ICPAK '" + subject,
+			 Arrays.asList(bookingInDb.getContact().getEmail()),
+			 Arrays.asList(bookingInDb.getContact().getContactName()),
+			 attachment);
+
 			// EmailServiceHelper.sendEmail(html, "RE: ICPAK '" + subject,
-			// Arrays.asList(bookingInDb.getContact().getEmail()),
+			// Arrays.asList("tomkim@wira.io"),
 			// Arrays.asList(bookingInDb.getContact().getContactName()),
 			// attachment);
-
-			EmailServiceHelper.sendEmail(html, "RE: ICPAK '" + subject,
-					Arrays.asList("tomkim@wira.io"),
-					Arrays.asList(bookingInDb.getContact().getContactName()),
-					attachment);
 
 			// sendDelegateSMS(bookingRefId);
 

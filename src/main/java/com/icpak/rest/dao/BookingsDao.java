@@ -249,7 +249,7 @@ public class BookingsDao extends BaseDao {
 		booking.setDelegates(delegates);
 		daoHelper.createBooking(eventRefId, booking);
 
-		daoHelper.sendProInvoice(booking.getRefId());
+		// daoHelper.sendProInvoice(booking.getRefId());
 
 		int[] results = new int[3];
 		results[0] = delegates.size();
