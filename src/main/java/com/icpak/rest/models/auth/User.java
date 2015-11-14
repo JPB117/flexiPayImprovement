@@ -118,6 +118,7 @@ public class User extends PO {
 	private String postalCode;
 	private String lmsStatus;
 	private String lmsResponse;
+	private String lmsPayLoad;
 
 	@Enumerated(EnumType.STRING)
 	private AccountStatus status = AccountStatus.NEWACC;
@@ -216,6 +217,7 @@ public class User extends PO {
 		setMemberNo(dto.getMemberNo());
 		setLmsResponse(dto.getLmsResponse());
 		setLmsStatus(dto.getLmsStatus());
+		setLmsPayLoad(dto.getLmsPayload());
 		setUserData(bio);
 	}
 
@@ -381,6 +383,14 @@ public class User extends PO {
 
 	public void setLmsResponse(String lmsResponse) {
 		this.lmsResponse = lmsResponse;
+	}
+
+	public String getLmsPayLoad() {
+		return lmsPayLoad;
+	}
+
+	public void setLmsPayLoad(String lmsPayLoad) {
+		this.lmsPayLoad = lmsPayLoad;
 	}
 
 }

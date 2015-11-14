@@ -30,6 +30,7 @@ public class UserDto extends SerializableObj implements Listable, Serializable {
 	private Date lastDateUpdateFromErp;
 	private String lmsStatus;
 	private String lmsResponse;
+	private String lmsPayload;
 
 	public UserDto() {
 	}
@@ -225,5 +226,13 @@ public class UserDto extends SerializableObj implements Listable, Serializable {
 
 	public void setLmsResponse(String lmsResponse) {
 		this.lmsResponse = lmsResponse;
+	}
+
+	public String getLmsPayload() {
+		return lmsPayload;
+	}
+
+	public void setLmsPayload(String lmsPayload) {
+		this.lmsPayload = lmsPayload;
 	}
 }

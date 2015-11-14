@@ -202,4 +202,10 @@ public class ApplicationFormDao extends BaseDao {
 				.setParameter("invoiceRefId", invoiceRefId));
 	}
 
+	public ApplicationFormHeader getApplicationByUserRef(String userRefId) {
+		return getSingleResultOrNull(getEntityManager().createQuery(
+				"FROM ApplicationFormHeader h where h.userRefId=:userRefId")
+				.setParameter("userRefId", userRefId));
+	}
+
 }

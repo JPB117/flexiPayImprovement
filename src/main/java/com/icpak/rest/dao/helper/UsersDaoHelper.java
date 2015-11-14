@@ -17,6 +17,7 @@ import org.apache.log4j.Logger;
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import com.icpak.rest.BaseResource;
+import com.icpak.rest.dao.ApplicationFormDao;
 import com.icpak.rest.dao.RolesDao;
 import com.icpak.rest.dao.TransactionsDao;
 import com.icpak.rest.dao.UserSessionDao;
@@ -29,6 +30,7 @@ import com.icpak.rest.models.auth.User;
 import com.icpak.rest.models.base.ExpandTokens;
 import com.icpak.rest.models.base.ResourceCollectionModel;
 import com.icpak.rest.models.base.ResourceModel;
+import com.icpak.rest.models.membership.ApplicationFormHeader;
 import com.icpak.rest.models.membership.Member;
 import com.icpak.rest.models.trx.Transaction;
 import com.icpak.rest.models.util.Attachment;
@@ -39,6 +41,7 @@ import com.icpak.rest.utils.EmailServiceHelper;
 import com.workpoint.icpak.server.integration.lms.LMSIntegrationUtil;
 import com.workpoint.icpak.server.integration.lms.LMSResponse;
 import com.workpoint.icpak.shared.lms.LMSMemberDto;
+import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 import com.workpoint.icpak.shared.model.Gender;
 import com.workpoint.icpak.shared.model.RoleDto;
 import com.workpoint.icpak.shared.model.Title;
@@ -56,6 +59,8 @@ public class UsersDaoHelper {
 	Logger logger = Logger.getLogger(UsersDaoHelper.class.getName());
 	@Inject
 	UsersDao dao;
+	@Inject
+	ApplicationFormDao applicationDao;
 	@Inject
 	RolesDao roleDao;
 	@Inject
@@ -98,8 +103,15 @@ public class UsersDaoHelper {
 		return user.toDto();
 	}
 
-	public void sendActivationEmail(String userId) {
+	public void sendActivationEmail(String userId, String emailAddress) {
 		User user = dao.findByUserId(userId);
+		user.setEmail(emailAddress);
+		dao.updateUser(user);
+		ApplicationFormHeader application = applicationDao
+				.getApplicationByUserRef(user.getRefId());
+		application.setEmail(emailAddress);
+		applicationDao.updateApplication(application);
+
 		sendActivationEmail(user);
 	}
 
@@ -311,6 +323,16 @@ public class UsersDaoHelper {
 		return user.clone();
 	}
 
+	public User getUserByActivationEmail(String userId) {
+		User user = dao.findByUserActivationEmail(userId, true);
+
+		if (user == null) {
+			throw new ServiceException(ErrorCodes.NOTFOUND, "'" + userId + "'");
+		}
+
+		return user.clone();
+	}
+
 	public void setProfilePic(String userId, byte[] bites, String fileName,
 			String contentType) {
 		User user = dao.findByUserId(userId);
@@ -431,7 +453,7 @@ public class UsersDaoHelper {
 		dto.setLastName(user.getUserData().getLastName());
 		dto.setGender((user.getUserData().getGender() == Gender.MALE ? Gender.MALE
 				.getCode() : Gender.FEMALE.getCode()));
-		if (user.getPhoneNumber() != null) {
+		if (user.getPhoneNumber() != null && !user.getPhoneNumber().isEmpty()) {
 			dto.setMobileNo(user.getPhoneNumber());
 		} else {
 			dto.setMobileNo("0722333333");

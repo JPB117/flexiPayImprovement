@@ -2,6 +2,7 @@ package com.workpoint.icpak.server.integration.lms;
 
 public class LMSResponse {
 
+	private String payload;
 	private String message;
 	private String status;
 
@@ -28,6 +29,14 @@ public class LMSResponse {
 
 	public void setMessage(String message) {
 		this.message = message;
+	}
+
+	public String getPayload() {
+		return payload;
+	}
+
+	public void setPayload(String payload) {
+		this.payload = payload;
 	}
 
 }

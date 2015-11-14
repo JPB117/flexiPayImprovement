@@ -353,7 +353,7 @@ public class ProfilePresenter
 						public void onSuccess(ApplicationFormHeaderDto result) {
 							// result;
 							getView().bindBasicDetails(result);
-							getView().setEditMode(false);
+							getView().setEditMode(true);
 							fireEvent(new ProcessingCompletedEvent());
 						}
 

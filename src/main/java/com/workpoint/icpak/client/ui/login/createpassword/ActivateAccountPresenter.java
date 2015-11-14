@@ -182,7 +182,9 @@ public class ActivateAccountPresenter
 				@Override
 				public void onSuccess(UserDto user) {
 					if (user == null) {
-						Window.alert("No User Details found...!");
+						Window.alert("Your details have not been found. Please try again..");
+						placeManager.revealPlace(new PlaceRequest.Builder()
+								.nameToken(NameTokens.login).build());
 					}
 					ActivateAccountPresenter.this.user = user;
 					getView().bindUser(user);
@@ -285,7 +287,7 @@ public class ActivateAccountPresenter
 				@Override
 				public void onSuccess(UserDto result) {
 					getView().showProcessing(false);
-					sendActivationLink(result.getRefId());
+					sendActivationLink(result.getRefId(), getView().getEmail());
 				}
 
 				public boolean handleCustomError(
@@ -326,7 +328,7 @@ public class ActivateAccountPresenter
 								"Your Email Address was not found. Kindly contact ICPAK Support "
 										+ "to update your Email", "error");
 				};
-			}).getById(getView().getEmail());
+			}).getUserByActivationEmail(getView().getEmail());
 		}
 	}
 
@@ -364,8 +366,9 @@ public class ActivateAccountPresenter
 
 	}
 
-	private void sendActivationLink(String userRefId) {
-		usersDelegate.withoutCallback().sendActivationEmail(userRefId);
+	private void sendActivationLink(String userRefId, String emailAddress) {
+		usersDelegate.withoutCallback().sendActivationEmail(userRefId,
+				emailAddress);
 		getView().showMessage(
 				"Your Activation Instructions have been sent to your email",
 				"success");

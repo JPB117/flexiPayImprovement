@@ -102,8 +102,15 @@ public class UsersResourceImpl implements UsersResource {
 	@ApiOperation(value = "Get a user by userId", response = User.class, consumes = MediaType.APPLICATION_JSON)
 	public UserDto getById(
 			@ApiParam(value = "User Id of the user to fetch", required = true) @PathParam("userId") String userId) {
-
 		User user = helper.getUser(userId);
+		return user.toDto();
+	}
+
+	@GET
+	@Path("/getUserByActivationEmail/{userId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public UserDto getUserByActivationEmail(@PathParam("userId") String userId) {
+		User user = helper.getUserByActivationEmail(userId);
 		return user.toDto();
 	}
 
@@ -256,9 +263,10 @@ public class UsersResourceImpl implements UsersResource {
 	}
 
 	@GET
-	@Path("/sendActivationEmail/{userId}")
-	public void sendActivationEmail(@PathParam("userId") String userId) {
-		helper.sendActivationEmail(userId);
+	@Path("/{userId}/sendActivationEmail/{emailAddress}")
+	public void sendActivationEmail(@PathParam("userId") String userId,
+			@PathParam("emailAddress") String emailAddress) {
+		helper.sendActivationEmail(userId, emailAddress);
 	}
 
 	@POST
@@ -293,7 +301,7 @@ public class UsersResourceImpl implements UsersResource {
 	}
 
 	@POST
-	@Path("/{userId}/lmsPost")
+	@Path("/{userId}/lmsPost/{password}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public String postUserLMS(@PathParam("userId") String userId,

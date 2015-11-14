@@ -71,8 +71,9 @@ public class UserItemView extends ViewImpl implements UserItemPresenter.MyView {
 				spnLMSStatus.setClassName("label label-danger popover-icon");
 			}
 			if (user.getLmsResponse() != null) {
-				spnLMSStatus
-						.setAttribute("data-content", user.getLmsResponse());
+				spnLMSStatus.setAttribute("data-content",
+						"LMS Response::" + user.getLmsResponse()
+								+ "<br/>LMS Payload::" + user.getLmsPayload());
 			}
 		}
 

@@ -462,7 +462,7 @@ public class BookingsDao extends BaseDao {
 			query.setParameter("searchTerm", "%" + searchTerm + "%");
 		}
 
-		System.err.println(sql);
+		// System.err.println(sql);
 
 		List<Object[]> rows = getResultList(query, offset, limit);
 		for (Object o[] : rows) {

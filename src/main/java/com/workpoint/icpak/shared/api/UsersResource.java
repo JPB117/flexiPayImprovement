@@ -32,6 +32,10 @@ public interface UsersResource extends BaseResource {
 	public UserDto getById(@PathParam("userId") String userId);
 
 	@GET
+	@Path("/getUserByActivationEmail/{userId}")
+	public UserDto getUserByActivationEmail(@PathParam("userId") String userId);
+
+	@GET
 	@Path("/auth")
 	public UserDto login(@QueryParam("username") String username,
 			@QueryParam("password") String password);
@@ -55,8 +59,9 @@ public interface UsersResource extends BaseResource {
 	public void activateAccount(@PathParam("userId") String userId);
 
 	@GET
-	@Path("/sendActivationEmail/{userId}")
-	public void sendActivationEmail(@PathParam("userId") String userId);
+	@Path("/{userId}/sendActivationEmail/{emailAddress}")
+	public void sendActivationEmail(@PathParam("userId") String userId,
+			@PathParam("emailAddress") String emailAddress);
 
 	@POST
 	@Path("/{userId}/password")
@@ -65,7 +70,7 @@ public interface UsersResource extends BaseResource {
 			@QueryParam("password") String newPassword);
 
 	@POST
-	@Path("/{userId}/lmsPost")
+	@Path("/{userId}/lmsPost/{password}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public String postUserLMS(@PathParam("userId") String userId,
 			@PathParam("password") String password);

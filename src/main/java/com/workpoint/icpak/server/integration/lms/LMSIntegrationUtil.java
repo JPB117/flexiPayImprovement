@@ -127,6 +127,7 @@ public class LMSIntegrationUtil {
 				.post(ClientResponse.class, payLoad);
 
 		LMSResponse response = new LMSResponse();
+		response.setPayload(json.toString());
 		if (clientResponse.getClientResponseStatus() != ClientResponse.Status.OK) {
 			response.setMessage(clientResponse.getEntity(String.class));
 			response.setStatus("Failed");
