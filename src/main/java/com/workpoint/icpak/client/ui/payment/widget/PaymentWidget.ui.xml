@@ -22,7 +22,7 @@
 					<a href="#mobile" aria-controls="home" role="tab" data-toggle="tab">Pay
 						with Mobile Money</a>
 				</li>
-				<li role="presentation">
+				<li role="presentation" class="hide">
 					<!-- <span class="fa fa-credit-card"></span> -->
 					<a href="#cards" aria-controls="home" role="tab" data-toggle="tab">Pay
 						with Credit/Debit Card</a>
@@ -104,7 +104,7 @@
 						</div>
 					</div>
 				</div>
-				<div role="tabpanel" class="tab-pane" id="cards">
+				<div role="tabpanel" class="tab-pane hide" id="cards">
 					<div class="col-sm-12">
 						<d:IssuesPanel ui:field="issuesPanel" styleName="hide alert alert-danger"></d:IssuesPanel>
 					</div>

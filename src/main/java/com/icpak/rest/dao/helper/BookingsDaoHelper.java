@@ -2,6 +2,7 @@ package com.icpak.rest.dao.helper;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -170,23 +171,20 @@ public class BookingsDaoHelper {
 			dto.getDelegates().get(i).setRefId(delegate.getRefId());
 			dto.getDelegates().get(i).setErn(delegate.getErn());
 		}
-		dto.setInvoiceRef(dao.getInvoiceRef(booking.getRefId()));
-
 		return dto;
 	}
 
 	private void deleteExistingInvoices(String bookingId) {
 		if (bookingId == null)
 			return;
-
 		dao.deleteAllBookingInvoice(bookingId);
 	}
 
 	public void sendProInvoice(String bookingRefId) {
 		assert bookingRefId != null;
-
 		Booking bookingInDb = dao.findByRefId(bookingRefId, Booking.class);
-		InvoiceDto invoice = generateInvoice(bookingInDb);
+		InvoiceDto invoice = invoiceHelper.getInvoice(dao
+				.getInvoiceRef(bookingRefId));
 		Event event = bookingInDb.getEvent();
 
 		String subject = bookingInDb.getEvent().getName()
@@ -245,12 +243,20 @@ public class BookingsDaoHelper {
 			Doc proformaDocument = new Doc(emailValues);
 			for (InvoiceLineDto dto : invoice.getLines()) {
 				line.put("description", dto.getDescription());
-				line.put("unitPrice", dto.getUnitPrice());
+				line.put(
+						"quantity",
+						NumberFormat.getNumberInstance().format(
+								dto.getQuantity()));
+				line.put(
+						"unitPrice",
+						NumberFormat.getNumberInstance().format(
+								dto.getUnitPrice()));
 				line.put("amount", dto.getTotalAmount());
 				proformaDocument.addDetail(new DocumentLine("invoiceDetails",
 						line));
 			}
-			emailValues.put("totalAmount", invoice.getInvoiceAmount());
+			emailValues.put("totalAmount", NumberFormat.getNumberInstance()
+					.format(invoice.getInvoiceAmount()));
 
 			// PDF Invoice Generation
 			InputStream inv = EmailServiceHelper.class.getClassLoader()
@@ -269,17 +275,17 @@ public class BookingsDaoHelper {
 			String html = IOUtils.toString(is);
 			html = new DocumentHTMLMapper().map(emailDocument, html);
 
-			 EmailServiceHelper.sendEmail(html, "RE: ICPAK '" + subject,
-			 Arrays.asList(bookingInDb.getContact().getEmail()),
-			 Arrays.asList(bookingInDb.getContact().getContactName()),
-			 attachment);
+			EmailServiceHelper.sendEmail(html, "RE: ICPAK '" + subject,
+					Arrays.asList(bookingInDb.getContact().getEmail()),
+					Arrays.asList(bookingInDb.getContact().getContactName()),
+					attachment);
 
 			// EmailServiceHelper.sendEmail(html, "RE: ICPAK '" + subject,
 			// Arrays.asList("tomkim@wira.io"),
 			// Arrays.asList(bookingInDb.getContact().getContactName()),
 			// attachment);
 
-			// sendDelegateSMS(bookingRefId);
+			sendDelegateSMS(bookingRefId);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -437,7 +443,6 @@ public class BookingsDaoHelper {
 		invoice.setContactName(booking.getContact().getContactName());
 		invoice.setPhoneNumber(booking.getContact().getTelephoneNumbers());
 		invoice.setBookingRefId(booking.getRefId());
-
 		invoice = invoiceHelper.save(invoice);
 
 		// System.err.println("Invoice RefId>>>" + invoice.getRefId());

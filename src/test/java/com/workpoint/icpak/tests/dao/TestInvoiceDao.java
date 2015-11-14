@@ -80,7 +80,6 @@ public class TestInvoiceDao extends AbstractDaoTest {
 			dto.setUnitPrice(20 * i);
 			dto.setTotalAmount(20 * i);
 			invoice.addLine(dto);
-
 			amount += dto.getUnitPrice();
 		}
 

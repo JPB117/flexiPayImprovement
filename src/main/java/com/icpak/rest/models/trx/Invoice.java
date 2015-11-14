@@ -27,6 +27,7 @@ public class Invoice extends PO {
 	private String contactName;
 	private String phoneNumber;
 	private Double amount;
+	@Column(unique = true)
 	private String bookingRefId;
 	private String memberId; // Invoice owner
 	@Column(length = 5000)

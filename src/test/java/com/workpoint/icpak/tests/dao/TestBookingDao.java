@@ -62,7 +62,7 @@ public class TestBookingDao extends AbstractDaoTest {
 		bookingsHelper.sendProInvoice("C6lcgHyPYUDCcUBi");
 	}
 
-	@Ignore
+	@Test
 	public void createBooking() {
 		BookingDto dto = new BookingDto();
 		dto.setStatus("");
@@ -89,27 +89,20 @@ public class TestBookingDao extends AbstractDaoTest {
 		dto.setDelegates(delegates);
 
 		// dto.setCurrency(currency);
-		// BookingDto booking = bookingsHelper.createBooking("PrjIf8x4RIDaPZIv
-		// ",
-		// dto);
+		BookingDto booking = bookingsHelper.createBooking("PrjIf8x4RIDaPZIv",
+				dto);
+		System.err.println(booking.getRefId());
+		bookingsHelper.sendProInvoice(booking.getRefId());
+
+		// List<DelegateDto> delegateDtos = bookingsHelper.getAllDelegates(null,
+		// "Jx4Ca6HpOutf2ic7", null, 1000, "wainaina");
 		//
-		// System.err.println(booking.getRefId());
-
-		// bookingsHelper.sendProInvoice(booking.getRefId());
-		// Booking bookingModel = new Booking();
-		// bookingModel.copyFrom(booking);
-
-		// bookingsHelper.generateInvoice(bookingModel);
-
-		List<DelegateDto> delegateDtos = bookingsHelper.getAllDelegates(null,
-				"Jx4Ca6HpOutf2ic7", null, 1000, "wainaina");
-
-		for (DelegateDto delegateDto : delegateDtos) {
-			logger.error(" booking ref id " + delegateDto.getBookingId());
-		}
+		// for (DelegateDto delegateDto : delegateDtos) {
+		// logger.error(" booking ref id " + delegateDto.getBookingId());
+		// }
 	}
 
-	@Test
+	@Ignore
 	public void TestImportBookings() {
 		bookingDao.importAllEvents();
 	}

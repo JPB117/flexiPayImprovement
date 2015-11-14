@@ -19,26 +19,33 @@ public class MemberDao extends BaseDao {
 
 	public List<MemberDto> getAllMembers(Integer offSet, Integer limit,
 			String searchTerm) {
-		List<Object[]> rows =  getResultList(getEntityManager().createNativeQuery(
-				"select u.refId userRefId, u.email, u.firstName, u.lastName, u.title,"
-				+ " m.memberId, m.refId memberRefId from Member m inner join user u on (m.userId=u.id) "
-				+ "where (u.memberId like :searchTerm or u.Name like :searchTerm)")
-				.setParameter("searchTerm", "%"+searchTerm+"%"),
+		List<Object[]> rows = getResultList(
+				getEntityManager()
+						.createNativeQuery(
+								"select u.refId userRefId, u.email, u.firstName, u.lastName, u.title,"
+										+ " m.memberNo, m.refId memberRefId from Member m inner join user u on (m.userId=u.id) "
+										+ "where (u.memberNo like :searchTerm or u.Name like :searchTerm)")
+						.setParameter("searchTerm", "%" + searchTerm + "%"),
 				offSet, limit);
-		
+
 		List<MemberDto> memberList = new ArrayList<>();
-		
-		for(Object[] row: rows){
-			int i=0;
-			Object value=null;
-			String userRefId = (value=row[i++])==null? null: value.toString();
-			String email=(value=row[i++])==null? null: value.toString();
-			String firstName = (value=row[i++])==null? null: value.toString();
-			String lastName=(value=row[i++])==null? null: value.toString();
-			String title=(value=row[i++])==null? null: value.toString();
-			String memberId = (value=row[i++])==null? null: value.toString();
-			String memberRefId = (value=row[i++])==null? null: value.toString();
-			
+
+		for (Object[] row : rows) {
+			int i = 0;
+			Object value = null;
+			String userRefId = (value = row[i++]) == null ? null : value
+					.toString();
+			String email = (value = row[i++]) == null ? null : value.toString();
+			String firstName = (value = row[i++]) == null ? null : value
+					.toString();
+			String lastName = (value = row[i++]) == null ? null : value
+					.toString();
+			String title = (value = row[i++]) == null ? null : value.toString();
+			String memberId = (value = row[i++]) == null ? null : value
+					.toString();
+			String memberRefId = (value = row[i++]) == null ? null : value
+					.toString();
+
 			MemberDto dto = new MemberDto();
 			dto.setUserId(userRefId);
 			dto.setMemberNo(memberId);
@@ -49,10 +56,10 @@ public class MemberDao extends BaseDao {
 			dto.setTitle(title);
 			memberList.add(dto);
 		}
-		
+
 		return memberList;
 	}
-	
+
 	public List<Member> getAllMembers(Integer offSet, Integer limit) {
 		return getResultList(getEntityManager().createQuery(
 				"select m from Member m " + "where m.isActive=1"), offSet,
@@ -85,9 +92,9 @@ public class MemberDao extends BaseDao {
 	}
 
 	public String getGoodStandingCertDocNumber(Long id) {
-		
-		return getSingleResultOrNull(getEntityManager()
-				.createNativeQuery("select documentNo from goodstandingcertificate where id=:id")
+
+		return getSingleResultOrNull(getEntityManager().createNativeQuery(
+				"select documentNo from goodstandingcertificate where id=:id")
 				.setParameter("id", id));
 	}
 
