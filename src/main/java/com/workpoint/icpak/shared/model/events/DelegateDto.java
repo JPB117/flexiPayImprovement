@@ -39,6 +39,9 @@ public class DelegateDto extends SerializableObj {
 	private String receiptNo;
 	private String lpoNo;
 	private int isCredit;
+	private String contact;
+	private String contactEmail;
+	private Date bookingDate;
 
 	public String getReceiptNo() {
 		return receiptNo;
@@ -205,6 +208,32 @@ public class DelegateDto extends SerializableObj {
 
 	public String getErn() {
 		return ern;
+	}
+	
+	
+
+	public String getContact() {
+		return contact;
+	}
+
+	public void setContact(String contact) {
+		this.contact = contact;
+	}
+
+	public String getContacEmail() {
+		return contactEmail;
+	}
+
+	public void setContactEmail(String contactEmail) {
+		this.contactEmail = contactEmail;
+	}
+
+	public Date getBookingDate() {
+		return bookingDate;
+	}
+
+	public void setBookingDate(Date bookingDate) {
+		this.bookingDate = bookingDate;
 	}
 
 	public void setErn(String ern) {

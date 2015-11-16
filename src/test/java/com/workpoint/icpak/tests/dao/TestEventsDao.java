@@ -9,8 +9,10 @@ import org.junit.Test;
 import com.google.inject.Inject;
 import com.icpak.rest.dao.helper.CoursesDaoHelper;
 import com.icpak.rest.dao.helper.EventsDaoHelper;
+import com.icpak.servlet.upload.GetDelegatesReport;
 import com.workpoint.icpak.shared.model.EventType;
 import com.workpoint.icpak.shared.model.events.CourseDto;
+import com.workpoint.icpak.shared.model.events.DelegateDto;
 import com.workpoint.icpak.shared.model.events.EventDto;
 import com.workpoint.icpak.tests.base.AbstractDaoTest;
 
@@ -30,7 +32,7 @@ public class TestEventsDao extends AbstractDaoTest {
 		createEvent();
 	}
 
-	@Test
+	@Ignore
 	public void createEvent() {
 		EventDto event = new EventDto();
 		event.setName("The Financial Reporting Workshop: Mt. Kenya Branch, Nyeri");
@@ -103,6 +105,22 @@ public class TestEventsDao extends AbstractDaoTest {
 		for (EventDto e : searchResults) {
 			System.err.println("Event Size>>>" + e.getCategoryName());
 		}
+	}
+	
+	@Test
+	public void testDeleagtesReport() throws Exception{
+		String eventRefId = "Jx4Ca6HpOutf2ic7";
+		String docType = "xls";
+		
+		List<DelegateDto> delegateDtos = helper.getEventDelegatesReport(eventRefId);
+		
+		for(DelegateDto dto : delegateDtos){
+			System.err.println("<>><<< ERN NO>>>" + dto.getErn());
+		}
+		
+		GetDelegatesReport report = new GetDelegatesReport();
+		
+		report.generateDelegateReport(delegateDtos, docType);
 	}
 
 }
