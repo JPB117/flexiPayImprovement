@@ -3,20 +3,26 @@ package com.workpoint.icpak.client.ui.eventsandseminars;
 import java.util.List;
 
 import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasKeyDownHandlers;
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
+import com.workpoint.icpak.client.model.UploadContext;
+import com.workpoint.icpak.client.model.UploadContext.UPLOADACTION;
 import com.workpoint.icpak.client.ui.component.PagingPanel;
 import com.workpoint.icpak.client.ui.eventsandseminars.delegates.row.DelegateTableRow;
 import com.workpoint.icpak.client.ui.eventsandseminars.delegates.table.DelegatesTable;
 import com.workpoint.icpak.client.ui.eventsandseminars.header.EventsHeader;
 import com.workpoint.icpak.client.ui.eventsandseminars.row.EventsTableRow;
 import com.workpoint.icpak.client.ui.eventsandseminars.table.EventsTable;
+import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.model.EventSummaryDto;
 import com.workpoint.icpak.shared.model.events.BookingDto;
 import com.workpoint.icpak.shared.model.events.DelegateDto;
@@ -52,6 +58,20 @@ public class EventsView extends ViewImpl implements EventsPresenter.IEventsView 
 	public EventsView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
 		showAdvancedView(false);
+
+		tblDelegates.getDownloadPDFLink().addStyleName("hide");
+		tblDelegates.getDownloadXLSLink().removeStyleName("hide");
+		tblDelegates.getDownloadXLSLink().addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				UploadContext ctx = new UploadContext("getreport");
+				ctx.setContext("eventRefId", EventsView.this.event.getRefId());
+				ctx.setContext("docType", "xlsx");
+				ctx.setAction(UPLOADACTION.GETDELEGATESREPORT);
+				Window.open(ctx.toUrl(), "", null);
+			}
+		});
+
 	}
 
 	@Override

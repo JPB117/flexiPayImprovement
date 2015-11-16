@@ -29,6 +29,11 @@
 					<i class="fa fa-file-pdf-o"></i>
 					Download as Pdf
 				</d:ActionLink>
+
+				<d:ActionLink ui:field="aDownloadXls" styleName="hide">
+					<i class="fa fa-file-pdf-o"></i>
+					Download as xls
+				</d:ActionLink>
 			</g:HTMLPanel>
 		</div>
 		<g:HTMLPanel styleName="table table-striped table-hover table-bordered"

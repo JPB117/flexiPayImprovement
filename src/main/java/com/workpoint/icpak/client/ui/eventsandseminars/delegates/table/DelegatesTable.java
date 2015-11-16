@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasKeyDownHandlers;
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -11,6 +12,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
+import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.PagingPanel;
 import com.workpoint.icpak.client.ui.component.PagingTable;
 import com.workpoint.icpak.client.ui.component.TableHeader;
@@ -50,7 +52,6 @@ public class DelegatesTable extends Composite {
 		th.add(new TableHeader("Payment Status"));
 		th.add(new TableHeader("Attendance"));
 		th.add(new TableHeader("Action"));
-
 		tblView.setTableHeaders(th);
 	}
 
@@ -73,6 +74,14 @@ public class DelegatesTable extends Composite {
 
 	public PagingPanel getPagingPanel() {
 		return tblView.getPagingPanel();
+	}
+
+	public ActionLink getDownloadPDFLink() {
+		return tblView.getDownloadPdf();
+	}
+
+	public ActionLink getDownloadXLSLink() {
+		return tblView.getDownloadXls();
 	}
 
 	public String getDelegateSearchValue() {

@@ -44,6 +44,8 @@ public class TableView extends Composite {
 	@UiField
 	ActionLink aDownloadPdf;
 	@UiField
+	ActionLink aDownloadXls;
+	@UiField
 	TextField txtSearch;
 
 	@UiField
@@ -340,8 +342,12 @@ public class TableView extends Composite {
 		dtEndDate.setValue(endDate);
 	}
 
-	public HasClickHandlers getDownloadPdf() {
+	public ActionLink getDownloadPdf() {
 		return aDownloadPdf;
+	}
+
+	public ActionLink getDownloadXls() {
+		return aDownloadXls;
 	}
 
 	public HasClickHandlers getFilterButton() {

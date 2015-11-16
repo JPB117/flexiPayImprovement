@@ -12,8 +12,8 @@ import java.util.Set;
  * @author duggan
  *
  */
-public class UploadContext {
 
+public class UploadContext {
 	private String url = "upload";
 	public static final String ACTION = "action";
 	private List<String> acceptsDocTypes = new ArrayList<String>();
@@ -21,7 +21,7 @@ public class UploadContext {
 	private Map<String, String> context = new HashMap<String, String>();
 
 	public enum UPLOADACTION {
-		ATTACHDOCUMENT, UPLOADBPMNPROCESS, UPLOADCHANGESET, IMPORTFORM, UPLOADUSERIMAGE, UPLOADLOGO, UPLOADDOCFILE, UPLOADOUTPUTDOC, GENERATEOUTPUT, IMPORTGRIDDATA, UPLOADCPD, GETSTATEMENT, GETCPDSTATEMENT, DownloadCertGoodStanding, GETATTACHMENT
+		ATTACHDOCUMENT, UPLOADBPMNPROCESS, UPLOADCHANGESET, IMPORTFORM, UPLOADUSERIMAGE, UPLOADLOGO, UPLOADDOCFILE, UPLOADOUTPUTDOC, GENERATEOUTPUT, IMPORTGRIDDATA, UPLOADCPD, GETSTATEMENT, GETCPDSTATEMENT, DownloadCertGoodStanding, GETATTACHMENT, GETDELEGATESREPORT
 	}
 
 	public UploadContext() {

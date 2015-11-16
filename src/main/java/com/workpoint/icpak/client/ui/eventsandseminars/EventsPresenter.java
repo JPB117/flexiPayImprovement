@@ -132,6 +132,7 @@ public class EventsPresenter extends
 				eventsValueChangeHandler);
 		getView().getDelegateSearchValueChangeHandler().addValueChangeHandler(
 				delegateTableValueChangeHandler);
+
 	}
 
 	@Override

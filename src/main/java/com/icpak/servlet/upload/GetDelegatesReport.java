@@ -40,18 +40,21 @@ public class GetDelegatesReport {
 
 	private Workbook wb = new HSSFWorkbook();
 
+	private String name;
+
 	public GetDelegatesReport() {
 
 	}
 
+	public String getName() {
+		return name;
+	}
+
 	public GetDelegatesReport(List<DelegateDto> delegateDtos, String docType) {
 		logger.error(" === Constructor called === ");
-
 		logger.error(" === dto size === " + delegateDtos.size());
 		String label = "Delegates";
-		String name = label + "_report_"
-				+ SimpleDateFormat.getDateInstance().format(new Date()) + "."
-				+ docType;
+		name = label + "Report" + "." + docType;
 
 		fonts = createFonts(wb);
 		styles = createStyles(wb);
@@ -380,7 +383,7 @@ public class GetDelegatesReport {
 		os.close();
 	}
 
-	private byte[] getBytes() throws IOException {
+	public byte[] getBytes() throws IOException {
 		ByteArrayOutputStream byteo = new ByteArrayOutputStream();
 		wb.write(byteo);
 		return byteo.toByteArray();
