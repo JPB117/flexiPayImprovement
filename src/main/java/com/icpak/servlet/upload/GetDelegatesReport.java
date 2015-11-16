@@ -24,6 +24,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 
+
 import com.workpoint.icpak.shared.model.events.DelegateDto;
 
 public class GetDelegatesReport {
@@ -363,7 +364,7 @@ public class GetDelegatesReport {
 				cell.setCellValue(detail.getLpoNo());
 			}
 
-			styleName = "cell_normal";
+			styleName = "cell_normal_centered";
 
 			cell.setCellStyle(styles.get(styleName));
 		}
