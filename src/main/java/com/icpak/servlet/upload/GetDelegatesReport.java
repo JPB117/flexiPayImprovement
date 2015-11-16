@@ -50,7 +50,6 @@ public class GetDelegatesReport {
 	}
 
 	public GetDelegatesReport(List<DelegateDto> delegateDtos, String docType) {
-		logger.error(" === Constructor called === ");
 		logger.error(" === dto size === " + delegateDtos.size());
 		String label = "Delegates";
 		name = label + "Report" + "." + docType;
