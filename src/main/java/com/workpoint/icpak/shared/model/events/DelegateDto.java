@@ -40,7 +40,6 @@ public class DelegateDto extends SerializableObj {
 	private String lpoNo;
 	private int isCredit;
 	private String contact;
-	private String contactEmail;
 	private Date bookingDate;
 
 	public String getReceiptNo() {
@@ -93,10 +92,6 @@ public class DelegateDto extends SerializableObj {
 
 	public String getContactEmail() {
 		return contactEmail;
-	}
-
-	public void setContactEmail(String contactEmail) {
-		this.contactEmail = contactEmail;
 	}
 
 	public DelegateDto() {
@@ -209,8 +204,6 @@ public class DelegateDto extends SerializableObj {
 	public String getErn() {
 		return ern;
 	}
-	
-	
 
 	public String getContact() {
 		return contact;

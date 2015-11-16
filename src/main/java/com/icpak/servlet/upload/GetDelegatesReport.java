@@ -29,25 +29,28 @@ import com.workpoint.icpak.shared.model.events.DelegateDto;
 public class GetDelegatesReport {
 	Logger logger = Logger.getLogger(GetDelegatesReport.class);
 
-	private static final String[] titles = { "MEMBER REGISTRATION NUMBER", "ERN", "EMAIL", "SPONSOR", "SPONSOR TEL",
-			"CONTACT PERSON", "CONTACT EMAIL", "BOOKING DATE", "ACCOMODATION", "PAYMENT STATUS", "RECEIPT", "LPO",
-			"ON CREDIT", "ATTENDANCE" };
+	private static final String[] titles = { "MEMBER REGISTRATION NUMBER",
+			"ERN", "EMAIL", "SPONSOR", "SPONSOR TEL", "CONTACT PERSON",
+			"CONTACT EMAIL", "BOOKING DATE", "ACCOMODATION", "PAYMENT STATUS",
+			"RECEIPT", "LPO", "ON CREDIT", "ATTENDANCE" };
 
 	static Map<String, CellStyle> styles = null;
 	static Map<String, Font> fonts = null;
 
 	private Workbook wb = new HSSFWorkbook();
-	
-	public GetDelegatesReport(){
-		
+
+	public GetDelegatesReport() {
+
 	}
 
 	public GetDelegatesReport(List<DelegateDto> delegateDtos, String docType) {
 		logger.error(" === Constructor called === ");
-		
-		logger.error(" === dto size === "+delegateDtos.size());
+
+		logger.error(" === dto size === " + delegateDtos.size());
 		String label = "Delegates";
-		String name = label + "_report_" + SimpleDateFormat.getDateInstance().format(new Date()) + "." + docType;
+		String name = label + "_report_"
+				+ SimpleDateFormat.getDateInstance().format(new Date()) + "."
+				+ docType;
 
 		fonts = createFonts(wb);
 		styles = createStyles(wb);
@@ -78,14 +81,16 @@ public class GetDelegatesReport {
 		headerFont.setFontHeightInPoints((short) 14);
 		style = createBorderedStyle(wb);
 		style.setAlignment(CellStyle.ALIGN_CENTER);
-		style.setFillForegroundColor(IndexedColors.LIGHT_CORNFLOWER_BLUE.getIndex());
+		style.setFillForegroundColor(IndexedColors.LIGHT_CORNFLOWER_BLUE
+				.getIndex());
 		style.setFillPattern(CellStyle.SOLID_FOREGROUND);
 		style.setFont(headerFont);
 		styles.put("header", style);
 
 		style = createBorderedStyle(wb);
 		style.setAlignment(CellStyle.ALIGN_CENTER);
-		style.setFillForegroundColor(IndexedColors.LIGHT_CORNFLOWER_BLUE.getIndex());
+		style.setFillForegroundColor(IndexedColors.LIGHT_CORNFLOWER_BLUE
+				.getIndex());
 		style.setFillPattern(CellStyle.SOLID_FOREGROUND);
 		style.setFont(headerFont);
 		style.setDataFormat(df.getFormat("d-mmm"));
@@ -231,9 +236,10 @@ public class GetDelegatesReport {
 		return fonts;
 	}
 
-	private void generate(Workbook workbook, String sheetName, List<DelegateDto> delegateDtos) {
+	private void generate(Workbook workbook, String sheetName,
+			List<DelegateDto> delegateDtos) {
 		logger.error("=== Generating Work boook====");
-		
+
 		Sheet sheet = workbook.createSheet(sheetName);
 
 		// sheet.setDisplayGridlines(false);
@@ -282,7 +288,8 @@ public class GetDelegatesReport {
 		sheet.setZoom(3, 4);
 	}
 
-	private static int paintRows(List<DelegateDto> data, int rownum, CreationHelper helper, Sheet sheet) {
+	private static int paintRows(List<DelegateDto> data, int rownum,
+			CreationHelper helper, Sheet sheet) {
 		if (data == null || data.isEmpty()) {
 			return rownum - 1;
 		}
@@ -293,13 +300,14 @@ public class GetDelegatesReport {
 			DelegateDto detail = data.get(i);
 			bindData(detail, helper, sheet, row, i);
 
-//			rownum = paintRows(data, rownum + 1, helper, sheet);
+			// rownum = paintRows(data, rownum + 1, helper, sheet);
 		}
 
 		return --rownum;
 	}
 
-	private static void bindData(DelegateDto detail, CreationHelper helper, Sheet sheet, Row row, Integer i) {
+	private static void bindData(DelegateDto detail, CreationHelper helper,
+			Sheet sheet, Row row, Integer i) {
 
 		for (int j = 0; j < titles.length; j++) {
 			Cell cell = row.createCell(j);
@@ -334,7 +342,7 @@ public class GetDelegatesReport {
 			}
 
 			if (j == 7) {
-				cell.setCellValue(""+detail.getBookingDate());
+				cell.setCellValue("" + detail.getBookingDate());
 			}
 
 			if (j == 8) {
@@ -360,11 +368,13 @@ public class GetDelegatesReport {
 
 	}
 
-	public void generateDelegateReport(List<DelegateDto> delegateDtos, String docType) throws Exception {
+	public void generateDelegateReport(List<DelegateDto> delegateDtos,
+			String docType) throws Exception {
 
 		byte[] bites = new GetDelegatesReport(delegateDtos, docType).getBytes();
 
-		FileOutputStream os = new FileOutputStream(new File("/home/wladek/Documents/delegatesReport.xlsx"));
+		FileOutputStream os = new FileOutputStream(new File(
+				"delegatesReport.xlsx"));
 		os.write(bites);
 		os.close();
 	}

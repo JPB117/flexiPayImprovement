@@ -106,20 +106,20 @@ public class TestEventsDao extends AbstractDaoTest {
 			System.err.println("Event Size>>>" + e.getCategoryName());
 		}
 	}
-	
+
 	@Test
-	public void testDeleagtesReport() throws Exception{
-		String eventRefId = "Jx4Ca6HpOutf2ic7";
+	public void testDeleagtesReport() throws Exception {
+		String eventRefId = "PrjIf8x4RIDaPZIv";
 		String docType = "xls";
-		
-		List<DelegateDto> delegateDtos = helper.getEventDelegatesReport(eventRefId);
-		
-		for(DelegateDto dto : delegateDtos){
+
+		List<DelegateDto> delegateDtos = helper
+				.getEventDelegatesReport(eventRefId);
+
+		for (DelegateDto dto : delegateDtos) {
 			System.err.println("<>><<< ERN NO>>>" + dto.getErn());
 		}
-		
+
 		GetDelegatesReport report = new GetDelegatesReport();
-		
 		report.generateDelegateReport(delegateDtos, docType);
 	}
 
