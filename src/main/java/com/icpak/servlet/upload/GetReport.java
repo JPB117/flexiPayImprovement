@@ -33,6 +33,7 @@ import com.icpak.rest.dao.CPDDao;
 import com.icpak.rest.dao.MemberDao;
 import com.icpak.rest.dao.UsersDao;
 import com.icpak.rest.dao.helper.CPDDaoHelper;
+import com.icpak.rest.dao.helper.EventsDaoHelper;
 import com.icpak.rest.dao.helper.StatementDaoHelper;
 import com.icpak.rest.dao.helper.UsersDaoHelper;
 import com.icpak.rest.models.auth.User;
@@ -49,6 +50,7 @@ import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.shared.model.CPDStatus;
 import com.workpoint.icpak.shared.model.MemberStanding;
 import com.workpoint.icpak.shared.model.UserDto;
+import com.workpoint.icpak.shared.model.events.DelegateDto;
 import com.workpoint.icpak.shared.model.statement.StatementDto;
 
 @Singleton
@@ -76,6 +78,8 @@ public class GetReport extends HttpServlet {
 	StatementDaoHelper statementDaoHelper;
 	@Inject
 	CPDDao CPDDao;
+	@Inject
+	EventsDaoHelper eventsDaoHelper;
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
@@ -142,7 +146,28 @@ public class GetReport extends HttpServlet {
 		if (action.equals("GETCPDSTATEMENT")) {
 			processMemberCPDStatementRequest(req, resp);
 		}
+		
+		if (action.equals("GETDELEGATESREPORT")) {
+			generateDelegateReport(req, resp);
+		}
 
+	}
+
+	private void generateDelegateReport(HttpServletRequest req, HttpServletResponse resp) {
+		String eventRefId = null;
+		String docType = null;
+		
+		if (req.getParameter("eventRefId") != null) {
+			eventRefId = req.getParameter("eventRefId");
+		}
+		
+		if (req.getParameter("docType") != null) {
+			docType = req.getParameter("docType");
+		}
+		
+		
+		List<DelegateDto> delegateDtos = eventsDaoHelper.getEventDelegatesReport(eventRefId);
+		
 	}
 
 	private void procesStatementsRequest(HttpServletRequest req, HttpServletResponse resp) throws IOException,

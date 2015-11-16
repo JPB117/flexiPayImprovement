@@ -10,6 +10,7 @@ import com.icpak.rest.dao.EventsDao;
 import com.icpak.rest.models.event.Event;
 import com.workpoint.icpak.shared.model.EventType;
 import com.workpoint.icpak.shared.model.PaymentStatus;
+import com.workpoint.icpak.shared.model.events.DelegateDto;
 import com.workpoint.icpak.shared.model.events.EventDto;
 
 @Transactional
@@ -87,5 +88,9 @@ public class EventsDaoHelper {
 
 	public Integer getCount(String searchTerm) {
 		return dao.getSearchEventCount(searchTerm);
+	}
+
+	public List<DelegateDto> getEventDelegatesReport(String eventRefId) {
+		return dao.getEventDelegates(eventRefId);
 	}
 }
