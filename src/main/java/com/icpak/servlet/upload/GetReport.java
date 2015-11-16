@@ -168,6 +168,8 @@ public class GetReport extends HttpServlet {
 		
 		List<DelegateDto> delegateDtos = eventsDaoHelper.getEventDelegatesReport(eventRefId);
 		
+		GetDelegatesReport report = new GetDelegatesReport(delegateDtos,docType);
+		
 	}
 
 	private void procesStatementsRequest(HttpServletRequest req, HttpServletResponse resp) throws IOException,

@@ -20,8 +20,6 @@ public class TestEventsDao extends AbstractDaoTest {
 
 	@Inject
 	EventsDaoHelper helper;
-	@Inject
-	GetDelegatesReport report;
 
 	@Inject
 	CoursesDaoHelper courseHelper;
@@ -113,7 +111,14 @@ public class TestEventsDao extends AbstractDaoTest {
 	public void testDeleagtesReport() throws Exception{
 		String eventRefId = "Jx4Ca6HpOutf2ic7";
 		String docType = "xls";
+		
 		List<DelegateDto> delegateDtos = helper.getEventDelegatesReport(eventRefId);
+		
+		for(DelegateDto dto : delegateDtos){
+			System.err.println("<>><<< ERN NO>>>" + dto.getErn());
+		}
+		
+		GetDelegatesReport report = new GetDelegatesReport();
 		
 		report.generateDelegateReport(delegateDtos, docType);
 	}

@@ -37,21 +37,27 @@ public class GetDelegatesReport {
 	static Map<String, Font> fonts = null;
 
 	private Workbook wb = new HSSFWorkbook();
+	
+	public GetDelegatesReport(){
+		
+	}
 
 	public GetDelegatesReport(List<DelegateDto> delegateDtos, String docType) {
 		logger.error(" === Constructor called === ");
+		
+		logger.error(" === dto size === "+delegateDtos.size());
 		String label = "Delegates";
 		String name = label + "_report_" + SimpleDateFormat.getDateInstance().format(new Date()) + "." + docType;
 
 		fonts = createFonts(wb);
 		styles = createStyles(wb);
 
-		if (delegateDtos.isEmpty()) {
+		if (!delegateDtos.isEmpty()) {
 			generate(wb, name, delegateDtos);
 		}
 	}
 
-	private Map<String, CellStyle> createStyles(Workbook wb2) {
+	private Map<String, CellStyle> createStyles(Workbook wb) {
 		Map<String, CellStyle> styles = new HashMap<String, CellStyle>();
 		DataFormat df = wb.createDataFormat();
 
@@ -287,7 +293,7 @@ public class GetDelegatesReport {
 			DelegateDto detail = data.get(i);
 			bindData(detail, helper, sheet, row, i);
 
-			rownum = paintRows(data, rownum + 1, helper, sheet);
+//			rownum = paintRows(data, rownum + 1, helper, sheet);
 		}
 
 		return --rownum;
@@ -328,7 +334,7 @@ public class GetDelegatesReport {
 			}
 
 			if (j == 7) {
-				cell.setCellValue(detail.getBookingDate());
+				cell.setCellValue(""+detail.getBookingDate());
 			}
 
 			if (j == 8) {
