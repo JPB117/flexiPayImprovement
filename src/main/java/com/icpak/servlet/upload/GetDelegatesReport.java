@@ -365,7 +365,7 @@ public class GetDelegatesReport {
 				cell.setCellValue(detail.getLpoNo());
 			}
 
-			styleName = "cell_blue";
+			styleName = "cell_normal_centered";
 
 			cell.setCellStyle(styles.get(styleName));
 		}
