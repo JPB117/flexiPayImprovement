@@ -1,27 +1,27 @@
 package com.workpoint.icpak.client.ui.component;
 
-
-
 public class PagingConfig {
 
-	public static int PAGE_LIMIT=10;
+	public static int PAGE_LIMIT = 10;
 	private Integer offset;
 	private Integer limit;
-	private Integer total;//total count
-	
+	private Integer total;// total count
+
 	public PagingConfig(Integer offSet, Integer total) {
 		this(offSet, PAGE_LIMIT, total);
 	}
-	
+
 	public PagingConfig(Integer offSet, Integer limit, Integer total) {
-		if(offSet==null) offSet=0;
-		
-		if(limit==null || limit==0) limit = PAGE_LIMIT;
-		
-		if(total==null){
+		if (offSet == null)
+			offSet = 0;
+
+		if (limit == null || limit == 0)
+			limit = PAGE_LIMIT;
+
+		if (total == null) {
 			total = 0;
 		}
-		
+
 		this.offset = offSet;
 		this.limit = limit;
 		this.total = total;
@@ -42,87 +42,95 @@ public class PagingConfig {
 	public int getTotal() {
 		return total;
 	}
-	
+
 	private boolean isMultipage() {
-		return total/limit>1 || total%limit>0;
+		return total / limit > 1 || total % limit > 0;
 	}
 
-	private boolean isFirstPage(){
-		return offset<limit;
+	private boolean isFirstPage() {
+		return offset < limit;
 	}
-	
-	private boolean isLastPage(){
-		return offset+limit>=total;
+
+	private boolean isLastPage() {
+		return offset + limit >= total;
 	}
-	
-	public int next(){
-		if(hasNext()){
-			offset = (offset+limit);
+
+	public int next() {
+		if (hasNext()) {
+			offset = (offset + limit);
 		}
-		
+
 		return offset;
 	}
-	
-	public int last(){
-		if(isMultipage() && !isLastPage()){
-			//Last
-			int lastPageSize = total%limit;
-			if(lastPageSize==0){
+
+	public int getPAGE_LIMIT() {
+		return PAGE_LIMIT;
+	}
+
+	public void setPAGE_LIMIT(int pAGE_LIMIT) {
+		PAGE_LIMIT = pAGE_LIMIT;
+	}
+
+	public int last() {
+		if (isMultipage() && !isLastPage()) {
+			// Last
+			int lastPageSize = total % limit;
+			if (lastPageSize == 0) {
 				lastPageSize = limit;
 			}
-			
-			offset=(total-lastPageSize);
+
+			offset = (total - lastPageSize);
 		}
-		
+
 		return offset;
 	}
-	
-	public int previous(){
-		if(!hasPrevious()){
+
+	public int previous() {
+		if (!hasPrevious()) {
 			return offset;
 		}
-		
-		offset = (offset-limit);
+
+		offset = (offset - limit);
 		return offset;
 	}
-	
-	public boolean hasNext(){
+
+	public boolean hasNext() {
 		return isMultipage() && !isLastPage();
 	}
-	
-	public boolean hasPrevious(){
+
+	public boolean hasPrevious() {
 		return isMultipage() && !isFirstPage();
 	}
 
 	public int getPageEnd() {
-		
-		if((offset+limit) > total){
+
+		if ((offset + limit) > total) {
 			return total;
 		}
-		
-		return offset+limit;
+
+		return offset + limit;
 	}
-	
-	public int getPages(){
-		int size = total/limit;
-		
-		if(total%limit>0){
-			size = size+1;
+
+	public int getPages() {
+		int size = total / limit;
+
+		if (total % limit > 0) {
+			size = size + 1;
 		}
-		
+
 		return size;
 	}
-	
-	public int getCurrentPage(){
-		if(offset==0){
+
+	public int getCurrentPage() {
+		if (offset == 0) {
 			return 0;
 		}
-		
-		return (offset/limit);
+
+		return (offset / limit);
 	}
 
 	public void setPage(int idx) {
-		offset = idx*limit;
+		offset = idx * limit;
 	}
 
 }

@@ -63,6 +63,17 @@ public class TestBookingDao extends AbstractDaoTest {
 	}
 
 	@Test
+	public void testGetDelegate() {
+		List<DelegateDto> delegates = bookingsHelper.getAllDelegates(null, "QEyf2DasD3X7Pybt",
+				0, 10, "");
+
+		for (DelegateDto del : delegates) {
+			System.err.println("Booking Ref>>" + del.getBookingRefId());
+		}
+
+	}
+
+	@Ignore
 	public void createBooking() {
 		BookingDto dto = new BookingDto();
 		dto.setStatus("");

@@ -437,8 +437,9 @@ public class BookingsDao extends BaseDao {
 		logger.error("==>>>>>>>>>>>>>>><<<<<<<<<<<>> eventRefId " + passedRefId);
 
 		List<DelegateDto> delegateList = new ArrayList<>();
-
-		String sql = "select d.refId,d.memberRefId,d.memberRegistrationNo,d.ern,"
+		String sql = "select b.refId as bookingRefId,b.created,"
+				+ "b.company,b.Contact, b.`E-Mail`,"
+				+ "d.refId,d.memberRefId,d.memberRegistrationNo,d.ern,"
 				+ "d.title,d.otherNames,a.hotel,b.paymentStatus,"
 				+ "d.attendance,d.surname,d.email,e.refid,d.booking_id "
 				+ "from delegate d inner join booking b on (d.booking_id=b.id) "
@@ -455,6 +456,8 @@ public class BookingsDao extends BaseDao {
 					+ "d.ern like :searchTerm)");
 		}
 
+		sql = sql.concat(" order by d.created DESC");
+
 		Query query = getEntityManager().createNativeQuery(sql).setParameter(
 				"eventRefId", passedRefId);
 
@@ -469,6 +472,15 @@ public class BookingsDao extends BaseDao {
 			int i = 0;
 			Object value = null;
 
+			String bookingRefId = (value = o[i++]) == null ? null : value
+					.toString();
+			Date bookingDate = (value = o[i++]) == null ? null : (Date) value;
+			String companyName = (value = o[i++]) == null ? null : value
+					.toString();
+			String contactName = (value = o[i++]) == null ? null : value
+					.toString();
+			String contactEmail = (value = o[i++]) == null ? null : value
+					.toString();
 			String refId = (value = o[i++]) == null ? null : value.toString();
 			String memberRefId = (value = o[i++]) == null ? null : value
 					.toString();
@@ -491,7 +503,11 @@ public class BookingsDao extends BaseDao {
 					: (BigInteger) value;
 
 			DelegateDto delegateDto = new DelegateDto();
-
+			delegateDto.setCreatedDate(bookingDate);
+			delegateDto.setCompanyName(companyName);
+			delegateDto.setContactName(contactName);
+			delegateDto.setContactEmail(contactEmail);
+			delegateDto.setBookingRefId(bookingRefId);
 			delegateDto.setRefId(refId);
 			delegateDto.setMemberRefId(memberRefId);
 			delegateDto.setMemberNo(memberNo);
@@ -514,7 +530,6 @@ public class BookingsDao extends BaseDao {
 			delegateDto.setSurname(surname);
 			delegateDto.setEmail(email);
 			delegateDto.setEventRefId(eventRefId);
-
 			delegateList.add(delegateDto);
 
 		}

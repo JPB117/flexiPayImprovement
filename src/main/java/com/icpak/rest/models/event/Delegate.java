@@ -28,14 +28,14 @@ public class Delegate extends PO {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
 	private String memberRegistrationNo;
-	private String ern;// ERN Number - see trigger generate_booking_ern_no
+	private String ern;
 	private String memberRefId;
 	private String title;
 	private String surname;
 	private String otherNames;
 	private String email;
+
 	@Transient
 	private String bookingId;
 	@ManyToOne
@@ -170,6 +170,7 @@ public class Delegate extends PO {
 		dto.setSurname(surname);
 		dto.setTitle(title);
 		dto.setBookingId(bookingId);
+		dto.setBookingRefId(booking.getRefId());
 		if (getAccommodation() != null) {
 			dto.setAccommodation(getAccommodation().toDto());
 		}

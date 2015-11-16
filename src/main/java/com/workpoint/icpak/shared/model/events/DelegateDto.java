@@ -1,5 +1,7 @@
 package com.workpoint.icpak.shared.model.events;
 
+import java.util.Date;
+
 import com.workpoint.icpak.shared.model.PaymentStatus;
 import com.workpoint.icpak.shared.model.SerializableObj;
 import com.workpoint.icpak.shared.trx.TransactionDto;
@@ -10,6 +12,10 @@ public class DelegateDto extends SerializableObj {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private Date createdDate;
+	private String companyName;
+	private String contactName;
+	private String contactEmail;
 	private String memberNo;
 	private String memberRefId;
 	private String title;
@@ -22,6 +28,7 @@ public class DelegateDto extends SerializableObj {
 	private TransactionDto transaction;
 	private DelegateType delegateType;
 	private String bookingId;
+	private String bookingRefId;
 	private String eventRefId;
 	private PaymentStatus paymentStatus;
 	public String courseId;
@@ -63,6 +70,30 @@ public class DelegateDto extends SerializableObj {
 
 	public void setHotel(String hotel) {
 		this.hotel = hotel;
+	}
+
+	public String getCompanyName() {
+		return companyName;
+	}
+
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
+	}
+
+	public String getContactName() {
+		return contactName;
+	}
+
+	public void setContactName(String contactName) {
+		this.contactName = contactName;
+	}
+
+	public String getContactEmail() {
+		return contactEmail;
+	}
+
+	public void setContactEmail(String contactEmail) {
+		this.contactEmail = contactEmail;
 	}
 
 	public DelegateDto() {
@@ -224,6 +255,22 @@ public class DelegateDto extends SerializableObj {
 
 	public void setPaymentStatus(PaymentStatus paymentStatus) {
 		this.paymentStatus = paymentStatus;
+	}
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public String getBookingRefId() {
+		return bookingRefId;
+	}
+
+	public void setBookingRefId(String bookingRefId) {
+		this.bookingRefId = bookingRefId;
 	}
 
 }

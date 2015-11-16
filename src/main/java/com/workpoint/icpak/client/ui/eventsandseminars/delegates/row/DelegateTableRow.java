@@ -7,6 +7,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Widget;
@@ -15,8 +16,11 @@ import com.workpoint.icpak.client.ui.OnOptionSelected;
 import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.RowWidget;
 import com.workpoint.icpak.client.ui.component.TextField;
+import com.workpoint.icpak.client.ui.cpd.table.row.CPDTableRow.TableActionType;
 import com.workpoint.icpak.client.ui.events.EditModelEvent;
+import com.workpoint.icpak.client.ui.events.TableActionEvent;
 import com.workpoint.icpak.client.ui.eventsandseminars.delegates.updatepayment.UpdatePaymentWidget;
+import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.model.EventType;
 import com.workpoint.icpak.shared.model.PaymentStatus;
@@ -26,9 +30,11 @@ import com.workpoint.icpak.shared.model.events.DelegateDto;
 
 public class DelegateTableRow extends RowWidget {
 
-	private static ActivitiesTableRowUiBinder uiBinder = GWT.create(ActivitiesTableRowUiBinder.class);
+	private static ActivitiesTableRowUiBinder uiBinder = GWT
+			.create(ActivitiesTableRowUiBinder.class);
 
-	interface ActivitiesTableRowUiBinder extends UiBinder<Widget, DelegateTableRow> {
+	interface ActivitiesTableRowUiBinder extends
+			UiBinder<Widget, DelegateTableRow> {
 	}
 
 	@UiField
@@ -49,11 +55,20 @@ public class DelegateTableRow extends RowWidget {
 	HTMLPanel divAttendance;
 	@UiField
 	HTMLPanel divPaymentStatus;
+	@UiField
+	HTMLPanel divBookingDate;
+	@UiField
+	HTMLPanel divCompanyNames;
+	@UiField
+	SpanElement spnCompanyNames;
 
 	@UiField
 	HTMLPanel divAmount;
 	@UiField
 	SpanElement spnPaymentStatus;
+	@UiField
+	SpanElement spnContactPerson;
+
 	@UiField
 	SpanElement spnAttendance;
 
@@ -70,6 +85,9 @@ public class DelegateTableRow extends RowWidget {
 	@UiField
 	ActionLink aNotAttended;
 
+	@UiField
+	ActionLink aResendProforma;
+
 	private DelegateDto delegate;
 
 	public DelegateTableRow() {
@@ -81,7 +99,6 @@ public class DelegateTableRow extends RowWidget {
 
 			}
 		});
-
 		aNotAttended.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -102,24 +119,51 @@ public class DelegateTableRow extends RowWidget {
 				updatePaymentInfo();
 			}
 		});
+
+		aResendProforma.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+
+				AppManager.showPopUp(
+						"Update Payment Info",
+						"Confirm resend of Email to "
+								+ delegate.getContactName() + "<"
+								+ delegate.getContactEmail() + ">",
+						new OnOptionSelected() {
+							@Override
+							public void onSelect(String name) {
+								if (name.equals("Confirm")) {
+									AppContext.fireEvent(new TableActionEvent(
+											delegate,
+											TableActionType.RESENDPROFORMA));
+								}
+							}
+						}, "Confirm", "Cancel");
+
+			}
+		});
+
 	}
 
 	protected void updatePaymentInfo() {
-		final UpdatePaymentWidget paymentWidget = new UpdatePaymentWidget(delegate);
-		AppManager.showPopUp("Update Payment Info", paymentWidget, new OnOptionSelected() {
-			@Override
-			public void onSelect(String name) {
-				if (name.equals("Save")) {
-					DelegateDto d = paymentWidget.getDelegate();
-					AppContext.fireEvent(new EditModelEvent(paymentWidget.getDelegate()));
-				}
-			}
-		}, "Save", "Cancel");
+		final UpdatePaymentWidget paymentWidget = new UpdatePaymentWidget(
+				delegate);
+		AppManager.showPopUp("Update Payment Info", paymentWidget,
+				new OnOptionSelected() {
+					@Override
+					public void onSelect(String name) {
+						if (name.equals("Save")) {
+							DelegateDto d = paymentWidget.getDelegate();
+							AppContext.fireEvent(new EditModelEvent(
+									paymentWidget.getDelegate()));
+						}
+					}
+				}, "Save", "Cancel");
 	}
 
 	protected void onAttendanceChanged(final AttendanceStatus attendanceStatus) {
-		AppManager.showPopUp("Confirm",
-				"Confirm " + delegate.getSurname() + " " + attendanceStatus.getDisplayName() + " this event?",
+		AppManager.showPopUp("Confirm", "Confirm " + delegate.getSurname()
+				+ " " + attendanceStatus.getDisplayName() + " this event?",
 				new OnOptionSelected() {
 					@Override
 					public void onSelect(String name) {
@@ -133,8 +177,8 @@ public class DelegateTableRow extends RowWidget {
 
 	}
 
-	public DelegateTableRow(String memberNo, String title, String surName, String otherNames, String email,
-			Integer rowId) {
+	public DelegateTableRow(String memberNo, String title, String surName,
+			String otherNames, String email, Integer rowId) {
 		this();
 		divMemberNo.getElement().setInnerHTML(memberNo);
 		divTitle.getElement().setInnerHTML(title);
@@ -146,15 +190,33 @@ public class DelegateTableRow extends RowWidget {
 	}
 
 	public DelegateTableRow(DelegateDto delegate, EventType eventType) {
-		this(delegate.getMemberNo(), delegate.getTitle(), delegate.getSurname(), delegate.getOtherNames(),
-				delegate.getEmail(), null);
-		// Window.alert(delegate.getBookingId());
+		this(delegate.getMemberNo(), delegate.getTitle(),
+				delegate.getSurname(), delegate.getOtherNames(), delegate
+						.getEmail(), null);
 		delegate.setBookingId(delegate.getBookingId());
 		delegate.setEventRefId(delegate.getEventRefId());
+		divBookingDate.getElement().setInnerText(
+				DateUtils.CREATEDFORMAT.format(delegate.getCreatedDate()));
 		this.delegate = delegate;
 
 		if (delegate.getAccommodation() != null) {
-			divAccomodation.add(new InlineLabel(delegate.getAccommodation().getHotel() + ""));
+			divAccomodation.add(new InlineLabel(delegate.getAccommodation()
+					.getHotel() + ""));
+		} else {
+			divAccomodation.getElement().setInnerText("None");
+		}
+
+		if (delegate.getCompanyName() != null) {
+			spnCompanyNames.setInnerText(delegate.getCompanyName());
+		}
+
+		if (delegate.getContactEmail() != null
+				&& delegate.getContactName() != null) {
+			String contactDetail = "<div><strong>Contact Name:</strong>"
+					+ delegate.getContactName()
+					+ "</div><div><strong>Email:</strong>"
+					+ delegate.getContactEmail() + "</div>";
+			spnContactPerson.setAttribute("data-content", contactDetail);
 		}
 
 		setPaymentStatus(delegate.getPaymentStatus());
@@ -177,7 +239,8 @@ public class DelegateTableRow extends RowWidget {
 	private void setAttendance(AttendanceStatus attendance) {
 		if (attendance != null) {
 			spnAttendance.setInnerText(attendance.getDisplayName());
-			if (attendance == AttendanceStatus.NOTATTENDED || attendance == AttendanceStatus.NOTENROLLED) {
+			if (attendance == AttendanceStatus.NOTATTENDED
+					|| attendance == AttendanceStatus.NOTENROLLED) {
 				spnAttendance.removeClassName("label-success");
 				spnAttendance.addClassName("label-danger");
 			} else {
@@ -198,8 +261,9 @@ public class DelegateTableRow extends RowWidget {
 
 	}
 
-	public void InsertParameters(TextField memberNo, TextField title, TextField surName, TextField otherNames,
-			TextField email, Integer rowId) {
+	public void InsertParameters(TextField memberNo, TextField title,
+			TextField surName, TextField otherNames, TextField email,
+			Integer rowId) {
 		divMemberNo.add(memberNo);
 		divTitle.add(title);
 		divSurName.add(surName);

@@ -299,7 +299,6 @@ public class CPDManagementPresenter
 	@Override
 	public void onTableAction(TableActionEvent event) {
 		if (event.getAction() == TableActionType.APPROVECPD) {
-			Window.alert("Approve action called!");
 			final CPDDto dto = (CPDDto) event.getModel();
 			saveRecord(dto);
 		} else if (event.getAction() == TableActionType.REJECTCPD) {

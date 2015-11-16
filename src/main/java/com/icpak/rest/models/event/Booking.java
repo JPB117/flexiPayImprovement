@@ -51,18 +51,14 @@ public class Booking extends PO {
 
 	@Embedded
 	private Contact contact;
-
 	private String paymentMode;// MPesa, VISA etc
 	private String currency;
 	private Date bookingDate = new Date();
 	private String userId; // Member who made the booking
-
 	@Transient
 	private String eventId;
-
 	private String status; // DRAFT/ PAID
 	private int delegatesCount;
-
 	// Payment
 	@Column(unique = true)
 	private String paymentRef; // TrxNumber

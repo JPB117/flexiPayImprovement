@@ -16,7 +16,7 @@ import javax.ws.rs.core.MediaType;
 import com.workpoint.icpak.shared.model.events.BookingDto;
 import com.workpoint.icpak.shared.model.events.DelegateDto;
 
-public interface BookingsResource extends BaseResource{
+public interface BookingsResource extends BaseResource {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -47,23 +47,27 @@ public interface BookingsResource extends BaseResource{
 	@Produces(MediaType.APPLICATION_JSON)
 	public BookingDto update(@PathParam("bookingId") String bookingId,
 			BookingDto booking);
-	
+
 	@POST
 	@Path("/{bookingId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public void sendAlert(@PathParam("bookingId") String bookingId);
 
+	@POST
+	@Path("/resendProforma/{bookingId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public void resendProforma(@PathParam("bookingId") String bookingId);
+
 	@DELETE
 	@Path("/{bookingId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public void delete(@PathParam("bookingId") String bookingId);
-	
+
 	@PUT
 	@Path("/{bookingId}/delegates/{delegateId}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public DelegateDto updateDelegate(@PathParam("bookingId") String bookingId,
-			@PathParam("delegateId") String delegateId,
-			DelegateDto delegate);
+			@PathParam("delegateId") String delegateId, DelegateDto delegate);
 
 }

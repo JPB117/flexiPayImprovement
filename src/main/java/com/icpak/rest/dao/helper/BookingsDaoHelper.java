@@ -182,14 +182,15 @@ public class BookingsDaoHelper {
 
 	public void sendProInvoice(String bookingRefId) {
 		assert bookingRefId != null;
+
 		Booking bookingInDb = dao.findByRefId(bookingRefId, Booking.class);
 		InvoiceDto invoice = invoiceHelper.getInvoice(dao
 				.getInvoiceRef(bookingRefId));
-		Event event = bookingInDb.getEvent();
 
 		String subject = bookingInDb.getEvent().getName()
 				+ "' Event Registration";
 		SimpleDateFormat formatter = new SimpleDateFormat("MMM d Y");
+
 		try {
 			Map<String, Object> emailValues = new HashMap<String, Object>();
 			emailValues.put("companyName", invoice.getCompanyName());
@@ -233,7 +234,6 @@ public class BookingsDaoHelper {
 						.getAccommodation().getHotel()
 						+ " "
 						+ delegate.getAccommodation().getNights()));
-
 				DocumentLine docLine = new DocumentLine("accomadationDetails",
 						emailValues);
 				emailDocument.addDetail(docLine);
@@ -284,8 +284,6 @@ public class BookingsDaoHelper {
 			// Arrays.asList("tomkim@wira.io"),
 			// Arrays.asList(bookingInDb.getContact().getContactName()),
 			// attachment);
-
-			sendDelegateSMS(bookingRefId);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -493,7 +491,7 @@ public class BookingsDaoHelper {
 		// return bookingDto;
 	}
 
-	private void sendDelegateSMS(String bookingRefId) {
+	public void sendDelegateSMS(String bookingRefId) {
 
 		Booking bookingInDb = dao.findByRefId(bookingRefId, Booking.class);
 

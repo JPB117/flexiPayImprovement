@@ -3,6 +3,14 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d='urn:import:com.workpoint.icpak.client.ui.component'>
 
 	<g:HTMLPanel styleName="tr" ui:field="row">
+		<g:HTMLPanel styleName="td" ui:field="divBookingDate">
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td" ui:field="divCompanyNames">
+			<span ui:field="spnCompanyNames"></span>
+			<span ui:field="spnContactPerson" class="fa fa-user popover-icon"
+				data-toggle="popover" data-trigger="hover" title="Reasons for this:"></span>
+			<d:PopOver></d:PopOver>
+		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divMemberNo">
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divTitle">
@@ -15,7 +23,7 @@
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divAccomodation">
 		</g:HTMLPanel>
-		<g:HTMLPanel styleName="td" ui:field="divAmount">
+		<g:HTMLPanel styleName="td hide" ui:field="divAmount">
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divPaymentStatus">
 			<span class="label label-success" ui:field="spnPaymentStatus">Paid</span>
@@ -33,6 +41,9 @@
 				<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
 					<li>
 						<d:ActionLink ui:field="aEnrol">Enrol in LMS</d:ActionLink>
+					</li>
+					<li>
+						<d:ActionLink ui:field="aResendProforma">Resend Proforma</d:ActionLink>
 					</li>
 					<li>
 						<d:ActionLink ui:field="aUpdatePayment">Update Payment</d:ActionLink>

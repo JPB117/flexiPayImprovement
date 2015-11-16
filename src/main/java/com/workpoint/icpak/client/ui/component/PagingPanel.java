@@ -123,29 +123,29 @@ public class PagingPanel extends Composite {
 			// previous
 			if (config.hasPrevious()) {
 				config.previous();
-//				ankaPanel.getWidget(widgetIdx).removeStyleName("active");
-//				ankaPanel.getWidget(widgetIdx - 1).addStyleName("active");
+				// ankaPanel.getWidget(widgetIdx).removeStyleName("active");
+				// ankaPanel.getWidget(widgetIdx - 1).addStyleName("active");
 				load(config.getOffset());
 			}
 		} else if (idx == -1) {
 			// Next
 			if (config.hasNext()) {
 				config.next();
-//				ankaPanel.getWidget(widgetIdx).removeStyleName("active");
-//				ankaPanel.getWidget(widgetIdx + 1).addStyleName("active");
+				// ankaPanel.getWidget(widgetIdx).removeStyleName("active");
+				// ankaPanel.getWidget(widgetIdx + 1).addStyleName("active");
 				load(config.getOffset());
 			}
 		} else {
-			if(idx==config.getPages()){
-				//move to last
+			if (idx == config.getPages()) {
+				// move to last
 				load(config.last());
-			}else{
+			} else {
 				config.setPage(idx);
 				load(config.getOffset());
 			}
-//			ankaPanel.getWidget(widgetIdx).removeStyleName("active");
-//			ankaPanel.getWidget(idx + 1).addStyleName("active");
-			
+			// ankaPanel.getWidget(widgetIdx).removeStyleName("active");
+			// ankaPanel.getWidget(idx + 1).addStyleName("active");
+
 		}
 
 		txtPageNo.setValue(config.getCurrentPage());

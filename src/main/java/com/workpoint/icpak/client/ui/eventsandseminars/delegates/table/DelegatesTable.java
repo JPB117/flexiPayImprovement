@@ -39,13 +39,14 @@ public class DelegatesTable extends Composite {
 
 	public void createHeader() {
 		List<TableHeader> th = new ArrayList<TableHeader>();
+		th.add(new TableHeader("Booking Date"));
+		th.add(new TableHeader("Sponsor"));
 		th.add(new TableHeader("Member No"));
 		th.add(new TableHeader("Title"));
 		th.add(new TableHeader("SurNames"));
 		th.add(new TableHeader("Other Names"));
 		th.add(new TableHeader("Email"));
 		th.add(new TableHeader("Accomodation"));
-		th.add(new TableHeader("Total Amount"));
 		th.add(new TableHeader("Payment Status"));
 		th.add(new TableHeader("Attendance"));
 		th.add(new TableHeader("Action"));

@@ -33,8 +33,9 @@ public class BookingsResourceImpl implements BookingsResource {
 	BookingsDaoHelper helper;
 
 	private final String eventId;
-	@Context HttpContext httpContext;
-	
+	@Context
+	HttpContext httpContext;
+
 	@Inject
 	public BookingsResourceImpl(@Assisted String eventId) {
 		this.eventId = eventId;
@@ -51,7 +52,7 @@ public class BookingsResourceImpl implements BookingsResource {
 				limit, "");
 		return dtos;
 	}
-	
+
 	@GET
 	@Path("/count")
 	public Integer getCount() {
@@ -80,11 +81,11 @@ public class BookingsResourceImpl implements BookingsResource {
 			BookingDto dto) {
 
 		String uri = "";
-//		URI requestUri = httpContext.getRequest().getRequestUri();
-//		String host = requestUri.getHost();
-//		int port = requestUri.getPort();
-//		uri = host+":"+port;
-		
+		// URI requestUri = httpContext.getRequest().getRequestUri();
+		// String host = requestUri.getHost();
+		// int port = requestUri.getPort();
+		// uri = host+":"+port;
+
 		helper.createBooking(eventId, dto);
 		uri = uri + "/" + dto.getRefId();
 		dto.setUri(uri);
@@ -137,15 +138,14 @@ public class BookingsResourceImpl implements BookingsResource {
 			@ApiParam(value = "Booking Id of the booking to delete", required = true) @PathParam("bookingId") String bookingId) {
 		helper.deleteBooking(eventId, bookingId);
 	}
-	
+
 	@PUT
 	@Path("/{bookingId}/delegates/{delegateId}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public DelegateDto updateDelegate(@PathParam("bookingId") String bookingId,
-			@PathParam("delegateId") String delegateId,
-			DelegateDto delegate){
-		
+			@PathParam("delegateId") String delegateId, DelegateDto delegate) {
+
 		return helper.updateDelegate(bookingId, delegateId, delegate);
 	}
 
@@ -154,6 +154,15 @@ public class BookingsResourceImpl implements BookingsResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Send Pro invoice mail and sms")
 	public void sendAlert(@PathParam("bookingId") String bookingId) {
+		helper.sendProInvoice(bookingId);
+		helper.sendDelegateSMS(bookingId);
+	}
+
+	@POST
+	@Path("/resendProforma/{bookingId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "Send Pro invoice mail and sms")
+	public void resendProforma(@PathParam("bookingId") String bookingId) {
 		helper.sendProInvoice(bookingId);
 	}
 
