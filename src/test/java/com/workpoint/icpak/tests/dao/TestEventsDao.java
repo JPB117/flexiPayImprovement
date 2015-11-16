@@ -109,7 +109,7 @@ public class TestEventsDao extends AbstractDaoTest {
 
 	@Test
 	public void testDeleagtesReport() throws Exception {
-		String eventRefId = "PrjIf8x4RIDaPZIv";
+		String eventRefId = "Jx4Ca6HpOutf2ic7";
 		String docType = "xls";
 
 		List<DelegateDto> delegateDtos = helper
