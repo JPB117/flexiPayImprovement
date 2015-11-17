@@ -90,10 +90,6 @@ public class DelegateDto extends SerializableObj {
 		this.contactName = contactName;
 	}
 
-	public String getContactEmail() {
-		return contactEmail;
-	}
-
 	public DelegateDto() {
 	}
 
@@ -213,12 +209,12 @@ public class DelegateDto extends SerializableObj {
 		this.contact = contact;
 	}
 
-	public String getContacEmail() {
-		return contactEmail;
-	}
-
 	public void setContactEmail(String contactEmail) {
 		this.contactEmail = contactEmail;
+	}
+
+	public String getContactEmail() {
+		return contactEmail;
 	}
 
 	public Date getBookingDate() {

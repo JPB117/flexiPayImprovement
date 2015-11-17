@@ -24,7 +24,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 
-
 import com.workpoint.icpak.shared.model.events.DelegateDto;
 
 public class GetDelegatesReport {
@@ -341,7 +340,7 @@ public class GetDelegatesReport {
 			}
 
 			if (j == 6) {
-				cell.setCellValue(detail.getContacEmail());
+				cell.setCellValue(detail.getContactEmail());
 			}
 
 			if (j == 7) {

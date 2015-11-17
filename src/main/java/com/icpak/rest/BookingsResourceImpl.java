@@ -159,11 +159,12 @@ public class BookingsResourceImpl implements BookingsResource {
 	}
 
 	@POST
-	@Path("/resendProforma/{bookingId}")
+	@Path("/resendProforma/{emails}/{bookingRefId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	@ApiOperation(value = "Send Pro invoice mail and sms")
-	public void resendProforma(@PathParam("bookingId") String bookingId) {
-		helper.sendProInvoice(bookingId);
+	@ApiOperation(value = "Send Proforma Invoice mail and sms")
+	public void resendProforma(@PathParam("emails") String newEmails,
+			@PathParam("bookingRefId") String bookingRefId) {
+		// helper.sendProInvoice(newEmail);
 	}
 
 }
