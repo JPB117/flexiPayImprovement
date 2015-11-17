@@ -30,6 +30,7 @@ import com.workpoint.icpak.client.ui.events.EditModelEvent;
 import com.workpoint.icpak.client.ui.events.EditModelEvent.EditModelHandler;
 import com.workpoint.icpak.client.ui.events.TableActionEvent;
 import com.workpoint.icpak.client.ui.events.TableActionEvent.TableActionHandler;
+import com.workpoint.icpak.client.ui.eventsandseminars.resendProforma.ResendModel;
 import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
 import com.workpoint.icpak.client.ui.events.ProcessingEvent;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
@@ -278,7 +279,7 @@ public class EventsPresenter extends
 	@Override
 	public void onTableAction(TableActionEvent event) {
 		if (event.getAction() == TableActionType.RESENDPROFORMA) {
-			final DelegateDto delegateDto = (DelegateDto) event.getModel();
+			final ResendModel resendModel = (ResendModel) event.getModel();
 
 			fireEvent(new ProcessingEvent());
 			// Resend Proforma for that Booking
@@ -289,8 +290,10 @@ public class EventsPresenter extends
 							fireEvent(new ProcessingCompletedEvent());
 							Window.alert("Email sent successfully..");
 						}
-					}).bookings(eventId)
-					.resendProforma(delegateDto.getBookingRefId());
+					})
+					.bookings(eventId)
+					.resendProforma(resendModel.getEmails(),
+							resendModel.getDelegate().getBookingRefId());
 
 		}
 

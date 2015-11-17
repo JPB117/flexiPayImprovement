@@ -98,16 +98,20 @@ public class TestEventsDao extends AbstractDaoTest {
 
 	}
 
-	@Ignore
+	@Test
 	public void testSerch() {
-		List<EventDto> searchResults = helper.getAllEvents("", null, 100, null,
-				"F");
-		for (EventDto e : searchResults) {
-			System.err.println("Event Size>>>" + e.getCategoryName());
-		}
+		// List<EventDto> searchResults = helper.getAllEvents("", null, 100,
+		// null,
+		// "F");
+		// for (EventDto e : searchResults) {
+		// System.err.println("Event Size>>>" + e.getCategoryName());
+		// }
+
+		System.err.println(helper.getEventDelegatesReport("QEyf2DasD3X7Pybt")
+				.size());
 	}
 
-	@Test
+	@Ignore
 	public void testDeleagtesReport() throws Exception {
 		String eventRefId = "Jx4Ca6HpOutf2ic7";
 		String docType = "xls";

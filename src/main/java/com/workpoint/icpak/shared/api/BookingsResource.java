@@ -54,9 +54,10 @@ public interface BookingsResource extends BaseResource {
 	public void sendAlert(@PathParam("bookingId") String bookingId);
 
 	@POST
-	@Path("/resendProforma/{bookingId}")
+	@Path("/resendProforma/{emails}/{bookingRefId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public void resendProforma(@PathParam("bookingId") String bookingId);
+	public void resendProforma(@PathParam("emails") String emailAddress,
+			@PathParam("bookingRefId") String bookingRefId);
 
 	@DELETE
 	@Path("/{bookingId}")

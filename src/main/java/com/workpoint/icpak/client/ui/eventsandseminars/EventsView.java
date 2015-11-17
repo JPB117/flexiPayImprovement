@@ -66,7 +66,7 @@ public class EventsView extends ViewImpl implements EventsPresenter.IEventsView 
 			public void onClick(ClickEvent event) {
 				UploadContext ctx = new UploadContext("getreport");
 				ctx.setContext("eventRefId", EventsView.this.event.getRefId());
-				ctx.setContext("docType", "xlsx");
+				ctx.setContext("docType", "xls");
 				ctx.setAction(UPLOADACTION.GETDELEGATESREPORT);
 				Window.open(ctx.toUrl(), "", null);
 			}

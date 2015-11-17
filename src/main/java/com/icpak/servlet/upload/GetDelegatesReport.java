@@ -24,7 +24,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 
-
 import com.workpoint.icpak.shared.model.events.DelegateDto;
 
 public class GetDelegatesReport {
@@ -51,7 +50,6 @@ public class GetDelegatesReport {
 	}
 
 	public GetDelegatesReport(List<DelegateDto> delegateDtos, String docType) {
-		logger.error(" === Constructor called === ");
 		logger.error(" === dto size === " + delegateDtos.size());
 		String label = "Delegates";
 		name = label + "Report" + "." + docType;
@@ -342,7 +340,7 @@ public class GetDelegatesReport {
 			}
 
 			if (j == 6) {
-				cell.setCellValue(detail.getContacEmail());
+				cell.setCellValue(detail.getContactEmail());
 			}
 
 			if (j == 7) {

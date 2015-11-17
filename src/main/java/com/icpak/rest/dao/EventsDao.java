@@ -205,7 +205,7 @@ public class EventsDao extends BaseDao {
 		String sql = "select " + "d.memberRegistrationNo,d.ern,d.email,b.contact,b.bookingDate,a.hotel,b.paymentStatus,"
 				+ "b.`E-Mail`,d.lpoNo,d.isCredit,d.clearanceNo,d.attendance " + "from "
 				+ "event e inner join booking b on (e.id=b.event_id) " + "inner join delegate d on (d.booking_id=b.id) "
-				+ "inner join accommodation a on (d.accommodationId=a.id) " + "where " + "e.refId =:eventRefId";
+				+ "left join accommodation a on (d.accommodationId=a.id) " + "where " + "e.refId =:eventRefId";
 		Query query = getEntityManager().createNativeQuery(sql).setParameter("eventRefId", eventRefId);
 
 		List<Object[]> rows = getResultList(query);

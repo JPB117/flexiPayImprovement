@@ -20,6 +20,7 @@ import com.workpoint.icpak.client.ui.cpd.table.row.CPDTableRow.TableActionType;
 import com.workpoint.icpak.client.ui.events.EditModelEvent;
 import com.workpoint.icpak.client.ui.events.TableActionEvent;
 import com.workpoint.icpak.client.ui.eventsandseminars.delegates.updatepayment.UpdatePaymentWidget;
+import com.workpoint.icpak.client.ui.eventsandseminars.resendProforma.ResendProforma;
 import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.model.EventType;
@@ -124,21 +125,19 @@ public class DelegateTableRow extends RowWidget {
 			@Override
 			public void onClick(ClickEvent event) {
 
-				AppManager.showPopUp(
-						"Update Payment Info",
-						"Confirm resend of Email to "
-								+ delegate.getContactName() + "<"
-								+ delegate.getContactEmail() + ">",
+				final ResendProforma resendWidget = new ResendProforma(delegate);
+				AppManager.showPopUp("Resend Proforma", resendWidget,
 						new OnOptionSelected() {
 							@Override
 							public void onSelect(String name) {
-								if (name.equals("Confirm")) {
+								if (name.equals("Resend")) {
 									AppContext.fireEvent(new TableActionEvent(
-											delegate,
+											resendWidget.getResendObject(),
 											TableActionType.RESENDPROFORMA));
+
 								}
 							}
-						}, "Confirm", "Cancel");
+						}, "Resend", "Cancel");
 
 			}
 		});
