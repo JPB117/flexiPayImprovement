@@ -29,10 +29,10 @@ import com.workpoint.icpak.shared.model.events.DelegateDto;
 public class GetDelegatesReport {
 	Logger logger = Logger.getLogger(GetDelegatesReport.class);
 
-	private static final String[] titles = { "MEMBER REGISTRATION NUMBER",
-			"ERN", "EMAIL", "SPONSOR", "SPONSOR TEL", "CONTACT PERSON",
-			"CONTACT EMAIL", "BOOKING DATE", "ACCOMODATION", "PAYMENT STATUS",
-			"RECEIPT", "LPO", "ON CREDIT", "ATTENDANCE" };
+	private static final String[] titles = { "BOOKING DATE",
+			"SPONSOR", "MEMBER NO", "ERN NO" , "TITLE", "SUR NAMES", "OTHER NAMES",
+			"EMAIL", "ACCOMMODATION", "PAYMENT STATUS", "ATTENDANCE",
+			"RECEIPT NO", "LPO", "ON CREDIT" , "CLEARANCE NO"};
 
 	static Map<String, CellStyle> styles = null;
 	static Map<String, Font> fonts = null;
@@ -52,7 +52,7 @@ public class GetDelegatesReport {
 	public GetDelegatesReport(List<DelegateDto> delegateDtos, String docType) {
 		logger.error(" === dto size === " + delegateDtos.size());
 		String label = "Delegates";
-		name = label + "Report" + "." + docType;
+		name = label + "Report_" + "." + docType;
 
 		fonts = createFonts(wb);
 		styles = createStyles(wb);
@@ -310,41 +310,42 @@ public class GetDelegatesReport {
 
 	private static void bindData(DelegateDto detail, CreationHelper helper,
 			Sheet sheet, Row row, Integer i) {
+		SimpleDateFormat formater = new SimpleDateFormat("dd/MM/yyyy");
 
 		for (int j = 0; j < titles.length; j++) {
 			Cell cell = row.createCell(j);
 			String styleName = null;
 
 			if (j == 0) {
-				cell.setCellValue(detail.getMemberNo());
+				cell.setCellValue(formater.format(detail.getCreatedDate()));
 			}
 
 			if (j == 1) {
-				cell.setCellValue(detail.getErn());
+				cell.setCellValue(detail.getCompanyName());
 			}
 
 			if (j == 2) {
-				cell.setCellValue(detail.getEmail());
+				cell.setCellValue(detail.getMemberNo());
 			}
-
+			
 			if (j == 3) {
-				cell.setCellValue("Sponsor");
+				cell.setCellValue(detail.getErn());
 			}
-
+			
 			if (j == 4) {
-				cell.setCellValue("Sponsor tel");
+				cell.setCellValue(detail.getTitle());
 			}
 
 			if (j == 5) {
-				cell.setCellValue(detail.getContact());
+				cell.setCellValue(detail.getSurname());
 			}
 
 			if (j == 6) {
-				cell.setCellValue(detail.getContactEmail());
+				cell.setCellValue(detail.getOtherNames());
 			}
 
 			if (j == 7) {
-				cell.setCellValue("" + detail.getBookingDate());
+				cell.setCellValue(detail.getEmail());
 			}
 
 			if (j == 8) {
@@ -356,11 +357,23 @@ public class GetDelegatesReport {
 			}
 
 			if (j == 10) {
-				cell.setCellValue(detail.getReceiptNo());
+				cell.setCellValue(detail.getAttendance().toString());
 			}
 
 			if (j == 11) {
+				cell.setCellValue(detail.getReceiptNo());
+			}
+
+			if (j == 12) {
 				cell.setCellValue(detail.getLpoNo());
+			}
+			
+			if (j == 13) {
+				cell.setCellValue(detail.getIsCredit());
+			}
+			
+			if (j == 14) {
+				cell.setCellValue(detail.getClearanceNo());
 			}
 
 			styleName = "cell_normal_centered";
