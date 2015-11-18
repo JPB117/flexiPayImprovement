@@ -128,7 +128,9 @@ public class DirectoryDao extends BaseDao {
 
 	public int getDirectorySearchCount(String searchTerm) {
 
-		String sql = "select count(*)" + "from " + "directory d " + "where "
+		String sql = "select count(*) " 
+		        + "from " 
+				+ "directory d " + "where "
 				+ "d.firmId like :searchTerm or d.firmName like :searchTerm or "
 				+ "d.typeOfFirm like :searchTerm or d.city like :searchTerm or "
 				+ "d.email like :searchTerm or d.regno like :searchTerm";
