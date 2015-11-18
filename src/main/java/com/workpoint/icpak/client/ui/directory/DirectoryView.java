@@ -14,7 +14,7 @@ import com.workpoint.icpak.client.ui.directory.table.DirectoryTable;
 import com.workpoint.icpak.client.ui.directory.table.row.DirectoryTableRow;
 import com.workpoint.icpak.shared.model.DirectoryDto;
 
-class DirectoryView extends ViewImpl implements DirectoryPresenter.MyDirectoryView {
+public class DirectoryView extends ViewImpl implements DirectoryPresenter.MyDirectoryView {
     interface Binder extends UiBinder<Widget, DirectoryView> {
     }
     

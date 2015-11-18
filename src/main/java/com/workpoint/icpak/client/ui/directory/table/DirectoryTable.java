@@ -28,14 +28,14 @@ public class DirectoryTable extends Composite{
 		initWidget(uiBinder.createAndBindUi(this));
 		tblView.setAutoNumber(false);
 		tblView.setSearchSectionVisible(true);
-		tblView.setSearchFieldVisible(false);
-		tblView.setDatesVisible(true);
+		tblView.setSearchFieldVisible(true);
+		tblView.setDatesVisible(false);
 		createHeader();
 	}
 	
 	public void createHeader() {
 		List<TableHeader> th = new ArrayList<TableHeader>();
-		th.add(new TableHeader("NAME OF FIRM"));
+		th.add(new TableHeader("NAME OF FIRM / PARTNERS"));
 		th.add(new TableHeader("ADDRESS"));
 		th.add(new TableHeader("CONTACTS"));
 		tblView.setTableHeaders(th);

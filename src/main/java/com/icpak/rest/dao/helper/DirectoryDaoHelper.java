@@ -27,8 +27,8 @@ public class DirectoryDaoHelper {
 		return dto;
 	}
 	
-	public List<DirectoryDto> getAll(){
-		List<Directory> directories = directoryDao.getAll(null, 0);
+	public List<DirectoryDto> getAll(Integer offset, Integer limit){
+		List<Directory> directories = directoryDao.getAll(offset, limit);
 		List<DirectoryDto> directoryDtos = new ArrayList<>();
 		
 		for(Directory d : directories){

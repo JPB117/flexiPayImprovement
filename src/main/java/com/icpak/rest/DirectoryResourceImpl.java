@@ -29,11 +29,12 @@ public class DirectoryResourceImpl implements DirectoryResource {
 	DirectoryDaoHelper directoryDaoHelper;
 
 	@GET
+	@Path("/")
 	@ApiOperation(value = "Retrieve all directories")
 	public List<DirectoryDto> getAll(
 			@ApiParam(value = "Starting index", required = true) @QueryParam("offset") Integer offset,
 			@ApiParam(value = "Number of items to retrieve", required = true) @QueryParam("limit") Integer limit) {
-		return directoryDaoHelper.getAll();
+		return directoryDaoHelper.getAll(offset , limit);
 	}
 
 	@GET

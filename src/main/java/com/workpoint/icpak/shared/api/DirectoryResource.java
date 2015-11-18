@@ -16,6 +16,7 @@ import com.workpoint.icpak.shared.model.DirectoryDto;
 public interface DirectoryResource extends BaseResource {
 
 	@GET
+	@Path("/")
 	public List<DirectoryDto> getAll(@QueryParam("offset") Integer offset,
 			@QueryParam("limit") Integer limit);
 
