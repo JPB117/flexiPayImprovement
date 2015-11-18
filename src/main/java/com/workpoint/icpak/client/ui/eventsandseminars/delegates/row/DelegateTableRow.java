@@ -7,15 +7,15 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Widget;
+import com.workpoint.icpak.client.model.UploadContext;
+import com.workpoint.icpak.client.model.UploadContext.UPLOADACTION;
 import com.workpoint.icpak.client.ui.AppManager;
 import com.workpoint.icpak.client.ui.OnOptionSelected;
 import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.RowWidget;
-import com.workpoint.icpak.client.ui.component.TextField;
 import com.workpoint.icpak.client.ui.cpd.table.row.CPDTableRow.TableActionType;
 import com.workpoint.icpak.client.ui.events.EditModelEvent;
 import com.workpoint.icpak.client.ui.events.TableActionEvent;
@@ -26,7 +26,6 @@ import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.model.EventType;
 import com.workpoint.icpak.shared.model.PaymentStatus;
 import com.workpoint.icpak.shared.model.events.AttendanceStatus;
-import com.workpoint.icpak.shared.model.events.BookingDto;
 import com.workpoint.icpak.shared.model.events.DelegateDto;
 
 public class DelegateTableRow extends RowWidget {
@@ -41,42 +40,25 @@ public class DelegateTableRow extends RowWidget {
 	@UiField
 	HTMLPanel row;
 	@UiField
+	HTMLPanel divBookingDate;
+	@UiField
+	HTMLPanel divSponsorNames;
+	@UiField
+	HTMLPanel divContactName;
+	@UiField
+	HTMLPanel divSponsorEmail;
+	@UiField
 	HTMLPanel divMemberNo;
 	@UiField
-	HTMLPanel divTitle;
-	@UiField
-	HTMLPanel divSurName;
-	@UiField
-	HTMLPanel divOtherNames;
-	@UiField
-	HTMLPanel divEmail;
+	HTMLPanel divDelegateNames;
 	@UiField
 	HTMLPanel divAccomodation;
 	@UiField
-	HTMLPanel divAttendance;
-	@UiField
-	HTMLPanel divPaymentStatus;
-	@UiField
-	HTMLPanel divBookingDate;
-	@UiField
-	HTMLPanel divCompanyNames;
-	@UiField
-	SpanElement spnCompanyNames;
-
-	@UiField
-	HTMLPanel divAmount;
-	@UiField
 	SpanElement spnPaymentStatus;
 	@UiField
-	SpanElement spnContactPerson;
-
-	@UiField
 	SpanElement spnAttendance;
-
-	ActionLink aRemove;
-
-	private Integer rowId;
-
+	@UiField
+	SpanElement spnIsMember;
 	@UiField
 	ActionLink aEnrol;
 	@UiField
@@ -85,10 +67,10 @@ public class DelegateTableRow extends RowWidget {
 	ActionLink aUpdatePayment;
 	@UiField
 	ActionLink aNotAttended;
-
+	@UiField
+	ActionLink aProforma;
 	@UiField
 	ActionLink aResendProforma;
-
 	private DelegateDto delegate;
 
 	public DelegateTableRow() {
@@ -124,7 +106,6 @@ public class DelegateTableRow extends RowWidget {
 		aResendProforma.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-
 				final ResendProforma resendWidget = new ResendProforma(delegate);
 				AppManager.showPopUp("Resend Proforma", resendWidget,
 						new OnOptionSelected() {
@@ -139,6 +120,19 @@ public class DelegateTableRow extends RowWidget {
 							}
 						}, "Resend", "Cancel");
 
+			}
+		});
+
+		aProforma.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+//				Window.alert("Proforma" + delegate.getBookingRefId());
+				UploadContext ctx = new UploadContext("getreport");
+				ctx.setContext("bookingRefId", delegate.getBookingRefId());
+				ctx.setAction(UPLOADACTION.GETPROFORMA);
+
+				// ctx.setContext(key, value)
+				Window.open(ctx.toUrl(), "Get Proforma", null);
 			}
 		});
 
@@ -176,27 +170,26 @@ public class DelegateTableRow extends RowWidget {
 
 	}
 
-	public DelegateTableRow(String memberNo, String title, String surName,
-			String otherNames, String email, Integer rowId) {
-		this();
-		divMemberNo.getElement().setInnerHTML(memberNo);
-		divTitle.getElement().setInnerHTML(title);
-		divSurName.getElement().setInnerHTML(surName);
-		divOtherNames.getElement().setInnerHTML(otherNames);
-		divEmail.getElement().setInnerHTML(email);
-		this.rowId = rowId;
-
-	}
-
 	public DelegateTableRow(DelegateDto delegate, EventType eventType) {
-		this(delegate.getMemberNo(), delegate.getTitle(),
-				delegate.getSurname(), delegate.getOtherNames(), delegate
-						.getEmail(), null);
-		delegate.setBookingId(delegate.getBookingId());
-		delegate.setEventRefId(delegate.getEventRefId());
+		this();
+		this.delegate = delegate;
 		divBookingDate.getElement().setInnerText(
 				DateUtils.CREATEDFORMAT.format(delegate.getCreatedDate()));
-		this.delegate = delegate;
+		if (delegate.getCompanyName() != null) {
+			divSponsorNames.getElement()
+					.setInnerText(delegate.getCompanyName());
+		}
+		divContactName.getElement().setInnerText(delegate.getContactName());
+		divSponsorEmail.getElement().setInnerText(delegate.getContactEmail());
+		if (delegate.getMemberNo() != null) {
+			divMemberNo.getElement().setInnerText(delegate.getMemberNo());
+		}
+		divDelegateNames.getElement().setInnerText(
+				(delegate.getTitle() == null ? "" : delegate.getTitle() + " ")
+						+ (delegate.getSurname() == null ? "" : delegate
+								.getSurname() + " ")
+						+ (delegate.getOtherNames() == null ? "" : delegate
+								.getOtherNames() + " "));
 
 		if (delegate.getAccommodation() != null) {
 			divAccomodation.add(new InlineLabel(delegate.getAccommodation()
@@ -205,17 +198,10 @@ public class DelegateTableRow extends RowWidget {
 			divAccomodation.getElement().setInnerText("None");
 		}
 
-		if (delegate.getCompanyName() != null) {
-			spnCompanyNames.setInnerText(delegate.getCompanyName());
-		}
-
-		if (delegate.getContactEmail() != null
-				&& delegate.getContactName() != null) {
-			String contactDetail = "<div><strong>Contact Name:</strong>"
-					+ delegate.getContactName()
-					+ "</div><div><strong>Email:</strong>"
-					+ delegate.getContactEmail() + "</div>";
-			spnContactPerson.setAttribute("data-content", contactDetail);
+		if (delegate.getMemberNo() == null) {
+			spnIsMember.setClassName("fa fa-times");
+		} else {
+			spnIsMember.setClassName("fa fa-check");
 		}
 
 		setPaymentStatus(delegate.getPaymentStatus());
@@ -237,47 +223,52 @@ public class DelegateTableRow extends RowWidget {
 
 	private void setAttendance(AttendanceStatus attendance) {
 		if (attendance != null) {
-			spnAttendance.setInnerText(attendance.getDisplayName());
+			// spnAttendance.setInnerText(attendance.getDisplayName());
 			if (attendance == AttendanceStatus.NOTATTENDED
 					|| attendance == AttendanceStatus.NOTENROLLED) {
-				spnAttendance.removeClassName("label-success");
-				spnAttendance.addClassName("label-danger");
+				// spnAttendance.removeClassName("label-success");
+				// spnAttendance.addClassName("label-danger");
+				spnAttendance.setClassName("fa fa-times");
 			} else {
-				spnAttendance.removeClassName("label-danger");
-				spnAttendance.addClassName("label-success");
+				// spnAttendance.removeClassName("label-danger");
+				// spnAttendance.addClassName("label-success");
+				spnAttendance.setClassName("fa fa-check");
 			}
 		}
 	}
 
 	private void setPaymentStatus(PaymentStatus paymentStatus) {
 		if (paymentStatus != null) {
-			spnPaymentStatus.setInnerText(paymentStatus.name());
+			// spnPaymentStatus.setInnerText(paymentStatus.name());
 			if (paymentStatus == PaymentStatus.NOTPAID) {
-				spnPaymentStatus.removeClassName("label-success");
-				spnPaymentStatus.addClassName("label-danger");
+				// spnPaymentStatus.removeClassName("label-success");
+				// spnPaymentStatus.addClassName("label-danger");
+				spnPaymentStatus.setClassName("fa fa-times");
+			} else {
+				spnPaymentStatus.setClassName("fa fa-check");
 			}
 		}
 
 	}
 
-	public void InsertParameters(TextField memberNo, TextField title,
-			TextField surName, TextField otherNames, TextField email,
-			Integer rowId) {
-		divMemberNo.add(memberNo);
-		divTitle.add(title);
-		divSurName.add(surName);
-		divOtherNames.add(otherNames);
-		divEmail.add(email);
-		this.rowId = rowId;
-	}
-
-	public void showAdvancedDetails(boolean show) {
-		if (show) {
-			divPaymentStatus.setVisible(true);
-			divAttendance.setVisible(true);
-		} else {
-			divPaymentStatus.setVisible(false);
-			divAttendance.setVisible(false);
-		}
-	}
+	// public void InsertParameters(TextField memberNo, TextField title,
+	// TextField surName, TextField otherNames, TextField email,
+	// Integer rowId) {
+	// divMemberNo.add(memberNo);
+	// divTitle.add(title);
+	// divSurName.add(surName);
+	// divOtherNames.add(otherNames);
+	// divEmail.add(email);
+	// this.rowId = rowId;
+	// }
+	//
+	// public void showAdvancedDetails(boolean show) {
+	// if (show) {
+	// divPaymentStatus.setVisible(true);
+	// divAttendance.setVisible(true);
+	// } else {
+	// divPaymentStatus.setVisible(false);
+	// divAttendance.setVisible(false);
+	// }
+	// }
 }

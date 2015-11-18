@@ -98,7 +98,7 @@ public class TestEventsDao extends AbstractDaoTest {
 
 	}
 
-	@Test
+	@Ignore
 	public void testSerch() {
 		// List<EventDto> searchResults = helper.getAllEvents("", null, 100,
 		// null,

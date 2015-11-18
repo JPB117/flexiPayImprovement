@@ -29,10 +29,10 @@ import com.workpoint.icpak.shared.model.events.DelegateDto;
 public class GetDelegatesReport {
 	Logger logger = Logger.getLogger(GetDelegatesReport.class);
 
-	private static final String[] titles = { "BOOKING DATE",
-			"SPONSOR", "MEMBER NO", "ERN NO" , "TITLE", "SUR NAMES", "OTHER NAMES",
-			"EMAIL", "ACCOMMODATION", "PAYMENT STATUS", "ATTENDANCE",
-			"RECEIPT NO", "LPO", "ON CREDIT" , "CLEARANCE NO"};
+	private static final String[] titles = { "BOOKING DATE", "SPONSOR",
+			"SPONSOR EMAIL", "MEMBER NO", "ERN NO", "TITLE", "SUR NAMES",
+			"OTHER NAMES", "DELEGATE EMAIL", "ACCOMMODATION", "PAYMENT STATUS",
+			"ATTENDANCE", "RECEIPT NO", "LPO", "ON CREDIT", "CLEARANCE NO" };
 
 	static Map<String, CellStyle> styles = null;
 	static Map<String, Font> fonts = null;
@@ -49,10 +49,10 @@ public class GetDelegatesReport {
 		return name;
 	}
 
-	public GetDelegatesReport(List<DelegateDto> delegateDtos, String docType) {
+	public GetDelegatesReport(List<DelegateDto> delegateDtos, String docType,
+			String eventName) {
 		logger.error(" === dto size === " + delegateDtos.size());
-		String label = "Delegates";
-		name = label + "Report_" + "." + docType;
+		name = eventName + "_Report_" + "." + docType;
 
 		fonts = createFonts(wb);
 		styles = createStyles(wb);
@@ -73,8 +73,6 @@ public class GetDelegatesReport {
 		sheetHeadingFont.setFontHeightInPoints((short) 16);
 		style = createBorderedStyle(wb);
 		style.setAlignment(CellStyle.ALIGN_CENTER);
-		// style.setFillForegroundColor(IndexedColors.LIGHT_CORNFLOWER_BLUE.getIndex());
-		// style.setFillPattern(CellStyle.SOLID_FOREGROUND);
 		style.setFont(sheetHeadingFont);
 		styles.put("sheet_heading", style);
 
@@ -199,14 +197,6 @@ public class GetDelegatesReport {
 	private CellStyle createBorderedStyle(Workbook wb2) {
 		CellStyle style = wb.createCellStyle();
 		style.setVerticalAlignment(CellStyle.VERTICAL_TOP);
-		// style.setBorderRight(CellStyle.BORDER_THIN);
-		// style.setRightBorderColor(IndexedColors.BLACK.getIndex());
-		// style.setBorderBottom(CellStyle.BORDER_THIN);
-		// style.setBottomBorderColor(IndexedColors.BLACK.getIndex());
-		// style.setBorderLeft(CellStyle.BORDER_THIN);
-		// style.setLeftBorderColor(IndexedColors.BLACK.getIndex());
-		// style.setBorderTop(CellStyle.BORDER_THIN);
-		// style.setTopBorderColor(IndexedColors.BLACK.getIndex());
 		return style;
 	}
 
@@ -218,7 +208,6 @@ public class GetDelegatesReport {
 
 		Font font = wb.createFont();
 		font.setBoldweight(Font.BOLDWEIGHT_BOLD);
-		// font.setColor(Font.COLOR_RED);
 		font.setColor(IndexedColors.GREEN.index);
 		fonts.put("font-success", font);
 
@@ -240,8 +229,6 @@ public class GetDelegatesReport {
 
 	private void generate(Workbook workbook, String sheetName,
 			List<DelegateDto> delegateDtos) {
-		logger.error("=== Generating Work boook====");
-
 		Sheet sheet = workbook.createSheet(sheetName);
 
 		// sheet.setDisplayGridlines(false);
@@ -258,14 +245,14 @@ public class GetDelegatesReport {
 
 		// the header row: centered text in 48pt font
 
-		Row headingRow = sheet.createRow(0);
-		headingRow.setHeightInPoints(30f);
-		Cell headingCell = headingRow.createCell(0);
-		headingCell.setCellStyle(styles.get("sheet_heading"));
-		headingCell.setCellValue(sheetName);
-		sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 7));
+		// Row headingRow = sheet.createRow(0);
+		// headingRow.setHeightInPoints(30f);
+		// Cell headingCell = headingRow.createCell(0);
+		// headingCell.setCellStyle(styles.get("sheet_heading"));
+		// headingCell.setCellValue(sheetName);
+		// sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 7));
 
-		Row headerRow = sheet.createRow(1);
+		Row headerRow = sheet.createRow(0);
 		headerRow.setHeightInPoints(30f);
 		for (int i = 0; i < titles.length; i++) {
 			Cell cell = headerRow.createCell(i);
@@ -274,7 +261,7 @@ public class GetDelegatesReport {
 		}
 
 		CreationHelper helper = wb.getCreationHelper();
-		int rownum = 2;
+		int rownum = 1;
 		paintRows(delegateDtos, rownum, helper, sheet);
 
 		sheet.setColumnWidth(0, 256 * 20);
@@ -325,54 +312,62 @@ public class GetDelegatesReport {
 			}
 
 			if (j == 2) {
-				cell.setCellValue(detail.getMemberNo());
+				cell.setCellValue(detail.getContactEmail());
 			}
-			
+
 			if (j == 3) {
-				cell.setCellValue(detail.getErn());
+				cell.setCellValue(detail.getContactEmail());
 			}
-			
+
 			if (j == 4) {
-				cell.setCellValue(detail.getTitle());
+				cell.setCellValue(detail.getMemberNo());
 			}
 
 			if (j == 5) {
-				cell.setCellValue(detail.getSurname());
+				cell.setCellValue(detail.getErn());
 			}
 
 			if (j == 6) {
-				cell.setCellValue(detail.getOtherNames());
+				cell.setCellValue(detail.getTitle());
 			}
 
 			if (j == 7) {
-				cell.setCellValue(detail.getEmail());
+				cell.setCellValue(detail.getSurname());
 			}
 
 			if (j == 8) {
-				cell.setCellValue(detail.getHotel());
+				cell.setCellValue(detail.getOtherNames());
 			}
 
 			if (j == 9) {
-				cell.setCellValue(detail.getPaymentStatus().toString());
+				cell.setCellValue(detail.getEmail());
 			}
 
 			if (j == 10) {
-				cell.setCellValue(detail.getAttendance().toString());
+				cell.setCellValue(detail.getHotel());
 			}
 
 			if (j == 11) {
-				cell.setCellValue(detail.getReceiptNo());
+				cell.setCellValue(detail.getPaymentStatus().toString());
 			}
 
 			if (j == 12) {
+				cell.setCellValue(detail.getAttendance().toString());
+			}
+
+			if (j == 13) {
+				cell.setCellValue(detail.getReceiptNo());
+			}
+
+			if (j == 14) {
 				cell.setCellValue(detail.getLpoNo());
 			}
-			
-			if (j == 13) {
+
+			if (j == 15) {
 				cell.setCellValue(detail.getIsCredit());
 			}
-			
-			if (j == 14) {
+
+			if (j == 16) {
 				cell.setCellValue(detail.getClearanceNo());
 			}
 
@@ -386,7 +381,8 @@ public class GetDelegatesReport {
 	public void generateDelegateReport(List<DelegateDto> delegateDtos,
 			String docType) throws Exception {
 
-		byte[] bites = new GetDelegatesReport(delegateDtos, docType).getBytes();
+		byte[] bites = new GetDelegatesReport(delegateDtos, docType, "My Event")
+				.getBytes();
 
 		FileOutputStream os = new FileOutputStream(new File(
 				"delegatesReport.xlsx"));
