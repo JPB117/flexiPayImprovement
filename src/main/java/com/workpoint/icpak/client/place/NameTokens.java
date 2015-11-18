@@ -2,6 +2,8 @@ package com.workpoint.icpak.client.place;
 
 public class NameTokens {
 
+	public static final String directory = "directory";
+
 	public static final String payment = "payment";
 
 	public static final String home = "home";
@@ -83,6 +85,10 @@ public class NameTokens {
 
 	public static String getAdminDefaultPage() {
 		return events;
+	}
+
+	public static String getDirectory() {
+		return directory;
 	}
 
 }

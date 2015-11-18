@@ -1,0 +1,14 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:table='urn:import:com.workpoint.icpak.client.ui.directory.table>
+
+	<g:HTMLPanel ui:field="container"
+		styleName="content-wrapper ng-scope ng-fadeInUp">
+		<div class="row">
+			<div class="col-lg-12">
+				<table:DirectoryTable ui:field="tblView">
+				</table:DirectoryTable>
+			</div>
+		</div>
+	</g:HTMLPanel>
+</ui:UiBinder>
