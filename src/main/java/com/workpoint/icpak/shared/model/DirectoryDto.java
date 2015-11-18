@@ -1,8 +1,5 @@
 package com.workpoint.icpak.shared.model;
 
-import java.util.Date;
-import java.util.List;
-
 public class DirectoryDto extends SerializableObj {
 
 	/**

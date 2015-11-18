@@ -1,11 +1,7 @@
 package com.icpak.rest.dao;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.persistence.Query;
 
@@ -14,44 +10,34 @@ import org.apache.log4j.Logger;
 import com.icpak.rest.exceptions.ServiceException;
 import com.icpak.rest.models.Directory;
 import com.icpak.rest.models.ErrorCodes;
-import com.icpak.rest.models.cpd.CPD;
-import com.workpoint.icpak.shared.model.CPDCategory;
-import com.workpoint.icpak.shared.model.CPDDto;
-import com.workpoint.icpak.shared.model.CPDStatus;
-import com.workpoint.icpak.shared.model.CPDSummaryDto;
 import com.workpoint.icpak.shared.model.DirectoryDto;
 
 /**
  * 
- * @author duggan
+ * @author Wladek
  *
  */
 public class DirectoryDao extends BaseDao {
 	Logger logger = Logger.getLogger(DirectoryDao.class);
 
-	public void createCPD(CPD cpd) {
-		save(cpd);
+	public void createDirectory(Directory directory) {
+		save(directory);
 	}
 
 	public List<Directory> getAll(Integer offSet, Integer limit) {
 		StringBuffer sql = new StringBuffer("FROM Directory");
 
-		boolean isFirstParam = true;
-		Map<String, Object> params = new HashMap<>();
-
-		sql.append(" and isActive=1");
-		sql.append(" order by startDate asc");
+		sql.append(" order by firmId desc");
 
 		Query query = getEntityManager().createQuery(sql.toString());
-		for (String key : params.keySet()) {
-			query.setParameter(key, params.get(key));
-		}
 
 		return getResultList(query, offSet, limit);
 	}
 
-	public void updateCPD(CPD cpd) {
-		createCPD(cpd);
+	public void updateDirectory(DirectoryDto directoryDto) {
+		Directory dirInDb = findByDirectoryRefId(directoryDto.getRefId());
+		dirInDb.copyFromDto(directoryDto);
+		createDirectory(dirInDb);
 	}
 
 	public int getDirectoryCount() {
@@ -80,14 +66,13 @@ public class DirectoryDao extends BaseDao {
 
 		String sql = "select d.refId,d.firmId,d.firmName,d.address1,d.address2,"
 				+ "d.address3,d.typeOfFirm,d.city,d.telephone,d.fax,d.email,"
-				+ "d.paidup,d.sector,d.partners,d.regno,d.branch "
-				+ "from "
-				+ "directory d "
+				+ "d.paidup,d.sector,d.partners,d.regno,d.branch " 
+				+ "from " 
+				+ "directory d " 
 				+ "where "
 				+ "d.firmId like :searchTerm or d.firmName like :searchTerm or "
 				+ "d.typeOfFirm like :searchTerm or d.city like :searchTerm or "
-				+ "d.email like :searchTerm or d.regno like :searchTerm "
-				+ "order by firmId desc;";
+				+ "d.email like :searchTerm or d.regno like :searchTerm " + "order by firmId desc";
 
 		Query query = getEntityManager().createNativeQuery(sql).setParameter("searchTerm", "%" + searchTerm + "%");
 
@@ -116,10 +101,43 @@ public class DirectoryDao extends BaseDao {
 			String branch = (value = row[i++]) == null ? null : value.toString().trim();
 
 			DirectoryDto directoryDto = new DirectoryDto();
+			directoryDto.setRefId(refId);
+			directoryDto.setFirmId(firmId);
+			directoryDto.setFirmName(firmName);
+			directoryDto.setAddress1(address1);
+			directoryDto.setAddress2(address2);
+			directoryDto.setAddress3(address3);
+			directoryDto.setTypeOfFirm(typeOfFirm);
+			directoryDto.setCity(city);
+			directoryDto.setTelephone(telephone);
+			directoryDto.setFax(fax);
+			directoryDto.setEmail(email);
+			directoryDto.setPaidup(paidUp);
+			directoryDto.setSector(sector);
+			directoryDto.setPartners(partners);
+			directoryDto.setRegno(regNo);
+			directoryDto.setBranch(branch);
+
+			directoryDtos.add(directoryDto);
+
 		}
-		
 
 		return directoryDtos;
+
+	}
+
+	public int getDirectorySearchCount(String searchTerm) {
+
+		String sql = "select count(*)" + "from " + "directory d " + "where "
+				+ "d.firmId like :searchTerm or d.firmName like :searchTerm or "
+				+ "d.typeOfFirm like :searchTerm or d.city like :searchTerm or "
+				+ "d.email like :searchTerm or d.regno like :searchTerm";
+
+		Query query = getEntityManager().createNativeQuery(sql).setParameter("searchTerm", "%" + searchTerm + "%");
+
+		Number number = getSingleResultOrNull(query);
+
+		return number.intValue();
 
 	}
 }
