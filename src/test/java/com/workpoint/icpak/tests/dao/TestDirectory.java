@@ -44,7 +44,7 @@ public class TestDirectory extends AbstractDaoTest {
 	@Ignore
 	public void testGetAll() {
 
-		List<DirectoryDto> directoryDtos = directoryDaoHelper.getAll();
+		List<DirectoryDto> directoryDtos = directoryDaoHelper.getAll(0,0);
 		int count = directoryDaoHelper.getCount();
 
 		logger.error(" ==== Count == " + count);

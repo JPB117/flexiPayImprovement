@@ -32,7 +32,5 @@ public interface DirectoryResource extends BaseResource {
 	
 	@GET
 	@Path("/searchCount/{searchTerm}")
-	public Integer getSearchCount(@PathParam("searchTerm") String searchTerm,
-			@QueryParam("offset") Integer offset,
-			@QueryParam("limit") Integer limit);
+	public Integer getSearchCount(@PathParam("searchTerm") String searchTerm);
 }

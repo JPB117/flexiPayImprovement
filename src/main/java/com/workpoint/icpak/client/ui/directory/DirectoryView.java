@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -48,5 +49,15 @@ public class DirectoryView extends ViewImpl implements DirectoryPresenter.MyDire
 	@Override
 	public PagingPanel getPagingPanel() {
 		return tblView.getPagingPanel();
+	}
+
+	@Override
+	public HasValueChangeHandlers<String> getSearchValueChangeHander() {
+		return tblView.getSearchKeyDownHander();
+	}
+
+	@Override
+	public String getSearchValue() {
+			return tblView.getSearchValue();
 	}
 }

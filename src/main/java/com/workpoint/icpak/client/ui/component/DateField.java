@@ -109,7 +109,7 @@ public class DateField extends Composite {
 		Date today = new Date();
 		CalendarUtil.addDaysToDate(today, 1);
 
-		//initCollapsable(DateUtils.DATEFORMAT_SYS.format(today));
+		initCollapsable(DateUtils.DATEFORMAT_SYS.format(today));
 	}
 
 	public static native void initCollapsable(String maxDate)/*-{
