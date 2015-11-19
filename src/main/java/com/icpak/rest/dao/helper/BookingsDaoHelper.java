@@ -1,5 +1,6 @@
 package com.icpak.rest.dao.helper;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.NumberFormat;
@@ -15,8 +16,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.xml.parsers.FactoryConfigurationError;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
+import org.xml.sax.SAXException;
 
 import com.amazonaws.util.json.JSONException;
 import com.amazonaws.util.json.JSONObject;
@@ -43,6 +48,7 @@ import com.icpak.rest.utils.DocumentHTMLMapper;
 import com.icpak.rest.utils.DocumentLine;
 import com.icpak.rest.utils.EmailServiceHelper;
 import com.icpak.rest.utils.HTMLToPDFConvertor;
+import com.itextpdf.text.DocumentException;
 import com.workpoint.icpak.server.integration.lms.LMSIntegrationUtil;
 import com.workpoint.icpak.server.integration.lms.LMSResponse;
 import com.workpoint.icpak.shared.model.InvoiceDto;
@@ -84,6 +90,8 @@ public class BookingsDaoHelper {
 	@Inject
 	AccommodationsDaoHelper accommodationsDaoHelper;
 
+	SimpleDateFormat formatter = new SimpleDateFormat("MMM d Y");
+
 	public List<BookingDto> getAllBookings(String uriInfo, String eventId,
 			Integer offset, Integer limit, String searchTerm) {
 		List<Booking> list = null;
@@ -109,7 +117,6 @@ public class BookingsDaoHelper {
 			Integer offset, Integer limit, String searchTerm) {
 		List<DelegateDto> delegateDtos = dao.getAllDelegates(eventId, offset,
 				limit, searchTerm);
-
 		return delegateDtos;
 	}
 
@@ -180,92 +187,40 @@ public class BookingsDaoHelper {
 		dao.deleteAllBookingInvoice(bookingId);
 	}
 
+	public byte[] generateInvoicePdf(String bookingRefId)
+			throws FileNotFoundException, IOException, SAXException,
+			ParserConfigurationException, FactoryConfigurationError,
+			DocumentException {
+		assert bookingRefId != null;
+		Booking bookingInDb = dao.findByRefId(bookingRefId, Booking.class);
+		InvoiceDto invoice = invoiceHelper.getInvoice(dao
+				.getInvoiceRef(bookingRefId));
+		// Generate Email Document to be used to Map to HTML
+		Map<String, Object> emailValues = generateEmailValues(invoice,
+				bookingInDb);
+		byte[] invoicePdf = generatePDFDocument(invoice, emailValues);
+
+		return invoicePdf;
+	}
+
 	public void sendProInvoice(String bookingRefId) {
 		assert bookingRefId != null;
-
 		Booking bookingInDb = dao.findByRefId(bookingRefId, Booking.class);
 		InvoiceDto invoice = invoiceHelper.getInvoice(dao
 				.getInvoiceRef(bookingRefId));
 
 		String subject = bookingInDb.getEvent().getName()
 				+ "' Event Registration";
-		SimpleDateFormat formatter = new SimpleDateFormat("MMM d Y");
+
+		// Generate Email Document to be used to Map to HTML
+		Map<String, Object> emailValues = generateEmailValues(invoice,
+				bookingInDb);
+		Doc emailDocument = new Doc(emailValues);
 
 		try {
-			Map<String, Object> emailValues = new HashMap<String, Object>();
-			emailValues.put("companyName", invoice.getCompanyName());
-			emailValues.put("companyAddress", invoice.getCompanyAddress());
-			emailValues.put("companyLocation", bookingInDb.getContact()
-					.getPhysicalAddress());
-			emailValues.put("contactPhone", bookingInDb.getContact()
-					.getPhysicalAddress());
-
-			emailValues.put("quoteNo", invoice.getDocumentNo());
-			emailValues.put("date", invoice.getDate());
-			emailValues.put("firstName", invoice.getContactName());
-			emailValues.put("eventName", bookingInDb.getEvent().getName());
-			emailValues.put("eventStartDate",
-					formatter.format(bookingInDb.getEvent().getStartDate()));
-			emailValues.put("DocumentURL", settings.getApplicationPath());
-			emailValues.put("email", bookingInDb.getContact().getEmail());
-			emailValues.put("eventId", bookingInDb.getEvent().getRefId());
-			emailValues.put("bookingId", bookingInDb.getRefId());
-			Doc emailDocument = new Doc(emailValues);
-
-			// Collection of Delegates
-			Collection<Delegate> delegates = bookingInDb.getDelegates();
-			int counter = 0;
-
-			for (Delegate delegate : delegates) {
-				counter++;
-				emailValues.put("counter", counter);
-				emailValues.put("delegateNames", delegate.getSurname() + " "
-						+ delegate.getOtherNames());
-
-				if (delegate.getMemberRegistrationNo() != null) {
-					emailValues.put("memberType", "Member");
-				} else {
-					emailValues.put("memberType", "Non-Member");
-				}
-				emailValues.put("ernNo", delegate.getErn());
-
-				emailValues.put("accomodationName", (delegate
-						.getAccommodation() == null ? "None" : delegate
-						.getAccommodation().getHotel()
-						+ " "
-						+ delegate.getAccommodation().getNights()));
-				DocumentLine docLine = new DocumentLine("accomadationDetails",
-						emailValues);
-				emailDocument.addDetail(docLine);
-			}
-
-			Map<String, Object> line = new HashMap<String, Object>();
-			Doc proformaDocument = new Doc(emailValues);
-			for (InvoiceLineDto dto : invoice.getLines()) {
-				line.put("description", dto.getDescription());
-				line.put(
-						"quantity",
-						NumberFormat.getNumberInstance().format(
-								dto.getQuantity()));
-				line.put(
-						"unitPrice",
-						NumberFormat.getNumberInstance().format(
-								dto.getUnitPrice()));
-				line.put("amount", dto.getTotalAmount());
-				proformaDocument.addDetail(new DocumentLine("invoiceDetails",
-						line));
-			}
-			emailValues.put("totalAmount", NumberFormat.getNumberInstance()
-					.format(invoice.getInvoiceAmount()));
-
-			// PDF Invoice Generation
-			InputStream inv = EmailServiceHelper.class.getClassLoader()
-					.getResourceAsStream("proforma-invoice.html");
-			String invoiceHTML = IOUtils.toString(inv);
-			byte[] invoicePDF = new HTMLToPDFConvertor().convert(
-					proformaDocument, new String(invoiceHTML));
+			byte[] invoicePdf = generatePDFDocument(invoice, emailValues);
 			Attachment attachment = new Attachment();
-			attachment.setAttachment(invoicePDF);
+			attachment.setAttachment(invoicePdf);
 			attachment.setName("ProForma Invoice_"
 					+ bookingInDb.getContact().getContactName() + ".pdf");
 
@@ -288,6 +243,92 @@ public class BookingsDaoHelper {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	private byte[] generatePDFDocument(InvoiceDto invoice,
+			Map<String, Object> emailValues) throws FileNotFoundException,
+			IOException, SAXException, ParserConfigurationException,
+			FactoryConfigurationError, DocumentException {
+		Map<String, Object> line = new HashMap<String, Object>();
+		Doc proformaDocument = new Doc(emailValues);
+		for (InvoiceLineDto dto : invoice.getLines()) {
+			line.put("description", dto.getDescription());
+			line.put("quantity",
+					NumberFormat.getNumberInstance().format(dto.getQuantity()));
+			line.put("unitPrice",
+					NumberFormat.getNumberInstance().format(dto.getUnitPrice()));
+			line.put(
+					"amount",
+					NumberFormat.getNumberInstance().format(
+							dto.getTotalAmount()));
+			proformaDocument
+					.addDetail(new DocumentLine("invoiceDetails", line));
+		}
+		emailValues.put(
+				"totalAmount",
+				NumberFormat.getNumberInstance().format(
+						invoice.getInvoiceAmount()));
+
+		// PDF Invoice Generation
+		InputStream inv = EmailServiceHelper.class.getClassLoader()
+				.getResourceAsStream("proforma-invoice.html");
+		String invoiceHTML = IOUtils.toString(inv);
+		byte[] invoicePDF = new HTMLToPDFConvertor().convert(proformaDocument,
+				new String(invoiceHTML));
+
+		return invoicePDF;
+	}
+
+	public Map<String, Object> generateEmailValues(InvoiceDto invoice,
+			Booking bookingInDb) {
+		Map<String, Object> emailValues = new HashMap<String, Object>();
+		emailValues.put("companyName", invoice.getCompanyName());
+		emailValues.put("companyAddress", invoice.getCompanyAddress());
+		emailValues.put("companyLocation", bookingInDb.getContact()
+				.getPhysicalAddress());
+		emailValues.put("contactPhone", bookingInDb.getContact()
+				.getPhysicalAddress());
+
+		emailValues.put("quoteNo", invoice.getDocumentNo());
+		emailValues.put("date", invoice.getDate());
+		emailValues.put("firstName", invoice.getContactName());
+		emailValues.put("eventName", bookingInDb.getEvent().getName());
+		emailValues.put("eventStartDate",
+				formatter.format(bookingInDb.getEvent().getStartDate()));
+		emailValues.put("DocumentURL", settings.getApplicationPath());
+		emailValues.put("email", bookingInDb.getContact().getEmail());
+		emailValues.put("eventId", bookingInDb.getEvent().getRefId());
+		emailValues.put("bookingId", bookingInDb.getRefId());
+		Doc emailDocument = new Doc(emailValues);
+
+		// Collection of Delegates
+		Collection<Delegate> delegates = bookingInDb.getDelegates();
+		int counter = 0;
+
+		for (Delegate delegate : delegates) {
+			counter++;
+			emailValues.put("counter", counter);
+			emailValues.put("delegateNames", delegate.getSurname() + " "
+					+ delegate.getOtherNames());
+
+			if (delegate.getMemberRegistrationNo() != null) {
+				emailValues.put("memberType", "Member");
+			} else {
+				emailValues.put("memberType", "Non-Member");
+			}
+			emailValues.put("ernNo", delegate.getErn());
+
+			emailValues.put("accomodationName",
+					(delegate.getAccommodation() == null ? "None" : delegate
+							.getAccommodation().getHotel()
+							+ " "
+							+ delegate.getAccommodation().getNights()));
+			DocumentLine docLine = new DocumentLine("accomadationDetails",
+					emailValues);
+			emailDocument.addDetail(docLine);
+		}
+
+		return emailValues;
 	}
 
 	public InvoiceDto generateInvoice(Booking booking) {

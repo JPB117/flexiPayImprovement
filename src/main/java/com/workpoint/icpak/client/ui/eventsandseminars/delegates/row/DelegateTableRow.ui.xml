@@ -2,34 +2,38 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d='urn:import:com.workpoint.icpak.client.ui.component'>
 
+	<ui:style>
+	.center {
+		text-align: center;
+	}
+	</ui:style>
+
 	<g:HTMLPanel styleName="tr" ui:field="row">
 		<g:HTMLPanel styleName="td" ui:field="divBookingDate">
 		</g:HTMLPanel>
-		<g:HTMLPanel styleName="td" ui:field="divCompanyNames">
-			<span ui:field="spnCompanyNames"></span>
-			<span ui:field="spnContactPerson" class="fa fa-user popover-icon"
-				data-toggle="popover" data-trigger="hover" title="Reasons for this:"></span>
-			<d:PopOver></d:PopOver>
+		<g:HTMLPanel styleName="td" ui:field="divProformaLink">
+			<d:ActionLink ui:field="aProforma">Proforma</d:ActionLink>
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td" ui:field="divSponsorNames">
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td" ui:field="divContactName">
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td" ui:field="divSponsorEmail">
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td center" ui:field="divIsMember">
+			<span ui:field="spnIsMember"></span>
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divMemberNo">
 		</g:HTMLPanel>
-		<g:HTMLPanel styleName="td" ui:field="divTitle">
-		</g:HTMLPanel>
-		<g:HTMLPanel styleName="td" ui:field="divSurName">
-		</g:HTMLPanel>
-		<g:HTMLPanel styleName="td" ui:field="divOtherNames">
-		</g:HTMLPanel>
-		<g:HTMLPanel styleName="td" ui:field="divEmail">
+		<g:HTMLPanel styleName="td" ui:field="divDelegateNames">
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divAccomodation">
 		</g:HTMLPanel>
-		<g:HTMLPanel styleName="td hide" ui:field="divAmount">
+		<g:HTMLPanel styleName="td center" ui:field="divPaymentStatus">
+			<span class="label label-success" ui:field="spnPaymentStatus"></span>
 		</g:HTMLPanel>
-		<g:HTMLPanel styleName="td" ui:field="divPaymentStatus">
-			<span class="label label-success" ui:field="spnPaymentStatus">Paid</span>
-		</g:HTMLPanel>
-		<g:HTMLPanel styleName="td" ui:field="divAttendance">
-			<span class="label label-danger" ui:field="spnAttendance">Not-Attended</span>
+		<g:HTMLPanel styleName="td center" ui:field="divAttendance">
+			<span class="label label-danger" ui:field="spnAttendance"></span>
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divAction">
 			<div class="dropdown">

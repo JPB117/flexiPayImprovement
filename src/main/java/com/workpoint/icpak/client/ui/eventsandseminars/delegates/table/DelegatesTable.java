@@ -42,16 +42,17 @@ public class DelegatesTable extends Composite {
 	public void createHeader() {
 		List<TableHeader> th = new ArrayList<TableHeader>();
 		th.add(new TableHeader("Booking Date"));
-		th.add(new TableHeader("Sponsor"));
+		th.add(new TableHeader("Proforma Invoice"));
+		th.add(new TableHeader("Sponsor Name"));
+		th.add(new TableHeader("Contact Names"));
+		th.add(new TableHeader("Contact Email"));
+		th.add(new TableHeader("ICPAK Member"));
 		th.add(new TableHeader("Member No"));
-		th.add(new TableHeader("Title"));
-		th.add(new TableHeader("SurNames"));
-		th.add(new TableHeader("Other Names"));
-		th.add(new TableHeader("Email"));
+		th.add(new TableHeader("Delegate Names"));
 		th.add(new TableHeader("Accomodation"));
 		th.add(new TableHeader("Payment Status"));
 		th.add(new TableHeader("Attendance"));
-		th.add(new TableHeader("Action"));
+		th.add(new TableHeader("Actions"));
 		tblView.setTableHeaders(th);
 	}
 
