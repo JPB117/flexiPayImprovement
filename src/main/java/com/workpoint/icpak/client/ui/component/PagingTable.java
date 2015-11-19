@@ -15,5 +15,4 @@ public class PagingTable extends TableView {
 	public PagingPanel getPagingPanel() {
 		return panel;
 	}
-
 }

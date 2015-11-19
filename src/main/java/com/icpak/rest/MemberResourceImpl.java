@@ -137,4 +137,31 @@ public class MemberResourceImpl implements MemberResource {
 		return bookingsDaoHelper.getMemberBookings(memberId, offset, limit);
 	}
 
+	@GET
+	@Path("/all")
+	public List<MemberDto> getMembers(@QueryParam("offset") Integer offset,
+			@QueryParam("limit") Integer limit) {
+		return membersHelper.getMembers(offset, limit);
+	}
+
+	@GET
+	@Path("/count")
+	public Integer getMembersCount() {
+		return membersHelper.getMembersCount();
+	}
+
+	@GET
+	@Path("/all/{searchTerm}")
+	public List<MemberDto> searchMembers(@PathParam("searchTerm") String searchTerm ,
+			@QueryParam("offset") Integer offset,
+			@QueryParam("limit") Integer limit) {
+		return membersHelper.searchMembers(searchTerm, offset, limit);
+	}
+
+	@GET
+	@Path("/count/{searchTerm}")
+	public Integer getMembersSearchCount(@PathParam("searchTerm") String searchTerm) {
+		return membersHelper.getsearchMembersCount(searchTerm);
+	}
+
 }

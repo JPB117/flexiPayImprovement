@@ -21,6 +21,25 @@ public interface MemberResource extends BaseResource {
 	@GET
 	public List<MemberDto> getAll(@QueryParam("offset") Integer offset,
 			@QueryParam("limit") Integer limit);
+	
+	@GET
+	@Path("/all")
+	public List<MemberDto> getMembers(@QueryParam("offset") Integer offset,
+			@QueryParam("limit") Integer limit);
+	
+	@GET
+	@Path("/count")
+	public Integer getMembersCount();
+	
+	@GET
+	@Path("/all/{searchTerm}")
+	public List<MemberDto> searchMembers(@PathParam("searchTerm") String searchTerm ,
+			@QueryParam("offset") Integer offset,
+			@QueryParam("limit") Integer limit);
+	
+	@GET
+	@Path("/count/{searchTerm}")
+	public Integer getMembersSearchCount(@PathParam("searchTerm") String searchTerm);
 
 	@GET
 	@Path("/search/{searchTerm}")

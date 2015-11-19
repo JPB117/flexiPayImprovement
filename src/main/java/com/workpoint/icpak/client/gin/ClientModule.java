@@ -31,6 +31,8 @@ import com.workpoint.icpak.client.ui.cpd.admin.CPDManagementPresenter;
 import com.workpoint.icpak.client.ui.cpd.admin.CPDManagementView;
 import com.workpoint.icpak.client.ui.dashboard.DashboardPresenter;
 import com.workpoint.icpak.client.ui.dashboard.DashboardView;
+import com.workpoint.icpak.client.ui.directory.DirectoryPresenter;
+import com.workpoint.icpak.client.ui.directory.DirectoryView;
 import com.workpoint.icpak.client.ui.enquiries.EnquiriesPresenter;
 import com.workpoint.icpak.client.ui.enquiries.EnquiriesView;
 import com.workpoint.icpak.client.ui.error.ErrorPagePresenter;
@@ -257,6 +259,8 @@ public class ClientModule extends AbstractPresenterModule {
 		bindPresenterWidget(PaymentPresenter.class,
 				PaymentPresenter.MyView.class, PaymentView.class);
 
+		bindPresenter(DirectoryPresenter.class,DirectoryPresenter.MyDirectoryView.class, 
+				DirectoryView.class, DirectoryPresenter.MyDirectoryProxy.class);
 		bind(TabPanel.class);
 
 	}

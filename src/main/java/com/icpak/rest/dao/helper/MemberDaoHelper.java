@@ -308,5 +308,25 @@ public class MemberDaoHelper {
 			return false;
 		}
 	}
+	
+	/*
+	 * Methods to be used by members presenter for website iframe
+	 */
+	
+	public int getMembersCount(){
+		return memberDao.getMembersCount();
+	}
+	
+	public List<MemberDto> getMembers(Integer offSet, Integer limit){
+		return memberDao.getMembers(offSet, limit);
+	}
+	
+	public int getsearchMembersCount(String searchTerm){
+		return memberDao.getMembersSearchCount(searchTerm);
+	}
+	
+	public List<MemberDto> searchMembers(String searchTerm , Integer offSet, Integer limit){
+		return memberDao.searchMembers(searchTerm, offSet, limit);
+	}
 
 }

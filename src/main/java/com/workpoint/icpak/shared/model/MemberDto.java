@@ -20,7 +20,9 @@ public class MemberDto extends SerializableObj implements Listable {
 	private String practisingNo;
 	private String customerType;
 	private Date practisingCertDate;
-
+	private MembershipStatus membershipStatus;
+	private String fullName;
+	private String member;
 
 	public MemberDto() {
 	}
@@ -81,8 +83,7 @@ public class MemberDto extends SerializableObj implements Listable {
 
 	@JsonIgnore
 	public String getName() {
-		return (lastName == null ? "" : lastName) + " "
-				+ (firstName == null ? "" : firstName);
+		return (lastName == null ? "" : lastName) + " " + (firstName == null ? "" : firstName);
 	}
 
 	public String getTitle() {
@@ -131,5 +132,28 @@ public class MemberDto extends SerializableObj implements Listable {
 		this.practisingCertDate = practisingCertDate;
 	}
 
+	public MembershipStatus getMembershipStatus() {
+		return membershipStatus;
+	}
+
+	public void setMembershipStatus(MembershipStatus membershipStatus) {
+		this.membershipStatus = membershipStatus;
+	}
+
+	public String getFullName() {
+		return fullName;
+	}
+
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
+	}
+
+	public String getMember() {
+		return member;
+	}
+
+	public void setMember(String member) {
+		this.member = member;
+	}
 
 }
