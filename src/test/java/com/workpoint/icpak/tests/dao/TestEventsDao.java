@@ -93,27 +93,19 @@ public class TestEventsDao extends AbstractDaoTest {
 		course.setCpdHours(14);
 		courseHelper.createEvent(course);
 		eventId1 = course.getRefId();
-
 		System.out.println("Event Id::" + eventId1);
 
 	}
 
 	@Ignore
 	public void testSerch() {
-		// List<EventDto> searchResults = helper.getAllEvents("", null, 100,
-		// null,
-		// "F");
-		// for (EventDto e : searchResults) {
-		// System.err.println("Event Size>>>" + e.getCategoryName());
-		// }
-
 		System.err.println(helper.getEventDelegatesReport("QEyf2DasD3X7Pybt")
 				.size());
 	}
 
-	@Ignore
+	@Test
 	public void testDeleagtesReport() throws Exception {
-		String eventRefId = "Jx4Ca6HpOutf2ic7";
+		String eventRefId = "QEyf2DasD3X7Pybt";
 		String docType = "xls";
 
 		List<DelegateDto> delegateDtos = helper

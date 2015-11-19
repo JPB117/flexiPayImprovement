@@ -29,10 +29,10 @@ import com.workpoint.icpak.shared.model.events.DelegateDto;
 public class GetDelegatesReport {
 	Logger logger = Logger.getLogger(GetDelegatesReport.class);
 
-	private static final String[] titles = { "BOOKING DATE", "SPONSOR",
-			"SPONSOR EMAIL", "MEMBER NO", "ERN NO", "TITLE", "SUR NAMES",
-			"OTHER NAMES", "DELEGATE EMAIL", "ACCOMMODATION", "PAYMENT STATUS",
-			"ATTENDANCE", "RECEIPT NO", "LPO", "ON CREDIT", "CLEARANCE NO" };
+	private static final String[] titles = { "ICPAK MEMBER", "MEMBER NO",
+			"ERN NO", "DELEGATE NAMES", "EMAIL", "BOOKING DATE", "SPONSOR",
+			"CONTACT PERSON", "CONTACT EMAIL", "SPONSOR TEL", "ACCOMODATION",
+			"PAID", "RECEIPT", "LPO NO", "CREDIT", "CLEARANCE NO", "ATTEND" };
 
 	static Map<String, CellStyle> styles = null;
 	static Map<String, Font> fonts = null;
@@ -52,7 +52,7 @@ public class GetDelegatesReport {
 	public GetDelegatesReport(List<DelegateDto> delegateDtos, String docType,
 			String eventName) {
 		logger.error(" === dto size === " + delegateDtos.size());
-		name = eventName + "_Report_" + "." + docType;
+		name = eventName + "_Report" + "." + docType;
 
 		fonts = createFonts(wb);
 		styles = createStyles(wb);
@@ -299,76 +299,90 @@ public class GetDelegatesReport {
 			Sheet sheet, Row row, Integer i) {
 		SimpleDateFormat formater = new SimpleDateFormat("dd/MM/yyyy");
 
+		// {"ICPAK MEMBER", "MEMBER NO", "ERN NO",
+		// "DELEGATE NAMES","EMAIL","BOOKING DATE", "SPONSOR",
+		// "CONTACT PERSON","CONTACT EMAIL","SPONSOR TEL","BOOKING DATE",
+		// "ACCOMODATION"
+		// ,"PAID","RECEIPT" ,"LPO NO", "CREDIT","CLEARANCE NO","ATTEND"}
+
 		for (int j = 0; j < titles.length; j++) {
 			Cell cell = row.createCell(j);
 			String styleName = null;
 
 			if (j == 0) {
-				cell.setCellValue(formater.format(detail.getCreatedDate()));
+				// cell.setCellValue(formater.format(detail.getCreatedDate()));
+				cell.setCellValue((detail.getMemberNo() != null ? "1" : "0"));
 			}
 
 			if (j == 1) {
-				cell.setCellValue(detail.getCompanyName());
-			}
-
-			if (j == 2) {
-				cell.setCellValue(detail.getContactEmail());
-			}
-
-			if (j == 3) {
-				cell.setCellValue(detail.getContactEmail());
-			}
-
-			if (j == 4) {
 				cell.setCellValue(detail.getMemberNo());
 			}
 
-			if (j == 5) {
+			if (j == 2) {
 				cell.setCellValue(detail.getErn());
 			}
 
-			if (j == 6) {
-				cell.setCellValue(detail.getTitle());
+			if (j == 3) {
+				cell.setCellValue(detail.getSurname() + " "
+						+ detail.getOtherNames());
 			}
 
-			if (j == 7) {
-				cell.setCellValue(detail.getSurname());
-			}
-
-			if (j == 8) {
-				cell.setCellValue(detail.getOtherNames());
-			}
-
-			if (j == 9) {
+			if (j == 4) {
 				cell.setCellValue(detail.getEmail());
 			}
 
-			if (j == 10) {
-				cell.setCellValue(detail.getHotel());
+			// "BOOKING DATE", "SPONSOR",
+			// "CONTACT PERSON","CONTACT EMAIL","SPONSOR TEL"
+			// "ACCOMODATION"
+
+			if (j == 5) {
+				cell.setCellValue(formater.format(detail.getCreatedDate()));
 			}
 
+			if (j == 6) {
+				cell.setCellValue(detail.getCompanyName());
+			}
+
+			if (j == 7) {
+				cell.setCellValue(detail.getContactName());
+			}
+
+			if (j == 8) {
+				cell.setCellValue(detail.getContactEmail());
+			}
+
+			if (j == 9) {
+				cell.setCellValue("");
+			}
+
+			if (j == 10) {
+				cell.setCellValue((detail.getAccommodation() == null ? "None"
+						: detail.getAccommodation().getHotel()));
+			}
+
+			// ,"PAID","RECEIPT" ,"LPO NO", "CREDIT","CLEARANCE NO","ATTEND"}
 			if (j == 11) {
-				cell.setCellValue(detail.getPaymentStatus().toString());
+				cell.setCellValue(detail.getPaymentStatus().getDisplayName());
 			}
 
 			if (j == 12) {
-				cell.setCellValue(detail.getAttendance().toString());
-			}
-
-			if (j == 13) {
 				cell.setCellValue(detail.getReceiptNo());
 			}
 
-			if (j == 14) {
+			if (j == 13) {
 				cell.setCellValue(detail.getLpoNo());
 			}
 
-			if (j == 15) {
+			if (j == 14) {
 				cell.setCellValue(detail.getIsCredit());
 			}
 
-			if (j == 16) {
+			if (j == 15) {
 				cell.setCellValue(detail.getClearanceNo());
+			}
+
+			if (j == 16) {
+				cell.setCellValue(detail.getAttendance().getDisplayName());
 			}
 
 			styleName = "cell_normal_centered";

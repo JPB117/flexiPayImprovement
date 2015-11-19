@@ -200,7 +200,6 @@ public class GetReport extends HttpServlet {
 
 		List<DelegateDto> delegateDtos = bookingsDaoHelper.getAllDelegates("",
 				eventRefId, null, 10000, "");
-
 		EventDto event = eventDaoHelper.getEventById(eventRefId);
 
 		GetDelegatesReport report = new GetDelegatesReport(delegateDtos,

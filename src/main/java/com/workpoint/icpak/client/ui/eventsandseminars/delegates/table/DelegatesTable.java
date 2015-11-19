@@ -43,6 +43,7 @@ public class DelegatesTable extends Composite {
 		List<TableHeader> th = new ArrayList<TableHeader>();
 		th.add(new TableHeader("Booking Date"));
 		th.add(new TableHeader("Proforma Invoice"));
+		th.add(new TableHeader("ERN No"));
 		th.add(new TableHeader("Sponsor Name"));
 		th.add(new TableHeader("Contact Names"));
 		th.add(new TableHeader("Contact Email"));

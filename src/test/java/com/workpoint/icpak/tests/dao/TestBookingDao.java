@@ -73,7 +73,7 @@ public class TestBookingDao extends AbstractDaoTest {
 		}
 	}
 
-	@Test
+	@Ignore
 	public void createBooking() {
 		BookingDto dto = new BookingDto();
 		dto.setStatus("");
@@ -106,7 +106,7 @@ public class TestBookingDao extends AbstractDaoTest {
 		bookingsHelper.sendProInvoice(booking.getRefId());
 	}
 
-	@Ignore
+	@Test
 	public void TestImportBookings() {
 		bookingDao.importAllEvents();
 	}

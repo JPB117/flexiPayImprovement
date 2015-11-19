@@ -330,7 +330,7 @@ public class MemberImport {
 			dto.setApplicationType(ApplicationType.NON_PRACTISING);
 		}
 		// Gender
-		if (gender.equals(1)) {
+		if (gender.equals(0)) {
 			dto.setGender(Gender.MALE);
 		} else {
 			dto.setGender(Gender.FEMALE);
