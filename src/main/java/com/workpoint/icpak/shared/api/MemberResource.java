@@ -23,22 +23,22 @@ public interface MemberResource extends BaseResource {
 			@QueryParam("limit") Integer limit);
 	
 	@GET
-	@Path("/all")
+	@Path("/frontMembers")
 	public List<MemberDto> getMembers(@QueryParam("offset") Integer offset,
 			@QueryParam("limit") Integer limit);
 	
 	@GET
-	@Path("/count")
+	@Path("/frontMemberCount")
 	public Integer getMembersCount();
 	
 	@GET
-	@Path("/all/{searchTerm}")
+	@Path("/frontMembers/{searchTerm}")
 	public List<MemberDto> searchMembers(@PathParam("searchTerm") String searchTerm ,
 			@QueryParam("offset") Integer offset,
 			@QueryParam("limit") Integer limit);
 	
 	@GET
-	@Path("/count/{searchTerm}")
+	@Path("/frontMembers/searcCount/{searchTerm}")
 	public Integer getMembersSearchCount(@PathParam("searchTerm") String searchTerm);
 
 	@GET
@@ -63,8 +63,9 @@ public interface MemberResource extends BaseResource {
 	@Path("/{memberId}/statements")
 	public StatementsResource statements(@PathParam("memberId") String memberId);
 
-	@Path("/{memberId}/invoice")
+	
 	@GET
+	@Path("/{memberId}/invoice")
 	public List<InvoiceDto> getAllInvoicesForMember(
 			@PathParam("memberId") String memberId);
 

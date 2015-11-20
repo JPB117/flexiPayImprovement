@@ -138,20 +138,20 @@ public class MemberResourceImpl implements MemberResource {
 	}
 
 	@GET
-	@Path("/all")
+	@Path("/frontMembers")
 	public List<MemberDto> getMembers(@QueryParam("offset") Integer offset,
 			@QueryParam("limit") Integer limit) {
 		return membersHelper.getMembers(offset, limit);
 	}
 
 	@GET
-	@Path("/count")
+	@Path("/frontMemberCount")
 	public Integer getMembersCount() {
 		return membersHelper.getMembersCount();
 	}
 
 	@GET
-	@Path("/all/{searchTerm}")
+	@Path("/frontMembers/{searchTerm}")
 	public List<MemberDto> searchMembers(@PathParam("searchTerm") String searchTerm ,
 			@QueryParam("offset") Integer offset,
 			@QueryParam("limit") Integer limit) {
@@ -159,7 +159,7 @@ public class MemberResourceImpl implements MemberResource {
 	}
 
 	@GET
-	@Path("/count/{searchTerm}")
+	@Path("/frontMembers/searcCount/{searchTerm}")
 	public Integer getMembersSearchCount(@PathParam("searchTerm") String searchTerm) {
 		return membersHelper.getsearchMembersCount(searchTerm);
 	}

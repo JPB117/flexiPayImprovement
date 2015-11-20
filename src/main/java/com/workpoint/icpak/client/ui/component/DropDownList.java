@@ -42,7 +42,7 @@ public class DropDownList<T extends Listable> extends Composite implements HasVa
 	
 	
 	
-	void initComponents(){
+	public void initComponents(){
 		listBox.addChangeHandler(new ChangeHandler() {
 			
 			@Override

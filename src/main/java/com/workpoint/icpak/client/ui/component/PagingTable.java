@@ -1,5 +1,6 @@
 package com.workpoint.icpak.client.ui.component;
 
+import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 
 public class PagingTable extends TableView {
 
@@ -15,4 +16,9 @@ public class PagingTable extends TableView {
 	public PagingPanel getPagingPanel() {
 		return panel;
 	}
+
+	public String getSelectedTownName() {
+		return listTowns.getValue().getDisplayName();
+	}
+
 }

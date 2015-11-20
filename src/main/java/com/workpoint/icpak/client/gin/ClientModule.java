@@ -49,6 +49,8 @@ import com.workpoint.icpak.client.ui.events.registration.EventBookingPresenter;
 import com.workpoint.icpak.client.ui.events.registration.EventBookingView;
 import com.workpoint.icpak.client.ui.eventsandseminars.EventsPresenter;
 import com.workpoint.icpak.client.ui.eventsandseminars.EventsView;
+import com.workpoint.icpak.client.ui.frontmember.FrontMemberPresenter;
+import com.workpoint.icpak.client.ui.frontmember.FrontMemberView;
 import com.workpoint.icpak.client.ui.header.HeaderPresenter;
 import com.workpoint.icpak.client.ui.header.HeaderView;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
@@ -104,8 +106,7 @@ public class ClientModule extends AbstractPresenterModule {
 		// Bind RestApplicationPath To Server endpoint
 		bindConstant().annotatedWith(RestApplicationPath.class).to("api");
 
-		install(new DefaultModule.Builder().placeManager(
-				ClientPlaceManager.class).build());
+		install(new DefaultModule.Builder().placeManager(ClientPlaceManager.class).build());
 
 		// SECURITY
 		bind(CurrentUser.class).asEagerSingleton();
@@ -116,151 +117,114 @@ public class ClientModule extends AbstractPresenterModule {
 		// bindConstant().annotatedWith(DefaultPlace.class).to(NameTokens.home);
 		bindConstant().annotatedWith(DefaultPlace.class).to(NameTokens.login);
 		bindConstant().annotatedWith(ErrorPlace.class).to(NameTokens.error);
-		bindConstant().annotatedWith(UnauthorizedPlace.class).to(
-				NameTokens.unauthorized);
-		bindConstant().annotatedWith(SecurityCookie.class).to(
-				Definitions.AUTHENTICATIONCOOKIE);
+		bindConstant().annotatedWith(UnauthorizedPlace.class).to(NameTokens.unauthorized);
+		bindConstant().annotatedWith(SecurityCookie.class).to(Definitions.AUTHENTICATIONCOOKIE);
 
-		bindPresenter(MainPagePresenter.class, MainPagePresenter.MyView.class,
-				MainPageView.class, MainPagePresenter.MyProxy.class);
+		bindPresenter(MainPagePresenter.class, MainPagePresenter.MyView.class, MainPageView.class,
+				MainPagePresenter.MyProxy.class);
 
-		bindPresenter(HomePresenter.class, HomePresenter.IHomeView.class,
-				HomeView.class, HomePresenter.MyProxy.class);
+		bindPresenter(HomePresenter.class, HomePresenter.IHomeView.class, HomeView.class, HomePresenter.MyProxy.class);
 
-		bindPresenterWidget(HeaderPresenter.class,
-				HeaderPresenter.IHeaderView.class, HeaderView.class);
+		bindPresenterWidget(HeaderPresenter.class, HeaderPresenter.IHeaderView.class, HeaderView.class);
 
-		bindPresenter(MemberRegistrationPresenter.class,
-				MemberRegistrationPresenter.MyView.class,
-				MemberRegistrationView.class,
-				MemberRegistrationPresenter.MyProxy.class);
+		bindPresenter(MemberRegistrationPresenter.class, MemberRegistrationPresenter.MyView.class,
+				MemberRegistrationView.class, MemberRegistrationPresenter.MyProxy.class);
 
-		bindPresenter(InvoiceListPresenter.class,
-				InvoiceListPresenter.IInvoiceView.class, InvoiceListView.class,
+		bindPresenter(InvoiceListPresenter.class, InvoiceListPresenter.IInvoiceView.class, InvoiceListView.class,
 				InvoiceListPresenter.IInvoiceProxy.class);
 
-		bindPresenter(StatementsPresenter.class,
-				StatementsPresenter.IStatementsView.class,
-				StatementsView.class,
+		bindPresenter(StatementsPresenter.class, StatementsPresenter.IStatementsView.class, StatementsView.class,
 				StatementsPresenter.IStatementsProxy.class);
 
-		bindPresenter(OffencesPresenter.class,
-				OffencesPresenter.IOffencesView.class, OffencesView.class,
+		bindPresenter(OffencesPresenter.class, OffencesPresenter.IOffencesView.class, OffencesView.class,
 				OffencesPresenter.IOffencesProxy.class);
 
-		bindPresenter(AccomodationPresenter.class,
-				AccomodationPresenter.IAccomodationView.class,
-				AccomodationView.class,
-				AccomodationPresenter.IAccomodationProxy.class);
+		bindPresenter(AccomodationPresenter.class, AccomodationPresenter.IAccomodationView.class,
+				AccomodationView.class, AccomodationPresenter.IAccomodationProxy.class);
 
-		bindPresenter(EnquiriesPresenter.class,
-				EnquiriesPresenter.IEnquiriesView.class, EnquiriesView.class,
+		bindPresenter(EnquiriesPresenter.class, EnquiriesPresenter.IEnquiriesView.class, EnquiriesView.class,
 				EnquiriesPresenter.IEnquiriesProxy.class);
 
-		bindPresenter(EventsPresenter.class, EventsPresenter.IEventsView.class,
-				EventsView.class, EventsPresenter.IEventsProxy.class);
+		bindPresenter(EventsPresenter.class, EventsPresenter.IEventsView.class, EventsView.class,
+				EventsPresenter.IEventsProxy.class);
 
-		bindPresenter(BookingsPresenter.class,
-				BookingsPresenter.IBookingsView.class, BookingsView.class,
+		bindPresenter(BookingsPresenter.class, BookingsPresenter.IBookingsView.class, BookingsView.class,
 				BookingsPresenter.IBookingsProxy.class);
 
-		bindPresenter(EventBookingPresenter.class,
-				EventBookingPresenter.MyView.class, EventBookingView.class,
+		bindPresenter(EventBookingPresenter.class, EventBookingPresenter.MyView.class, EventBookingView.class,
 				EventBookingPresenter.MyProxy.class);
 
-		bindPresenter(DashboardPresenter.class,
-				DashboardPresenter.IDashboardView.class, DashboardView.class,
+		bindPresenter(DashboardPresenter.class, DashboardPresenter.IDashboardView.class, DashboardView.class,
 				DashboardPresenter.IDashboardProxy.class);
 
-		bindPresenter(CPDMemberPresenter.class, CPDMemberPresenter.ICPDView.class,
-				CPDMemberView.class, CPDMemberPresenter.ICPDProxy.class);
+		bindPresenter(CPDMemberPresenter.class, CPDMemberPresenter.ICPDView.class, CPDMemberView.class,
+				CPDMemberPresenter.ICPDProxy.class);
 
-		bindPresenter(CPDManagementPresenter.class,
-				CPDManagementPresenter.ICPDManagementView.class,
-				CPDManagementView.class,
-				CPDManagementPresenter.ICPDManagementProxy.class);
+		bindPresenter(CPDManagementPresenter.class, CPDManagementPresenter.ICPDManagementView.class,
+				CPDManagementView.class, CPDManagementPresenter.ICPDManagementProxy.class);
 
-		bindPresenter(ApplicationsPresenter.class,
-				ApplicationsPresenter.IApplicationsView.class,
-				ApplicationsView.class,
-				ApplicationsPresenter.IApplicationsProxy.class);
+		bindPresenter(ApplicationsPresenter.class, ApplicationsPresenter.IApplicationsView.class,
+				ApplicationsView.class, ApplicationsPresenter.IApplicationsProxy.class);
 
-		bindPresenter(ErrorPagePresenter.class,
-				ErrorPagePresenter.MyView.class, ErrorPageView.class,
+		bindPresenter(ErrorPagePresenter.class, ErrorPagePresenter.MyView.class, ErrorPageView.class,
 				ErrorPagePresenter.MyProxy.class);
 
-		bindPresenter(UnauthorizedPagePresenter.class,
-				UnauthorizedPagePresenter.MyView.class,
-				UnauthorizedPageView.class,
-				UnauthorizedPagePresenter.MyProxy.class);
+		bindPresenter(UnauthorizedPagePresenter.class, UnauthorizedPagePresenter.MyView.class,
+				UnauthorizedPageView.class, UnauthorizedPagePresenter.MyProxy.class);
 
-		bindPresenterWidget(ErrorPresenter.class, ErrorPresenter.MyView.class,
-				ErrorView.class);
+		bindPresenterWidget(ErrorPresenter.class, ErrorPresenter.MyView.class, ErrorView.class);
 
-		bindPresenter(LoginPresenter.class, LoginPresenter.ILoginView.class,
-				LoginView.class, LoginPresenter.ILoginProxy.class);
+		bindPresenter(LoginPresenter.class, LoginPresenter.ILoginView.class, LoginView.class,
+				LoginPresenter.ILoginProxy.class);
 
-		bindPresenter(ActivateAccountPresenter.class,
-				ActivateAccountPresenter.IActivateAccountView.class,
-				ActivateAccountView.class,
-				ActivateAccountPresenter.IActivateAccountProxy.class);
+		bindPresenter(ActivateAccountPresenter.class, ActivateAccountPresenter.IActivateAccountView.class,
+				ActivateAccountView.class, ActivateAccountPresenter.IActivateAccountProxy.class);
 
-		bindPresenter(NotfoundPresenter.class, NotfoundPresenter.MyView.class,
-				NotfoundView.class, NotfoundPresenter.MyProxy.class);
+		bindPresenter(NotfoundPresenter.class, NotfoundPresenter.MyView.class, NotfoundView.class,
+				NotfoundPresenter.MyProxy.class);
 
-		bindPresenterWidget(NotificationsPresenter.class,
-				NotificationsPresenter.MyView.class, NotificationsView.class);
+		bindPresenterWidget(NotificationsPresenter.class, NotificationsPresenter.MyView.class, NotificationsView.class);
 
-		bindPresenterWidget(AttachmentPresenter.class,
-				AttachmentPresenter.IAttachmentView.class, AttachmentView.class);
+		bindPresenterWidget(AttachmentPresenter.class, AttachmentPresenter.IAttachmentView.class, AttachmentView.class);
 
-		bindPresenterWidget(UserSelectionPresenter.class,
-				UserSelectionPresenter.MyView.class, UserSelectionView.class);
+		bindPresenterWidget(UserSelectionPresenter.class, UserSelectionPresenter.MyView.class, UserSelectionView.class);
 
-		bindPresenterWidget(UploadDocumentPresenter.class,
-				UploadDocumentPresenter.MyView.class, UploadDocumentView.class);
+		bindPresenterWidget(UploadDocumentPresenter.class, UploadDocumentPresenter.MyView.class,
+				UploadDocumentView.class);
 
-		bindPresenter(AdminHomePresenter.class,
-				AdminHomePresenter.MyView.class, AdminHomeView.class,
+		bindPresenter(AdminHomePresenter.class, AdminHomePresenter.MyView.class, AdminHomeView.class,
 				AdminHomePresenter.MyProxy.class);
 
-		bindPresenter(UserPresenter.class, UserPresenter.MyView.class,
-				UserView.class, UserPresenter.MyProxy.class);
+		bindPresenter(UserPresenter.class, UserPresenter.MyView.class, UserView.class, UserPresenter.MyProxy.class);
 
-		bindPresenterWidget(ReportsPresenter.class,
-				ReportsPresenter.MyView.class, ReportsView.class);
+		bindPresenterWidget(ReportsPresenter.class, ReportsPresenter.MyView.class, ReportsView.class);
 
-		bindPresenterWidget(UserSavePresenter.class,
-				UserSavePresenter.IUserSaveView.class, UserSaveView.class);
+		bindPresenterWidget(UserSavePresenter.class, UserSavePresenter.IUserSaveView.class, UserSaveView.class);
 
-		bindPresenterWidget(UserItemPresenter.class,
-				UserItemPresenter.MyView.class, UserItemView.class);
+		bindPresenterWidget(UserItemPresenter.class, UserItemPresenter.MyView.class, UserItemView.class);
 
-		bindPresenterWidget(GroupPresenter.class, GroupPresenter.MyView.class,
-				GroupView.class);
+		bindPresenterWidget(GroupPresenter.class, GroupPresenter.MyView.class, GroupView.class);
 
-		bindPresenterWidget(GenericPopupPresenter.class,
-				GenericPopupPresenter.MyView.class, GenericPopupView.class);
+		bindPresenterWidget(GenericPopupPresenter.class, GenericPopupPresenter.MyView.class, GenericPopupView.class);
 
-		bindPresenterWidget(IFrameDataPresenter.class,
-				IFrameDataPresenter.IFrameView.class, IFrameDataView.class);
+		bindPresenterWidget(IFrameDataPresenter.class, IFrameDataPresenter.IFrameView.class, IFrameDataView.class);
 
-		bindPresenter(ProfilePresenter.class,
-				ProfilePresenter.IProfileView.class, ProfileView.class,
+		bindPresenter(ProfilePresenter.class, ProfilePresenter.IProfileView.class, ProfileView.class,
 				ProfilePresenter.IProfileProxy.class);
 
-		bindPresenter(SettingsPresenter.class,
-				SettingsPresenter.ISettingsView.class, SettingsView.class,
+		bindPresenter(SettingsPresenter.class, SettingsPresenter.ISettingsView.class, SettingsView.class,
 				SettingsPresenter.MyProxy.class);
 
-		bindPresenterWidget(TableDataPresenter.class,
-				TableDataPresenter.ITableDataView.class, TableDataView.class);
+		bindPresenterWidget(TableDataPresenter.class, TableDataPresenter.ITableDataView.class, TableDataView.class);
 
-		bindPresenterWidget(PaymentPresenter.class,
-				PaymentPresenter.MyView.class, PaymentView.class);
+		bindPresenterWidget(PaymentPresenter.class, PaymentPresenter.MyView.class, PaymentView.class);
 
-		bindPresenter(DirectoryPresenter.class,DirectoryPresenter.MyDirectoryView.class, 
-				DirectoryView.class, DirectoryPresenter.MyDirectoryProxy.class);
+		bindPresenter(DirectoryPresenter.class, DirectoryPresenter.MyDirectoryView.class, DirectoryView.class,
+				DirectoryPresenter.MyDirectoryProxy.class);
+
+		bindPresenter(FrontMemberPresenter.class, FrontMemberPresenter.MyFrontMemberView.class, FrontMemberView.class,
+				FrontMemberPresenter.MyFrontMemberProxy.class);
+
 		bind(TabPanel.class);
 
 	}

@@ -3,6 +3,8 @@ package com.workpoint.icpak.client.place;
 public class NameTokens {
 
 	public static final String directory = "directory";
+	
+	public static final String frontMember = "frontMember";
 
 	public static final String payment = "payment";
 

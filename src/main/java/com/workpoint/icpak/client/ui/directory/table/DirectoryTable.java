@@ -9,9 +9,11 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
+import com.workpoint.icpak.client.ui.component.DropDownList;
 import com.workpoint.icpak.client.ui.component.PagingPanel;
 import com.workpoint.icpak.client.ui.component.PagingTable;
 import com.workpoint.icpak.client.ui.component.TableHeader;
+import com.workpoint.icpak.client.ui.component.TableView.Towns;
 import com.workpoint.icpak.client.ui.directory.table.row.DirectoryTableRow;
 
 public class DirectoryTable extends Composite {
@@ -23,6 +25,14 @@ public class DirectoryTable extends Composite {
 
 	@UiField
 	PagingTable tblView;
+	
+	private String[] towns = { "all", "Nairobi", "BONDO", "Bungoma", "BURU BURU, NAIROBI", "Busia", "City Square",
+			"Eldoret", "EMBU", "GPO NAIROBI", "Juba", "KAKAMEGA", "Kapsabet", "Karatina", "Kericho", "Kerugoya",
+			"KIAMBU", "Kigali", "Kigali, Rwanda", "KISERIAN", "Kisii", "Kisumu", "Kitale", "Kitui", "KNH", "Lamu",
+			"Limuru", "Luanda", "Machakos", "Malindi", "Meru", "Mombasa", "Mumias", "Murang'a", "Muranga", "Nairobi",
+			"Nairobi,Kenya", "Naivasha", "Nakuru", "Nanyuki", "Naro Moru", "NGARA NAIROBI", "Niarobi", "Nyahururu",
+			"Nyamira", "Nyeri", "OLKALOU", "RUARAKA, NAIROBI", "Ruaraka- Nairobi", "SARIT CENTRE", "Siaya", "SOTIK",
+			"Suna", "Tala", "Thika", "Ugunja", "Vienna Australia", "Voi", "Webuye" };
 
 	public DirectoryTable() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -31,6 +41,8 @@ public class DirectoryTable extends Composite {
 		tblView.setSearchFieldVisible(true);
 		tblView.setDatesVisible(false);
 		tblView.getDownloadPdf().setVisible(false);
+		tblView.setTownListVisible(true);
+		setTowns(towns);
 		createHeader();
 	}
 
@@ -70,4 +82,22 @@ public class DirectoryTable extends Composite {
 	public HasValueChangeHandlers<String> getSearchKeyDownHander() {
 		return tblView.getSearchKeyDownHander();
 	}
+	
+	public void setTowns(String[] towns){
+		List<Towns> townsList = new ArrayList<>();
+		for(int i = 0 ; i < towns.length ; i++){
+			Towns town = tblView.new Towns(towns[i]);
+			townsList.add(town);
+		}
+	    tblView.setTowns(townsList);
+	}
+	
+	public DropDownList<Towns> getTowns(){
+		return tblView.getTowns();
+	}
+
+	public String getSelectedTownName() {
+		return tblView.getSelectedTownName();
+	}
+
 }
