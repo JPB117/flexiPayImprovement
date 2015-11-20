@@ -69,7 +69,8 @@ public class BookingsDao extends BaseDao {
 	}
 
 	public void importAllEvents() {
-		String sqlQuery = "select oldSystemId,refId from icpakdb.event where oldSystemId=424";
+		String sqlQuery = "select oldSystemId,refId from icpakdb.event "
+				+ "where oldSystemId IN (480,479,474,469)";
 		// String sqlQuery =
 		// "select oldSystemId,refId from icpakdb.event where oldSystemId=424";
 		List<Object[]> rows = getResultList(getEntityManager()
