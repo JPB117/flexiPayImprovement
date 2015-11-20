@@ -9,7 +9,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.dom.client.HasKeyDownHandlers;
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -18,11 +17,11 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Widget;
+import com.workpoint.icpak.shared.model.Listable;
 
 public class TableView extends Composite {
 
-	private static TableViewUiBinder uiBinder = GWT
-			.create(TableViewUiBinder.class);
+	private static TableViewUiBinder uiBinder = GWT.create(TableViewUiBinder.class);
 
 	interface TableViewUiBinder extends UiBinder<Widget, TableView> {
 	}
@@ -62,14 +61,21 @@ public class TableView extends Composite {
 	DateField dtStartDate;
 	@UiField
 	DateField dtEndDate;
+	@UiField
+	HTMLPanel panelTowns;
+	@UiField
+	DropDownList<Towns> listTowns;
+	@UiField
+	DivElement divTownList;
 
 	private boolean isAutoNumber = true;
 	private int count = 0;
-
+	
 	public TableView() {
 		initWidget(uiBinder.createAndBindUi(this));
 		setSearchSectionVisible(false);
 		setDatesVisible(false);
+		setTownListVisible(false);
 	}
 
 	public void setHeaders(List<String> names) {
@@ -90,6 +96,14 @@ public class TableView extends Composite {
 		} else {
 			panelDates.setVisible(false);
 		}
+	}
+	
+	public void setTowns(List<Towns> townNames){
+		listTowns.setItems(townNames);
+	}
+	
+	public DropDownList<Towns> getTowns(){
+		return listTowns;
 	}
 
 	public void setActionsVisible(boolean show) {
@@ -137,8 +151,7 @@ public class TableView extends Composite {
 
 			// add to row
 			if (header.getWidth() != null) {
-				th.getElement().getStyle()
-						.setWidth(header.getWidth(), Unit.PCT);
+				th.getElement().getStyle().setWidth(header.getWidth(), Unit.PCT);
 			}
 
 			if (header.getStyleName() != null) {
@@ -249,6 +262,14 @@ public class TableView extends Composite {
 		}
 	}
 
+	public void setTownListVisible(Boolean status) {
+		if (status) {
+			divTownList.removeClassName("hide");
+		} else {
+			divTownList.addClassName("hide");
+		}
+	}
+
 	public void setBordered(Boolean status) {
 		tblContainer.removeStyleName("table-bordered");
 		if (status) {
@@ -298,8 +319,7 @@ public class TableView extends Composite {
 		count = 0;
 	}
 
-	public void createHeader(String name, String width, String labelStyle,
-			String thStyle) {
+	public void createHeader(String name, String width, String labelStyle, String thStyle) {
 		HTMLPanel th = new HTMLPanel("");
 		th.addStyleName("th");
 		if (thStyle != null) {
@@ -360,5 +380,25 @@ public class TableView extends Composite {
 
 	public HasValueChangeHandlers<String> getSearchKeyDownHander() {
 		return txtSearch;
+	}
+	
+	public class Towns implements Listable {
+
+		private String townName;
+
+		public Towns(String townName) {
+			this.townName = townName;
+		}
+
+		@Override
+		public String getName() {
+			return townName;
+		}
+
+		@Override
+		public String getDisplayName() {
+			return townName;
+		}
+
 	}
 }

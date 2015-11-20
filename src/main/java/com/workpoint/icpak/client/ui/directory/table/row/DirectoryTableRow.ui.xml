@@ -6,7 +6,7 @@
 		<g:HTMLPanel styleName="td" ui:field="divFirmName">
 		    <div>
 		        <p>
-		            <g:Label ui:field="lFirmName"/>
+		            <strong><g:Label ui:field="lFirmName"/></strong>
 		        </p>
 		        <p>
 		            <g:Label ui:field="lPartners"/>

@@ -10,33 +10,35 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewImpl;
+import com.workpoint.icpak.client.ui.component.DropDownList;
 import com.workpoint.icpak.client.ui.component.PagingPanel;
+import com.workpoint.icpak.client.ui.component.TableView.Towns;
 import com.workpoint.icpak.client.ui.directory.table.DirectoryTable;
 import com.workpoint.icpak.client.ui.directory.table.row.DirectoryTableRow;
 import com.workpoint.icpak.shared.model.DirectoryDto;
 
 public class DirectoryView extends ViewImpl implements DirectoryPresenter.MyDirectoryView {
-    interface Binder extends UiBinder<Widget, DirectoryView> {
-    }
-    
-    @UiField
+	interface Binder extends UiBinder<Widget, DirectoryView> {
+	}
+
+	@UiField
 	HTMLPanel container;
-    
+
 	@UiField
 	DirectoryTable tblView;
-    
-    private final Widget widget;
 
-    @Inject
-    DirectoryView(final Binder uiBinder) {
-    	widget = uiBinder.createAndBindUi(this);
-    }
+	private final Widget widget;
+
+	@Inject
+	DirectoryView(final Binder uiBinder) {
+		widget = uiBinder.createAndBindUi(this);
+	}
 
 	@Override
 	public Widget asWidget() {
 		return widget;
 	}
-	
+
 	@Override
 	public void bindResults(List<DirectoryDto> result) {
 		tblView.clearRows();
@@ -45,7 +47,7 @@ public class DirectoryView extends ViewImpl implements DirectoryPresenter.MyDire
 			tblView.createRow(new DirectoryTableRow(dto));
 		}
 	}
-	
+
 	@Override
 	public PagingPanel getPagingPanel() {
 		return tblView.getPagingPanel();
@@ -58,6 +60,17 @@ public class DirectoryView extends ViewImpl implements DirectoryPresenter.MyDire
 
 	@Override
 	public String getSearchValue() {
-			return tblView.getSearchValue();
+		return tblView.getSearchValue();
 	}
+
+	@Override
+	public String getTownName() {
+		return tblView.getSelectedTownName();
+	}
+
+	@Override
+	public DropDownList<Towns> getTownList() {
+		return tblView.getTowns();
+	}
+
 }
