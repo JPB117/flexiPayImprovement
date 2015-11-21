@@ -1,6 +1,5 @@
 package com.workpoint.icpak.client.ui.component;
 
-import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 
 public class PagingTable extends TableView {
 

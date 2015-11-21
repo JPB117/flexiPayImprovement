@@ -11,8 +11,8 @@ import com.icpak.rest.dao.helper.DirectoryDaoHelper;
 import com.workpoint.icpak.shared.model.DirectoryDto;
 import com.workpoint.icpak.tests.base.AbstractDaoTest;
 
-public class TestDirectory extends AbstractDaoTest {
-	Logger logger = Logger.getLogger(TestDirectory.class);
+public class TestDirectoryDao extends AbstractDaoTest {
+	Logger logger = Logger.getLogger(TestDirectoryDao.class);
 
 	@Inject
 	DirectoryDaoHelper directoryDaoHelper;
@@ -26,16 +26,16 @@ public class TestDirectory extends AbstractDaoTest {
 
 	@Ignore
 	public void testSearchCount() {
-		int count = directoryDaoHelper.getSerchCount("7");
+		// int count = directoryDaoHelper.getSerchCount("7");
 
-		logger.error(" ==== Count == " + count);
+		// logger.error(" ==== Count == " + count);
 	}
 
-	@Ignore
+	@Test
 	public void testSearch() {
-
-		List<DirectoryDto> directoryDtos = directoryDaoHelper.searchDirectory("h");
-		int count = directoryDaoHelper.getSerchCount("h");
+		List<DirectoryDto> directoryDtos = directoryDaoHelper.searchDirectory(
+				"Chege", "EMBU", 0, 10);
+		int count = directoryDaoHelper.getSerchCount("Chege", "Embu");
 
 		logger.error(" ==== Count == " + count);
 		logger.error(" ==== List Size == " + directoryDtos.size());
@@ -44,7 +44,7 @@ public class TestDirectory extends AbstractDaoTest {
 	@Ignore
 	public void testGetAll() {
 
-		List<DirectoryDto> directoryDtos = directoryDaoHelper.getAll(0,0);
+		List<DirectoryDto> directoryDtos = directoryDaoHelper.getAll(0, 0);
 		int count = directoryDaoHelper.getCount();
 
 		logger.error(" ==== Count == " + count);
@@ -54,14 +54,15 @@ public class TestDirectory extends AbstractDaoTest {
 		}
 	}
 
-	@Test
+	@Ignore
 	public void testGetByRefId() {
 
-		DirectoryDto directoryDto = directoryDaoHelper.getByRefId("32b9d21c-8ded-11");
+		DirectoryDto directoryDto = directoryDaoHelper
+				.getByRefId("32b9d21c-8ded-11");
 
 		logger.error(" ==== Address1 == " + directoryDto.getAddress1());
 		logger.error(" ==== Email == " + directoryDto.getEmail());
-		
+
 	}
 
 }

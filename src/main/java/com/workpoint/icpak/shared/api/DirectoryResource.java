@@ -21,16 +21,20 @@ public interface DirectoryResource extends BaseResource {
 			@QueryParam("limit") Integer limit);
 
 	@GET
-	@Path("/search/{searchTerm}")
-	public List<DirectoryDto> search(@PathParam("searchTerm") String searchTerm,
+	@Path("/search/{searchTerm}/{townSearchTerm}")
+	public List<DirectoryDto> search(
+			@PathParam("searchTerm") String searchTerm,
+			@PathParam("townSearchTerm") String townSearchTerm,
 			@QueryParam("offset") Integer offset,
 			@QueryParam("limit") Integer limit);
-	
+
 	@GET
 	@Path("/count")
 	public Integer getCount();
-	
+
 	@GET
-	@Path("/searchCount/{searchTerm}")
-	public Integer getSearchCount(@PathParam("searchTerm") String searchTerm);
+	@Path("/searchCount/{searchTerm}/{citySearchTerm}")
+	public Integer getSearchCount(@PathParam("searchTerm") String searchTerm,
+			@PathParam("citySearchTerm") String citySearchTerm);
+
 }

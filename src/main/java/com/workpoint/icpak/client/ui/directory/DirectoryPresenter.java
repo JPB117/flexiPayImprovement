@@ -5,6 +5,7 @@ import java.util.List;
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rest.delegates.client.ResourceDelegate;
@@ -30,25 +31,31 @@ import com.workpoint.icpak.client.place.NameTokens;
 import com.workpoint.icpak.client.service.AbstractAsyncCallback;
 
 public class DirectoryPresenter
-		extends Presenter<DirectoryPresenter.MyDirectoryView, DirectoryPresenter.MyDirectoryProxy>
+		extends
+		Presenter<DirectoryPresenter.MyDirectoryView, DirectoryPresenter.MyDirectoryProxy>
 		implements TableActionHandler {
 	public interface MyDirectoryView extends View {
-
 		void bindResults(List<DirectoryDto> result);
 
 		PagingPanel getPagingPanel();
 
 		HasValueChangeHandlers<String> getSearchValueChangeHander();
-		
+
 		DropDownList<Towns> getTownList();
 
 		String getSearchValue();
 
 		String getTownName();
 
+		void setResultString(String resultString);
+
+		void showmask(boolean isProcessing);
+
 	}
 
 	protected final ResourceDelegate<DirectoryResource> directoryResourceDelegate;
+	private String searchTerm = "all";
+	private String townSearchTerm = "all";
 
 	@ProxyCodeSplit
 	@NameToken(NameTokens.directory)
@@ -59,13 +66,21 @@ public class DirectoryPresenter
 	ValueChangeHandler<String> directoryValueChangeHandler = new ValueChangeHandler<String>() {
 		@Override
 		public void onValueChange(ValueChangeEvent<String> event) {
-			searchDirectory(getView().getSearchValue().trim());
+			if (getView().getSearchValue().trim() == "") {
+				searchTerm = "all";
+				searchDirectory(searchTerm, townSearchTerm);
+			} else {
+				searchTerm = getView().getSearchValue().trim();
+				searchDirectory(getView().getSearchValue().trim(),
+						townSearchTerm);
+			}
 		}
 	};
-	
+
 	@Inject
 	DirectoryPresenter(EventBus eventBus, MyDirectoryView view,
-			ResourceDelegate<DirectoryResource> directoryResourceDelegate, MyDirectoryProxy proxy) {
+			ResourceDelegate<DirectoryResource> directoryResourceDelegate,
+			MyDirectoryProxy proxy) {
 		super(eventBus, view, proxy);
 		this.directoryResourceDelegate = directoryResourceDelegate;
 
@@ -86,14 +101,22 @@ public class DirectoryPresenter
 				loadDirectory(offset, limit);
 			}
 		});
-		getView().getSearchValueChangeHander().addValueChangeHandler(directoryValueChangeHandler);
-		getView().getTownList().addValueChangeHandler(new ValueChangeHandler<TableView.Towns>() {
-
-			@Override
-			public void onValueChange(ValueChangeEvent<Towns> towns) {
-				searchDirectory(getView().getTownName().trim());
-			}
-		});
+		getView().getSearchValueChangeHander().addValueChangeHandler(
+				directoryValueChangeHandler);
+		getView().getTownList().addValueChangeHandler(
+				new ValueChangeHandler<TableView.Towns>() {
+					@Override
+					public void onValueChange(ValueChangeEvent<Towns> towns) {
+						if (towns.getValue() == null) {
+							townSearchTerm = "all";
+							searchDirectory(searchTerm, townSearchTerm);
+						} else {
+							townSearchTerm = getView().getTownName().trim();
+							searchDirectory(searchTerm, getView().getTownName()
+									.trim());
+						}
+					}
+				});
 	}
 
 	@Override
@@ -108,62 +131,64 @@ public class DirectoryPresenter
 	}
 
 	private void loadCount() {
-		directoryResourceDelegate.withCallback(new AbstractAsyncCallback<Integer>() {
+		directoryResourceDelegate.withCallback(
+				new AbstractAsyncCallback<Integer>() {
+					@Override
+					public void onSuccess(Integer result) {
+						PagingPanel panel = getView().getPagingPanel();
+						panel.setTotal(result);
+						PagingConfig config = panel.getConfig();
+						String resultString = result + " FIRMS LOADED";
+						getView().setResultString(resultString);
+						loadDirectory(config.getOffset(), config.getLimit());
+					}
 
-			@Override
-			public void onSuccess(Integer result) {
-				PagingPanel panel = getView().getPagingPanel();
-				panel.setTotal(result);
-				PagingConfig config = panel.getConfig();
-
-				loadDirectory(config.getOffset(), config.getLimit());
-			}
-
-		}).getCount();
+				}).getCount();
 	}
 
 	private void loadDirectory(int offset, int limit) {
-
-		directoryResourceDelegate.withCallback(new AbstractAsyncCallback<List<DirectoryDto>>() {
-
-			@Override
-			public void onSuccess(List<DirectoryDto> results) {
-				getView().bindResults(results);
-			}
-
-		}).getAll(offset, limit);
+		getView().showmask(true);
+		directoryResourceDelegate.withCallback(
+				new AbstractAsyncCallback<List<DirectoryDto>>() {
+					@Override
+					public void onSuccess(List<DirectoryDto> results) {
+						getView().bindResults(results);
+						getView().showmask(false);
+					}
+				}).getAll(offset, limit);
 	}
 
-	public void searchDirectory(final String searchTerm) {
-		fireEvent(new ProcessingEvent());
-		directoryResourceDelegate.withCallback(new AbstractAsyncCallback<Integer>() {
+	public void searchDirectory(final String searchTerm, final String townSearch) {
+		getView().showmask(true);
 
-			@Override
-			public void onSuccess(Integer result) {
-				PagingPanel panel = getView().getPagingPanel();
-				panel.setTotal(result);
-				PagingConfig config = panel.getConfig();
-				searchDirectory(searchTerm, config.getOffset(), config.getLimit());
-			}
-		}).getSearchCount(searchTerm);
+		// Window.alert(searchTerm);
+		directoryResourceDelegate.withCallback(
+				new AbstractAsyncCallback<Integer>() {
+					@Override
+					public void onSuccess(Integer result) {
+						PagingPanel panel = getView().getPagingPanel();
+						panel.setTotal(result);
+						PagingConfig config = panel.getConfig();
+						String resultString = result
+								+ " FIRMS MATCHING THE KEYWORD '" + searchTerm
+								+ "'" + " and in '" + townSearch + "' town";
+						getView().setResultString(resultString);
+						searchDirectory(searchTerm, townSearch,
+								config.getOffset(), config.getLimit());
+					}
+				}).getSearchCount(searchTerm, townSearch);
 	}
 
-	public void searchDirectory(String searchTerm, int offset, int limit) {
-		directoryResourceDelegate.withCallback(new AbstractAsyncCallback<List<DirectoryDto>>() {
+	public void searchDirectory(String searchTerm, String townSearchTerm,
+			int offset, int limit) {
+		directoryResourceDelegate.withCallback(
+				new AbstractAsyncCallback<List<DirectoryDto>>() {
+					@Override
+					public void onSuccess(List<DirectoryDto> results) {
+						getView().bindResults(results);
+						getView().showmask(false);
+					}
 
-			@Override
-			public void onSuccess(List<DirectoryDto> results) {
-				getView().bindResults(results);
-			}
-
-		}).search(searchTerm, offset, limit);
+				}).search(searchTerm, townSearchTerm, offset, limit);
 	}
-
-	private String[] towns = { "all", "Nairobi", "BONDO", "Bungoma", "BURU BURU, NAIROBI", "Busia", "City Square",
-			"Eldoret", "EMBU", "GPO NAIROBI", "Juba", "KAKAMEGA", "Kapsabet", "Karatina", "Kericho", "Kerugoya",
-			"KIAMBU", "Kigali", "Kigali, Rwanda", "KISERIAN", "Kisii", "Kisumu", "Kitale", "Kitui", "KNH", "Lamu",
-			"Limuru", "Luanda", "Machakos", "Malindi", "Meru", "Mombasa", "Mumias", "Murang'a", "Muranga", "Nairobi",
-			"Nairobi,Kenya", "Naivasha", "Nakuru", "Nanyuki", "Naro Moru", "NGARA NAIROBI", "Niarobi", "Nyahururu",
-			"Nyamira", "Nyeri", "OLKALOU", "RUARAKA, NAIROBI", "Ruaraka- Nairobi", "SARIT CENTRE", "Siaya", "SOTIK",
-			"Suna", "Tala", "Thika", "Ugunja", "Vienna Australia", "Voi", "Webuye" };
 }

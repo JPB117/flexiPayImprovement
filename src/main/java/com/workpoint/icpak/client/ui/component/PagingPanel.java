@@ -46,7 +46,7 @@ public class PagingPanel extends Composite {
 
 	public PagingPanel() {
 		initWidget(uiBinder.createAndBindUi(this));
-		txtPageNo.setValue(0);
+		txtPageNo.setValue(1);
 		txtPageNo.addValueChangeHandler(new ValueChangeHandler<Integer>() {
 
 			@Override

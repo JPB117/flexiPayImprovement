@@ -34,7 +34,7 @@ public class DirectoryResourceImpl implements DirectoryResource {
 	public List<DirectoryDto> getAll(
 			@ApiParam(value = "Starting index", required = true) @QueryParam("offset") Integer offset,
 			@ApiParam(value = "Number of items to retrieve", required = true) @QueryParam("limit") Integer limit) {
-		return directoryDaoHelper.getAll(offset , limit);
+		return directoryDaoHelper.getAll(offset, limit);
 	}
 
 	@GET
@@ -44,19 +44,23 @@ public class DirectoryResourceImpl implements DirectoryResource {
 	}
 
 	@GET
-	@Path("/search/{searchTerm}")
+	@Path("/search/{searchTerm}/{townSearchTerm}")
 	@ApiOperation(value = "Search directory based on a search term")
 	public List<DirectoryDto> search(
 			@ApiParam(value = "Search term to use", required = true) @PathParam("searchTerm") String searchTerm,
-			@QueryParam("offset") Integer offset, @QueryParam("limit") Integer limit) {
+			@PathParam("townSearchTerm") String townSearchTerm,
+			@QueryParam("offset") Integer offset,
+			@QueryParam("limit") Integer limit) {
 
-		return directoryDaoHelper.searchDirectory(searchTerm);
+		return directoryDaoHelper.searchDirectory(searchTerm, townSearchTerm,
+				offset, limit);
 	}
 
 	@GET
-	@Path("/searchCount/{searchTerm}")
-	public Integer getSearchCount(@PathParam("searchTerm") String searchTerm) {
-		return directoryDaoHelper.getSerchCount(searchTerm);
+	@Path("/searchCount/{searchTerm}/{citySearchTerm}")
+	public Integer getSearchCount(@PathParam("searchTerm") String searchTerm,
+			@PathParam("citySearchTerm") String townSearchTerm) {
+		return directoryDaoHelper.getSerchCount(searchTerm, townSearchTerm);
 	}
 
 }
