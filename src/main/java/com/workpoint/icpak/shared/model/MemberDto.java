@@ -17,8 +17,11 @@ public class MemberDto extends SerializableObj implements Listable {
 	private String lastName;
 	private String firstName;
 	private String title;
+	private String address;
+	private String city;
 	private String practisingNo;
-	private String customerType;
+	private ApplicationType customerType;
+	private String customerPostingGroup;
 	private Date practisingCertDate;
 	private MembershipStatus membershipStatus;
 	private String fullName;
@@ -83,7 +86,8 @@ public class MemberDto extends SerializableObj implements Listable {
 
 	@JsonIgnore
 	public String getName() {
-		return (lastName == null ? "" : lastName) + " " + (firstName == null ? "" : firstName);
+		return (lastName == null ? "" : lastName) + " "
+				+ (firstName == null ? "" : firstName);
 	}
 
 	public String getTitle() {
@@ -116,14 +120,6 @@ public class MemberDto extends SerializableObj implements Listable {
 		this.practisingNo = practisingNo;
 	}
 
-	public String getCustomerType() {
-		return customerType;
-	}
-
-	public void setCustomerType(String customerType) {
-		this.customerType = customerType;
-	}
-
 	public Date getPractisingCertDate() {
 		return practisingCertDate;
 	}
@@ -154,6 +150,38 @@ public class MemberDto extends SerializableObj implements Listable {
 
 	public void setMember(String member) {
 		this.member = member;
+	}
+
+	public ApplicationType getCustomerType() {
+		return customerType;
+	}
+
+	public void setCustomerType(ApplicationType customerType) {
+		this.customerType = customerType;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public String getCustomerPostingGroup() {
+		return customerPostingGroup;
+	}
+
+	public void setCustomerPostingGroup(String customerPostingGroup) {
+		this.customerPostingGroup = customerPostingGroup;
 	}
 
 }

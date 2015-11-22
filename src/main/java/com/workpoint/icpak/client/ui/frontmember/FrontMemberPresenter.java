@@ -26,7 +26,8 @@ import com.workpoint.icpak.shared.api.MemberResource;
 import com.workpoint.icpak.shared.model.MemberDto;
 
 public class FrontMemberPresenter
-		extends Presenter<FrontMemberPresenter.MyFrontMemberView, FrontMemberPresenter.MyFrontMemberProxy>
+		extends
+		Presenter<FrontMemberPresenter.MyFrontMemberView, FrontMemberPresenter.MyFrontMemberProxy>
 		implements TableActionHandler {
 	public interface MyFrontMemberView extends View {
 
@@ -40,22 +41,33 @@ public class FrontMemberPresenter
 	}
 
 	protected final ResourceDelegate<MemberResource> memberResourceDelegate;
+	private String searchTerm = "all";
+	private String townSearchTerm = "all";
 
 	@ProxyCodeSplit
 	@NameToken(NameTokens.frontMember)
 	@NoGatekeeper
-	public interface MyFrontMemberProxy extends ProxyPlace<FrontMemberPresenter> {
+	public interface MyFrontMemberProxy extends
+			ProxyPlace<FrontMemberPresenter> {
 	}
 
 	ValueChangeHandler<String> frontMemberValueChangeHandler = new ValueChangeHandler<String>() {
 		@Override
 		public void onValueChange(ValueChangeEvent<String> event) {
-			searchMembers(getView().getSearchValue().trim());
+			if (getView().getSearchValue().trim() == "") {
+				searchTerm = "all";
+				// sear(searchTerm, townSearchTerm);
+			} else {
+				searchTerm = getView().getSearchValue().trim();
+				searchDirectory(getView().getSearchValue().trim(),
+						townSearchTerm);
+			}
 		}
 	};
 
 	@Inject
-	FrontMemberPresenter(EventBus eventBus, MyFrontMemberView view, MyFrontMemberProxy proxy,
+	FrontMemberPresenter(EventBus eventBus, MyFrontMemberView view,
+			MyFrontMemberProxy proxy,
 			ResourceDelegate<MemberResource> memberResourceDelegate) {
 		super(eventBus, view, proxy);
 		this.memberResourceDelegate = memberResourceDelegate;
@@ -77,8 +89,9 @@ public class FrontMemberPresenter
 				loadMembers(offset, limit);
 			}
 		});
-		
-		getView().getSearchValueChangeHander().addValueChangeHandler(frontMemberValueChangeHandler);
+
+		getView().getSearchValueChangeHander().addValueChangeHandler(
+				frontMemberValueChangeHandler);
 	}
 
 	@Override
@@ -88,58 +101,65 @@ public class FrontMemberPresenter
 	}
 
 	private void loadCount() {
-		memberResourceDelegate.withCallback(new AbstractAsyncCallback<Integer>() {
+		memberResourceDelegate.withCallback(
+				new AbstractAsyncCallback<Integer>() {
 
-			@Override
-			public void onSuccess(Integer result) {
-				PagingPanel pagingPanel = getView().getPagingPanel();
-				pagingPanel.setTotal(result);
-				PagingConfig pagingConfig = pagingPanel.getConfig();
+					@Override
+					public void onSuccess(Integer result) {
+						PagingPanel pagingPanel = getView().getPagingPanel();
+						pagingPanel.setTotal(result);
+						PagingConfig pagingConfig = pagingPanel.getConfig();
 
-				loadMembers(pagingConfig.getOffset(), pagingConfig.getLimit());
-			}
-		}).getMembersCount();
+						loadMembers(pagingConfig.getOffset(),
+								pagingConfig.getLimit());
+					}
+				}).getMembersCount();
 	}
 
 	private void loadMembers(int offset, int limit) {
-		memberResourceDelegate.withCallback(new AbstractAsyncCallback<List<MemberDto>>() {
+		memberResourceDelegate.withCallback(
+				new AbstractAsyncCallback<List<MemberDto>>() {
 
-			@Override
-			public void onSuccess(List<MemberDto> results) {
-				getView().bindResults(results);
-			}
-		}).getMembers(offset, limit);
+					@Override
+					public void onSuccess(List<MemberDto> results) {
+						getView().bindResults(results);
+					}
+				}).getMembers(offset, limit);
 	}
 
-	public void searchMembers(final String searchTerm) {
-		memberResourceDelegate.withCallback(new AbstractAsyncCallback<Integer>() {
+	public void searchMembers(final String searchTerm,
+			final String citySearchTerm) {
+		memberResourceDelegate.withCallback(
+				new AbstractAsyncCallback<Integer>() {
 
-			@Override
-			public void onSuccess(Integer result) {
-				PagingPanel panel = getView().getPagingPanel();
-				panel.setTotal(result);
-				PagingConfig pagingConfig = panel.getConfig();
-				searchMembers(searchTerm, pagingConfig.getOffset(), pagingConfig.getLimit());
-			}
+					@Override
+					public void onSuccess(Integer result) {
+						PagingPanel panel = getView().getPagingPanel();
+						panel.setTotal(result);
+						PagingConfig pagingConfig = panel.getConfig();
+						searchMembers(searchTerm, citySearchTerm,
+								pagingConfig.getOffset(),
+								pagingConfig.getLimit());
+					}
 
-		}).getMembersSearchCount(searchTerm);
+				}).getMembersSearchCount(searchTerm);
 	}
 
-	public void searchMembers(String searchTerm, int offset, int limit) {
-		memberResourceDelegate.withCallback(new AbstractAsyncCallback<List<MemberDto>>() {
-
-			@Override
-			public void onSuccess(List<MemberDto> results) {
-				PagingPanel panel = getView().getPagingPanel();
-				panel.setTotal(results.size());
-				getView().bindResults(results);
-			}
-		}).searchMembers(searchTerm, offset, limit);
+	public void searchMembers(String searchTerm, String citySearchTerm,
+			int offset, int limit) {
+		memberResourceDelegate.withCallback(
+				new AbstractAsyncCallback<List<MemberDto>>() {
+					@Override
+					public void onSuccess(List<MemberDto> results) {
+						PagingPanel panel = getView().getPagingPanel();
+						panel.setTotal(results.size());
+						getView().bindResults(results);
+					}
+				}).searchMembers(searchTerm, citySearchTerm, offset, limit);
 	}
 
 	@Override
 	public void onTableAction(TableActionEvent event) {
-		// TODO Auto-generated method stub
-		
+
 	}
 }

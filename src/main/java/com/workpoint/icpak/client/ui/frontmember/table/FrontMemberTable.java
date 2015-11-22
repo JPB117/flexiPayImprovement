@@ -36,6 +36,7 @@ public class FrontMemberTable extends Composite {
 
 	public void createHeader() {
 		List<TableHeader> th = new ArrayList<TableHeader>();
+		th.add(new TableHeader("Member No"));
 		th.add(new TableHeader("NAME"));
 		th.add(new TableHeader("Category"));
 		th.add(new TableHeader("Membership"));

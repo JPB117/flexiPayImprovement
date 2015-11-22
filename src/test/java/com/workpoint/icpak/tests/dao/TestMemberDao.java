@@ -18,10 +18,21 @@ public class TestMemberDao extends AbstractDaoTest {
 	MemberDaoHelper helper;
 	@Inject
 	UsersDaoHelper userHelper;
-	
-	@Test
-	public void resetPassword(){
+
+	@Ignore
+	public void resetPassword() {
 		userHelper.resetAccount("gNtLJ03iEfS3LCac");
+	}
+
+	@Test
+	public void testSearchMemberFromOldTable() {
+		List<MemberDto> list = helper.getMembersFromOldTable("Ogot", "all", 0,
+				100);
+
+		Integer count = helper.getMembersCount("Ogot", "all");
+
+		System.err.println("List Size::" + list.size());
+		System.err.println("Count::" + count);
 	}
 
 	@Ignore
