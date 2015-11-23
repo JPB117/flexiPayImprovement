@@ -431,6 +431,7 @@ public class BookingsDao extends BaseDao {
 			} else {
 				delegateDto.setPaymentStatus(PaymentStatus.NOTPAID);
 			}
+			
 			if (attendance == 0) {
 				delegateDto.setAttendance(AttendanceStatus.ATTENDED);
 			}

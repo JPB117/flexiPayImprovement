@@ -1,6 +1,8 @@
 package com.icpak.rest.models.event;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -43,6 +45,7 @@ public class Delegate extends PO {
 	@XmlTransient
 	private Booking booking;
 	private Double amount;
+	@Enumerated(EnumType.ORDINAL)
 	private AttendanceStatus attendance = AttendanceStatus.NOTATTENDED;
 	@ManyToOne
 	@JoinColumn(name = "accommodationId")
