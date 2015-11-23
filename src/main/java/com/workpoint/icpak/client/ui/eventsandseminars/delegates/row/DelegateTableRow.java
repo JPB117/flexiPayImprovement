@@ -50,6 +50,8 @@ public class DelegateTableRow extends RowWidget {
 	@UiField
 	HTMLPanel divMemberNo;
 	@UiField
+	HTMLPanel divErnNo;
+	@UiField
 	HTMLPanel divDelegateNames;
 	@UiField
 	HTMLPanel divAccomodation;
@@ -126,7 +128,7 @@ public class DelegateTableRow extends RowWidget {
 		aProforma.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-//				Window.alert("Proforma" + delegate.getBookingRefId());
+				// Window.alert("Proforma" + delegate.getBookingRefId());
 				UploadContext ctx = new UploadContext("getreport");
 				ctx.setContext("bookingRefId", delegate.getBookingRefId());
 				ctx.setAction(UPLOADACTION.GETPROFORMA);
@@ -178,6 +180,10 @@ public class DelegateTableRow extends RowWidget {
 		if (delegate.getCompanyName() != null) {
 			divSponsorNames.getElement()
 					.setInnerText(delegate.getCompanyName());
+		}
+
+		if (delegate.getErn() != null) {
+			divErnNo.getElement().setInnerText(delegate.getErn());
 		}
 		divContactName.getElement().setInnerText(delegate.getContactName());
 		divSponsorEmail.getElement().setInnerText(delegate.getContactEmail());

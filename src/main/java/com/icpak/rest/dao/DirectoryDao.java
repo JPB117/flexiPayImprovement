@@ -1,7 +1,9 @@
 package com.icpak.rest.dao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.Query;
 
@@ -42,8 +44,8 @@ public class DirectoryDao extends BaseDao {
 
 	public int getDirectoryCount() {
 
-		Number number = getSingleResultOrNull(
-				getEntityManager().createNativeQuery("select count(*) from directory d "));
+		Number number = getSingleResultOrNull(getEntityManager()
+				.createNativeQuery("select count(*) from directory d "));
 		return number.intValue();
 	}
 
@@ -51,30 +53,37 @@ public class DirectoryDao extends BaseDao {
 		return findByDirectoryRefId(refId, true);
 	}
 
-	public Directory findByDirectoryRefId(String refId, boolean throwExceptionIfNull) {
-		Directory directory = getSingleResultOrNull(
-				getEntityManager().createQuery("from Directory d where d.refId=:refId").setParameter("refId", refId));
+	public Directory findByDirectoryRefId(String refId,
+			boolean throwExceptionIfNull) {
+		Directory directory = getSingleResultOrNull(getEntityManager()
+				.createQuery("from Directory d where d.refId=:refId")
+				.setParameter("refId", refId));
 
 		if (directory == null && throwExceptionIfNull) {
-			throw new ServiceException(ErrorCodes.NOTFOUND, "Directory", "'" + refId + "'");
+			throw new ServiceException(ErrorCodes.NOTFOUND, "Directory", "'"
+					+ refId + "'");
 		}
 
 		return directory;
 	}
 
-	public List<DirectoryDto> searchDirectory(String searchTerm, Integer offset, Integer limit) {
+	public List<DirectoryDto> searchDirectory(String searchTerm,
+			String citySearchTerm, Integer offset, Integer limit) {
 
-		String sql = "select d.refId,d.firmId,d.firmName,d.address1,d.address2,"
-				+ "d.address3,d.typeOfFirm,d.city,d.telephone,d.fax,d.email,"
-				+ "d.paidup,d.sector,d.partners,d.regno,d.branch " 
-				+ "from " 
-				+ "directory d " 
-				+ "where "
-				+ "d.firmId like :searchTerm or d.firmName like :searchTerm or "
-				+ "d.typeOfFirm like :searchTerm or d.city like :searchTerm or "
-				+ "d.email like :searchTerm or d.regno like :searchTerm " + "order by firmId desc";
+		StringBuffer sql = new StringBuffer(
+				"select d.refId,d.firmId,d.firmName,d.address1,d.address2,"
+						+ "d.address3,d.typeOfFirm,d.city,d.telephone,d.fax,d.email,"
+						+ "d.paidup,d.sector,d.partners,d.regno,d.branch "
+						+ "from " + "directory d ");
 
-		Query query = getEntityManager().createNativeQuery(sql).setParameter("searchTerm", "%" + searchTerm + "%");
+		Map<String, Object> params = appendParameters(searchTerm,
+				citySearchTerm, sql);
+
+		sql.append(" order by d.firmId desc");
+		Query query = getEntityManager().createNativeQuery(sql.toString());
+		for (String key : params.keySet()) {
+			query.setParameter(key, params.get(key));
+		}
 
 		List<Object[]> rows = getResultList(query, offset, limit);
 
@@ -83,22 +92,38 @@ public class DirectoryDao extends BaseDao {
 		for (Object[] row : rows) {
 			int i = 0;
 			Object value = null;
-			String refId = (value = row[i++]) == null ? null : value.toString().trim();
-			String firmId = (value = row[i++]) == null ? null : value.toString().trim();
-			String firmName = (value = row[i++]) == null ? null : value.toString().trim();
-			String address1 = (value = row[i++]) == null ? null : value.toString().trim();
-			String address2 = (value = row[i++]) == null ? null : value.toString().trim();
-			String address3 = (value = row[i++]) == null ? null : value.toString().trim();
-			String typeOfFirm = (value = row[i++]) == null ? null : value.toString().trim();
-			String city = (value = row[i++]) == null ? null : value.toString().trim();
-			String telephone = (value = row[i++]) == null ? null : value.toString().trim();
-			String fax = (value = row[i++]) == null ? null : value.toString().trim();
-			String email = (value = row[i++]) == null ? null : value.toString().trim();
-			String paidUp = (value = row[i++]) == null ? null : value.toString().trim();
-			String sector = (value = row[i++]) == null ? null : value.toString().trim();
-			String partners = (value = row[i++]) == null ? null : value.toString().trim();
-			String regNo = (value = row[i++]) == null ? null : value.toString().trim();
-			String branch = (value = row[i++]) == null ? null : value.toString().trim();
+			String refId = (value = row[i++]) == null ? null : value.toString()
+					.trim();
+			String firmId = (value = row[i++]) == null ? null : value
+					.toString().trim();
+			String firmName = (value = row[i++]) == null ? null : value
+					.toString().trim();
+			String address1 = (value = row[i++]) == null ? null : value
+					.toString().trim();
+			String address2 = (value = row[i++]) == null ? null : value
+					.toString().trim();
+			String address3 = (value = row[i++]) == null ? null : value
+					.toString().trim();
+			String typeOfFirm = (value = row[i++]) == null ? null : value
+					.toString().trim();
+			String city = (value = row[i++]) == null ? null : value.toString()
+					.trim();
+			String telephone = (value = row[i++]) == null ? null : value
+					.toString().trim();
+			String fax = (value = row[i++]) == null ? null : value.toString()
+					.trim();
+			String email = (value = row[i++]) == null ? null : value.toString()
+					.trim();
+			String paidUp = (value = row[i++]) == null ? null : value
+					.toString().trim();
+			String sector = (value = row[i++]) == null ? null : value
+					.toString().trim();
+			String partners = (value = row[i++]) == null ? null : value
+					.toString().trim();
+			String regNo = (value = row[i++]) == null ? null : value.toString()
+					.trim();
+			String branch = (value = row[i++]) == null ? null : value
+					.toString().trim();
 
 			DirectoryDto directoryDto = new DirectoryDto();
 			directoryDto.setRefId(refId);
@@ -126,20 +151,50 @@ public class DirectoryDao extends BaseDao {
 
 	}
 
-	public int getDirectorySearchCount(String searchTerm) {
+	public int getDirectorySearchCount(String searchTerm, String citySearchTerm) {
 
-		String sql = "select count(*) " 
-		        + "from " 
-				+ "directory d " + "where "
-				+ "d.firmId like :searchTerm or d.firmName like :searchTerm or "
-				+ "d.typeOfFirm like :searchTerm or d.city like :searchTerm or "
-				+ "d.email like :searchTerm or d.regno like :searchTerm";
+		StringBuffer sql = new StringBuffer("select count(*) " + "from "
+				+ "directory d ");
 
-		Query query = getEntityManager().createNativeQuery(sql).setParameter("searchTerm", "%" + searchTerm + "%");
+		Map<String, Object> params = appendParameters(searchTerm,
+				citySearchTerm, sql);
+		Query query = getEntityManager().createNativeQuery(sql.toString());
+		for (String key : params.keySet()) {
+			query.setParameter(key, params.get(key));
+		}
 
 		Number number = getSingleResultOrNull(query);
 
 		return number.intValue();
 
+	}
+
+	/**
+	 * 
+	 * 
+	 * @param filter
+	 * @param sqlQuery
+	 * @return Filter parameter values
+	 */
+	private Map<String, Object> appendParameters(String searchTerm,
+			String citySearchTerm, StringBuffer sqlQuery) {
+		boolean isFirst = true;
+		Map<String, Object> params = new HashMap<>();
+
+		if (!searchTerm.equals("all")) {
+			sqlQuery.append(isFirst ? " where" : " And");
+			sqlQuery.append(" (d.firmName like :searchTerm or");
+			sqlQuery.append(" d.partners like :searchTerm)");
+			params.put("searchTerm", "%" + searchTerm + "%");
+			isFirst = false;
+		}
+
+		if (!citySearchTerm.equals("all")) {
+			sqlQuery.append(isFirst ? " where" : " And");
+			sqlQuery.append(" d.city=:citySearchTerm ");
+			params.put("citySearchTerm", citySearchTerm);
+			isFirst = false;
+		}
+		return params;
 	}
 }

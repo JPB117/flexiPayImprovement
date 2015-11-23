@@ -147,21 +147,29 @@ public class MemberResourceImpl implements MemberResource {
 	@GET
 	@Path("/frontMemberCount")
 	public Integer getMembersCount() {
-		return membersHelper.getMembersCount();
+		return membersHelper.getMembersCount("all", "all", "all");
 	}
 
 	@GET
-	@Path("/frontMembers/{searchTerm}")
-	public List<MemberDto> searchMembers(@PathParam("searchTerm") String searchTerm ,
+	@Path("/frontMembers/{searchTerm}/{citySearchTerm}/{categoryName}")
+	public List<MemberDto> searchMembers(
+			@PathParam("searchTerm") String searchTerm,
+			@PathParam("citySearchTerm") String citySearchTerm,
+			@PathParam("categoryName") String categoryName,
 			@QueryParam("offset") Integer offset,
 			@QueryParam("limit") Integer limit) {
-		return membersHelper.searchMembers(searchTerm, offset, limit);
+		return membersHelper.getMembersFromOldTable(searchTerm, citySearchTerm,
+				categoryName, offset, limit);
 	}
 
 	@GET
-	@Path("/frontMembers/searcCount/{searchTerm}")
-	public Integer getMembersSearchCount(@PathParam("searchTerm") String searchTerm) {
-		return membersHelper.getsearchMembersCount(searchTerm);
+	@Path("/frontMembers/searcCount/{searchTerm}/{citySearchTerm}/{categoryName}")
+	public Integer getMembersSearchCount(
+			@PathParam("searchTerm") String searchTerm,
+			@PathParam("citySearchTerm") String citySearchTerm,
+			@PathParam("categoryName") String categoryName) {
+		return membersHelper.getMembersCount(searchTerm, citySearchTerm,
+				categoryName);
 	}
 
 }

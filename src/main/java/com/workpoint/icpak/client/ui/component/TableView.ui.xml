@@ -12,7 +12,12 @@
 			</g:HTMLPanel>
 			<g:HTMLPanel ui:field="panelTowns">
 				<div class="col-md-3" ui:field="divTownList">
-					<d:DropDownList ui:field="listTowns"
+					<d:DropDownList ui:field="listTowns" styleName="form-control"></d:DropDownList>
+				</div>
+			</g:HTMLPanel>
+			<g:HTMLPanel ui:field="panelMemberCategory">
+				<div class="col-md-3" ui:field="divMemberCategory">
+					<d:DropDownList ui:field="listMemberCategory"
 						styleName="form-control"></d:DropDownList>
 				</div>
 			</g:HTMLPanel>

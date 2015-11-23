@@ -60,29 +60,40 @@ public class BookingsDao extends BaseDao {
 	}
 
 	public void importAllEvents() {
-		String sqlQuery = "select oldSystemId,refId from icpakdb.event where oldSystemId IS NOT NULL";
+		String sqlQuery = "select oldSystemId,refId from icpakdb.event "
+				+ "where oldSystemId IN (480,479,474,469)";
 		// String sqlQuery =
 		// "select oldSystemId,refId from icpakdb.event where oldSystemId=424";
 		List<Object[]> rows = getResultList(getEntityManager().createNativeQuery(sqlQuery));
 		for (Object[] row : rows) {
 			int i = 0;
 			Object value = null;
+<<<<<<< HEAD
 			BookingDto booking = new BookingDto();
 			Integer seminarId = (value = row[i++]) == null ? null : (Integer) value;
 			String eventRefId = (value = row[i++]) == null ? null : value.toString();
 			importDistinctSponsor(seminarId, booking, eventRefId);
+=======
+			Integer seminarId = (value = row[i++]) == null ? null
+					: (Integer) value;
+			String eventRefId = (value = row[i++]) == null ? null : value
+					.toString();
+			importDistinctSponsor(seminarId, eventRefId);
+>>>>>>> 4b7e6b452f4f51a4dbaca350e7a1c28d7a1f6bcd
 
 			// System.err.println("Importing Seminar Id>>" + seminarId);
 		}
 
 	}
 
-	public void importDistinctSponsor(Integer seminarId, BookingDto booking, String eventRefId) {
+	public void importDistinctSponsor(Integer seminarId, String eventRefId) {
 		List<Object[]> rows = getResultList(getEntityManager()
-				.createNativeQuery("SELECT distinct(batch_ID) as batchId,s_name,b.booking_date,b.s_country,"
-						+ "b.s_address,b.s_town,b.s_telephone,b.contact,b.s_email,b.code "
-						+ "FROM icpakco_main.bookings b WHERE b.seminar_id = :seminarId group by b.batch_ID")
-				.setParameter("seminarId", seminarId));
+				.createNativeQuery(
+						"SELECT distinct(batch_ID) as batchId,s_name,b.booking_date,b.s_country,"
+								+ "b.s_address,b.s_town,b.s_telephone,b.contact,b.s_email,b.code "
+								+ "FROM icpakco_main.bookings b WHERE b.seminar_id = :seminarId "
+								+ "group by b.batch_ID").setParameter(
+						"seminarId", seminarId));
 
 		int totalSponsorCount = 0;
 		int totalDelegateCount = 0;
@@ -91,9 +102,13 @@ public class BookingsDao extends BaseDao {
 		int[] resultArray = new int[10];
 		for (Object[] row : rows) {
 			int i = 0;
+			BookingDto booking = new BookingDto();
 			Object value = null;
-			Integer batchId = (value = row[i++]) == null ? null : (Integer) value;
-			String sponsorName = (value = row[i++]) == null ? null : value.toString();
+			Integer batchId = (value = row[i++]) == null ? null
+					: (Integer) value;
+			String sponsorName = (value = row[i++]) == null ? null : value
+					.toString();
+
 			Date bookingDate = (value = row[i++]) == null ? null : (Date) value;
 			booking.setBookingDate(bookingDate.getTime());
 			String sponsorCountry = (value = row[i++]) == null ? null : value.toString();
@@ -115,12 +130,15 @@ public class BookingsDao extends BaseDao {
 			contact.setTelephoneNumbers(sponsorTelephone);
 			booking.setContact(contact);
 
+			System.err.println(">>" + booking.getContact().getContactName());
+
 			// System.err.println("Company Name>>" + contact.getCompany());
 			resultArray = importDelegates(batchId, booking, eventRefId, seminarId);
 			totalDelegateCount += resultArray[0];
 			totalPaidCount += resultArray[1];
 			totalUnpaidCount += resultArray[2];
 			totalSponsorCount++;
+
 		}
 
 		System.err.println("Total Sponsor Count:::" + totalSponsorCount);

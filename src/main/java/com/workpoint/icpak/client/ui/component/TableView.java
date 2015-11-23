@@ -17,11 +17,13 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Widget;
+import com.workpoint.icpak.client.ui.frontmember.model.MemberCategory;
 import com.workpoint.icpak.shared.model.Listable;
 
 public class TableView extends Composite {
 
-	private static TableViewUiBinder uiBinder = GWT.create(TableViewUiBinder.class);
+	private static TableViewUiBinder uiBinder = GWT
+			.create(TableViewUiBinder.class);
 
 	interface TableViewUiBinder extends UiBinder<Widget, TableView> {
 	}
@@ -46,17 +48,14 @@ public class TableView extends Composite {
 	ActionLink aDownloadXls;
 	@UiField
 	TextField txtSearch;
-
 	@UiField
 	ActionLink aFilter;
-
 	@UiField
 	HTMLPanel panelSearch;
 	@UiField
 	HTMLPanel panelDates;
 	@UiField
 	HTMLPanel panelActionButtons;
-
 	@UiField
 	DateField dtStartDate;
 	@UiField
@@ -66,16 +65,23 @@ public class TableView extends Composite {
 	@UiField
 	DropDownList<Towns> listTowns;
 	@UiField
+	DropDownList<MemberCategory> listMemberCategory;
+
+	@UiField
 	DivElement divTownList;
+
+	@UiField
+	DivElement divMemberCategory;
 
 	private boolean isAutoNumber = true;
 	private int count = 0;
-	
+
 	public TableView() {
 		initWidget(uiBinder.createAndBindUi(this));
 		setSearchSectionVisible(false);
 		setDatesVisible(false);
 		setTownListVisible(false);
+		setMemberCategoryVisible(false);
 	}
 
 	public void setHeaders(List<String> names) {
@@ -97,13 +103,25 @@ public class TableView extends Composite {
 			panelDates.setVisible(false);
 		}
 	}
-	
-	public void setTowns(List<Towns> townNames){
-		listTowns.setItems(townNames);
+
+	public void setTowns(List<Towns> townNames) {
+		listTowns.setItems(townNames, "All Towns");
 	}
-	
-	public DropDownList<Towns> getTowns(){
+
+	public void setMemberCategories(List<MemberCategory> categories) {
+		listMemberCategory.setItems(categories, "All Members");
+	}
+
+	public DropDownList<Towns> getTowns() {
 		return listTowns;
+	}
+
+	public DropDownList<MemberCategory> getCategoryDropdown() {
+		return listMemberCategory;
+	}
+
+	public String getCategorySelected() {
+		return listMemberCategory.getValue().getName();
 	}
 
 	public void setActionsVisible(boolean show) {
@@ -124,7 +142,6 @@ public class TableView extends Composite {
 
 	public void setHeaders(List<String> tdStyles, List<String> names) {
 		List<Widget> widgets = new ArrayList<Widget>();
-
 		for (String name : names) {
 			InlineLabel label = new InlineLabel(name);
 			widgets.add(label);
@@ -151,7 +168,8 @@ public class TableView extends Composite {
 
 			// add to row
 			if (header.getWidth() != null) {
-				th.getElement().getStyle().setWidth(header.getWidth(), Unit.PCT);
+				th.getElement().getStyle()
+						.setWidth(header.getWidth(), Unit.PCT);
 			}
 
 			if (header.getStyleName() != null) {
@@ -270,6 +288,14 @@ public class TableView extends Composite {
 		}
 	}
 
+	public void setMemberCategoryVisible(Boolean status) {
+		if (status) {
+			divMemberCategory.removeClassName("hide");
+		} else {
+			divMemberCategory.addClassName("hide");
+		}
+	}
+
 	public void setBordered(Boolean status) {
 		tblContainer.removeStyleName("table-bordered");
 		if (status) {
@@ -319,7 +345,8 @@ public class TableView extends Composite {
 		count = 0;
 	}
 
-	public void createHeader(String name, String width, String labelStyle, String thStyle) {
+	public void createHeader(String name, String width, String labelStyle,
+			String thStyle) {
 		HTMLPanel th = new HTMLPanel("");
 		th.addStyleName("th");
 		if (thStyle != null) {
@@ -381,9 +408,8 @@ public class TableView extends Composite {
 	public HasValueChangeHandlers<String> getSearchKeyDownHander() {
 		return txtSearch;
 	}
-	
-	public class Towns implements Listable {
 
+	public class Towns implements Listable {
 		private String townName;
 
 		public Towns(String townName) {

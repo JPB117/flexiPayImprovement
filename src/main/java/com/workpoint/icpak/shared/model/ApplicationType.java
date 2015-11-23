@@ -2,9 +2,9 @@ package com.workpoint.icpak.shared.model;
 
 public enum ApplicationType implements Listable {
 
-	NON_PRACTISING("Non Practising"), PRACTISING("Practising Member"), PRACTISING_RT(
-			"Practising Member"), OVERSEAS("Overseas Member"), ASSOCIATE(
-			"Associate Member"), RETIRED("Retired Member");
+	NON_PRACTISING("NON-PRACTICING"), PRACTISING("PRACTICING"), PRACTISING_RT(
+			"PRACTICING-RETIRED"), OVERSEAS("OVERSEAS"), ASSOCIATE("ASSOCIATE"), RETIRED(
+			"RETIRED");
 
 	private String displayName;
 

@@ -14,6 +14,8 @@
 		<g:HTMLPanel styleName="td" ui:field="divProformaLink">
 			<d:ActionLink ui:field="aProforma">Proforma</d:ActionLink>
 		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td" ui:field="divErnNo">
+		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divSponsorNames">
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divContactName">

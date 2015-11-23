@@ -17,7 +17,8 @@ import com.workpoint.icpak.client.ui.directory.table.DirectoryTable;
 import com.workpoint.icpak.client.ui.directory.table.row.DirectoryTableRow;
 import com.workpoint.icpak.shared.model.DirectoryDto;
 
-public class DirectoryView extends ViewImpl implements DirectoryPresenter.MyDirectoryView {
+public class DirectoryView extends ViewImpl implements
+		DirectoryPresenter.MyDirectoryView {
 	interface Binder extends UiBinder<Widget, DirectoryView> {
 	}
 
@@ -71,6 +72,20 @@ public class DirectoryView extends ViewImpl implements DirectoryPresenter.MyDire
 	@Override
 	public DropDownList<Towns> getTownList() {
 		return tblView.getTowns();
+	}
+
+	@Override
+	public void setResultString(String resultString) {
+		tblView.setResultString(resultString);
+	}
+
+	@Override
+	public void showmask(boolean processing) {
+		if (processing) {
+			container.addStyleName("whirl traditional");
+		} else {
+			container.removeStyleName("whirl traditional");
+		}
 	}
 
 }

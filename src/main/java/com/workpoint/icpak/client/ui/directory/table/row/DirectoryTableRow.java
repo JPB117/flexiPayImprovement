@@ -1,6 +1,7 @@
 package com.workpoint.icpak.client.ui.directory.table.row;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -9,16 +10,17 @@ import com.google.gwt.user.client.ui.Widget;
 import com.workpoint.icpak.client.ui.component.RowWidget;
 import com.workpoint.icpak.shared.model.DirectoryDto;
 
-public class DirectoryTableRow extends RowWidget{
-	
+public class DirectoryTableRow extends RowWidget {
+
 	private static ActivitiesTableRowUiBinder uiBinder = GWT
 			.create(ActivitiesTableRowUiBinder.class);
 
-	interface ActivitiesTableRowUiBinder extends UiBinder<Widget, DirectoryTableRow> {
+	interface ActivitiesTableRowUiBinder extends
+			UiBinder<Widget, DirectoryTableRow> {
 	}
-	
+
 	private DirectoryDto directoryDto;
-	
+
 	@UiField
 	HTMLPanel row;
 	@UiField
@@ -40,13 +42,15 @@ public class DirectoryTableRow extends RowWidget{
 	@UiField
 	Label lTelephone;
 	@UiField
+	SpanElement spnCity;
+	@UiField
 	Label lEmail;
-	
-	public DirectoryTableRow(){
+
+	public DirectoryTableRow() {
 		initWidget(uiBinder.createAndBindUi(this));
 	}
-	
-	public DirectoryTableRow(DirectoryDto directoryDto){
+
+	public DirectoryTableRow(DirectoryDto directoryDto) {
 		this();
 		this.directoryDto = directoryDto;
 		lFirmName.setText(directoryDto.getFirmName());
@@ -56,6 +60,7 @@ public class DirectoryTableRow extends RowWidget{
 		lAddress3.setText(directoryDto.getAddress3());
 		lTelephone.setText(directoryDto.getTelephone());
 		lEmail.setText(directoryDto.getEmail());
-		
+		spnCity.setInnerText(" " + directoryDto.getCity());
+
 	}
 }

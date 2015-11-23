@@ -530,7 +530,6 @@ public class BookingsDaoHelper {
 		}
 
 		d.copyFrom(delegateDto);
-		// assert delegate.getMemberRegistrationNo()!=null;
 
 		if (delegateDto.getAccommodation() != null) {
 			Accommodation accommodation = dao.findByRefId(delegateDto.getAccommodation().getRefId(),

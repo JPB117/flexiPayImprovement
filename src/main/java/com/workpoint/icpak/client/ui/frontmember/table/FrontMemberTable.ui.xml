@@ -3,7 +3,7 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.workpoint.icpak.client.ui.component">
 	<g:HTMLPanel>
 		<d:PagingTable ui:field="tblView" striped="true"
-			isGrid="false" bordered="true" autoNumber="true" styleName="tabbable">
+			isGrid="false" bordered="false" autoNumber="true" styleName="tabbable">
 		</d:PagingTable>
 	</g:HTMLPanel>
 </ui:UiBinder>

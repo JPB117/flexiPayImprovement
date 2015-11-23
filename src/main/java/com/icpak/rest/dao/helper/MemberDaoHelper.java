@@ -308,25 +308,34 @@ public class MemberDaoHelper {
 			return false;
 		}
 	}
-	
+
 	/*
 	 * Methods to be used by members presenter for website iframe
 	 */
-	
-	public int getMembersCount(){
-		return memberDao.getMembersCount();
+
+	public int getMembersCount(String searchTerm, String citySearchTerm,
+			String categoryName) {
+		return memberDao.getMembersCount(searchTerm, citySearchTerm,
+				categoryName);
 	}
-	
-	public List<MemberDto> getMembers(Integer offSet, Integer limit){
+
+	public List<MemberDto> getMembers(Integer offSet, Integer limit) {
 		return memberDao.getMembers(offSet, limit);
 	}
-	
-	public int getsearchMembersCount(String searchTerm){
+
+	public int getsearchMembersCount(String searchTerm) {
 		return memberDao.getMembersSearchCount(searchTerm);
 	}
-	
-	public List<MemberDto> searchMembers(String searchTerm , Integer offSet, Integer limit){
+
+	public List<MemberDto> searchMembers(String searchTerm, Integer offSet,
+			Integer limit) {
 		return memberDao.searchMembers(searchTerm, offSet, limit);
+	}
+
+	public List<MemberDto> getMembersFromOldTable(String searchTerm,
+			String citySearchTerm, String categoryName, int offset, int limit) {
+		return memberDao.searchMembersFromOldTable(searchTerm, citySearchTerm,
+				categoryName, offset, limit);
 	}
 
 }

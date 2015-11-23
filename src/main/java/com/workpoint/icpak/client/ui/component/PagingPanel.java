@@ -10,6 +10,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
+import com.workpoint.icpak.client.ui.util.NumberUtils;
 
 public class PagingPanel extends Composite {
 
@@ -46,7 +47,7 @@ public class PagingPanel extends Composite {
 
 	public PagingPanel() {
 		initWidget(uiBinder.createAndBindUi(this));
-		txtPageNo.setValue(0);
+		txtPageNo.setValue(1);
 		txtPageNo.addValueChangeHandler(new ValueChangeHandler<Integer>() {
 
 			@Override
@@ -111,10 +112,14 @@ public class PagingPanel extends Composite {
 	}
 
 	private void setPageDetails() {
-		spnOffset.setInnerText(config.getOffset() + "");
-		spnPageEnd.setInnerText(config.getPageEnd() + "");
-		spnTotal.setInnerText(config.getTotal() + "");
-		spnTotalPages.setInnerText(config.getPages() + "");
+		spnOffset.setInnerText(NumberUtils.NUMBERFORMAT.format(config
+				.getOffset()) + "");
+		spnPageEnd.setInnerText(NumberUtils.NUMBERFORMAT.format(config
+				.getPageEnd()) + "");
+		spnTotal.setInnerText(NumberUtils.NUMBERFORMAT.format(config.getTotal())
+				+ "");
+		spnTotalPages.setInnerText(NumberUtils.NUMBERFORMAT.format(config
+				.getPages()) + "");
 	}
 
 	protected void move(int idx) {

@@ -17,16 +17,21 @@ import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
 import com.workpoint.icpak.client.place.NameTokens;
 import com.workpoint.icpak.client.service.AbstractAsyncCallback;
+import com.workpoint.icpak.client.ui.component.DropDownList;
 import com.workpoint.icpak.client.ui.component.PagingConfig;
 import com.workpoint.icpak.client.ui.component.PagingLoader;
 import com.workpoint.icpak.client.ui.component.PagingPanel;
+import com.workpoint.icpak.client.ui.component.TableView;
+import com.workpoint.icpak.client.ui.component.TableView.Towns;
 import com.workpoint.icpak.client.ui.events.TableActionEvent;
 import com.workpoint.icpak.client.ui.events.TableActionEvent.TableActionHandler;
+import com.workpoint.icpak.client.ui.frontmember.model.MemberCategory;
 import com.workpoint.icpak.shared.api.MemberResource;
 import com.workpoint.icpak.shared.model.MemberDto;
 
 public class FrontMemberPresenter
-		extends Presenter<FrontMemberPresenter.MyFrontMemberView, FrontMemberPresenter.MyFrontMemberProxy>
+		extends
+		Presenter<FrontMemberPresenter.MyFrontMemberView, FrontMemberPresenter.MyFrontMemberProxy>
 		implements TableActionHandler {
 	public interface MyFrontMemberView extends View {
 
@@ -37,25 +42,47 @@ public class FrontMemberPresenter
 		HasValueChangeHandlers<String> getSearchValueChangeHander();
 
 		String getSearchValue();
+
+		String getTownName();
+
+		DropDownList<Towns> getTownList();
+
+		DropDownList<MemberCategory> getCategoryList();
+
+		String getCategorySelected();
+
+		void showmask(boolean isProcessing);
 	}
 
 	protected final ResourceDelegate<MemberResource> memberResourceDelegate;
+	private String searchTerm = "all";
+	private String townSearchTerm = "all";
+	private String categoryName = "all";
 
 	@ProxyCodeSplit
 	@NameToken(NameTokens.frontMember)
 	@NoGatekeeper
-	public interface MyFrontMemberProxy extends ProxyPlace<FrontMemberPresenter> {
+	public interface MyFrontMemberProxy extends
+			ProxyPlace<FrontMemberPresenter> {
 	}
 
 	ValueChangeHandler<String> frontMemberValueChangeHandler = new ValueChangeHandler<String>() {
 		@Override
 		public void onValueChange(ValueChangeEvent<String> event) {
-			searchMembers(getView().getSearchValue().trim());
+			if (getView().getSearchValue().trim() == "") {
+				searchTerm = "all";
+				searchMembers(searchTerm, townSearchTerm, categoryName);
+			} else {
+				searchTerm = getView().getSearchValue().trim();
+				searchMembers(getView().getSearchValue().trim(),
+						townSearchTerm, categoryName);
+			}
 		}
 	};
 
 	@Inject
-	FrontMemberPresenter(EventBus eventBus, MyFrontMemberView view, MyFrontMemberProxy proxy,
+	FrontMemberPresenter(EventBus eventBus, MyFrontMemberView view,
+			MyFrontMemberProxy proxy,
 			ResourceDelegate<MemberResource> memberResourceDelegate) {
 		super(eventBus, view, proxy);
 		this.memberResourceDelegate = memberResourceDelegate;
@@ -74,11 +101,47 @@ public class FrontMemberPresenter
 		getView().getPagingPanel().setLoader(new PagingLoader() {
 			@Override
 			public void onLoad(int offset, int limit) {
-				loadMembers(offset, limit);
+
+				loadMembers(offset, 20);
 			}
 		});
-		
-		getView().getSearchValueChangeHander().addValueChangeHandler(frontMemberValueChangeHandler);
+
+		getView().getSearchValueChangeHander().addValueChangeHandler(
+				frontMemberValueChangeHandler);
+
+		getView().getTownList().addValueChangeHandler(
+				new ValueChangeHandler<TableView.Towns>() {
+					@Override
+					public void onValueChange(ValueChangeEvent<Towns> towns) {
+						if (towns.getValue() == null) {
+							townSearchTerm = "all";
+							searchMembers(searchTerm, townSearchTerm,
+									categoryName);
+						} else {
+							townSearchTerm = getView().getTownName().trim();
+							searchMembers(searchTerm, getView().getTownName()
+									.trim(), categoryName);
+						}
+					}
+				});
+
+		getView().getCategoryList().addValueChangeHandler(
+				new ValueChangeHandler<MemberCategory>() {
+					@Override
+					public void onValueChange(
+							ValueChangeEvent<MemberCategory> selectedCategory) {
+						if (selectedCategory.getValue() == null) {
+							categoryName = "all";
+							searchMembers(searchTerm, townSearchTerm,
+									categoryName);
+						} else {
+							categoryName = getView().getCategorySelected()
+									.trim();
+							searchMembers(searchTerm, getView().getTownName()
+									.trim(), categoryName);
+						}
+					}
+				});
 	}
 
 	@Override
@@ -88,58 +151,72 @@ public class FrontMemberPresenter
 	}
 
 	private void loadCount() {
-		memberResourceDelegate.withCallback(new AbstractAsyncCallback<Integer>() {
+		memberResourceDelegate.withCallback(
+				new AbstractAsyncCallback<Integer>() {
 
-			@Override
-			public void onSuccess(Integer result) {
-				PagingPanel pagingPanel = getView().getPagingPanel();
-				pagingPanel.setTotal(result);
-				PagingConfig pagingConfig = pagingPanel.getConfig();
+					@Override
+					public void onSuccess(Integer result) {
+						PagingPanel pagingPanel = getView().getPagingPanel();
+						pagingPanel.setTotal(result);
+						PagingConfig pagingConfig = pagingPanel.getConfig();
 
-				loadMembers(pagingConfig.getOffset(), pagingConfig.getLimit());
-			}
-		}).getMembersCount();
+						loadMembers(pagingConfig.getOffset(),
+								pagingConfig.getLimit());
+					}
+				}).getMembersCount();
 	}
 
 	private void loadMembers(int offset, int limit) {
-		memberResourceDelegate.withCallback(new AbstractAsyncCallback<List<MemberDto>>() {
-
-			@Override
-			public void onSuccess(List<MemberDto> results) {
-				getView().bindResults(results);
-			}
-		}).getMembers(offset, limit);
+		getView().showmask(true);
+		memberResourceDelegate.withCallback(
+				new AbstractAsyncCallback<List<MemberDto>>() {
+					@Override
+					public void onSuccess(List<MemberDto> results) {
+						getView().bindResults(results);
+						getView().showmask(false);
+					}
+				}).searchMembers(searchTerm, townSearchTerm, categoryName,
+				offset, limit);
 	}
 
-	public void searchMembers(final String searchTerm) {
-		memberResourceDelegate.withCallback(new AbstractAsyncCallback<Integer>() {
+	public void searchMembers(final String searchTerm,
+			final String citySearchTerm, final String categoryName) {
+		memberResourceDelegate.withCallback(
+				new AbstractAsyncCallback<Integer>() {
 
-			@Override
-			public void onSuccess(Integer result) {
-				PagingPanel panel = getView().getPagingPanel();
-				panel.setTotal(result);
-				PagingConfig pagingConfig = panel.getConfig();
-				searchMembers(searchTerm, pagingConfig.getOffset(), pagingConfig.getLimit());
-			}
+					@Override
+					public void onSuccess(Integer result) {
+						PagingPanel panel = getView().getPagingPanel();
+						panel.setTotal(result);
+						PagingConfig pagingConfig = panel.getConfig();
+						searchMembers(searchTerm, citySearchTerm, categoryName,
+								pagingConfig.getOffset(),
+								pagingConfig.getLimit());
+					}
 
-		}).getMembersSearchCount(searchTerm);
+				}).getMembersSearchCount(searchTerm, townSearchTerm,
+				categoryName);
 	}
 
-	public void searchMembers(String searchTerm, int offset, int limit) {
-		memberResourceDelegate.withCallback(new AbstractAsyncCallback<List<MemberDto>>() {
+	public void searchMembers(String searchTerm, String citySearchTerm,
+			String categoryName, int offset, int limit) {
+		getView().showmask(true);
+		memberResourceDelegate.withCallback(
+				new AbstractAsyncCallback<List<MemberDto>>() {
+					@Override
+					public void onSuccess(List<MemberDto> results) {
+						PagingPanel panel = getView().getPagingPanel();
+						panel.setTotal(results.size());
+						getView().bindResults(results);
 
-			@Override
-			public void onSuccess(List<MemberDto> results) {
-				PagingPanel panel = getView().getPagingPanel();
-				panel.setTotal(results.size());
-				getView().bindResults(results);
-			}
-		}).searchMembers(searchTerm, offset, limit);
+						getView().showmask(false);
+					}
+				}).searchMembers(searchTerm, citySearchTerm, categoryName,
+				offset, limit);
 	}
 
 	@Override
 	public void onTableAction(TableActionEvent event) {
-		// TODO Auto-generated method stub
-		
+
 	}
 }

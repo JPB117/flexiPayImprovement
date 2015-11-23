@@ -1,6 +1,5 @@
 package com.icpak.rest.dao.helper;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,38 +25,40 @@ public class DirectoryDaoHelper {
 		directoryDao.createDirectory(newDir);
 		return dto;
 	}
-	
-	public List<DirectoryDto> getAll(Integer offset, Integer limit){
+
+	public List<DirectoryDto> getAll(Integer offset, Integer limit) {
 		List<Directory> directories = directoryDao.getAll(offset, limit);
 		List<DirectoryDto> directoryDtos = new ArrayList<>();
-		
-		for(Directory d : directories){
+
+		for (Directory d : directories) {
 			DirectoryDto dto = d.toDto();
 			directoryDtos.add(dto);
 		}
-		
+
 		return directoryDtos;
 	}
-	
-	public List<DirectoryDto> searchDirectory(String searchTerm){
-		return directoryDao.searchDirectory(searchTerm, null, 0);
+
+	public List<DirectoryDto> searchDirectory(String searchTerm,
+			String townSearch, int offset, int limit) {
+		return directoryDao.searchDirectory(searchTerm, townSearch, offset,
+				limit);
 	}
-	
-	public int getCount(){
+
+	public int getCount() {
 		return directoryDao.getDirectoryCount();
 	}
-	
-	public int getSerchCount(String searchTerm){
-		return directoryDao.getDirectorySearchCount(searchTerm);
+
+	public int getSerchCount(String searchTerm, String townSearch) {
+		return directoryDao.getDirectorySearchCount(searchTerm,townSearch);
 	}
-	
-	public DirectoryDto getByRefId(String refId){
+
+	public DirectoryDto getByRefId(String refId) {
 		Directory directory = directoryDao.findByDirectoryRefId(refId);
-		
+
 		return directory.toDto();
 	}
-	
-	public DirectoryDto update(DirectoryDto directoryDto){
+
+	public DirectoryDto update(DirectoryDto directoryDto) {
 		directoryDao.updateDirectory(directoryDto);
 		return directoryDto;
 	}

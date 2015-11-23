@@ -4,37 +4,42 @@
 
 	<g:HTMLPanel styleName="tr" ui:field="row">
 		<g:HTMLPanel styleName="td" ui:field="divFirmName">
-		    <div>
-		        <p>
-		            <strong><g:Label ui:field="lFirmName"/></strong>
-		        </p>
-		        <p>
-		            <g:Label ui:field="lPartners"/>
-		        </p>
-		    </div>
+			<div>
+				<p>
+					<strong>
+						<g:Label ui:field="lFirmName" />
+					</strong>
+				</p>
+				<p>
+					<g:Label ui:field="lPartners" />
+				</p>
+			</div>
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divAddress">
-		    <div>
-		        <p>
-		            <g:Label ui:field="lAddress1"/>
-		        </p>
-		        <p>
-		            <g:Label ui:field="lAddress2"/>
-		        </p>
-		        <p>
-		            <g:Label ui:field="lAddress3"/>
-		        </p>
-		    </div>
+			<div>
+				<p>
+					<g:Label ui:field="lAddress1" />
+				</p>
+				<p>
+					<g:Label ui:field="lAddress2" />
+				</p>
+				<p>
+					<g:Label ui:field="lAddress3" />
+					<span ui:field="spnCity"></span>
+				</p>
+			</div>
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divContacts">
-		    <div>
-		        <p>
-		            Telephone:<g:Label ui:field="lTelephone"/>
-		        </p>
-		        <p>
-		            Email:<g:Label ui:field="lEmail"/>
-		        </p>
-		    </div>
+			<div>
+				<p>
+					Telephone:
+					<g:InlineLabel ui:field="lTelephone" />
+				</p>
+				<p>
+					Email:
+					<g:InlineLabel ui:field="lEmail" />
+				</p>
+			</div>
 		</g:HTMLPanel>
 	</g:HTMLPanel>
 </ui:UiBinder> 
