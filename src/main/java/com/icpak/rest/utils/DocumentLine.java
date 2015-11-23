@@ -34,4 +34,14 @@ public class DocumentLine {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	@Override
+	public String toString() {
+		StringBuffer line = new StringBuffer("{");
+		for(String key: values.keySet()){
+			line.append(key+":"+values.get(key)+", ");
+		}
+		line.append("}");
+		return line.toString();
+	}
 }

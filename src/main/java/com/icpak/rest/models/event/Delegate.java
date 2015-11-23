@@ -149,7 +149,6 @@ public class Delegate extends PO {
 		setOtherNames(delegateDto.getOtherNames());
 		setSurname(delegateDto.getSurname());
 		setTitle(delegateDto.getTitle());
-		setErn(delegateDto.getErn());
 		if (delegateDto.getAttendance() != null) {
 			setAttendance(delegateDto.getAttendance());
 		}

@@ -7,6 +7,7 @@ import java.util.List;
 import javax.persistence.Query;
 
 import com.workpoint.icpak.shared.model.InvoiceDto;
+import com.workpoint.icpak.shared.model.InvoiceLineDto;
 import com.workpoint.icpak.shared.model.InvoiceSummary;
 
 public class InvoiceDao extends BaseDao {
@@ -259,6 +260,43 @@ public class InvoiceDao extends BaseDao {
 		}
 
 		return summary;
+	}
+	
+	public List<InvoiceLineDto> getByLinesByDocumentNo(String documentNo){
+		List<InvoiceLineDto> invoiceLines = new ArrayList<>();
+		
+		String sql = "select "
+				+ "l.description,l.quantity,l.unitprice,l.totalamount "
+				+ "from "
+				+ "invoiceline l "
+				+ "where "
+				+ "l.invoiceId="
+				+ "(select n.id from invoice n where n.documentNo=:documentNo)";
+		
+		Query query = getEntityManager().createNativeQuery(sql).setParameter("documentNo", documentNo);
+		
+		List<Object[]> rows = getResultList(query);
+		
+		for (Object[] row : rows) {
+			int i = 0;
+			Object value = null;
+
+			String description = (value = row[i++]) == null ? null : value.toString();
+			int quantity = (value = row[i++]) == null ? null : (Integer)value;
+			Double unitPrice = (value = row[i++]) == null ? null : (Double)value;
+			Double totalAmount = (value = row[i++]) == null ? null : (Double)value;
+			
+			InvoiceLineDto dto = new InvoiceLineDto();
+			dto.setDescription(description);
+			dto.setQuantity(quantity);
+			dto.setUnitPrice(unitPrice);
+			dto.setTotalAmount(totalAmount);
+			
+			invoiceLines.add(dto);
+			
+		}
+		
+		return invoiceLines;
 	}
 
 }
