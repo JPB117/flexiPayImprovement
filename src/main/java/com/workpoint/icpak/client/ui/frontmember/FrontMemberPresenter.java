@@ -135,7 +135,7 @@ public class FrontMemberPresenter
 							searchMembers(searchTerm, townSearchTerm,
 									categoryName);
 						} else {
-							townSearchTerm = getView().getCategorySelected()
+							categoryName = getView().getCategorySelected()
 									.trim();
 							searchMembers(searchTerm, getView().getTownName()
 									.trim(), categoryName);
