@@ -32,17 +32,20 @@ public interface MemberResource extends BaseResource {
 	public Integer getMembersCount();
 
 	@GET
-	@Path("/frontMembers/{searchTerm}/{citySearchTerm}")
+	@Path("/frontMembers/{searchTerm}/{citySearchTerm}/{categoryName}")
 	public List<MemberDto> searchMembers(
 			@PathParam("searchTerm") String searchTerm,
 			@PathParam("citySearchTerm") String citySearchTerm,
+			@PathParam("categoryName") String categoryName,
 			@QueryParam("offset") Integer offset,
 			@QueryParam("limit") Integer limit);
 
 	@GET
-	@Path("/frontMembers/searcCount/{searchTerm}")
+	@Path("/frontMembers/searcCount/{searchTerm}/{citySearchTerm}/{categoryName}")
 	public Integer getMembersSearchCount(
-			@PathParam("searchTerm") String searchTerm);
+			@PathParam("searchTerm") String searchTerm,
+			@PathParam("citySearchTerm") String citySearchTerm,
+			@PathParam("categoryName") String categoryName);
 
 	@GET
 	@Path("/search/{searchTerm}")

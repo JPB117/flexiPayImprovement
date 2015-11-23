@@ -313,8 +313,10 @@ public class MemberDaoHelper {
 	 * Methods to be used by members presenter for website iframe
 	 */
 
-	public int getMembersCount(String searchTerm, String citySearchTerm) {
-		return memberDao.getMembersCount(searchTerm, citySearchTerm);
+	public int getMembersCount(String searchTerm, String citySearchTerm,
+			String categoryName) {
+		return memberDao.getMembersCount(searchTerm, citySearchTerm,
+				categoryName);
 	}
 
 	public List<MemberDto> getMembers(Integer offSet, Integer limit) {
@@ -331,9 +333,9 @@ public class MemberDaoHelper {
 	}
 
 	public List<MemberDto> getMembersFromOldTable(String searchTerm,
-			String citySearchTerm, int offset, int limit) {
+			String citySearchTerm, String categoryName, int offset, int limit) {
 		return memberDao.searchMembersFromOldTable(searchTerm, citySearchTerm,
-				offset, limit);
+				categoryName, offset, limit);
 	}
 
 }

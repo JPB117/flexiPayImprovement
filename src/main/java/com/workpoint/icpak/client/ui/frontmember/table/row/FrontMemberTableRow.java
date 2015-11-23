@@ -8,6 +8,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.workpoint.icpak.client.ui.component.RowWidget;
+import com.workpoint.icpak.shared.model.ApplicationType;
 import com.workpoint.icpak.shared.model.DirectoryDto;
 import com.workpoint.icpak.shared.model.MemberDto;
 
@@ -50,14 +51,23 @@ public class FrontMemberTableRow extends RowWidget {
 	public FrontMemberTableRow(MemberDto memberDto) {
 		this();
 		this.memberDto = memberDto;
-		lMemberNo.setText(memberDto.getMemberNo());
+		if (memberDto.getMemberNo() != null)
+			lMemberNo.setText(Double.valueOf(memberDto.getMemberNo()) + "");
 		lName.setText(memberDto.getFullName());
-		lCategory.setText(memberDto.getMember());
+		if (memberDto.getCustomerPostingGroup() != null)
+			lCategory.setText(memberDto.getCustomerPostingGroup());
 		if (memberDto.getMembershipStatus() != null)
 			lMemberShip
 					.setInnerText(memberDto.getMembershipStatus().toString());
 
-		if (memberDto.getCustomerType() != null)
-			lPracStatus.setText(memberDto.getCustomerType().getDisplayName());
+		if (memberDto.getCustomerType() != null) {
+			if (memberDto.getCustomerType() == ApplicationType.PRACTISING) {
+				lPracStatus.setText("VALID CERTIFICATE("
+						+ memberDto.getPractisingNo() + ")");
+			} else {
+				lPracStatus.setText(memberDto.getCustomerType()
+						.getDisplayName());
+			}
+		}
 	}
 }

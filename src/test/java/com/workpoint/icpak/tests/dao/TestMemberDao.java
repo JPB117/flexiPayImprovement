@@ -26,10 +26,11 @@ public class TestMemberDao extends AbstractDaoTest {
 
 	@Test
 	public void testSearchMemberFromOldTable() {
-		List<MemberDto> list = helper.getMembersFromOldTable("Ogot", "all", 0,
-				100);
+		List<MemberDto> list = helper.getMembersFromOldTable("Njoroge",
+				"Nairobi", "PRAC MEMBER", 0, 1000);
 
-		Integer count = helper.getMembersCount("Ogot", "all");
+		Integer count = helper.getMembersCount("Njoroge", "Nairobi",
+				"PRAC MEMBER");
 
 		System.err.println("List Size::" + list.size());
 		System.err.println("Count::" + count);

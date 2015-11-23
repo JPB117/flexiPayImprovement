@@ -17,6 +17,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Widget;
+import com.workpoint.icpak.client.ui.frontmember.model.MemberCategory;
 import com.workpoint.icpak.shared.model.Listable;
 
 public class TableView extends Composite {
@@ -47,17 +48,14 @@ public class TableView extends Composite {
 	ActionLink aDownloadXls;
 	@UiField
 	TextField txtSearch;
-
 	@UiField
 	ActionLink aFilter;
-
 	@UiField
 	HTMLPanel panelSearch;
 	@UiField
 	HTMLPanel panelDates;
 	@UiField
 	HTMLPanel panelActionButtons;
-
 	@UiField
 	DateField dtStartDate;
 	@UiField
@@ -67,7 +65,13 @@ public class TableView extends Composite {
 	@UiField
 	DropDownList<Towns> listTowns;
 	@UiField
+	DropDownList<MemberCategory> listMemberCategory;
+
+	@UiField
 	DivElement divTownList;
+
+	@UiField
+	DivElement divMemberCategory;
 
 	private boolean isAutoNumber = true;
 	private int count = 0;
@@ -77,6 +81,7 @@ public class TableView extends Composite {
 		setSearchSectionVisible(false);
 		setDatesVisible(false);
 		setTownListVisible(false);
+		setMemberCategoryVisible(false);
 	}
 
 	public void setHeaders(List<String> names) {
@@ -103,8 +108,20 @@ public class TableView extends Composite {
 		listTowns.setItems(townNames, "All Towns");
 	}
 
+	public void setMemberCategories(List<MemberCategory> categories) {
+		listMemberCategory.setItems(categories, "All Members");
+	}
+
 	public DropDownList<Towns> getTowns() {
 		return listTowns;
+	}
+
+	public DropDownList<MemberCategory> getCategoryDropdown() {
+		return listMemberCategory;
+	}
+
+	public String getCategorySelected() {
+		return listMemberCategory.getValue().getName();
 	}
 
 	public void setActionsVisible(boolean show) {
@@ -125,7 +142,6 @@ public class TableView extends Composite {
 
 	public void setHeaders(List<String> tdStyles, List<String> names) {
 		List<Widget> widgets = new ArrayList<Widget>();
-
 		for (String name : names) {
 			InlineLabel label = new InlineLabel(name);
 			widgets.add(label);
@@ -272,6 +288,14 @@ public class TableView extends Composite {
 		}
 	}
 
+	public void setMemberCategoryVisible(Boolean status) {
+		if (status) {
+			divMemberCategory.removeClassName("hide");
+		} else {
+			divMemberCategory.addClassName("hide");
+		}
+	}
+
 	public void setBordered(Boolean status) {
 		tblContainer.removeStyleName("table-bordered");
 		if (status) {
@@ -386,7 +410,6 @@ public class TableView extends Composite {
 	}
 
 	public class Towns implements Listable {
-
 		private String townName;
 
 		public Towns(String townName) {

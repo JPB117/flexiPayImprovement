@@ -31,7 +31,7 @@ public class DirectoryTable extends Composite {
 	@UiField
 	SpanElement spnResults;
 
-	private String[] towns = { "Nairobi", "BONDO", "Bungoma",
+	public static String[] towns = { "Nairobi", "BONDO", "Bungoma",
 			"BURU BURU, NAIROBI", "Busia", "City Square", "Eldoret", "EMBU",
 			"GPO NAIROBI", "Juba", "KAKAMEGA", "Kapsabet", "Karatina",
 			"Kericho", "Kerugoya", "KIAMBU", "Kigali", "Kigali, Rwanda",

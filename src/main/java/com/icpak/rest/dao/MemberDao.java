@@ -147,11 +147,12 @@ public class MemberDao extends BaseDao {
 
 	}
 
-	public Integer getMembersCount(String searchTerm, String citySearchTerm) {
+	public Integer getMembersCount(String searchTerm, String citySearchTerm,
+			String categoryName) {
 		StringBuffer sql = new StringBuffer("select count(*) "
 				+ " from allicpakmembers_5 m");
 		Map<String, Object> params = appendParameters(searchTerm,
-				citySearchTerm, sql);
+				citySearchTerm, categoryName, sql);
 		Query query = getEntityManager().createNativeQuery(sql.toString());
 		for (String key : params.keySet()) {
 			query.setParameter(key, params.get(key));
@@ -162,16 +163,18 @@ public class MemberDao extends BaseDao {
 	}
 
 	public List<MemberDto> searchMembersFromOldTable(String searchTerm,
-			String citySearchTerm, Integer offSet, Integer limit) {
+			String citySearchTerm, String categoryName, Integer offSet,
+			Integer limit) {
 
 		List<MemberDto> memberDtos = new ArrayList<>();
 
 		StringBuffer sql = new StringBuffer(
 				"select m.No_,m.Name,m.Address,m.City,"
-						+ "m.`Customer Posting Group`,m.`Customer Type`,m.Status,m.PractisingNo "
+						+ "m.`Customer Posting Group`,m.`Customer Type`,"
+						+ "m.Status,m.PractisingNo "
 						+ " from allicpakmembers_5 m ");
 		Map<String, Object> params = appendParameters(searchTerm,
-				citySearchTerm, sql);
+				citySearchTerm, categoryName, sql);
 		Query query = getEntityManager().createNativeQuery(sql.toString());
 		for (String key : params.keySet()) {
 			query.setParameter(key, params.get(key));
@@ -182,8 +185,8 @@ public class MemberDao extends BaseDao {
 			int i = 0;
 			Object value = null;
 
-			String memberNo = (value = row[i++]) == null ? null : value
-					.toString();
+			Double memberNo = (value = row[i++]) == null ? null
+					: (Double) value;
 			String fullName = (value = row[i++]) == null ? null : value
 					.toString();
 			String address = (value = row[i++]) == null ? null : value
@@ -193,17 +196,16 @@ public class MemberDao extends BaseDao {
 					: value.toString();
 			String customerType = (value = row[i++]) == null ? null : value
 					.toString();
-
-			MembershipStatus memberShipStatus = (value = row[i++]) == null ? null
-					: MembershipStatus.valueOf(value.toString());
+			Double status = (value = row[i++]) == null ? null
+					: ((Double) value);
 			String practisingNo = (value = row[i++]) == null ? null : value
 					.toString();
 			MemberDto memberDto = new MemberDto();
-			memberDto.setMemberNo(memberNo);
+			memberDto.setMemberNo(Double.toString(memberNo));
 			memberDto.setFullName(fullName);
 			memberDto.setAddress(address);
 			memberDto.setCity(city);
-			memberDto.setMembershipStatus(memberShipStatus);
+			// Customer Type
 			if (customerType.equals("MEMBER")) {
 				memberDto.setCustomerType(ApplicationType.NON_PRACTISING);
 			} else if (customerType.equals("PRACTICING RT")) {
@@ -216,6 +218,13 @@ public class MemberDao extends BaseDao {
 				memberDto.setCustomerType(ApplicationType.RETIRED);
 			} else {
 				memberDto.setCustomerType(ApplicationType.NON_PRACTISING);
+			}
+
+			// Set Membership Status
+			if (status == 1) {
+				memberDto.setMembershipStatus(MembershipStatus.ACTIVE);
+			} else {
+				memberDto.setMembershipStatus(MembershipStatus.INACTIVE);
 			}
 			memberDto.setPractisingNo(practisingNo);
 			memberDto.setCustomerPostingGroup(customerPostingGroup);
@@ -299,22 +308,30 @@ public class MemberDao extends BaseDao {
 	 * @return Filter parameter values
 	 */
 	private Map<String, Object> appendParameters(String searchTerm,
-			String citySearchTerm, StringBuffer sqlQuery) {
+			String citySearchTerm, String categoryName, StringBuffer sqlQuery) {
 		boolean isFirst = true;
 		Map<String, Object> params = new HashMap<>();
 
 		if (!searchTerm.equals("all")) {
 			sqlQuery.append(isFirst ? " where" : " And");
-			sqlQuery.append(" m.Name like :searchTerm");
+			sqlQuery.append(" (m.Name like :searchTerm or ");
+			sqlQuery.append(" m.No_ like :searchTerm)");
 			params.put("searchTerm", "%" + searchTerm + "%");
 			isFirst = false;
 		}
 
 		if (!citySearchTerm.equals("all")) {
 			sqlQuery.append(isFirst ? " where" : " And");
-			sqlQuery.append(" (m.Address=:citySearchTerm or ");
-			sqlQuery.append(" m.City=:citySearchTerm) ");
+			sqlQuery.append(" (m.Address like :citySearchTerm or ");
+			sqlQuery.append(" m.City like :citySearchTerm) ");
 			params.put("citySearchTerm", "%" + citySearchTerm + "%");
+			isFirst = false;
+		}
+
+		if (!categoryName.equals("all")) {
+			sqlQuery.append(isFirst ? " where" : " And");
+			sqlQuery.append(" m.`Customer Type`=:categoryName");
+			params.put("categoryName", categoryName);
 			isFirst = false;
 		}
 		return params;

@@ -1,6 +1,5 @@
 package com.workpoint.icpak.client.ui.component;
 
-
 public class PagingTable extends TableView {
 
 	PagingPanel panel = null;
