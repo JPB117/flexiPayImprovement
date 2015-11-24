@@ -185,8 +185,8 @@ public class MemberDao extends BaseDao {
 			int i = 0;
 			Object value = null;
 
-			Double memberNo = (value = row[i++]) == null ? null
-					: (Double) value;
+			String memberNo = (value = row[i++]) == null ? null
+					: value.toString();
 			String fullName = (value = row[i++]) == null ? null : value
 					.toString();
 			String address = (value = row[i++]) == null ? null : value
@@ -196,12 +196,12 @@ public class MemberDao extends BaseDao {
 					: value.toString();
 			String customerType = (value = row[i++]) == null ? null : value
 					.toString();
-			Double status = (value = row[i++]) == null ? null
-					: ((Double) value);
+			String status = (value = row[i++]) == null ? null
+					: value.toString();
 			String practisingNo = (value = row[i++]) == null ? null : value
 					.toString();
 			MemberDto memberDto = new MemberDto();
-			memberDto.setMemberNo(Double.toString(memberNo));
+			memberDto.setMemberNo(memberNo);
 			memberDto.setFullName(fullName);
 			memberDto.setAddress(address);
 			memberDto.setCity(city);
@@ -221,7 +221,7 @@ public class MemberDao extends BaseDao {
 			}
 
 			// Set Membership Status
-			if (status == 1) {
+			if (status.equals("1")) {
 				memberDto.setMembershipStatus(MembershipStatus.ACTIVE);
 			} else {
 				memberDto.setMembershipStatus(MembershipStatus.INACTIVE);
