@@ -68,18 +68,11 @@ public class BookingsDao extends BaseDao {
 		for (Object[] row : rows) {
 			int i = 0;
 			Object value = null;
-<<<<<<< HEAD
-			BookingDto booking = new BookingDto();
-			Integer seminarId = (value = row[i++]) == null ? null : (Integer) value;
-			String eventRefId = (value = row[i++]) == null ? null : value.toString();
-			importDistinctSponsor(seminarId, booking, eventRefId);
-=======
 			Integer seminarId = (value = row[i++]) == null ? null
 					: (Integer) value;
 			String eventRefId = (value = row[i++]) == null ? null : value
 					.toString();
 			importDistinctSponsor(seminarId, eventRefId);
->>>>>>> 4b7e6b452f4f51a4dbaca350e7a1c28d7a1f6bcd
 
 			// System.err.println("Importing Seminar Id>>" + seminarId);
 		}
