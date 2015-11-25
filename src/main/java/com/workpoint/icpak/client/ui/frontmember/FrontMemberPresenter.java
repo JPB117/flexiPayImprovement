@@ -5,6 +5,7 @@ import java.util.List;
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rest.delegates.client.ResourceDelegate;
@@ -30,8 +31,7 @@ import com.workpoint.icpak.shared.api.MemberResource;
 import com.workpoint.icpak.shared.model.MemberDto;
 
 public class FrontMemberPresenter
-		extends
-		Presenter<FrontMemberPresenter.MyFrontMemberView, FrontMemberPresenter.MyFrontMemberProxy>
+		extends Presenter<FrontMemberPresenter.MyFrontMemberView, FrontMemberPresenter.MyFrontMemberProxy>
 		implements TableActionHandler {
 	public interface MyFrontMemberView extends View {
 
@@ -62,27 +62,25 @@ public class FrontMemberPresenter
 	@ProxyCodeSplit
 	@NameToken(NameTokens.frontMember)
 	@NoGatekeeper
-	public interface MyFrontMemberProxy extends
-			ProxyPlace<FrontMemberPresenter> {
+	public interface MyFrontMemberProxy extends ProxyPlace<FrontMemberPresenter> {
 	}
 
 	ValueChangeHandler<String> frontMemberValueChangeHandler = new ValueChangeHandler<String>() {
 		@Override
 		public void onValueChange(ValueChangeEvent<String> event) {
-			if (getView().getSearchValue().trim() == "") {
+			if (getView().getSearchValue().isEmpty() || getView().getSearchValue() == null) {
 				searchTerm = "all";
-				searchMembers(searchTerm, townSearchTerm, categoryName);
+				searchMembers(searchTerm, getView().getTownName().trim(), getView().getCategorySelected().trim());
 			} else {
 				searchTerm = getView().getSearchValue().trim();
-				searchMembers(getView().getSearchValue().trim(),
-						townSearchTerm, categoryName);
+				searchMembers(searchTerm, getView().getTownName().trim(),
+						getView().getCategorySelected().trim());
 			}
 		}
 	};
 
 	@Inject
-	FrontMemberPresenter(EventBus eventBus, MyFrontMemberView view,
-			MyFrontMemberProxy proxy,
+	FrontMemberPresenter(EventBus eventBus, MyFrontMemberView view, MyFrontMemberProxy proxy,
 			ResourceDelegate<MemberResource> memberResourceDelegate) {
 		super(eventBus, view, proxy);
 		this.memberResourceDelegate = memberResourceDelegate;
@@ -106,42 +104,64 @@ public class FrontMemberPresenter
 			}
 		});
 
-		getView().getSearchValueChangeHander().addValueChangeHandler(
-				frontMemberValueChangeHandler);
+		getView().getSearchValueChangeHander().addValueChangeHandler(frontMemberValueChangeHandler);
 
-		getView().getTownList().addValueChangeHandler(
-				new ValueChangeHandler<TableView.Towns>() {
-					@Override
-					public void onValueChange(ValueChangeEvent<Towns> towns) {
-						if (towns.getValue() == null) {
-							townSearchTerm = "all";
-							searchMembers(searchTerm, townSearchTerm,
-									categoryName);
-						} else {
-							townSearchTerm = getView().getTownName().trim();
-							searchMembers(searchTerm, getView().getTownName()
-									.trim(), categoryName);
-						}
-					}
-				});
+		getView().getTownList().addValueChangeHandler(new ValueChangeHandler<TableView.Towns>() {
+			@Override
+			public void onValueChange(ValueChangeEvent<Towns> towns) {
+				Window.alert(" Town change ");
+				
+				searchTerm = getView().getSearchValue().trim();
+				categoryName = getView().getCategorySelected().trim();
+				townSearchTerm = getView().getTownName().trim();
+				
+				
+				if(searchTerm.isEmpty() || searchTerm == null){
+					searchTerm = "all";
+				}
+				
+				if(categoryName.isEmpty() || categoryName == null){
+					categoryName = "all";
+				}
+				
+				
+				
+				if (townSearchTerm == null || townSearchTerm.isEmpty()) {
+					townSearchTerm = "all";
+					Window.alert(" Category == "+categoryName+" ==Search value =="+searchTerm+" ==Town="+townSearchTerm);
+					searchMembers(searchTerm, townSearchTerm, categoryName);
+				} else {
+					Window.alert(" Category == "+categoryName+" ==Search value =="+searchTerm+" ==Town="+townSearchTerm);
+					searchMembers(searchTerm, townSearchTerm, categoryName);
+				}
+			}
+		});
 
-		getView().getCategoryList().addValueChangeHandler(
-				new ValueChangeHandler<MemberCategory>() {
-					@Override
-					public void onValueChange(
-							ValueChangeEvent<MemberCategory> selectedCategory) {
-						if (selectedCategory.getValue() == null) {
-							categoryName = "all";
-							searchMembers(searchTerm, townSearchTerm,
-									categoryName);
-						} else {
-							categoryName = getView().getCategorySelected()
-									.trim();
-							searchMembers(searchTerm, getView().getTownName()
-									.trim(), categoryName);
-						}
-					}
-				});
+		getView().getCategoryList().addValueChangeHandler(new ValueChangeHandler<MemberCategory>() {
+			@Override
+			public void onValueChange(ValueChangeEvent<MemberCategory> selectedCategory) {
+				
+				searchTerm = getView().getSearchValue().trim();
+				townSearchTerm = getView().getTownName().trim();
+				categoryName = getView().getCategorySelected().trim();
+				
+				if(searchTerm.isEmpty() || searchTerm == null){
+					searchTerm = "all";
+				}
+				
+				if(townSearchTerm.isEmpty() || categoryName == null){
+					townSearchTerm = "all";
+				}
+				
+				if (categoryName == null || categoryName.isEmpty()) {
+					categoryName = "all";
+					searchMembers(searchTerm, townSearchTerm, categoryName);
+				} else {
+					categoryName = getView().getCategorySelected().trim();
+					searchMembers(searchTerm, townSearchTerm, categoryName);
+				}
+			}
+		});
 	}
 
 	@Override
@@ -151,68 +171,55 @@ public class FrontMemberPresenter
 	}
 
 	private void loadCount() {
-		memberResourceDelegate.withCallback(
-				new AbstractAsyncCallback<Integer>() {
+		memberResourceDelegate.withCallback(new AbstractAsyncCallback<Integer>() {
 
-					@Override
-					public void onSuccess(Integer result) {
-						PagingPanel pagingPanel = getView().getPagingPanel();
-						pagingPanel.setTotal(result);
-						PagingConfig pagingConfig = pagingPanel.getConfig();
+			@Override
+			public void onSuccess(Integer result) {
+				PagingPanel pagingPanel = getView().getPagingPanel();
+				pagingPanel.setTotal(result);
+				PagingConfig pagingConfig = pagingPanel.getConfig();
 
-						loadMembers(pagingConfig.getOffset(),
-								pagingConfig.getLimit());
-					}
-				}).getMembersCount();
+				loadMembers(pagingConfig.getOffset(), pagingConfig.getLimit());
+			}
+		}).getMembersCount();
 	}
 
 	private void loadMembers(int offset, int limit) {
 		getView().showmask(true);
-		memberResourceDelegate.withCallback(
-				new AbstractAsyncCallback<List<MemberDto>>() {
-					@Override
-					public void onSuccess(List<MemberDto> results) {
-						getView().bindResults(results);
-						getView().showmask(false);
-					}
-				}).searchMembers(searchTerm, townSearchTerm, categoryName,
-				offset, limit);
+		memberResourceDelegate.withCallback(new AbstractAsyncCallback<List<MemberDto>>() {
+			@Override
+			public void onSuccess(List<MemberDto> results) {
+				getView().bindResults(results);
+				getView().showmask(false);
+			}
+		}).searchMembers(searchTerm, townSearchTerm, categoryName, offset, limit);
 	}
 
-	public void searchMembers(final String searchTerm,
-			final String citySearchTerm, final String categoryName) {
-		memberResourceDelegate.withCallback(
-				new AbstractAsyncCallback<Integer>() {
+	public void searchMembers(final String searchTerm, final String citySearchTerm, final String categoryName) {
+		memberResourceDelegate.withCallback(new AbstractAsyncCallback<Integer>() {
 
-					@Override
-					public void onSuccess(Integer result) {
-						PagingPanel panel = getView().getPagingPanel();
-						panel.setTotal(result);
-						PagingConfig pagingConfig = panel.getConfig();
-						searchMembers(searchTerm, citySearchTerm, categoryName,
-								pagingConfig.getOffset(),
-								pagingConfig.getLimit());
-					}
+			@Override
+			public void onSuccess(Integer result) {
+				PagingPanel panel = getView().getPagingPanel();
+				Window.alert("Count == " + result);
+				panel.setTotal(result);
+				PagingConfig pagingConfig = panel.getConfig();
+				searchMembers(searchTerm, citySearchTerm, categoryName, pagingConfig.getOffset(),
+						pagingConfig.getLimit());
+			}
 
-				}).getMembersSearchCount(searchTerm, townSearchTerm,
-				categoryName);
+		}).getMembersSearchCount(searchTerm, townSearchTerm, categoryName);
 	}
 
-	public void searchMembers(String searchTerm, String citySearchTerm,
-			String categoryName, int offset, int limit) {
-		getView().showmask(true);
-		memberResourceDelegate.withCallback(
-				new AbstractAsyncCallback<List<MemberDto>>() {
-					@Override
-					public void onSuccess(List<MemberDto> results) {
-						PagingPanel panel = getView().getPagingPanel();
-						panel.setTotal(results.size());
-						getView().bindResults(results);
-
-						getView().showmask(false);
-					}
-				}).searchMembers(searchTerm, citySearchTerm, categoryName,
-				offset, limit);
+	public void searchMembers(String searchTerm, String citySearchTerm, String categoryName, int offset, int limit) {
+		getView().showmask(true);		
+		memberResourceDelegate.withCallback(new AbstractAsyncCallback<List<MemberDto>>() {
+			@Override
+			public void onSuccess(List<MemberDto> results) {
+				getView().bindResults(results);
+				getView().showmask(false);
+			}
+		}).searchMembers(searchTerm, citySearchTerm, categoryName, offset, limit);
 	}
 
 	@Override

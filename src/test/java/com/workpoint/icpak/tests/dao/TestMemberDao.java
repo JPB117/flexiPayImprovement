@@ -2,6 +2,7 @@ package com.workpoint.icpak.tests.dao;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -13,6 +14,8 @@ import com.workpoint.icpak.shared.model.UserDto;
 import com.workpoint.icpak.tests.base.AbstractDaoTest;
 
 public class TestMemberDao extends AbstractDaoTest {
+	
+	Logger logger = Logger.getLogger(TestMemberDao.class);
 
 	@Inject
 	MemberDaoHelper helper;
@@ -26,14 +29,15 @@ public class TestMemberDao extends AbstractDaoTest {
 
 	@Test
 	public void testSearchMemberFromOldTable() {
-		List<MemberDto> list = helper.getMembersFromOldTable("Njoroge",
-				"Nairobi", "PRAC MEMBER", 0, 1000);
+		List<MemberDto> list = helper.getMembersFromOldTable("cpa",
+				"all", "all", 0, 0);
 
-		Integer count = helper.getMembersCount("Njoroge", "Nairobi",
-				"PRAC MEMBER");
+		Integer count = helper.getMembersCount("cpa", "all",
+				"all");
+		
+		logger.error("===== <>>>>>> Search Count === "+count);
+		logger.error("===== <>>>>>> List Size === "+list.size());
 
-		System.err.println("List Size::" + list.size());
-		System.err.println("Count::" + count);
 	}
 
 	@Ignore
