@@ -57,7 +57,7 @@ public class EventsTableRow extends RowWidget {
 
 	public EventsTableRow(EventDto event) {
 		this();
-
+		row.addStyleName("active");
 		Date startDate = isNullOrEmpty(event.getStartDate()) ? null : DateUtils
 				.parse(event.getStartDate(), DateUtils.FULLTIMESTAMP);
 		Date endDate = isNullOrEmpty(event.getEndDate()) ? null : DateUtils

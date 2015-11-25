@@ -68,13 +68,23 @@ public class FrontMemberPresenter
 	ValueChangeHandler<String> frontMemberValueChangeHandler = new ValueChangeHandler<String>() {
 		@Override
 		public void onValueChange(ValueChangeEvent<String> event) {
-			if (getView().getSearchValue().isEmpty() || getView().getSearchValue() == null) {
+			searchTerm = getView().getSearchValue().trim();
+			categoryName = getView().getCategorySelected().trim();
+			townSearchTerm = getView().getTownName().trim();
+			
+			if (categoryName.isEmpty() || categoryName == null) {
+				categoryName = "all";
+			}
+			
+			if (townSearchTerm.isEmpty() || townSearchTerm == null) {
+				townSearchTerm = "all";
+			}
+
+			if (searchTerm.isEmpty() || searchTerm == null) {
 				searchTerm = "all";
-				searchMembers(searchTerm, getView().getTownName().trim(), getView().getCategorySelected().trim());
+				searchMembers(searchTerm, townSearchTerm, categoryName);
 			} else {
-				searchTerm = getView().getSearchValue().trim();
-				searchMembers(searchTerm, getView().getTownName().trim(),
-						getView().getCategorySelected().trim());
+				searchMembers(searchTerm, townSearchTerm, categoryName);
 			}
 		}
 	};
@@ -110,28 +120,23 @@ public class FrontMemberPresenter
 			@Override
 			public void onValueChange(ValueChangeEvent<Towns> towns) {
 				Window.alert(" Town change ");
-				
+
 				searchTerm = getView().getSearchValue().trim();
 				categoryName = getView().getCategorySelected().trim();
 				townSearchTerm = getView().getTownName().trim();
-				
-				
-				if(searchTerm.isEmpty() || searchTerm == null){
+
+				if (searchTerm.isEmpty() || searchTerm == null) {
 					searchTerm = "all";
 				}
-				
-				if(categoryName.isEmpty() || categoryName == null){
+
+				if (categoryName.isEmpty() || categoryName == null) {
 					categoryName = "all";
 				}
-				
-				
-				
+
 				if (townSearchTerm == null || townSearchTerm.isEmpty()) {
 					townSearchTerm = "all";
-					Window.alert(" Category == "+categoryName+" ==Search value =="+searchTerm+" ==Town="+townSearchTerm);
 					searchMembers(searchTerm, townSearchTerm, categoryName);
 				} else {
-					Window.alert(" Category == "+categoryName+" ==Search value =="+searchTerm+" ==Town="+townSearchTerm);
 					searchMembers(searchTerm, townSearchTerm, categoryName);
 				}
 			}
@@ -140,19 +145,20 @@ public class FrontMemberPresenter
 		getView().getCategoryList().addValueChangeHandler(new ValueChangeHandler<MemberCategory>() {
 			@Override
 			public void onValueChange(ValueChangeEvent<MemberCategory> selectedCategory) {
-				
+				Window.alert(" Gaterory change ");
+
 				searchTerm = getView().getSearchValue().trim();
 				townSearchTerm = getView().getTownName().trim();
 				categoryName = getView().getCategorySelected().trim();
-				
-				if(searchTerm.isEmpty() || searchTerm == null){
+
+				if (searchTerm.isEmpty() || searchTerm == null || searchTerm.equals(" ")) {
 					searchTerm = "all";
 				}
-				
-				if(townSearchTerm.isEmpty() || categoryName == null){
+
+				if (townSearchTerm.isEmpty() || townSearchTerm == null) {
 					townSearchTerm = "all";
 				}
-				
+
 				if (categoryName == null || categoryName.isEmpty()) {
 					categoryName = "all";
 					searchMembers(searchTerm, townSearchTerm, categoryName);
@@ -212,7 +218,7 @@ public class FrontMemberPresenter
 	}
 
 	public void searchMembers(String searchTerm, String citySearchTerm, String categoryName, int offset, int limit) {
-		getView().showmask(true);		
+		getView().showmask(true);
 		memberResourceDelegate.withCallback(new AbstractAsyncCallback<List<MemberDto>>() {
 			@Override
 			public void onSuccess(List<MemberDto> results) {

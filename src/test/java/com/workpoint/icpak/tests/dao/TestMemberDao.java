@@ -29,10 +29,10 @@ public class TestMemberDao extends AbstractDaoTest {
 
 	@Test
 	public void testSearchMemberFromOldTable() {
-		List<MemberDto> list = helper.getMembersFromOldTable("cpa",
-				"all", "all", 0, 0);
+		List<MemberDto> list = helper.getMembersFromOldTable("FCPA",
+				"nairobi", "all", 0, 0);
 
-		Integer count = helper.getMembersCount("cpa", "all",
+		Integer count = helper.getMembersCount("FCPA", "nairobi",
 				"all");
 		
 		logger.error("===== <>>>>>> Search Count === "+count);
