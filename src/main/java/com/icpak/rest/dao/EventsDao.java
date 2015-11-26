@@ -58,7 +58,7 @@ public class EventsDao extends BaseDao {
 				return getResultList(
 						getEntityManager()
 								.createQuery(
-										"from Event where isActive=1 order by startDate DESC"),
+										"from Event where isActive=1 order by endDate DESC"),
 						offSet, limit);
 
 			}
