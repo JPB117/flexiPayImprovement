@@ -1,4 +1,4 @@
-apackage com.icpak.rest.dao;
+package com.icpak.rest.dao;
 
 import java.util.ArrayList;
 import java.util.HashMap;

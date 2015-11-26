@@ -113,20 +113,7 @@ public class EventsPresenter extends
 		super.onBind();
 		addRegisteredHandler(EditModelEvent.TYPE, this);
 		addRegisteredHandler(TableActionEvent.TYPE, this);
-		getView().getEventsPagingPanel().setLoader(new PagingLoader() {
-			@Override
-			public void onLoad(int offset, int limit) {
-				loadEvents(offset, limit, "");
-			}
-		});
-
-		getView().getBookingsPagingPanel().setLoader(new PagingLoader() {
-			@Override
-			public void onLoad(int offset, int limit) {
-				loadDelegates(offset, limit, "");
-			}
-		});
-
+		
 		getView().getSearchValueChangeHander().addValueChangeHandler(
 				eventsValueChangeHandler);
 		getView().getDelegateSearchValueChangeHandler().addValueChangeHandler(
@@ -189,8 +176,8 @@ public class EventsPresenter extends
 					PagingPanel panel = getView().getEventsPagingPanel();
 					panel.setTotal(aCount);
 					PagingConfig config = panel.getConfig();
-					config.setPAGE_LIMIT(50);
-					loadEvents(config.getOffset(), config.getLimit(), "");
+					config.setPAGE_LIMIT(100);
+					loadEvents(config.getOffset(), 100, "");
 				}
 			}).getCount();
 		}

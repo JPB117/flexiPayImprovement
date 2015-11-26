@@ -1,16 +1,9 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.workpoint.icpak.client.ui.component">
-	<ui:style>
-		.active{
-		   background-color:#99FF33;
-		}
-		.in-active{
-		   background-color:#00FFFF;
-		}
-	</ui:style>
 	<g:HTMLPanel styleName="tr active" ui:field="row">
 		<g:HTMLPanel styleName="td" ui:field="divDate">
+		    <p><g:Label ui:field="lDays"/></p>
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divEventName">
 			<g:Anchor ui:field="aEventName"></g:Anchor>
