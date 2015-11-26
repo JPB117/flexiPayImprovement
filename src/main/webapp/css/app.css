@@ -34920,3 +34920,7 @@ body .jvectormap-zoomout {
 .event-inactive {
 	background-color: #00FFFF !important;
 }
+
+.event-inactive a {
+    color: #3436BF;
+}
