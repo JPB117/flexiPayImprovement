@@ -7,6 +7,8 @@ import java.util.Map;
 
 import javax.persistence.Query;
 
+import org.apache.log4j.Logger;
+
 import com.icpak.rest.models.membership.Member;
 import com.workpoint.icpak.shared.model.ApplicationType;
 import com.workpoint.icpak.shared.model.MemberDto;
@@ -18,6 +20,7 @@ import com.workpoint.icpak.shared.model.MembershipStatus;
  *
  */
 public class MemberDao extends BaseDao {
+	Logger logger = Logger.getLogger(MemberDao.class);
 
 	public void createMember(Member member) {
 		save(member);
@@ -176,8 +179,11 @@ public class MemberDao extends BaseDao {
 		Map<String, Object> params = appendParameters(searchTerm,
 				citySearchTerm, categoryName, sql);
 		Query query = getEntityManager().createNativeQuery(sql.toString());
-		for (String key : params.keySet()) {
-			query.setParameter(key, params.get(key));
+		
+		if(!params.isEmpty()){
+			for (String key : params.keySet()) {
+				query.setParameter(key, params.get(key));
+			}
 		}
 
 		List<Object[]> rows = getResultList(query, offSet, limit);
@@ -312,28 +318,63 @@ public class MemberDao extends BaseDao {
 		boolean isFirst = true;
 		Map<String, Object> params = new HashMap<>();
 
-		if (!searchTerm.equals("all")) {
-			sqlQuery.append(isFirst ? " where" : " And");
-			sqlQuery.append(" (m.Name like :searchTerm or ");
-			sqlQuery.append(" m.No_ like :searchTerm)");
-			params.put("searchTerm", "%" + searchTerm + "%");
-			isFirst = false;
-		}
-
-		if (!citySearchTerm.equals("all")) {
-			sqlQuery.append(isFirst ? " where" : " And");
+		if (!searchTerm.equals("all") && !citySearchTerm.equals("all") && !categoryName.equals("all")) {
+			logger.error(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> exec T T T ");
+			sqlQuery.append(" where ");
+			sqlQuery.append(" m.Name like :searchTerm or ");
+			sqlQuery.append(" m.No_ like :searchTerm and ");
 			sqlQuery.append(" (m.Address like :citySearchTerm or ");
-			sqlQuery.append(" m.City like :citySearchTerm) ");
+			sqlQuery.append(" m.City like :citySearchTerm) and ");
+			sqlQuery.append(" (m.`Customer Type`=:categoryName)");
+			params.put("searchTerm", "%" + searchTerm + "%");
 			params.put("citySearchTerm", "%" + citySearchTerm + "%");
-			isFirst = false;
+			params.put("categoryName", categoryName);
 		}
-
-		if (!categoryName.equals("all")) {
-			sqlQuery.append(isFirst ? " where" : " And");
+		
+		if (!searchTerm.equals("all") && !citySearchTerm.equals("all") && categoryName.equals("all")) {
+			logger.error(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> exec T T F ");
+			sqlQuery.append(" where ");
+			sqlQuery.append(" m.Name like :searchTerm or ");
+			sqlQuery.append(" m.No_ like :searchTerm and ");
+			sqlQuery.append(" (m.Address like :citySearchTerm or ");
+			sqlQuery.append(" m.City like :citySearchTerm)");
+			params.put("searchTerm", "%" + searchTerm + "%");
+			params.put("citySearchTerm", "%" + citySearchTerm + "%");
+		}
+		
+		if (!searchTerm.equals("all") && citySearchTerm.equals("all") && categoryName.equals("all")) {
+			logger.error(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> exec T F F ");
+			sqlQuery.append(" where ");
+			sqlQuery.append(" m.Name like :searchTerm or ");
+			sqlQuery.append(" m.No_ like :searchTerm");
+			params.put("searchTerm", "%" + searchTerm + "%");
+		}
+		
+		if (searchTerm.equals("all") && !citySearchTerm.equals("all") && !categoryName.equals("all")) {
+			logger.error(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> exec F T T ");
+			sqlQuery.append(" where ");
+			sqlQuery.append(" m.Address like :citySearchTerm or ");
+			sqlQuery.append(" m.City like :citySearchTerm and ");
+			sqlQuery.append(" (m.`Customer Type`=:categoryName)");
+			params.put("citySearchTerm", "%" + citySearchTerm + "%");
+			params.put("categoryName", categoryName);
+		}
+		
+		if (searchTerm.equals("all") && citySearchTerm.equals("all") && !categoryName.equals("all")) {
+			logger.error(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> exec F F T ");
+			sqlQuery.append(" where ");
 			sqlQuery.append(" m.`Customer Type`=:categoryName");
 			params.put("categoryName", categoryName);
-			isFirst = false;
 		}
+		
+		if (searchTerm.equals("all") && !citySearchTerm.equals("all") && categoryName.equals("all")) {
+			logger.error(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> exec F T F ");
+			sqlQuery.append(" where ");
+			sqlQuery.append(" (m.Address like :citySearchTerm or ");
+			sqlQuery.append(" m.City like :citySearchTerm)");
+			params.put("citySearchTerm", "%" + citySearchTerm + "%");
+		}
+
 		return params;
 	}
 
