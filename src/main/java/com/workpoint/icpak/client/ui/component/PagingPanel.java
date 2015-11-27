@@ -113,7 +113,7 @@ public class PagingPanel extends Composite {
 
 	private void setPageDetails() {
 		spnOffset.setInnerText(NumberUtils.NUMBERFORMAT.format(config
-				.getOffset()) + "");
+				.getOffset()+1) + "");
 		spnPageEnd.setInnerText(NumberUtils.NUMBERFORMAT.format(config
 				.getPageEnd()) + "");
 		spnTotal.setInnerText(NumberUtils.NUMBERFORMAT.format(config.getTotal())
