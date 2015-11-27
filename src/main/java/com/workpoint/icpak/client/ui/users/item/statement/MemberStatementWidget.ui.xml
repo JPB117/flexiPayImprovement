@@ -1,0 +1,29 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d='urn:import:com.workpoint.icpak.client.ui.component'>
+	<ui:style>
+	
+	</ui:style>
+	<g:HTMLPanel>
+		<div class="row">
+			<div class="col-lg-12">
+				<span ui:field="spnRefreshSection">
+					<span class="muted">
+						(last Update From ERP:
+						<span ui:field="spnLastUpdated"></span>
+					</span>
+					<d:ActionLink ui:field="aRefresh">Refresh Now</d:ActionLink>
+					)
+				</span>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-4 col-offset-1">
+				<d:DateField ui:field="dtStartDate" />
+			</div>
+			<div class="col-lg-4">
+				<d:DateField ui:field="dtEndDate" />
+			</div>
+		</div>
+	</g:HTMLPanel>
+</ui:UiBinder> 

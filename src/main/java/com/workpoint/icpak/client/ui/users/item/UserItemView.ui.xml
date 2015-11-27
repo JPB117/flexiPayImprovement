@@ -22,6 +22,14 @@
 				<g:Anchor styleName="btn btn-success" ui:field="aEdit">
 					<i class="icon-pencil helper-14"></i>
 				</g:Anchor>
+				<g:Anchor styleName="btn btn-success" ui:field="aGoodStanding"
+					title="Download GoodStanding">
+					<i class="fa fa-certificate helper-14"></i>
+				</g:Anchor>
+				<g:Anchor styleName="btn btn-success" ui:field="aStatementDownload"
+					title="Download Member Statements">
+					<i class="fa fa-money helper-14"></i>
+				</g:Anchor>
 				<g:Anchor styleName="btn btn-danger" ui:field="aDelete">
 					<i class="icon-trash"></i>
 				</g:Anchor>
