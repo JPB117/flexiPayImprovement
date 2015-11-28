@@ -233,6 +233,11 @@ public class EventBookingPresenter extends
 
 						getView().setCountries(countries);
 					};
+
+					@Override
+					public void onFailure(Throwable caught) {
+						super.onFailure(caught);
+					}
 				}).getAll();
 
 		eventsResource.withCallback(new AbstractAsyncCallback<EventDto>() {
@@ -249,9 +254,6 @@ public class EventBookingPresenter extends
 					buffer.append(elem.getLineNumber() + ">>"
 							+ elem.getClassName() + ">>" + elem.getMethodName());
 				}
-
-				Window.alert(caught + " " + caught.getMessage() + " "
-						+ caught.getStackTrace().toString());
 
 				super.onFailure(caught);
 			}
@@ -311,7 +313,7 @@ public class EventBookingPresenter extends
 			@Override
 			public void onFailure(Throwable caught) {
 				super.onFailure(caught);
-				Window.alert("Ooops..! Something went wrong and we ve noted. Report to ICPAK Customer Care");
+				// Window.alert("Ooops..! Something went wrong and we ve noted. Report to ICPAK Customer Care");
 			}
 		}).getInvoice(invoiceRef);
 
