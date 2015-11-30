@@ -119,8 +119,6 @@ public class FrontMemberPresenter
 		getView().getTownList().addValueChangeHandler(new ValueChangeHandler<TableView.Towns>() {
 			@Override
 			public void onValueChange(ValueChangeEvent<Towns> towns) {
-				Window.alert(" Town change ");
-
 				searchTerm = getView().getSearchValue().trim();
 				categoryName = getView().getCategorySelected().trim();
 				townSearchTerm = getView().getTownName().trim();
@@ -145,8 +143,6 @@ public class FrontMemberPresenter
 		getView().getCategoryList().addValueChangeHandler(new ValueChangeHandler<MemberCategory>() {
 			@Override
 			public void onValueChange(ValueChangeEvent<MemberCategory> selectedCategory) {
-				Window.alert(" Gaterory change ");
-
 				searchTerm = getView().getSearchValue().trim();
 				townSearchTerm = getView().getTownName().trim();
 				categoryName = getView().getCategorySelected().trim();
@@ -207,7 +203,6 @@ public class FrontMemberPresenter
 			@Override
 			public void onSuccess(Integer result) {
 				PagingPanel panel = getView().getPagingPanel();
-				Window.alert("Count == " + result);
 				panel.setTotal(result);
 				PagingConfig pagingConfig = panel.getConfig();
 				searchMembers(searchTerm, citySearchTerm, categoryName, pagingConfig.getOffset(),
