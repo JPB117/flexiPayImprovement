@@ -3,6 +3,8 @@ package com.icpak.rest.dao.helper;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import com.icpak.rest.IDUtils;
@@ -13,6 +15,7 @@ import com.workpoint.icpak.shared.model.events.CourseDto;
 
 @Transactional
 public class CoursesDaoHelper {
+	Logger logger = Logger.getLogger(CoursesDaoHelper.class);
 
 	@Inject EventsDao dao;
 	
