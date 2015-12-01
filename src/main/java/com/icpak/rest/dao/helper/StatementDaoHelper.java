@@ -60,10 +60,12 @@ public class StatementDaoHelper {
 		}
 
 		List<StatementDto> statementDtos = new ArrayList<>();
-		StatementDto balanceCD = null;
+		StatementDto openingBal = null;
 		if (startDate != null && member != null) {
-			balanceCD = statementDao.getBalanceCD(member.getMemberNo(), startDate);
-			statementDtos.add(balanceCD);
+			openingBal = statementDao.getBalance(member.getMemberNo(), startDate);
+			openingBal.setDescription("Opening Balance");
+			openingBal.setDocumentType("Opening Balance");
+			statementDtos.add(openingBal);
 		}
 
 		for (Statement statement : statementList) {
@@ -83,13 +85,13 @@ public class StatementDaoHelper {
 			statementDtos.add(statementDto);
 		}
 
-		if (member != null) {
-			StatementDto balanceCF = statementDao.getBalanceCD(member.getMemberNo(),
-					endDate == null ? new Date() : endDate);
-			balanceCF.setDescription("Balance C/F");
-			balanceCF.setDocumentType("Balance C/F");
-			statementDtos.add(balanceCF);
-		}
+//		if (member != null) {
+//			StatementDto balanceCF = statementDao.getBalanceCD(member.getMemberNo(),
+//					endDate == null ? new Date() : endDate);
+//			balanceCF.setDescription("Balance C/F");
+//			balanceCF.setDocumentType("Balance C/F");
+//			statementDtos.add(balanceCF);
+//		}
 
 		return statementDtos;
 	}
@@ -140,7 +142,7 @@ public class StatementDaoHelper {
 
 	public Double getAccountBalance(String memberRefId) {
 		Member member = statementDao.findByRefId(memberRefId, Member.class);
-		return statementDao.getBalanceCD(member.getMemberNo(), new Date()).getAmount();
+		return statementDao.getBalance(member.getMemberNo(), new Date()).getAmount();
 	}
 
 	/**
@@ -158,13 +160,14 @@ public class StatementDaoHelper {
 		List<Statement> memberStatements = getMemberStatementsFromErp(memberInDb);
 
 		for (Statement statement : memberStatements) {
-			logger.info("=== >><<<<< === Ducument No from erp statements ==" + statement.getEntryNo());
+			logger.info("=== >><<<<< === Entry No from erp statements ==" + statement.getEntryNo());
 			
 			Statement statementInDb = statementDao.getByEntryNo(statement.getEntryNo(), true);
+			
+			logger.info("=== statement in Db refId ==" + statement.getRefId());
 						
-			if(statementInDb != null ){
-				
-				statementInDb.setEntryNo(statement.getEntryNo());
+			if(statementInDb != null){
+				logger.info("=== >><<<<< === Updating ==");
 				statementInDb.setCustLedgerEntryNo(statement.getCustLedgerEntryNo());
 				statementInDb.setEntryType(statement.getEntryType());
 				statementInDb.setPostingDate(statement.getPostingDate());
@@ -177,7 +180,7 @@ public class StatementDaoHelper {
 				
 				statementDao.updateStatement(statementInDb);
 			}else{
-				
+				logger.info("=== >><<<<< === Creating ==");
 				statementDao.createStatement(statement);
 				
 			}
@@ -232,7 +235,7 @@ public class StatementDaoHelper {
 			e.printStackTrace();
 		}
 
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
 		assert result != null;
 		res = result.toString();

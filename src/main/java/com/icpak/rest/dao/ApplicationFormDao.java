@@ -181,14 +181,17 @@ public class ApplicationFormDao extends BaseDao {
 			Object value = null;
 			Integer count = (value = row[i++]) == null ? null
 					: ((Number) value).intValue();
-			String status = (value = row[i++]) == null ? null : value
+			String status = (value = row[i++]) == null ? "PENDING" : value
 					.toString();
-
-			if (ApplicationStatus.valueOf(status) == ApplicationStatus.APPROVED) {
-				summary.setProcessedCount(count);
-			} else {
-				summary.setPendingCount(count);
+			
+			if(!status.isEmpty() || status != null){
+				if (ApplicationStatus.valueOf(status) == ApplicationStatus.APPROVED) {
+					summary.setProcessedCount(count);
+				} else {
+					summary.setPendingCount(count);
+				}
 			}
+	
 		}
 
 		return summary;

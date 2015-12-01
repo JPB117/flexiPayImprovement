@@ -8,6 +8,7 @@ import java.util.List;
 import javax.persistence.Query;
 
 import org.apache.log4j.Logger;
+import org.hibernate.QueryException;
 
 import com.google.inject.Inject;
 import com.icpak.rest.dao.helper.BookingsDaoHelper;
@@ -42,7 +43,7 @@ public class BookingsDao extends BaseDao {
 		save(booking);
 	}
 
-	public List<Booking> getAllBookings(String eventId, Integer offSet, Integer limit, String searchTerm) {
+	public List<Booking> getAllBookings(String eventId, Integer offSet, Integer limit, String searchTerm) throws QueryException{
 
 		if (searchTerm.isEmpty()) {
 			return getResultList(

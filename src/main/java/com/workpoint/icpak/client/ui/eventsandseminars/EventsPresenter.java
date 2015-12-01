@@ -20,6 +20,8 @@ import com.gwtplatform.mvp.client.proxy.TabContentProxyPlace;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.workpoint.icpak.client.place.NameTokens;
 import com.workpoint.icpak.client.service.AbstractAsyncCallback;
+import com.workpoint.icpak.client.ui.AppManager;
+import com.workpoint.icpak.client.ui.OptionControl;
 import com.workpoint.icpak.client.ui.admin.TabDataExt;
 import com.workpoint.icpak.client.ui.component.PagingConfig;
 import com.workpoint.icpak.client.ui.component.PagingLoader;
@@ -275,6 +277,12 @@ public class EventsPresenter extends
 							fireEvent(new ProcessingCompletedEvent());
 							Window.alert("Email sent successfully..");
 						}
+
+						@Override
+						public void onFailure(Throwable caught) {
+							callPopOver();
+							super.onFailure(caught);
+						}
 					})
 					.bookings(eventId)
 					.resendProforma(resendModel.getEmails(),
@@ -282,6 +290,17 @@ public class EventsPresenter extends
 
 		}
 
+	}
+	
+	public void callPopOver(){
+		AppManager.showPopUp("Sorry dude ..", "", new OptionControl(){
+
+			@Override
+			public void onSelect(String name) {
+				super.onSelect(name);
+				hide();
+			}
+		}, "Proceed");
 	}
 
 }

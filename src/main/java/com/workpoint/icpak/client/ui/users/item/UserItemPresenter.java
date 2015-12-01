@@ -29,8 +29,7 @@ import com.workpoint.icpak.shared.api.MemberResource;
 import com.workpoint.icpak.shared.api.UsersResource;
 import com.workpoint.icpak.shared.model.UserDto;
 
-public class UserItemPresenter extends
-		PresenterWidget<UserItemPresenter.MyView> implements TableActionHandler {
+public class UserItemPresenter extends PresenterWidget<UserItemPresenter.MyView> implements TableActionHandler {
 
 	public interface MyView extends View {
 		void setValues(UserDto user);
@@ -52,8 +51,7 @@ public class UserItemPresenter extends
 
 	@Inject
 	public UserItemPresenter(final EventBus eventBus, final MyView view,
-			final ResourceDelegate<UsersResource> usersDelegate,
-			ResourceDelegate<MemberResource> memberDelegate) {
+			final ResourceDelegate<UsersResource> usersDelegate, ResourceDelegate<MemberResource> memberDelegate) {
 		super(eventBus, view);
 		this.usersDelegate = usersDelegate;
 		this.memberDelegate = memberDelegate;
@@ -74,19 +72,16 @@ public class UserItemPresenter extends
 		getView().getDelete().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				AppManager.showPopUp(
-						"Confirm Delete",
-						new HTMLPanel("Do you want to delete user \""
-								+ user.getName() + "\""),
-						new OnOptionSelected() {
+				AppManager.showPopUp("Confirm Delete",
+						new HTMLPanel("Do you want to delete user \"" + user.getName() + "\""), new OnOptionSelected() {
 
-							@Override
-							public void onSelect(String name) {
-								if (name.equals("Ok")) {
-									delete(user);
-								}
-							}
-						}, "Cancel", "Ok");
+					@Override
+					public void onSelect(String name) {
+						if (name.equals("Ok")) {
+							delete(user);
+						}
+					}
+				}, "Cancel", "Ok");
 
 			}
 		});
@@ -106,6 +101,14 @@ public class UserItemPresenter extends
 	@Override
 	public void onTableAction(TableActionEvent event) {
 		if (event.getAction() == TableActionType.ERPREFRESH) {
+			if (!(event.getModel() instanceof UserDto)) {
+				return;
+			}
+			UserDto dto = (UserDto) event.getModel();
+			if (!(dto.getRefId().equals(user.getRefId()))) {
+				return;
+			}
+
 			fireEvent(new ProcessingEvent());
 			memberDelegate.withCallback(new AbstractAsyncCallback<Boolean>() {
 				@Override
@@ -117,8 +120,7 @@ public class UserItemPresenter extends
 						getView().forceRefresh();
 					}
 				}
-			}).getDataFromErp(((UserDto) event.getModel()).getMemberRefId(),
-					true);
+			}).getDataFromErp(((UserDto) event.getModel()).getMemberRefId(), true);
 		}
 	}
 }

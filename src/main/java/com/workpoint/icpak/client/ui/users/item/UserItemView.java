@@ -97,8 +97,7 @@ public class UserItemView extends ViewImpl implements UserItemPresenter.MyView {
 			}
 			if (user.getLmsResponse() != null) {
 				spnLMSStatus.setAttribute("data-content",
-						"LMS Response::" + user.getLmsResponse()
-								+ "<br/>LMS Payload::" + user.getLmsPayload());
+						"LMS Response::" + user.getLmsResponse() + "<br/>LMS Payload::" + user.getLmsPayload());
 			}
 		}
 
@@ -107,51 +106,34 @@ public class UserItemView extends ViewImpl implements UserItemPresenter.MyView {
 				@Override
 				public void onClick(ClickEvent event) {
 					final MemberStatementWidget statementWidget = new MemberStatementWidget();
-					statementWidget.setLastUpdated(DateUtils.CREATEDFORMAT
-							.format(user.getLastDateUpdateFromErp()));
+					statementWidget.setLastUpdated(DateUtils.CREATEDFORMAT.format(user.getLastDateUpdateFromErp()));
+					statementWidget.getRefreshButton().addClickHandler(new ClickHandler() {
+						@Override
+						public void onClick(ClickEvent event) {
+							Window.alert("Success");
+							AppContext.fireEvent(new TableActionEvent(user, TableActionType.ERPREFRESH));
+						}
+					});
 
-					statementWidget.getRefreshButton().addClickHandler(
-							new ClickHandler() {
-								@Override
-								public void onClick(ClickEvent event) {
-									Window.alert("Event Fired");
-									AppContext.fireEvent(new TableActionEvent(
-											user, TableActionType.ERPREFRESH));
-								}
-							});
-
-					AppManager.showPopUp("Pick Dates:", statementWidget,
-							new OptionControl() {
-								@Override
-								public void onSelect(String name) {
-									if (name.equals("Cancel")) {
-										hide();
-									} else {
-										UploadContext ctx = new UploadContext(
-												"getreport");
-										if (statementWidget.getStartDate()
-												.getValueDate() != null)
-											ctx.setContext("startdate",
-													statementWidget
-															.getStartDate()
-															.getValueDate()
-															.getTime()
-															+ "");
-										if (statementWidget.getEndDate()
-												.getValueDate() != null)
-											ctx.setContext("enddate",
-													statementWidget
-															.getEndDate()
-															.getValueDate()
-															.getTime()
-															+ "");
-										ctx.setContext("memberRefId",
-												user.getMemberRefId());
-										ctx.setAction(UPLOADACTION.GETSTATEMENT);
-										Window.open(ctx.toUrl(), "", null);
-									}
-								};
-							}, "Generate", "Cancel");
+					AppManager.showPopUp("Pick Dates:", statementWidget, new OptionControl() {
+						@Override
+						public void onSelect(String name) {
+							if (name.equals("Cancel")) {
+								hide();
+							} else {
+								UploadContext ctx = new UploadContext("getreport");
+								if (statementWidget.getStartDate().getValueDate() != null)
+									ctx.setContext("startdate",
+											statementWidget.getStartDate().getValueDate().getTime() + "");
+								if (statementWidget.getEndDate().getValueDate() != null)
+									ctx.setContext("enddate",
+											statementWidget.getEndDate().getValueDate().getTime() + "");
+								ctx.setContext("memberRefId", user.getMemberRefId());
+								ctx.setAction(UPLOADACTION.GETSTATEMENT);
+								Window.open(ctx.toUrl(), "", null);
+							}
+						};
+					}, "Generate", "Cancel");
 
 				}
 			});

@@ -229,8 +229,8 @@ public class GetReport extends HttpServlet {
 			memberRefId = req.getParameter("memberRefId");
 		}
 
-		Date finalStartDate = new Date(startDate);
-		Date finalEndDate = new Date(endDate);
+		Date finalStartDate = startDate==null? null: new Date(startDate);
+		Date finalEndDate = endDate==null? null:new Date(endDate);
 
 		byte[] data = processStatementsRequest(memberRefId, finalStartDate,
 				finalEndDate);
@@ -278,6 +278,7 @@ public class GetReport extends HttpServlet {
 		try {
 			member = userDao.findByRefId(memberRefId, Member.class);
 		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 		User user = null;
@@ -295,6 +296,7 @@ public class GetReport extends HttpServlet {
 				memberRefId, startDate, endDate, 0, 1000);
 
 		Double totalAmount = 0.00;
+		Double total = 0.00;
 
 		for (StatementDto statementDto : statements) {
 			totalAmount = statementDto.getAmount() + totalAmount;
@@ -311,14 +313,14 @@ public class GetReport extends HttpServlet {
 		Doc doc = new Doc(values);
 
 		for (StatementDto dto : statements) {
-
+			total = dto.getAmount() + total;
 			values = new HashMap<String, Object>();
 			values.put("postingDate", formatter.format(dto.getPostingDate()));
 			values.put("docNo", dto.getDocumentNo());
 			values.put("description", dto.getDescription());
 			values.put("originalAmount", dto.getAmount());
 			values.put("credit", dto.getAmount());
-			values.put("balance", dto.getAmount());
+			values.put("balance", total);
 			DocumentLine line = new DocumentLine("statementDetail", values);
 
 			doc.addDetail(line);

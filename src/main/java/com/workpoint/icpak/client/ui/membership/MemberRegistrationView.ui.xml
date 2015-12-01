@@ -57,7 +57,7 @@
 											3 - Proforma Invoice
 										</a>
 									</li>
-									<li style="width:25%;" ui:field="liTab4">
+									<li  style="width:25%;" ui:field="liTab4">
 										<a>
 											<span class="fa fa-check-circle hide"></span>
 											4 - Make Payment
@@ -191,7 +191,7 @@
 												<div class="pricing-table col-xs-4" ui:field="divOverseas">
 													<div class="panel panel-primary" style="border:none;">
 														<div class="controle-header panel-heading panel-heading-landing">
-															<h1 class="panel-title panel-title-landing">OverSeas Member</h1>
+															<h1 class="panel-title panel-title-landing">Associate</h1>
 														</div>
 
 														<div class="panel-body panel-body-landing">
@@ -226,7 +226,7 @@
 														</div>
 														<div class="panel-footer panel-footer-landing">
 															<g:Anchor styleName="btn btn-price btn-block btn-success"
-																ui:field="aOverseas" name="Overseas">SELECT</g:Anchor>
+																ui:field="aAssociate" name="Overseas">SELECT</g:Anchor>
 														</div>
 													</div>
 												</div>
@@ -234,7 +234,7 @@
 												<div class="pricing-table col-xs-4" ui:field="divAssociate">
 													<div class="panel panel-primary" style="border:none;">
 														<div class="controle-header panel-heading panel-heading-landing">
-															<h1 class="panel-title panel-title-landing">Associate</h1>
+															<h1 class="panel-title panel-title-landing">OverSeas Member</h1>
 														</div>
 
 														<div class="panel-body panel-body-landing">
@@ -269,7 +269,7 @@
 														</div>
 														<div class="panel-footer panel-footer-landing">
 															<g:Anchor styleName="btn btn-price btn-block btn-success"
-																ui:field="aAssociate" name="Associate">SELECT</g:Anchor>
+																ui:field="aOverseas" name="Associate">SELECT</g:Anchor>
 														</div>
 													</div>
 												</div>

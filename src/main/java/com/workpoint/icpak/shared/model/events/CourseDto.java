@@ -15,7 +15,7 @@ public class CourseDto extends SerializableObj implements Listable {
 	private String name;
 	private String description;
 	private String code;
-	private Integer cpdHours;
+	private Double cpdHours;
 	private String venue;
 	private String startDate;
 	private String endDate;
@@ -47,11 +47,11 @@ public class CourseDto extends SerializableObj implements Listable {
 		this.description = description;
 	}
 
-	public Integer getCpdHours() {
+	public Double getCpdHours() {
 		return cpdHours;
 	}
 
-	public void setCpdHours(Integer cpdHours) {
+	public void setCpdHours(Double cpdHours) {
 		this.cpdHours = cpdHours;
 	}
 

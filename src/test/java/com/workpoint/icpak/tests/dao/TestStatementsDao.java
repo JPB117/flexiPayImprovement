@@ -4,18 +4,24 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
+import com.amazonaws.util.json.JSONException;
 import com.google.inject.Inject;
 import com.icpak.rest.dao.CPDDao;
 import com.icpak.rest.dao.InvoiceDaoHelper;
@@ -26,6 +32,7 @@ import com.itextpdf.text.DocumentException;
 import com.workpoint.icpak.tests.base.AbstractDaoTest;
 
 public class TestStatementsDao extends AbstractDaoTest{
+	Logger logger = Logger.getLogger(TestStatementsDao.class);
 
 	@Inject InvoiceDaoHelper helper; 
 	@Inject StatementDaoHelper statementHelper;
@@ -34,7 +41,7 @@ public class TestStatementsDao extends AbstractDaoTest{
 	
 	@Ignore
 	public void generateReport() throws FileNotFoundException, IOException, SAXException, ParserConfigurationException, FactoryConfigurationError, DocumentException{
-		String memberRefId= "LLU0eoZpPuA4lfSU";
+		String memberRefId= "cb4ZWESs9um1k8BN";
 		Calendar c = Calendar.getInstance();
 		c.set(Calendar.DATE, 02);
 		c.set(Calendar.YEAR, 2009);
@@ -47,11 +54,11 @@ public class TestStatementsDao extends AbstractDaoTest{
 		byte[] bites = reportServlet.processStatementsRequest(memberRefId,
 				c.getTime(), null);
 
-		IOUtils.write(bites, new FileOutputStream(new File("statements.pdf")));
+		IOUtils.write(bites, new FileOutputStream(new File("/home/wladek/Documents/statements.pdf")));
 
 	}
 
-	@Test
+	@Ignore
 	public void generateMemebrCPDReport() throws FileNotFoundException,
 			IOException, SAXException, ParserConfigurationException,
 			FactoryConfigurationError, DocumentException {
@@ -82,5 +89,17 @@ public class TestStatementsDao extends AbstractDaoTest{
 	@Ignore
 	public void insertIds() {
 		helper.insertIds();
+	}
+	
+	@Ignore
+	public void testFromErp() throws URISyntaxException, ParseException, JSONException{
+		statementHelper.updateStatementsRecord("cb4ZWESs9um1k8BN");
+	}
+	
+	@Test
+	public void testDateFormatter() throws ParseException{
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		Date date = (Date) formatter.parse("2012-05-21");
+		logger.info(">>>>> Formatted "+date);
 	}
 }

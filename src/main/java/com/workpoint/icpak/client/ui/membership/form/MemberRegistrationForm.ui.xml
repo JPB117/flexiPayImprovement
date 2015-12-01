@@ -14,6 +14,17 @@
 		<div class="col-sm-12">
 			<div class="form-group">
 				<div class="row">
+					<div class="col-xs-12">
+						<g:HTMLPanel ui:field="passportPanel">
+							<div>
+								<g:FocusPanel ui:field="panelPicture">
+									<g:Image ui:field="imgPassport" styleName="thumbnail col-sm-offset-1" />
+								</g:FocusPanel>
+							</div>
+						</g:HTMLPanel>
+					</div>
+				</div>
+				<div class="row">
 					<div class="col-xs-6">
 						<label for="firstname">Surname</label>
 						<d:TextField ui:field="txtSurname" styleName="form-control"
