@@ -7,7 +7,6 @@ import java.util.List;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.GwtEvent.Type;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -313,7 +312,6 @@ public class EventBookingPresenter extends
 			@Override
 			public void onFailure(Throwable caught) {
 				super.onFailure(caught);
-				// Window.alert("Ooops..! Something went wrong and we ve noted. Report to ICPAK Customer Care");
 			}
 		}).getInvoice(invoiceRef);
 
@@ -324,7 +322,6 @@ public class EventBookingPresenter extends
 		super.onReset();
 		getView().setMiddleHeight();
 		setInSlot(PAYMENTS_SLOT, paymentPresenter);
-
 	}
 
 	@Override
