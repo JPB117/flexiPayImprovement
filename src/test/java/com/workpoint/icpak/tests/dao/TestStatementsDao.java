@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.List;
 
@@ -16,6 +18,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
+import com.amazonaws.util.json.JSONException;
 import com.google.inject.Inject;
 import com.icpak.rest.dao.CPDDao;
 import com.icpak.rest.dao.InvoiceDaoHelper;
@@ -34,7 +37,7 @@ public class TestStatementsDao extends AbstractDaoTest{
 	
 	@Ignore
 	public void generateReport() throws FileNotFoundException, IOException, SAXException, ParserConfigurationException, FactoryConfigurationError, DocumentException{
-		String memberRefId= "LLU0eoZpPuA4lfSU";
+		String memberRefId= "cb4ZWESs9um1k8BN";
 		Calendar c = Calendar.getInstance();
 		c.set(Calendar.DATE, 02);
 		c.set(Calendar.YEAR, 2009);
@@ -47,11 +50,11 @@ public class TestStatementsDao extends AbstractDaoTest{
 		byte[] bites = reportServlet.processStatementsRequest(memberRefId,
 				c.getTime(), null);
 
-		IOUtils.write(bites, new FileOutputStream(new File("statements.pdf")));
+		IOUtils.write(bites, new FileOutputStream(new File("/home/wladek/Documents/statements.pdf")));
 
 	}
 
-	@Test
+	@Ignore
 	public void generateMemebrCPDReport() throws FileNotFoundException,
 			IOException, SAXException, ParserConfigurationException,
 			FactoryConfigurationError, DocumentException {
@@ -82,5 +85,10 @@ public class TestStatementsDao extends AbstractDaoTest{
 	@Ignore
 	public void insertIds() {
 		helper.insertIds();
+	}
+	
+	@Test
+	public void testFromErp() throws URISyntaxException, ParseException, JSONException{
+		statementHelper.updateStatementsRecord("cb4ZWESs9um1k8BN");
 	}
 }

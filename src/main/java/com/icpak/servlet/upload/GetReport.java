@@ -278,6 +278,7 @@ public class GetReport extends HttpServlet {
 		try {
 			member = userDao.findByRefId(memberRefId, Member.class);
 		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 		User user = null;

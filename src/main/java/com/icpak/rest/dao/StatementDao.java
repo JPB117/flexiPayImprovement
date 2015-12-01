@@ -7,12 +7,15 @@ import java.util.Map;
 
 import javax.persistence.Query;
 
+import org.apache.log4j.Logger;
+
 import com.icpak.rest.exceptions.ServiceException;
 import com.icpak.rest.models.ErrorCodes;
 import com.icpak.rest.models.trx.Statement;
 import com.workpoint.icpak.shared.model.statement.StatementDto;
 
 public class StatementDao extends BaseDao {
+	Logger logger = Logger.getLogger(StatementDao.class);
 
 	public Statement getByStatementId(String refId) {
 		return getByStatementId(refId, true);
@@ -32,11 +35,29 @@ public class StatementDao extends BaseDao {
 	}
 
 	public Statement getByEntryNo(String entryNo, boolean throwExceptionIfNull) {
-
-		Statement statement = getSingleResultOrNull(getEntityManager()
-				.createQuery("from Statement u where u.entryNo=:entryNo")
-				.setParameter("entryNo", entryNo));
-
+		
+		logger.info(">>>>>>>>>><<<<<<<<<< entryNo = "+entryNo);
+		
+		Statement statement = null;
+		
+		Query query = getEntityManager().createQuery("from Statement u where u.entryNo=:entryNo");
+		
+		List<Statement> statements = getResultList(query.setParameter("entryNo", entryNo));
+		
+		if(!statements.isEmpty()){
+			statement = statements.get(0);
+			statements.remove(0);
+			
+			/**
+			 * If duplicates exist, delete duplicates
+			 */
+			if(statements.size() > 0){
+				for(Statement st : statements){
+					delete(st);
+				}
+			}
+		}
+		
 		return statement;
 	}
 

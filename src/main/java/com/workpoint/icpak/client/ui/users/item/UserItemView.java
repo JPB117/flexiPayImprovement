@@ -109,12 +109,11 @@ public class UserItemView extends ViewImpl implements UserItemPresenter.MyView {
 					final MemberStatementWidget statementWidget = new MemberStatementWidget();
 					statementWidget.setLastUpdated(DateUtils.CREATEDFORMAT
 							.format(user.getLastDateUpdateFromErp()));
-
 					statementWidget.getRefreshButton().addClickHandler(
 							new ClickHandler() {
 								@Override
 								public void onClick(ClickEvent event) {
-									Window.alert("Event Fired");
+									Window.alert("Success");
 									AppContext.fireEvent(new TableActionEvent(
 											user, TableActionType.ERPREFRESH));
 								}

@@ -158,13 +158,14 @@ public class StatementDaoHelper {
 		List<Statement> memberStatements = getMemberStatementsFromErp(memberInDb);
 
 		for (Statement statement : memberStatements) {
-			logger.info("=== >><<<<< === Ducument No from erp statements ==" + statement.getEntryNo());
+			logger.info("=== >><<<<< === Entry No from erp statements ==" + statement.getEntryNo());
 			
 			Statement statementInDb = statementDao.getByEntryNo(statement.getEntryNo(), true);
+			
+			logger.info("=== statement in Db refId ==" + statement.getRefId());
 						
-			if(statementInDb != null ){
-				
-				statementInDb.setEntryNo(statement.getEntryNo());
+			if(statementInDb != null){
+				logger.info("=== >><<<<< === Updating ==");
 				statementInDb.setCustLedgerEntryNo(statement.getCustLedgerEntryNo());
 				statementInDb.setEntryType(statement.getEntryType());
 				statementInDb.setPostingDate(statement.getPostingDate());
@@ -177,7 +178,7 @@ public class StatementDaoHelper {
 				
 				statementDao.updateStatement(statementInDb);
 			}else{
-				
+				logger.info("=== >><<<<< === Creating ==");
 				statementDao.createStatement(statement);
 				
 			}

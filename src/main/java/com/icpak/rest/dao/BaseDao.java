@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.Query;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -62,7 +63,7 @@ public class BaseDao {
 		T value = null;
 		try {
 			value = (T) query.getSingleResult();
-		} catch (Exception e) {
+		} catch (NoResultException e) {
 			if (!(e instanceof NoResultException)) {
 				e.printStackTrace();
 			}
