@@ -6,13 +6,16 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -29,6 +32,7 @@ import com.itextpdf.text.DocumentException;
 import com.workpoint.icpak.tests.base.AbstractDaoTest;
 
 public class TestStatementsDao extends AbstractDaoTest{
+	Logger logger = Logger.getLogger(TestStatementsDao.class);
 
 	@Inject InvoiceDaoHelper helper; 
 	@Inject StatementDaoHelper statementHelper;
@@ -87,8 +91,15 @@ public class TestStatementsDao extends AbstractDaoTest{
 		helper.insertIds();
 	}
 	
-	@Test
+	@Ignore
 	public void testFromErp() throws URISyntaxException, ParseException, JSONException{
 		statementHelper.updateStatementsRecord("cb4ZWESs9um1k8BN");
+	}
+	
+	@Test
+	public void testDateFormatter() throws ParseException{
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		Date date = (Date) formatter.parse("2012-05-21");
+		logger.info(">>>>> Formatted "+date);
 	}
 }

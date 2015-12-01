@@ -170,8 +170,8 @@ public class MemberRegistrationView extends ViewImpl implements
 		pageElements.add(new PageElement(divPackage, "Proceed", liTab1));
 		pageElements.add(new PageElement(divCategories, "Submit", "Back",
 				liTab2));
-		pageElements
-				.add(new PageElement(divProforma, "Proceed to Pay", liTab3));
+//		pageElements
+//				.add(new PageElement(divProforma, "Proceed to Pay", liTab3));
 		pageElements.add(new PageElement(divPayment, "Finish", "Back", liTab4));
 
 		setActive(liElements.get(counter), pageElements.get(counter));

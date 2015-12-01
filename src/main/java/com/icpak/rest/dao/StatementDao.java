@@ -189,7 +189,7 @@ public class StatementDao extends BaseDao {
 		return count.intValue();
 	}
 
-	public StatementDto getBalanceCD(String memberNo, Date startDate) {
+	public StatementDto getBalance(String memberNo, Date startDate) {
 
 		// System.err.println("MemberNo = "+memberNo+" startDate="+startDate);
 		String sql = "select sum(amount) from statement where customerNo=:memberNo ";
@@ -209,8 +209,8 @@ public class StatementDao extends BaseDao {
 		StatementDto dto = new StatementDto();
 		dto.setCustomerNo(memberNo);
 		dto.setDueDate(startDate);
-		dto.setDescription("Balance C/D");
-		dto.setDocumentType("Balance C/D");
+		dto.setDescription("Balance");
+		dto.setDocumentType("Balance");
 		dto.setPostingDate(startDate);
 
 		for (Double value : rows) {

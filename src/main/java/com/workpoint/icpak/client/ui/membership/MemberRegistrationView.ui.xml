@@ -57,7 +57,7 @@
 											3 - Proforma Invoice
 										</a>
 									</li>
-									<li style="width:25%;" ui:field="liTab4">
+									<li  style="width:25%;" ui:field="liTab4">
 										<a>
 											<span class="fa fa-check-circle hide"></span>
 											4 - Make Payment
