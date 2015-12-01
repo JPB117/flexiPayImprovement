@@ -27,7 +27,7 @@ public class EventDto extends SerializableObj implements Listable {
 	private static final long serialVersionUID = 1L;
 	private String name;
 	private String description;
-	private Integer cpdHours;
+	private Double cpdHours;
 	private String venue;
 	private String startDate;
 	private String endDate;
@@ -65,11 +65,11 @@ public class EventDto extends SerializableObj implements Listable {
 		this.description = description;
 	}
 
-	public Integer getCpdHours() {
+	public Double getCpdHours() {
 		return cpdHours;
 	}
 
-	public void setCpdHours(Integer cpdHours) {
+	public void setCpdHours(Double cpdHours) {
 		this.cpdHours = cpdHours;
 	}
 

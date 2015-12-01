@@ -51,7 +51,7 @@ public class Event extends PO {
 	@Column(length = 5000)
 	private String description;
 	@Column(length = 255)
-	private Integer cpdHours;
+	private Double cpdHours;
 	private String venue;
 	private String categoryName;
 
@@ -173,11 +173,11 @@ public class Event extends PO {
 		this.type = type;
 	}
 
-	public Integer getCpdHours() {
+	public Double getCpdHours() {
 		return cpdHours;
 	}
 
-	public void setCpdHours(Integer cpdHours) {
+	public void setCpdHours(Double cpdHours) {
 		this.cpdHours = cpdHours;
 	}
 

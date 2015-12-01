@@ -32,21 +32,21 @@ public class TestEventsDao extends AbstractDaoTest {
 		createEvent();
 	}
 
-	@Ignore
+	@Test
 	public void createEvent() {
 		EventDto event = new EventDto();
-		event.setName("The Financial Reporting Workshop: Mt. Kenya Branch, Nyeri");
+		event.setName("ICPAK NYANZA BRANCH HOSTS ITS INAUGURAL END OF YEAR GALA DINNER");
 		event.setDescription("");
-		event.setStartDate("2015-11-06");
-		event.setEndDate("2015-11-06");
-		event.setNonMemberPrice(30000.00);
+		event.setStartDate("2015-12-18");
+		event.setEndDate("2015-12-18");
+		event.setNonMemberPrice(3750.00);
 		event.setMemberPrice(20000.00);
-		event.setVenue("GreenHills Hotel, Nyeri");
+		event.setVenue("Acacia Premier Hotel");
 		event.setType(EventType.EVENT);
 		event.setCategoryName("Conferences");
-		event.setCpdHours(14);
-		// helper.createEvent(event);
-		helper.getAllEvents(null, 0, 10);
+		event.setCpdHours(new Double(2.5));
+		 helper.createEvent(event);
+//		helper.getAllEvents(null, 0, 10);
 		eventId1 = event.getRefId();
 
 		System.out.println("Event Id::" + eventId1);
@@ -90,7 +90,7 @@ public class TestEventsDao extends AbstractDaoTest {
 		course.setMemberPrice(20000.00);
 		course.setVenue("GreenHills Hotel, Nyeri");
 		course.setType(EventType.COURSE);
-		course.setCpdHours(14);
+		course.setCpdHours(new Double(14));
 		courseHelper.createEvent(course);
 		eventId1 = course.getRefId();
 		System.out.println("Event Id::" + eventId1);
@@ -103,7 +103,7 @@ public class TestEventsDao extends AbstractDaoTest {
 				.size());
 	}
 
-	@Test
+	@Ignore
 	public void testDeleagtesReport() throws Exception {
 		String eventRefId = "QEyf2DasD3X7Pybt";
 		String docType = "xls";
