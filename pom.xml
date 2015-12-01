@@ -157,7 +157,7 @@
 				<configuration>
 					<!-- With multiple tests use GwtTestSuite.java for speed -->
 					<includes>**/*GwtTest.java</includes>
-					<extraJvmArgs>-Xss1024K -Xmx1024M -XX:MaxPermSize=128M</extraJvmArgs>
+					<extraJvmArgs>-Xss1024K -Xmx1024M -XX:MaxPermSize=128M -Dcom.sun.management.jmxremote</extraJvmArgs>
 					<!-- <bindAddress></bindAddress> -->
 					<logLevel>INFO</logLevel>
 					<copyWebapp>true</copyWebapp>
