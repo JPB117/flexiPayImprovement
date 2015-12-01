@@ -111,7 +111,7 @@
 											</div>
 										</div>
 
-										<div ui:field="divPayNow">
+										<div ui:field="divPayNow" class="hide">
 											<div class="row">
 												Account Balance:
 												<span ui:field="spnBalance" class="text-muted"></span>
