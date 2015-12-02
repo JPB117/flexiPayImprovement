@@ -76,8 +76,6 @@ public class StatementsView extends ViewImpl implements
 		grid.getElement().getFirstChildElement().getStyle().clearHeight();
 
 		dtEndDate.addStyleName("end-date");
-		
-		downloadPdf.setStyleName("hide");
 
 		TextColumn<StatementDto> date = new TextColumn<StatementDto>() {
 			@Override

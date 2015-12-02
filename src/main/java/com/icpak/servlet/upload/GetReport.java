@@ -229,8 +229,8 @@ public class GetReport extends HttpServlet {
 			memberRefId = req.getParameter("memberRefId");
 		}
 
-		Date finalStartDate = startDate==null? null: new Date(startDate);
-		Date finalEndDate = endDate==null? null:new Date(endDate);
+		Date finalStartDate = startDate == null ? null : new Date(startDate);
+		Date finalEndDate = endDate == null ? null : new Date(endDate);
 
 		byte[] data = processStatementsRequest(memberRefId, finalStartDate,
 				finalEndDate);
@@ -316,13 +316,15 @@ public class GetReport extends HttpServlet {
 			total = dto.getAmount() + total;
 			values = new HashMap<String, Object>();
 			values.put("postingDate", formatter.format(dto.getPostingDate()));
-			values.put("docNo", dto.getDocumentNo());
+			values.put("type",
+					dto.getDocumentType() == null ? "" : dto.getDocumentType());
+			values.put("docNo",
+					(dto.getDocumentNo() == null ? "" : dto.getDocumentNo()));
 			values.put("description", dto.getDescription());
 			values.put("originalAmount", dto.getAmount());
 			values.put("credit", dto.getAmount());
 			values.put("balance", total);
 			DocumentLine line = new DocumentLine("statementDetail", values);
-
 			doc.addDetail(line);
 		}
 

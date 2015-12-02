@@ -162,9 +162,9 @@ public class RecordCPD extends Composite {
 			dto = this.dto;
 		}
 		dto.setCategory(lstCategory.getValue());
+		dto.setStartDate(dtStartDate.getValueDate());
 		dto.setEndDate(dtEndDate.getValueDate());
 		dto.setOrganizer(txtOrganizer.getValue());
-		dto.setStartDate(dtStartDate.getValueDate());
 		dto.setTitle(txtTitle.getValue());
 		return dto;
 	}

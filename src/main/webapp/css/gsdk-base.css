@@ -51,7 +51,7 @@ html, body {
 }
 /*     General overwrite     */
 a {
-	color: #2CA8FF;
+	/* color: #2CA8FF; */
 	cursor: pointer;
 }
 
