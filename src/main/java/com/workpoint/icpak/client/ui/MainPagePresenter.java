@@ -103,7 +103,7 @@ public class MainPagePresenter extends
 	@Override
 	public void onError(final ErrorEvent event) {
 		// addToPopupSlot(null);
-		Window.alert(event.getMessage() + "---" + event.getSource());
+		// Window.alert(event.getMessage() + "---" + event.getSource());
 
 		errorFactory.get(new ServiceCallback<ErrorPresenter>() {
 			@Override

@@ -10,7 +10,7 @@
 
 	<g:HTMLPanel ui:field="divMainContainer">
 		<g:HTMLPanel ui:field="divHeaderContainer" styleName="top-header">
-			<nav class="navbar">
+			<nav class="navbar top-navbar">
 				<div class="container">
 					<div class="navbar-header" style="width: 100%; text-align: center;">
 						<a class="brand">

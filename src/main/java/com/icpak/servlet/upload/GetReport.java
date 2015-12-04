@@ -4,12 +4,15 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.ServletConfig;
@@ -268,12 +271,18 @@ public class GetReport extends HttpServlet {
 		processAttachmentRequest(resp, data, "memberCPDStatement.pdf");
 	}
 
+	public static String priceWithDecimal(Double price) {
+		DecimalFormat formatter = new DecimalFormat("###,###,###.00");
+		return formatter.format(price);
+	}
+
 	public byte[] processStatementsRequest(String memberRefId, Date startDate,
 			Date endDate) throws FileNotFoundException, IOException,
 			SAXException, ParserConfigurationException,
 			FactoryConfigurationError, DocumentException {
 
 		Member member = null;
+		NumberFormat df = NumberFormat.getCurrencyInstance();
 
 		try {
 			member = userDao.findByRefId(memberRefId, Member.class);
@@ -304,11 +313,16 @@ public class GetReport extends HttpServlet {
 
 		Map<String, Object> values = new HashMap<String, Object>();
 		values.put("date", formatter.format(new Date()));
+		values.put("startingDate", formatter.format(startDate));
+		StatementDto lastStatement = statements.get(statements.size() - 1);
+
+		values.put("endingDate",
+				formatter.format(lastStatement.getPostingDate()));
 		values.put("memberAddress", user.getAddress());
 		values.put("memberLocation", user.getCity());
 		values.put("memberNo", user.getMemberNo());
 		values.put("memberNames", user.getUserData().getFullNames());
-		values.put("totalAmount", totalAmount);
+		values.put("totalAmount", priceWithDecimal(totalAmount));
 
 		Doc doc = new Doc(values);
 
@@ -316,14 +330,18 @@ public class GetReport extends HttpServlet {
 			total = dto.getAmount() + total;
 			values = new HashMap<String, Object>();
 			values.put("postingDate", formatter.format(dto.getPostingDate()));
-			values.put("type",
-					dto.getDocumentType() == null ? "" : dto.getDocumentType());
+			values.put("type", (dto.getDocumentType().equals("null") || dto
+					.getDocumentType() == null) ? "" : dto.getDocumentType());
 			values.put("docNo",
 					(dto.getDocumentNo() == null ? "" : dto.getDocumentNo()));
 			values.put("description", dto.getDescription());
-			values.put("originalAmount", dto.getAmount());
-			values.put("credit", dto.getAmount());
-			values.put("balance", total);
+			values.put("debit",
+					dto.getAmount() < 0 ? priceWithDecimal(dto.getAmount())
+							: 0.00);
+			values.put("credit",
+					dto.getAmount() > 0 ? priceWithDecimal(dto.getAmount())
+							: 0.00);
+			values.put("balance", priceWithDecimal(total));
 			DocumentLine line = new DocumentLine("statementDetail", values);
 			doc.addDetail(line);
 		}

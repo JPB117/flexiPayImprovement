@@ -9,6 +9,8 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.DateField;
+import com.workpoint.icpak.client.ui.util.DateRange;
+import com.workpoint.icpak.client.ui.util.DateUtils;
 
 public class MemberStatementWidget extends Composite {
 
@@ -24,12 +26,17 @@ public class MemberStatementWidget extends Composite {
 	@UiField
 	SpanElement spnLastUpdated;
 
+	@UiField
+	SpanElement spnShowLoading;
+
 	interface StatementWidgetUiBinder extends
 			UiBinder<Widget, MemberStatementWidget> {
 	}
 
 	public MemberStatementWidget() {
 		initWidget(uiBinder.createAndBindUi(this));
+		dtStartDate
+				.setValue(DateUtils.getDateByRange(DateRange.THISYEAR, true));
 	}
 
 	public DateField getStartDate() {
@@ -46,5 +53,15 @@ public class MemberStatementWidget extends Composite {
 
 	public void setLastUpdated(String lastUpdated) {
 		spnLastUpdated.setInnerText(lastUpdated);
+	}
+
+	public void showLoading(boolean show) {
+		if (show) {
+			spnLastUpdated.addClassName("hide");
+			spnShowLoading.removeClassName("hide");
+		} else {
+			spnLastUpdated.removeClassName("hide");
+			spnShowLoading.addClassName("hide");
+		}
 	}
 }

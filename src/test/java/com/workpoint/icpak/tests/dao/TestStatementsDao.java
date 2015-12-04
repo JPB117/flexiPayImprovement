@@ -29,19 +29,26 @@ import com.icpak.rest.dao.helper.StatementDaoHelper;
 import com.icpak.rest.models.cpd.CPD;
 import com.icpak.servlet.upload.GetReport;
 import com.itextpdf.text.DocumentException;
+import com.workpoint.icpak.shared.model.statement.StatementSummaryDto;
 import com.workpoint.icpak.tests.base.AbstractDaoTest;
 
-public class TestStatementsDao extends AbstractDaoTest{
+public class TestStatementsDao extends AbstractDaoTest {
 	Logger logger = Logger.getLogger(TestStatementsDao.class);
 
-	@Inject InvoiceDaoHelper helper; 
-	@Inject StatementDaoHelper statementHelper;
-	@Inject GetReport reportServlet;
-	@Inject CPDDao cpdDao;
-	
+	@Inject
+	InvoiceDaoHelper helper;
+	@Inject
+	StatementDaoHelper statementHelper;
+	@Inject
+	GetReport reportServlet;
+	@Inject
+	CPDDao cpdDao;
+
 	@Ignore
-	public void generateReport() throws FileNotFoundException, IOException, SAXException, ParserConfigurationException, FactoryConfigurationError, DocumentException{
-		String memberRefId= "cb4ZWESs9um1k8BN";
+	public void generateReport() throws FileNotFoundException, IOException,
+			SAXException, ParserConfigurationException,
+			FactoryConfigurationError, DocumentException {
+		String memberRefId = "cb4ZWESs9um1k8BN";
 		Calendar c = Calendar.getInstance();
 		c.set(Calendar.DATE, 02);
 		c.set(Calendar.YEAR, 2009);
@@ -54,7 +61,8 @@ public class TestStatementsDao extends AbstractDaoTest{
 		byte[] bites = reportServlet.processStatementsRequest(memberRefId,
 				c.getTime(), null);
 
-		IOUtils.write(bites, new FileOutputStream(new File("/home/wladek/Documents/statements.pdf")));
+		IOUtils.write(bites, new FileOutputStream(new File(
+				"/home/wladek/Documents/statements.pdf")));
 
 	}
 
@@ -64,9 +72,9 @@ public class TestStatementsDao extends AbstractDaoTest{
 			FactoryConfigurationError, DocumentException {
 		String memberRefId = "69WQZqVMM54kunKf";
 
-//		List<CPD> cpds = cpdDao.getAllCPDS(memberRefId, null, null, 0, 1000);
-//		Assert.assertEquals(12, cpds.size());
-//		System.err.println("No of entries = " + cpds.size());
+		// List<CPD> cpds = cpdDao.getAllCPDS(memberRefId, null, null, 0, 1000);
+		// Assert.assertEquals(12, cpds.size());
+		// System.err.println("No of entries = " + cpds.size());
 
 		byte[] bites = reportServlet.processMemberCPDStatementRequest(
 				memberRefId, null, null);
@@ -90,16 +98,28 @@ public class TestStatementsDao extends AbstractDaoTest{
 	public void insertIds() {
 		helper.insertIds();
 	}
-	
+
 	@Ignore
-	public void testFromErp() throws URISyntaxException, ParseException, JSONException{
+	public void testFromErp() throws URISyntaxException, ParseException,
+			JSONException {
 		statementHelper.updateStatementsRecord("cb4ZWESs9um1k8BN");
 	}
-	
-	@Test
-	public void testDateFormatter() throws ParseException{
+
+	@Ignore
+	public void testDateFormatter() throws ParseException {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		Date date = (Date) formatter.parse("2012-05-21");
-		logger.info(">>>>> Formatted "+date);
+		logger.info(">>>>> Formatted " + date);
+	}
+
+	@Test
+	public void testTotals() {
+		Long startDate = 1420059600000L;
+		StatementSummaryDto summary = statementHelper.getSummary(
+				"m17193dBJZTEeNZj", new Date(startDate), null);
+		System.err.println("Total Debit>>" + summary.getTotalDebit());
+		System.err.println("Total Credit>>" + summary.getTotalCredit());
+		System.err.println("Total Balance>>" + summary.getTotalBalance());
+
 	}
 }

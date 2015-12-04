@@ -11,7 +11,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.TabBar;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
@@ -56,8 +55,9 @@ public class UserItemView extends ViewImpl implements UserItemPresenter.MyView {
 
 	@UiField
 	Anchor aGoodStanding;
-
 	private UserDto user;
+
+	final MemberStatementWidget statementWidget = new MemberStatementWidget();
 
 	@Inject
 	public UserItemView(final Binder binder) {
@@ -97,7 +97,8 @@ public class UserItemView extends ViewImpl implements UserItemPresenter.MyView {
 			}
 			if (user.getLmsResponse() != null) {
 				spnLMSStatus.setAttribute("data-content",
-						"LMS Response::" + user.getLmsResponse() + "<br/>LMS Payload::" + user.getLmsPayload());
+						"LMS Response::" + user.getLmsResponse()
+								+ "<br/>LMS Payload::" + user.getLmsPayload());
 			}
 		}
 
@@ -105,35 +106,53 @@ public class UserItemView extends ViewImpl implements UserItemPresenter.MyView {
 			aStatementDownload.addClickHandler(new ClickHandler() {
 				@Override
 				public void onClick(ClickEvent event) {
-					final MemberStatementWidget statementWidget = new MemberStatementWidget();
-					statementWidget.setLastUpdated(DateUtils.CREATEDFORMAT.format(user.getLastDateUpdateFromErp()));
-					statementWidget.getRefreshButton().addClickHandler(new ClickHandler() {
-						@Override
-						public void onClick(ClickEvent event) {
-							Window.alert("Success");
-							AppContext.fireEvent(new TableActionEvent(user, TableActionType.ERPREFRESH));
-						}
-					});
+					statementWidget.setLastUpdated(DateUtils.CREATEDFORMAT
+							.format(user.getLastDateUpdateFromErp()));
 
-					AppManager.showPopUp("Pick Dates:", statementWidget, new OptionControl() {
-						@Override
-						public void onSelect(String name) {
-							if (name.equals("Cancel")) {
-								hide();
-							} else {
-								UploadContext ctx = new UploadContext("getreport");
-								if (statementWidget.getStartDate().getValueDate() != null)
-									ctx.setContext("startdate",
-											statementWidget.getStartDate().getValueDate().getTime() + "");
-								if (statementWidget.getEndDate().getValueDate() != null)
-									ctx.setContext("enddate",
-											statementWidget.getEndDate().getValueDate().getTime() + "");
-								ctx.setContext("memberRefId", user.getMemberRefId());
-								ctx.setAction(UPLOADACTION.GETSTATEMENT);
-								Window.open(ctx.toUrl(), "", null);
-							}
-						};
-					}, "Generate", "Cancel");
+					statementWidget.getRefreshButton().addClickHandler(
+							new ClickHandler() {
+								@Override
+								public void onClick(ClickEvent event) {
+									statementWidget.showLoading(true);
+									AppContext.fireEvent(new TableActionEvent(
+											user, TableActionType.ERPREFRESH));
+								}
+							});
+
+					AppManager.showPopUp(
+							"Generate Statements for " + user.getDisplayName()
+									+ "-" + user.getMemberNo(),
+							statementWidget, new OptionControl() {
+								@Override
+								public void onSelect(String name) {
+									if (name.equals("Cancel")) {
+										hide();
+									} else {
+										UploadContext ctx = new UploadContext(
+												"getreport");
+										if (statementWidget.getStartDate()
+												.getValueDate() != null)
+											ctx.setContext("startdate",
+													statementWidget
+															.getStartDate()
+															.getValueDate()
+															.getTime()
+															+ "");
+										if (statementWidget.getEndDate()
+												.getValueDate() != null)
+											ctx.setContext("enddate",
+													statementWidget
+															.getEndDate()
+															.getValueDate()
+															.getTime()
+															+ "");
+										ctx.setContext("memberRefId",
+												user.getMemberRefId());
+										ctx.setAction(UPLOADACTION.GETSTATEMENT);
+										Window.open(ctx.toUrl(), "", null);
+									}
+								};
+							}, "Generate", "Cancel");
 
 				}
 			});
@@ -177,7 +196,8 @@ public class UserItemView extends ViewImpl implements UserItemPresenter.MyView {
 
 	@Override
 	public void forceRefresh() {
-		// statementWidget.setLastUpdated(DateUtils.CREATEDFORMAT
-		// .format(new Date()));
+		statementWidget.setLastUpdated(DateUtils.CREATEDFORMAT
+				.format(new Date()));
+		statementWidget.showLoading(false);
 	}
 }

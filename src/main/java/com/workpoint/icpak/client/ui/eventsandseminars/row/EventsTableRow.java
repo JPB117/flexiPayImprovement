@@ -21,9 +21,11 @@ import com.workpoint.icpak.shared.model.events.EventDto;
 
 public class EventsTableRow extends RowWidget {
 
-	private static ActivitiesTableRowUiBinder uiBinder = GWT.create(ActivitiesTableRowUiBinder.class);
+	private static ActivitiesTableRowUiBinder uiBinder = GWT
+			.create(ActivitiesTableRowUiBinder.class);
 
-	interface ActivitiesTableRowUiBinder extends UiBinder<Widget, EventsTableRow> {
+	interface ActivitiesTableRowUiBinder extends
+			UiBinder<Widget, EventsTableRow> {
 	}
 
 	@UiField
@@ -58,19 +60,19 @@ public class EventsTableRow extends RowWidget {
 
 	public EventsTableRow(EventDto event) {
 		this();
-		Date startDate = isNullOrEmpty(event.getStartDate()) ? null
-				: DateUtils.parse(event.getStartDate(), DateUtils.FULLTIMESTAMP);
-		Date endDate = isNullOrEmpty(event.getEndDate()) ? null
-				: DateUtils.parse(event.getEndDate(), DateUtils.FULLTIMESTAMP);
+		Date startDate = isNullOrEmpty(event.getStartDate()) ? null : DateUtils
+				.parse(event.getStartDate(), DateUtils.FULLTIMESTAMP);
+		Date endDate = isNullOrEmpty(event.getEndDate()) ? null : DateUtils
+				.parse(event.getEndDate(), DateUtils.FULLTIMESTAMP);
 
 		Date today = new Date();
 
-		String dates = startDate == null ? ""
-				: DATEFORMAT.format(startDate) + "-" + endDate == null ? "" : DATEFORMAT.format(endDate);
-
+		String dates = startDate == null ? "" : DATEFORMAT.format(startDate)
+				+ "-" + endDate == null ? "" : DATEFORMAT.format(endDate);
 		if (today.getTime() < endDate.getTime()) {
 			divDate.addStyleName("event-active");
-			lDays.setText("[ "+DateUtils.getTimeDifference(endDate)+" to ago]");
+			lDays.setText("[ " + DateUtils.getTimeDifferenceAsString(endDate)
+					+ "]");
 			divEventType.addStyleName("event-active");
 			divDelegates.addStyleName("event-active");
 			divEventLocation.addStyleName("event-active");
@@ -80,7 +82,8 @@ public class EventsTableRow extends RowWidget {
 			divEventName.addStyleName("event-active");
 		} else {
 			divDate.addStyleName("event-inactive");
-			lDays.setText("[ "+DateUtils.getTimeDifference(endDate)+" a go]");
+			lDays.setText("[ " + DateUtils.getTimeDifference(endDate)
+					+ " a go]");
 			divEventType.addStyleName("event-inactive");
 			divDelegates.addStyleName("event-inactive");
 			divEventLocation.addStyleName("event-inactive");
@@ -95,10 +98,13 @@ public class EventsTableRow extends RowWidget {
 		divEventType.add(new InlineLabel(event.getType().getDisplayName()));
 		divDelegates.add(new InlineLabel(event.getDelegateCount() + ""));
 		divEventLocation.add(new InlineLabel(event.getVenue()));
-		divPaidAmount.add(new InlineLabel(NUMBERFORMAT.format(event.getPaidCount()) + ""));
-		divUnPaidAmount.add(new InlineLabel(NUMBERFORMAT.format(event.getUnPaidCount()) + ""));
+		divPaidAmount.add(new InlineLabel(NUMBERFORMAT.format(event
+				.getPaidCount()) + ""));
+		divUnPaidAmount.add(new InlineLabel(NUMBERFORMAT.format(event
+				.getUnPaidCount()) + ""));
 		divCPDHours.add(new InlineLabel(event.getCpdHours() + ""));
-		String courseId = ((event.getCourseId() != null) ? "(Course Id:" + event.getCourseId() + ")" : "");
+		String courseId = ((event.getCourseId() != null) ? "(Course Id:"
+				+ event.getCourseId() + ")" : "");
 		aEventName.setText(event.getName() + courseId);
 		aEventName.setHref("#events;eventId=" + event.getRefId());
 	}

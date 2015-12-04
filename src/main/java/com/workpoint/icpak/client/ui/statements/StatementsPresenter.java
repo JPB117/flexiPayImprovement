@@ -43,6 +43,7 @@ import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.api.MemberResource;
 import com.workpoint.icpak.shared.model.statement.SearchDto;
 import com.workpoint.icpak.shared.model.statement.StatementDto;
+import com.workpoint.icpak.shared.model.statement.StatementSummaryDto;
 
 public class StatementsPresenter
 		extends
@@ -66,6 +67,8 @@ public class StatementsPresenter
 		Date getStartDateValue();
 
 		void setInitialDates(DateRange thisquarter, Date date);
+
+		void setSummary(StatementSummaryDto summary);
 	}
 
 	@ProxyCodeSplit
@@ -101,17 +104,6 @@ public class StatementsPresenter
 	protected void onBind() {
 		super.onBind();
 
-		getView().getGrid().setDataProvider(
-				new AsyncDataProvider<StatementDto>() {
-					@Override
-					protected void onRangeChanged(
-							final HasData<StatementDto> display) {
-						final Range range = getView().getGrid()
-								.getVisibleRange();
-						loadStatements(range.getStart(), range.getLength());
-					}
-				});
-
 		getView().getRefresh().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent arg0) {
@@ -128,19 +120,18 @@ public class StatementsPresenter
 		return memberId;
 	}
 
-	protected void save() {
-	}
-
 	protected void loadStatements(final int offset, final int limit) {
 		final Date startDate = getView().getSearchCriteria().getStartDate();
 		final Date endDate = getView().getSearchCriteria().getEndDate();
 		fireEvent(new ProcessingEvent());
+		loadStatementSummary(startDate, endDate);
 
 		memberDelegate
 				.withCallback(new AbstractAsyncCallback<Integer>() {
 					@Override
 					public void onSuccess(Integer aCount) {
 						totalCount = aCount;
+						// Load Actual Statements
 						memberDelegate
 								.withCallback(
 										new AbstractAsyncCallback<List<StatementDto>>() {
@@ -164,12 +155,34 @@ public class StatementsPresenter
 						endDate == null ? null : endDate.getTime());
 	}
 
+	protected void loadStatementSummary(Date startDate, Date endDate) {
+		memberDelegate
+				.withCallback(new AbstractAsyncCallback<StatementSummaryDto>() {
+					@Override
+					public void onSuccess(StatementSummaryDto result) {
+						getView().setSummary(result);
+						fireEvent(new ProcessingCompletedEvent());
+					}
+				})
+				.statements(getMemberId())
+				.getSummary(startDate == null ? null : startDate.getTime(),
+						endDate == null ? null : endDate.getTime());
+	}
+
 	@Override
 	protected void onReveal() {
 		super.onReveal();
-		final Range range = getView().getGrid().getVisibleRange();
-		getView().setInitialDates(DateRange.THISQUARTER, new Date());
-		loadStatements(range.getStart(), range.getLength());
+		getView().setInitialDates(DateRange.THISYEAR, null);
+		getView().getGrid().setDataProvider(
+				new AsyncDataProvider<StatementDto>() {
+					@Override
+					protected void onRangeChanged(
+							final HasData<StatementDto> display) {
+						final Range range = getView().getGrid()
+								.getVisibleRange();
+						loadStatements(range.getStart(), range.getLength());
+					}
+				});
 	}
 
 }

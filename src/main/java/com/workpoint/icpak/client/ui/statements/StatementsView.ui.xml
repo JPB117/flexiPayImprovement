@@ -1,8 +1,9 @@
-<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+	<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
 	xmlns:g='urn:import:com.google.gwt.user.client.ui' ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
 	xmlns:d='urn:import:com.workpoint.icpak.client.ui.component'
+	xmlns:header='urn:import:com.workpoint.icpak.client.ui.statement.header'
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
 
@@ -10,6 +11,10 @@
 	.top-bar {
 		margin: 0px 15px;
 		width: 99%;
+	}
+	
+	.start-date-picker {
+		margin-right: 25px;
 	}
 	</ui:style>
 
@@ -21,14 +26,17 @@
 			</h3>
 
 
+
 			<div class="main-content">
+				<header:StatementHeader ui:field="panelHeader"></header:StatementHeader>
 				<div class="row">
 					<div class="col-lg-12 tabbable {style.top-bar}">
 						<div class="row search-bar">
-							<div class="col-lg-3">
+							<div class="col-lg-3" style="display: inline-flex;">
+								<Strong style="padding-top:10px;margin-right: 10px;">From:</Strong>
 								<d:DateField ui:field="dtStartDate" />
 							</div>
-							<div class="col-lg-3">
+							<div class="col-lg-3 hide">
 								<d:DateField ui:field="dtEndDate" />
 							</div>
 							<div class="col-lg-1">

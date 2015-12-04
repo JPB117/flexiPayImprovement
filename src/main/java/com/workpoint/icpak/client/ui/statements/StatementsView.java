@@ -6,6 +6,7 @@ import static com.workpoint.icpak.client.ui.util.NumberUtils.CURRENCYFORMAT;
 import java.util.Date;
 import java.util.List;
 
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -22,11 +23,14 @@ import com.workpoint.icpak.client.model.UploadContext.UPLOADACTION;
 import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.DateField;
 import com.workpoint.icpak.client.ui.component.Grid;
+import com.workpoint.icpak.client.ui.statement.header.StatementHeader;
 import com.workpoint.icpak.client.ui.util.DateRange;
 import com.workpoint.icpak.client.ui.util.DateUtils;
+import com.workpoint.icpak.client.ui.util.NumberUtils;
 import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.model.statement.SearchDto;
 import com.workpoint.icpak.shared.model.statement.StatementDto;
+import com.workpoint.icpak.shared.model.statement.StatementSummaryDto;
 
 public class StatementsView extends ViewImpl implements
 		StatementsPresenter.IStatementsView {
@@ -49,9 +53,18 @@ public class StatementsView extends ViewImpl implements
 	@UiField
 	ActionLink downloadPdf;
 
+	@UiField
+	StatementHeader panelHeader;
+
+	Double totalBalance = 0.00;
+	Double totalCredit = 0.00;
+	Double totalDebit = 0.00;
+
 	@Inject
 	public StatementsView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
+
+		dtStartDate.getElement().getStyle().setMarginRight(25, Unit.PX);
 
 		downloadPdf.addClickHandler(new ClickHandler() {
 
@@ -88,7 +101,8 @@ public class StatementsView extends ViewImpl implements
 		TextColumn<StatementDto> type = new TextColumn<StatementDto>() {
 			@Override
 			public String getValue(StatementDto arg0) {
-				return arg0.getDocumentType();
+				return arg0.getDocumentType().equals("null") ? "" : arg0
+						.getDocumentType();
 			}
 		};
 
@@ -99,14 +113,41 @@ public class StatementsView extends ViewImpl implements
 			}
 		};
 
-		TextColumn<StatementDto> amount = new TextColumn<StatementDto>() {
+		TextColumn<StatementDto> debitAmount = new TextColumn<StatementDto>() {
 			@Override
 			public String getValue(StatementDto arg0) {
-
+				if (arg0.getAmount() < 0) {
+					StatementsView.this.totalDebit = totalDebit
+							+ (-arg0.getAmount());
+					// Window.alert(totalDebit + ">Debit");
+				}
 				return arg0.getAmount() == null ? ""
 						: arg0.getAmount() < 0 ? "("
 								+ CURRENCYFORMAT.format(-arg0.getAmount())
-								+ ")" : CURRENCYFORMAT.format(arg0.getAmount());
+								+ ")" : CURRENCYFORMAT.format(0.00);
+			}
+		};
+		TextColumn<StatementDto> creditAmount = new TextColumn<StatementDto>() {
+			@Override
+			public String getValue(StatementDto arg0) {
+				if (arg0.getAmount() > 0) {
+					StatementsView.this.totalCredit = totalCredit
+							+ arg0.getAmount();
+					// Window.alert(totalCredit + ">Credit");
+				}
+
+				return arg0.getAmount() == null ? ""
+						: arg0.getAmount() < 0 ? CURRENCYFORMAT.format(0.0)
+								: CURRENCYFORMAT.format(arg0.getAmount());
+			}
+		};
+
+		TextColumn<StatementDto> balance = new TextColumn<StatementDto>() {
+			@Override
+			public String getValue(StatementDto arg0) {
+				StatementsView.this.totalBalance = totalBalance
+						+ arg0.getAmount();
+				return CURRENCYFORMAT.format(totalBalance);
 			}
 		};
 
@@ -117,19 +158,13 @@ public class StatementsView extends ViewImpl implements
 			}
 		};
 
-		TextColumn<StatementDto> dueDate = new TextColumn<StatementDto>() {
-			@Override
-			public String getValue(StatementDto arg0) {
-
-				return (arg0.getDueDate() == null ? "" : DATEFORMAT.format(arg0
-						.getDueDate()));
-			}
-		};
-
 		grid.addColumn(date, "Date");
-		grid.addColumn(description, "Description", "150px");
-		grid.addColumn(amount, "Amount");
-		grid.addColumn(type, "Doc Type");
+		grid.addColumn((type), "Doc Type");
+		grid.addColumn(docNo, "Doc No");
+		grid.addColumn(description, "Description", "200px");
+		grid.addColumn(debitAmount, "Debit Amount");
+		grid.addColumn(creditAmount, "Credit Amount");
+		grid.addColumn(balance, "Balance");
 
 	}
 
@@ -140,7 +175,21 @@ public class StatementsView extends ViewImpl implements
 
 	@Override
 	public void setData(List<StatementDto> data, int totalCount) {
+		clearSummaryAmounts();
 		grid.setData(data, totalCount);
+	}
+
+	private void clearSummaryAmounts() {
+		totalBalance = 0.0;
+		totalDebit = 0.0;
+		totalCredit = 0.0;
+	}
+
+	public void setSummary(StatementSummaryDto summary) {
+		panelHeader.setSummary(
+				NumberUtils.NUMBERFORMAT.format(-summary.getTotalDebit()),
+				NumberUtils.NUMBERFORMAT.format(summary.getTotalCredit()),
+				NumberUtils.NUMBERFORMAT.format(summary.getTotalBalance()));
 	}
 
 	@Override

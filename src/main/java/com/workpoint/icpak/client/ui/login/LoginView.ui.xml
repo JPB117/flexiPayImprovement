@@ -5,9 +5,10 @@
 	ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
+
 	<g:HTMLPanel>
 		<div>
-			<nav class="navbar">
+			<nav class="navbar top-navbar">
 				<div class="container">
 					<div class="navbar-header" style="width: 100%; text-align: center;">
 						<a class="brand">
@@ -63,5 +64,18 @@
 				</g:HTMLPanel>
 			</g:HTMLPanel>
 		</g:HTMLPanel>
+
+		<footer class="footer-navbar-wrapper footer-skinny ng-scope"
+			role="contentinfo" data-ng-controller="footerController">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12 text-center">
+						<p class="copyright">
+							© 2015 ICPAK
+						</p>
+					</div>
+				</div>
+			</div>
+		</footer>
 	</g:HTMLPanel>
 </ui:UiBinder>

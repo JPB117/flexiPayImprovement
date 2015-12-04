@@ -3,7 +3,7 @@
 <head>
 <style type="text/css">
 body {
-	
+	font-family: Arial;
 }
 
 h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
@@ -499,6 +499,7 @@ div.footer {
 
 @page {
 	size: 11.69in 8.27in;
+	font-family: Arial;
 }
 </style>
 </head>
@@ -530,12 +531,19 @@ div.footer {
 				<h1 class="text-center">Statement</h1>
 			</div>
 			<div class="row-fluid">
-				<div class="col-print-10">
+				<div class="col-print-6">
 					<strong>Customer No:</strong>@#memberNo<br /> @#memberNames <br />
 					@#memberAddress<br /> @#memberLocation <br />
 				</div>
-				<div class="col-print-2 text-right">
-					<b>Date:</b>@#date
+				<div class="col-print-5 text-right">
+					<p>Starting Date: @#startingDate</p>
+					<p>Ending Date: @#endingDate</p>
+				</div>
+			</div>
+
+			<div class="row-fluid">
+				<div class="col-print-12">
+					<br /> <b>Date:</b>@#date
 				</div>
 			</div>
 		</div>
@@ -548,9 +556,9 @@ div.footer {
 						<th>Date</th>
 						<th>Type</th>
 						<th>Doc No</th>
-						<th style="text-align: center">Description</th>
-						<th style="text-align: right">Debit Amount</th>
-						<th style="text-align: right">Credit Amount</th>
+						<th style="text-align: right">Description</th>
+						<th style="text-align: right">Debit</th>
+						<th style="text-align: right">Credit</th>
 						<th style="text-align: right">Balance</th>
 					</tr>
 				</thead>
@@ -560,8 +568,8 @@ div.footer {
 						<td>@#postingDate</td>
 						<td>@#type</td>
 						<td>@#docNo</td>
-						<td style="text-align: center">@#description</td>
-						<td style="text-align: right">@#originalAmount</td>
+						<td style="text-align: right">@#description</td>
+						<td style="text-align: right">@#debit</td>
 						<td style="text-align: right">@#credit</td>
 						<td style="text-align: right" class="num">@#balance</td>
 					</tr>
@@ -572,7 +580,7 @@ div.footer {
 						<td></td>
 						<td></td>
 						<td></td>
-						<td class="num"><b>Total</b></td>
+						<td class="num"><b>Total Balance</b></td>
 						<td class="num"><b style="border-bottom: 3px double;">KES
 								@#totalAmount</b></td>
 					</tr>
