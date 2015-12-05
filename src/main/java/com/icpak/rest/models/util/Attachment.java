@@ -15,22 +15,19 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.icpak.rest.models.base.PO;
 import com.icpak.rest.models.cpd.CPD;
+import com.icpak.rest.models.membership.ApplicationFormHeader;
 import com.icpak.rest.models.membership.Education;
 import com.icpak.rest.models.membership.GoodStandingCertificate;
 import com.icpak.rest.models.membership.TrainingAndExperience;
 import com.wordnik.swagger.annotations.ApiModel;
 
-
-
-@ApiModel(description="File attachment model")
-
+@ApiModel(description = "File attachment model")
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-
 @Entity
-@Table(name="attachment")
-@Cache(usage= CacheConcurrencyStrategy.READ_WRITE)
-public class Attachment extends PO{
+@Table(name = "attachment")
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+public class Attachment extends PO {
 
 	/**
 		 * 
@@ -44,25 +41,29 @@ public class Attachment extends PO{
 	@Lob
 	private byte[] attachment;
 
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="goodstandingcertid")
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "goodstandingcertid")
 	private GoodStandingCertificate goodStandingCert;
-	
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="educationid")
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "educationid")
 	private Education education;
 
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="trainingExperienceId")
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "trainingExperienceId")
 	private TrainingAndExperience trainingAndExperience;
-	
-	//Profile Pic
-	private String profilePicUserId;
-	
+
 	@ManyToOne
-	@JoinColumn(name="cpdid")
+	@JoinColumn(name = "cpdid")
 	private CPD cpd;
-	
+
+	@ManyToOne
+	@JoinColumn(name = "applicationId")
+	private ApplicationFormHeader application;
+
+	// Profile Pic
+	private String profilePicUserId;
+
 	public Attachment() {
 		super();
 	}
@@ -108,15 +109,15 @@ public class Attachment extends PO{
 
 	public Attachment clone(String detail) {
 		Attachment a = new Attachment();
-		
-		if(detail!=null && detail!=null){
+
+		if (detail != null && detail != null) {
 			a.setAttachment(attachment);
 		}
 		a.setContentType(contentType);
 		a.setName(name);
 		a.setSize(size);
 		a.setRefId(refId);
-		
+
 		return a;
 	}
 
@@ -142,5 +143,13 @@ public class Attachment extends PO{
 
 	public void setGoodStandingCert(GoodStandingCertificate goodStandingCert) {
 		this.goodStandingCert = goodStandingCert;
+	}
+
+	public void setApplication(ApplicationFormHeader application) {
+		this.application = application;
+	}
+
+	public ApplicationFormHeader getApplication() {
+		return application;
 	}
 }

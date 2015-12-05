@@ -73,8 +73,8 @@ public class ApplicationFormDaoHelper {
 		po.setUserRefId(user.getRefId());
 
 		// Generate Invoice
-		InvoiceDto invoice = generateInvoice(po);
-		po.setInvoiceRef(invoice.getRefId());
+		// InvoiceDto invoice = generateInvoice(po);
+		// po.setInvoiceRef(invoice.getRefId());
 
 		// Save Data
 		applicationDao.createApplication(po);
@@ -82,7 +82,7 @@ public class ApplicationFormDaoHelper {
 		// setCategory(po);
 
 		// Send Email
-		sendEmail(po, invoice, user);
+		// sendEmail(po, invoice, user);
 
 		// Copy into DTO
 		po.copyInto(application);

@@ -4,17 +4,24 @@ import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.workpoint.icpak.client.model.UploadContext;
+import com.workpoint.icpak.client.model.UploadContext.UPLOADACTION;
 import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.membership.form.MemberRegistrationForm;
 import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
+import com.workpoint.icpak.shared.model.AttachmentDto;
 import com.workpoint.icpak.shared.model.Country;
 
 public class BasicDetails extends Composite {
@@ -53,10 +60,12 @@ public class BasicDetails extends Composite {
 	@UiField
 	Element elIdNo;
 	@UiField
+	HTMLPanel panelPassportCopy;
+
+	@UiField
 	Anchor aSave;
 	@UiField
 	Anchor aCancel;
-
 	@UiField
 	ActionLink aEdit;
 
@@ -80,22 +89,36 @@ public class BasicDetails extends Composite {
 	public void bindDetails(ApplicationFormHeaderDto result) {
 		elPhone.setInnerText(result.getTelephone1());
 		elEmail.setInnerText(result.getEmail());
-
 		elEmployer.setInnerText(result.getEmployer());
+		elIdNo.setInnerText(result.getIdNumber());
 		elResidence.setInnerText(result.getResidence());
 		elAddress.setInnerText(result.getAddress1());
 		elPostalCode.setInnerText(result.getPostCode());
 		elCountry.setInnerText(result.getCountry());
 		elCity.setInnerText(result.getCity1());
-
-		if (result.getGender() != null) {
-			elSex.setInnerText(result.getGender().name());
-		}
+		elSex.setInnerText(result.getGender().name());
 
 		if (result.getDob() != null) {
 			elDob.setInnerText(DateUtils.DATEFORMAT.format(result.getDob()));
 		}
 
+		if (result.getAttachments() != null) {
+			for (final AttachmentDto attachment : result.getAttachments()) {
+				final UploadContext ctx = new UploadContext("getreport");
+				ctx.setAction(UPLOADACTION.GETATTACHMENT);
+				ctx.setContext("refId", attachment.getRefId());
+
+				ActionLink link = new ActionLink(attachment.getAttachmentName());
+				link.addClickHandler(new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {
+						Window.open(ctx.toUrl(),
+								attachment.getAttachmentName(), "");
+					}
+				});
+				panelPassportCopy.add(link);
+			}
+		}
 		// panelRegistration.bind(result);
 	}
 

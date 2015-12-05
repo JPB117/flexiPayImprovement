@@ -1,6 +1,7 @@
 package com.workpoint.icpak.shared.model;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -108,7 +109,7 @@ public class ApplicationFormHeaderDto extends SerializableObj {
 	private String memberNo;
 	private Integer percCompletion; // Percentage completion
 	private String timezone;
-
+	private List<AttachmentDto> attachments;
 	private ApplicationStatus applicationStatus;
 
 	public ApplicationStatus getApplicationStatus() {
@@ -835,6 +836,14 @@ public class ApplicationFormHeaderDto extends SerializableObj {
 
 	public void setTitle(Title title) {
 		this.title = title;
+	}
+
+	public List<AttachmentDto> getAttachments() {
+		return attachments;
+	}
+
+	public void setAttachments(List<AttachmentDto> attachments) {
+		this.attachments = attachments;
 	}
 
 }

@@ -6,17 +6,18 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.FocusPanel;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
+import com.workpoint.icpak.client.model.UploadContext;
+import com.workpoint.icpak.client.model.UploadContext.UPLOADACTION;
 import com.workpoint.icpak.client.ui.component.DateField;
 import com.workpoint.icpak.client.ui.component.DropDownList;
 import com.workpoint.icpak.client.ui.component.IssuesPanel;
 import com.workpoint.icpak.client.ui.component.TextField;
+import com.workpoint.icpak.client.ui.upload.custom.Uploader;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 import com.workpoint.icpak.shared.model.ApplicationType;
 import com.workpoint.icpak.shared.model.Country;
@@ -49,12 +50,9 @@ public class MemberRegistrationForm extends Composite {
 	@UiField
 	DateField dtDOB;
 	@UiField
-	HTMLPanel passportPanel;
+	Uploader uploaderIdCopy;
 	@UiField
-	FocusPanel panelPicture;
-	@UiField
-	Image imgPassport;
-
+	DivElement divIdCopy;
 	@UiField
 	DropDownList<Gender> lstGender;
 
@@ -119,6 +117,11 @@ public class MemberRegistrationForm extends Composite {
 				issuesPanel.addError("Address is required");
 			}
 
+			if (isNullOrEmpty(txtIdNo.getValue())) {
+				isValid = false;
+				issuesPanel.addError("IdNumber is required");
+			}
+
 			if (lstGender.getValue() == null) {
 				isValid = false;
 				issuesPanel.addError("Gender is required");
@@ -140,6 +143,15 @@ public class MemberRegistrationForm extends Composite {
 
 	public TextField getEmail() {
 		return txtEmailAddress;
+	}
+
+	private void setIDUploadContext(String applicationRefId) {
+		UploadContext context = new UploadContext();
+		context.setContext("applicationRefId", applicationRefId);
+		context.setAction(UPLOADACTION.UPLOADIDPHOTOCOPY);
+		context.setAccept(Arrays.asList("doc", "pdf", "jpg", "jpeg", "png",
+				"docx"));
+		uploaderIdCopy.setContext(context);
 	}
 
 	public ApplicationFormHeaderDto getApplicationForm() {
@@ -196,6 +208,12 @@ public class MemberRegistrationForm extends Composite {
 		txtResidence.setValue(application.getResidence());
 		txtIdNo.setValue(application.getIdNumber());
 		type = application.getApplicationType();
+		if (application.getRefId() != null) {
+			divIdCopy.removeClassName("hide");
+			setIDUploadContext(application.getRefId());
+		} else {
+			divIdCopy.addClassName("hide");
+		}
 	}
 
 	public void clear() {

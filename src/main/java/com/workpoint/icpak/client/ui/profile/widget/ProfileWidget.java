@@ -64,10 +64,10 @@ public class ProfileWidget extends Composite {
 	ActionLink aEditPicture;
 
 	@UiField
-	ActionLink aPayNow;
+	ActionLink aSubmit;
 
 	@UiField
-	DivElement divPayNow;
+	DivElement divSubmit;
 
 	@UiField
 	ActionLink aSaveChanges;
@@ -110,8 +110,6 @@ public class ProfileWidget extends Composite {
 	SpanElement spnMembershipNo;
 	@UiField
 	SpanElement spnMembershipStatus;
-	@UiField
-	SpanElement spnBalance;
 
 	@UiField
 	SpanElement spnApplicationType;
@@ -278,11 +276,10 @@ public class ProfileWidget extends Composite {
 		spnMembershipNo.setInnerText(user.getUser().getMemberNo());
 		spnMembershipStatus.setInnerText(user.getUser().getMemberNo());
 
-		// Window.alert(user.getUser().getLastDateUpdateFromErp() + "");
 		if (user.getUser().getLastDateUpdateFromErp() != null) {
-
 			spnLastUpdated.setInnerText(DateUtils.CREATEDFORMAT.format(user
 					.getUser().getLastDateUpdateFromErp()));
+
 		}
 
 		setUserImage(user.getUser().getRefId());
@@ -374,14 +371,10 @@ public class ProfileWidget extends Composite {
 	}
 
 	public void bindMemberStanding(MemberStanding standing) {
-		spnMembershipStatus.setInnerText(standing.getMembershipStatus()
-				.getDisplayName());
 
-		if (standing.getMemberBalance() == null) {
-			spnBalance.setInnerText(NumberUtils.CURRENCYFORMAT.format(0.0));
-		} else {
-			spnBalance.setInnerText(NumberUtils.CURRENCYFORMAT.format(standing
-					.getMemberBalance()));
+		if (standing.getMembershipStatus() != null) {
+			spnMembershipStatus.setInnerText(standing.getMembershipStatus()
+					.getDisplayName());
 		}
 
 		if (standing.getStanding() == 0) {
@@ -427,15 +420,16 @@ public class ProfileWidget extends Composite {
 
 	public void showBasicMember(boolean show) {
 		if (show) {
-			spnBalance.setInnerText(NumberUtils.CURRENCYFORMAT.format(0.0));
 			spnMembershipNo.getParentElement().addClassName("hide");
 			spnMembershipStatus.setInnerText("Pending");
 			spnRefreshSection.addClassName("hide");
 			divStandingStatus.addClassName("hide");
+			divSubmit.removeClassName("hide");
 		} else {
 			spnMembershipNo.getParentElement().removeClassName("hide");
 			spnRefreshSection.removeClassName("hide");
 			divStandingStatus.removeClassName("hide");
+			divSubmit.addClassName("hide");
 		}
 	}
 }

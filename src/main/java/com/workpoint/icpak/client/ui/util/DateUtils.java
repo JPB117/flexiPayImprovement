@@ -114,6 +114,14 @@ public class DateUtils {
 		long now = today.getTime();
 		long created = createdDate.getTime();
 		long diff = now - created;
+		
+		if(diff<0){
+			//Date in th future
+			int days = (int) (diff/dayInMillis);
+			
+			return days+"";
+		}
+		
 
 		StringBuffer buff = new StringBuffer();
 

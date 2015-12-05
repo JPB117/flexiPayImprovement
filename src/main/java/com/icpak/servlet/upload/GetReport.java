@@ -106,9 +106,7 @@ public class GetReport extends HttpServlet {
 			executeGet(req, resp);
 		} catch (Exception e) {
 			e.printStackTrace();
-
 			writeError(resp, e.getMessage());
-			// throw new RuntimeException(e);
 		}
 	}
 

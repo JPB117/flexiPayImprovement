@@ -30,10 +30,18 @@
 							</tr>
 							<tr>
 								<td width="30%">
-									<Strong>Id Number:</Strong>
+									<Strong>Id/Passport Number:</Strong>
 								</td>
 								<td>
 									<i ui:field="elIdNo"></i>
+								</td>
+							</tr>
+							<tr>
+								<td width="30%">
+									<Strong>Id/Passport PhotoCopy:</Strong>
+								</td>
+								<td>
+									<g:HTMLPanel ui:field="panelPassportCopy"></g:HTMLPanel>
 								</td>
 							</tr>
 							<tr>

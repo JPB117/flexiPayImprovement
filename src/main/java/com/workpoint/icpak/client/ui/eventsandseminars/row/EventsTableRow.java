@@ -71,8 +71,8 @@ public class EventsTableRow extends RowWidget {
 				+ "-" + endDate == null ? "" : DATEFORMAT.format(endDate);
 		if (today.getTime() < endDate.getTime()) {
 			divDate.addStyleName("event-active");
-			lDays.setText("[ " + DateUtils.getTimeDifferenceAsString(endDate)
-					+ "]");
+			// lDays.setText("[ " + DateUtils.getTimeDifferenceAsString(endDate)
+			// + "]");
 			divEventType.addStyleName("event-active");
 			divDelegates.addStyleName("event-active");
 			divEventLocation.addStyleName("event-active");

@@ -59,13 +59,21 @@
 									<g:HTMLPanel ui:field="profileViewEditMode">
 										<div>
 											<g:FocusPanel ui:field="panelPicture">
-												<g:Image ui:field="imgUser" styleName="thumbnail col-sm-offset-1" />
+												<g:HTMLPanel>
+													<g:Image ui:field="imgUser" styleName="thumbnail col-sm-offset-1" />
+													<div class="text-muted">
+														<span ui:field="spnInfo1">(Upload your recent passport
+															photo here
+															by clicking Edit > Change Profile).
+														</span>
+													</div>
+												</g:HTMLPanel>
 											</g:FocusPanel>
 										</div>
 									</g:HTMLPanel>
 								</div>
 
-								<div class="col-lg-6 profile-overview">
+								<div class="col-lg-9 profile-overview">
 									<g:HTMLPanel ui:field="panelProfile" styleName="col-md-12">
 										<up:Uploader ui:field="uploader" styleName="custom-file-input"></up:Uploader>
 									</g:HTMLPanel>
@@ -111,11 +119,19 @@
 											</div>
 										</div>
 
-										<div ui:field="divPayNow" class="hide">
+										<br />
+										<div ui:field="divSubmit" class="hide">
 											<div class="row">
-												Account Balance:
-												<span ui:field="spnBalance" class="text-muted"></span>
-												<d:ActionLink ui:field="aPayNow" styleName="hide"></d:ActionLink>
+												<d:ActionLink ui:field="aSubmit" styleName="btn btn-fill btn-gold">Submit
+													Application</d:ActionLink>
+												<div class="text-muted">
+													<span ui:field="spnInfo">
+														(Fill all sections here and
+														click
+														submit
+														to complete your registration)
+													</span>
+												</div>
 											</div>
 										</div>
 

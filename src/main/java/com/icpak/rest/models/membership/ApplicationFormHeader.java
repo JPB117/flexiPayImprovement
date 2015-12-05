@@ -1,17 +1,26 @@
 package com.icpak.rest.models.membership;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.icpak.rest.models.base.PO;
+import com.icpak.rest.models.util.Attachment;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 import com.workpoint.icpak.shared.model.ApplicationType;
+import com.workpoint.icpak.shared.model.AttachmentDto;
 import com.workpoint.icpak.shared.model.Gender;
 import com.workpoint.icpak.shared.model.Title;
 import com.workpoint.icpak.shared.model.auth.ApplicationStatus;
@@ -19,7 +28,6 @@ import com.workpoint.icpak.shared.model.auth.ApplicationStatus;
 @Entity
 @Table(name = "`Application Form Header`")
 public class ApplicationFormHeader extends PO {
-
 	/**
 	 * 
 	 */
@@ -267,6 +275,9 @@ public class ApplicationFormHeader extends PO {
 
 	@Column(name = "`Application Method`", length = 10)
 	private int applicationMethod;
+
+	@OneToMany(mappedBy = "application", fetch = FetchType.LAZY, cascade = { CascadeType.REMOVE })
+	private Set<Attachment> attachments = new HashSet<>();
 
 	private Date PracticingCertDate;
 	private String AlternatePhoneNo;
@@ -1002,6 +1013,15 @@ public class ApplicationFormHeader extends PO {
 		dto.setResidence(residence);
 		dto.setApplicationStatus(applicationStatus);
 		dto.setIdNumber(idNumber);
+
+		List<AttachmentDto> attachmentDtos = new ArrayList<AttachmentDto>();
+		for (Attachment attachment : attachments) {
+			AttachmentDto attachmentDto = new AttachmentDto();
+			attachmentDto.setAttachmentName(attachment.getName());
+			attachmentDto.setRefId(attachment.getRefId());
+			attachmentDtos.add(attachmentDto);
+		}
+		dto.setAttachments(attachmentDtos);
 	}
 
 	public String getInvoiceRef() {

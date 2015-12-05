@@ -352,8 +352,8 @@ public class ProfilePresenter
 						@Override
 						public void onSuccess(ApplicationFormHeaderDto result) {
 							// result;
-							getView().bindBasicDetails(result);
 							getView().setEditMode(true);
+							loadMemberDetails();
 							fireEvent(new ProcessingCompletedEvent());
 						}
 
