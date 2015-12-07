@@ -190,6 +190,7 @@ public class StatementDaoHelper {
 				statementDao.updateStatement(statementInDb);
 			} else {
 				logger.info("=== >><<<<< === Creating ==");
+				
 				statementDao.createStatement(statement);
 
 			}
