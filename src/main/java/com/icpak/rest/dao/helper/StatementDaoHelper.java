@@ -293,6 +293,7 @@ public class StatementDaoHelper {
 				/**
 				 * Add this statement to list
 				 */
+				memberStatements.add(erpMemberStatement);
 			}
 		}
 		logger.error(" ===>>><<<< === result " + res);

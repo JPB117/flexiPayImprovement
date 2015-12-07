@@ -107,16 +107,14 @@ public class LMSIntegrationUtil {
 	public <T> LMSResponse executeLMSCall(String resourcePath, Object payLoad, final Class<T> returnTypeClazz)
 			throws IOException {
 
-		Client client = Client.create();
-
 		final HttpClient httpClient = new DefaultHttpClient();
 		logger.error("=== Payload =====" + resourcePath);
 		HttpPost request = new HttpPost("http://www2.icpak.com:8082/api/Course/EnrollCourse");
 		request.setHeader("accept", "application/json");
+		@SuppressWarnings("deprecation")
 		StringEntity stringEntity = new StringEntity(payLoad.toString(), "application/json", "UTF-8");
 		request.setEntity(stringEntity);
 
-		String res = "";
 		HttpResponse httpResponse = null;
 
 		String responseString = null;
