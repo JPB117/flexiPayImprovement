@@ -483,9 +483,12 @@ public class UsersDaoHelper {
 				"/account/register", jObject, String.class);
 		logger.info("LMS Response::" + response.getMessage());
 		logger.info("LMS Status::" + response.getStatus());
+		logger.info("LMS PayLoad::" + jObject.toString());
 		user.setLmsResponse(response.getMessage());
 		user.setLmsStatus(response.getStatus());
-		update(dto.getRefID(), user);
+		user.setLmsPayLoad(jObject.toString());
+		dao.updateUser(user);
+//		update(dto.getRefID(), user);
 
 		return response.getStatus();
 	}

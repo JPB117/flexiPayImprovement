@@ -2,6 +2,7 @@ package com.icpak.rest.dao;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.apache.shiro.crypto.hash.Sha256Hash;
 
 import com.icpak.rest.exceptions.ServiceException;
@@ -11,6 +12,7 @@ import com.icpak.rest.models.auth.User;
 import com.icpak.rest.models.util.Attachment;
 
 public class UsersDao extends BaseDao {
+	Logger logger  = Logger.getLogger(UsersDao.class);
 
 	public User findUserByUsername(String username) {
 		assert username != null;
@@ -80,7 +82,10 @@ public class UsersDao extends BaseDao {
 	}
 
 	public void updateUser(User user) {
+		logger.info(" ++++ >>>>><<<<> Updating user ++++++");
 		createUser(user);
+		logger.info(" ++++ >>>>><<<<> user updated ++++++");
+		logger.info(" ++++ >>>>><<<<> Pay Load ++++++"+user.getLmsPayLoad());
 	}
 
 	public int getUserCount(String searchTerm) {

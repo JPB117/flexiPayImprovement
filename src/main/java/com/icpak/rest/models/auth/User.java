@@ -118,6 +118,7 @@ public class User extends PO {
 	private String postalCode;
 	private String lmsStatus;
 	private String lmsResponse;
+	@Column(columnDefinition="TEXT")
 	private String lmsPayLoad;
 
 	@Enumerated(EnumType.STRING)
@@ -308,6 +309,7 @@ public class User extends PO {
 		dto.setStatus(status);
 		dto.setLmsResponse(lmsResponse);
 		dto.setLmsStatus(lmsStatus);
+		dto.setLmsPayload(lmsPayLoad);
 
 		if (member != null) {
 			dto.setLastDateUpdateFromErp(member.getLastUpdate());

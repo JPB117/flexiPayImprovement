@@ -105,7 +105,7 @@ public class TestLMSIntegration extends AbstractDaoTest {
 	
 	@Test
 	public void testPostUserToLms() throws IOException{
-		String response = userDaoHelper.postUserToLMS("iypUNLFxbsEFMJLB", "pass1");
+		String response = userDaoHelper.postUserToLMS("IEdmTY0RVloxKPg6", "pass1");
 		logger.error(" >>>>>>>>><<<<<<<<<<<<< Response fromm lms <<<<<<<<<<>>>> "+response);
 	}
 

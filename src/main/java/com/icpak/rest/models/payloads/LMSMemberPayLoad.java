@@ -27,6 +27,10 @@ public class LMSMemberPayLoad extends PO {
 	private String meberRefID;
 	private String Status;
 
+	public LMSMemberPayLoad() {
+
+	}
+
 	public String getTitle() {
 		return title;
 	}
@@ -122,10 +126,8 @@ public class LMSMemberPayLoad extends PO {
 	public void setStatus(String status) {
 		Status = status;
 	}
-	
-	
-	
-	public void copyFromDto(LMSMemberDto dto , String status){
+
+	public void copyFromDto(LMSMemberDto dto, String status) {
 		setTitle(dto.getTitle());
 		setFirstName(dto.getFirstName());
 		setLastName(dto.getLastName());
@@ -139,10 +141,10 @@ public class LMSMemberPayLoad extends PO {
 		setMeberRefID(dto.getRefID());
 		setStatus(status);
 	}
-	
-	public LMSMemberDto toDto(){
+
+	public LMSMemberDto toDto() {
 		LMSMemberDto dto = new LMSMemberDto();
-		
+
 		dto.setTitle(title);
 		dto.setFirstName(firstName);
 		dto.setLastName(lastName);
@@ -154,7 +156,7 @@ public class LMSMemberPayLoad extends PO {
 		dto.setTimeZone(timeZone);
 		dto.setMembershipID(membershipID);
 		dto.setRefID(meberRefID);
-		
+
 		return dto;
 	}
 
