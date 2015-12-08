@@ -43,7 +43,7 @@ public class LMSIntegrationUtil {
 			synchronized (logger) {
 				if (util == null) {
 					util = new LMSIntegrationUtil();
-					logger.error(">>>>>>Util Class:" + util.getResourceUri("/registter"));
+					logger.error(">>>>>>Util Class:" + util.getResourceUri("Course/EnrollCourse"));
 				}
 			}
 		}
@@ -108,8 +108,8 @@ public class LMSIntegrationUtil {
 			throws IOException {
 
 		final HttpClient httpClient = new DefaultHttpClient();
-		logger.error("=== Payload =====" + resourcePath);
-		HttpPost request = new HttpPost("http://www2.icpak.com:8082/api/Course/EnrollCourse");
+		logger.error("=== Payload =====" + payLoad.toString());
+		HttpPost request = new HttpPost(baseUri+resourcePath);
 		request.setHeader("accept", "application/json");
 		@SuppressWarnings("deprecation")
 		StringEntity stringEntity = new StringEntity(payLoad.toString(), "application/json", "UTF-8");

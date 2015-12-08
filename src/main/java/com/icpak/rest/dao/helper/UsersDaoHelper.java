@@ -14,6 +14,7 @@ import javax.ws.rs.core.UriInfo;
 
 import org.apache.log4j.Logger;
 
+import com.amazonaws.util.json.JSONObject;
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import com.icpak.rest.BaseResource;
@@ -452,7 +453,7 @@ public class UsersDaoHelper {
 		dto.setFirstName(user.getUserData().getFirstName());
 		dto.setLastName(user.getUserData().getLastName());
 		dto.setGender((user.getUserData().getGender() == Gender.MALE ? Gender.MALE
-				.getCode() : Gender.FEMALE.getCode()));
+				.getCode()+"" : Gender.FEMALE.getCode()+""));
 		if (user.getPhoneNumber() != null && !user.getPhoneNumber().isEmpty()) {
 			dto.setMobileNo(user.getPhoneNumber());
 		} else {
@@ -460,7 +461,7 @@ public class UsersDaoHelper {
 		}
 		dto.setPassword(password);
 		dto.setTimeZone("E. Africa Standard Time");
-		dto.setTitle(Title.Mr.getCode());
+		dto.setTitle(Title.Mr.getCode()+"");
 		if (user.getUserData().getDob() != null) {
 			dto.setDOB(new SimpleDateFormat("dd-MM-yyyy").format(user
 					.getUserData().getDob()));
@@ -474,11 +475,12 @@ public class UsersDaoHelper {
 
 		if (user.getEmail() != null) {
 			dto.setUserName(user.getEmail());
-			dto.setEmailID(user.getEmail());
 		}
 		dto.setRefID(user.getRefId());
+		
+		JSONObject jObject = new JSONObject(dto);
 		LMSResponse response = LMSIntegrationUtil.getInstance().executeLMSCall(
-				"/account/register", dto, String.class);
+				"/account/register", jObject, String.class);
 		logger.info("LMS Response::" + response.getMessage());
 		logger.info("LMS Status::" + response.getStatus());
 		user.setLmsResponse(response.getMessage());
