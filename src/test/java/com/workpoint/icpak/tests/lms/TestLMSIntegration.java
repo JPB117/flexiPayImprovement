@@ -9,6 +9,7 @@ import java.util.List;
 
 import javax.ws.rs.core.MediaType;
 
+import org.apache.log4j.Logger;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -16,6 +17,7 @@ import com.amazonaws.util.json.JSONException;
 import com.google.inject.Inject;
 import com.icpak.rest.dao.BookingsDao;
 import com.icpak.rest.dao.helper.BookingsDaoHelper;
+import com.icpak.rest.dao.helper.UsersDaoHelper;
 import com.icpak.rest.models.event.Delegate;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
@@ -28,10 +30,13 @@ import com.workpoint.icpak.shared.model.events.DelegateDto;
 import com.workpoint.icpak.tests.base.AbstractDaoTest;
 
 public class TestLMSIntegration extends AbstractDaoTest {
+	Logger logger = Logger.getLogger(TestLMSIntegration.class);
 	@Inject
 	BookingsDao dao;
 	@Inject
 	BookingsDaoHelper helper;
+	@Inject
+	UsersDaoHelper userDaoHelper;
 
 	@Ignore
 	public void sendMemberData() throws IOException {
@@ -52,14 +57,14 @@ public class TestLMSIntegration extends AbstractDaoTest {
 		Client client = Client.create();
 
 		LMSMemberDto dto = new LMSMemberDto();
-		dto.setTitle(Title.Dr.getCode());
+		dto.setTitle(Title.Dr.getCode()+"");
 		dto.setFirstName("Duggan");
 		dto.setLastName("Kimani");
 		dto.setMobileNo("+254721239821");
 		dto.setUserName("tomkim@icpak.com");
 		dto.setPassword("testpass");
 		dto.setDOB(new SimpleDateFormat("dd-mm-yyyy").format(new Date()));
-		dto.setGender(Gender.MALE.getCode());
+		dto.setGender(Gender.MALE.getCode()+"");
 		dto.setTimeZone("E. Africa Standard Time");
 		dto.setMembershipID("10000");
 		dto.setRefID("48fd4a84f8da");
@@ -79,8 +84,11 @@ public class TestLMSIntegration extends AbstractDaoTest {
 
 	}
 
-	@Test
-	public void testEnrolDelegateToLms() {
+	@Ignore
+	public void testEnrolDelegateToLms() throws IOException {
+		
+		logger.error(" == LMS INSTANCE "+LMSIntegrationUtil.getInstance());
+		
 		List<DelegateDto> delegates = new ArrayList<>();
 		Delegate delegateInDb = dao.findByRefId("h8IeWNUed7DckOgY", Delegate.class);
 		DelegateDto dto = delegateInDb.toDto();
@@ -93,6 +101,12 @@ public class TestLMSIntegration extends AbstractDaoTest {
 		} catch (JSONException | IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	@Test
+	public void testPostUserToLms() throws IOException{
+		String response = userDaoHelper.postUserToLMS("iypUNLFxbsEFMJLB", "pass1");
+		logger.error(" >>>>>>>>><<<<<<<<<<<<< Response fromm lms <<<<<<<<<<>>>> "+response);
 	}
 
 	// @Test
