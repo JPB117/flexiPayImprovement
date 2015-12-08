@@ -52,6 +52,7 @@ import com.icpak.rest.utils.HTMLToPDFConvertor;
 import com.itextpdf.text.DocumentException;
 import com.workpoint.icpak.server.integration.lms.LMSIntegrationUtil;
 import com.workpoint.icpak.server.integration.lms.LMSResponse;
+import com.workpoint.icpak.shared.model.EventType;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.InvoiceLineDto;
 import com.workpoint.icpak.shared.model.events.AttendanceStatus;
@@ -579,14 +580,17 @@ public class BookingsDaoHelper {
 	public DelegateDto updateDelegate(String delegateId, DelegateDto delegateDto) {
 
 		Delegate delegate = dao.findByRefId(delegateId, Delegate.class);
+		Event event = dao.findByRefId(delegateDto.getEventRefId(), Event.class);
 
-		if (delegate.getMemberRefId() != null && delegate.getAttendance() != delegateDto.getAttendance()) {
+		if (delegate.getMemberRefId() != null && delegate.getAttendance() != delegateDto.getAttendance()
+				&& event.getType() != EventType.COURSE) {
 			// send and SMS
 			Member member = dao.findByRefId(delegate.getMemberRefId(), Member.class);
-			Event event = dao.findByRefId(delegateDto.getEventRefId(), Event.class);
 			String smsMessage = "Dear" + " " + delegateDto.getSurname() + ",Thank you for attending the "
 					+ event.getName() + "." + "Your ERN No. is " + delegate.getErn();
 			smsIntergration.send(member.getUser().getPhoneNumber(), smsMessage);
+		}else{
+			enrolDelegateToLms(delegate.getRefId() , event);
 		}
 
 		logger.error(delegateDto.getReceiptNo() + "== RCPT NO");
@@ -643,5 +647,28 @@ public class BookingsDaoHelper {
 			updateDelegate(delegateInDb.getRefId(), delegate);
 		}
 
+	}
+
+	public String enrolDelegateToLms(String delegateRefId , Event event) {
+		logger.error("== Enrolling to lms ===");
+
+		String message = null;
+
+		List<DelegateDto> delegates = new ArrayList<>();
+		Delegate delegateInDb = dao.findByRefId(delegateRefId, Delegate.class);
+		DelegateDto dto = delegateInDb.toDto();
+		dto.setCourseId(event.getLmsCourseId()+"");
+
+		delegates.add(dto);
+
+		try {
+			enrolDelegateToLMS(delegates);
+			message = "Success";
+		} catch (JSONException | IOException e) {
+			e.printStackTrace();
+			message = "Failed";
+		}
+
+		return message;
 	}
 }
