@@ -97,7 +97,7 @@ public class TestLMSIntegration extends AbstractDaoTest {
 		delegates.add(dto);
 
 		try {
-			helper.enrolDelegateToLMS(delegates, "YeVcDDmtM7th2SgR");
+			helper.enrolDelegateToLMS(delegates);
 		} catch (JSONException | IOException e) {
 			e.printStackTrace();
 		}

@@ -312,4 +312,10 @@ public class UsersResourceImpl implements UsersResource {
 			return e.getStackTrace().toString();
 		}
 	}
+
+	@PUT
+	@Path("/repost")
+	public UserDto repostToLms(@QueryParam("userRefId") String userRefId) {
+		return helper.rePostToLms(userRefId);
+	}
 }

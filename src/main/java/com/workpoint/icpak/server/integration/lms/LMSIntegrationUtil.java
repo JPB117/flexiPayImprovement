@@ -146,7 +146,7 @@ public class LMSIntegrationUtil {
 		LMSResponse response = new LMSResponse();
 		response.setPayload(payLoad.toString());
 
-		if (rsponseCode != 200) {
+		if (rsponseCode != 200 && rsponseCode != 400) {
 			response.setMessage(responseString);
 			response.setStatus("Failed");
 			logger.error(response);
@@ -154,7 +154,10 @@ public class LMSIntegrationUtil {
 			response.setMessage("No Response from LMS...");
 			response.setStatus("Failed");
 			logger.error(response);
-		} else {
+		} else if(rsponseCode == 400){
+			response.setMessage(responseString);
+			response.setStatus("Success");
+		}else{
 			response.setMessage(responseString);
 			response.setStatus("Success");
 		}

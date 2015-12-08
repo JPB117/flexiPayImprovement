@@ -576,7 +576,7 @@ public class BookingsDaoHelper {
 		return booking.toDto();
 	}
 
-	public DelegateDto updateDelegate(String bookingId, String delegateId, DelegateDto delegateDto) {
+	public DelegateDto updateDelegate(String delegateId, DelegateDto delegateDto) {
 
 		Delegate delegate = dao.findByRefId(delegateId, Delegate.class);
 
@@ -621,7 +621,7 @@ public class BookingsDaoHelper {
 		return dao.getDelegateCount(eventId, searchTerm);
 	}
 
-	public void enrolDelegateToLMS(List<DelegateDto> delegates, String bookingId) throws JSONException, IOException {
+	public void enrolDelegateToLMS(List<DelegateDto> delegates) throws JSONException, IOException {
 		for (DelegateDto delegate : delegates) {
 			CourseRegDetailsPojo details = new CourseRegDetailsPojo();
 			details.setCourseId(delegate.getCourseId());
@@ -640,7 +640,7 @@ public class BookingsDaoHelper {
 			logger.info("Delegate RefId::" + refId);
 			logger.info("Event RefId::" + delegate.getEventRefId());
 			Delegate delegateInDb = dao.findByRefId(refId, Delegate.class);
-			updateDelegate(bookingId, delegateInDb.getRefId(), delegate);
+			updateDelegate(delegateInDb.getRefId(), delegate);
 		}
 
 	}

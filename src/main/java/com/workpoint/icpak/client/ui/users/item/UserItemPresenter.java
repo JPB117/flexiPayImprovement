@@ -40,6 +40,8 @@ public class UserItemPresenter extends PresenterWidget<UserItemPresenter.MyView>
 
 		HasClickHandlers getStatementButton();
 
+		HasClickHandlers getAlmsReview();
+
 		String getMemberRefId();
 
 		void forceRefresh();
@@ -86,6 +88,36 @@ public class UserItemPresenter extends PresenterWidget<UserItemPresenter.MyView>
 			}
 		});
 
+		getView().getAlmsReview().addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				AppManager.showPopUp("LMS Review",
+						new HTMLPanel((user.getLmsPayload() == null ? "No Payload Available." : user.getLmsPayload())),
+						new OnOptionSelected() {
+
+					@Override
+					public void onSelect(String name) {
+						if (name.equals("Resend")) {
+							repost(user.getRefId());
+						}
+					}
+
+				}, "Cancel", "Resend");
+			}
+		});
+
+	}
+
+	private void repost(String refId) {
+		usersDelegate.withCallback(new AbstractAsyncCallback<UserDto>() {
+
+			@Override
+			public void onSuccess(UserDto result) {
+				user = result;
+				Window.alert("Success");
+			}
+		}).repostToLms(refId);
 	}
 
 	private void delete(UserDto user) {
