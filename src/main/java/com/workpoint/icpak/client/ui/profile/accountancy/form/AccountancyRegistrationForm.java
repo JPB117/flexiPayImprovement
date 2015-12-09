@@ -1,4 +1,4 @@
-package com.workpoint.icpak.client.ui.profile.education.form;
+package com.workpoint.icpak.client.ui.profile.accountancy.form;
 
 import static com.workpoint.icpak.client.ui.util.StringUtils.isNullOrEmpty;
 
@@ -21,62 +21,47 @@ import com.workpoint.icpak.client.ui.component.DateField;
 import com.workpoint.icpak.client.ui.component.IssuesPanel;
 import com.workpoint.icpak.client.ui.component.TextField;
 import com.workpoint.icpak.client.ui.upload.custom.Uploader;
-import com.workpoint.icpak.shared.model.ApplicationFormEducationalDto;
+import com.workpoint.icpak.shared.model.ApplicationFormAccountancyDto;
 import com.workpoint.icpak.shared.model.AttachmentDto;
 
-public class EducationRegistrationForm extends Composite {
+public class AccountancyRegistrationForm extends Composite {
 
 	private static EducationRegistrationFormUiBinder uiBinder = GWT
 			.create(EducationRegistrationFormUiBinder.class);
 
 	@UiField
-	TextField txtInstitution;
-	@UiField
-	TextField txtExaminingBody;
-	@UiField
-	DateField dtStartDate;
-	@UiField
-	DateField dtDateCompleted;
-	@UiField
-	TextField txtSectionsPassed;
+	TextField txtExaminationBody;
 	@UiField
 	TextField txtRegistrationNo;
 	@UiField
-	TextField txtClassOrDivision;
+	TextField txtSectionPassed;
 	@UiField
-	TextField txtAward;
+	DateField dtDatePassed;
 	@UiField
-	TextField txtEduType;
+	IssuesPanel issues;
 	@UiField
 	Uploader uploader;
-
 	@UiField
 	ActionLink aStartUpload;
-
 	@UiField
 	HTMLPanel panelUploader;
-
 	@UiField
 	HTMLPanel panelUpload;
-
 	@UiField
 	HTMLPanel panelPreviousAttachments;
 
-	@UiField
-	IssuesPanel issues;
-
-	private ApplicationFormEducationalDto educationDto;
+	private ApplicationFormAccountancyDto accountancyDto;
 
 	interface EducationRegistrationFormUiBinder extends
-			UiBinder<Widget, EducationRegistrationForm> {
+			UiBinder<Widget, AccountancyRegistrationForm> {
 	}
 
-	public EducationRegistrationForm() {
+	public AccountancyRegistrationForm() {
 		initWidget(uiBinder.createAndBindUi(this));
 		showUploadPanel(false);
 	}
 
-	public EducationRegistrationForm(String firstName) {
+	public AccountancyRegistrationForm(String firstName) {
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 
@@ -84,81 +69,63 @@ public class EducationRegistrationForm extends Composite {
 		boolean isValid = true;
 		issues.clear();
 
-		if (isNullOrEmpty(txtInstitution.getValue())) {
+		if (isNullOrEmpty(txtExaminationBody.getValue())) {
 			isValid = false;
-			issues.addError("Institution is mandatory");
+			issues.addError("Organization is mandatory");
 		}
-
-		if (isNullOrEmpty(txtExaminingBody.getValue())) {
+		if (isNullOrEmpty(txtRegistrationNo.getValue())) {
 			isValid = false;
-			issues.addError("Examining Body is mandatory");
+			issues.addError("Position is mandatory");
 		}
-
-		if (dtStartDate.getValueDate() == null) {
+		if (isNullOrEmpty(txtSectionPassed.getValue())) {
 			isValid = false;
-			issues.addError("Start date is mandatory");
+			issues.addError("Section Passed is mandatory");
 		}
-		if (dtDateCompleted.getValueDate() == null) {
+		if (dtDatePassed.getValueDate() == null) {
 			isValid = false;
-			issues.addError("Date Completed is mandatory");
+			issues.addError("Date Passed is mandatory");
 		}
-
-		if (isNullOrEmpty(txtClassOrDivision.getValue())) {
-			isValid = false;
-			issues.addError("Class/Division is mandatory");
+		if (isValid != true) {
+			issues.removeStyleName("hide");
+		} else {
+			issues.addStyleName("hide");
 		}
-		if (isNullOrEmpty(txtAward.getValue())) {
-			isValid = false;
-			issues.addError("Award is mandatory");
-		}
-
 		return isValid;
 	}
 
 	public void clear() {
-		txtInstitution.setValue("");
-		txtExaminingBody.setValue("");
-		dtStartDate.clear();
-		dtDateCompleted.clear();
-		txtSectionsPassed.setValue("");
+		issues.clear();
+		txtExaminationBody.setValue("");;
 		txtRegistrationNo.setValue("");
-		txtClassOrDivision.setValue("");
-		txtAward.setValue("");
+		txtSectionPassed.setValue("");
+		dtDatePassed.setValue(null);
 		panelPreviousAttachments.clear();
 		showUploadPanel(false);
 		uploader.clear();
 	}
 
-	public ApplicationFormEducationalDto getEducationDto() {
-		ApplicationFormEducationalDto dto = new ApplicationFormEducationalDto();
-		if (educationDto != null) {
-			dto = educationDto;
+	public ApplicationFormAccountancyDto getAccountancyDto() {
+		ApplicationFormAccountancyDto dto = new ApplicationFormAccountancyDto();
+		if (accountancyDto != null) {
+			dto = accountancyDto;
 		}
-		dto.setWhereObtained(txtInstitution.getValue());
-		dto.setExaminingBody(txtExaminingBody.getValue());
-		dto.setFromDate(dtStartDate.getValueDate());
-		dto.setToDate(dtDateCompleted.getValueDate());
-		dto.setSections(txtSectionsPassed.getValue());
-		dto.setRegNo(txtRegistrationNo.getValue());
-		dto.setClassDivisionAttained(txtClassOrDivision.getValue());
-		dto.setCertificateAwarded(txtAward.getValue());
+		dto.setExaminingBody(txtExaminationBody.getText());
+		dto.setRegistrationNo(txtRegistrationNo.getText());
+		dto.setSectionPassed(txtSectionPassed.getText());
+		dto.setDatePassed(dtDatePassed.getValueDate());
 		return dto;
 	}
 
-	public void bindDetail(ApplicationFormEducationalDto educationDto) {
-		this.educationDto = educationDto;
+	public void bindDetail(ApplicationFormAccountancyDto accountancyDto) {
+		this.accountancyDto = accountancyDto;
 		clear();
-		txtInstitution.setValue(educationDto.getWhereObtained());
-		txtExaminingBody.setValue(educationDto.getExaminingBody());
-		dtStartDate.setValue(educationDto.getFromDate());
-		dtDateCompleted.setValue(educationDto.getToDate());
-		txtSectionsPassed.setValue(educationDto.getSections());
-		txtRegistrationNo.setValue(educationDto.getRegNo());
-		txtClassOrDivision.setValue(educationDto.getClassDivisionAttained());
-		txtAward.setValue(educationDto.getCertificateAwarded());
-
-		if (educationDto.getAttachments() != null) {
-			for (final AttachmentDto attachment : educationDto.getAttachments()) {
+		txtExaminationBody.setValue(accountancyDto.getExaminingBody());
+		txtRegistrationNo.setValue(accountancyDto.getRegistrationNo());
+		txtSectionPassed.setValue(accountancyDto.getSectionPassed());
+		dtDatePassed.setValue(accountancyDto.getDatePassed());
+		if (accountancyDto.getAttachments() != null) {
+			for (final AttachmentDto attachment : accountancyDto
+					.getAttachments()) {
 				final UploadContext ctx = new UploadContext("getreport");
 				ctx.setAction(UPLOADACTION.GETATTACHMENT);
 				ctx.setContext("refId", attachment.getRefId());
@@ -174,8 +141,10 @@ public class EducationRegistrationForm extends Composite {
 				panelPreviousAttachments.add(link);
 			}
 		}
+
 		setUploadContext();
 		showUploadPanel(true);
+		uploader.clear();
 	}
 
 	public void showUploadPanel(boolean showForm) {
@@ -190,8 +159,8 @@ public class EducationRegistrationForm extends Composite {
 
 	private void setUploadContext() {
 		UploadContext context = new UploadContext();
-		context.setContext("educationRefId", getEducationDto().getRefId());
-		context.setAction(UPLOADACTION.UPLOADEDUCATIONATTATCHMENTS);
+		context.setContext("accountancyRefId", getAccountancyDto().getRefId());
+		context.setAction(UPLOADACTION.UPLOADTRAININGATTATCHMENTS);
 		context.setAccept(Arrays.asList("doc", "pdf", "jpg", "jpeg", "png",
 				"docx"));
 		uploader.setContext(context);
@@ -200,5 +169,4 @@ public class EducationRegistrationForm extends Composite {
 	public HasClickHandlers getStartUploadButton() {
 		return aStartUpload;
 	}
-
 }

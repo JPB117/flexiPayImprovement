@@ -37,17 +37,6 @@ public class SpecializationDetails extends Composite {
 
 	public SpecializationDetails() {
 		initWidget(uiBinder.createAndBindUi(this));
-		createHeader();
-		// createRows();
-
-	}
-
-	private void createHeader() {
-		tblHeaders.add(new TableHeader("Specialization"));
-		tblHeaders.add(new TableHeader("Date Added"));
-		tblHeaders.add(new TableHeader("Action"));
-
-		// tblSpecialization.setTableHeaders(tblHeaders);
 	}
 
 	protected void showForm(boolean show) {
@@ -73,12 +62,10 @@ public class SpecializationDetails extends Composite {
 	}
 
 	public void clear() {
-		// tblSpecialization.clearRows();
 	}
 
 	public void bindSpecializations(
 			List<ApplicationFormSpecializationDto> result) {
-
 		formSpecialization.bindDetails(result);
 	}
 

@@ -1,6 +1,7 @@
 package com.workpoint.icpak.shared.model;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -20,6 +21,8 @@ public class ApplicationFormTrainingDto extends SerializableObj {
 	private TrainingType trainingType;
 	private String clients;
 	private Date datePassed;
+
+	private List<AttachmentDto> attachments;
 
 	public ApplicationFormTrainingDto() {
 	}
@@ -94,6 +97,14 @@ public class ApplicationFormTrainingDto extends SerializableObj {
 
 	public void setTrainingType(TrainingType trainingType) {
 		this.trainingType = trainingType;
+	}
+
+	public List<AttachmentDto> getAttachments() {
+		return attachments;
+	}
+
+	public void setAttachments(List<AttachmentDto> attachments) {
+		this.attachments = attachments;
 	}
 
 }

@@ -5,16 +5,26 @@ import static com.workpoint.icpak.client.ui.util.StringUtils.isNullOrEmpty;
 import java.util.Arrays;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.Widget;
+import com.workpoint.icpak.client.model.UploadContext;
+import com.workpoint.icpak.client.model.UploadContext.UPLOADACTION;
+import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.DateField;
 import com.workpoint.icpak.client.ui.component.DropDownList;
 import com.workpoint.icpak.client.ui.component.IssuesPanel;
 import com.workpoint.icpak.client.ui.component.TextField;
+import com.workpoint.icpak.client.ui.upload.custom.Uploader;
 import com.workpoint.icpak.shared.model.ApplicationFormTrainingDto;
+import com.workpoint.icpak.shared.model.AttachmentDto;
 import com.workpoint.icpak.shared.model.TrainingType;
 
 public class TrainingRegistrationForm extends Composite {
@@ -36,12 +46,24 @@ public class TrainingRegistrationForm extends Composite {
 	TextArea txtResponsibility;
 	@UiField
 	DropDownList<TrainingType> lstTrainingType;
-
 	@UiField
 	DateField dtDatePassed;
-
 	@UiField
 	IssuesPanel issues;
+	@UiField
+	Uploader uploader;
+
+	@UiField
+	ActionLink aStartUpload;
+
+	@UiField
+	HTMLPanel panelUploader;
+
+	@UiField
+	HTMLPanel panelUpload;
+
+	@UiField
+	HTMLPanel panelPreviousAttachments;
 
 	private ApplicationFormTrainingDto trainingDto;
 
@@ -52,6 +74,7 @@ public class TrainingRegistrationForm extends Composite {
 	public TrainingRegistrationForm() {
 		initWidget(uiBinder.createAndBindUi(this));
 		lstTrainingType.setItems(Arrays.asList(TrainingType.values()));
+		showUploadPanel(false);
 	}
 
 	public TrainingRegistrationForm(String firstName) {
@@ -82,19 +105,6 @@ public class TrainingRegistrationForm extends Composite {
 			isValid = false;
 			issues.addError("Task Nature is mandatory");
 		}
-		if (isNullOrEmpty(txtResponsibility.getValue())) {
-			isValid = false;
-			issues.addError("Responsibility is mandatory");
-		}
-		if (isNullOrEmpty(lstTrainingType.getValue())) {
-			isValid = false;
-			issues.addError("Clients is mandatory");
-		}
-		if (isNullOrEmpty(dtDatePassed.getValueDate())) {
-			isValid = false;
-			issues.addError("Date Passed is mandatory");
-		}
-
 		if (isValid != true) {
 			issues.removeStyleName("hide");
 		} else {
@@ -104,14 +114,17 @@ public class TrainingRegistrationForm extends Composite {
 	}
 
 	public void clear() {
+		issues.clear();
 		txtOrganization.setValue("");
 		txtPosition.setValue("");
 		dtStartDate.clear();
 		dtDateCompleted.clear();
 		txtTaskNature.setValue("");
 		txtResponsibility.setValue("");
-		// lstTrainingType.setValue("");
 		dtDatePassed.setValue(null);
+		panelPreviousAttachments.clear();
+		showUploadPanel(false);
+		uploader.clear();
 	}
 
 	public ApplicationFormTrainingDto getTrainingDto() {
@@ -132,6 +145,8 @@ public class TrainingRegistrationForm extends Composite {
 
 	public void bindDetail(ApplicationFormTrainingDto trainingDto) {
 		this.trainingDto = trainingDto;
+		clear();
+		txtOrganization.setValue(trainingDto.getPosition());
 		txtPosition.setValue(trainingDto.getPosition());
 		dtStartDate.setValue(trainingDto.getFromDate());
 		dtDateCompleted.setValue(trainingDto.getToDate());
@@ -139,6 +154,50 @@ public class TrainingRegistrationForm extends Composite {
 		txtResponsibility.setValue(trainingDto.getResponsibility());
 		lstTrainingType.setValue(trainingDto.getTrainingType());
 		dtDatePassed.setValue(trainingDto.getDatePassed());
+
+		if (trainingDto.getAttachments() != null) {
+			for (final AttachmentDto attachment : trainingDto.getAttachments()) {
+				final UploadContext ctx = new UploadContext("getreport");
+				ctx.setAction(UPLOADACTION.GETATTACHMENT);
+				ctx.setContext("refId", attachment.getRefId());
+
+				ActionLink link = new ActionLink(attachment.getAttachmentName());
+				link.addClickHandler(new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {
+						Window.open(ctx.toUrl(),
+								attachment.getAttachmentName(), "");
+					}
+				});
+				panelPreviousAttachments.add(link);
+			}
+		}
+
+		setUploadContext();
+		showUploadPanel(true);
+		uploader.clear();
 	}
 
+	public void showUploadPanel(boolean showForm) {
+		aStartUpload.setVisible(!showForm);
+		if (showForm) {
+			panelUploader.removeStyleName("hide");
+			setUploadContext();
+		} else {
+			panelUploader.addStyleName("hide");
+		}
+	}
+
+	private void setUploadContext() {
+		UploadContext context = new UploadContext();
+		context.setContext("trainingRefId", getTrainingDto().getRefId());
+		context.setAction(UPLOADACTION.UPLOADTRAININGATTATCHMENTS);
+		context.setAccept(Arrays.asList("doc", "pdf", "jpg", "jpeg", "png",
+				"docx"));
+		uploader.setContext(context);
+	}
+
+	public HasClickHandlers getStartUploadButton() {
+		return aStartUpload;
+	}
 }

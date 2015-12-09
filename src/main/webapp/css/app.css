@@ -2910,6 +2910,11 @@ body, html {
 	border: 0
 }
 
+.panel .table.border-top{
+	border-top:1px solid #dddddd;
+}
+
+
 .panel.panel-transparent {
 	border: 0;
 	background-color: transparent;

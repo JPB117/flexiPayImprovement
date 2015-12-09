@@ -33,6 +33,7 @@ import com.workpoint.icpak.client.ui.component.tabs.TabContent;
 import com.workpoint.icpak.client.ui.component.tabs.TabHeader;
 import com.workpoint.icpak.client.ui.component.tabs.TabPanel;
 import com.workpoint.icpak.client.ui.component.tabs.TabPanel.TabPosition;
+import com.workpoint.icpak.client.ui.profile.accountancy.AccountancyDetails;
 import com.workpoint.icpak.client.ui.profile.basic.BasicDetails;
 import com.workpoint.icpak.client.ui.profile.education.EducationDetails;
 import com.workpoint.icpak.client.ui.profile.specialization.SpecializationDetails;
@@ -41,6 +42,7 @@ import com.workpoint.icpak.client.ui.upload.custom.Uploader;
 import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.client.ui.util.NumberUtils;
 import com.workpoint.icpak.client.util.AppContext;
+import com.workpoint.icpak.shared.model.ApplicationFormAccountancyDto;
 import com.workpoint.icpak.shared.model.ApplicationFormEducationalDto;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 import com.workpoint.icpak.shared.model.ApplicationFormSpecializationDto;
@@ -138,6 +140,7 @@ public class ProfileWidget extends Composite {
 	private EducationDetails educationDetail;
 	private SpecializationDetails specializationDetail;
 	private TrainingDetails trainingDetail;
+	private AccountancyDetails accountancyDetail;
 	private String url;
 
 	interface ProfileWidgetUiBinder extends UiBinder<Widget, ProfileWidget> {
@@ -150,24 +153,30 @@ public class ProfileWidget extends Composite {
 		educationDetail = new EducationDetails();
 		specializationDetail = new SpecializationDetails();
 		trainingDetail = new TrainingDetails();
+		accountancyDetail = new AccountancyDetails();
 
 		setEditMode(true);
 		setChangeProfilePicture(false);
 
 		divTabs.setHeaders(Arrays.asList(new TabHeader("Basic Information",
-				true, "basic_details"), new TabHeader(
-				"Education Background(From O-Levels)", false,
-				"education_details"), new TabHeader("Practical Training",
-				false, "training_details"), new TabHeader(
-				"Specialization Detail", false, "specialisation_details")));
+				true, "basic_details"), new TabHeader("Education Background",
+				false, "education_details"), new TabHeader(
+				"Practical Training", false, "training_details"),
+				new TabHeader("Accountancy Examinations", false,
+						"accountancy_details"),
+				new TabHeader("Specialization Areas", false,
+						"specialisation_details")));
 
 		divTabs.setPosition(TabPosition.PILLS);
 
-		divTabs.setContent(Arrays.asList(new TabContent(basicDetail,
-				"basic_details", true), new TabContent(educationDetail,
-				"education_details", false), new TabContent(
-				specializationDetail, "specialisation_details", false),
-				new TabContent(trainingDetail, "training_details", false)));
+		divTabs.setContent(Arrays
+				.asList(new TabContent(basicDetail, "basic_details", true),
+						new TabContent(educationDetail, "education_details",
+								false), new TabContent(specializationDetail,
+								"specialisation_details", false),
+						new TabContent(accountancyDetail,
+								"accountancy_details", false), new TabContent(
+								trainingDetail, "training_details", false)));
 
 		/* Set Edit Mode */
 		aEditPicture.addClickHandler(new ClickHandler() {
@@ -370,6 +379,11 @@ public class ProfileWidget extends Composite {
 		specializationDetail.bindSpecializations(result);
 	}
 
+	public void bindAccountancyDetails(
+			List<ApplicationFormAccountancyDto> result) {
+		accountancyDetail.bindDetails(result);
+	}
+
 	public void bindMemberStanding(MemberStanding standing) {
 
 		if (standing.getMembershipStatus() != null) {
@@ -421,7 +435,7 @@ public class ProfileWidget extends Composite {
 	public void showBasicMember(boolean show) {
 		if (show) {
 			spnMembershipNo.getParentElement().addClassName("hide");
-			spnMembershipStatus.setInnerText("Pending");
+			spnMembershipStatus.setInnerText("Not Confirmed");
 			spnRefreshSection.addClassName("hide");
 			divStandingStatus.addClassName("hide");
 			divSubmit.removeClassName("hide");
@@ -432,4 +446,9 @@ public class ProfileWidget extends Composite {
 			divSubmit.addClassName("hide");
 		}
 	}
+
+	public HasClickHandlers getAccountancyAddButton() {
+		return accountancyDetail.getAddButton();
+	}
+
 }

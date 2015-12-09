@@ -1,4 +1,4 @@
-package com.workpoint.icpak.client.ui.profile.training;
+package com.workpoint.icpak.client.ui.profile.accountancy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,10 +22,10 @@ import com.workpoint.icpak.client.ui.component.TableView;
 import com.workpoint.icpak.client.ui.events.EditModelEvent;
 import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.client.util.AppContext;
-import com.workpoint.icpak.shared.model.ApplicationFormTrainingDto;
+import com.workpoint.icpak.shared.model.ApplicationFormAccountancyDto;
 import com.workpoint.icpak.shared.model.AttachmentDto;
 
-public class TrainingDetails extends Composite {
+public class AccountancyDetails extends Composite {
 
 	private static TrainingDetailsUiBinder uiBinder = GWT
 			.create(TrainingDetailsUiBinder.class);
@@ -43,21 +43,21 @@ public class TrainingDetails extends Composite {
 
 	List<TableHeader> tblAfterHeaders = new ArrayList<TableHeader>();
 
-	interface TrainingDetailsUiBinder extends UiBinder<Widget, TrainingDetails> {
+	interface TrainingDetailsUiBinder extends
+			UiBinder<Widget, AccountancyDetails> {
 	}
 
-	public TrainingDetails() {
+	public AccountancyDetails() {
 		initWidget(uiBinder.createAndBindUi(this));
 		createBeforeHeader();
 	}
 
 	private void createBeforeHeader() {
-		tblBeforeHeaders.add(new TableHeader("Name of Organization"));
-		tblBeforeHeaders.add(new TableHeader("From"));
-		tblBeforeHeaders.add(new TableHeader("To"));
-		tblBeforeHeaders.add(new TableHeader("Position Held"));
-		tblBeforeHeaders.add(new TableHeader(
-				"Nature of Training & Tasks performed or completed"));
+		tblBeforeHeaders.add(new TableHeader("Name of Examining Body"));
+		tblBeforeHeaders.add(new TableHeader("Registration No."));
+		tblBeforeHeaders
+				.add(new TableHeader("Sections, Stages, Parts passed "));
+		tblBeforeHeaders.add(new TableHeader("Date Passed"));
 		tblBeforeHeaders.add(new TableHeader("Attachments"));
 		tblBeforeHeaders.add(new TableHeader("Action"));
 		tblTrainingDetails.setTableHeaders(tblBeforeHeaders);
@@ -75,11 +75,11 @@ public class TrainingDetails extends Composite {
 		return aAdd;
 	}
 
-	public void bindDetails(List<ApplicationFormTrainingDto> result) {
+	public void bindDetails(List<ApplicationFormAccountancyDto> result) {
 		tblTrainingDetails.clearRows();
 		tblTrainingDetails.setNoRecords(result.size());
-		for (ApplicationFormTrainingDto training : result) {
-			final ActionLink edit = new ActionLink(training);
+		for (ApplicationFormAccountancyDto accountancy : result) {
+			final ActionLink edit = new ActionLink(accountancy);
 			edit.setStyleName("fa fa-pencil btn btn-primary");
 			edit.addClickHandler(new ClickHandler() {
 
@@ -89,7 +89,7 @@ public class TrainingDetails extends Composite {
 				}
 			});
 
-			final ActionLink delete = new ActionLink(training);
+			final ActionLink delete = new ActionLink(accountancy);
 			delete.setStyleName("fa fa-trash-o btn btn-danger");
 			delete.addClickHandler(new ClickHandler() {
 
@@ -105,8 +105,9 @@ public class TrainingDetails extends Composite {
 			panel.add(delete);
 
 			HTMLPanel panelAttachment = new HTMLPanel("");
-			if (training.getAttachments() != null) {
-				for (final AttachmentDto attachment : training.getAttachments()) {
+			if (accountancy.getAttachments() != null) {
+				for (final AttachmentDto attachment : accountancy
+						.getAttachments()) {
 					final UploadContext ctx = new UploadContext("getreport");
 					ctx.setAction(UPLOADACTION.GETATTACHMENT);
 					ctx.setContext("refId", attachment.getRefId());
@@ -124,12 +125,11 @@ public class TrainingDetails extends Composite {
 				}
 			}
 			tblTrainingDetails.addRow(
-					new InlineLabel(training.getOrganisationName()),
-					new InlineLabel(DateUtils.DATEFORMAT.format(training
-							.getFromDate())), new InlineLabel(
-							DateUtils.DATEFORMAT.format(training.getToDate())),
-					new InlineLabel(training.getPosition()), new InlineLabel(
-							training.getTaskNature()), panelAttachment, panel);
+					new InlineLabel(accountancy.getExaminingBody()),
+					new InlineLabel(accountancy.getRegistrationNo()),
+					new InlineLabel(accountancy.getSectionPassed()),
+					new InlineLabel(DateUtils.DATEFORMAT.format(accountancy
+							.getDatePassed())), panelAttachment, panel);
 		}
 	}
 

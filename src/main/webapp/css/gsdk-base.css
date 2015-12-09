@@ -140,6 +140,12 @@ h1 .subtitle {
 	transition: all 300ms linear;
 }
 
+.attachment-text {
+	font-size: 14px;
+	font-weight: bold;
+	font-style: italic;
+}
+
 .btn {
 	border-width: 2px;
 	background-color: rgba(0, 0, 0, .0);
@@ -503,13 +509,17 @@ h1 .subtitle {
 
 
 
+
  
 
 
 
 
 
+
 .form-control
+
+
 
 
 
@@ -533,9 +543,13 @@ h1 .subtitle {
 
 
 
+
+
 :first-child
 ,
 .input-group-btn
+
+
 
 
 
@@ -551,6 +565,8 @@ h1 .subtitle {
 .btn
 ,
 .input-group-btn
+
+
 
 
 
@@ -576,9 +592,13 @@ h1 .subtitle {
 
 
 
+
+
 :last-child
 >
 .btn
+
+
 
 
 
@@ -595,7 +615,9 @@ h1 .subtitle {
 
 
 
+
  
+
 
 
 
@@ -608,7 +630,9 @@ h1 .subtitle {
 
 
 
+
  
+
 
 
 
@@ -621,7 +645,9 @@ h1 .subtitle {
 
 
 
+
  
+
 
 
 
@@ -635,7 +661,9 @@ h1 .subtitle {
 
 
 
+
 	
+
 
 
 
@@ -654,7 +682,10 @@ border-right
 
 
 
+
+
 :
+
 
 
 
@@ -666,8 +697,11 @@ border-right
 
 
 
+
 0
 none
+
+
 
 
 
@@ -686,13 +720,17 @@ none
 
 
 
+
  
 
 
 
 
 
+
 .form-control
+
+
 
 
 
@@ -716,9 +754,13 @@ none
 
 
 
+
+
 :last-child
 ,
 .input-group-btn
+
+
 
 
 
@@ -734,6 +776,8 @@ none
 .btn
 ,
 .input-group-btn
+
+
 
 
 
@@ -759,9 +803,13 @@ none
 
 
 
+
+
 :first-child
 >
 .btn
+
+
 
 
 
@@ -778,7 +826,9 @@ none
 
 
 
+
  
+
 
 
 
@@ -791,7 +841,9 @@ none
 
 
 
+
  
+
 
 
 
@@ -810,7 +862,10 @@ border-left
 
 
 
+
+
 :
+
 
 
 
@@ -822,8 +877,11 @@ border-left
 
 
 
+
 0
 none
+
+
 
 
 

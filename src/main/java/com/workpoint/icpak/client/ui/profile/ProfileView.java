@@ -14,6 +14,7 @@ import com.gwtplatform.mvp.client.ViewImpl;
 import com.workpoint.icpak.client.security.CurrentUser;
 import com.workpoint.icpak.client.ui.profile.password.PasswordWidget;
 import com.workpoint.icpak.client.ui.profile.widget.ProfileWidget;
+import com.workpoint.icpak.shared.model.ApplicationFormAccountancyDto;
 import com.workpoint.icpak.shared.model.ApplicationFormEducationalDto;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 import com.workpoint.icpak.shared.model.ApplicationFormSpecializationDto;
@@ -210,5 +211,16 @@ public class ProfileView extends ViewImpl implements
 	@Override
 	public void showBasicMember(boolean show) {
 		divProfileContent.showBasicMember(show);
+	}
+
+	@Override
+	public void bindAccountancyDetails(
+			List<ApplicationFormAccountancyDto> result) {
+		divProfileContent.bindAccountancyDetails(result);
+	}
+
+	@Override
+	public HasClickHandlers getAccountancyAddButton() {
+		return divProfileContent.getAccountancyAddButton();
 	}
 }

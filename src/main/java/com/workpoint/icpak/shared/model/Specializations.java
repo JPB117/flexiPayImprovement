@@ -20,9 +20,7 @@ public enum Specializations {
 			SpecializationCategory.PUBLICSECTOR),
 
 	EDUCATION(SpecializationCategory.TRAINING), NGO(
-			SpecializationCategory.TRAINING)
-
-	;
+			SpecializationCategory.TRAINING);
 
 	private SpecializationCategory category;
 

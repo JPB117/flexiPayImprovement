@@ -274,6 +274,7 @@ public class TableView extends Composite {
 
 	public void setSearchSectionVisible(Boolean status) {
 		if (status) {
+			tblContainer.addStyleName("");
 			divSearch.removeClassName("hide");
 		} else {
 			divSearch.addClassName("hide");
