@@ -27,6 +27,12 @@
 					<a href="#cards" aria-controls="home" role="tab" data-toggle="tab">Pay
 						with Credit/Debit Card</a>
 				</li>
+
+				<li role="presentation" class="hide">
+					<!-- <span class="fa fa-credit-card"></span> -->
+					<a href="#cards" aria-controls="home" role="tab" data-toggle="tab">Offline
+						Payment</a>
+				</li>
 			</ul>
 
 
@@ -194,6 +200,28 @@
 								</div>
 							</div>
 						</div>
+					</div>
+				</div>
+			</div>
+
+			<div role="tabpanel" class="tab-pane hide" id="cards">
+				<div class="row">
+					<div class="col lg-12">
+						The following are offline modes of payment to ICPAK;
+						<br />
+						<strong>BARCLAYS BANK OF KENYA</strong>
+						<p>Branch: Moi Avenue</p>
+						<p>Bank Account No: 03-075-1597134</p>
+						<p>Swift Code: BARCKENX</p>
+
+						<br />
+						<strong>STANDARD CHARTERED BANK</strong>
+						<p>Branch: Ruaraka</p>
+						<p>Bank Account No: 010-2093120900</p>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col lg-12">
 					</div>
 				</div>
 			</div>
