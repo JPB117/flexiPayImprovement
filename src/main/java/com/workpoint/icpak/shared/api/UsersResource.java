@@ -88,6 +88,10 @@ public interface UsersResource extends BaseResource {
 	@DELETE
 	@Path("/{userId}")
 	public void delete(@PathParam("userId") String userId);
+	
+	@PUT
+	@Path("/repost")
+	public UserDto repostToLms(@QueryParam("userRefId") String userRefId);
 
 	// @PUT
 	// @Path("/{userId}/password")

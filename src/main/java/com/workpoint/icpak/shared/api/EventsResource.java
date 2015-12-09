@@ -62,4 +62,5 @@ public interface EventsResource extends BaseResource {
 	@GET
 	@Path("/searchCount")
 	public Integer getSearchCount(@QueryParam("searchTerm") String searchTerm);
+
 }

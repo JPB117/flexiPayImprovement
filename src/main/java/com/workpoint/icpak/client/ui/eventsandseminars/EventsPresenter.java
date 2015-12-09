@@ -36,14 +36,14 @@ import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
 import com.workpoint.icpak.client.ui.events.ProcessingEvent;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
 import com.workpoint.icpak.client.ui.security.AdminGateKeeper;
+import com.workpoint.icpak.shared.api.DelegatesResource;
 import com.workpoint.icpak.shared.api.EventsResource;
 import com.workpoint.icpak.shared.model.EventSummaryDto;
 import com.workpoint.icpak.shared.model.events.BookingDto;
 import com.workpoint.icpak.shared.model.events.DelegateDto;
 import com.workpoint.icpak.shared.model.events.EventDto;
 
-public class EventsPresenter extends
-		Presenter<EventsPresenter.IEventsView, EventsPresenter.IEventsProxy>
+public class EventsPresenter extends Presenter<EventsPresenter.IEventsView, EventsPresenter.IEventsProxy>
 		implements EditModelHandler, TableActionHandler {
 
 	public interface IEventsView extends View {
@@ -94,8 +94,7 @@ public class EventsPresenter extends
 	@TabInfo(container = HomePresenter.class)
 	static TabData getTabLabel(AdminGateKeeper gateKeeper) {
 		String tabName = "Events & Courses";
-		TabDataExt data = new TabDataExt(tabName, "fa fa-tags", 2, gateKeeper,
-				true);
+		TabDataExt data = new TabDataExt(tabName, "fa fa-tags", 2, gateKeeper, true);
 		return data;
 	}
 
@@ -103,8 +102,7 @@ public class EventsPresenter extends
 	private String eventId;
 
 	@Inject
-	public EventsPresenter(final EventBus eventBus, final IEventsView view,
-			final IEventsProxy proxy,
+	public EventsPresenter(final EventBus eventBus, final IEventsView view, final IEventsProxy proxy,
 			ResourceDelegate<EventsResource> eventsDelegate) {
 		super(eventBus, view, proxy, HomePresenter.SLOT_SetTabContent);
 		this.eventsDelegate = eventsDelegate;
@@ -115,11 +113,9 @@ public class EventsPresenter extends
 		super.onBind();
 		addRegisteredHandler(EditModelEvent.TYPE, this);
 		addRegisteredHandler(TableActionEvent.TYPE, this);
-		
-		getView().getSearchValueChangeHander().addValueChangeHandler(
-				eventsValueChangeHandler);
-		getView().getDelegateSearchValueChangeHandler().addValueChangeHandler(
-				delegateTableValueChangeHandler);
+
+		getView().getSearchValueChangeHander().addValueChangeHandler(eventsValueChangeHandler);
+		getView().getDelegateSearchValueChangeHandler().addValueChangeHandler(delegateTableValueChangeHandler);
 
 	}
 
@@ -140,12 +136,11 @@ public class EventsPresenter extends
 
 	private void loadData() {
 		fireEvent(new ProcessingEvent());
-		eventsDelegate.withCallback(
-				new AbstractAsyncCallback<EventSummaryDto>() {
-					public void onSuccess(EventSummaryDto result) {
-						getView().bindEventSummary(result);
-					};
-				}).getEventsSummary();
+		eventsDelegate.withCallback(new AbstractAsyncCallback<EventSummaryDto>() {
+			public void onSuccess(EventSummaryDto result) {
+				getView().bindEventSummary(result);
+			};
+		}).getEventsSummary();
 
 		if (eventId != null) {
 			// Load Bookings
@@ -187,14 +182,13 @@ public class EventsPresenter extends
 
 	protected void loadDelegates(int offset, int limit, String searchTerm) {
 		fireEvent(new ProcessingEvent());
-		eventsDelegate
-				.withCallback(new AbstractAsyncCallback<List<DelegateDto>>() {
-					@Override
-					public void onSuccess(List<DelegateDto> delegates) {
-						fireEvent(new ProcessingCompletedEvent());
-						getView().bindDelegates(delegates);
-					}
-				}).delegates(eventId).getAll(offset, limit, searchTerm);
+		eventsDelegate.withCallback(new AbstractAsyncCallback<List<DelegateDto>>() {
+			@Override
+			public void onSuccess(List<DelegateDto> delegates) {
+				fireEvent(new ProcessingCompletedEvent());
+				getView().bindDelegates(delegates);
+			}
+		}).delegates(eventId).getAll(offset, limit, searchTerm);
 	}
 
 	protected void loadDelegatesCount(final String searchTerm) {
@@ -233,14 +227,13 @@ public class EventsPresenter extends
 
 	protected void loadEvents(int offset, int limit, String searchTerm) {
 		fireEvent(new ProcessingEvent());
-		eventsDelegate.withCallback(
-				new AbstractAsyncCallback<List<EventDto>>() {
-					@Override
-					public void onSuccess(List<EventDto> events) {
-						fireEvent(new ProcessingCompletedEvent());
-						getView().bindEvents(events);
-					}
-				}).getAll(offset, limit, searchTerm);
+		eventsDelegate.withCallback(new AbstractAsyncCallback<List<EventDto>>() {
+			@Override
+			public void onSuccess(List<EventDto> events) {
+				fireEvent(new ProcessingCompletedEvent());
+				getView().bindEvents(events);
+			}
+		}).getAll(offset, limit, searchTerm);
 	}
 
 	@Override
@@ -259,41 +252,54 @@ public class EventsPresenter extends
 				fireEvent(new ProcessingCompletedEvent());
 				Window.alert("Successfully updated " + result.getSurname());
 			}
-		}).bookings(model.getEventRefId())
-				.updateDelegate(model.getBookingId(), model.getRefId(), model);
+		}).bookings(eventId).updateDelegate(model.getBookingId(), model.getRefId(), model);
 	}
 
 	@Override
 	public void onTableAction(TableActionEvent event) {
+		Window.alert(event.getAction() + "");
 		if (event.getAction() == TableActionType.RESENDPROFORMA) {
 			final ResendModel resendModel = (ResendModel) event.getModel();
-
 			fireEvent(new ProcessingEvent());
+			Window.alert("method 1");
 			// Resend Proforma for that Booking
-			eventsDelegate
-					.withCallback(new AbstractAsyncCallback<BookingDto>() {
-						@Override
-						public void onSuccess(BookingDto booking) {
-							fireEvent(new ProcessingCompletedEvent());
-							Window.alert("Email sent successfully..");
-						}
+			eventsDelegate.withCallback(new AbstractAsyncCallback<BookingDto>() {
+				@Override
+				public void onSuccess(BookingDto booking) {
+					fireEvent(new ProcessingCompletedEvent());
+					Window.alert("Email sent successfully..");
+				}
 
-						@Override
-						public void onFailure(Throwable caught) {
-							callPopOver();
-							super.onFailure(caught);
-						}
-					})
-					.bookings(eventId)
-					.resendProforma(resendModel.getEmails(),
-							resendModel.getDelegate().getBookingRefId());
+				@Override
+				public void onFailure(Throwable caught) {
+					callPopOver();
+					super.onFailure(caught);
+				}
+			}).bookings(eventId).resendProforma(resendModel.getEmails(), resendModel.getDelegate().getBookingRefId());
+		}
 
+		if (event.getAction() == TableActionType.ENROLTOLMS) {
+			Window.alert("Tesssttt");
+			final ResendModel resendModel = (ResendModel) event.getModel();
+			// eventsDelegate.withCallback(new AbstractAsyncCallback<String>() {
+			// @Override
+			// public void onSuccess(String result) {
+			// Window.alert(result);
+			// }
+			// }).enrolToLMS(resendModel.getDelegate().getRefId());
+
+			// eventsDelegate.withCallback(new AbstractAsyncCallback<String>() {
+			// @Override
+			// public void onSuccess(String result) {
+			// Window.alert(result);
+			// }
+			// }).getSearchCount("Test");
 		}
 
 	}
-	
-	public void callPopOver(){
-		AppManager.showPopUp("Sorry dude ..", "", new OptionControl(){
+
+	public void callPopOver() {
+		AppManager.showPopUp("Sorry dude ..", "", new OptionControl() {
 
 			@Override
 			public void onSelect(String name) {

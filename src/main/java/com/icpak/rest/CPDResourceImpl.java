@@ -44,10 +44,8 @@ public class CPDResourceImpl implements CPDResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Get a list of all cpds", response = CPDDto.class, consumes = MediaType.APPLICATION_JSON)
-	public List<CPDDto> getAll(@QueryParam("offset") Integer offset,
-			@QueryParam("limit") Integer limit,
-			@QueryParam("startDate") Long startDate,
-			@QueryParam("endDate") Long endDate) {
+	public List<CPDDto> getAll(@QueryParam("offset") Integer offset, @QueryParam("limit") Integer limit,
+			@QueryParam("startDate") Long startDate, @QueryParam("endDate") Long endDate) {
 
 		return helper.getAllCPD(memberId, offset, limit, startDate, endDate);
 	}
@@ -56,15 +54,13 @@ public class CPDResourceImpl implements CPDResource {
 	@Path("/summary")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public CPDSummaryDto getCPDSummary(@QueryParam("startDate") Long startDate,
-			@QueryParam("endDate") Long endDate) {
+	public CPDSummaryDto getCPDSummary(@QueryParam("startDate") Long startDate, @QueryParam("endDate") Long endDate) {
 		return helper.getCPDSummary(memberId, startDate, endDate);
 	}
 
 	@GET
 	@Path("/filteredcount")
-	public Integer getCount(@QueryParam("startDate") Long startDate,
-			@QueryParam("endDate") Long endDate) {
+	public Integer getCount(@QueryParam("startDate") Long startDate, @QueryParam("endDate") Long endDate) {
 		return helper.getCount(memberId, startDate, endDate);
 	}
 
@@ -84,7 +80,13 @@ public class CPDResourceImpl implements CPDResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Create a new cpd", response = CPDDto.class, consumes = MediaType.APPLICATION_JSON)
 	public CPDDto create(CPDDto cpd) {
-		return helper.create(memberId, cpd);
+
+		if (memberId != null) {
+			return helper.create(memberId, cpd);
+		} else {
+			return helper.create(cpd);
+		}
+
 	}
 
 	@PUT

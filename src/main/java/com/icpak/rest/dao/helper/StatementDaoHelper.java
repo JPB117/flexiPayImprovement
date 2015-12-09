@@ -190,6 +190,7 @@ public class StatementDaoHelper {
 				statementDao.updateStatement(statementInDb);
 			} else {
 				logger.info("=== >><<<<< === Creating ==");
+				
 				statementDao.createStatement(statement);
 
 			}
@@ -292,6 +293,7 @@ public class StatementDaoHelper {
 				/**
 				 * Add this statement to list
 				 */
+				memberStatements.add(erpMemberStatement);
 			}
 		}
 		logger.error(" ===>>><<<< === result " + res);

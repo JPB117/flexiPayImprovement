@@ -1,6 +1,8 @@
 package com.icpak.rest.dao.helper;
 
 import java.math.BigInteger;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -301,6 +303,30 @@ public class CPDDaoHelper {
 	public Integer cpdSearchCount(String searchTerm) {
 		BigInteger count  = dao.cpdSearchCount(searchTerm);
 		return count.intValue();
+	}
+
+	/*
+	 * Handles data from lms for creating cpd
+	 */
+	public CPDDto create(CPDDto cpdDto) {
+		
+		SimpleDateFormat fomatter = new SimpleDateFormat("yyyy-MM-dd");
+		
+		try {
+			cpdDto.setStartDate(fomatter.parse(cpdDto.getLmsStartDate()));
+			cpdDto.setEndDate(fomatter.parse(cpdDto.getLmsEnddate()));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
+		CPD cpd = new CPD();
+		cpd.copyFrom(cpdDto);
+		cpd.setMemberRefId(cpdDto.getLmsMemberId());
+		dao.save(cpd);
+
+		CPDDto rtn = cpd.toDTO();
+		rtn.setFullNames(userDao.getFullNames(cpdDto.getLmsMemberId()));
+		return rtn;
 	}
 
 }

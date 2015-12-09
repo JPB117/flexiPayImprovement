@@ -49,6 +49,8 @@ public class UserItemView extends ViewImpl implements UserItemPresenter.MyView {
 	Anchor aEdit;
 	@UiField
 	Anchor aDelete;
+	@UiField
+	Anchor almsReview;
 
 	@UiField
 	Anchor aStatementDownload;
@@ -184,6 +186,10 @@ public class UserItemView extends ViewImpl implements UserItemPresenter.MyView {
 
 	public HasClickHandlers getDelete() {
 		return aDelete;
+	}
+	
+	public HasClickHandlers getAlmsReview() {
+		return almsReview;
 	}
 
 	public HasClickHandlers getStatementButton() {
