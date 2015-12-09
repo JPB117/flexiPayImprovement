@@ -35,9 +35,13 @@ public class UploadServlet extends UploadAction {
 	CPDAttachmentsExecutor cpdExecutor;
 	@Inject
 	UserProfileImageExecutor userProfileImageExecutor;
-
 	@Inject
 	IDAttachmentsExecutor idAttachmentsExecutor;
+	@Inject
+	EducationAttachmentsExecutor educationAttachmentsExecutor;
+
+	@Inject
+	TrainingAttachmentsExecutor trainingAttachmentsExecutor;
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
@@ -87,6 +91,12 @@ public class UploadServlet extends UploadAction {
 			break;
 		case UPLOADIDPHOTOCOPY:
 			executor = idAttachmentsExecutor;
+			break;
+		case UPLOADEDUCATIONATTATCHMENTS:
+			executor = educationAttachmentsExecutor;
+			break;
+		case UPLOADTRAININGATTATCHMENTS:
+			executor = trainingAttachmentsExecutor;
 			break;
 		}
 

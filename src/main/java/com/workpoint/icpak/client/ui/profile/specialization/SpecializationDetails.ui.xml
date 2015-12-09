@@ -6,12 +6,13 @@
 
 	<g:HTMLPanel styleName="row">
 		<div class="col-sm-12">
-			<d:ActionLink styleName="btn btn-next btn-fill btn-primary btn-wd btn-sm"
+			<d:ActionLink styleName="btn btn-next btn-fill btn-default btn-wd btn-sm"
 				ui:field="aAdd">
-				<i class="fa fa-plus"></i>
-				Add Specialization
+				<i class="fa fa-pencil"></i>
+				Edit Specialization
 			</d:ActionLink>
 		</div>
+
 		<br />
 
 		<g:HTMLPanel ui:field="panelTable">

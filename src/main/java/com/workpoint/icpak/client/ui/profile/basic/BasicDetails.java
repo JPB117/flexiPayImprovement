@@ -103,6 +103,7 @@ public class BasicDetails extends Composite {
 		}
 
 		if (result.getAttachments() != null) {
+			panelPassportCopy.clear();
 			for (final AttachmentDto attachment : result.getAttachments()) {
 				final UploadContext ctx = new UploadContext("getreport");
 				ctx.setAction(UPLOADACTION.GETATTACHMENT);
@@ -117,6 +118,7 @@ public class BasicDetails extends Composite {
 					}
 				});
 				panelPassportCopy.add(link);
+				panelPassportCopy.add(new HTML("<br/>"));
 			}
 		}
 		// panelRegistration.bind(result);

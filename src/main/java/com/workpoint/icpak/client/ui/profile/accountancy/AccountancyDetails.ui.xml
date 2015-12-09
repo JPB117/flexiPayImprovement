@@ -9,7 +9,7 @@
 					<d:ActionLink styleName="btn btn-next btn-fill btn-default btn-wd btn-sm"
 						ui:field="aAdd">
 						<i class="fa fa-plus"></i>
-						Add Training
+						Add Record
 					</d:ActionLink>
 				</div>
 			</div>

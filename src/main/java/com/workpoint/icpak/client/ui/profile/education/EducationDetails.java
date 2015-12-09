@@ -9,10 +9,14 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Widget;
+import com.workpoint.icpak.client.model.UploadContext;
+import com.workpoint.icpak.client.model.UploadContext.UPLOADACTION;
 import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.TableHeader;
 import com.workpoint.icpak.client.ui.component.TableView;
@@ -20,6 +24,7 @@ import com.workpoint.icpak.client.ui.events.EditModelEvent;
 import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.model.ApplicationFormEducationalDto;
+import com.workpoint.icpak.shared.model.AttachmentDto;
 
 public class EducationDetails extends Composite {
 
@@ -59,8 +64,7 @@ public class EducationDetails extends Composite {
 		tblHeaders.add(new TableHeader("Exam Body"));
 		tblHeaders.add(new TableHeader("Class/Division"));
 		tblHeaders.add(new TableHeader("Awarded"));
-		tblHeaders.add(new TableHeader("Reg No."));
-		tblHeaders.add(new TableHeader("Section Passed"));
+		tblHeaders.add(new TableHeader("Attachments"));
 		tblHeaders.add(new TableHeader("Action"));
 		tblEducationalDetail.setTableHeaders(tblHeaders);
 	}
@@ -115,6 +119,28 @@ public class EducationDetails extends Composite {
 			HTMLPanel panel = new HTMLPanel("");
 			panel.add(edit);
 			panel.add(delete);
+
+			HTMLPanel panelAttachment = new HTMLPanel("");
+			if (edu.getAttachments() != null) {
+				for (final AttachmentDto attachment : edu.getAttachments()) {
+					final UploadContext ctx = new UploadContext("getreport");
+					ctx.setAction(UPLOADACTION.GETATTACHMENT);
+					ctx.setContext("refId", attachment.getRefId());
+
+					ActionLink link = new ActionLink(
+							attachment.getAttachmentName());
+					link.addClickHandler(new ClickHandler() {
+						@Override
+						public void onClick(ClickEvent event) {
+							Window.open(ctx.toUrl(),
+									attachment.getAttachmentName(), "");
+						}
+					});
+					panelAttachment.add(link);
+					panelAttachment.add(new HTML("<br/>"));
+				}
+			}
+
 			tblEducationalDetail.addRow(
 					new InlineLabel(edu.getWhereObtained()),
 					new InlineLabel(DateUtils.DATEFORMAT.format(edu
@@ -123,9 +149,8 @@ public class EducationDetails extends Composite {
 							DateUtils.DATEFORMAT.format(edu.getToDate())),
 					new InlineLabel(edu.getExaminingBody()), new InlineLabel(
 							edu.getClassDivisionAttained()), new InlineLabel(
-							edu.getCertificateAwarded() + ""), new InlineLabel(
-							edu.getRegNo()),
-					new InlineLabel(edu.getSections()), panel);
+							edu.getCertificateAwarded() + ""), panelAttachment,
+					panel);
 		}
 	}
 

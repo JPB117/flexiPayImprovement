@@ -22,15 +22,13 @@ import com.icpak.rest.models.util.Attachment;
 import com.wordnik.swagger.annotations.ApiModel;
 import com.workpoint.icpak.shared.model.EduType;
 
-@ApiModel(description="Education details of a member")
-
+@ApiModel(description = "Education details of a member")
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-
 @Entity
-@Table(name="education")
-@Cache(usage= CacheConcurrencyStrategy.READ_WRITE)
-public class Education extends PO{
+@Table(name = "education")
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+public class Education extends PO {
 
 	/**
 	 * 
@@ -39,23 +37,24 @@ public class Education extends PO{
 
 	@Transient
 	private String memberId;
-	
+
 	private EduType type = EduType.ACADEMIA;
-	
-	@Column(length=2000)
+
+	@Column(length = 2000)
 	private String institution;
-	
+
 	private Date startDate;
 	private Date dateCompleted;
 	private String examiningBody;
 	private String classOrDivision;
-	private String award; //Degree or Diploma awarded
-	
-	//For Professional Acc Exams
+	private String award; // Degree or Diploma awarded
+
+	// For Professional Acc Exams
 	private String registrationNo;
 	private String sectionsPassed;
-	
-	@OneToMany(mappedBy="education",fetch=FetchType.LAZY, cascade={CascadeType.PERSIST, CascadeType.REMOVE})
+
+	@OneToMany(mappedBy = "education", fetch = FetchType.LAZY, cascade = {
+			CascadeType.PERSIST, CascadeType.REMOVE })
 	Collection<Attachment> attachments;
 
 	public String getInstitution() {
@@ -137,8 +136,8 @@ public class Education extends PO{
 	public void setType(EduType type) {
 		this.type = type;
 	}
-	
-	public Education clone(String ... details){
+
+	public Education clone(String... details) {
 		return this;
 	}
 
@@ -156,10 +155,10 @@ public class Education extends PO{
 		this.startDate = eduEntry.getStartDate();
 		this.dateCompleted = eduEntry.getDateCompleted();
 		this.examiningBody = eduEntry.getExaminingBody();
-		this.classOrDivision =eduEntry.getClassOrDivision();
+		this.classOrDivision = eduEntry.getClassOrDivision();
 		this.award = eduEntry.getAward();
 		this.registrationNo = eduEntry.getRegistrationNo();
 		this.sectionsPassed = eduEntry.getSectionsPassed();
 	}
-		
+
 }

@@ -92,6 +92,7 @@ public class SpecializationRegistrationForm extends Composite {
 		aCooperative.addValueChangeHandler(checkHandler);
 		aEducation.addValueChangeHandler(checkHandler);
 		aNGOs.addValueChangeHandler(checkHandler);
+
 		setEditMode(false);
 	}
 
@@ -116,6 +117,18 @@ public class SpecializationRegistrationForm extends Composite {
 			addRemove(Specializations.HOTEL, value);
 		} else if (source.equals(aOther)) {
 			addRemove(Specializations.OTHER, value);
+		} else if (source.equals(aOther)) {
+			addRemove(Specializations.CENTRALGVT, value);
+		} else if (source.equals(aLocal)) {
+			addRemove(Specializations.LOCALGVT, value);
+		} else if (source.equals(aState)) {
+			addRemove(Specializations.STATECOOP, value);
+		} else if (source.equals(aCooperative)) {
+			addRemove(Specializations.COOP, value);
+		} else if (source.equals(aEducation)) {
+			addRemove(Specializations.EDUCATION, value);
+		} else if (source.equals(aNGOs)) {
+			addRemove(Specializations.NGO, value);
 		}
 	}
 
@@ -168,7 +181,6 @@ public class SpecializationRegistrationForm extends Composite {
 							new ApplicationFormSpecializationDto(
 									Specializations.HOTEL), !isSave));
 			break;
-
 		case OTHER:
 			AppContext
 					.fireEvent(new EditModelEvent(
@@ -176,6 +188,40 @@ public class SpecializationRegistrationForm extends Composite {
 									Specializations.OTHER), !isSave));
 			break;
 
+		case CENTRALGVT:
+			AppContext.fireEvent(new EditModelEvent(
+					new ApplicationFormSpecializationDto(
+							Specializations.CENTRALGVT), !isSave));
+			break;
+		case LOCALGVT:
+			AppContext.fireEvent(new EditModelEvent(
+					new ApplicationFormSpecializationDto(
+							Specializations.LOCALGVT), !isSave));
+			break;
+
+		case STATECOOP:
+			AppContext.fireEvent(new EditModelEvent(
+					new ApplicationFormSpecializationDto(
+							Specializations.STATECOOP), !isSave));
+			break;
+
+		case COOP:
+			AppContext.fireEvent(new EditModelEvent(
+					new ApplicationFormSpecializationDto(Specializations.COOP),
+					!isSave));
+			break;
+
+		case EDUCATION:
+			AppContext.fireEvent(new EditModelEvent(
+					new ApplicationFormSpecializationDto(
+							Specializations.EDUCATION), !isSave));
+			break;
+
+		case NGO:
+			AppContext.fireEvent(new EditModelEvent(
+					new ApplicationFormSpecializationDto(Specializations.NGO),
+					!isSave));
+			break;
 		}
 	}
 
@@ -184,11 +230,50 @@ public class SpecializationRegistrationForm extends Composite {
 		case AUDIT:
 			aAudit.setValue(true);
 			break;
+		case TAXATION:
+			aTaxation.setValue(true);
+			break;
 		case FINANCIAL:
 			aFinancial.setValue(true);
 			break;
-		case TAXATION:
-			aTaxation.setValue(true);
+		case HRCONSULTANCY:
+			aHRConsultancy.setValue(true);
+			break;
+		case BANKING:
+			aBanking.setValue(true);
+			break;
+		case FINANCE:
+			aFinance.setValue(true);
+			break;
+		case INSURANCE:
+			aInsurance.setValue(true);
+			break;
+		case MANUFACTURING:
+			aManufacturing.setValue(true);
+			break;
+		case HOTEL:
+			aHotel.setValue(true);
+			break;
+		case OTHER:
+			aOther.setValue(true);
+			break;
+		case CENTRALGVT:
+			aCentral.setValue(true);
+			break;
+		case LOCALGVT:
+			aLocal.setValue(true);
+			break;
+		case STATECOOP:
+			aState.setValue(true);
+			break;
+		case COOP:
+			aCooperative.setValue(true);
+			break;
+		case EDUCATION:
+			aEducation.setValue(true);
+			break;
+		case NGO:
+			aNGOs.setValue(true);
 			break;
 		}
 	}
@@ -206,8 +291,40 @@ public class SpecializationRegistrationForm extends Composite {
 	public void setEditMode(boolean editMode) {
 		if (editMode) {
 			divHeader.removeClassName("hide");
+			aAudit.setEnabled(true);
+			aTaxation.setEnabled(true);
+			aFinancial.setEnabled(true);
+			aHRConsultancy.setEnabled(true);
+			aBanking.setEnabled(true);
+			aFinance.setEnabled(true);
+			aInsurance.setEnabled(true);
+			aManufacturing.setEnabled(true);
+			aHotel.setEnabled(true);
+			aOther.setEnabled(true);
+			aCentral.setEnabled(true);
+			aLocal.setEnabled(true);
+			aState.setEnabled(true);
+			aCooperative.setEnabled(true);
+			aEducation.setEnabled(true);
+			aNGOs.setEnabled(true);
 		} else {
 			divHeader.addClassName("hide");
+			aAudit.setEnabled(false);
+			aTaxation.setEnabled(false);
+			aFinancial.setEnabled(false);
+			aHRConsultancy.setEnabled(false);
+			aBanking.setEnabled(false);
+			aFinance.setEnabled(false);
+			aInsurance.setEnabled(false);
+			aManufacturing.setEnabled(false);
+			aHotel.setEnabled(false);
+			aOther.setEnabled(false);
+			aCentral.setEnabled(false);
+			aLocal.setEnabled(false);
+			aState.setEnabled(false);
+			aCooperative.setEnabled(false);
+			aEducation.setEnabled(false);
+			aNGOs.setEnabled(false);
 		}
 	}
 

@@ -13,9 +13,26 @@
 				<div class="form-group">
 					<div class="row">
 						<div class="col-xs-12">
-							<label for="firstname">Name and Address of Organization</label>
-							<d:TextField ui:field="txtOrganization" styleName="form-control"
-								placeholder="Organization Name" value="" required="true">
+							<label for="firstname">Name of Examining Body:</label>
+							<d:TextField ui:field="txtExaminationBody" styleName="form-control"
+								placeholder="Examination Body" value="" required="true">
+							</d:TextField>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="row">
+						<div class="col-xs-6">
+							<label for="lastname">Registration No:</label>
+							<d:TextField ui:field="txtRegistrationNo" styleName="form-control"
+								placeholder="Registration Number" value="" required="true">
+							</d:TextField>
+						</div>
+
+						<div class="col-xs-6">
+							<label for="emailaddress">Sections, Stages, Parts passed:</label>
+							<d:TextField ui:field="txtSectionPassed" styleName="form-control"
+								placeholder="Section Passed">
 							</d:TextField>
 						</div>
 					</div>
@@ -23,59 +40,6 @@
 
 				<div class="form-group">
 					<div class="row">
-						<div class="col-xs-6">
-							<label for="emailaddress">Start Date:</label>
-							<d:DateField ui:field="dtStartDate" placeholder="Enter Start Date"
-								required="true">
-							</d:DateField>
-						</div>
-
-						<div class="col-xs-6">
-							<label for="phone">End Date:</label>
-							<d:DateField ui:field="dtDateCompleted" placeholder="End Date"
-								required="true">
-							</d:DateField>
-						</div>
-					</div>
-				</div>
-
-				<div class="form-group">
-					<div class="row">
-						<div class="col-xs-6">
-							<label for="lastname">Position</label>
-							<d:TextField ui:field="txtPosition" styleName="form-control"
-								placeholder="Enter Position" value="" required="true">
-							</d:TextField>
-						</div>
-
-						<div class="col-xs-6">
-							<label for="emailaddress">Nature of Training / Tasks performed or
-								completed</label>
-							<d:TextField ui:field="txtTaskNature" styleName="form-control"
-								placeholder="Task Nature">
-							</d:TextField>
-						</div>
-					</div>
-				</div>
-
-				<div class="form-group hide">
-					<div class="row">
-						<div class="col-xs-6">
-							<label for="applicationCategory">Responsibilities:</label>
-							<d:TextArea ui:field="txtResponsibility" styleName="form-control"
-								placeholder="Responsibility" value="">
-							</d:TextArea>
-						</div>
-					</div>
-				</div>
-
-				<div class="form-group hide">
-					<div class="row">
-						<div class="col-xs-6">
-							<label for="emailaddress">Training Type:</label>
-							<d:DropDownList ui:field="lstTrainingType"></d:DropDownList>
-						</div>
-
 						<div class="col-xs-6">
 							<label for="applicationCategory">Date passed:</label>
 							<d:DateField ui:field="dtDatePassed" placeholder="Enter Date passed"
@@ -89,16 +53,18 @@
 					<div class="row">
 						<div class="col-xs-12">
 							<label for="enddate">Attachments:</label>
-							<p class="text-small text-muted">
-								Provide details of professional experience/employment
-								record
-								during the last three (3) years starting from present
-								appointment by way of letter(s) from the employer(s) in
-								question. NB: The confirmation(s) should be made on
-								official/business notepaper, should be addressed to the
-								Chairman, Registration and Quality Assurance Committee and
-								should specify the character and professional conduct of
-								applicant.
+							<p class="text-small text-muted attachment-text">
+								Provide copies of all parts of the local (KASNEB) CPA
+								examination certificates. Where an applicant has not received a
+								certificate, he/she should provide a copy of the congratulatory
+								letter from KASNEB and all the result notification slips.
+								Holders of foreign accountancy qualifications will be required
+								to submit copies of their membership certificates from their
+								foreign institutes and a copy of the letter from KASNEB
+								confirming that they have sat and passed the recommended local
+								examination papers. Certification of copies may be done at the
+								ICPAK offices (free of charge) upon presentation of the
+								originals.
 							</p>
 						</div>
 					</div>

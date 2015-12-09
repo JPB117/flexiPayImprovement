@@ -15,7 +15,11 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.icpak.rest.models.base.PO;
 import com.icpak.rest.models.cpd.CPD;
+import com.icpak.rest.models.membership.ApplicationFormAccountancy;
+import com.icpak.rest.models.membership.ApplicationFormEducational;
+import com.icpak.rest.models.membership.ApplicationFormEmployment;
 import com.icpak.rest.models.membership.ApplicationFormHeader;
+import com.icpak.rest.models.membership.ApplicationFormTraining;
 import com.icpak.rest.models.membership.Education;
 import com.icpak.rest.models.membership.GoodStandingCertificate;
 import com.icpak.rest.models.membership.TrainingAndExperience;
@@ -46,12 +50,28 @@ public class Attachment extends PO {
 	private GoodStandingCertificate goodStandingCert;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "educationid")
-	private Education education;
+	@JoinColumn(name = "applicationEducationId")
+	private ApplicationFormEducational applicationEducation;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "employmentId")
+	private ApplicationFormEmployment employment;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "accountancyId")
+	private ApplicationFormAccountancy applicationAccountancy;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "applicationTrainingId")
+	private ApplicationFormTraining applicationTraining;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "trainingExperienceId")
 	private TrainingAndExperience trainingAndExperience;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "educationId")
+	private Education education;
 
 	@ManyToOne
 	@JoinColumn(name = "cpdid")
@@ -107,6 +127,15 @@ public class Attachment extends PO {
 		this.contentType = contentType;
 	}
 
+	public ApplicationFormAccountancy getApplicationAccountancy() {
+		return applicationAccountancy;
+	}
+
+	public void setApplicationAccountancy(
+			ApplicationFormAccountancy applicationAccountancy) {
+		this.applicationAccountancy = applicationAccountancy;
+	}
+
 	public Attachment clone(String detail) {
 		Attachment a = new Attachment();
 
@@ -123,6 +152,15 @@ public class Attachment extends PO {
 
 	public String getProfilePicUserId() {
 		return profilePicUserId;
+	}
+
+	public ApplicationFormTraining getApplicationTraining() {
+		return applicationTraining;
+	}
+
+	public void setApplicationTraining(
+			ApplicationFormTraining applicationTraining) {
+		this.applicationTraining = applicationTraining;
 	}
 
 	public void setProfilePicUserId(String profilePicUserId) {
@@ -151,5 +189,13 @@ public class Attachment extends PO {
 
 	public ApplicationFormHeader getApplication() {
 		return application;
+	}
+
+	public ApplicationFormEducational getEducation() {
+		return applicationEducation;
+	}
+
+	public void setEducation(ApplicationFormEducational education) {
+		this.applicationEducation = education;
 	}
 }

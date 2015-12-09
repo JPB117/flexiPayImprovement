@@ -1,23 +1,31 @@
 package com.icpak.rest.models.membership;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.icpak.rest.models.base.PO;
+import com.icpak.rest.models.util.Attachment;
 import com.workpoint.icpak.shared.model.ApplicationFormEducationalDto;
+import com.workpoint.icpak.shared.model.AttachmentDto;
 import com.workpoint.icpak.shared.model.EduType;
 
 @Entity
 @Table(name = "`Application Form Educational`")
 public class ApplicationFormEducational extends PO {
 
-	
 	/**
 	 * 
 	 */
@@ -26,53 +34,56 @@ public class ApplicationFormEducational extends PO {
 	@Column(name = "`timestamp`", columnDefinition = "timestamp NOT NULL default current_timestamp")
 	private Timestamp timestamp;
 
-	@Column( name = "`Line No_`")
+	@Column(name = "`Line No_`")
 	private int lineNo;
 
-	@Column( name = "`Application No_`", length = 20)
+	@Column(name = "`Application No_`", length = 20)
 	private String applicationNo;
-	
-	@Column( name = "`ApplicationRefId`", length = 20)
+
+	@Column(name = "`ApplicationRefId`", length = 20)
 	private String applicationRefId;
 
-	@Column( name = "`Where Obtained`", length = 100)
+	@Column(name = "`Where Obtained`", length = 100)
 	private String whereObtained;
 
-	@Column( name = "`From Date`", columnDefinition = "datetime")
+	@Column(name = "`From Date`", columnDefinition = "datetime")
 	private Date fromDate;
 
-	@Column( name = "`To Date`", columnDefinition = "datetime")
+	@Column(name = "`To Date`", columnDefinition = "datetime")
 	private Date toDate;
 
-	@Column( name = "`Class_Division Attained`", length = 50)
+	@Column(name = "`Class_Division Attained`", length = 50)
 	private String classDivisionAttained;
 
-	@Column( name = "`Certificate Awarded`")
-	private int certificateAwarded;
+	@Column(name = "`Certificate Awarded`")
+	private String certificateAwarded;
 
-	@Column( name = "`Examining Body`", length = 50)
+	@Column(name = "`Examining Body`", length = 50)
 	private String examiningBody;
 
-	@Column( name = "`Qualification Description`", length = 80)
+	@Column(name = "`Qualification Description`", length = 80)
 	private String qualificationDesc;
 
-	@Column( name = "`Qualification code`", length = 20)
+	@Column(name = "`Qualification code`", length = 20)
 	private String qualificationCode;
 
-//	@Column( name = "`Type`")
-//	private int type;
-	
+	@OneToMany(mappedBy = "applicationEducation", fetch = FetchType.LAZY, cascade = { CascadeType.REMOVE })
+	private Set<Attachment> attachments = new HashSet<>();
+
+	// @Column( name = "`Type`")
+	// private int type;
+
 	@Enumerated(EnumType.ORDINAL)
-	@Column( name = "`Type`")
+	@Column(name = "`Type`")
 	private EduType type;
 
-	@Column( name = "`Reg_No`", length = 15)
+	@Column(name = "`Reg_No`", length = 15)
 	private String regNo;
 
-	@Column( name = "`Sections`", length = 30)
+	@Column(name = "`Sections`", length = 30)
 	private String sections;
 
-	@Column( name = "`Description`", length = 50)
+	@Column(name = "`Description`", length = 50)
 	private String description;
 
 	public ApplicationFormEducational() {
@@ -134,14 +145,6 @@ public class ApplicationFormEducational extends PO {
 		this.classDivisionAttained = classDivisionAttained;
 	}
 
-	public int getCertificateAwarded() {
-		return certificateAwarded;
-	}
-
-	public void setCertificateAwarded(int certificateAwarded) {
-		this.certificateAwarded = certificateAwarded;
-	}
-
 	public String getExaminingBody() {
 		return examiningBody;
 	}
@@ -165,7 +168,15 @@ public class ApplicationFormEducational extends PO {
 	public void setQualificationCode(String qualificationCode) {
 		this.qualificationCode = qualificationCode;
 	}
-	
+
+	public String getCertificateAwarded() {
+		return certificateAwarded;
+	}
+
+	public void setCertificateAwarded(String certificateAwarded) {
+		this.certificateAwarded = certificateAwarded;
+	}
+
 	public String getRegNo() {
 		return regNo;
 	}
@@ -191,7 +202,7 @@ public class ApplicationFormEducational extends PO {
 	}
 
 	public void copyFrom(ApplicationFormEducationalDto dto) {
-		
+
 		setCertificateAwarded(dto.getCertificateAwarded());
 		setClassDivisionAttained(dto.getClassDivisionAttained());
 		setDescription(dto.getDescription());
@@ -205,10 +216,10 @@ public class ApplicationFormEducational extends PO {
 		setToDate(dto.getToDate());
 		setType(dto.getType());
 		setWhereObtained(dto.getWhereObtained());
-		//setApplicationNo(applicationNo);
-		//setRefId(refId);
+		// setApplicationNo(applicationNo);
+		// setRefId(refId);
 	}
-	
+
 	public ApplicationFormEducationalDto toDto() {
 		ApplicationFormEducationalDto dto = new ApplicationFormEducationalDto();
 		dto.setRefId(getRefId());
@@ -227,7 +238,15 @@ public class ApplicationFormEducational extends PO {
 		dto.setToDate(toDate);
 		dto.setType(type);
 		dto.setWhereObtained(whereObtained);
-		
+
+		List<AttachmentDto> attachmentDtos = new ArrayList<AttachmentDto>();
+		for (Attachment attachment : attachments) {
+			AttachmentDto attachmentDto = new AttachmentDto();
+			attachmentDto.setAttachmentName(attachment.getName());
+			attachmentDto.setRefId(attachment.getRefId());
+			attachmentDtos.add(attachmentDto);
+		}
+		dto.setAttachments(attachmentDtos);
 		return dto;
 	}
 
@@ -246,6 +265,5 @@ public class ApplicationFormEducational extends PO {
 	public void setType(EduType type) {
 		this.type = type;
 	}
-
 
 }

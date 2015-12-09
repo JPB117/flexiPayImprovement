@@ -62,7 +62,8 @@
 												<g:HTMLPanel>
 													<g:Image ui:field="imgUser" styleName="thumbnail col-sm-offset-1" />
 													<div class="text-muted">
-														<span ui:field="spnInfo1">(Upload your recent passport
+														<span ui:field="spnInfo1" class="hide">(Upload your recent
+															passport
 															photo here
 															by clicking Edit > Change Profile).
 														</span>
@@ -123,7 +124,7 @@
 										<div ui:field="divSubmit" class="hide">
 											<div class="row">
 												<d:ActionLink ui:field="aSubmit" styleName="btn btn-fill btn-gold">Submit
-													Application</d:ActionLink>
+													And Pay</d:ActionLink>
 												<div class="text-muted">
 													<span ui:field="spnInfo">
 														(Fill all sections here and

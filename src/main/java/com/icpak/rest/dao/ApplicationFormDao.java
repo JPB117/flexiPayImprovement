@@ -6,6 +6,7 @@ import java.util.List;
 import com.icpak.rest.exceptions.ServiceException;
 import com.icpak.rest.models.ErrorCodes;
 import com.icpak.rest.models.membership.ApplicationCategory;
+import com.icpak.rest.models.membership.ApplicationFormAccountancy;
 import com.icpak.rest.models.membership.ApplicationFormEducational;
 import com.icpak.rest.models.membership.ApplicationFormHeader;
 import com.icpak.rest.models.membership.ApplicationFormSpecialization;
@@ -95,9 +96,16 @@ public class ApplicationFormDao extends BaseDao {
 
 	public Collection<ApplicationFormEducational> getEducation(
 			String applicationId) {
-
 		return getResultList(getEntityManager().createQuery(
 				"from ApplicationFormEducational "
+						+ "where ApplicationRefId=:refId and isactive=1")
+				.setParameter("refId", applicationId));
+	}
+
+	public Collection<ApplicationFormAccountancy> getAccountancy(
+			String applicationId) {
+		return getResultList(getEntityManager().createQuery(
+				"from ApplicationFormAccountancy "
 						+ "where ApplicationRefId=:refId and isactive=1")
 				.setParameter("refId", applicationId));
 	}
@@ -183,15 +191,15 @@ public class ApplicationFormDao extends BaseDao {
 					: ((Number) value).intValue();
 			String status = (value = row[i++]) == null ? "PENDING" : value
 					.toString();
-			
-			if(!status.isEmpty() || status != null){
+
+			if (!status.isEmpty() || status != null) {
 				if (ApplicationStatus.valueOf(status) == ApplicationStatus.APPROVED) {
 					summary.setProcessedCount(count);
 				} else {
 					summary.setPendingCount(count);
 				}
 			}
-	
+
 		}
 
 		return summary;

@@ -1,21 +1,21 @@
 package com.workpoint.icpak.shared.model;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
-
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class ApplicationFormEducationalDto extends SerializableObj{
+public class ApplicationFormEducationalDto extends SerializableObj {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	private int lineNo;
 	private String applicationNo;
 	private String applicationRefId;
@@ -23,15 +23,16 @@ public class ApplicationFormEducationalDto extends SerializableObj{
 	private Date fromDate;
 	private Date toDate;
 	private String classDivisionAttained;
-	private int certificateAwarded;
+	private String certificateAwarded;
 	private String examiningBody;
-	private String qualificationDesc; //Msc, BSC, KCSE
+	private String qualificationDesc; // Msc, BSC, KCSE
 	private String qualificationCode;
 	private EduType type;
 	private String regNo;
 	private String sections;
 	private String description;
-	
+	private List<AttachmentDto> attachments;
+
 	public ApplicationFormEducationalDto() {
 	}
 
@@ -91,14 +92,6 @@ public class ApplicationFormEducationalDto extends SerializableObj{
 		this.classDivisionAttained = classDivisionAttained;
 	}
 
-	public int getCertificateAwarded() {
-		return certificateAwarded;
-	}
-
-	public void setCertificateAwarded(int certificateAwarded) {
-		this.certificateAwarded = certificateAwarded;
-	}
-
 	public String getExaminingBody() {
 		return examiningBody;
 	}
@@ -153,5 +146,21 @@ public class ApplicationFormEducationalDto extends SerializableObj{
 
 	public void setType(EduType type) {
 		this.type = type;
+	}
+
+	public List<AttachmentDto> getAttachments() {
+		return attachments;
+	}
+
+	public void setAttachments(List<AttachmentDto> attachments) {
+		this.attachments = attachments;
+	}
+
+	public String getCertificateAwarded() {
+		return certificateAwarded;
+	}
+
+	public void setCertificateAwarded(String certificateAwarded) {
+		this.certificateAwarded = certificateAwarded;
 	}
 }
