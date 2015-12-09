@@ -42,6 +42,7 @@ import com.icpak.rest.utils.EmailServiceHelper;
 import com.workpoint.icpak.server.integration.lms.LMSIntegrationUtil;
 import com.workpoint.icpak.server.integration.lms.LMSResponse;
 import com.workpoint.icpak.shared.lms.LMSMemberDto;
+import com.workpoint.icpak.shared.lms.LMSPassWordDto;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 import com.workpoint.icpak.shared.model.Gender;
 import com.workpoint.icpak.shared.model.RoleDto;
@@ -421,12 +422,47 @@ public class UsersDaoHelper {
 	public void changePassword(String userId, String newPassword) {
 		User user = dao.findByUserId(userId);
 		user.setPassword(newPassword);
+
+		/**
+		 * Updating lms password upon password change
+		 */
+		if (user.getMemberNo() != null && !user.getMemberNo().isEmpty()) {
+			logger.info(" +++++++ Updating LMS password upon password change +++++++ ");
+
+			LMSResponse lmsRespone = null;
+
+			LMSPassWordDto dto = new LMSPassWordDto();
+			dto.setMembershipID(user.getMemberNo());
+			dto.setPassword(newPassword);
+
+			JSONObject jObject = new JSONObject(dto);
+			try {
+				lmsRespone = LMSIntegrationUtil.getInstance().executeLMSCall("/Account/Updatepassword", jObject,
+						String.class);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			if (lmsRespone != null) {
+				if (lmsRespone.equals("Invalid User.")) {
+					return;
+				}
+			}
+
+		}
+
 		dao.changePassword(user);
 
 	}
 
 	public String postUserToLMS(String userRefId, String password) throws IOException {
 		User user = dao.findByUserId(userRefId);
+
+		if (user.getLmsPayLoad() == null || user.getLmsPayLoad().isEmpty()) {
+			sendActivationEmail(user);
+			return "Activation Mail resent";
+		}
+
 		LMSMemberDto dto = new LMSMemberDto();
 		dto.setFirstName(user.getUserData().getFirstName());
 		dto.setLastName(user.getUserData().getLastName());
@@ -507,28 +543,32 @@ public class UsersDaoHelper {
 		User user = dao.findByUserId(userRefId);
 		LMSResponse response = null;
 		try {
-			if(user.getLmsPayLoad() != null){
-				response = LMSIntegrationUtil.getInstance().executeLMSCall("/account/register",
-						user.getLmsPayLoad(), String.class);
-			}else{
+			if (user.getLmsPayLoad() != null) {
+				response = LMSIntegrationUtil.getInstance().executeLMSCall("/account/register", user.getLmsPayLoad(),
+						String.class);
+			} else {
 				response = new LMSResponse();
+
+				if (user.getLmsStatus() == null || user.getLmsStatus().equals("Failed") || user.getLmsStatus().isEmpty() || user.getLmsResponse() == null) {
+					sendActivationEmail(user);
+				}
+
 				response.setMessage("No payload available");
 				response.setStatus("Failed");
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		if(response != null){
-			logger.info("LMS Response::" + response.getMessage());
-			logger.info("LMS Status::" + response.getStatus());
-			logger.info("LMS PayLoad::" + user.getLmsPayLoad());
+
+		if (response != null) {
+			logger.info("LMS Response on Repost::" + response.getMessage());
+			logger.info("LMS Status on Repost::" + response.getStatus());
+			logger.info("LMS PayLoad on Repost::" + user.getLmsPayLoad());
 			user.setLmsResponse(response.getMessage());
 			user.setLmsStatus(response.getStatus());
 			dao.updateUser(user);
 		}
-		
+
 		return user.toDto();
 	}
 }
