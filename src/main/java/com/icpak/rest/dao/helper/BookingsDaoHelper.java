@@ -580,6 +580,8 @@ public class BookingsDaoHelper {
 	public DelegateDto updateDelegate(String delegateId, DelegateDto delegateDto) {
 		logger.error("+++++ <><>>>>>>>>>>>>> UPDATE DELEGATW +++++++++++++++++");
 
+		int counter = 0;
+
 		Delegate delegate = dao.findByRefId(delegateId, Delegate.class);
 		Event event = dao.findByRefId(delegate.getBooking().getEvent().getRefId(), Event.class);
 
@@ -590,8 +592,15 @@ public class BookingsDaoHelper {
 			String smsMessage = "Dear" + " " + delegateDto.getSurname() + ",Thank you for attending the "
 					+ event.getName() + "." + "Your ERN No. is " + delegate.getErn();
 			smsIntergration.send(member.getUser().getPhoneNumber(), smsMessage);
-		}else{
-			enrolDelegateToLms(delegate.getRefId() , event);
+		} else {
+			List<DelegateDto> delegates = new ArrayList<>();
+			delegates.add(delegate.toDto());
+			try {
+				enrolDelegateToLMS(delegates , event);
+			} catch (JSONException | IOException e) {
+				e.printStackTrace();
+			}
+
 		}
 
 		logger.error(delegateDto.getReceiptNo() + "== RCPT NO");
@@ -630,7 +639,7 @@ public class BookingsDaoHelper {
 		logger.info("Delgates size::" + delegates.size());
 		for (DelegateDto delegate : delegates) {
 			CourseRegDetailsPojo details = new CourseRegDetailsPojo();
-			details.setCourseId(delegate.getCourseId());
+			details.setCourseId(event.getLmsCourseId() + "");
 			details.setMembershipID(delegate.getMemberNo());
 			JSONObject json = new JSONObject(details);
 			logger.info("JSON::" + json);
@@ -646,32 +655,7 @@ public class BookingsDaoHelper {
 			String refId = delegate.getRefId();
 			logger.info("Delegate RefId::" + refId);
 			logger.info("Event RefId::" + event.getRefId());
-			Delegate delegateInDb = dao.findByRefId(refId, Delegate.class);
-			updateDelegate(delegateInDb.getRefId(), delegate);
 		}
 
-	}
-
-	public String enrolDelegateToLms(String delegateRefId , Event event) {
-		logger.error("== Enrolling to lms ===");
-
-		String message = null;
-
-		List<DelegateDto> delegates = new ArrayList<>();
-		Delegate delegateInDb = dao.findByRefId(delegateRefId, Delegate.class);
-		DelegateDto dto = delegateInDb.toDto();
-		dto.setCourseId(event.getLmsCourseId()+"");
-
-		delegates.add(dto);
-
-		try {
-			enrolDelegateToLMS(delegates , event);
-			message = "Success";
-		} catch (JSONException | IOException e) {
-			e.printStackTrace();
-			message = "Failed";
-		}
-
-		return message;
 	}
 }
