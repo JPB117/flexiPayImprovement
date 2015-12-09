@@ -14,6 +14,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import com.amazonaws.util.json.JSONException;
+import com.amazonaws.util.json.JSONObject;
 import com.google.inject.Inject;
 import com.icpak.rest.dao.BookingsDao;
 import com.icpak.rest.dao.helper.BookingsDaoHelper;
@@ -24,6 +25,7 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.workpoint.icpak.server.integration.lms.LMSIntegrationUtil;
 import com.workpoint.icpak.shared.lms.LMSMemberDto;
+import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.shared.model.Gender;
 import com.workpoint.icpak.shared.model.Title;
 import com.workpoint.icpak.shared.model.events.DelegateDto;
@@ -57,14 +59,14 @@ public class TestLMSIntegration extends AbstractDaoTest {
 		Client client = Client.create();
 
 		LMSMemberDto dto = new LMSMemberDto();
-		dto.setTitle(Title.Dr.getCode()+"");
+		dto.setTitle(Title.Dr.getCode() + "");
 		dto.setFirstName("Duggan");
 		dto.setLastName("Kimani");
 		dto.setMobileNo("+254721239821");
 		dto.setUserName("tomkim@icpak.com");
 		dto.setPassword("testpass");
 		dto.setDOB(new SimpleDateFormat("dd-mm-yyyy").format(new Date()));
-		dto.setGender(Gender.MALE.getCode()+"");
+		dto.setGender(Gender.MALE.getCode() + "");
 		dto.setTimeZone("E. Africa Standard Time");
 		dto.setMembershipID("10000");
 		dto.setRefID("48fd4a84f8da");
@@ -86,9 +88,9 @@ public class TestLMSIntegration extends AbstractDaoTest {
 
 	@Ignore
 	public void testEnrolDelegateToLms() throws IOException {
-		
-		logger.error(" == LMS INSTANCE "+LMSIntegrationUtil.getInstance());
-		
+
+		logger.error(" == LMS INSTANCE " + LMSIntegrationUtil.getInstance());
+
 		List<DelegateDto> delegates = new ArrayList<>();
 		Delegate delegateInDb = dao.findByRefId("h8IeWNUed7DckOgY", Delegate.class);
 		DelegateDto dto = delegateInDb.toDto();
@@ -97,18 +99,23 @@ public class TestLMSIntegration extends AbstractDaoTest {
 		delegates.add(dto);
 
 		try {
-			helper.enrolDelegateToLMS(delegates);
+			helper.enrolDelegateToLMS(delegates, null);
 		} catch (JSONException | IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	@Test
-	public void testPostUserToLms() throws IOException{
+
+	@Ignore
+	public void testPostUserToLms() throws IOException {
 		String response = userDaoHelper.postUserToLMS("IEdmTY0RVloxKPg6", "pass1");
-		logger.error(" >>>>>>>>><<<<<<<<<<<<< Response fromm lms <<<<<<<<<<>>>> "+response);
+		logger.error(" >>>>>>>>><<<<<<<<<<<<< Response fromm lms <<<<<<<<<<>>>> " + response);
 	}
 
-	// @Test
-	// public void testIn
+	@Test
+	public void CPDDOJSONTEST() {
+		CPDDto cpdDto = new CPDDto();
+		JSONObject jobject = new JSONObject(cpdDto);
+
+		logger.error(" >>>>>>>>><<<<<<<<<<<<< CPDDTO JSON <<<<<<<<<<>>>> " + jobject.toString());
+	}
 }

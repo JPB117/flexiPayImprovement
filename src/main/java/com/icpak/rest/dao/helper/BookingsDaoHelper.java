@@ -578,9 +578,10 @@ public class BookingsDaoHelper {
 	}
 
 	public DelegateDto updateDelegate(String delegateId, DelegateDto delegateDto) {
+		logger.error("+++++ <><>>>>>>>>>>>>> UPDATE DELEGATW +++++++++++++++++");
 
 		Delegate delegate = dao.findByRefId(delegateId, Delegate.class);
-		Event event = dao.findByRefId(delegateDto.getEventRefId(), Event.class);
+		Event event = dao.findByRefId(delegate.getBooking().getEvent().getRefId(), Event.class);
 
 		if (delegate.getMemberRefId() != null && delegate.getAttendance() != delegateDto.getAttendance()
 				&& event.getType() != EventType.COURSE) {
@@ -625,7 +626,8 @@ public class BookingsDaoHelper {
 		return dao.getDelegateCount(eventId, searchTerm);
 	}
 
-	public void enrolDelegateToLMS(List<DelegateDto> delegates) throws JSONException, IOException {
+	public void enrolDelegateToLMS(List<DelegateDto> delegates, Event event) throws JSONException, IOException {
+		logger.info("Delgates size::" + delegates.size());
 		for (DelegateDto delegate : delegates) {
 			CourseRegDetailsPojo details = new CourseRegDetailsPojo();
 			details.setCourseId(delegate.getCourseId());
@@ -636,13 +638,14 @@ public class BookingsDaoHelper {
 					String.class);
 			logger.info("LMS Response::" + response.getMessage());
 			logger.info("LMS Status::" + response.getStatus());
+			delegate.setEventRefId(event.getRefId());
 			delegate.setLmsResponse(response.getMessage());
 			if (response.getStatus().equals("Success")) {
 				delegate.setAttendance(AttendanceStatus.ENROLLED);
 			}
 			String refId = delegate.getRefId();
 			logger.info("Delegate RefId::" + refId);
-			logger.info("Event RefId::" + delegate.getEventRefId());
+			logger.info("Event RefId::" + event.getRefId());
 			Delegate delegateInDb = dao.findByRefId(refId, Delegate.class);
 			updateDelegate(delegateInDb.getRefId(), delegate);
 		}
@@ -662,7 +665,7 @@ public class BookingsDaoHelper {
 		delegates.add(dto);
 
 		try {
-			enrolDelegateToLMS(delegates);
+			enrolDelegateToLMS(delegates , event);
 			message = "Success";
 		} catch (JSONException | IOException e) {
 			e.printStackTrace();

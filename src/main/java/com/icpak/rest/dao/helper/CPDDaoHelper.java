@@ -321,7 +321,7 @@ public class CPDDaoHelper {
 		
 		CPD cpd = new CPD();
 		cpd.copyFrom(cpdDto);
-		cpd.setMemberRefId(cpdDto.getLmsMemberId());
+		cpd.setMemberRegistrationNo(cpdDto.getLmsMemberId());
 		dao.save(cpd);
 
 		CPDDto rtn = cpd.toDTO();

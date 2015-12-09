@@ -14,6 +14,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import org.apache.log4j.Logger;
+
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.icpak.rest.dao.CPDDao;
@@ -27,6 +29,7 @@ import com.workpoint.icpak.shared.model.CPDSummaryDto;
 
 @Api(value = "", description = "Handles CRUD on cpd data")
 public class CPDResourceImpl implements CPDResource {
+	Logger logger = Logger.getLogger(CPDResourceImpl.class);
 
 	@Inject
 	CPDDaoHelper helper;
@@ -80,10 +83,12 @@ public class CPDResourceImpl implements CPDResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Create a new cpd", response = CPDDto.class, consumes = MediaType.APPLICATION_JSON)
 	public CPDDto create(CPDDto cpd) {
+		logger.error("++++++ API CALL ++++++++");
 
 		if (memberId != null) {
 			return helper.create(memberId, cpd);
 		} else {
+			logger.error("++++++ API CALL EXECUTE ++++++++");
 			return helper.create(cpd);
 		}
 
