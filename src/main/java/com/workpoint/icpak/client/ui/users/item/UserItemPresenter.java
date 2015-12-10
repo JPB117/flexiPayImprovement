@@ -110,6 +110,7 @@ public class UserItemPresenter extends PresenterWidget<UserItemPresenter.MyView>
 	}
 
 	private void repost(String refId) {
+		fireEvent(new ProcessingEvent());
 		usersDelegate.withCallback(new AbstractAsyncCallback<UserDto>() {
 
 			@Override
