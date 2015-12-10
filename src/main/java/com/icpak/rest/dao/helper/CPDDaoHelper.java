@@ -8,7 +8,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-
 import org.apache.log4j.Logger;
 
 import com.google.inject.Inject;
@@ -299,9 +298,9 @@ public class CPDDaoHelper {
 	public List<CPDDto> searchCPD(String searchTerm, Integer offset, Integer limit) {
 		return dao.searchCPD(searchTerm, offset, limit);
 	}
-	
+
 	public Integer cpdSearchCount(String searchTerm) {
-		BigInteger count  = dao.cpdSearchCount(searchTerm);
+		BigInteger count = dao.cpdSearchCount(searchTerm);
 		return count.intValue();
 	}
 
@@ -309,23 +308,35 @@ public class CPDDaoHelper {
 	 * Handles data from lms for creating cpd
 	 */
 	public CPDDto create(CPDDto cpdDto) {
-		
+
 		SimpleDateFormat fomatter = new SimpleDateFormat("yyyy-MM-dd");
-		
+
 		try {
 			cpdDto.setStartDate(fomatter.parse(cpdDto.getLmsStartDate()));
 			cpdDto.setEndDate(fomatter.parse(cpdDto.getLmsEnddate()));
+			cpdDto.setMemberRegistrationNo(cpdDto.getLmsMemberId());
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		
+
+		logger.info(" +++++ LMS STARTDATE +++ " + cpdDto.getLmsStartDate());
+		logger.info(" +++++ LMS ENDDATE +++ " + cpdDto.getLmsEnddate());
+		logger.info(" +++++ MemberRegistration Number +++ " + cpdDto.getMemberRegistrationNo());
+
 		CPD cpd = new CPD();
 		cpd.copyFrom(cpdDto);
-		cpd.setMemberRegistrationNo(cpdDto.getLmsMemberId());
+
 		dao.save(cpd);
 
 		CPDDto rtn = cpd.toDTO();
 		rtn.setFullNames(userDao.getFullNames(cpdDto.getLmsMemberId()));
+		
+		if (rtn.getMemberRegistrationNo() != null) {
+			rtn.setLmsResponse("Success");
+		}else{
+			rtn.setLmsResponse("Failed");
+		}
+		
 		return rtn;
 	}
 

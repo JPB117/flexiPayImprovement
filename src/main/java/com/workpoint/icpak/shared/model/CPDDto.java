@@ -28,6 +28,7 @@ public class CPDDto extends SerializableObj {
 	private String lmsMemberId;
 	private String lmsStartDate;
 	private String lmsEnddate;
+	private String lmsResponse;
 
 	public CPDDto() {
 	}
@@ -166,6 +167,14 @@ public class CPDDto extends SerializableObj {
 
 	public void setLmsEnddate(String lmsEnddate) {
 		this.lmsEnddate = lmsEnddate;
+	}
+
+	public String getLmsResponse() {
+		return lmsResponse;
+	}
+
+	public void setLmsResponse(String lmsResponse) {
+		this.lmsResponse = lmsResponse;
 	}
 
 }

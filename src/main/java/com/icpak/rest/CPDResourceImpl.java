@@ -85,7 +85,7 @@ public class CPDResourceImpl implements CPDResource {
 	public CPDDto create(CPDDto cpd) {
 		logger.error("++++++ API CALL ++++++++");
 
-		if (memberId != null) {
+		if (cpd.getLmsMemberId() == null) {
 			return helper.create(memberId, cpd);
 		} else {
 			logger.error("++++++ API CALL EXECUTE ++++++++");
