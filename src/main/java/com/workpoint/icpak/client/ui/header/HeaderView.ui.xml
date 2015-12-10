@@ -13,8 +13,7 @@
 				<div class="navbar-header">
 					<a href="#/" class="navbar-brand">
 						<div class="brand-logo">
-							<img class="img-responsive"
-								src="http://www2.icpak.com/wp-content/uploads/2015/03/LogoWhitebg.png" />
+							<img class="img-responsive" src="img/LogoWhitebg.png" />
 						</div>
 						<div class="brand-logo-collapsed">
 							<img src="img/icpak_logo.png" class="img-responsive" />
