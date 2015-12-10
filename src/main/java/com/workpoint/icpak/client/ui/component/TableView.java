@@ -274,9 +274,10 @@ public class TableView extends Composite {
 
 	public void setSearchSectionVisible(Boolean status) {
 		if (status) {
-			tblContainer.addStyleName("");
+			tblContainer.removeStyleName("border-top");
 			divSearch.removeClassName("hide");
 		} else {
+			tblContainer.addStyleName("border-top");
 			divSearch.addClassName("hide");
 		}
 	}

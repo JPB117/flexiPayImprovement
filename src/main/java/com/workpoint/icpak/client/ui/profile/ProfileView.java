@@ -223,4 +223,14 @@ public class ProfileView extends ViewImpl implements
 	public HasClickHandlers getAccountancyAddButton() {
 		return divProfileContent.getAccountancyAddButton();
 	}
+
+	@Override
+	public HasClickHandlers getSubmitButton() {
+		return divProfileContent.getSubmitButton();
+	}
+
+	@Override
+	public boolean validateBasicDetailIssues() {
+		return divProfileContent.getBasicDetailIssues();
+	}
 }

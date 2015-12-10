@@ -134,6 +134,7 @@
 
 					<div class="col-xs-6 hide" ui:field="divIdCopy">
 						<label for="emailaddress">Id Copy:</label>
+						<g:HTMLPanel ui:field="panelPreviousAttachments"></g:HTMLPanel>
 						<up:Uploader ui:field="uploaderIdCopy" styleName="custom-file-input"></up:Uploader>
 						<div class="text-muted">
 							<span ui:field="spnInfo">

@@ -106,6 +106,10 @@ public class ProfilePresenter
 		void bindAccountancyDetails(List<ApplicationFormAccountancyDto> result);
 
 		HasClickHandlers getAccountancyAddButton();
+
+		HasClickHandlers getSubmitButton();
+
+		boolean validateBasicDetailIssues();
 	}
 
 	private final CurrentUser currentUser;
@@ -172,6 +176,15 @@ public class ProfilePresenter
 								}
 							}
 						}, "Save", "Cancel");
+			}
+		});
+
+		getView().getSubmitButton().addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				// Validate Basic Detail
+				getView().validateBasicDetailIssues();
+
 			}
 		});
 
@@ -565,9 +578,9 @@ public class ProfilePresenter
 					public void onSuccess(ApplicationFormHeaderDto result) {
 						memberForm.bind(result);
 						getView().bindBasicDetails(result);
-						ProfilePresenter.this.applicationStatus = result
-								.getApplicationStatus();
-						getView().setApplicationStaus(applicationStatus);
+						// ProfilePresenter.this.applicationStatus = result
+						// .getApplicationStatus();
+						// getView().setApplicationStaus(applicationStatus);
 					}
 				}).getById(applicationRefId);
 	}

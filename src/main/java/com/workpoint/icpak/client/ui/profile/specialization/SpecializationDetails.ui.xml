@@ -5,6 +5,8 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui">
 
 	<g:HTMLPanel styleName="row">
+		<br />
+
 		<div class="col-sm-12">
 			<d:ActionLink styleName="btn btn-next btn-fill btn-default btn-wd btn-sm"
 				ui:field="aAdd">

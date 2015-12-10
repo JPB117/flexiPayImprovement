@@ -7,12 +7,18 @@ import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.workpoint.icpak.client.model.UploadContext;
 import com.workpoint.icpak.client.model.UploadContext.UPLOADACTION;
+import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.DateField;
 import com.workpoint.icpak.client.ui.component.DropDownList;
 import com.workpoint.icpak.client.ui.component.IssuesPanel;
@@ -20,6 +26,7 @@ import com.workpoint.icpak.client.ui.component.TextField;
 import com.workpoint.icpak.client.ui.upload.custom.Uploader;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 import com.workpoint.icpak.shared.model.ApplicationType;
+import com.workpoint.icpak.shared.model.AttachmentDto;
 import com.workpoint.icpak.shared.model.Country;
 import com.workpoint.icpak.shared.model.Gender;
 
@@ -55,6 +62,8 @@ public class MemberRegistrationForm extends Composite {
 	DivElement divIdCopy;
 	@UiField
 	DropDownList<Gender> lstGender;
+	@UiField
+	HTMLPanel panelPreviousAttachments;
 
 	@UiField
 	DropDownList<Country> lstCountry;
@@ -65,6 +74,7 @@ public class MemberRegistrationForm extends Composite {
 			.create(MemberRegistrationFormUiBinder.class);
 	private int counter;
 	private ApplicationType type;
+	private ApplicationFormHeaderDto application;
 
 	interface MemberRegistrationFormUiBinder extends
 			UiBinder<Widget, MemberRegistrationForm> {
@@ -195,6 +205,7 @@ public class MemberRegistrationForm extends Composite {
 	}
 
 	public void bind(ApplicationFormHeaderDto application) {
+		this.application = application;
 		txtSurname.setValue(application.getSurname());
 		txtOtherNames.setValue(application.getOtherNames());
 		txtEmailAddress.setValue(application.getEmail());
@@ -207,6 +218,25 @@ public class MemberRegistrationForm extends Composite {
 		txtPostalCode.setValue(application.getPostCode());
 		txtResidence.setValue(application.getResidence());
 		txtIdNo.setValue(application.getIdNumber());
+
+		if (application.getAttachments() != null) {
+			for (final AttachmentDto attachment : application.getAttachments()) {
+				final UploadContext ctx = new UploadContext("getreport");
+				ctx.setAction(UPLOADACTION.GETATTACHMENT);
+				ctx.setContext("refId", attachment.getRefId());
+
+				ActionLink link = new ActionLink(attachment.getAttachmentName());
+				link.addClickHandler(new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {
+						Window.open(ctx.toUrl(),
+								attachment.getAttachmentName(), "");
+					}
+				});
+				panelPreviousAttachments.add(link);
+				panelPreviousAttachments.add(new HTML("<br/>"));
+			}
+		}
 		type = application.getApplicationType();
 		if (application.getRefId() != null) {
 			divIdCopy.removeClassName("hide");

@@ -1,5 +1,6 @@
 package com.workpoint.icpak.client.ui.profile.basic;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
@@ -72,6 +73,8 @@ public class BasicDetails extends Composite {
 	@UiField
 	MemberRegistrationForm panelRegistration;
 
+	List<String> allIssues = new ArrayList<>();
+
 	public BasicDetails() {
 		initWidget(uiBinder.createAndBindUi(this));
 
@@ -87,8 +90,17 @@ public class BasicDetails extends Composite {
 	}
 
 	public void bindDetails(ApplicationFormHeaderDto result) {
-		elPhone.setInnerText(result.getTelephone1());
-		elEmail.setInnerText(result.getEmail());
+		if (result.getTelephone1() != null) {
+			elPhone.setInnerText(result.getTelephone1());
+		} else {
+			allIssues.add("No phone Number registered");
+		}
+		if (result.getEmail() != null) {
+			elEmail.setInnerText(result.getEmail());
+		} else {
+			allIssues.add("No Email Address registered");
+		}
+
 		elEmployer.setInnerText(result.getEmployer());
 		elIdNo.setInnerText(result.getIdNumber());
 		elResidence.setInnerText(result.getResidence());
@@ -120,6 +132,8 @@ public class BasicDetails extends Composite {
 				panelPassportCopy.add(link);
 				panelPassportCopy.add(new HTML("<br/>"));
 			}
+		} else {
+			allIssues.add("Your ID/Passport Copy is required.");
 		}
 		// panelRegistration.bind(result);
 	}
@@ -155,12 +169,15 @@ public class BasicDetails extends Composite {
 		elPostalCode.setInnerText(null);
 		elCountry.setInnerText(null);
 		elCity.setInnerText(null);
-
 		panelRegistration.clear();
 
 	}
 
 	public void setCountries(List<Country> countries) {
 		panelRegistration.setCountries(countries);
+	}
+
+	public List<String> getBasicDetailIssues() {
+		return allIssues;
 	}
 }

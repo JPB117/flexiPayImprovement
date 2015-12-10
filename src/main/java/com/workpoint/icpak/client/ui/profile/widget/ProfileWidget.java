@@ -23,6 +23,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Widget;
 import com.workpoint.icpak.client.model.UploadContext;
 import com.workpoint.icpak.client.model.UploadContext.UPLOADACTION;
@@ -40,7 +41,6 @@ import com.workpoint.icpak.client.ui.profile.specialization.SpecializationDetail
 import com.workpoint.icpak.client.ui.profile.training.TrainingDetails;
 import com.workpoint.icpak.client.ui.upload.custom.Uploader;
 import com.workpoint.icpak.client.ui.util.DateUtils;
-import com.workpoint.icpak.client.ui.util.NumberUtils;
 import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.model.ApplicationFormAccountancyDto;
 import com.workpoint.icpak.shared.model.ApplicationFormEducationalDto;
@@ -81,6 +81,7 @@ public class ProfileWidget extends Composite {
 	HTMLPanel panelProfile;
 	@UiField
 	HTMLPanel PanelProfileDisplay;
+
 	@UiField
 	HTMLPanel panelApplicationType;
 	@UiField
@@ -91,31 +92,26 @@ public class ProfileWidget extends Composite {
 	SpanElement spnLastUpdated;
 	@UiField
 	ActionLink aRefresh;
-
+	@UiField
+	ActionLink aChangePhoto;
 	@UiField
 	Uploader uploader;
-
 	@UiField
 	FocusPanel panelPicture;
-
 	@UiField
 	Image imgUser;
-
 	@UiField
 	Element spnNames;
 	@UiField
 	Element iconSuccess;
 	@UiField
 	Element iconFail;
-
 	@UiField
 	SpanElement spnMembershipNo;
 	@UiField
 	SpanElement spnMembershipStatus;
-
 	@UiField
 	SpanElement spnApplicationType;
-
 	@UiField
 	SpanElement spnAccountStatus;
 	@UiField
@@ -124,17 +120,17 @@ public class ProfileWidget extends Composite {
 	DivElement divMembershipNo;
 	@UiField
 	DivElement divStandingStatus;
-
 	@UiField
 	SpanElement spnRefreshSection;
 	@UiField
 	Element spnHelpIcon;
-
 	@UiField
 	ProgressBar progressBar;
-
 	@UiField
 	Anchor aDownloadCert;
+
+	@UiField
+	HTMLPanel panelIssues;
 
 	private BasicDetails basicDetail;
 	private EducationDetails educationDetail;
@@ -154,7 +150,6 @@ public class ProfileWidget extends Composite {
 		specializationDetail = new SpecializationDetails();
 		trainingDetail = new TrainingDetails();
 		accountancyDetail = new AccountancyDetails();
-
 		setEditMode(true);
 		setChangeProfilePicture(false);
 
@@ -166,9 +161,7 @@ public class ProfileWidget extends Composite {
 						"accountancy_details"),
 				new TabHeader("Specialization Areas", false,
 						"specialisation_details")));
-
 		divTabs.setPosition(TabPosition.PILLS);
-
 		divTabs.setContent(Arrays
 				.asList(new TabContent(basicDetail, "basic_details", true),
 						new TabContent(educationDetail, "education_details",
@@ -180,6 +173,12 @@ public class ProfileWidget extends Composite {
 
 		/* Set Edit Mode */
 		aEditPicture.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				setChangeProfilePicture(true);
+			}
+		});
+		aChangePhoto.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				setChangeProfilePicture(true);
@@ -205,6 +204,7 @@ public class ProfileWidget extends Composite {
 			public void onFinish(IUploader uploaderRef) {
 				imgUser.setUrl(url + "&version=" + Random.nextInt());
 				uploader.clear();
+				setChangeProfilePicture(false);
 			}
 		});
 
@@ -253,7 +253,6 @@ public class ProfileWidget extends Composite {
 
 	public void bindBasicDetails(ApplicationFormHeaderDto result) {
 		basicDetail.bindDetails(result);
-		// test
 		if (result.getRefId() != null) {
 			spnNames.setInnerText(result.getSurname() + " "
 					+ result.getOtherNames());
@@ -449,6 +448,23 @@ public class ProfileWidget extends Composite {
 
 	public HasClickHandlers getAccountancyAddButton() {
 		return accountancyDetail.getAddButton();
+	}
+
+	public HasClickHandlers getSubmitButton() {
+		return aSubmit;
+	}
+
+	public boolean getBasicDetailIssues() {
+		if (basicDetail.getBasicDetailIssues().size() != 0) {
+			for (String issue : basicDetail.getBasicDetailIssues()) {
+				panelIssues.add(new InlineLabel(issue));
+			}
+			panelIssues.removeStyleName("hide");
+			return false;
+		} else {
+			panelIssues.addStyleName("hide");
+			return true;
+		}
 	}
 
 }
