@@ -123,6 +123,7 @@ public class CPD extends PO {
 		dto.setTitle(title);
 		dto.setEventId(eventId);
 		dto.setEventLocation(eventLocation);
+		dto.setMemberRegistrationNo(memberRegistrationNo);
 		List<AttachmentDto> attachmentDtos = new ArrayList<AttachmentDto>();
 		for (Attachment attachment : attachments) {
 			AttachmentDto attachmentDto = new AttachmentDto();
