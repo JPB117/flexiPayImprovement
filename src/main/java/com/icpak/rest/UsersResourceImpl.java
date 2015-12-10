@@ -154,7 +154,7 @@ public class UsersResourceImpl implements UsersResource {
 	 * <p/>
 	 * curl -v -F 'filename=POvBCBE-PO-NRB-1_1.pdf' -F
 	 * 'file=@/home/duggan/Downloads/PO_BCBE-PO-NRB-1_1.pdf;type=application/pdf
-	 * ' http://localhost:8080/icpak/api/users/xIXcSQNcXmqMDrth/profile
+	 * ' https://localhost:8080/icpak/api/users/xIXcSQNcXmqMDrth/profile
 	 * <p/>
 	 * 
 	 * @param userId
