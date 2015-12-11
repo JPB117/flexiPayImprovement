@@ -22,9 +22,9 @@ public class TestUrl {
 		public void run() {
 			try{
 				
-//				URL url = new URL("https://localhost:8080/icpakportal/getreport?bookingRefId=U5G0Yi5WPoeUIf1V&action=GETPROFORMA");
+//				URL url = new URL("https://www.icpak.com/icpakportal/getreport?bookingRefId=U5G0Yi5WPoeUIf1V&action=GETPROFORMA");
 				URL url = new URL("http://www.icpak.com:8080/icpakportal/api/users");
-				//URL url = new URL("https://localhost:8080/icpakportal/index.html");
+				//URL url = new URL("https://www.icpak.com/icpakportal/index.html");
 				//URL url = new URL("http://127.0.0.1:8888/index.html");
 				System.err.println("Request "+count);
 				InputStream stream = url.openStream();

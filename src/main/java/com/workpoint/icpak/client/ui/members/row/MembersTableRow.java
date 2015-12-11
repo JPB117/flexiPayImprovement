@@ -31,8 +31,6 @@ public class MembersTableRow extends RowWidget {
 	HTMLPanel row;
 	@UiField
 	HTMLPanel divDate;
-//	@UiField
-//	HTMLPanel divMemberNo;
 	@UiField
 	HTMLPanel divMemberName;
 	@UiField
@@ -41,10 +39,8 @@ public class MembersTableRow extends RowWidget {
 	HTMLPanel divAction;
 	@UiField
 	HTMLPanel divEmail;
-
 	@UiField
 	ActionLink aMemberName;
-
 	@UiField
 	Element divCompletion;
 
@@ -71,14 +67,13 @@ public class MembersTableRow extends RowWidget {
 				: application.getDate() != null ? application.getDate()
 						: application.getCreated();
 
-		divDate.add(new InlineLabel(DateUtils.DATEFORMAT.format(regDate)));
-//		divMemberNo.add(new InlineLabel(application.getMemberNo()));
+		divDate.add(new InlineLabel(DateUtils.FULLTIMESTAMP.format(regDate)));
 		aMemberName.setText(application.fullNames());
 		divEmail.add(new InlineLabel(application.getEmail()));
-		divCompletion.setAttribute("data-label", application.getPercCompletion()+""
-				+ "%");
-		divCompletion
-				.addClassName("radial-bar-" + application.getPercCompletion()+"");
+		divCompletion.setAttribute("data-label",
+				application.getPercCompletion() + "" + "%");
+		divCompletion.addClassName("radial-bar-"
+				+ application.getPercCompletion() + "");
 		spnStatus.setInnerText("Pending");
 	}
 }
