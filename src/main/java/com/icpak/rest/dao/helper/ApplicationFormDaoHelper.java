@@ -145,7 +145,7 @@ public class ApplicationFormDaoHelper {
 			values.put("quoteNo", application.getId());
 			values.put("date", application.getDate());
 			values.put("firstName", application.getOtherNames());
-			// http://localhost:8080/icpakportal/#eventBooking;eventId=Jx4Ca6HpOutf2ic7;bookingId=ttDzH7OkgAHk5CSk
+			// https://localhost:8080/icpakportal/#eventBooking;eventId=Jx4Ca6HpOutf2ic7;bookingId=ttDzH7OkgAHk5CSk
 			values.put("DocumentURL", settings.getApplicationPath());
 			values.put("userRefId", user.getRefId());
 			values.put("email", application.getEmail());

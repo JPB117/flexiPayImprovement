@@ -71,7 +71,7 @@ public class TestLMSIntegration extends AbstractDaoTest {
 		dto.setMembershipID("10000");
 		dto.setRefID("48fd4a84f8da");
 
-		WebResource resource = client.resource("http://localhost:8080/messenger/webapi/messages");
+		WebResource resource = client.resource("https://localhost:8080/messenger/webapi/messages");
 
 		ClientResponse resp = resource.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
 				.post(ClientResponse.class, dto);
