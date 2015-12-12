@@ -459,8 +459,8 @@ public class UsersDaoHelper {
 		User user = dao.findByUserId(userRefId);
 
 		if (user.getLmsPayLoad() == null || user.getLmsPayLoad().isEmpty()) {
+			logger.info(" ++++++++ Sending Activation mail on post user to lms +++++ ");
 			sendActivationEmail(user);
-			return "Activation Mail resent";
 		}
 
 		LMSMemberDto dto = new LMSMemberDto();
@@ -508,6 +508,8 @@ public class UsersDaoHelper {
 	public void activateAccount(String userId, AccountStatus activated) {
 		User user = dao.findByUserId(userId);
 		user.setStatus(activated);
+
+		dao.save(user);
 	}
 
 	public String getApplicationRefId(String userRef) {
@@ -540,6 +542,7 @@ public class UsersDaoHelper {
 	}
 
 	public UserDto rePostToLms(String userRefId) {
+		logger.info(" ++++++++++++++++ REPOST TO LMS ++++++++++++++ ");
 		User user = dao.findByUserId(userRefId);
 		LMSResponse response = null;
 		try {
@@ -549,7 +552,8 @@ public class UsersDaoHelper {
 			} else {
 				response = new LMSResponse();
 
-				if (user.getLmsStatus() == null || user.getLmsStatus().equals("Failed") || user.getLmsStatus().isEmpty() || user.getLmsResponse() == null) {
+				if (user.getLmsStatus() == null || user.getLmsStatus().equals("Failed") || user.getLmsStatus().isEmpty()
+						|| user.getLmsResponse() == null) {
 					sendActivationEmail(user);
 				}
 
