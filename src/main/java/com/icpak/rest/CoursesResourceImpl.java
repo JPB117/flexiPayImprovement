@@ -13,6 +13,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import org.apache.log4j.Logger;
+
 import com.google.inject.Inject;
 import com.icpak.rest.dao.helper.CoursesDaoHelper;
 import com.icpak.rest.factory.ResourceFactory;
@@ -25,6 +27,7 @@ import com.workpoint.icpak.shared.model.events.CourseDto;
 @Path("courses")
 @Api(value = "courses", description = "Handles CRUD for Courses")
 public class CoursesResourceImpl {
+	Logger logger = Logger.getLogger(CoursesResourceImpl.class);
 
 	@Inject
 	CoursesDaoHelper helper;
@@ -37,15 +40,13 @@ public class CoursesResourceImpl {
 	public List<CourseDto> getAll(
 			@ApiParam(value = "Starting index", required = true) @QueryParam("offset") Integer offset,
 			@ApiParam(value = "Number of items to retrieve", required = true) @QueryParam("limit") Integer limit) {
-
-		List<CourseDto> dtos = helper.getAllEvents("", offset, limit,
-				EventType.COURSE.name());
+		logger.info("+++++ GET ALL COURSES ++++ ");
+		List<CourseDto> dtos = helper.getAllEvents("", offset, limit, EventType.COURSE.name());
 		return dtos;
 	}
 
 	@Path("/{courseId}/enrollments")
-	public EnrollmentsResourceImpl bookings(
-			@PathParam("courseId") String courseId) {
+	public EnrollmentsResourceImpl bookings(@PathParam("courseId") String courseId) {
 		return factory.createEnrollmentsResource(courseId);
 	}
 
@@ -66,6 +67,7 @@ public class CoursesResourceImpl {
 
 		return dto;
 	}
+
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -73,6 +75,7 @@ public class CoursesResourceImpl {
 	public CourseDto create(CourseDto course) {
 		return helper.createEvent(course);
 	}
+
 	@PUT
 	@Path("/{courseId}")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -93,4 +96,5 @@ public class CoursesResourceImpl {
 			@ApiParam(value = "Course Id of the course to delete", required = true) @PathParam("courseId") String courseId) {
 		helper.deleteEvent(courseId);
 	}
+
 }

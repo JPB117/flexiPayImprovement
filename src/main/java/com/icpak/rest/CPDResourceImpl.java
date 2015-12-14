@@ -20,6 +20,7 @@ import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.icpak.rest.dao.CPDDao;
 import com.icpak.rest.dao.helper.CPDDaoHelper;
+import com.icpak.rest.dao.helper.CoursesDaoHelper;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
@@ -35,6 +36,8 @@ public class CPDResourceImpl implements CPDResource {
 	CPDDaoHelper helper;
 	@Inject
 	CPDDao cpdDao;
+	@Inject
+	CoursesDaoHelper cHelper;
 
 	private final String memberId;
 

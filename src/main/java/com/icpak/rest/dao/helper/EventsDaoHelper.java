@@ -35,7 +35,7 @@ public class EventsDaoHelper {
 		
 		try{
 			if (eventType != null) {
-				type = EventType.valueOf(eventType);
+				type = EventType.valueOf(eventType.toUpperCase());
 			}
 			List<Event> list = dao.getAllEvents(offset, limit, type, searchTerm);
 			
