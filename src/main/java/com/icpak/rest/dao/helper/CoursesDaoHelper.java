@@ -26,6 +26,7 @@ public class CoursesDaoHelper {
 			
 	public List<CourseDto> getAllEvents(String uri, Integer offset,
 			Integer limit, String eventType) {
+		logger.info(" +++ Fetching courses ++++ ");
 
 		EventType type = null;
 		if(eventType!=null){

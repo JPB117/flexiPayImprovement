@@ -28,6 +28,10 @@ public class CPDDto extends SerializableObj {
 	private String lmsMemberId;
 	private String lmsStartDate;
 	private String lmsEnddate;
+	
+	/**
+	 * Response back to lms
+	 */
 	private String lmsResponse;
 
 	public CPDDto() {

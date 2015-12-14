@@ -21,16 +21,13 @@ public interface CPDResource extends BaseResource {
 
 	@GET
 	@Consumes(MediaType.APPLICATION_JSON)
-	public List<CPDDto> getAll(@QueryParam("offset") Integer offset,
-			@QueryParam("limit") Integer limit,
-			@QueryParam("startDate") Long startDate,
-			@QueryParam("endDate") Long endDate);
+	public List<CPDDto> getAll(@QueryParam("offset") Integer offset, @QueryParam("limit") Integer limit,
+			@QueryParam("startDate") Long startDate, @QueryParam("endDate") Long endDate);
 
 	@GET
 	@Path("/summary")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public CPDSummaryDto getCPDSummary(@QueryParam("startDate") Long startDate,
-			@QueryParam("endDate") Long endDate);
+	public CPDSummaryDto getCPDSummary(@QueryParam("startDate") Long startDate, @QueryParam("endDate") Long endDate);
 
 	@GET
 	@Path("/{cpdId}")
@@ -51,6 +48,5 @@ public interface CPDResource extends BaseResource {
 
 	@GET
 	@Path("/filteredcount")
-	public Integer getCount(@QueryParam("startDate") Long startDate,
-			@QueryParam("endDate") Long endDate);
+	public Integer getCount(@QueryParam("startDate") Long startDate, @QueryParam("endDate") Long endDate);
 }
