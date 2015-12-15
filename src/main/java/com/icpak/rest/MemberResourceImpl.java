@@ -117,8 +117,8 @@ public class MemberResourceImpl implements MemberResource {
 		return resourceFactory.createStatementResource(memberId);
 	}
 
-	@Path("/{memberId}/cpd")
-	public CPDResourceImpl cpd(@PathParam("memberId") String memberId) {
+	@Path("/cpd")
+	public CPDResourceImpl cpd(@QueryParam("memberId") String memberId) {
 		return resourceFactory.createCPDResource(memberId);
 	}
 

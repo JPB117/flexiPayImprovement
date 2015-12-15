@@ -9,7 +9,9 @@ import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import com.icpak.rest.IDUtils;
 import com.icpak.rest.dao.EventsDao;
+import com.icpak.rest.models.cpd.CPD;
 import com.icpak.rest.models.event.Event;
+import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.shared.model.EventType;
 import com.workpoint.icpak.shared.model.events.CourseDto;
 
@@ -80,5 +82,20 @@ public class CoursesDaoHelper {
 	public void deleteEvent(String eventId) {
 		Event event = dao.getByEventId(eventId);
 		dao.delete(event);
+	}
+
+	public String updateCPDCOurse(String curseRefId, CPDDto cpdDto) {
+		Event eventInDb = dao.findByRefId(curseRefId, Event.class);
+		CPD newCpd = new CPD();
+		newCpd.copyFrom(cpdDto);
+		newCpd.setEventId(eventInDb.getRefId());
+		
+		return dao.createCourseCpd(newCpd);
+	}
+
+	public CourseDto getCourseByLongId(Long id) {
+		// TODO Auto-generated method stub
+		Event event = dao.getByEventLongId(id);
+		return event.toCourseDto();
 	}
 }

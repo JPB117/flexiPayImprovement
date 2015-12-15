@@ -21,6 +21,7 @@ import com.icpak.rest.factory.ResourceFactory;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
+import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.shared.model.EventType;
 import com.workpoint.icpak.shared.model.events.CourseDto;
 
@@ -67,6 +68,18 @@ public class CoursesResourceImpl {
 
 		return dto;
 	}
+	
+	@GET
+	@Path("/{longId}/findbyid")
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "Get a course by courseId", response = CourseDto.class, consumes = MediaType.APPLICATION_JSON)
+	public CourseDto getByLongId(
+			@ApiParam(value = "Course long Id of the course to fetch", required = true) @PathParam("longId")  Long id) {
+
+		CourseDto dto = helper.getCourseByLongId(id);
+
+		return dto;
+	}
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -95,6 +108,17 @@ public class CoursesResourceImpl {
 	public void delete(
 			@ApiParam(value = "Course Id of the course to delete", required = true) @PathParam("courseId") String courseId) {
 		helper.deleteEvent(courseId);
+	}
+
+	@PUT
+	@Path("/updateScore/{cpdRefId}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "Update an existing cpd after exam", response = String.class, consumes = MediaType.APPLICATION_JSON, produces = MediaType.APPLICATION_JSON)
+	public String updateCPD(
+			@ApiParam(value = "CPD to be updated after exam", required = true) @PathParam("cpdRefId") String cpdRefId,
+			CPDDto cpdDto) {
+		return helper.updateCPDCOurse(cpdRefId, cpdDto);
 	}
 
 }

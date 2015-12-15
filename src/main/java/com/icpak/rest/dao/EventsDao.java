@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 
 import com.icpak.rest.exceptions.ServiceException;
 import com.icpak.rest.models.ErrorCodes;
+import com.icpak.rest.models.cpd.CPD;
 import com.icpak.rest.models.event.Accommodation;
 import com.icpak.rest.models.event.Event;
 import com.workpoint.icpak.shared.model.EventSummaryDto;
@@ -355,6 +356,28 @@ public class EventsDao extends BaseDao {
 		}
 
 		return delegateDtos;
+	}
+
+	public String createCourseCpd(CPD newCpd) {
+		save(newCpd);
+		return null;
+	}
+
+	public Event getByEventLongId(Long id  , boolean throwExceptionIfNull) {
+		Event event = getSingleResultOrNull(getEntityManager().createQuery(
+				"from Event u where u.id=:id").setParameter("id",
+				id));
+
+		if (throwExceptionIfNull && event == null) {
+			throw new ServiceException(ErrorCodes.NOTFOUND, "Event", "'"
+					+ id + "'");
+		}
+
+		return event;
+	}
+	
+	public Event getByEventLongId(Long id){
+		return getByEventLongId(id ,true);
 	}
 
 }
