@@ -5,6 +5,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -30,6 +31,8 @@ public class LoginView extends ViewImpl implements LoginPresenter.ILoginView {
 	SpanElement loading;
 	@UiField
 	HTMLPanel loadingbox;
+	@UiField
+	HTMLPanel PanelParent;
 
 	@Inject
 	public LoginView(final Binder binder) {
@@ -104,7 +107,11 @@ public class LoginView extends ViewImpl implements LoginPresenter.ILoginView {
 
 	@Override
 	public void clearErrors() {
-		//issues.clear();
+		// issues.clear();
+	}
+
+	public HTMLPanel getPanelParent() {
+		return PanelParent;
 	}
 
 	@Override
@@ -123,6 +130,7 @@ public class LoginView extends ViewImpl implements LoginPresenter.ILoginView {
 
 	@Override
 	public void clearViewItems(boolean status) {
+
 		// remove loading
 		loadingbox.removeStyleName("loading");
 		loading.addClassName("hide");
@@ -139,6 +147,6 @@ public class LoginView extends ViewImpl implements LoginPresenter.ILoginView {
 
 	@Override
 	public void setLoginButtonEnabled(boolean b) {
-		
+
 	}
 }

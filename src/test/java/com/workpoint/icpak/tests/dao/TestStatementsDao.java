@@ -25,6 +25,7 @@ import com.amazonaws.util.json.JSONException;
 import com.google.inject.Inject;
 import com.icpak.rest.dao.CPDDao;
 import com.icpak.rest.dao.InvoiceDaoHelper;
+import com.icpak.rest.dao.StatementDao;
 import com.icpak.rest.dao.helper.StatementDaoHelper;
 import com.icpak.rest.models.cpd.CPD;
 import com.icpak.servlet.upload.GetReport;
@@ -66,20 +67,24 @@ public class TestStatementsDao extends AbstractDaoTest {
 
 	}
 
-	@Ignore
+	@Test
 	public void generateMemebrCPDReport() throws FileNotFoundException,
 			IOException, SAXException, ParserConfigurationException,
 			FactoryConfigurationError, DocumentException {
-		String memberRefId = "69WQZqVMM54kunKf";
+		String memberRefId = "pySASAeyC482FVKZ";
+		Long startDate = 1356987600000L;
 
 		// List<CPD> cpds = cpdDao.getAllCPDS(memberRefId, null, null, 0, 1000);
 		// Assert.assertEquals(12, cpds.size());
 		// System.err.println("No of entries = " + cpds.size());
 
-		byte[] bites = reportServlet.processMemberCPDStatementRequest(
-				memberRefId, null, null);
-		IOUtils.write(bites, new FileOutputStream(new File(
-				"memberStatement.pdf")));
+		statementHelper.getAllStatements(memberRefId, new Date(startDate),
+				null, 0, 1000);
+
+		// byte[] bites = reportServlet.processMemberCPDStatementRequest(
+		// memberRefId, null, null);
+		// IOUtils.write(bites, new FileOutputStream(new File(
+		// "memberStatement.pdf")));
 
 	}
 

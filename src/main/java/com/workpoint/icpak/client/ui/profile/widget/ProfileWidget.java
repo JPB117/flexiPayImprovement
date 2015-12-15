@@ -3,6 +3,7 @@ package com.workpoint.icpak.client.ui.profile.widget;
 import gwtupload.client.IUploader;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
@@ -23,12 +24,13 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Widget;
 import com.workpoint.icpak.client.model.UploadContext;
 import com.workpoint.icpak.client.model.UploadContext.UPLOADACTION;
 import com.workpoint.icpak.client.security.CurrentUser;
 import com.workpoint.icpak.client.ui.component.ActionLink;
+import com.workpoint.icpak.client.ui.component.BulletListPanel;
+import com.workpoint.icpak.client.ui.component.BulletPanel;
 import com.workpoint.icpak.client.ui.component.ProgressBar;
 import com.workpoint.icpak.client.ui.component.tabs.TabContent;
 import com.workpoint.icpak.client.ui.component.tabs.TabHeader;
@@ -131,6 +133,8 @@ public class ProfileWidget extends Composite {
 
 	@UiField
 	HTMLPanel panelIssues;
+	@UiField
+	BulletListPanel ulIssues;
 
 	private BasicDetails basicDetail;
 	private EducationDetails educationDetail;
@@ -455,9 +459,12 @@ public class ProfileWidget extends Composite {
 	}
 
 	public boolean getBasicDetailIssues() {
+		// Window.alert(basicDetail.getBasicDetailIssues().size() + "");
 		if (basicDetail.getBasicDetailIssues().size() != 0) {
 			for (String issue : basicDetail.getBasicDetailIssues()) {
-				panelIssues.add(new InlineLabel(issue));
+				BulletPanel listItem = new BulletPanel();
+				listItem.setText(issue);
+				ulIssues.add(listItem);
 			}
 			panelIssues.removeStyleName("hide");
 			return false;
@@ -465,6 +472,11 @@ public class ProfileWidget extends Composite {
 			panelIssues.addStyleName("hide");
 			return true;
 		}
+	}
+
+	public void setLastUpdatedToNow() {
+		// spnLastUpdated.setInnerText(DateUtils.CREATEDFORMAT.format(new
+		// Date()));
 	}
 
 }
