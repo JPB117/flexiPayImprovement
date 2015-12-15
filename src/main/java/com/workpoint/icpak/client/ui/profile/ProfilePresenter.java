@@ -110,6 +110,8 @@ public class ProfilePresenter
 		HasClickHandlers getSubmitButton();
 
 		boolean validateBasicDetailIssues();
+
+		void setLastUpdateToNow();
 	}
 
 	private final CurrentUser currentUser;
@@ -182,9 +184,7 @@ public class ProfilePresenter
 		getView().getSubmitButton().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				// Validate Basic Detail
 				getView().validateBasicDetailIssues();
-
 			}
 		});
 
@@ -501,8 +501,8 @@ public class ProfilePresenter
 			@Override
 			public void onSuccess(Boolean hasLoaded) {
 				fireEvent(new ProcessingCompletedEvent());
-				// TODO Reload All Member Information
 				loadData(getApplicationRefId());
+				getView().setLastUpdateToNow();
 				if (!hasLoaded) {
 					Window.alert("There was a problem loading ERP Data");
 				}
@@ -534,7 +534,6 @@ public class ProfilePresenter
 							}
 						});
 						memberForm.setCountries(countries);
-						// getView().setCountries(countries);
 					};
 				}).getAll();
 

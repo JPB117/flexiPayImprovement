@@ -22,13 +22,13 @@
 					<a href="#mobile" aria-controls="home" role="tab" data-toggle="tab">Pay
 						with Mobile Money</a>
 				</li>
-				<li role="presentation" class="hide">
+				<li role="presentation">
 					<!-- <span class="fa fa-credit-card"></span> -->
 					<a href="#cards" aria-controls="home" role="tab" data-toggle="tab">Pay
 						with Credit/Debit Card</a>
 				</li>
 
-				<li role="presentation" class="hide">
+				<li role="presentation">
 					<!-- <span class="fa fa-credit-card"></span> -->
 					<a href="#cards" aria-controls="home" role="tab" data-toggle="tab">Offline
 						Payment</a>
@@ -110,7 +110,7 @@
 						</div>
 					</div>
 				</div>
-				<div role="tabpanel" class="tab-pane hide" id="cards">
+				<div role="tabpanel" class="tab-pane" id="cards">
 					<div class="col-sm-12">
 						<d:IssuesPanel ui:field="issuesPanel" styleName="hide alert alert-danger"></d:IssuesPanel>
 					</div>
@@ -204,7 +204,7 @@
 				</div>
 			</div>
 
-			<div role="tabpanel" class="tab-pane hide" id="cards">
+			<div role="tabpanel" class="tab-pane" id="cards">
 				<div class="row">
 					<div class="col lg-12">
 						The following are offline modes of payment to ICPAK;

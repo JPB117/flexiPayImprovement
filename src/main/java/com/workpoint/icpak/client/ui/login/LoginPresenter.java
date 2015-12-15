@@ -11,7 +11,9 @@ import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.user.client.Cookies;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -72,6 +74,8 @@ public class LoginPresenter extends
 		void setOrgName(String orgName);
 
 		void setLoginButtonEnabled(boolean b);
+
+		HTMLPanel getPanelParent();
 	}
 
 	@ProxyCodeSplit
@@ -116,7 +120,6 @@ public class LoginPresenter extends
 	public void prepareFromRequest(PlaceRequest request) {
 		super.prepareFromRequest(request);
 		tryLoggingInWithCookieFirst();
-
 	}
 
 	@Override
@@ -127,7 +130,6 @@ public class LoginPresenter extends
 	@Override
 	protected void onBind() {
 		super.onBind();
-
 		getView().getLoginBtn().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -161,12 +163,14 @@ public class LoginPresenter extends
 	private void callServerLoginAction(final LogInAction logInAction) {
 		getView().clearErrors();
 		getView().showLoginProgress();
-
+		// Window.alert("Before CallBack!");
+		// getView().getPanelParent().getElement().setInnerText("Loading...");
 		usersDelegate.withCallback(
 				ManualRevealCallback.create(this,
 						new AbstractAsyncCallback<LogInResult>() {
 							@Override
 							public void onSuccess(LogInResult result) {
+								// Window.alert("Callback Done!");
 								if (result.getCurrentUserDto().isLoggedIn()) {
 									setLoggedInCookie(result
 											.getLoggedInCookie());
@@ -194,6 +198,14 @@ public class LoginPresenter extends
 
 	}
 
+	@Override
+	protected void onReveal() {
+		super.onReveal();
+		// Window.alert("Revealed called!");
+		// getView().getPanelParent().getElement()
+		// .setInnerText("Please wait while we load your account..");
+	}
+
 	private void onLoginCallSucceededForCookie(CurrentUserDto currentUserDto) {
 		getView().setLoginButtonEnabled(true);
 		if (currentUserDto.isLoggedIn()) {
@@ -205,7 +217,6 @@ public class LoginPresenter extends
 		if (currentUserDto.isLoggedIn()) {
 			currentUser.fromCurrentUserDto(currentUserDto);
 			fireEvent(new ContextLoadedEvent(currentUser.getUser(), null));
-
 			redirectToLoggedOnPage();
 		} else {
 			LOGGER.log(Level.SEVERE, "Wrong username or password......");
@@ -215,7 +226,6 @@ public class LoginPresenter extends
 
 	private void tryLoggingInWithCookieFirst() {
 		getView().setLoginButtonEnabled(false);
-
 		String loggedInCookie = AppContext.getLoggedInCookie();
 		LogInAction logInAction = new LogInAction(loggedInCookie);
 		callServerLoginAction(logInAction);
@@ -223,6 +233,9 @@ public class LoginPresenter extends
 
 	public void redirectToLoggedOnPage() {
 		String redirect = "";
+		String redirectType = "";
+		String resource = "";
+
 		if (AppContext.isCurrentUserAdmin()) {
 			redirect = NameTokens.getAdminDefaultPage();
 		} else {
@@ -230,9 +243,18 @@ public class LoginPresenter extends
 		}
 		String token = placeManager.getCurrentPlaceRequest().getParameter(
 				ParameterTokens.REDIRECT, redirect);
-		PlaceRequest placeRequest = new Builder().nameToken(token).build();
+		String type = placeManager.getCurrentPlaceRequest().getParameter(
+				ParameterTokens.REDIRECTTYPE, redirectType);
+		String resourceValue = placeManager.getCurrentPlaceRequest()
+				.getParameter(ParameterTokens.RESOURCE, resource);
 
-		placeManager.revealPlace(placeRequest);
+		if (type.equals("website")) {
+			Window.Location.replace("https://icpak.com/resource/"
+					+ resourceValue);
+		} else {
+			PlaceRequest placeRequest = new Builder().nameToken(token).build();
+			placeManager.revealPlace(placeRequest);
+		}
 
 	}
 

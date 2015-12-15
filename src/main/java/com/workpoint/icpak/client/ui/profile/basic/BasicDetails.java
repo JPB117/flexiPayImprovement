@@ -114,7 +114,8 @@ public class BasicDetails extends Composite {
 			elDob.setInnerText(DateUtils.DATEFORMAT.format(result.getDob()));
 		}
 
-		if (result.getAttachments() != null) {
+		if (result.getAttachments() != null
+				&& !result.getAttachments().isEmpty()) {
 			panelPassportCopy.clear();
 			for (final AttachmentDto attachment : result.getAttachments()) {
 				final UploadContext ctx = new UploadContext("getreport");
@@ -133,9 +134,9 @@ public class BasicDetails extends Composite {
 				panelPassportCopy.add(new HTML("<br/>"));
 			}
 		} else {
+			// Window.alert("No ID/Passport!");
 			allIssues.add("Your ID/Passport Copy is required.");
 		}
-		// panelRegistration.bind(result);
 	}
 
 	// public ApplicationFormHeaderDto getApplicationForm() {
@@ -170,7 +171,6 @@ public class BasicDetails extends Composite {
 		elCountry.setInnerText(null);
 		elCity.setInnerText(null);
 		panelRegistration.clear();
-
 	}
 
 	public void setCountries(List<Country> countries) {

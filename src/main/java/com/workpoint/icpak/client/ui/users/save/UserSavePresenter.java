@@ -5,6 +5,7 @@ import java.util.List;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -46,7 +47,7 @@ public class UserSavePresenter extends
 		PopupPanel getPopUpPanel();
 
 		HasClickHandlers getaResetPassword();
-		
+
 		boolean isSendEmail();
 
 	}
@@ -101,7 +102,7 @@ public class UserSavePresenter extends
 										bindUser(dto);
 									}
 
-								}).create(userDto,getView().isSendEmail());
+								}).create(userDto, getView().isSendEmail());
 					}
 				}
 			}
@@ -121,10 +122,10 @@ public class UserSavePresenter extends
 									public void onSuccess(RoleDto result) {
 										bindGroup(result);
 									}
-									
+
 								}).update(group.getRefId(), userGroup);
 					} else {
-						
+
 						rolesDelegate.withCallback(
 								new AbstractAsyncCallback<RoleDto>() {
 									public void onSuccess(RoleDto result) {
@@ -135,11 +136,13 @@ public class UserSavePresenter extends
 				}
 			}
 		});
-		
+
 		getView().getaResetPassword().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				//Send Email to client to Reset password
+				// Send Email to client to Reset password
+				String resetUrl = "#activateacc;uid=" + user.getRefId();
+				Window.open(resetUrl, "Password Reset", "");
 			}
 		});
 	}
@@ -150,7 +153,7 @@ public class UserSavePresenter extends
 		getView().hide();
 		fireEvent(new LoadUsersEvent());
 	}
-	
+
 	private void bindGroup(RoleDto savedRole) {
 		group = savedRole;
 		getView().setGroup(group);

@@ -22,7 +22,6 @@ public class StatementDao extends BaseDao {
 	}
 
 	public Statement getByStatementId(String refId, boolean throwExceptionIfNull) {
-
 		Statement statement = getSingleResultOrNull(getEntityManager()
 				.createQuery("from Statement u where u.refId=:refId")
 				.setParameter("refId", refId));
@@ -31,16 +30,12 @@ public class StatementDao extends BaseDao {
 			throw new ServiceException(ErrorCodes.NOTFOUND, "Statement", "'"
 					+ refId + "'");
 		}
-
 		return statement;
 	}
 
 	public Statement getByEntryNo(String entryNo, boolean throwExceptionIfNull) {
-
 		logger.info(">>>>>>>>>><<<<<<<<<< entryNo = " + entryNo);
-
 		Statement statement = null;
-
 		Query query = getEntityManager().createQuery(
 				"from Statement u where u.entryNo=:entryNo");
 
@@ -106,7 +101,7 @@ public class StatementDao extends BaseDao {
 				sql.append(" where");
 			}
 			params.put("startDate", startDate);
-			sql.append(" postingDate>:startDate");
+			sql.append(" postingDate>=:startDate");
 		}
 
 		if (endDate != null) {
@@ -117,7 +112,7 @@ public class StatementDao extends BaseDao {
 				sql.append(" and");
 			}
 			params.put("endDate", endDate);
-			sql.append(" postingDate<:endDate");
+			sql.append(" postingDate<=:endDate");
 		}
 
 		if (memberRegistrationNo != null && !memberRegistrationNo.equals("ALL")) {
@@ -161,7 +156,7 @@ public class StatementDao extends BaseDao {
 				sql.append(" where");
 			}
 			params.put("startDate", startDate);
-			sql.append(" postingDate>:startDate");
+			sql.append(" postingDate>=:startDate");
 		}
 
 		if (endDate != null) {
@@ -172,7 +167,7 @@ public class StatementDao extends BaseDao {
 				sql.append(" and");
 			}
 			params.put("endDate", endDate);
-			sql.append(" postingDate<:endDate");
+			sql.append(" postingDate<=:endDate");
 		}
 
 		if (memberNo != null && !memberNo.equals("ALL")) {
@@ -210,7 +205,7 @@ public class StatementDao extends BaseDao {
 				sql.append(" and ");
 			}
 			params.put("startDate", startDate);
-			sql.append(" postingDate>:startDate");
+			sql.append(" postingDate>=:startDate");
 		}
 
 		if (memberNo != null && !memberNo.equals("ALL")) {
@@ -247,7 +242,7 @@ public class StatementDao extends BaseDao {
 				sql.append(" and ");
 			}
 			params.put("startDate", startDate);
-			sql.append(" postingDate>:startDate");
+			sql.append(" postingDate>=:startDate");
 		}
 
 		if (memberNo != null && !memberNo.equals("ALL")) {
@@ -264,12 +259,9 @@ public class StatementDao extends BaseDao {
 		for (String key : params.keySet()) {
 			query.setParameter(key, params.get(key));
 		}
-
 		Double totalDebit = getSingleResultOrNull(query);
-
 		return totalDebit;
 	}
-
 
 	public StatementDto getOpeningBalance(String memberNo, Date startDate) {
 		String sql = "select sum(amount) from statement where customerNo=:memberNo ";
@@ -283,9 +275,7 @@ public class StatementDao extends BaseDao {
 		if (startDate != null) {
 			query.setParameter("startDate", startDate);
 		}
-
 		List<Double> rows = getResultList(query);
-
 		StatementDto dto = new StatementDto();
 		dto.setCustomerNo(memberNo);
 		dto.setDueDate(startDate);

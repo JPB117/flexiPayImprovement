@@ -233,4 +233,9 @@ public class ProfileView extends ViewImpl implements
 	public boolean validateBasicDetailIssues() {
 		return divProfileContent.getBasicDetailIssues();
 	}
+
+	@Override
+	public void setLastUpdateToNow() {
+		divProfileContent.setLastUpdatedToNow();
+	}
 }

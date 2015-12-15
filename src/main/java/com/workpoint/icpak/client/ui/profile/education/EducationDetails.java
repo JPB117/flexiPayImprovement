@@ -139,6 +139,8 @@ public class EducationDetails extends Composite {
 					panelAttachment.add(link);
 					panelAttachment.add(new HTML("<br/>"));
 				}
+			}else{
+				
 			}
 
 			tblEducationalDetail.addRow(

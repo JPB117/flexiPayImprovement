@@ -148,8 +148,9 @@
 														to complete your registration)
 													</span>
 												</div>
-
 												<g:HTMLPanel ui:field="panelIssues" styleName="alert alert-danger hide">
+													<d:BulletListPanel ui:field="ulIssues">
+													</d:BulletListPanel>
 												</g:HTMLPanel>
 											</div>
 										</div>
