@@ -21,7 +21,6 @@ import com.icpak.rest.factory.ResourceFactory;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
-import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.shared.model.EventType;
 import com.workpoint.icpak.shared.model.events.CourseDto;
 
@@ -111,14 +110,14 @@ public class CoursesResourceImpl {
 	}
 
 	@PUT
-	@Path("/updateScore/{cpdRefId}")
+	@Path("/updateScore")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	@ApiOperation(value = "Update an existing cpd after exam", response = String.class, consumes = MediaType.APPLICATION_JSON, produces = MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "Update member from lms course attendance", response = String.class, consumes = MediaType.APPLICATION_JSON, produces = MediaType.APPLICATION_JSON)
 	public String updateCPD(
-			@ApiParam(value = "CPD to be updated after exam", required = true) @PathParam("cpdRefId") String cpdRefId,
-			CPDDto cpdDto) {
-		return helper.updateCPDCOurse(cpdRefId, cpdDto);
+			@ApiParam(value = "Course Done", required = true) @QueryParam("lmsCourseId") Long lmsCourseId,
+			@ApiParam(value = "Member no done course", required = true) @QueryParam("memberNo") String memberNo) {
+		return helper.updateCPDCOurse(lmsCourseId, memberNo);
 	}
 
 }

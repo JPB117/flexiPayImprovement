@@ -9,9 +9,12 @@ import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import com.icpak.rest.IDUtils;
 import com.icpak.rest.dao.EventsDao;
-import com.icpak.rest.models.cpd.CPD;
+import com.icpak.rest.dao.MemberDao;
 import com.icpak.rest.models.event.Event;
+import com.icpak.rest.models.membership.Member;
+import com.workpoint.icpak.shared.model.CPDCategory;
 import com.workpoint.icpak.shared.model.CPDDto;
+import com.workpoint.icpak.shared.model.CPDStatus;
 import com.workpoint.icpak.shared.model.EventType;
 import com.workpoint.icpak.shared.model.events.CourseDto;
 
@@ -19,35 +22,40 @@ import com.workpoint.icpak.shared.model.events.CourseDto;
 public class CoursesDaoHelper {
 	Logger logger = Logger.getLogger(CoursesDaoHelper.class);
 
-	@Inject EventsDao dao;
-	
-	public List<CourseDto> getAllEvents(String uri, Integer offset,
-			Integer limit){
+	@Inject
+	EventsDao dao;
+	@Inject
+	MemberDao memberDao;
+	@Inject
+	CPDDaoHelper cpdDaoHelper;
+
+	public List<CourseDto> getAllEvents(String uri, Integer offset, Integer limit) {
 		return getAllEvents(uri, offset, limit, null);
 	}
-			
-	public List<CourseDto> getAllEvents(String uri, Integer offset,
-			Integer limit, String eventType) {
+
+	public List<CourseDto> getAllEvents(String uri, Integer offset, Integer limit, String eventType) {
 		logger.info(" +++ Fetching courses ++++ ");
 
 		EventType type = null;
-		if(eventType!=null){
+		if (eventType != null) {
 			type = EventType.valueOf(eventType);
 		}
-		
+
 		List<Event> list = dao.getAllEvents(offset, limit, type, eventType);
 		List<CourseDto> eventsList = new ArrayList<>();
-		
-		for(Event e : list){
+
+		for (Event e : list) {
 			CourseDto event = e.toCourseDto();
-			//int[] counts = dao.getEventCounts();
-//			event.setDelegateCount(dao.getDelegateCount(e.getRefId()));
-//			event.setTotalPaid(dao.getTotalEventAmount(e.getRefId(), PaymentStatus.PAID));
-//			event.setTotalUnpaid(dao.getTotalEventAmount(e.getRefId(), PaymentStatus.NOTPAID));
-			event.setUri(uri+"/"+event.getRefId());
+			// int[] counts = dao.getEventCounts();
+			// event.setDelegateCount(dao.getDelegateCount(e.getRefId()));
+			// event.setTotalPaid(dao.getTotalEventAmount(e.getRefId(),
+			// PaymentStatus.PAID));
+			// event.setTotalUnpaid(dao.getTotalEventAmount(e.getRefId(),
+			// PaymentStatus.NOTPAID));
+			event.setUri(uri + "/" + event.getRefId());
 			eventsList.add(event);
 		}
-		
+
 		return eventsList;
 	}
 
@@ -56,24 +64,24 @@ public class CoursesDaoHelper {
 		Event event = dao.getByEventId(eventId);
 		return event.toCourseDto();
 	}
-	
+
 	public CourseDto createEvent(CourseDto dto) {
 		dto.setType(EventType.COURSE);
-		assert dto.getRefId()==null;
-		
+		assert dto.getRefId() == null;
+
 		Event event = new Event();
 		event.setRefId(IDUtils.generateId());
 		event.copyFromCourse(dto);
 		dao.save(event);
 		dto.setRefId(event.getRefId());
-		assert event.getId()!=null;
-		
+		assert event.getId() != null;
+
 		return event.toCourseDto();
 	}
 
 	public void updateEvent(String eventId, CourseDto dto) {
 		dto.setType(EventType.COURSE);
-		assert dto.getRefId()!=null;
+		assert dto.getRefId() != null;
 		Event poEvent = dao.getByEventId(eventId);
 		poEvent.copyFromCourse(dto);
 		dao.save(poEvent);
@@ -84,17 +92,52 @@ public class CoursesDaoHelper {
 		dao.delete(event);
 	}
 
-	public String updateCPDCOurse(String curseRefId, CPDDto cpdDto) {
-		Event eventInDb = dao.findByRefId(curseRefId, Event.class);
-		CPD newCpd = new CPD();
-		newCpd.copyFrom(cpdDto);
-		newCpd.setEventId(eventInDb.getRefId());
-		
-		return dao.createCourseCpd(newCpd);
+	public String updateCPDCOurse(Long lmsCourseId, String memberNo) {
+		logger.info("++++ Updating course from LMS ++++");
+		String result = null;
+
+		Event eventInDb = dao.getByEventLongId(lmsCourseId);
+
+		Member memberInDb = memberDao.getByMemberNo(memberNo);
+
+		if (eventInDb == null) {
+			result = "That course was not found in the portal db";
+		}
+
+		if (memberInDb == null) {
+			if (eventInDb == null) {
+				result = result + "and no member with that member number";
+			} else {
+				result = "There is no member registered with that number";
+			}
+		}
+
+		if (eventInDb != null && memberInDb != null) {
+
+			CPDDto cpdDto = new CPDDto();
+			cpdDto.setCategory(CPDCategory.CATEGORY_A);
+			cpdDto.setEndDate(eventInDb.getEndDate());
+			cpdDto.setStartDate(eventInDb.getStartDate());
+			cpdDto.setCpdHours(eventInDb.getCpdHours());
+			cpdDto.setStatus(CPDStatus.Approved);
+			cpdDto.setMemberRefId(memberInDb.getRefId());
+			cpdDto.setMemberRegistrationNo(memberInDb.getMemberNo());
+			cpdDto.setEventId(eventInDb.getRefId());
+			cpdDto.setOrganizer(eventInDb.getDescription());
+			cpdDto.setTitle(eventInDb.getName());
+			cpdDto.setEventLocation(eventInDb.getVenue());
+
+			cpdDaoHelper.create(memberInDb.getRefId(), cpdDto);
+
+			result = "Success";
+		} else {
+			result = "Failed !!: " + result;
+		}
+
+		return result;
 	}
 
 	public CourseDto getCourseByLongId(Long id) {
-		// TODO Auto-generated method stub
 		Event event = dao.getByEventLongId(id);
 		return event.toCourseDto();
 	}
