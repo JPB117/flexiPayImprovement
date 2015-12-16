@@ -20,6 +20,7 @@ import com.icpak.rest.models.cpd.CPD;
 import com.icpak.rest.models.event.Delegate;
 import com.icpak.rest.models.event.Event;
 import com.icpak.rest.models.membership.Member;
+import com.workpoint.icpak.server.integration.lms.LMSResponse;
 import com.workpoint.icpak.server.util.DateUtils;
 import com.workpoint.icpak.shared.model.CPDCategory;
 import com.workpoint.icpak.shared.model.CPDDto;
@@ -42,6 +43,8 @@ public class CPDDaoHelper {
 	StatementDaoHelper statementHelper;
 	@Inject
 	MemberDao memberDao;
+	@Inject
+	CoursesDaoHelper coursesDaoHelper;
 
 	static Logger logger = Logger.getLogger(CPDDaoHelper.class);
 
@@ -61,6 +64,8 @@ public class CPDDaoHelper {
 			dto.setFullNames(userDao.getFullNames(cpd.getMemberRefId()));
 			rtn.add(dto);
 		}
+		
+		logger.info(" ++++ TOTAL CPDS FOUND ++++ "+cpds.size());
 
 		return rtn;
 	}
@@ -153,12 +158,15 @@ public class CPDDaoHelper {
 	}
 
 	public CPDSummaryDto getCPDSummary(String memberRefId, Long startDate, Long endDate) {
+		logger.info(" ++++ CPD SUMMARY ++++ ");
 
 		CPDSummaryDto dto = null;
 
 		if (memberRefId.equals("ALL")) {
+			logger.info(" ++++ CPD SUMMARY FOR ALL ++++ ");
 			dto = dao.getCPDSummary(new Date(startDate), new Date(endDate));
 		} else {
+			logger.info(" ++++ CPD SUMMARY FOR MEMBER REFID "+memberRefId+" ++++++ ");
 			dto = dao.getCPDSummary(memberRefId, new Date(startDate), new Date(endDate));
 		}
 
@@ -308,6 +316,10 @@ public class CPDDaoHelper {
 	 * Handles data from lms for creating cpd
 	 */
 	public CPDDto create(CPDDto cpdDto) {
+		String lmsResult = null;
+		if (cpdDto.getLmsCourseId() != null) {
+			lmsResult = coursesDaoHelper.updateCPDCOurse(cpdDto.getLmsCourseId(), cpdDto.getLmsMemberId());
+		}
 
 		SimpleDateFormat fomatter = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -330,13 +342,13 @@ public class CPDDaoHelper {
 
 		CPDDto rtn = cpd.toDTO();
 		rtn.setFullNames(userDao.getFullNames(cpdDto.getLmsMemberId()));
-		
+
 		if (rtn.getMemberRegistrationNo() != null) {
-			rtn.setLmsResponse("Success");
-		}else{
-			rtn.setLmsResponse("Failed");
+			rtn.setLmsResponse("Success " + lmsResult);
+		} else {
+			rtn.setLmsResponse("Failed " + lmsResult);
 		}
-		
+
 		return rtn;
 	}
 

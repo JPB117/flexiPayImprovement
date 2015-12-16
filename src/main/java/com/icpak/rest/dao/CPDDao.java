@@ -36,6 +36,7 @@ public class CPDDao extends BaseDao {
 	}
 
 	public List<CPD> getAllCPDs(String memberRefId, Integer offSet, Integer limit, Date startDate, Date endDate) {
+		logger.info(" +++ GET GET CPPD FOR +++++ REFID == " + memberRefId);
 		StringBuffer sql = new StringBuffer("FROM CPD");
 
 		boolean isFirstParam = true;
@@ -87,15 +88,20 @@ public class CPDDao extends BaseDao {
 	}
 
 	public int getCPDCount(String memberRefId, Date startDate, Date endDate) {
+		logger.info(" +++ GET RESULT COUNT FOR CPD +++++ REFID == " + memberRefId);
 
 		Number number = null;
 		if (memberRefId != null) {
 			if (memberRefId.equals("ALL")) {
+				logger.info(" +++ COUNT FOR ALL ++++ ");
+				logger.info(" +++ startDate ++++ "+startDate);
+				logger.info(" +++ endDate ++++ "+endDate);
 				number = getSingleResultOrNull(getEntityManager()
 						.createNativeQuery("select count(*) from cpd c "
 								+ "where c.isactive=1 and startDate>=:startDate and endDate<=:endDate")
 						.setParameter("startDate", startDate).setParameter("endDate", endDate));
 			} else {
+				logger.info(" +++ COUNT FOR MEMBER ++++ ");
 				number = getSingleResultOrNull(getEntityManager()
 						.createNativeQuery("select count(*) from cpd c inner join Member m on (c.memberRefId=m.refId) "
 								+ "where c.isactive=1 and m.refId=:refId and startDate>=:startDate and endDate<:endDate")
@@ -105,7 +111,9 @@ public class CPDDao extends BaseDao {
 		} else {
 			throw new ServiceException(ErrorCodes.ILLEGAL_ARGUMENT, "CPD", "'MemberRefId'");
 		}
-
+		
+		logger.info(" +++ COUNT RESULT +++++ == " + number.intValue());
+		
 		return number.intValue();
 	}
 
@@ -138,6 +146,7 @@ public class CPDDao extends BaseDao {
 	}
 
 	public CPDSummaryDto getCPDSummary(String memberRefId, Date startDate, Date endDate) {
+		logger.info(" +++++ GET CPD SUMMARY FOR MEMBER +++++++ ");
 		String sql = "select sum(cpdHours), status from cpd where "
 				+ "memberRefId=:memberRefId and startDate>=:startDate " + "and endDate<=:endDate group by status";
 
@@ -164,6 +173,7 @@ public class CPDDao extends BaseDao {
 	}
 
 	public CPDSummaryDto getCPDSummary(Date startDate, Date endDate) {
+		logger.info(" +++++ GET ALL CPD COUNT GROUP BY STATUS +++++++ ");
 		String sql = "select count(*), status from cpd where"
 				+ " startDate>=:startDate and endDate<=:endDate group by status";
 		List<Object[]> rows = getResultList(getEntityManager().createNativeQuery(sql)
