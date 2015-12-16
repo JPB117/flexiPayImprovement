@@ -11,7 +11,9 @@ public class IcpakPreBootstrapper implements PreBootstrapper {
 		GWT.setUncaughtExceptionHandler(new GWT.UncaughtExceptionHandler() {
 			@Override
 			public void onUncaughtException(Throwable e) {
-				// Window.alert(e.getStackTrace() + "");
+				// Logger logger = Logger.getLogger("NameOfYourLogger");
+				// logger.log(Level.SEVERE, "this message should get logged");
+				//Window.alert(e.getStackTrace() + "");
 				unwrap(e);
 			}
 
