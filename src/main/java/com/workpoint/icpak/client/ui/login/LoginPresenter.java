@@ -269,6 +269,8 @@ public class LoginPresenter extends
 		Cookies.setCookie(ApiParameters.LOGIN_COOKIE, value, expires, domain,
 				path, secure);
 
+		setCookie(ApiParameters.LOGIN_COOKIE, value);
+
 		// NewCookie newCookie = new NewCookie(ApiParameters.LOGIN_COOKIE,
 		// value,
 		// path, domain, "", maxAge, secure);
@@ -284,5 +286,12 @@ public class LoginPresenter extends
 
 		return "localhost".equalsIgnoreCase(domain) ? null : domain;
 	}
+
+	public static native void setCookie(String cname, String cvalue) /*-{
+																		var d = new Date();
+																		d.setTime(d.getTime() + (10*24*60*60*1000));
+																		var expires = "expires="+d.toUTCString();
+																		$doc.cookie = cname + "=" + cvalue + "; " + expires;
+																		}-*/;
 
 }
