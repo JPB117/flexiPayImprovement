@@ -201,9 +201,6 @@ public class LoginPresenter extends
 	@Override
 	protected void onReveal() {
 		super.onReveal();
-		// Window.alert("Revealed called!");
-		// getView().getPanelParent().getElement()
-		// .setInnerText("Please wait while we load your account..");
 	}
 
 	private void onLoginCallSucceededForCookie(CurrentUserDto currentUserDto) {
@@ -291,7 +288,7 @@ public class LoginPresenter extends
 																		var d = new Date();
 																		d.setTime(d.getTime() + (10*24*60*60*1000));
 																		var expires = "expires="+d.toUTCString();
-																		$doc.cookie = cname + "=" + cvalue + "; " + expires;
+																		$doc.cookie = cname + "=" + cvalue + "; " + expires+"; path=/";
 																		}-*/;
 
 }

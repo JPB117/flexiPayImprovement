@@ -1,7 +1,6 @@
 package com.workpoint.icpak.client;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Window;
 import com.google.web.bindery.event.shared.UmbrellaException;
 import com.gwtplatform.mvp.client.PreBootstrapper;
 
