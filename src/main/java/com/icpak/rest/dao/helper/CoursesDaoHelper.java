@@ -79,12 +79,17 @@ public class CoursesDaoHelper {
 		return event.toCourseDto();
 	}
 
-	public void updateEvent(String eventId, CourseDto dto) {
+	public CourseDto updateEvent(String eventId, CourseDto dto) {
+		logger.info(" ++ Updating Course ++ ");
 		dto.setType(EventType.COURSE);
 		assert dto.getRefId() != null;
 		Event poEvent = dao.getByEventId(eventId);
 		poEvent.copyFromCourse(dto);
 		dao.save(poEvent);
+		
+		Event updateEvent = dao.getByEventId(eventId);
+		
+		return updateEvent.toCourseDto();
 	}
 
 	public void deleteEvent(String eventId) {
@@ -92,7 +97,7 @@ public class CoursesDaoHelper {
 		dao.delete(event);
 	}
 
-	public String updateCPDCOurse(Long lmsCourseId, String memberNo) {
+	public String updateCPDCOurse(Integer lmsCourseId, String memberNo) {
 		logger.info("++++ Updating course from LMS ++++");
 		String result = null;
 
@@ -123,7 +128,6 @@ public class CoursesDaoHelper {
 			cpdDto.setMemberRefId(memberInDb.getRefId());
 			cpdDto.setMemberRegistrationNo(memberInDb.getMemberNo());
 			cpdDto.setEventId(eventInDb.getRefId());
-			cpdDto.setOrganizer(eventInDb.getDescription());
 			cpdDto.setTitle(eventInDb.getName());
 			cpdDto.setEventLocation(eventInDb.getVenue());
 
@@ -137,7 +141,7 @@ public class CoursesDaoHelper {
 		return result;
 	}
 
-	public CourseDto getCourseByLongId(Long id) {
+	public CourseDto getCourseByLongId(Integer id) {
 		Event event = dao.getByEventLongId(id);
 		return event.toCourseDto();
 	}

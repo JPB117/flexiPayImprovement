@@ -2,10 +2,12 @@ package com.workpoint.icpak.tests.dao;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import com.amazonaws.util.json.JSONObject;
 import com.google.inject.Inject;
 import com.icpak.rest.dao.helper.CoursesDaoHelper;
 import com.icpak.rest.dao.helper.EventsDaoHelper;
@@ -17,6 +19,7 @@ import com.workpoint.icpak.shared.model.events.EventDto;
 import com.workpoint.icpak.tests.base.AbstractDaoTest;
 
 public class TestEventsDao extends AbstractDaoTest {
+	Logger logger = Logger.getLogger(TestEventsDao.class);
 
 	@Inject
 	EventsDaoHelper helper;
@@ -32,7 +35,7 @@ public class TestEventsDao extends AbstractDaoTest {
 		createEvent();
 	}
 
-	@Test
+	@Ignore
 	public void createEvent() {
 		EventDto event = new EventDto();
 		event.setName("ICPAK NYANZA BRANCH HOSTS ITS INAUGURAL END OF YEAR GALA DINNER");
@@ -117,6 +120,29 @@ public class TestEventsDao extends AbstractDaoTest {
 
 		GetDelegatesReport report = new GetDelegatesReport();
 		report.generateDelegateReport(delegateDtos, docType);
+	}
+	
+	@Ignore
+	public void testFindbyLongId(){
+		CourseDto courseDto = courseHelper.getCourseByLongId(22);
+		
+		JSONObject json = new JSONObject(courseDto);
+		 logger.info(" +++ Result ++ "+ json.toString());
+	}
+	
+	@Test
+	public void testUpdate(){
+	
+		CourseDto courseDto = new CourseDto();
+		courseDto.setStartDate("2015-4-20");
+		courseDto.setEndDate("2015-8-20");
+		courseDto.setCode("8767");
+		courseDto.setDescription("Description");
+		
+		CourseDto updatedDto = courseHelper.updateEvent("QEyf2DasD3X7Pybt", courseDto);
+		
+		JSONObject json = new JSONObject(updatedDto);
+		 logger.info(" +++ Result ++ "+ json.toString());
 	}
 
 }
