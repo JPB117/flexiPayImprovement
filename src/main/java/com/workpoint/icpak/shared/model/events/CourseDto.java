@@ -26,7 +26,7 @@ public class CourseDto extends SerializableObj implements Listable {
 	private int delegateCount;
 	private Double totalPaid;
 	private Double totalUnpaid;
-	private Integer courseId;
+	private Integer lmsCourseId;
 
 	public CourseDto() {
 	}
@@ -163,11 +163,11 @@ public class CourseDto extends SerializableObj implements Listable {
 	}
 
 	public Integer getCourseId() {
-		return courseId;
+		return lmsCourseId;
 	}
 
-	public void setCourseId(Integer courseId) {
-		this.courseId = courseId;
+	public void setCourseId(Integer lmsCourseId) {
+		this.lmsCourseId = lmsCourseId;
 	}
 
 }

@@ -74,8 +74,7 @@ public class Event extends PO {
 	@XmlTransient
 	@OneToMany(mappedBy = "event")
 	Set<Booking> bookings = new HashSet<>();
-	@OneToMany(mappedBy = "event", cascade = { CascadeType.PERSIST,
-			CascadeType.REMOVE })
+	@OneToMany(mappedBy = "event", cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
 	Set<Accommodation> accommodation = new HashSet<>();
 
 	public Event() {
@@ -213,8 +212,7 @@ public class Event extends PO {
 			dto.setEndDate(DateUtils.format(endDate, DateUtils.FULLTIMESTAMP));
 
 		if (startDate != null) {
-			dto.setStartDate(DateUtils.format(startDate,
-					DateUtils.FULLTIMESTAMP));
+			dto.setStartDate(DateUtils.format(startDate, DateUtils.FULLTIMESTAMP));
 		}
 		dto.setMemberPrice(memberPrice);
 		dto.setName(name);
@@ -242,12 +240,10 @@ public class Event extends PO {
 		setCpdHours(dto.getCpdHours());
 		setDescription(dto.getDescription());
 		if (dto.getEndDate() != null)
-			setEndDate(DateUtils.parse(dto.getEndDate(),
-					DateUtils.SHORTTIMESTAMP));
+			setEndDate(DateUtils.parse(dto.getEndDate(), DateUtils.SHORTTIMESTAMP));
 
 		if (dto.getStartDate() != null)
-			setStartDate(DateUtils.parse(dto.getStartDate(),
-					DateUtils.SHORTTIMESTAMP));
+			setStartDate(DateUtils.parse(dto.getStartDate(), DateUtils.SHORTTIMESTAMP));
 
 		setMemberPrice(dto.getMemberPrice());
 		setName(dto.getName());
@@ -297,26 +293,61 @@ public class Event extends PO {
 		dto.setType(type);
 		dto.setVenue(venue);
 		dto.setCourseId(lmsCourseId);
+		dto.setStartDate(startDate+"");
+		dto.setEndDate(endDate+"");
 		return dto;
 	}
 
 	public void copyFromCourse(CourseDto dto) {
-		setCpdHours(dto.getCpdHours());
-		setDescription(dto.getDescription());
-		setMemberPrice(dto.getMemberPrice());
-		if (dto.getEndDate() != null)
-			setEndDate(DateUtils.parse(dto.getEndDate(),
-					DateUtils.SHORTTIMESTAMP));
-		if (dto.getStartDate() != null)
-			setStartDate(DateUtils.parse(dto.getStartDate(),
-					DateUtils.SHORTTIMESTAMP));
-		setName(dto.getName());
-		setNonMemberPrice(dto.getNonMemberPrice());
-		setStatus(dto.getStatus());
-		setType(dto.getType());
-		setVenue(dto.getVenue());
-		setCode(dto.getCode());
-		setLmsCourseId(dto.getCourseId());
+
+		if (dto.getCpdHours() != null) {
+			setCpdHours(dto.getCpdHours());
+		}
+
+		if (dto.getDescription() != null) {
+			setDescription(dto.getDescription());
+		}
+
+		if (dto.getMemberPrice() != null) {
+			setMemberPrice(dto.getMemberPrice());
+		}
+
+		if (dto.getEndDate() != null) {
+			setEndDate(DateUtils.parse(dto.getEndDate(), DateUtils.SHORTTIMESTAMP));
+		}
+
+		if (dto.getStartDate() != null) {
+			setStartDate(DateUtils.parse(dto.getStartDate(), DateUtils.SHORTTIMESTAMP));
+		}
+
+		if (dto.getName() != null) {
+			setName(dto.getName());
+		}
+
+		if (dto.getNonMemberPrice() != null) {
+			setNonMemberPrice(dto.getNonMemberPrice());
+		}
+
+		if (dto.getStatus() != null) {
+			setStatus(dto.getStatus());
+		}
+
+		if (dto.getType() != null) {
+			setType(dto.getType());
+		}
+
+		if (dto.getVenue() != null) {
+			setVenue(dto.getVenue());
+		}
+
+		if (dto.getCode() != null) {
+			setCode(dto.getCode());
+		}
+
+		if (dto.getCourseId() != null) {
+			setLmsCourseId(dto.getCourseId());
+		}
+
 	}
 
 	public String getCode() {

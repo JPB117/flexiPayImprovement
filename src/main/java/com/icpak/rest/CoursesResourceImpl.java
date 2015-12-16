@@ -67,13 +67,13 @@ public class CoursesResourceImpl {
 
 		return dto;
 	}
-	
+
 	@GET
-	@Path("/{longId}/findbyid")
+	@Path("/{lmsCourseId}/findbyid")
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Get a course by courseId", response = CourseDto.class, consumes = MediaType.APPLICATION_JSON)
 	public CourseDto getByLongId(
-			@ApiParam(value = "Course long Id of the course to fetch", required = true) @PathParam("longId")  Long id) {
+			@ApiParam(value = "Course long Id of the course to fetch", required = true) @PathParam("lmsCourseId") Integer id) {
 
 		CourseDto dto = helper.getCourseByLongId(id);
 
@@ -89,24 +89,25 @@ public class CoursesResourceImpl {
 	}
 
 	@PUT
-	@Path("/{courseId}")
+	@Path("/{courseRefId}/update")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Update an existing course", response = CourseDto.class, consumes = MediaType.APPLICATION_JSON, produces = MediaType.APPLICATION_JSON)
 	public CourseDto update(
-			@ApiParam(value = "Course Id of the course to update", required = true) @PathParam("courseId") String courseId,
+			@ApiParam(value = "Course Id of the course to update", required = true) @PathParam("courseRefId") String courseRefId,
 			CourseDto course) {
-		helper.updateEvent(courseId, course);
-		return course;
+		logger.info(" +++ UPDATE EXISTING COURSE API ++++ ");
+		CourseDto dto = helper.updateEvent(courseRefId, course);
+		return dto;
 	}
 
 	@DELETE
-	@Path("/{courseId}")
+	@Path("/{courseRefId}/remove")
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Delete an existing course")
 	public void delete(
-			@ApiParam(value = "Course Id of the course to delete", required = true) @PathParam("courseId") String courseId) {
-		helper.deleteEvent(courseId);
+			@ApiParam(value = "Course Id of the course to delete", required = true) @PathParam("courseRefId") String courseRefId) {
+		helper.deleteEvent(courseRefId);
 	}
 
 	@PUT
@@ -115,7 +116,7 @@ public class CoursesResourceImpl {
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Update member from lms course attendance", response = String.class, consumes = MediaType.APPLICATION_JSON, produces = MediaType.APPLICATION_JSON)
 	public String updateCPD(
-			@ApiParam(value = "Course Done", required = true) @QueryParam("lmsCourseId") Long lmsCourseId,
+			@ApiParam(value = "Course Done", required = true) @QueryParam("lmsCourseId") Integer lmsCourseId,
 			@ApiParam(value = "Member no done course", required = true) @QueryParam("memberNo") String memberNo) {
 		return helper.updateCPDCOurse(lmsCourseId, memberNo);
 	}

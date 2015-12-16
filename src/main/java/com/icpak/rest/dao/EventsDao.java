@@ -317,7 +317,7 @@ public class EventsDao extends BaseDao {
 		return null;
 	}
 
-	public Event getByEventLongId(Long lmsCourseId, boolean throwExceptionIfNull) {
+	public Event getByEventLongId(Integer lmsCourseId, boolean throwExceptionIfNull) {
 		Event event = getSingleResultOrNull(getEntityManager()
 				.createQuery("from Event u where u.lmsCourseId=:lmsCourseId").setParameter("lmsCourseId", lmsCourseId));
 
@@ -328,7 +328,7 @@ public class EventsDao extends BaseDao {
 		return event;
 	}
 
-	public Event getByEventLongId(Long id) {
+	public Event getByEventLongId(Integer id) {
 		return getByEventLongId(id, true);
 	}
 

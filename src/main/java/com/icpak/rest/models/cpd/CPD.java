@@ -102,7 +102,10 @@ public class CPD extends PO {
 
 		setCategory(dto.getCategory());
 		setMemberRefId(dto.getMemberRefId());
-		setOrganizer(dto.getOrganizer());
+		
+		if (dto.getOrganizer() != null) {
+			setOrganizer(dto.getOrganizer());
+		}
 		setTitle(dto.getTitle());
 		setEventId(dto.getEventId());
 		setEventLocation(dto.getEventLocation());
