@@ -53,8 +53,8 @@ public interface MemberResource extends BaseResource {
 			@QueryParam("offset") Integer offset,
 			@QueryParam("limit") Integer limit);
 
-	@Path("/{memberId}/cpd")
-	public CPDResource cpd(@PathParam("memberId") String memberId);
+	@Path("/cpd")
+	public CPDResource cpd(@QueryParam("memberId") String memberId);
 
 	@GET
 	@Path("/{memberId}/standing")

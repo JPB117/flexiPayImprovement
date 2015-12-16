@@ -84,15 +84,15 @@ public class CPDDaoHelper {
 		return rtn;
 	}
 
-	public CPDDto create(String memberId, CPDDto cpdDto) {
+	public CPDDto create(String memberRefId, CPDDto cpdDto) {
 
 		CPD cpd = new CPD();
 		cpd.copyFrom(cpdDto);
-		cpd.setMemberRefId(memberId);
+		cpd.setMemberRefId(memberRefId);
 		dao.save(cpd);
 
 		CPDDto rtn = cpd.toDTO();
-		rtn.setFullNames(userDao.getFullNames(memberId));
+		rtn.setFullNames(userDao.getFullNames(memberRefId));
 		return rtn;
 	}
 

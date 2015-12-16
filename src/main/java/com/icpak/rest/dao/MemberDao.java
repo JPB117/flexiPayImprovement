@@ -9,6 +9,8 @@ import javax.persistence.Query;
 
 import org.apache.log4j.Logger;
 
+import com.icpak.rest.exceptions.ServiceException;
+import com.icpak.rest.models.ErrorCodes;
 import com.icpak.rest.models.membership.Member;
 import com.workpoint.icpak.shared.model.ApplicationType;
 import com.workpoint.icpak.shared.model.MemberDto;
@@ -278,7 +280,6 @@ public class MemberDao extends BaseDao {
 	 */
 	private Map<String, Object> appendParameters(String searchTerm, String citySearchTerm, String categoryName,
 			StringBuffer sqlQuery) {
-		boolean isFirst = true;
 		Map<String, Object> params = new HashMap<>();
 
 		if (!searchTerm.equals("all") && !citySearchTerm.equals("all") && !categoryName.equals("all")) {
@@ -339,6 +340,23 @@ public class MemberDao extends BaseDao {
 		}
 
 		return params;
+	}
+
+	public Member getByMemberNo(String memberNo , boolean throwExceptionIfNull ) {
+		Member member = getSingleResultOrNull(getEntityManager().createQuery(
+				"from Member m where m.memberNo=:memberNo").setParameter("memberNo",
+						memberNo));
+
+		if (throwExceptionIfNull && member == null) {
+			throw new ServiceException(ErrorCodes.NOTFOUND, "Member", "'"
+					+ memberNo + "'");
+		}
+
+		return member;
+	}
+	
+	public Member getByMemberNo(String memberNo){
+		return getByMemberNo(memberNo , true);
 	}
 
 }

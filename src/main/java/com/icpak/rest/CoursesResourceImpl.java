@@ -67,6 +67,18 @@ public class CoursesResourceImpl {
 
 		return dto;
 	}
+	
+	@GET
+	@Path("/{longId}/findbyid")
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "Get a course by courseId", response = CourseDto.class, consumes = MediaType.APPLICATION_JSON)
+	public CourseDto getByLongId(
+			@ApiParam(value = "Course long Id of the course to fetch", required = true) @PathParam("longId")  Long id) {
+
+		CourseDto dto = helper.getCourseByLongId(id);
+
+		return dto;
+	}
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -95,6 +107,17 @@ public class CoursesResourceImpl {
 	public void delete(
 			@ApiParam(value = "Course Id of the course to delete", required = true) @PathParam("courseId") String courseId) {
 		helper.deleteEvent(courseId);
+	}
+
+	@PUT
+	@Path("/updateScore")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "Update member from lms course attendance", response = String.class, consumes = MediaType.APPLICATION_JSON, produces = MediaType.APPLICATION_JSON)
+	public String updateCPD(
+			@ApiParam(value = "Course Done", required = true) @QueryParam("lmsCourseId") Long lmsCourseId,
+			@ApiParam(value = "Member no done course", required = true) @QueryParam("memberNo") String memberNo) {
+		return helper.updateCPDCOurse(lmsCourseId, memberNo);
 	}
 
 }
