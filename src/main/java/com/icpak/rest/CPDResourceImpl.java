@@ -125,4 +125,21 @@ public class CPDResourceImpl implements CPDResource {
 	public Integer getCount() {
 		return helper.getCount(memberId, null, null);
 	}
+
+	@GET
+	@Path("/SearchCPD")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<CPDDto> searchCPd(@QueryParam("offset") int offset, @QueryParam("limit") int limit,
+			@QueryParam("searchTerm") String searchTerm) {
+		return helper.searchCPD(searchTerm, offset, limit);
+	}
+
+	@GET
+	@Path("/countCPDSearch")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Integer getCPDsearchCount(@QueryParam("searchTerm") String searchTerm) {
+		return helper.cpdSearchCount(searchTerm);
+	}
 }

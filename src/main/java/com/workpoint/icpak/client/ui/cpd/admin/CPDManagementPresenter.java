@@ -14,7 +14,14 @@ import java.util.List;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.HasKeyDownHandlers;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rest.delegates.client.ResourceDelegate;
@@ -57,8 +64,7 @@ import com.workpoint.icpak.shared.model.CPDStatus;
 import com.workpoint.icpak.shared.model.CPDSummaryDto;
 
 public class CPDManagementPresenter
-		extends
-		Presenter<CPDManagementPresenter.ICPDManagementView, CPDManagementPresenter.ICPDManagementProxy>
+		extends Presenter<CPDManagementPresenter.ICPDManagementView, CPDManagementPresenter.ICPDManagementProxy>
 		implements EditModelHandler, TableActionHandler {
 
 	public interface ICPDManagementView extends View {
@@ -80,29 +86,37 @@ public class CPDManagementPresenter
 
 		Date getEndDate();
 
+		HasValueChangeHandlers<String> getSearchValueChangeHander();
+
+		String getSearchValue();
+
 	}
 
 	@ProxyCodeSplit
 	@NameToken(NameTokens.cpdmgt)
 	@UseGatekeeper(LoginGateKeeper.class)
-	public interface ICPDManagementProxy extends
-			TabContentProxyPlace<CPDManagementPresenter> {
+	public interface ICPDManagementProxy extends TabContentProxyPlace<CPDManagementPresenter> {
 	}
 
 	@TabInfo(container = HomePresenter.class)
 	static TabData getTabLabel(AdminGateKeeper adminGatekeeper) {
-		TabDataExt data = new TabDataExt("C.P.D Management",
-				"fa fa-graduation-cap", 5, adminGatekeeper, true);
+		TabDataExt data = new TabDataExt("C.P.D Management", "fa fa-graduation-cap", 5, adminGatekeeper, true);
 		return data;
 	}
 
 	protected final ResourceDelegate<MemberResource> memberDelegate;
 	protected final CurrentUser currentUser;
 
+	ValueChangeHandler<String> cpdValueChangeHandler = new ValueChangeHandler<String>() {
+		@Override
+		public void onValueChange(ValueChangeEvent<String> event) {
+			searchCPD(getView().getSearchValue().trim());
+		}
+	};
+
 	@Inject
-	public CPDManagementPresenter(final EventBus eventBus,
-			final ICPDManagementView view, final ICPDManagementProxy proxy,
-			final ResourceDelegate<MemberResource> memberDelegate,
+	public CPDManagementPresenter(final EventBus eventBus, final ICPDManagementView view,
+			final ICPDManagementProxy proxy, final ResourceDelegate<MemberResource> memberDelegate,
 			final CurrentUser currentUser) {
 		super(eventBus, view, proxy, HomePresenter.SLOT_SetTabContent);
 		this.memberDelegate = memberDelegate;
@@ -132,6 +146,7 @@ public class CPDManagementPresenter
 			}
 		});
 
+		getView().getSearchValueChangeHander().addValueChangeHandler(cpdValueChangeHandler);
 	}
 
 	@Inject
@@ -157,16 +172,13 @@ public class CPDManagementPresenter
 					// not saved
 					if (cpdRecord.isValid()) {
 						String memberId = currentUser.getUser().getRefId();
-						memberDelegate
-								.withCallback(
-										new AbstractAsyncCallback<CPDDto>() {
-											@Override
-											public void onSuccess(CPDDto result) {
-												cpdRecord.setCPD(result);
-												cpdRecord.showUploadPanel(true);
-											}
-										}).cpd(memberId)
-								.create(cpdRecord.getCPD());
+						memberDelegate.withCallback(new AbstractAsyncCallback<CPDDto>() {
+							@Override
+							public void onSuccess(CPDDto result) {
+								cpdRecord.setCPD(result);
+								cpdRecord.showUploadPanel(true);
+							}
+						}).cpd(memberId).create(cpdRecord.getCPD());
 					}
 				} else {
 					cpdRecord.showUploadPanel(true);
@@ -177,31 +189,29 @@ public class CPDManagementPresenter
 
 		cpdRecord.setViewMode(isViewMode);
 
-		AppManager.showPopUp("Record CPD Wizard", cpdRecord.asWidget(),
-				new OptionControl() {
-					@Override
-					public void onSelect(String name) {
-						if (name.equals("Save")) {
-							if (cpdRecord.isValid()) {
-								saveRecord(cpdRecord.getCPD());
-								hide();
-							}
-						} else if (name.equals("Previous")) {
-							showInstructions(model);
-						} else if (name.equals("Approve")) {
-							CPDDto dto = cpdRecord.getCPD();
-							dto.setStatus(CPDStatus.Approved);
-							saveRecord(dto);
-							hide();
-						} else if (name.equals("Reject")) {
-							CPDDto dto = cpdRecord.getCPD();
-							dto.setStatus(CPDStatus.Rejected);
-							saveRecord(dto);
-							hide();
-						}
+		AppManager.showPopUp("Record CPD Wizard", cpdRecord.asWidget(), new OptionControl() {
+			@Override
+			public void onSelect(String name) {
+				if (name.equals("Save")) {
+					if (cpdRecord.isValid()) {
+						saveRecord(cpdRecord.getCPD());
+						hide();
 					}
-				}, (isViewMode == true ? "Reject" : "Previous"),
-				(isViewMode == true ? "Approve" : "Save"));
+				} else if (name.equals("Previous")) {
+					showInstructions(model);
+				} else if (name.equals("Approve")) {
+					CPDDto dto = cpdRecord.getCPD();
+					dto.setStatus(CPDStatus.Approved);
+					saveRecord(dto);
+					hide();
+				} else if (name.equals("Reject")) {
+					CPDDto dto = cpdRecord.getCPD();
+					dto.setStatus(CPDStatus.Rejected);
+					saveRecord(dto);
+					hide();
+				}
+			}
+		}, (isViewMode == true ? "Reject" : "Previous"), (isViewMode == true ? "Approve" : "Save"));
 	}
 
 	protected void saveRecord(CPDDto dto) {
@@ -224,15 +234,44 @@ public class CPDManagementPresenter
 		final RecordCPD cpdRecord = new RecordCPD();
 		cpdRecord.setCPD(model);
 		cpdRecord.showForm(false);
-		AppManager.showPopUp("Record CPD Wizard", cpdRecord.asWidget(),
-				new OnOptionSelected() {
-					@Override
-					public void onSelect(String name) {
-						if (name.equals("Next")) {
-							showForm(model);
-						}
-					}
-				}, "Next");
+		AppManager.showPopUp("Record CPD Wizard", cpdRecord.asWidget(), new OnOptionSelected() {
+			@Override
+			public void onSelect(String name) {
+				if (name.equals("Next")) {
+					showForm(model);
+				}
+			}
+		}, "Next");
+	}
+
+	private void searchCPD(final String searchTerm) {
+		fireEvent(new ProcessingEvent());
+		memberDelegate.withCallback(new AbstractAsyncCallback<Integer>() {
+
+			@Override
+			public void onSuccess(Integer count) {
+				// TODO Auto-generated method stub
+				fireEvent(new ProcessingCompletedEvent());
+				PagingPanel pagingPanel = getView().getPagingPanel();
+				pagingPanel.setTotal(count);
+				PagingConfig pagingConfig = pagingPanel.getConfig();
+				pagingConfig.setPAGE_LIMIT(100);
+				getCPDSearchResults(pagingConfig.getOffset(), pagingConfig.getLimit(), searchTerm);
+				fireEvent(new ProcessingCompletedEvent());
+			}
+		}).cpd("ALL").getCPDsearchCount(searchTerm);
+	}
+	
+	private void getCPDSearchResults(int offset, int limit, String searchTerm) {
+		fireEvent(new ProcessingEvent());
+		memberDelegate.withCallback(new AbstractAsyncCallback<List<CPDDto>>() {
+
+			@Override
+			public void onSuccess(List<CPDDto> result) {
+				fireEvent(new ProcessingCompletedEvent());
+				getView().bindResults(result);
+			}
+		}).cpd("ALL").searchCPd(offset, limit, searchTerm);
 	}
 
 	@Override
@@ -275,13 +314,11 @@ public class CPDManagementPresenter
 				fireEvent(new ProcessingCompletedEvent());
 				getView().bindResults(result);
 			}
-		}).cpd("ALL")
-				.getAll(offset, limit, startDate.getTime(), endDate.getTime());
+		}).cpd("ALL").getAll(offset, limit, startDate.getTime(), endDate.getTime());
 	}
 
 	String getApplicationRefId() {
-		String applicationRefId = currentUser.getUser() == null ? null
-				: currentUser.getUser().getApplicationRefId();
+		String applicationRefId = currentUser.getUser() == null ? null : currentUser.getUser().getApplicationRefId();
 
 		return applicationRefId;
 	}

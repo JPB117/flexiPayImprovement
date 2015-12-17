@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -137,4 +138,16 @@ public class CPDManagementView extends ViewImpl implements
 	public Date getStartDate() {
 		return tblView.getStartDate();
 	}
+
+	@Override
+	public HasValueChangeHandlers<String> getSearchValueChangeHander() {
+		return tblView.getSearchField();
+	}
+
+	@Override
+	public String getSearchValue() {
+		return tblView.getSearchValue();
+	}
+	
+	
 }

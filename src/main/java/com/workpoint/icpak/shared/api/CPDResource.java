@@ -49,4 +49,15 @@ public interface CPDResource extends BaseResource {
 	@GET
 	@Path("/filteredcount")
 	public Integer getCount(@QueryParam("startDate") Long startDate, @QueryParam("endDate") Long endDate);
+
+	@GET
+	@Path("/countCPDSearch")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Integer getCPDsearchCount(@QueryParam("searchTerm") String searchTerm);
+	
+	@GET
+	@Path("/SearchCPD")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public List<CPDDto> searchCPd(@QueryParam("offset") int offset, @QueryParam("limit") int limit,
+			@QueryParam("searchTerm") String searchTerm);
 }

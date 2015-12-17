@@ -6,6 +6,8 @@ import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
@@ -18,8 +20,7 @@ import com.workpoint.icpak.client.util.AppContext;
 
 public class CPDTable extends Composite {
 
-	private static TransactionTableUiBinder uiBinder = GWT
-			.create(TransactionTableUiBinder.class);
+	private static TransactionTableUiBinder uiBinder = GWT.create(TransactionTableUiBinder.class);
 
 	interface TransactionTableUiBinder extends UiBinder<Widget, CPDTable> {
 	}
@@ -31,7 +32,6 @@ public class CPDTable extends Composite {
 		initWidget(uiBinder.createAndBindUi(this));
 		tblView.setAutoNumber(false);
 		tblView.setSearchSectionVisible(true);
-		tblView.setSearchFieldVisible(false);
 		tblView.setDatesVisible(true);
 		createHeader(AppContext.isCurrentUserAdmin());
 	}
@@ -42,6 +42,9 @@ public class CPDTable extends Composite {
 		th.add(new TableHeader("End Date:"));
 		if (isAdmin) {
 			th.add(new TableHeader("Member Name:"));
+			tblView.setSearchFieldVisible(true);
+		} else {
+			tblView.setSearchFieldVisible(false);
 		}
 		th.add(new TableHeader("Course/Event Name"));
 		th.add(new TableHeader("Organiser"));
@@ -96,5 +99,12 @@ public class CPDTable extends Composite {
 	public HasClickHandlers getFilterButton() {
 		return tblView.getFilterButton();
 	}
+	
+	public HasValueChangeHandlers<String> getSearchField() {
+		return tblView.getSearchKeyDownHander();
+	}
 
+	public String getSearchValue() {
+		return tblView.getSearchValue();
+	}
 }
