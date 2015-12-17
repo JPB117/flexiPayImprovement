@@ -94,8 +94,8 @@ public class CPDDao extends BaseDao {
 		if (memberRefId != null) {
 			if (memberRefId.equals("ALL")) {
 				logger.info(" +++ COUNT FOR ALL ++++ ");
-				logger.info(" +++ startDate ++++ "+startDate);
-				logger.info(" +++ endDate ++++ "+endDate);
+				logger.info(" +++ startDate ++++ " + startDate);
+				logger.info(" +++ endDate ++++ " + endDate);
 				number = getSingleResultOrNull(getEntityManager()
 						.createNativeQuery("select count(*) from cpd c "
 								+ "where c.isactive=1 and startDate>=:startDate and endDate<=:endDate")
@@ -111,9 +111,9 @@ public class CPDDao extends BaseDao {
 		} else {
 			throw new ServiceException(ErrorCodes.ILLEGAL_ARGUMENT, "CPD", "'MemberRefId'");
 		}
-		
+
 		logger.info(" +++ COUNT RESULT +++++ == " + number.intValue());
-		
+
 		return number.intValue();
 	}
 
@@ -265,15 +265,12 @@ public class CPDDao extends BaseDao {
 
 		String sql = "select c.refId,c.startdate,c.enddate, concat(u.firstName,' ',u.lastName),"
 				+ "c.title,c.organizer,c.category,c.cpdhours,c.status " + "from cpd c "
-				+ "inner join member m on (c.memberRefId=m.refId) " + "inner join user u on (u.id=m.userId) " 
-				+ "where "
-				+ "u.firstName like :searchTerm or " 
-				+ "u.lastName like :searchTerm or "
-				+ "concat(u.firstName,' ',u.lastName) like :searchTerm or " 
-				+ "c.title like :searchTerm or "
-				+ "c.organizer like :searchTerm";
+				+ "inner join member m on (c.memberRefId=m.refId) " + "inner join user u on (u.id=m.userId) " + "where "
+				+ "u.firstName like :searchTerm or " + "u.lastName like :searchTerm or "
+				+ "concat(u.firstName,' ',u.lastName) like :searchTerm or " + "c.title like :searchTerm or "
+				+ "c.organizer like :searchTerm or " + "c.memberRegistrationNo like :searchTerm";
 
-		Query query = getEntityManager().createNativeQuery(sql).setParameter("searchTerm", "%"+searchTerm+"%");
+		Query query = getEntityManager().createNativeQuery(sql).setParameter("searchTerm", "%" + searchTerm + "%");
 
 		List<Object[]> rows = getResultList(query, offset, limit);
 
@@ -316,7 +313,7 @@ public class CPDDao extends BaseDao {
 				if (category.equals("CATEGORY_D")) {
 					cpdDto.setCategory(CPDCategory.CATEGORY_D);
 				}
-				
+
 				if (category.equals("NO_CATEGORY")) {
 					cpdDto.setCategory(CPDCategory.NO_CATEGORY);
 				}
@@ -352,17 +349,13 @@ public class CPDDao extends BaseDao {
 
 	public BigInteger cpdSearchCount(String searchTerm) {
 
-		String sql = "select count(*) " 
-		        + "from cpd c " 
-				+ "inner join member m on (c.memberRefId=m.refId) "
-				+ "inner join user u on (u.id=m.userId) " 
-				+ "where " 
-				+ "u.firstName like :searchTerm or "
-				+ "u.lastName like :searchTerm or " 
-				+ "concat(u.firstName,' ',u.lastName) like :searchTerm or "
-				+ "c.title like :searchTerm or " + "c.organizer like :searchTerm";
+		String sql = "select count(*) " + "from cpd c " + "inner join member m on (c.memberRefId=m.refId) "
+				+ "inner join user u on (u.id=m.userId) " + "where " + "u.firstName like :searchTerm or "
+				+ "u.lastName like :searchTerm or " + "concat(u.firstName,' ',u.lastName) like :searchTerm or "
+				+ "c.title like :searchTerm or "
+				+ "c.organizer like :searchTerm or c.memberRegistrationNo like :searchTerm";
 
-		Query query = getEntityManager().createNativeQuery(sql).setParameter("searchTerm", "%"+searchTerm+"%");
+		Query query = getEntityManager().createNativeQuery(sql).setParameter("searchTerm", "%" + searchTerm + "%");
 
 		return getSingleResultOrNull(query);
 	}
