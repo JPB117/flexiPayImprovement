@@ -74,11 +74,13 @@ public class CPDDao extends BaseDao {
 		}
 		sql.append(" and isActive=1");
 		sql.append(" order by startDate asc");
-
+		
 		Query query = getEntityManager().createQuery(sql.toString());
 		for (String key : params.keySet()) {
 			query.setParameter(key, params.get(key));
 		}
+		
+		logger.info(" +++ EXECUTING QUERY ...... SQL " + sql);
 
 		return getResultList(query, offSet, limit);
 	}
