@@ -14,6 +14,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -62,6 +63,8 @@ public class CPD extends PO {
 	private String eventId;
 	@OneToMany(mappedBy = "cpd", fetch = FetchType.LAZY, cascade = { CascadeType.REMOVE })
 	private Set<Attachment> attachments = new HashSet<>();
+	@Transient
+	private String fullnames;
 
 	private String eventLocation;
 
@@ -102,7 +105,7 @@ public class CPD extends PO {
 
 		setCategory(dto.getCategory());
 		setMemberRefId(dto.getMemberRefId());
-		
+
 		if (dto.getOrganizer() != null) {
 			setOrganizer(dto.getOrganizer());
 		}
@@ -133,6 +136,10 @@ public class CPD extends PO {
 			attachmentDto.setAttachmentName(attachment.getName());
 			attachmentDto.setRefId(attachment.getRefId());
 			attachmentDtos.add(attachmentDto);
+		}
+		
+		if(fullnames != null){
+			dto.setFullNames(fullnames);
 		}
 		dto.setAttachments(attachmentDtos);
 		return dto;
@@ -200,6 +207,18 @@ public class CPD extends PO {
 
 	public void setEventLocation(String eventName) {
 		this.eventLocation = eventName;
+	}
+
+	public String getFullnames() {
+		return fullnames;
+	}
+
+	public void setFullnames(String fullnames) {
+		this.fullnames = fullnames;
+	}
+
+	public void setCpdHours(Double cpdHours) {
+		this.cpdHours = cpdHours;
 	}
 
 }
