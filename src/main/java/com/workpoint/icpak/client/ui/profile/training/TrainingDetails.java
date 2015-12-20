@@ -19,6 +19,7 @@ import com.workpoint.icpak.client.model.UploadContext.UPLOADACTION;
 import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.TableHeader;
 import com.workpoint.icpak.client.ui.component.TableView;
+import com.workpoint.icpak.client.ui.component.tabs.TabHeader;
 import com.workpoint.icpak.client.ui.events.EditModelEvent;
 import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.client.util.AppContext;
@@ -42,6 +43,8 @@ public class TrainingDetails extends Composite {
 	List<TableHeader> tblBeforeHeaders = new ArrayList<TableHeader>();
 
 	List<TableHeader> tblAfterHeaders = new ArrayList<TableHeader>();
+
+	List<String> allIssues = new ArrayList<>();
 
 	interface TrainingDetailsUiBinder extends UiBinder<Widget, TrainingDetails> {
 	}
@@ -122,6 +125,9 @@ public class TrainingDetails extends Composite {
 					});
 					panelAttachment.add(link);
 				}
+			} else {
+				allIssues
+						.add("Training attachments are required. Please upload!");
 			}
 			tblTrainingDetails.addRow(
 					new InlineLabel(training.getOrganisationName()),
@@ -135,5 +141,9 @@ public class TrainingDetails extends Composite {
 
 	public void clear() {
 		tblTrainingDetails.clearRows();
+	}
+
+	public List<String> getTrainingDetailIssues() {
+		return allIssues;
 	}
 }

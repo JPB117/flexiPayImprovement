@@ -3,7 +3,6 @@ package com.workpoint.icpak.client.ui.profile.widget;
 import gwtupload.client.IUploader;
 
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
@@ -458,19 +457,44 @@ public class ProfileWidget extends Composite {
 		return aSubmit;
 	}
 
-	public boolean getBasicDetailIssues() {
-		// Window.alert(basicDetail.getBasicDetailIssues().size() + "");
-		if (basicDetail.getBasicDetailIssues().size() != 0) {
+	public boolean validateAllIssues() {
+		ulIssues.clear();
+		boolean isBasicDetailOK = basicDetail.getBasicDetailIssues().size() != 0 ? true
+				: false;
+		boolean isEducationDetailOk = educationDetail
+				.getEducationDetailIssues().size() != 0 ? true : false;
+		boolean isTrainingDetailOk = trainingDetail.getTrainingDetailIssues()
+				.size() != 0 ? true : false;
+		boolean isExaminationDetailOk = accountancyDetail
+				.getExaminationDetailIssues().size() != 0 ? true : false;
+		if (isBasicDetailOK && isEducationDetailOk && isTrainingDetailOk
+				&& isExaminationDetailOk) {
+			panelIssues.addStyleName("hide");
+			return true;
+		} else {
 			for (String issue : basicDetail.getBasicDetailIssues()) {
 				BulletPanel listItem = new BulletPanel();
 				listItem.setText(issue);
 				ulIssues.add(listItem);
 			}
+			for (String issue : educationDetail.getEducationDetailIssues()) {
+				BulletPanel listItem = new BulletPanel();
+				listItem.setText(issue);
+				ulIssues.add(listItem);
+			}
+			for (String issue : trainingDetail.getTrainingDetailIssues()) {
+				BulletPanel listItem = new BulletPanel();
+				listItem.setText(issue);
+				ulIssues.add(listItem);
+			}
+			for (String issue : accountancyDetail.getExaminationDetailIssues()) {
+				BulletPanel listItem = new BulletPanel();
+				listItem.setText(issue);
+				ulIssues.add(listItem);
+			}
+
 			panelIssues.removeStyleName("hide");
 			return false;
-		} else {
-			panelIssues.addStyleName("hide");
-			return true;
 		}
 	}
 

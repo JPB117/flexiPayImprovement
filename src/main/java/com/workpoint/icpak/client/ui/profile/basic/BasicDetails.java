@@ -134,14 +134,9 @@ public class BasicDetails extends Composite {
 				panelPassportCopy.add(new HTML("<br/>"));
 			}
 		} else {
-			// Window.alert("No ID/Passport!");
 			allIssues.add("Your ID/Passport Copy is required.");
 		}
 	}
-
-	// public ApplicationFormHeaderDto getApplicationForm() {
-	// return panelRegistration.getApplicationForm();
-	// }
 
 	public HasClickHandlers getSaveButton() {
 		return aSave;

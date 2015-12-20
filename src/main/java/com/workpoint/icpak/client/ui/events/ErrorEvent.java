@@ -9,6 +9,7 @@ public class ErrorEvent extends GwtEvent<ErrorEvent.ErrorHandler> {
 	public static Type<ErrorHandler> TYPE = new Type<ErrorHandler>();
 	private String message;
 	private Long id;
+	private int errorCode;
 
 	public interface ErrorHandler extends EventHandler {
 		void onError(ErrorEvent event);
@@ -17,6 +18,11 @@ public class ErrorEvent extends GwtEvent<ErrorEvent.ErrorHandler> {
 	public ErrorEvent(String message, Long id) {
 		this.message = message;
 		this.id = id;
+	}
+
+	public ErrorEvent(int errorCode, String message) {
+		this.setErrorCode(errorCode);
+		this.message = message;
 	}
 
 	public String getMessage() {
@@ -43,5 +49,13 @@ public class ErrorEvent extends GwtEvent<ErrorEvent.ErrorHandler> {
 
 	public static void fire(HasHandlers source, String message, Long id) {
 		source.fireEvent(new ErrorEvent(message, id));
+	}
+
+	public int getErrorCode() {
+		return errorCode;
+	}
+
+	public void setErrorCode(int errorCode) {
+		this.errorCode = errorCode;
 	}
 }

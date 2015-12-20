@@ -331,7 +331,6 @@ public class MemberRegistrationPresenter
 				 * Add an error message
 				 */
 				getView().getRegistrationForm().addError(message);
-
 				return false;
 			}
 		}).getById(email);

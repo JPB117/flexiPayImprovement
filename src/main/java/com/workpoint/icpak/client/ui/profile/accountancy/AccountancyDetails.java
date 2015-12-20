@@ -43,6 +43,8 @@ public class AccountancyDetails extends Composite {
 
 	List<TableHeader> tblAfterHeaders = new ArrayList<TableHeader>();
 
+	List<String> allIssues = new ArrayList<>();
+
 	interface TrainingDetailsUiBinder extends
 			UiBinder<Widget, AccountancyDetails> {
 	}
@@ -123,7 +125,11 @@ public class AccountancyDetails extends Composite {
 					});
 					panelAttachment.add(link);
 				}
+			} else {
+				allIssues
+						.add("Accountancy Examination attachments are required!");
 			}
+
 			tblTrainingDetails.addRow(
 					new InlineLabel(accountancy.getExaminingBody()),
 					new InlineLabel(accountancy.getRegistrationNo()),
@@ -135,5 +141,9 @@ public class AccountancyDetails extends Composite {
 
 	public void clear() {
 		tblTrainingDetails.clearRows();
+	}
+
+	public List<String> getExaminationDetailIssues() {
+		return allIssues;
 	}
 }

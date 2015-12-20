@@ -20,6 +20,7 @@ import com.workpoint.icpak.client.model.UploadContext.UPLOADACTION;
 import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.TableHeader;
 import com.workpoint.icpak.client.ui.component.TableView;
+import com.workpoint.icpak.client.ui.component.tabs.TabHeader;
 import com.workpoint.icpak.client.ui.events.EditModelEvent;
 import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.client.util.AppContext;
@@ -47,6 +48,7 @@ public class EducationDetails extends Composite {
 	HTMLPanel panelTable;
 
 	List<TableHeader> tblHeaders = new ArrayList<TableHeader>();
+	List<String> allIssues = new ArrayList<>();
 
 	interface EducationDetailsUiBinder extends
 			UiBinder<Widget, EducationDetails> {
@@ -139,8 +141,8 @@ public class EducationDetails extends Composite {
 					panelAttachment.add(link);
 					panelAttachment.add(new HTML("<br/>"));
 				}
-			}else{
-				
+			} else {
+				allIssues.add("Education attachments are required!");
 			}
 
 			tblEducationalDetail.addRow(
@@ -166,5 +168,9 @@ public class EducationDetails extends Composite {
 
 	public void clear() {
 		tblEducationalDetail.clearRows();
+	}
+
+	public List<String> getEducationDetailIssues() {
+		return allIssues;
 	}
 }

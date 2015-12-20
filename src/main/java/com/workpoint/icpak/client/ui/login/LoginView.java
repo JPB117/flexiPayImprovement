@@ -1,11 +1,13 @@
 package com.workpoint.icpak.client.ui.login;
 
+import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -33,6 +35,16 @@ public class LoginView extends ViewImpl implements LoginPresenter.ILoginView {
 	HTMLPanel loadingbox;
 	@UiField
 	HTMLPanel PanelParent;
+	@UiField
+	HTMLPanel divLoginPanel;
+	@UiField
+	DivElement divErrorMessage;
+	@UiField
+	DivElement divProgress;
+	@UiField
+	Anchor aRefresh;
+	@UiField
+	DivElement divLaunchErrors;
 
 	@Inject
 	public LoginView(final Binder binder) {
@@ -47,6 +59,13 @@ public class LoginView extends ViewImpl implements LoginPresenter.ILoginView {
 		password.getElement().setAttribute("Placeholder", "Password");
 		password.getElement().setId("userid");
 		password.removeStyleName("gwt-TextBox");
+
+		aRefresh.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+
+			}
+		});
 
 	}
 
@@ -130,15 +149,39 @@ public class LoginView extends ViewImpl implements LoginPresenter.ILoginView {
 
 	@Override
 	public void clearViewItems(boolean status) {
-
 		// remove loading
 		loadingbox.removeStyleName("loading");
 		loading.addClassName("hide");
 		issues.addStyleName("hide");
-
 		// remove any Data written
 		username.setText("");
 		password.setText("");
+	}
+
+	@Override
+	public void showInitialsetUp(boolean show) {
+		if (show) {
+			divProgress.removeClassName("hide");
+			divLaunchErrors.addClassName("hide");
+			divLoginPanel.addStyleName("hide");
+		} else {
+			divProgress.addClassName("hide");
+			divLaunchErrors.addClassName("hide");
+			divLoginPanel.removeStyleName("hide");
+		}
+	}
+
+	public void showLoadingError(boolean show, String message) {
+		if (show) {
+			divProgress.addClassName("hide");
+			divLaunchErrors.removeClassName("hide");
+			divLoginPanel.addStyleName("hide");
+			divErrorMessage.setInnerText(message);
+		} else {
+			divProgress.removeClassName("hide");
+			divLaunchErrors.addClassName("hide");
+			divLoginPanel.addStyleName("hide");
+		}
 	}
 
 	@Override

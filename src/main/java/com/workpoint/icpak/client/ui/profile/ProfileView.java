@@ -231,7 +231,7 @@ public class ProfileView extends ViewImpl implements
 
 	@Override
 	public boolean validateBasicDetailIssues() {
-		return divProfileContent.getBasicDetailIssues();
+		return divProfileContent.validateAllIssues();
 	}
 
 	@Override
