@@ -1,6 +1,5 @@
 package com.workpoint.icpak.tests.dao;
 
-import java.math.BigInteger;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -10,6 +9,8 @@ import org.apache.log4j.Logger;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import com.amazonaws.util.json.JSONArray;
+import com.amazonaws.util.json.JSONObject;
 import com.google.inject.Inject;
 import com.icpak.rest.dao.helper.CPDDaoHelper;
 import com.icpak.servlet.upload.GetReport;
@@ -74,13 +75,30 @@ public class TestCPDDao extends AbstractDaoTest {
 		
 	}
 	
-	@Test
+	@Ignore
 	public void searchCount(){
 		List<CPDDto> cpdDtos = helper.searchCPD("kimani", null, null);
 		
 		logger.error("========= CPP search count=== " + helper.cpdSearchCount("kimani"));
 		logger.error("========= List length=== " + cpdDtos.size());
 		
+	}
+	
+	@Test
+	public void testGetAllCPD() throws ParseException{
+		Date today = new Date();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		Date another = formatter.parse("2015-1-1");
+		List<CPDDto> cpdDtos = helper.getAllCPD("ALL", 0, 1000, another.getTime(), today.getTime());
+		JSONArray jArray = new JSONArray();
+		 
+		for(CPDDto dto :cpdDtos){
+			JSONObject jO = new JSONObject(dto);
+			jArray.put(jO);
+		}
+		
+		logger.error("========= List length=== " + cpdDtos.size());
+		logger.error("========= RESULT JARRAY === " + jArray.toString());
 	}
 
 }

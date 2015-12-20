@@ -61,7 +61,7 @@ public class CPDDaoHelper {
 		List<CPDDto> rtn = new ArrayList<>();
 		for (CPD cpd : cpds) {
 			CPDDto dto = cpd.toDTO();
-			dto.setFullNames(userDao.getFullNames(cpd.getMemberRefId()));
+//			dto.setFullNames(userDao.getFullNames(cpd.getMemberRefId()));
 			rtn.add(dto);
 		}
 		

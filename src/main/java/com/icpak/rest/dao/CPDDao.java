@@ -38,8 +38,12 @@ public class CPDDao extends BaseDao {
 
 	public List<CPD> getAllCPDs(String memberRefId, Integer offSet,
 			Integer limit, Date startDate, Date endDate) {
-		logger.info(" +++ GET GET CPD FOR +++++ REFID == " + memberRefId);
-		StringBuffer sql = new StringBuffer("select * from cpd");
+		logger.info(" +++ GET GET CPPD FOR +++++ REFID == " + memberRefId);
+		StringBuffer sql = new StringBuffer(
+				"select c. refId,c.startDate,c.endDate,"
+						+ "c.title,c.organizer,c.category,c.cpdHours,"
+						+ "c.status,c.memberRegistrationNo,concat(u.firstName,' ',u.lastName) from cpd c "
+						+ "inner join member m on (c.memberRefId=m.refId) inner join user u on (u.id=m.userId)");
 
 		boolean isFirstParam = true;
 		Map<String, Object> params = new HashMap<>();
@@ -72,16 +76,55 @@ public class CPDDao extends BaseDao {
 				sql.append(" and ");
 			}
 			params.put("memberRefId", memberRefId);
-			sql.append(" memberRefId=:memberRefId");
+			sql.append(" c.memberRefId=:memberRefId");
 		}
-		sql.append(" and isActive=1");
+		// sql.append(" and isActive=1");
 		sql.append(" order by startDate asc");
 
 		Query query = getEntityManager().createNativeQuery(sql.toString());
 		for (String key : params.keySet()) {
 			query.setParameter(key, params.get(key));
 		}
-		return getResultList(query, offSet, limit);
+		logger.info(" +++ EXECUTING QUERY ...... SQL " + sql);
+
+		List<Object[]> rows = getResultList(query, offSet, limit);
+
+		List<CPD> cpds = new ArrayList<>();
+
+		for (Object[] row : rows) {
+			int i = 0;
+			Object value = null;
+			String refId = (value = row[i++]) == null ? null : value.toString();
+			Date startDt = (value = row[i++]) == null ? null : (Date) value;
+			Date endDt = (value = row[i++]) == null ? null : (Date) value;
+			String title = (value = row[i++]) == null ? null : value.toString();
+			String organizer = (value = row[i++]) == null ? null : value
+					.toString();
+			String categry = (value = row[i++]) == null ? null : value
+					.toString();
+			Double cpdHours = (value = row[i++]) == null ? null
+					: (Double) value;
+			String status = (value = row[i++]) == null ? null : value
+					.toString();
+			String memberRegNo = (value = row[i++]) == null ? null : value
+					.toString();
+			String fullNames = (value = row[i++]) == null ? null : value
+					.toString();
+
+			CPD cpd = new CPD();
+			cpd.setRefId(refId);
+			cpd.setStartDate(startDt);
+			cpd.setEndDate(endDt);
+			cpd.setTitle(title);
+			cpd.setOrganizer(organizer);
+			cpd.setCategory(CPDCategory.valueOf(categry));
+			cpd.setCpdHours(cpdHours);
+			cpd.setStatus(CPDStatus.valueOf(status));
+			cpd.setMemberRegistrationNo(memberRegNo);
+			cpd.setFullnames(fullNames);
+			cpds.add(cpd);
+		}
+		return cpds;
 	}
 
 	public void updateCPD(CPD cpd) {
@@ -295,7 +338,8 @@ public class CPDDao extends BaseDao {
 				+ "u.lastName like :searchTerm or "
 				+ "concat(u.firstName,' ',u.lastName) like :searchTerm or "
 				+ "c.title like :searchTerm or "
-				+ "c.organizer like :searchTerm";
+				+ "c.organizer like :searchTerm or "
+				+ "c.memberRegistrationNo like :searchTerm";
 
 		Query query = getEntityManager().createNativeQuery(sql).setParameter(
 				"searchTerm", "%" + searchTerm + "%");
@@ -383,14 +427,16 @@ public class CPDDao extends BaseDao {
 
 	public BigInteger cpdSearchCount(String searchTerm) {
 
-		String sql = "select count(*) " + "from cpd c "
+		String sql = "select count(*) "
+				+ "from cpd c "
 				+ "inner join member m on (c.memberRefId=m.refId) "
-				+ "inner join user u on (u.id=m.userId) " + "where "
+				+ "inner join user u on (u.id=m.userId) "
+				+ "where "
 				+ "u.firstName like :searchTerm or "
 				+ "u.lastName like :searchTerm or "
 				+ "concat(u.firstName,' ',u.lastName) like :searchTerm or "
 				+ "c.title like :searchTerm or "
-				+ "c.organizer like :searchTerm";
+				+ "c.organizer like :searchTerm or c.memberRegistrationNo like :searchTerm";
 
 		Query query = getEntityManager().createNativeQuery(sql).setParameter(
 				"searchTerm", "%" + searchTerm + "%");
