@@ -41,7 +41,7 @@ public class TestCPDDao extends AbstractDaoTest {
 
 	}
 
-	@Test
+	@Ignore
 	public void testCreateCPD() {
 		CPD cpd = cpdDao.findByCPDId("xU8Bf2olyPVxWQom");
 		CPDDto dto = cpd.toDTO();
@@ -98,7 +98,7 @@ public class TestCPDDao extends AbstractDaoTest {
 
 	}
 
-	@Ignore
+	@Test
 	public void testGetAllCPD() throws ParseException {
 		Date today = new Date();
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");

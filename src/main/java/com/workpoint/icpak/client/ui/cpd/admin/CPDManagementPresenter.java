@@ -298,7 +298,7 @@ public class CPDManagementPresenter
 				PagingPanel panel = getView().getPagingPanel();
 				panel.setTotal(aCount);
 				PagingConfig config = panel.getConfig();
-				loadCPD(config.getOffset(), config.PAGE_LIMIT);
+				loadCPD(config.getOffset(), PagingConfig.PAGE_LIMIT);
 			}
 		}).cpd("ALL").getCount(startDate.getTime(), startDate.getTime());
 

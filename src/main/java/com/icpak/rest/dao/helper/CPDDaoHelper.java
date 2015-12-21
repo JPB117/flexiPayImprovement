@@ -73,12 +73,11 @@ public class CPDDaoHelper {
 		List<CPDDto> rtn = new ArrayList<>();
 		for (CPD cpd : cpds) {
 			CPDDto dto = cpd.toDTO();
-			// dto.setFullNames(userDao.getFullNames(cpd.getMemberRefId()));
+			dto.setAttachments(dao.getAllAttachment(cpd.getId()));
 			rtn.add(dto);
 		}
 
 		logger.info(" ++++ TOTAL CPDS FOUND ++++ " + cpds.size());
-
 		return rtn;
 	}
 

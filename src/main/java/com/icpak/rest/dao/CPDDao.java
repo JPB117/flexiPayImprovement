@@ -17,6 +17,7 @@ import com.icpak.rest.exceptions.ServiceException;
 import com.icpak.rest.models.ErrorCodes;
 import com.icpak.rest.models.cpd.CPD;
 import com.icpak.rest.models.util.Attachment;
+import com.workpoint.icpak.shared.model.AttachmentDto;
 import com.workpoint.icpak.shared.model.CPDCategory;
 import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.shared.model.CPDStatus;
@@ -100,8 +101,8 @@ public class CPDDao extends BaseDao {
 		for (Object[] row : rows) {
 			int i = 0;
 			Object value = null;
-			BigInteger id = (value = row[i++]) == null ? null
-					: (BigInteger) value;
+			Long id = (value = row[i++]) == null ? null : ((BigInteger) value)
+					.longValue();
 			String refId = (value = row[i++]) == null ? null : value.toString();
 			Date startDt = (value = row[i++]) == null ? null : (Date) value;
 			Date endDt = (value = row[i++]) == null ? null : (Date) value;
@@ -121,6 +122,7 @@ public class CPDDao extends BaseDao {
 			String fullNames = (value = row[i++]) == null ? null : value
 					.toString();
 			CPD cpd = new CPD();
+			cpd.setId(id);
 			cpd.setRefId(refId);
 			cpd.setStartDate(startDt);
 			cpd.setEndDate(endDt);
@@ -132,32 +134,33 @@ public class CPDDao extends BaseDao {
 			cpd.setMemberRegistrationNo(memberRegNo);
 			cpd.setMemberRefId(memberRefId);
 			cpd.setFullnames(fullNames);
-			Set<Attachment> attachments = getAllAttachment(id);
-			cpd.setAttachments(attachments);
 			cpds.add(cpd);
-
 		}
 		return cpds;
 	}
 
-	private Set<Attachment> getAllAttachment(BigInteger id) {
+	public List<AttachmentDto> getAllAttachment(Long id) {
 		logger.info(" +++ GET Attachments FOR +++++ cpdId == " + id);
 		StringBuffer sql = new StringBuffer(
 				"select refId,name from attachment where cpdid=:passedId");
 		Query query = getEntityManager().createNativeQuery(sql.toString())
 				.setParameter("passedId", id);
 		List<Object[]> rows = getResultList(query, 0, 1000);
-		Set<Attachment> attachments = new HashSet<>();
+		List<AttachmentDto> attachmentDtos = new ArrayList<>();
 		for (Object[] row : rows) {
 			int i = 0;
 			Object value = null;
 			String refId = (value = row[i++]) == null ? null : value.toString();
-			Attachment attachment = this.findByRefId(refId, Attachment.class);
-			attachments.add(attachment);
+			String name = (value = row[i++]) == null ? null : value.toString();
+
+			AttachmentDto attachment = new AttachmentDto();
+			attachment.setRefId(refId);
+			attachment.setAttachmentName(name);
+			attachmentDtos.add(attachment);
 		}
 		logger.info(" Found this number of attachments == "
-				+ attachments.size());
-		return attachments;
+				+ attachmentDtos.size());
+		return attachmentDtos;
 	}
 
 	public void updateCPD(CPD cpd) {
