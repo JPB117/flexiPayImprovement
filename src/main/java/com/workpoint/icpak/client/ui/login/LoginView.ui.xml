@@ -19,7 +19,7 @@
 			</nav>
 		</div>
 
-		<div class="col s6 col-offset-6" ui:field="divProgress">
+		<div class="col s6 col-offset-6 hide" ui:field="divProgress">
 			<div class="row">
 				<div class="progress">
 					<div class="progress-bar progress-bar-striped active" role="progressbar"
@@ -36,7 +36,7 @@
 			</div>
 		</div>
 
-		<g:HTMLPanel styleName="image-container set-full-height hide"
+		<g:HTMLPanel styleName="image-container set-full-height"
 			ui:field="divLoginPanel">
 			<g:HTMLPanel styleName="login-bg">
 				<g:HTMLPanel styleName="row-fluid login-wrapper">

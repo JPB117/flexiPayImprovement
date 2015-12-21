@@ -6,7 +6,6 @@ import java.util.List;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rest.delegates.client.ResourceDelegate;
@@ -165,13 +164,18 @@ public class CPDMemberPresenter extends
 	protected void showForm(final CPDDto model, boolean isViewMode) {
 		final RecordCPD cpdRecord = new RecordCPD();
 		cpdRecord.setCPD(model);
+
 		cpdRecord.getStartUploadButton().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				if (cpdRecord.getCPD().getRefId() == null) {
 					// not saved
 					if (cpdRecord.isValid()) {
+						CPDDto cpd = cpdRecord.getCPD();
 						String memberId = currentUser.getUser().getRefId();
+						String memberRegistrationNo = currentUser.getUser()
+								.getMemberNo();
+						cpd.setMemberRegistrationNo(memberRegistrationNo);
 						memberDelegate
 								.withCallback(
 										new AbstractAsyncCallback<CPDDto>() {
@@ -180,8 +184,7 @@ public class CPDMemberPresenter extends
 												cpdRecord.setCPD(result);
 												cpdRecord.showUploadPanel(true);
 											}
-										}).cpd(memberId)
-								.create(cpdRecord.getCPD());
+										}).cpd(memberId).create(cpd);
 					}
 				} else {
 					cpdRecord.showUploadPanel(true);
@@ -189,7 +192,6 @@ public class CPDMemberPresenter extends
 			}
 		});
 		cpdRecord.showForm(true);
-
 		cpdRecord.setViewMode(isViewMode);
 
 		AppManager.showPopUp("Record CPD Wizard", cpdRecord.asWidget(),
@@ -217,6 +219,7 @@ public class CPDMemberPresenter extends
 
 	protected void saveRecord(CPDDto dto) {
 		String memberId = currentUser.getUser().getRefId();
+		dto.setMemberRegistrationNo(currentUser.getUser().getMemberNo());
 		if (dto.getRefId() != null) {
 			memberDelegate.withCallback(new AbstractAsyncCallback<CPDDto>() {
 				@Override

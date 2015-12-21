@@ -27,7 +27,8 @@ import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.shared.model.CPDSummaryDto;
 
-public class CPDMemberView extends ViewImpl implements CPDMemberPresenter.ICPDView {
+public class CPDMemberView extends ViewImpl implements
+		CPDMemberPresenter.ICPDView {
 
 	private final Widget widget;
 
@@ -51,7 +52,6 @@ public class CPDMemberView extends ViewImpl implements CPDMemberPresenter.ICPDVi
 	public CPDMemberView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
 		tblView.getDownloadButton().addClickHandler(new ClickHandler() {
-
 			@Override
 			public void onClick(ClickEvent event) {
 				UploadContext ctx = new UploadContext("getreport");

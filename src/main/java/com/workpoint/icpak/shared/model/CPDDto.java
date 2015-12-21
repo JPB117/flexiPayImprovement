@@ -23,8 +23,9 @@ public class CPDDto extends SerializableObj {
 	private String eventLocation;
 	private String memberRegistrationNo;
 	private List<AttachmentDto> attachments;
+	private String managementComment;
 
-	// lms
+	// lms Fields
 	private String lmsMemberId;
 	private String lmsStartDate;
 	private String lmsEnddate;
@@ -189,4 +190,13 @@ public class CPDDto extends SerializableObj {
 	public void setLmsCourseId(Integer lmsCourseId) {
 		this.lmsCourseId = lmsCourseId;
 	}
+
+	public String getManagementComment() {
+		return managementComment;
+	}
+
+	public void setManagementComment(String managementComment) {
+		this.managementComment = managementComment;
+	}
+
 }

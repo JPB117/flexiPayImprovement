@@ -86,7 +86,6 @@ public class CPDTableRow extends RowWidget {
 						new OptionControl() {
 							@Override
 							public void onSelect(String name) {
-								// Window.alert("Called" + name);
 								if (name.equals("Confirm")) {
 									dto.setStatus(CPDStatus.Approved);
 									AppContext.fireEvent(new TableActionEvent(
@@ -129,6 +128,14 @@ public class CPDTableRow extends RowWidget {
 			}
 		});
 
+		aMember.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				AppContext.fireEvent(new TableActionEvent(dto,
+						TableActionType.VIEWCPD));
+			}
+		});
+
 		aDownloadCert.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -152,7 +159,10 @@ public class CPDTableRow extends RowWidget {
 
 		if (AppContext.isCurrentUserAdmin()) {
 			divMember.setVisible(true);
-			aMember.setText(dto.getFullNames());
+			String memberRegistrationNo = (dto.getMemberRegistrationNo() == null ? "N/R"
+					: dto.getMemberRegistrationNo());
+			aMember.setText(dto.getFullNames() + "(" + memberRegistrationNo
+					+ ")");
 		} else {
 			divMember.setVisible(false);
 		}
@@ -212,8 +222,7 @@ public class CPDTableRow extends RowWidget {
 		boolean isDeleteVisible = AppContext.isCurrentUserMember()
 				&& dto.getStatus() == CPDStatus.Unconfirmed
 				&& !(dto.getOrganizer().equals("ICPAK"));
-		boolean isApproveRejectVisible = (dto.getStatus() == CPDStatus.Unconfirmed)
-				&& AppContext.isCurrentUserAdmin();
+		boolean isApproveRejectVisible = false;
 		boolean isDownloadVisible = AppContext.isCurrentUserMember()
 				&& (dto.getOrganizer().equals("ICPAK"))
 				&& dto.getStatus() == CPDStatus.Approved;
@@ -241,7 +250,7 @@ public class CPDTableRow extends RowWidget {
 	}
 
 	public enum TableActionType {
-		DOWNLOADCERT, DELETECPD, VIEWCPD, APPROVECPD, REJECTCPD, RESENDPROFORMA, ERPREFRESH , ENROLTOLMS
+		DOWNLOADCERT, DELETECPD, VIEWCPD, APPROVECPD, REJECTCPD, RESENDPROFORMA, ERPREFRESH, ENROLTOLMS
 	}
 
 }

@@ -34,17 +34,7 @@ public class LoginView extends ViewImpl implements LoginPresenter.ILoginView {
 	@UiField
 	HTMLPanel loadingbox;
 	@UiField
-	HTMLPanel PanelParent;
-	@UiField
 	HTMLPanel divLoginPanel;
-	@UiField
-	DivElement divErrorMessage;
-	@UiField
-	DivElement divProgress;
-	@UiField
-	Anchor aRefresh;
-	@UiField
-	DivElement divLaunchErrors;
 
 	@Inject
 	public LoginView(final Binder binder) {
@@ -59,13 +49,6 @@ public class LoginView extends ViewImpl implements LoginPresenter.ILoginView {
 		password.getElement().setAttribute("Placeholder", "Password");
 		password.getElement().setId("userid");
 		password.removeStyleName("gwt-TextBox");
-
-		aRefresh.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-
-			}
-		});
 
 	}
 
@@ -129,10 +112,6 @@ public class LoginView extends ViewImpl implements LoginPresenter.ILoginView {
 		// issues.clear();
 	}
 
-	public HTMLPanel getPanelParent() {
-		return PanelParent;
-	}
-
 	@Override
 	public void showLoginProgress() {
 		issues.addStyleName("hide");
@@ -156,32 +135,6 @@ public class LoginView extends ViewImpl implements LoginPresenter.ILoginView {
 		// remove any Data written
 		username.setText("");
 		password.setText("");
-	}
-
-	@Override
-	public void showInitialsetUp(boolean show) {
-		if (show) {
-			divProgress.removeClassName("hide");
-			divLaunchErrors.addClassName("hide");
-			divLoginPanel.addStyleName("hide");
-		} else {
-			divProgress.addClassName("hide");
-			divLaunchErrors.addClassName("hide");
-			divLoginPanel.removeStyleName("hide");
-		}
-	}
-
-	public void showLoadingError(boolean show, String message) {
-		if (show) {
-			divProgress.addClassName("hide");
-			divLaunchErrors.removeClassName("hide");
-			divLoginPanel.addStyleName("hide");
-			divErrorMessage.setInnerText(message);
-		} else {
-			divProgress.removeClassName("hide");
-			divLaunchErrors.addClassName("hide");
-			divLoginPanel.addStyleName("hide");
-		}
 	}
 
 	@Override

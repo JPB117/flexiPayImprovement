@@ -147,7 +147,6 @@ public class UserPresenter extends
 		});
 
 		getView().getPagingPanel().setLoader(new PagingLoader() {
-
 			@Override
 			public void onLoad(int offset, int limit) {
 				loadUsers(offset, limit, "");

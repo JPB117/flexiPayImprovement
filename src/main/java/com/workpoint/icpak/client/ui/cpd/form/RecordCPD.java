@@ -17,6 +17,8 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.InlineLabel;
+import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.Widget;
 import com.workpoint.icpak.client.model.UploadContext;
 import com.workpoint.icpak.client.model.UploadContext.UPLOADACTION;
@@ -27,8 +29,10 @@ import com.workpoint.icpak.client.ui.component.IssuesPanel;
 import com.workpoint.icpak.client.ui.component.TextField;
 import com.workpoint.icpak.client.ui.upload.custom.Uploader;
 import com.workpoint.icpak.shared.model.AttachmentDto;
+import com.workpoint.icpak.shared.model.CPDAction;
 import com.workpoint.icpak.shared.model.CPDCategory;
 import com.workpoint.icpak.shared.model.CPDDto;
+import com.workpoint.icpak.shared.model.CPDStatus;
 
 public class RecordCPD extends Composite {
 
@@ -69,6 +73,9 @@ public class RecordCPD extends Composite {
 	DivElement divCpdHours;
 
 	@UiField
+	DivElement divMgtComment;
+
+	@UiField
 	TextField txtCPDHours;
 
 	@UiField
@@ -84,7 +91,13 @@ public class RecordCPD extends Composite {
 	HTMLPanel panelPreviousAttachments;
 
 	@UiField
+	TextArea txtMgmtComment;
+
+	@UiField
 	DropDownList<CPDCategory> lstCategory;
+
+	@UiField
+	DropDownList<CPDAction> lstMgmtAction;
 
 	private CPDDto dto;
 
@@ -94,9 +107,17 @@ public class RecordCPD extends Composite {
 
 		List<CPDCategory> categories = new ArrayList<CPDCategory>();
 		for (CPDCategory cat : CPDCategory.values()) {
-			categories.add(cat);
+			if (cat != CPDCategory.NO_CATEGORY) {
+				categories.add(cat);
+			}
 		}
 		lstCategory.setItems(categories);
+
+		List<CPDAction> cpdActions = new ArrayList<CPDAction>();
+		for (CPDAction cpd : CPDAction.values()) {
+			cpdActions.add(cpd);
+		}
+		lstMgmtAction.setItems(cpdActions);
 		// uploader.setAutoSubmit(false);
 	}
 
@@ -166,6 +187,18 @@ public class RecordCPD extends Composite {
 		dto.setEndDate(dtEndDate.getValueDate());
 		dto.setOrganizer(txtOrganizer.getValue());
 		dto.setTitle(txtTitle.getValue());
+		if (lstMgmtAction.getValue() != null) {
+			CPDStatus status = (lstMgmtAction.getValue().getName() == "APPROVED" ? CPDStatus.Approved
+					: CPDStatus.Rejected);
+			dto.setStatus(status);
+		}
+		if (txtCPDHours.getValue() != null
+				&& !(txtCPDHours.getValue().isEmpty())) {
+			dto.setCpdHours(Double.valueOf(txtCPDHours.getValue()));
+		}
+		if (txtMgmtComment.getValue() != null) {
+			dto.setManagementComment(txtMgmtComment.getValue());
+		}
 		return dto;
 	}
 
@@ -180,7 +213,7 @@ public class RecordCPD extends Composite {
 		txtTitle.setValue(dto.getTitle());
 		txtOrganizer.setValue(dto.getOrganizer());
 		txtCPDHours.setValue(Double.toString(dto.getCpdHours()));
-
+		txtMgmtComment.setValue(dto.getManagementComment());
 		// Window.alert("Attachment Size::" + dto.getAttachments().size());
 
 		if (dto.getAttachments() != null) {
@@ -200,6 +233,9 @@ public class RecordCPD extends Composite {
 				panelPreviousAttachments.add(new HTML("<br/>"));
 				panelPreviousAttachments.add(link);
 			}
+		} else {
+			panelPreviousAttachments.add(new InlineLabel(
+					"No attachments available"));
 		}
 	}
 
@@ -218,6 +254,7 @@ public class RecordCPD extends Composite {
 			aPreviousForm.setVisible(false);
 			panelUpload.setVisible(false);
 			divCpdHours.removeClassName("hide");
+			divMgtComment.removeClassName("hide");
 		} else {
 			lstCategory.getElement().getFirstChildElement()
 					.removeAttribute("disabled");

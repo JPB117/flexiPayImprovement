@@ -233,9 +233,15 @@ public class ProfileWidget extends Composite {
 		if (editMode) {
 			divEditDropDown.setVisible(true);
 			divSavePanel.setVisible(true);
+			divStandingStatus.removeClassName("hide");
+			aDownloadCert.setVisible(true);
+			spnRefreshSection.removeClassName("hide");
 		} else {
 			divEditDropDown.setVisible(false);
 			divSavePanel.setVisible(false);
+			divStandingStatus.addClassName("hide");
+			aDownloadCert.setVisible(false);
+			spnRefreshSection.addClassName("hide");
 		}
 	}
 

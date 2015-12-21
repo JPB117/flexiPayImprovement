@@ -21,6 +21,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Type;
 
 import com.icpak.rest.models.base.PO;
 import com.icpak.rest.models.util.Attachment;
@@ -42,6 +43,14 @@ import com.workpoint.icpak.shared.model.CPDStatus;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class CPD extends PO {
 
+	public Set<Attachment> getAttachments() {
+		return attachments;
+	}
+
+	public void setAttachments(Set<Attachment> attachments) {
+		this.attachments = attachments;
+	}
+
 	/**
 	 * 
 	 */
@@ -60,13 +69,22 @@ public class CPD extends PO {
 	private String memberRefId;
 	@Column(length = 20)
 	private String memberRegistrationNo;
+	@Type(type = "text")
+	private String managementComment;
 	private String eventId;
 	@OneToMany(mappedBy = "cpd", fetch = FetchType.LAZY, cascade = { CascadeType.REMOVE })
 	private Set<Attachment> attachments = new HashSet<>();
 	@Transient
 	private String fullnames;
-
 	private String eventLocation;
+
+	public String getManagementComment() {
+		return managementComment;
+	}
+
+	public void setManagementComment(String managementComment) {
+		this.managementComment = managementComment;
+	}
 
 	public CPD() {
 	}
@@ -99,13 +117,10 @@ public class CPD extends PO {
 		setCpdHours(dto.getCpdHours());
 		setEndDate(dto.getEndDate());
 		setStartDate(dto.getStartDate());
-
 		if (dto.getStatus() != null)
 			setStatus(dto.getStatus());
-
 		setCategory(dto.getCategory());
 		setMemberRefId(dto.getMemberRefId());
-
 		if (dto.getOrganizer() != null) {
 			setOrganizer(dto.getOrganizer());
 		}
@@ -113,6 +128,8 @@ public class CPD extends PO {
 		setEventId(dto.getEventId());
 		setEventLocation(dto.getEventLocation());
 		setMemberRegistrationNo(dto.getMemberRegistrationNo());
+		setCpdHours(dto.getCpdHours());
+		setManagementComment(dto.getManagementComment());
 	}
 
 	public CPDDto toDTO() {
@@ -137,8 +154,8 @@ public class CPD extends PO {
 			attachmentDto.setRefId(attachment.getRefId());
 			attachmentDtos.add(attachmentDto);
 		}
-		
-		if(fullnames != null){
+
+		if (fullnames != null) {
 			dto.setFullNames(fullnames);
 		}
 		dto.setAttachments(attachmentDtos);

@@ -30,13 +30,17 @@ import com.workpoint.icpak.client.ui.component.PagingConfig;
 import com.workpoint.icpak.client.ui.component.PagingLoader;
 import com.workpoint.icpak.client.ui.component.PagingPanel;
 import com.workpoint.icpak.client.ui.events.EditModelEvent;
+import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
 import com.workpoint.icpak.client.ui.events.EditModelEvent.EditModelHandler;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
 import com.workpoint.icpak.client.ui.profile.widget.ProfileWidget;
 import com.workpoint.icpak.client.ui.security.AdminGateKeeper;
 import com.workpoint.icpak.shared.api.ApplicationFormResource;
+import com.workpoint.icpak.shared.model.ApplicationFormAccountancyDto;
 import com.workpoint.icpak.shared.model.ApplicationFormEducationalDto;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
+import com.workpoint.icpak.shared.model.ApplicationFormSpecializationDto;
+import com.workpoint.icpak.shared.model.ApplicationFormTrainingDto;
 import com.workpoint.icpak.shared.model.ApplicationSummaryDto;
 
 public class ApplicationsPresenter
@@ -146,6 +150,39 @@ public class ApplicationsPresenter
 							}
 						}).education(applicationRefId).getAll(0, 100);
 
+		applicationDelegate
+				.withCallback(
+						new AbstractAsyncCallback<List<ApplicationFormSpecializationDto>>() {
+							@Override
+							public void onSuccess(
+									List<ApplicationFormSpecializationDto> result) {
+								// bind Training details
+								profileWidget.bindSpecializations(result);
+								fireEvent(new ProcessingCompletedEvent());
+							}
+						}).specialization(applicationRefId).getAll(0, 50);
+
+		applicationDelegate
+				.withCallback(
+						new AbstractAsyncCallback<List<ApplicationFormTrainingDto>>() {
+							@Override
+							public void onSuccess(
+									List<ApplicationFormTrainingDto> result) {
+								// bind Training details
+								profileWidget.bindTrainingDetails(result);
+							}
+						}).training(applicationRefId).getAll(0, 50);
+
+		applicationDelegate
+				.withCallback(
+						new AbstractAsyncCallback<List<ApplicationFormAccountancyDto>>() {
+							@Override
+							public void onSuccess(
+									List<ApplicationFormAccountancyDto> result) {
+								profileWidget.bindAccountancyDetails(result);
+							}
+						}).accountancy(applicationRefId).getAll(0, 100);
+
 	}
 
 	protected void loadApplications(int offset, int limit) {
@@ -178,11 +215,8 @@ public class ApplicationsPresenter
 		if (event.getModel() instanceof ApplicationFormHeaderDto) {
 			ApplicationFormHeaderDto headerDto = (ApplicationFormHeaderDto) event
 					.getModel();
-
 			loadProfileDetails(headerDto.getRefId());
-
 			profileWidget.setEditMode(false);
-
 			AppManager.showPopUp("View Profile Info", profileWidget, null,
 					"Done");
 		}

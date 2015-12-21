@@ -10,7 +10,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
-import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
@@ -25,6 +24,7 @@ import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.NoGatekeeper;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
+import com.gwtplatform.mvp.client.proxy.ManualRevealCallback;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealRootLayoutContentEvent;
@@ -35,8 +35,6 @@ import com.workpoint.icpak.client.place.ParameterTokens;
 import com.workpoint.icpak.client.security.CurrentUser;
 import com.workpoint.icpak.client.service.AbstractAsyncCallback;
 import com.workpoint.icpak.client.ui.events.ContextLoadedEvent;
-import com.workpoint.icpak.client.ui.events.ErrorEvent;
-import com.workpoint.icpak.client.ui.events.ErrorEvent.ErrorHandler;
 import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.api.ApiParameters;
@@ -48,8 +46,7 @@ import com.workpoint.icpak.shared.model.auth.LogInAction;
 import com.workpoint.icpak.shared.model.auth.LogInResult;
 
 public class LoginPresenter extends
-		Presenter<LoginPresenter.ILoginView, LoginPresenter.ILoginProxy>
-		implements ErrorHandler {
+		Presenter<LoginPresenter.ILoginView, LoginPresenter.ILoginProxy> {
 
 	public interface ILoginView extends View {
 		String getUsername();
@@ -78,11 +75,6 @@ public class LoginPresenter extends
 
 		void setLoginButtonEnabled(boolean b);
 
-		HTMLPanel getPanelParent();
-
-		void showInitialsetUp(boolean show);
-
-		void showLoadingError(boolean show, String errorMessage);
 	}
 
 	@ProxyCodeSplit
@@ -131,13 +123,12 @@ public class LoginPresenter extends
 
 	@Override
 	public boolean useManualReveal() {
-		return false;
+		return true;
 	}
 
 	@Override
 	protected void onBind() {
 		super.onBind();
-		addRegisteredHandler(ErrorEvent.TYPE, this);
 		getView().getLoginBtn().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -171,43 +162,38 @@ public class LoginPresenter extends
 	private void callServerLoginAction(final LogInAction logInAction) {
 		getView().clearErrors();
 		getView().showLoginProgress();
-		getView().showLoadingError(false, "");
-		getView().showInitialsetUp(true);
-		usersDelegate.withCallback(new AbstractAsyncCallback<LogInResult>() {
-			@Override
-			public void onSuccess(LogInResult result) {
-				getView().showInitialsetUp(false);
-				if (result.getCurrentUserDto().isLoggedIn()) {
-					setLoggedInCookie(result.getLoggedInCookie());
-				}
-				if (result.getActionType() == ActionType.VIA_COOKIE) {
-					onLoginCallSucceededForCookie(result.getCurrentUserDto());
-				} else {
-					onLoginCallSucceeded(result.getCurrentUserDto());
-				}
-			}
+		// Window.alert("Before CallBack!");
+		// getView().getPanelParent().getElement().setInnerText("Loading...");
+		usersDelegate.withCallback(
+				ManualRevealCallback.create(this,
+						new AbstractAsyncCallback<LogInResult>() {
+							@Override
+							public void onSuccess(LogInResult result) {
+								// Window.alert("Callback Done!");
+								if (result.getCurrentUserDto().isLoggedIn()) {
+									setLoggedInCookie(result
+											.getLoggedInCookie());
+								}
 
-			@Override
-			public boolean handleCustomError(Response aResponse) {
-				getView().clearLoginProgress();
-				int code = aResponse.getStatusCode();
-				String message = aResponse.getText();
-				LOGGER.log(Level.SEVERE, "server response::" + code + "::"
-						+ message);
-				if (code == 401) {
-					LOGGER.log(Level.SEVERE, "Wrong username or password......");
-					getView().setError("Wrong username or password");
-				} else {
-					LOGGER.log(Level.SEVERE, "Something else than a 404");
-					getView().showLoadingError(
-							true,
-							"There was a problem communicating with the server. Error code("
-									+ code + ")");
-				}
-				return false;
-			}
+								if (result.getActionType() == ActionType.VIA_COOKIE) {
+									onLoginCallSucceededForCookie(result
+											.getCurrentUserDto());
+								} else {
+									onLoginCallSucceeded(result
+											.getCurrentUserDto());
+								}
+							}
 
-		}).execLogin(logInAction);
+							@Override
+							public void onFailure(Throwable caught) {
+								getView().clearLoginProgress();
+								LOGGER.log(Level.SEVERE,
+										"Wrong username or password......");
+								getView()
+										.setError("Wrong username or password");
+								super.onFailure(caught);
+							}
+						})).execLogin(logInAction);
 
 	}
 
@@ -303,21 +289,5 @@ public class LoginPresenter extends
 																		var expires = "expires="+d.toUTCString();
 																		$doc.cookie = cname + "=" + cvalue + "; " + expires+"; path=/";
 																		}-*/;
-
-	@Override
-	public void onError(ErrorEvent event) {
-		int code = event.getErrorCode();
-		String message = event.getMessage();
-		LOGGER.log(Level.SEVERE, "server response::" + code + "::" + message);
-		if (code == 401) {
-			LOGGER.log(Level.SEVERE, "Wrong username or password......");
-			getView().setError("Wrong username or password");
-		} else {
-			LOGGER.log(Level.SEVERE, "Something else than a 404");
-			getView().setError(
-					"There was a problem communicating with the server. Error code("
-							+ code + ")");
-		}
-	}
 
 }
