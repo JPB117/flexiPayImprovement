@@ -8,12 +8,18 @@ package com.workpoint.icpak.client.ui.cpd.admin;
 //import com.workpoint.icpak.shared.responses.GetUserRequestResult;
 //import com.workpoint.icpak.shared.responses.SaveUserResponse;
 //import com.workpoint.icpak.shared.responses.UpdatePasswordResponse;
+import static com.workpoint.icpak.client.ui.util.StringUtils.isNullOrEmpty;
+
 import java.util.Date;
 import java.util.List;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.HasKeyDownHandlers;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -55,7 +61,6 @@ import com.workpoint.icpak.client.ui.util.DateRange;
 import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.shared.api.MemberResource;
 import com.workpoint.icpak.shared.model.CPDDto;
-import com.workpoint.icpak.shared.model.CPDStatus;
 import com.workpoint.icpak.shared.model.CPDSummaryDto;
 
 public class CPDManagementPresenter
@@ -84,6 +89,8 @@ public class CPDManagementPresenter
 
 		HasValueChangeHandlers<String> getSearchValueChangeHander();
 
+		HasKeyDownHandlers getTxtSearch();
+
 		String getSearchValue();
 
 	}
@@ -109,6 +116,17 @@ public class CPDManagementPresenter
 		@Override
 		public void onValueChange(ValueChangeEvent<String> event) {
 			searchCPD(getView().getSearchValue().trim());
+		}
+	};
+
+	KeyDownHandler keyHandler = new KeyDownHandler() {
+		@Override
+		public void onKeyDown(KeyDownEvent event) {
+			if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+				if (!isNullOrEmpty(getView().getSearchValue().trim())) {
+					searchCPD(getView().getSearchValue().trim());
+				}
+			}
 		}
 	};
 
@@ -147,6 +165,8 @@ public class CPDManagementPresenter
 
 		getView().getSearchValueChangeHander().addValueChangeHandler(
 				cpdValueChangeHandler);
+
+		getView().getTxtSearch().addKeyDownHandler(keyHandler);
 	}
 
 	@Inject
@@ -165,6 +185,7 @@ public class CPDManagementPresenter
 	protected void showForm(final CPDDto model, boolean isViewMode) {
 		final RecordCPD cpdRecord = new RecordCPD();
 		cpdRecord.setCPD(model);
+
 		cpdRecord.getStartUploadButton().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -212,6 +233,7 @@ public class CPDManagementPresenter
 	}
 
 	protected void saveRecord(CPDDto dto) {
+		fireEvent(new ProcessingEvent());
 		if (dto.getRefId() != null) {
 			memberDelegate.withCallback(new AbstractAsyncCallback<CPDDto>() {
 				@Override
@@ -244,7 +266,6 @@ public class CPDManagementPresenter
 	private void searchCPD(final String searchTerm) {
 		fireEvent(new ProcessingEvent());
 		memberDelegate.withCallback(new AbstractAsyncCallback<Integer>() {
-
 			@Override
 			public void onSuccess(Integer count) {
 				// TODO Auto-generated method stub
@@ -255,21 +276,24 @@ public class CPDManagementPresenter
 				pagingConfig.setPAGE_LIMIT(100);
 				getCPDSearchResults(pagingConfig.getOffset(),
 						pagingConfig.getLimit(), searchTerm);
-				fireEvent(new ProcessingCompletedEvent());
 			}
 		}).cpd("ALL").getCPDsearchCount(searchTerm);
 	}
 
 	private void getCPDSearchResults(int offset, int limit, String searchTerm) {
 		fireEvent(new ProcessingEvent());
-		memberDelegate.withCallback(new AbstractAsyncCallback<List<CPDDto>>() {
-
-			@Override
-			public void onSuccess(List<CPDDto> result) {
-				fireEvent(new ProcessingCompletedEvent());
-				getView().bindResults(result);
-			}
-		}).cpd("ALL").searchCPd(offset, limit, searchTerm);
+		memberDelegate
+				.withCallback(new AbstractAsyncCallback<List<CPDDto>>() {
+					@Override
+					public void onSuccess(List<CPDDto> result) {
+						getView().bindResults(result);
+						fireEvent(new ProcessingCompletedEvent());
+					}
+				})
+				.cpd("ALL")
+				.searchCPd(offset, limit, searchTerm,
+						getView().getStartDate().getTime(),
+						getView().getEndDate().getTime());
 	}
 
 	@Override

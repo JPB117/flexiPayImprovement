@@ -75,6 +75,6 @@ public class EventsTable extends Composite {
 	}
 
 	public HasValueChangeHandlers<String> getSearchKeyDownHander() {
-		return tblView.getSearchKeyDownHander();
+		return tblView.getSearchValueChangeHander();
 	}
 }

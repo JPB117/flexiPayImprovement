@@ -247,6 +247,7 @@ public class GetReport extends HttpServlet {
 		Long startDate = null;
 		Long endDate = null;
 		String memberRefId = null;
+		String memberNo = null;
 
 		if (req.getParameter("startdate") != null) {
 			startDate = new Long(req.getParameter("startdate"));
@@ -260,11 +261,15 @@ public class GetReport extends HttpServlet {
 			memberRefId = req.getParameter("memberRefId");
 		}
 
+		if (req.getParameter("memberNo") != null) {
+			memberNo = req.getParameter("memberNo");
+		}
+
 		Date finalStartDate = new Date(startDate);
 		Date finalEndDate = new Date(endDate);
 
-		byte[] data = processMemberCPDStatementRequest(memberRefId,
-				finalStartDate, finalEndDate);
+		byte[] data = processMemberCPDStatementRequest(memberNo, memberRefId,
+				finalStartDate, finalEndDate, resp);
 
 		processAttachmentRequest(resp, data, "memberCPDStatement.pdf");
 	}
@@ -658,23 +663,33 @@ public class GetReport extends HttpServlet {
 	// generate member cpd statement pdf
 	SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
-	public byte[] processMemberCPDStatementRequest(String memberRefId,
-			Date startDate, Date endDate) throws FileNotFoundException,
+	public byte[] processMemberCPDStatementRequest(String memberNo,
+			String memberRefId, Date startDate, Date endDate,
+			HttpServletResponse resp) throws FileNotFoundException,
 			IOException, SAXException, ParserConfigurationException,
 			FactoryConfigurationError, DocumentException {
+		Member member = null;
+		if (memberRefId != null) {
+			member = memberDao.findByRefId(memberRefId, Member.class);
+		} else {
+			member = memberDao.getByMemberNo(memberNo);
+		}
 
-		Member member = memberDao.findByRefId(memberRefId, Member.class);
+		if (member == null) {
+			writeError(resp,
+					"No member found, check if you passed correct memberNo or memberRefId..");
+			return null;
+		}
+
 		User user = member.getUser();
-
 		UserDto userDto = user.toDto();
 
 		// List<CPDDto> cpds = cpdHelper.getAllMemberCpd(memberRefId, startDate,
 		// endDate, 0, 1000);
-		List<CPD> cpds = CPDDao.getAllCPDS(memberRefId,
+		List<CPD> cpds = CPDDao.getAllCPDS(member.getRefId(),
 				startDate == null ? null : startDate, endDate == null ? null
 						: endDate, 0, 1000);
 		List<CPD> sortedCpd = new ArrayList<>();
-
 		for (CPD cpd : cpds) {
 			if (cpd.getStatus() != null) {
 				if (!cpd.getStatus().equals(CPDStatus.Unconfirmed)) {

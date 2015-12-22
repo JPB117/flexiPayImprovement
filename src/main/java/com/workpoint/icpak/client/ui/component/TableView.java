@@ -9,6 +9,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.HasKeyDownHandlers;
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -407,7 +408,11 @@ public class TableView extends Composite {
 		return txtSearch.getValue();
 	}
 
-	public HasValueChangeHandlers<String> getSearchKeyDownHander() {
+	public HasValueChangeHandlers<String> getSearchValueChangeHander() {
+		return txtSearch;
+	}
+
+	public HasKeyDownHandlers getSearchKeyDownHandler() {
 		return txtSearch;
 	}
 

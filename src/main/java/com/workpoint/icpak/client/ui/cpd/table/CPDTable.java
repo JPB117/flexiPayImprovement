@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.HasKeyDownHandlers;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -20,7 +21,8 @@ import com.workpoint.icpak.client.util.AppContext;
 
 public class CPDTable extends Composite {
 
-	private static TransactionTableUiBinder uiBinder = GWT.create(TransactionTableUiBinder.class);
+	private static TransactionTableUiBinder uiBinder = GWT
+			.create(TransactionTableUiBinder.class);
 
 	interface TransactionTableUiBinder extends UiBinder<Widget, CPDTable> {
 	}
@@ -99,12 +101,16 @@ public class CPDTable extends Composite {
 	public HasClickHandlers getFilterButton() {
 		return tblView.getFilterButton();
 	}
-	
+
 	public HasValueChangeHandlers<String> getSearchField() {
-		return tblView.getSearchKeyDownHander();
+		return tblView.getSearchValueChangeHander();
 	}
 
 	public String getSearchValue() {
 		return tblView.getSearchValue();
+	}
+
+	public HasKeyDownHandlers getSearchKeyDownHandler() {
+		return tblView.getSearchKeyDownHandler();
 	}
 }

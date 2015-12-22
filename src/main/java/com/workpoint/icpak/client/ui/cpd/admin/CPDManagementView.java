@@ -6,6 +6,7 @@ import java.util.List;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.HasKeyDownHandlers;
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -26,7 +27,6 @@ import com.workpoint.icpak.client.ui.cpd.table.CPDTable;
 import com.workpoint.icpak.client.ui.cpd.table.row.CPDTableRow;
 import com.workpoint.icpak.client.ui.util.DateRange;
 import com.workpoint.icpak.client.ui.util.DateUtils;
-import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.shared.model.CPDSummaryDto;
 import com.workpoint.icpak.shared.model.Listable;
@@ -69,22 +69,25 @@ public class CPDManagementView extends ViewImpl implements
 		divTabs.setPosition(TabPosition.PILLS);
 		aCreate.setVisible(false);
 
-		/*tblView.getDownloadButton().addClickHandler(new ClickHandler() {
+		tblView.getDownloadButton().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				UploadContext ctx = new UploadContext("getreport");
-				if (tblView.getStartDate() != null)
-					ctx.setContext("startdate", tblView.getStartDate()
-							.getTime() + "");
-				if (tblView.getEndDate() != null)
-					ctx.setContext("enddate", tblView.getEndDate().getTime()
-							+ "");
-				ctx.setContext("memberRefId", AppContext.getCurrentUser()
-						.getUser().getMemberRefId());
-				ctx.setAction(UPLOADACTION.GETCPDSTATEMENT);
-				Window.open(ctx.toUrl(), "", null);
+				if (!tblView.getSearchValue().isEmpty()) {
+					UploadContext ctx = new UploadContext("getreport");
+					if (tblView.getStartDate() != null)
+						ctx.setContext("startdate", tblView.getStartDate()
+								.getTime() + "");
+					if (tblView.getEndDate() != null)
+						ctx.setContext("enddate", tblView.getEndDate()
+								.getTime() + "");
+					ctx.setContext("memberNo", tblView.getSearchValue());
+					ctx.setAction(UPLOADACTION.GETCPDSTATEMENT);
+					Window.open(ctx.toUrl(), "", null);
+				} else {
+					Window.alert("Please enter a valid memberNo in the search box...");
+				}
 			}
-		});*/
+		});
 
 	}
 
@@ -170,6 +173,11 @@ public class CPDManagementView extends ViewImpl implements
 	@Override
 	public String getSearchValue() {
 		return tblView.getSearchValue();
+	}
+
+	@Override
+	public HasKeyDownHandlers getTxtSearch() {
+		return tblView.getSearchKeyDownHandler();
 	}
 
 }

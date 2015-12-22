@@ -101,7 +101,7 @@ public class FrontMemberTable extends Composite {
 	}
 
 	public HasValueChangeHandlers<String> getSearchKeyDownHander() {
-		return tblView.getSearchKeyDownHander();
+		return tblView.getSearchValueChangeHander();
 	}
 
 	public DropDownList<Towns> getTownDropDown() {

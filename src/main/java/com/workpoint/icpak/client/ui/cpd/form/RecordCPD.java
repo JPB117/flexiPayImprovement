@@ -122,7 +122,7 @@ public class RecordCPD extends Composite {
 	}
 
 	public void showUploadPanel(boolean showForm) {
-		aStartUpload.setVisible(showForm);
+		aStartUpload.setVisible(!showForm);
 		if (showForm) {
 			panelUploader.removeStyleName("hide");
 			setUploadContext();

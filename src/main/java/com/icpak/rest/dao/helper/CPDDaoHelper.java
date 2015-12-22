@@ -382,8 +382,9 @@ public class CPDDaoHelper {
 	}
 
 	public List<CPDDto> searchCPD(String searchTerm, Integer offset,
-			Integer limit) {
-		return dao.searchCPD(searchTerm, offset, limit);
+			Integer limit, Long startDate, Long endDate) {
+		return dao.searchCPD(searchTerm, offset, limit, new Date(startDate),
+				new Date(endDate));
 	}
 
 	public Integer cpdSearchCount(String searchTerm) {

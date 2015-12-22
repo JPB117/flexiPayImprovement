@@ -88,17 +88,19 @@ public class TestCPDDao extends AbstractDaoTest {
 
 	}
 
-	@Ignore
-	public void searchCount() {
-		List<CPDDto> cpdDtos = helper.searchCPD("kimani", null, null);
-
+	@Test
+	public void testSearch() {
+		Long startDate = 1420059600000L;
+		Long endDate = 1450645200000L;
+		List<CPDDto> cpdDtos = helper.searchCPD("2020", 0, 10, startDate,
+				endDate);
 		logger.error("========= CPP search count=== "
-				+ helper.cpdSearchCount("kimani"));
+				+ helper.cpdSearchCount("2020"));
 		logger.error("========= List length=== " + cpdDtos.size());
 
 	}
 
-	@Test
+	@Ignore
 	public void testGetAllCPD() throws ParseException {
 		Date today = new Date();
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");

@@ -21,13 +21,16 @@ public interface CPDResource extends BaseResource {
 
 	@GET
 	@Consumes(MediaType.APPLICATION_JSON)
-	public List<CPDDto> getAll(@QueryParam("offset") Integer offset, @QueryParam("limit") Integer limit,
-			@QueryParam("startDate") Long startDate, @QueryParam("endDate") Long endDate);
+	public List<CPDDto> getAll(@QueryParam("offset") Integer offset,
+			@QueryParam("limit") Integer limit,
+			@QueryParam("startDate") Long startDate,
+			@QueryParam("endDate") Long endDate);
 
 	@GET
 	@Path("/summary")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public CPDSummaryDto getCPDSummary(@QueryParam("startDate") Long startDate, @QueryParam("endDate") Long endDate);
+	public CPDSummaryDto getCPDSummary(@QueryParam("startDate") Long startDate,
+			@QueryParam("endDate") Long endDate);
 
 	@GET
 	@Path("/{cpdId}")
@@ -48,16 +51,20 @@ public interface CPDResource extends BaseResource {
 
 	@GET
 	@Path("/filteredcount")
-	public Integer getCount(@QueryParam("startDate") Long startDate, @QueryParam("endDate") Long endDate);
+	public Integer getCount(@QueryParam("startDate") Long startDate,
+			@QueryParam("endDate") Long endDate);
 
 	@GET
 	@Path("/countCPDSearch")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Integer getCPDsearchCount(@QueryParam("searchTerm") String searchTerm);
-	
+
 	@GET
 	@Path("/SearchCPD")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public List<CPDDto> searchCPd(@QueryParam("offset") int offset, @QueryParam("limit") int limit,
-			@QueryParam("searchTerm") String searchTerm);
+	public List<CPDDto> searchCPd(@QueryParam("offset") int offset,
+			@QueryParam("limit") int limit,
+			@QueryParam("searchTerm") String searchTerm,
+			@QueryParam("startDate") Long startDate,
+			@QueryParam("endDate") Long endDate);
 }

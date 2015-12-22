@@ -1,4 +1,3 @@
-
 package com.icpak.rest;
 
 import java.util.List;
@@ -50,9 +49,10 @@ public class CPDResourceImpl implements CPDResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Get a list of all cpds", response = CPDDto.class, consumes = MediaType.APPLICATION_JSON)
-	public List<CPDDto> getAll(@QueryParam("offset") Integer offset, @QueryParam("limit") Integer limit,
-			@QueryParam("startDate") Long startDate, @QueryParam("endDate") Long endDate) {
-
+	public List<CPDDto> getAll(@QueryParam("offset") Integer offset,
+			@QueryParam("limit") Integer limit,
+			@QueryParam("startDate") Long startDate,
+			@QueryParam("endDate") Long endDate) {
 		return helper.getAllCPD(memberId, offset, limit, startDate, endDate);
 	}
 
@@ -60,13 +60,15 @@ public class CPDResourceImpl implements CPDResource {
 	@Path("/summary")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public CPDSummaryDto getCPDSummary(@QueryParam("startDate") Long startDate, @QueryParam("endDate") Long endDate) {
+	public CPDSummaryDto getCPDSummary(@QueryParam("startDate") Long startDate,
+			@QueryParam("endDate") Long endDate) {
 		return helper.getCPDSummary(memberId, startDate, endDate);
 	}
 
 	@GET
 	@Path("/filteredcount")
-	public Integer getCount(@QueryParam("startDate") Long startDate, @QueryParam("endDate") Long endDate) {
+	public Integer getCount(@QueryParam("startDate") Long startDate,
+			@QueryParam("endDate") Long endDate) {
 		return helper.getCount(memberId, startDate, endDate);
 	}
 
@@ -76,7 +78,6 @@ public class CPDResourceImpl implements CPDResource {
 	@ApiOperation(value = "Get a cpd by cpdId", response = CPDDto.class, consumes = MediaType.APPLICATION_JSON)
 	public CPDDto getById(
 			@ApiParam(value = "CPD Id of the cpd to fetch", required = true) @PathParam("cpdId") String cpdId) {
-
 		CPDDto cpd = helper.getCPDFromMemberRefId(memberId, cpdId);
 		return cpd;
 	}
@@ -130,9 +131,12 @@ public class CPDResourceImpl implements CPDResource {
 	@Path("/SearchCPD")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<CPDDto> searchCPd(@QueryParam("offset") int offset, @QueryParam("limit") int limit,
-			@QueryParam("searchTerm") String searchTerm) {
-		return helper.searchCPD(searchTerm, offset, limit);
+	public List<CPDDto> searchCPd(@QueryParam("offset") int offset,
+			@QueryParam("limit") int limit,
+			@QueryParam("searchTerm") String searchTerm,
+			@QueryParam("startDate") Long startDate,
+			@QueryParam("endDate") Long endDate) {
+		return helper.searchCPD(searchTerm, offset, limit, startDate, endDate);
 	}
 
 	@GET

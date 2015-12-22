@@ -90,7 +90,7 @@ public class DirectoryTable extends Composite {
 	}
 
 	public HasValueChangeHandlers<String> getSearchKeyDownHander() {
-		return tblView.getSearchKeyDownHander();
+		return tblView.getSearchValueChangeHander();
 	}
 
 	public void setTowns(String[] towns) {

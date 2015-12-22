@@ -349,7 +349,7 @@ public class CPDDao extends BaseDao {
 			sql.append(" memberRefId=:memberRefId");
 		}
 
-		sql.append(" order by startDate desc");
+		sql.append(" order by created desc");
 		logger.debug("jpql= " + sql);
 		Query query = getEntityManager().createQuery(sql.toString());
 		for (String key : params.keySet()) {
@@ -361,28 +361,56 @@ public class CPDDao extends BaseDao {
 	}
 
 	public List<CPDDto> searchCPD(String searchTerm, Integer offset,
-			Integer limit) {
+			Integer limit, Date passedStartDate, Date passedEndDate) {
+		StringBuffer sql = new StringBuffer(
+				"select c.refId,c.startdate,c.enddate, concat(u.firstName,' ',u.lastName),"
+						+ "c.title,c.organizer,c.category,c.cpdhours,c.status,"
+						+ "c.memberRegistrationNo,c.memberRefId "
+						+ "from cpd c "
+						+ "inner join member m on (c.memberRefId=m.refId) "
+						+ "inner join user u on (u.id=m.userId) "
+						+ "where "
+						+ "u.firstName like :searchTerm or "
+						+ "u.lastName like :searchTerm or "
+						+ "concat(u.firstName,' ',u.lastName) like :searchTerm or "
+						+ "c.title like :searchTerm or "
+						+ "c.organizer like :searchTerm or "
+						+ "c.memberRegistrationNo=:memberNoSearch ");
 
-		String sql = "select c.refId,c.startdate,c.enddate, concat(u.firstName,' ',u.lastName),"
-				+ "c.title,c.organizer,c.category,c.cpdhours,c.status "
-				+ "from cpd c "
-				+ "inner join member m on (c.memberRefId=m.refId) "
-				+ "inner join user u on (u.id=m.userId) "
-				+ "where "
-				+ "u.firstName like :searchTerm or "
-				+ "u.lastName like :searchTerm or "
-				+ "concat(u.firstName,' ',u.lastName) like :searchTerm or "
-				+ "c.title like :searchTerm or "
-				+ "c.organizer like :searchTerm or "
-				+ "c.memberRegistrationNo like :searchTerm";
+		boolean isFirstParam = false;
+		Map<String, Object> params = new HashMap<>();
+		if (passedStartDate != null) {
+			if (isFirstParam) {
+				isFirstParam = false;
+				sql.append(" where");
+			} else {
+				sql.append(" and");
+			}
+			params.put("startDate", passedStartDate);
+			sql.append(" startDate>=:startDate");
+		}
 
-		Query query = getEntityManager().createNativeQuery(sql).setParameter(
-				"searchTerm", "%" + searchTerm + "%");
+		if (passedEndDate != null) {
+			if (isFirstParam) {
+				isFirstParam = false;
+				sql.append(" where");
+			} else {
+				sql.append(" and");
+			}
+			params.put("endDate", passedEndDate);
+			sql.append(" endDate<=:endDate");
+		}
+
+		Query query = getEntityManager().createNativeQuery(sql.toString())
+				.setParameter("searchTerm", "%" + searchTerm + "%")
+				.setParameter("memberNoSearch", searchTerm);
+		for (String key : params.keySet()) {
+			query.setParameter(key, params.get(key));
+		}
 
 		List<Object[]> rows = getResultList(query, offset, limit);
 
 		List<CPDDto> cpdDtos = new ArrayList<>();
-
 		for (Object[] row : rows) {
 			int i = 0;
 			Object value = null;
@@ -401,6 +429,10 @@ public class CPDDao extends BaseDao {
 					: (Double) value;
 			String status = (value = row[i++]) == null ? null : value
 					.toString().trim();
+			String memberRegistrationNo = (value = row[i++]) == null ? null
+					: value.toString().trim();
+			String memberRefId = (value = row[i++]) == null ? null : value
+					.toString().trim();
 
 			CPDDto cpdDto = new CPDDto();
 			cpdDto.setRefId(refId);
@@ -409,6 +441,8 @@ public class CPDDao extends BaseDao {
 			cpdDto.setFullNames(fullName);
 			cpdDto.setTitle(title);
 			cpdDto.setOrganizer(organizer);
+			cpdDto.setMemberRefId(memberRefId);
+			cpdDto.setMemberRegistrationNo(memberRegistrationNo);
 
 			if (category != null) {
 				if (category.equals("CATEGORY_A")) {
@@ -436,19 +470,19 @@ public class CPDDao extends BaseDao {
 			cpdDto.setCpdHours(cpdHours);
 
 			if (status != null) {
-				if (category.equals("Unconfirmed")) {
+				if (status.equals("Unconfirmed")) {
 					cpdDto.setStatus(CPDStatus.Unconfirmed);
 				}
 
-				if (category.equals("Approved")) {
+				if (status.equals("Approved")) {
 					cpdDto.setStatus(CPDStatus.Approved);
 				}
 
-				if (category.equals("Rejected")) {
+				if (status.equals("Rejected")) {
 					cpdDto.setStatus(CPDStatus.Rejected);
 				}
 
-				if (category.equals("Cancelled")) {
+				if (status.equals("Cancelled")) {
 					cpdDto.setStatus(CPDStatus.Cancelled);
 				}
 			}
