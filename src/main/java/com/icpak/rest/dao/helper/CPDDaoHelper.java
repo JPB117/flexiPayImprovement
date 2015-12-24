@@ -103,7 +103,6 @@ public class CPDDaoHelper {
 	}
 
 	public CPDDto create(String memberRefId, CPDDto cpdDto) {
-
 		CPD cpd = new CPD();
 		cpd.copyFrom(cpdDto);
 		cpd.setMemberRefId(memberRefId);

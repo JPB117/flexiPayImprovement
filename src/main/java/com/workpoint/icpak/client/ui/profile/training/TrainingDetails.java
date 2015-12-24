@@ -108,6 +108,7 @@ public class TrainingDetails extends Composite {
 			panel.add(delete);
 
 			HTMLPanel panelAttachment = new HTMLPanel("");
+			panelAttachment.clear();
 			if (training.getAttachments() != null) {
 				for (final AttachmentDto attachment : training.getAttachments()) {
 					final UploadContext ctx = new UploadContext("getreport");

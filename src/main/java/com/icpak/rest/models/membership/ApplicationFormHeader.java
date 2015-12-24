@@ -278,7 +278,6 @@ public class ApplicationFormHeader extends PO {
 
 	@OneToMany(mappedBy = "application", fetch = FetchType.LAZY, cascade = { CascadeType.REMOVE })
 	private Set<Attachment> attachments = new HashSet<>();
-
 	private Date PracticingCertDate;
 	private String AlternatePhoneNo;
 	private String MobileNo;
@@ -320,6 +319,8 @@ public class ApplicationFormHeader extends PO {
 	private String invoiceRef;
 	private String userRefId;
 	private String residence;
+	private String previousRefId;
+	private String nextRefId;
 
 	public ApplicationFormHeader() {
 	}
@@ -438,6 +439,22 @@ public class ApplicationFormHeader extends PO {
 
 	public String getTelephone1() {
 		return telephone1;
+	}
+
+	public String getPreviousRefId() {
+		return previousRefId;
+	}
+
+	public void setPreviousRefId(String previousRefId) {
+		this.previousRefId = previousRefId;
+	}
+
+	public String getNextRefId() {
+		return nextRefId;
+	}
+
+	public void setNextRefId(String nextRefId) {
+		this.nextRefId = nextRefId;
 	}
 
 	public void setTelephone1(String telephone1) {

@@ -5,11 +5,17 @@ import static com.workpoint.icpak.client.ui.util.NumberUtils.NUMBERFORMAT;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Widget;
+import com.workpoint.icpak.client.model.UploadContext;
+import com.workpoint.icpak.client.model.UploadContext.UPLOADACTION;
+import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.RowWidget;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 
@@ -42,12 +48,14 @@ public class InvoiceTableRow extends RowWidget {
 	HTMLPanel divPaymentMode;
 	@UiField
 	SpanElement spnStatus;
+	@UiField
+	ActionLink aProforma;
 
 	public InvoiceTableRow() {
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 
-	public InvoiceTableRow(InvoiceDto invoice) {
+	public InvoiceTableRow(final InvoiceDto invoice) {
 		this();
 		if (invoice.getContactName() != null) {
 			divContact.add(new InlineLabel(invoice.getContactName()));
@@ -60,7 +68,9 @@ public class InvoiceTableRow extends RowWidget {
 			divDueDate.add(new InlineLabel(DATEFORMAT.format(invoice
 					.getDueDate())));
 		}
-		divDocNum.add(new InlineLabel(invoice.getDocumentNo()));
+		// divDocNum.add(new InlineLabel(invoice.getDocumentNo()));
+		aProforma.setText(invoice.getDocumentNo());
+
 		divDescription.add(new InlineLabel(invoice.getDescription()));
 
 		Double amount = (invoice.getInvoiceAmount() == null ? 0 : invoice
@@ -90,5 +100,18 @@ public class InvoiceTableRow extends RowWidget {
 		}
 
 		divBalance.add(new InlineLabel(NUMBERFORMAT.format(balance) + ""));
+
+		aProforma.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				// Window.alert("Proforma" + delegate.getBookingRefId());
+				UploadContext ctx = new UploadContext("getreport");
+				ctx.setContext("invoiceRefId", invoice.getRefId());
+				ctx.setAction(UPLOADACTION.GETPROFORMA);
+
+				// ctx.setContext(key, value)
+				Window.open(ctx.toUrl(), "Get Proforma", null);
+			}
+		});
 	}
 }

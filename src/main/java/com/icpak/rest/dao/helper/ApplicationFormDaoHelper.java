@@ -251,16 +251,25 @@ public class ApplicationFormDaoHelper {
 	}
 
 	public List<ApplicationFormHeaderDto> getAllApplications(Integer offset,
-			Integer limit, String uri) {
+			Integer limit, String uri, String searchTerm) {
 
 		List<ApplicationFormHeader> applications = applicationDao
-				.getAllApplications(offset, limit);
+				.getAllApplications(offset, limit, searchTerm);
 		List<ApplicationFormHeaderDto> rtn = new ArrayList<>();
 
+		int counter = 0;
 		for (ApplicationFormHeader application : applications) {
 			ApplicationFormHeaderDto dto = application.toDto();
 			dto.setUri(uri + "/" + application.getRefId());
+			if (counter < applications.size() - 1) {
+				dto.setNextRefId(applications.get(counter + 1).getRefId());
+			}
+			if (counter > 0) {
+				dto.setPreviousRefId(applications.get(counter - 1).getRefId());
+			}
+			counter++;
 			rtn.add(dto);
+//			applicationDao.updateApplication();
 		}
 		return rtn;
 	}
@@ -279,8 +288,8 @@ public class ApplicationFormDaoHelper {
 		return rtn;
 	}
 
-	public Integer getApplicationCount() {
-		return applicationDao.getApplicationCount();
+	public Integer getApplicationCount(String searchTerm) {
+		return applicationDao.getApplicationCount(searchTerm);
 	}
 
 	public ApplicationFormHeader getApplicationById(String applicationId) {
@@ -345,6 +354,10 @@ public class ApplicationFormDaoHelper {
 
 	public void forwardToLMS(Member member) {
 
+	}
+
+	public Integer getApplicationCount() {
+		return getApplicationCount("");
 	}
 
 }

@@ -15,6 +15,8 @@ import javax.ws.rs.core.MediaType;
 
 import org.apache.log4j.Logger;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.icpak.rest.dao.CPDDao;
@@ -88,6 +90,12 @@ public class CPDResourceImpl implements CPDResource {
 	@ApiOperation(value = "Create a new cpd", response = CPDDto.class, consumes = MediaType.APPLICATION_JSON)
 	public CPDDto create(CPDDto cpd) {
 		logger.error("++++++ API CALL ++++++++");
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			logger.error(mapper.writeValueAsString(cpd));
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
 
 		if (cpd.getLmsMemberId() == null) {
 			return helper.create(memberId, cpd);

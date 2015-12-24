@@ -114,9 +114,9 @@ public class BasicDetails extends Composite {
 			elDob.setInnerText(DateUtils.DATEFORMAT.format(result.getDob()));
 		}
 
+		panelPassportCopy.clear();
 		if (result.getAttachments() != null
 				&& !result.getAttachments().isEmpty()) {
-			panelPassportCopy.clear();
 			for (final AttachmentDto attachment : result.getAttachments()) {
 				final UploadContext ctx = new UploadContext("getreport");
 				ctx.setAction(UPLOADACTION.GETATTACHMENT);
@@ -134,6 +134,7 @@ public class BasicDetails extends Composite {
 				panelPassportCopy.add(new HTML("<br/>"));
 			}
 		} else {
+
 			allIssues.add("Your ID/Passport Copy is required.");
 		}
 	}

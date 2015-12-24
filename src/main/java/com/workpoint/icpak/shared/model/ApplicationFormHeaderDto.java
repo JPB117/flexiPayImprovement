@@ -111,6 +111,8 @@ public class ApplicationFormHeaderDto extends SerializableObj {
 	private String timezone;
 	private List<AttachmentDto> attachments;
 	private ApplicationStatus applicationStatus;
+	private String nextRefId;
+	private String previousRefId;
 
 	public ApplicationStatus getApplicationStatus() {
 		return applicationStatus;
@@ -844,6 +846,22 @@ public class ApplicationFormHeaderDto extends SerializableObj {
 
 	public void setAttachments(List<AttachmentDto> attachments) {
 		this.attachments = attachments;
+	}
+
+	public String getNextRefId() {
+		return nextRefId;
+	}
+
+	public void setNextRefId(String nextRefId) {
+		this.nextRefId = nextRefId;
+	}
+
+	public String getPreviousRefId() {
+		return previousRefId;
+	}
+
+	public void setPreviousRefId(String previousRefId) {
+		this.previousRefId = previousRefId;
 	}
 
 }

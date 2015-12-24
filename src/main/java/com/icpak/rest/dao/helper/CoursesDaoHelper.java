@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import com.icpak.rest.IDUtils;
@@ -29,11 +31,13 @@ public class CoursesDaoHelper {
 	@Inject
 	CPDDaoHelper cpdDaoHelper;
 
-	public List<CourseDto> getAllEvents(String uri, Integer offset, Integer limit) {
+	public List<CourseDto> getAllEvents(String uri, Integer offset,
+			Integer limit) {
 		return getAllEvents(uri, offset, limit, null);
 	}
 
-	public List<CourseDto> getAllEvents(String uri, Integer offset, Integer limit, String eventType) {
+	public List<CourseDto> getAllEvents(String uri, Integer offset,
+			Integer limit, String eventType) {
 		logger.info(" +++ Fetching courses ++++ ");
 
 		EventType type = null;
@@ -67,15 +71,19 @@ public class CoursesDaoHelper {
 
 	public CourseDto createEvent(CourseDto dto) {
 		dto.setType(EventType.COURSE);
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			logger.error(mapper.writeValueAsString(dto));
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
 		assert dto.getRefId() == null;
-
 		Event event = new Event();
 		event.setRefId(IDUtils.generateId());
 		event.copyFromCourse(dto);
 		dao.save(event);
 		dto.setRefId(event.getRefId());
 		assert event.getId() != null;
-
 		return event.toCourseDto();
 	}
 
@@ -86,9 +94,9 @@ public class CoursesDaoHelper {
 		Event poEvent = dao.getByEventId(eventId);
 		poEvent.copyFromCourse(dto);
 		dao.save(poEvent);
-		
+
 		Event updateEvent = dao.getByEventId(eventId);
-		
+
 		return updateEvent.toCourseDto();
 	}
 
