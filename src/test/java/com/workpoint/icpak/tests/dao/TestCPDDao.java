@@ -88,7 +88,7 @@ public class TestCPDDao extends AbstractDaoTest {
 
 	}
 
-	@Test
+	@Ignore
 	public void testSearch() {
 		Long startDate = 1420059600000L;
 		Long endDate = 1450645200000L;
@@ -100,22 +100,24 @@ public class TestCPDDao extends AbstractDaoTest {
 
 	}
 
-	@Ignore
+	@Test
 	public void testGetAllCPD() throws ParseException {
 		Date today = new Date();
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		Date another = formatter.parse("2015-1-1");
-		List<CPDDto> cpdDtos = helper.getAllCPD("ALL", 0, 1000,
-				another.getTime(), today.getTime());
-		JSONArray jArray = new JSONArray();
 
-		for (CPDDto dto : cpdDtos) {
-			JSONObject jO = new JSONObject(dto);
-			jArray.put(jO);
+		for (int i = 0; i <= 10; i++) {
+			List<CPDDto> cpdDtos = helper.getAllCPD("ALL", 0, 100,
+					another.getTime(), today.getTime());
+			JSONArray jArray = new JSONArray();
+
+			for (CPDDto dto : cpdDtos) {
+				JSONObject jO = new JSONObject(dto);
+				jArray.put(jO);
+			}
+
+			logger.error("========= List length=== " + cpdDtos.size());
+			logger.error("========= RESULT JARRAY === " + jArray.toString());
 		}
-
-		logger.error("========= List length=== " + cpdDtos.size());
-		logger.error("========= RESULT JARRAY === " + jArray.toString());
 	}
-
 }

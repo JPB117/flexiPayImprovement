@@ -1,10 +1,8 @@
 package com.workpoint.icpak.tests.dao;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
@@ -50,7 +48,8 @@ public class TestInvoiceDao extends AbstractDaoTest {
 
 	@Ignore
 	public void createFromBooking() {
-		Booking booking = bookingsDao.findByRefId("xTNqziYTSzZrh4E8", Booking.class);
+		Booking booking = bookingsDao.findByRefId("xTNqziYTSzZrh4E8",
+				Booking.class);
 		Assert.assertNotNull(booking);
 
 		bookingHelper.generateInvoice(booking);
@@ -70,13 +69,14 @@ public class TestInvoiceDao extends AbstractDaoTest {
 
 	@Ignore
 	public void testPayment() {
-		trxHelper.receivePaymentUsingInvoiceNo("INV-0031", "722722", "INV-0031", "MPESA", "JGV1SYJTR5", "254729472421",
-				"26000");
+		trxHelper.receivePaymentUsingInvoiceNo("INV-0031", "722722",
+				"INV-0031", "MPESA", "JGV1SYJTR5", "254729472421", "26000");
 	}
 
 	@Ignore
 	public void checkPaymentStatus() {
-		System.err.println("Invoice>>>" + invoiceHelper.checkInvoicePaymentStatus("c0qgum0Bn8oxyLhO"));
+		System.err.println("Invoice>>>"
+				+ invoiceHelper.checkInvoicePaymentStatus("c0qgum0Bn8oxyLhO"));
 	}
 
 	@Ignore
@@ -106,13 +106,16 @@ public class TestInvoiceDao extends AbstractDaoTest {
 	}
 
 	@Test
-	public void testInvoiceLine() throws FileNotFoundException, IOException, SAXException, ParserConfigurationException,
+	public void testInvoiceLine() throws FileNotFoundException, IOException,
+			SAXException, ParserConfigurationException,
 			FactoryConfigurationError, DocumentException {
-		List<InvoiceLineDto> invoiceLineDtos = invoiceDao.getByLinesByDocumentNo("INV-0045");
+		List<InvoiceLineDto> invoiceLineDtos = invoiceDao
+				.getByLinesByDocumentNo("INV-0045");
 
 		byte[] doc = bookingHelper.generateInvoicePdf("vp5euYle2YLN2bxn");
 
-		FileOutputStream output = new FileOutputStream(new File("/home/wladek/Documents/profoma.pdf"));
+		FileOutputStream output = new FileOutputStream(new File(
+				"/home/wladek/Documents/profoma.pdf"));
 		IOUtils.write(doc, output);
 
 	}

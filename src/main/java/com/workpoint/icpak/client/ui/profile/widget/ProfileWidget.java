@@ -241,20 +241,22 @@ public class ProfileWidget extends Composite {
 
 		if (editMode) {
 			divEditDropDown.setVisible(true);
-			divSavePanel.setVisible(true);
+			// divSavePanel.setVisible(true);
 			divStandingStatus.removeClassName("hide");
-			aDownloadCert.setVisible(true);
+			// aDownloadCert.setVisible(true);
 			spnRefreshSection.removeClassName("hide");
 			elSpace.addClassName("hide");
 			aBackToApplications.addClassName("hide");
+			panelBreadcrumb.addStyleName("hide");
 		} else {
 			divEditDropDown.setVisible(false);
-			divSavePanel.setVisible(false);
+			// divSavePanel.setVisible(false);
 			divStandingStatus.addClassName("hide");
-			aDownloadCert.setVisible(false);
+			// aDownloadCert.setVisible(false);
 			spnRefreshSection.addClassName("hide");
 			elSpace.removeClassName("hide");
 			aBackToApplications.removeClassName("hide");
+			panelBreadcrumb.removeStyleName("hide");
 		}
 	}
 

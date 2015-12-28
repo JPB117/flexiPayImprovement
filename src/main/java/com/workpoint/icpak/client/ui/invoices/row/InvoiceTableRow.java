@@ -99,6 +99,8 @@ public class InvoiceTableRow extends RowWidget {
 			spnStatus.setInnerText("NOT PAID");
 		}
 
+		// Window.alert("Invoice RefId:" + invoice.getBookingRefId());
+
 		divBalance.add(new InlineLabel(NUMBERFORMAT.format(balance) + ""));
 
 		aProforma.addClickHandler(new ClickHandler() {
@@ -106,7 +108,7 @@ public class InvoiceTableRow extends RowWidget {
 			public void onClick(ClickEvent event) {
 				// Window.alert("Proforma" + delegate.getBookingRefId());
 				UploadContext ctx = new UploadContext("getreport");
-				ctx.setContext("invoiceRefId", invoice.getRefId());
+				ctx.setContext("invoiceRefId", invoice.getBookingRefId());
 				ctx.setAction(UPLOADACTION.GETPROFORMA);
 
 				// ctx.setContext(key, value)
