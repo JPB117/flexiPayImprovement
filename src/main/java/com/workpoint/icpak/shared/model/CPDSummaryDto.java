@@ -8,21 +8,23 @@ import javax.xml.bind.annotation.XmlType;
 
 @XmlType
 @XmlAccessorType(XmlAccessType.FIELD)
-public class CPDSummaryDto implements Serializable{
+public class CPDSummaryDto implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private int confirmedCPD=0;
-	private int unconfirmedCPD=0;
-	
+	private int confirmedCPD = 0;
+	private int unconfirmedCPD = 0;
+
+	private int totalArchive = 0;
+	private int totalReturns = 0;
 	/**
 	 * Additional fields for Administrator
 	 */
 	private int processedCount;
 	private int pendingCount;
-	
+
 	public CPDSummaryDto() {
 	}
 
@@ -57,5 +59,21 @@ public class CPDSummaryDto implements Serializable{
 	public void setProcessedCount(int processedCount) {
 		this.processedCount = processedCount;
 	}
-	
+
+	public int getTotalArchive() {
+		return totalArchive;
+	}
+
+	public void setTotalArchive(int totalArchive) {
+		this.totalArchive = totalArchive;
+	}
+
+	public int getTotalReturns() {
+		return totalReturns;
+	}
+
+	public void setTotalReturns(int totalReturns) {
+		this.totalReturns = totalReturns;
+	}
+
 }

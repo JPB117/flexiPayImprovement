@@ -1,4 +1,4 @@
-package com.workpoint.icpak.client.ui.cpd.table.row;
+package com.workpoint.icpak.client.ui.cpd.member.table.row;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.SpanElement;
@@ -10,8 +10,6 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Widget;
-import com.workpoint.icpak.client.ui.AppManager;
-import com.workpoint.icpak.client.ui.OptionControl;
 import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.RowWidget;
 import com.workpoint.icpak.client.ui.events.EditModelEvent;
@@ -20,23 +18,21 @@ import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.shared.model.CPDStatus;
+import com.workpoint.icpak.shared.model.TableActionType;
 
-public class CPDTableRow extends RowWidget {
+public class CPDMemberTableRow extends RowWidget {
 
 	private static ActivitiesTableRowUiBinder uiBinder = GWT
 			.create(ActivitiesTableRowUiBinder.class);
 
-	interface ActivitiesTableRowUiBinder extends UiBinder<Widget, CPDTableRow> {
+	interface ActivitiesTableRowUiBinder extends
+			UiBinder<Widget, CPDMemberTableRow> {
 	}
 
 	@UiField
 	HTMLPanel row;
 	@UiField
 	HTMLPanel divCourseName;
-	@UiField
-	HTMLPanel divOrganiser;
-	@UiField
-	HTMLPanel divCategory;
 	@UiField
 	HTMLPanel divCPD;
 	@UiField
@@ -60,87 +56,22 @@ public class CPDTableRow extends RowWidget {
 	@UiField
 	ActionLink aDelete;
 	@UiField
-	ActionLink aMember;
-	@UiField
-	HTMLPanel divMember;
-	@UiField
 	ActionLink aApprove;
 	@UiField
 	ActionLink aReject;
+
+	@UiField
+	HTMLPanel divCount;
+
 	private CPDDto dto;
 
-	public CPDTableRow() {
+	public CPDMemberTableRow() {
 		initWidget(uiBinder.createAndBindUi(this));
+
 		aEdit.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				AppContext.fireEvent(new EditModelEvent(dto));
-			}
-		});
-
-		aApprove.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				AppManager.showPopUp("Confirm Approval",
-						"Are you sure you want to Approve this CPD?",
-						new OptionControl() {
-							@Override
-							public void onSelect(String name) {
-								if (name.equals("Confirm")) {
-									dto.setStatus(CPDStatus.Approved);
-									AppContext.fireEvent(new TableActionEvent(
-											dto, TableActionType.APPROVECPD));
-									hide();
-								} else {
-									hide();
-								}
-
-							}
-						}, "Confirm", "Cancel");
-
-			}
-		});
-
-		aReject.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				AppManager.showPopUp("Confirm Approval",
-						"Are you sure you want to Approve this CPD?",
-						new OptionControl() {
-							@Override
-							public void onSelect(String name) {
-								if (name.equals("Confirm")) {
-									dto.setStatus(CPDStatus.Rejected);
-									AppContext.fireEvent(new TableActionEvent(
-											dto, TableActionType.REJECTCPD));
-								}
-								hide();
-							}
-						}, "Confirm", "Cancel");
-			}
-		});
-
-		aView.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				AppContext.fireEvent(new TableActionEvent(dto,
-						TableActionType.VIEWCPD));
-			}
-		});
-
-		aMember.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				AppContext.fireEvent(new TableActionEvent(dto,
-						TableActionType.VIEWCPD));
-			}
-		});
-
-		aDownloadCert.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				AppContext.fireEvent(new TableActionEvent(dto,
-						TableActionType.DOWNLOADCERT));
 			}
 		});
 
@@ -153,42 +84,23 @@ public class CPDTableRow extends RowWidget {
 		});
 	}
 
-	public CPDTableRow(CPDDto dto) {
+	public CPDMemberTableRow(CPDDto dto) {
 		this();
 		this.dto = dto;
 
-		if (AppContext.isCurrentUserAdmin()) {
-			divMember.setVisible(true);
-			String memberRegistrationNo = (dto.getMemberRegistrationNo() == null ? "N/R"
-					: dto.getMemberRegistrationNo());
-			aMember.setText(dto.getFullNames() + "(" + memberRegistrationNo
-					+ ")");
-		} else {
-			divMember.setVisible(false);
-		}
-
 		if ((dto.getStartDate() != null)) {
-			divStartDate.add(new InlineLabel(DateUtils.DATEFORMAT.format(dto
-					.getStartDate())));
+			divStartDate.add(new InlineLabel(DateUtils.DATEFORMAT_SYS
+					.format(dto.getStartDate())));
 		}
-
 		if (dto.getEndDate() != null) {
-			divEndDate.add(new InlineLabel(DateUtils.DATEFORMAT.format(dto
+			divEndDate.add(new InlineLabel(DateUtils.DATEFORMAT_SYS.format(dto
 					.getEndDate())));
 		}
 
-		divCourseName.add(new InlineLabel(dto.getTitle()));
-		divOrganiser.add(new InlineLabel(dto.getOrganizer()));
-
-		if (dto.getCategory() != null)
-			divCategory
-					.add(new InlineLabel(dto.getCategory().getDisplayName()));
-
-		divCPD.add(new InlineLabel(dto.getCpdHours() + " hrs"));
-
+		divCourseName.add(new InlineLabel(dto.getTitle().toUpperCase()));
+		divCPD.add(new InlineLabel(dto.getCpdHours() + ""));
 		CPDStatus status = dto.getStatus() == null ? CPDStatus.Unconfirmed
 				: dto.getStatus();
-
 		spnStatus.setInnerText(status.name());
 		if (status.equals(CPDStatus.Approved)) {
 			spnStatus.removeClassName("label-danger");
@@ -247,10 +159,6 @@ public class CPDTableRow extends RowWidget {
 		aApprove.setVisible(false);
 		aReject.setVisible(false);
 		spnNoAction.addClassName("hide");
-	}
-
-	public enum TableActionType {
-		DOWNLOADCERT, DELETECPD, VIEWCPD, APPROVECPD, REJECTCPD, RESENDPROFORMA, ERPREFRESH, ENROLTOLMS
 	}
 
 }

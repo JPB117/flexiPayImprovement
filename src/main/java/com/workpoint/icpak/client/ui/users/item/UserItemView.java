@@ -18,11 +18,11 @@ import com.workpoint.icpak.client.model.UploadContext;
 import com.workpoint.icpak.client.model.UploadContext.UPLOADACTION;
 import com.workpoint.icpak.client.ui.AppManager;
 import com.workpoint.icpak.client.ui.OptionControl;
-import com.workpoint.icpak.client.ui.cpd.table.row.CPDTableRow.TableActionType;
 import com.workpoint.icpak.client.ui.events.TableActionEvent;
 import com.workpoint.icpak.client.ui.users.item.statement.MemberStatementWidget;
 import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.client.util.AppContext;
+import com.workpoint.icpak.shared.model.TableActionType;
 import com.workpoint.icpak.shared.model.UserDto;
 
 public class UserItemView extends ViewImpl implements UserItemPresenter.MyView {

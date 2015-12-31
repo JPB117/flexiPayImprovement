@@ -8,7 +8,6 @@ import java.util.List;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasKeyDownHandlers;
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -76,6 +75,10 @@ public class TableView extends Composite {
 
 	private boolean isAutoNumber = true;
 	private int count = 0;
+
+	public int getCount() {
+		return count;
+	}
 
 	public TableView() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -329,6 +332,21 @@ public class TableView extends Composite {
 		this.isAutoNumber = isAutoNumber;
 	}
 
+	public void setFooters(List<HTMLPanel> widgets) {
+		panelFooter.clear();
+		HTMLPanel row = new HTMLPanel("");
+		row.addStyleName("tr");
+
+		if (isAutoNumber) {
+			row.add(getTd(new InlineLabel()));
+		}
+
+		for (HTMLPanel widget : widgets) {
+			row.add(getTd(widget));
+		}
+		panelFooter.add(row);
+	}
+
 	public void setFooter(List<Widget> widgets) {
 		panelFooter.clear();
 		HTMLPanel row = new HTMLPanel("");
@@ -400,7 +418,7 @@ public class TableView extends Composite {
 		return aDownloadXls;
 	}
 
-	public HasClickHandlers getFilterButton() {
+	public ActionLink getFilterButton() {
 		return aFilter;
 	}
 

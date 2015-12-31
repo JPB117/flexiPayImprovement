@@ -1,4 +1,4 @@
-package com.workpoint.icpak.client.ui.cpd.table;
+package com.workpoint.icpak.client.ui.cpd.admin.summary.table;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -7,7 +7,6 @@ import java.util.List;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasKeyDownHandlers;
-import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -16,48 +15,45 @@ import com.google.gwt.user.client.ui.Widget;
 import com.workpoint.icpak.client.ui.component.PagingPanel;
 import com.workpoint.icpak.client.ui.component.PagingTable;
 import com.workpoint.icpak.client.ui.component.TableHeader;
-import com.workpoint.icpak.client.ui.cpd.table.row.CPDTableRow;
-import com.workpoint.icpak.client.util.AppContext;
+import com.workpoint.icpak.client.ui.cpd.admin.summary.table.row.CPDSummaryTableRow;
 
-public class CPDTable extends Composite {
+public class CPDSummaryTable extends Composite {
 
 	private static TransactionTableUiBinder uiBinder = GWT
 			.create(TransactionTableUiBinder.class);
 
-	interface TransactionTableUiBinder extends UiBinder<Widget, CPDTable> {
+	interface TransactionTableUiBinder extends
+			UiBinder<Widget, CPDSummaryTable> {
 	}
 
 	@UiField
 	PagingTable tblView;
 
-	public CPDTable() {
+	public CPDSummaryTable() {
 		initWidget(uiBinder.createAndBindUi(this));
 		tblView.setAutoNumber(false);
 		tblView.setSearchSectionVisible(true);
-		tblView.setDatesVisible(true);
-		createHeader(AppContext.isCurrentUserAdmin());
+		tblView.getDownloadPdf().setVisible(false);
+		createHeader();
 	}
 
-	public void createHeader(boolean isAdmin) {
+	public void createHeader() {
 		List<TableHeader> th = new ArrayList<TableHeader>();
-		th.add(new TableHeader("Start Date:"));
-		th.add(new TableHeader("End Date:"));
-		if (isAdmin) {
-			th.add(new TableHeader("Member Name:"));
-			tblView.setSearchFieldVisible(true);
-		} else {
-			tblView.setSearchFieldVisible(false);
-		}
-		th.add(new TableHeader("Course/Event Name"));
-		th.add(new TableHeader("Organiser"));
-		th.add(new TableHeader("Category"));
-		th.add(new TableHeader("CPD Hours"));
-		th.add(new TableHeader("Status"));
-		th.add(new TableHeader("Action"));
+		th.add(new TableHeader("Reg No:"));
+		th.add(new TableHeader("Member Name:"));
+		th.add(new TableHeader("Category:"));
+		th.add(new TableHeader("Status:"));
+		th.add(new TableHeader("2016:"));
+		th.add(new TableHeader("2015:"));
+		th.add(new TableHeader("2014:"));
+		th.add(new TableHeader("2013:"));
+		th.add(new TableHeader("2012:"));
+		th.add(new TableHeader("2011:"));
+		tblView.setSearchFieldVisible(true);
 		tblView.setTableHeaders(th);
 	}
 
-	public void createRow(CPDTableRow row) {
+	public void createRow(CPDSummaryTableRow row) {
 		tblView.addRow(row);
 	}
 

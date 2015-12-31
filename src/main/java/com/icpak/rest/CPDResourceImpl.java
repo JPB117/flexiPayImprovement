@@ -28,7 +28,9 @@ import com.wordnik.swagger.annotations.ApiParam;
 import com.workpoint.icpak.shared.api.CPDResource;
 import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.shared.model.CPDSummaryDto;
+import com.workpoint.icpak.shared.model.MemberCPDDto;
 
+@Produces(MediaType.APPLICATION_JSON)
 @Api(value = "", description = "Handles CRUD on cpd data")
 public class CPDResourceImpl implements CPDResource {
 	Logger logger = Logger.getLogger(CPDResourceImpl.class);
@@ -59,6 +61,17 @@ public class CPDResourceImpl implements CPDResource {
 	}
 
 	@GET
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/cpdmemberSummary")
+	@ApiOperation(value = "Get a list of all cpds", response = MemberCPDDto.class, consumes = MediaType.APPLICATION_JSON)
+	public List<MemberCPDDto> getAllMemberSummary(
+			@QueryParam("searchTerm") String searchTerm,
+			@QueryParam("offset") Integer offset,
+			@QueryParam("limit") Integer limit) {
+		return helper.getAllMemberCPDSummary(searchTerm, offset, limit);
+	}
+
+	@GET
 	@Path("/summary")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -80,7 +93,7 @@ public class CPDResourceImpl implements CPDResource {
 	@ApiOperation(value = "Get a cpd by cpdId", response = CPDDto.class, consumes = MediaType.APPLICATION_JSON)
 	public CPDDto getById(
 			@ApiParam(value = "CPD Id of the cpd to fetch", required = true) @PathParam("cpdId") String cpdId) {
-		CPDDto cpd = helper.getCPDFromMemberRefId(memberId, cpdId);
+		CPDDto cpd = helper.getCPDFromRefId(cpdId);
 		return cpd;
 	}
 
@@ -133,6 +146,13 @@ public class CPDResourceImpl implements CPDResource {
 	@Path("/count")
 	public Integer getCount() {
 		return helper.getCount(memberId, null, null);
+	}
+
+	@GET
+	@Path("/summaryCount")
+	public Integer getMemberSummaryCount(
+			@QueryParam("searchTerm") String searchTerm) {
+		return helper.getMemberCPDCount(searchTerm);
 	}
 
 	@GET

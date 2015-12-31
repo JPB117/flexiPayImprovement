@@ -16,14 +16,12 @@ import com.gwtplatform.mvp.shared.proxy.PlaceRequest.Builder;
 import com.workpoint.icpak.client.place.NameTokens;
 import com.workpoint.icpak.client.place.ParameterTokens;
 import com.workpoint.icpak.client.security.CurrentUser;
-import com.workpoint.icpak.client.ui.cpd.table.row.CPDTableRow.TableActionType;
 import com.workpoint.icpak.shared.api.ApiParameters;
 import com.workpoint.icpak.shared.api.SessionResource;
 import com.workpoint.icpak.shared.api.UsersResource;
 import com.workpoint.icpak.shared.model.UserDto;
 import com.workpoint.icpak.shared.model.Version;
 import com.workpoint.icpak.shared.model.auth.CurrentUserDto;
-import com.workpoint.icpak.shared.model.events.DelegateDto;
 
 /**
  * 
@@ -157,7 +155,7 @@ public class AppContext {
 	}
 
 	public static boolean isCurrentUserAdmin() {
-		boolean isAdmin = user==null? false : user.getUser().isAdmin();
+		boolean isAdmin = user == null ? false : user.getUser().isAdmin();
 		return isAdmin;
 	}
 
@@ -213,6 +211,6 @@ public class AppContext {
 	}
 
 	public static boolean isCurrentUserMember() {
-		return user.getUser().getMemberNo()!=null;
+		return user.getUser().getMemberNo() != null;
 	}
 }

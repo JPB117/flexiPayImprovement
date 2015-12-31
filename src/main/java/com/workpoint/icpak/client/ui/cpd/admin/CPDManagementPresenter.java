@@ -1,13 +1,5 @@
 package com.workpoint.icpak.client.ui.cpd.admin;
 
-//import com.workpoint.icpak.shared.requests.CheckPasswordRequest;
-//import com.workpoint.icpak.shared.requests.GetUserRequest;
-//import com.workpoint.icpak.shared.requests.SaveUserRequest;
-//import com.workpoint.icpak.shared.requests.UpdatePasswordRequest;
-//import com.workpoint.icpak.shared.responses.CheckPasswordRequestResult;
-//import com.workpoint.icpak.shared.responses.GetUserRequestResult;
-//import com.workpoint.icpak.shared.responses.SaveUserResponse;
-//import com.workpoint.icpak.shared.responses.UpdatePasswordResponse;
 import static com.workpoint.icpak.client.ui.util.StringUtils.isNullOrEmpty;
 
 import java.util.Date;
@@ -23,6 +15,8 @@ import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rest.delegates.client.ResourceDelegate;
@@ -38,15 +32,10 @@ import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.workpoint.icpak.client.place.NameTokens;
 import com.workpoint.icpak.client.security.CurrentUser;
 import com.workpoint.icpak.client.service.AbstractAsyncCallback;
-import com.workpoint.icpak.client.ui.AppManager;
-import com.workpoint.icpak.client.ui.OnOptionSelected;
-import com.workpoint.icpak.client.ui.OptionControl;
 import com.workpoint.icpak.client.ui.admin.TabDataExt;
 import com.workpoint.icpak.client.ui.component.PagingConfig;
 import com.workpoint.icpak.client.ui.component.PagingLoader;
 import com.workpoint.icpak.client.ui.component.PagingPanel;
-import com.workpoint.icpak.client.ui.cpd.form.RecordCPD;
-import com.workpoint.icpak.client.ui.cpd.table.row.CPDTableRow.TableActionType;
 import com.workpoint.icpak.client.ui.events.EditModelEvent;
 import com.workpoint.icpak.client.ui.events.EditModelEvent.EditModelHandler;
 import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
@@ -62,6 +51,8 @@ import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.shared.api.MemberResource;
 import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.shared.model.CPDSummaryDto;
+import com.workpoint.icpak.shared.model.MemberCPDDto;
+import com.workpoint.icpak.shared.model.TableActionType;
 
 public class CPDManagementPresenter
 		extends
@@ -69,13 +60,11 @@ public class CPDManagementPresenter
 		implements EditModelHandler, TableActionHandler {
 
 	public interface ICPDManagementView extends View {
-		HasClickHandlers getRecordButton();
-
-		void bindResults(List<CPDDto> result);
+		void bindResults(List<CPDDto> result, String loadType);
 
 		void showDetailedView();
 
-		PagingPanel getPagingPanel();
+		PagingPanel getReturnsPagingPanel();
 
 		void bindSummary(CPDSummaryDto summary);
 
@@ -92,6 +81,16 @@ public class CPDManagementPresenter
 		HasKeyDownHandlers getTxtSearch();
 
 		String getSearchValue();
+
+		void setTab(String page, String refId);
+
+		void bindSingleResults(CPDDto result, String loadType);
+
+		void bindMemberSummary(List<MemberCPDDto> result);
+
+		PagingPanel getArchivePagingPanel();
+
+		PagingPanel getCPDSummaryPagingPanel();
 
 	}
 
@@ -129,12 +128,14 @@ public class CPDManagementPresenter
 			}
 		}
 	};
+	protected String searchTerm = "";
 
 	@Inject
 	public CPDManagementPresenter(final EventBus eventBus,
 			final ICPDManagementView view, final ICPDManagementProxy proxy,
 			final ResourceDelegate<MemberResource> memberDelegate,
 			final CurrentUser currentUser) {
+
 		super(eventBus, view, proxy, HomePresenter.SLOT_SetTabContent);
 		this.memberDelegate = memberDelegate;
 		this.currentUser = currentUser;
@@ -146,7 +147,7 @@ public class CPDManagementPresenter
 		addRegisteredHandler(EditModelEvent.TYPE, this);
 		addRegisteredHandler(TableActionEvent.TYPE, this);
 
-		getView().getPagingPanel().setLoader(new PagingLoader() {
+		getView().getReturnsPagingPanel().setLoader(new PagingLoader() {
 			@Override
 			public void onLoad(int offset, int limit) {
 				onLoad(offset, limit);
@@ -158,8 +159,9 @@ public class CPDManagementPresenter
 			public void onClick(ClickEvent event) {
 				startDate = getView().getStartDate();
 				endDate = getView().getEndDate();
-				loadCPD(getView().getPagingPanel().getConfig().getOffset(),
-						getView().getPagingPanel().getConfig().getLimit());
+				loadCPD(getView().getReturnsPagingPanel().getConfig()
+						.getOffset(), getView().getReturnsPagingPanel()
+						.getConfig().getLimit(), "CPDRETURNS");
 			}
 		});
 
@@ -167,100 +169,52 @@ public class CPDManagementPresenter
 				cpdValueChangeHandler);
 
 		getView().getTxtSearch().addKeyDownHandler(keyHandler);
+
+		getView().getReturnsPagingPanel().setLoader(new PagingLoader() {
+			@Override
+			public void onLoad(int offset, int limit) {
+				loadData(startDate, endDate, page);
+			}
+		});
+
+		getView().getArchivePagingPanel().setLoader(new PagingLoader() {
+			@Override
+			public void onLoad(int offset, int limit) {
+				loadData(startDate, endDate, page);
+			}
+		});
+
+		getView().getCPDSummaryPagingPanel().setLoader(new PagingLoader() {
+			@Override
+			public void onLoad(int offset, int limit) {
+				loadCPDSummaryData(searchTerm, offset, pageLimit);
+			}
+		});
+
 	}
 
 	@Inject
 	GenericPopupPresenter popup;
 	private Date startDate;
 	private Date endDate;
-
-	protected void showForm() {
-		showForm(null);
-	}
-
-	protected void showForm(final CPDDto model) {
-		showForm(model, false);
-	}
-
-	protected void showForm(final CPDDto model, boolean isViewMode) {
-		final RecordCPD cpdRecord = new RecordCPD();
-		cpdRecord.setCPD(model);
-
-		cpdRecord.getStartUploadButton().addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				if (cpdRecord.getCPD().getRefId() == null) {
-					// not saved
-					if (cpdRecord.isValid()) {
-						String memberId = currentUser.getUser().getRefId();
-						memberDelegate
-								.withCallback(
-										new AbstractAsyncCallback<CPDDto>() {
-											@Override
-											public void onSuccess(CPDDto result) {
-												cpdRecord.setCPD(result);
-												cpdRecord.showUploadPanel(true);
-											}
-										}).cpd(memberId)
-								.create(cpdRecord.getCPD());
-					}
-				} else {
-					cpdRecord.showUploadPanel(true);
-				}
-			}
-		});
-		cpdRecord.showForm(true);
-
-		cpdRecord.setViewMode(isViewMode);
-
-		AppManager.showPopUp("Record CPD Wizard", cpdRecord.asWidget(),
-				new OptionControl() {
-					@Override
-					public void onSelect(String name) {
-						if (name.equals("Save")) {
-							if (cpdRecord.isValid()) {
-								saveRecord(cpdRecord.getCPD());
-								hide();
-							}
-						} else if (name.equals("Previous")) {
-							showInstructions(model);
-						} else {
-							hide();
-						}
-					}
-				}, (isViewMode == true ? "Cancel" : "Previous"),
-				(isViewMode == true ? "Save" : "Save"));
-	}
+	private String page;
+	protected int pageLimit = 10;
 
 	protected void saveRecord(CPDDto dto) {
 		fireEvent(new ProcessingEvent());
-		if (dto.getRefId() != null) {
+		if (dto.getMemberRefId() != null) {
 			memberDelegate.withCallback(new AbstractAsyncCallback<CPDDto>() {
 				@Override
 				public void onSuccess(CPDDto result) {
-					loadData(startDate, endDate);
+					fireEvent(new ProcessingCompletedEvent());
+					History.back();
 				}
 			}).cpd(dto.getMemberRefId()).update(dto.getRefId(), dto);
+
+		} else {
+			Window.alert("MemberRefId cannot be null!");
 		}
-	}
 
-	private void showInstructions() {
-		showInstructions(null);
-	}
-
-	private void showInstructions(final CPDDto model) {
-		final RecordCPD cpdRecord = new RecordCPD();
-		cpdRecord.setCPD(model);
-		cpdRecord.showForm(false);
-		AppManager.showPopUp("Record CPD Wizard", cpdRecord.asWidget(),
-				new OnOptionSelected() {
-					@Override
-					public void onSelect(String name) {
-						if (name.equals("Next")) {
-							showForm(model);
-						}
-					}
-				}, "Next");
 	}
 
 	private void searchCPD(final String searchTerm) {
@@ -268,14 +222,12 @@ public class CPDManagementPresenter
 		memberDelegate.withCallback(new AbstractAsyncCallback<Integer>() {
 			@Override
 			public void onSuccess(Integer count) {
-				// TODO Auto-generated method stub
 				fireEvent(new ProcessingCompletedEvent());
-				PagingPanel pagingPanel = getView().getPagingPanel();
+				PagingPanel pagingPanel = getView().getReturnsPagingPanel();
 				pagingPanel.setTotal(count);
 				PagingConfig pagingConfig = pagingPanel.getConfig();
-				pagingConfig.setPAGE_LIMIT(100);
-				getCPDSearchResults(pagingConfig.getOffset(),
-						pagingConfig.getLimit(), searchTerm);
+				getCPDSearchResults(pagingConfig.getOffset(), pageLimit,
+						searchTerm);
 			}
 		}).cpd("ALL").getCPDsearchCount(searchTerm);
 	}
@@ -286,7 +238,7 @@ public class CPDManagementPresenter
 				.withCallback(new AbstractAsyncCallback<List<CPDDto>>() {
 					@Override
 					public void onSuccess(List<CPDDto> result) {
-						getView().bindResults(result);
+						// getView().bindResults(result);
 						fireEvent(new ProcessingCompletedEvent());
 					}
 				})
@@ -299,13 +251,10 @@ public class CPDManagementPresenter
 	@Override
 	protected void onReveal() {
 		super.onReveal();
-		getView().setInitialDates(DateRange.THISYEAR, new Date());
-		this.startDate = DateUtils.getDateByRange(DateRange.THISYEAR, false);
-		this.endDate = new Date();
-		loadData(startDate, endDate);
+
 	}
 
-	protected void loadData(Date startDate, Date endDate) {
+	protected void loadData(Date startDate, Date endDate, final String loadType) {
 		fireEvent(new ProcessingEvent());
 
 		memberDelegate.withCallback(new AbstractAsyncCallback<CPDSummaryDto>() {
@@ -319,26 +268,45 @@ public class CPDManagementPresenter
 			@Override
 			public void onSuccess(Integer aCount) {
 				fireEvent(new ProcessingCompletedEvent());
-				PagingPanel panel = getView().getPagingPanel();
-				panel.setTotal(aCount);
+				PagingPanel panel = null;
+				if (loadType.equals("ALLRETURNS")) {
+					panel = getView().getReturnsPagingPanel();
+					panel.setTotal(aCount);
+				} else if (loadType.equals("ALLARCHIVE")) {
+					panel = getView().getArchivePagingPanel();
+					panel.setTotal(aCount);
+				}
 				PagingConfig config = panel.getConfig();
-				loadCPD(config.getOffset(), PagingConfig.PAGE_LIMIT);
+				loadCPD(config.getOffset(), pageLimit, loadType);
 			}
-		}).cpd("ALL").getCount(startDate.getTime(), startDate.getTime());
+		}).cpd(loadType).getCount(startDate.getTime(), endDate.getTime());
 
 	}
 
-	protected void loadCPD(int offset, int limit) {
+	protected void loadCPD(int offset, int limit, final String loadType) {
 		fireEvent(new ProcessingEvent());
+
 		memberDelegate.withCallback(new AbstractAsyncCallback<List<CPDDto>>() {
 			@Override
 			public void onSuccess(List<CPDDto> result) {
 				fireEvent(new ProcessingCompletedEvent());
-				getView().bindResults(result);
+				getView().bindResults(result, loadType);
 
 			}
-		}).cpd("ALL")
+		}).cpd(loadType)
 				.getAll(offset, limit, startDate.getTime(), endDate.getTime());
+	}
+
+	protected void loadCPD(String refId, final String loadType) {
+		fireEvent(new ProcessingEvent());
+
+		memberDelegate.withCallback(new AbstractAsyncCallback<CPDDto>() {
+			@Override
+			public void onSuccess(CPDDto result) {
+				fireEvent(new ProcessingCompletedEvent());
+				getView().bindSingleResults(result, loadType);
+			}
+		}).cpd("ALL").getById(refId);
 	}
 
 	String getApplicationRefId() {
@@ -350,7 +318,58 @@ public class CPDManagementPresenter
 	@Override
 	public void prepareFromRequest(PlaceRequest request) {
 		super.prepareFromRequest(request);
-		getView().showDetailedView();
+		page = request.getParameter("p", "cpdReturns");
+		String refId = request.getParameter("refId", "");
+
+		// Set Tab to Front End
+		getView().setTab(page, refId);
+
+		// If there is no refId - Load Table Data else load individual CPD
+		// Record
+		if (refId.isEmpty()) {
+			getView().setInitialDates(DateRange.THISYEAR, new Date());
+			this.startDate = DateUtils
+					.getDateByRange(DateRange.THISYEAR, false);
+			this.endDate = new Date();
+
+			if (page.equals("cpdReturns")) {
+				loadData(startDate, endDate, "ALLRETURNS");
+			} else if (page.equals("returnArchive")) {
+				loadData(startDate, endDate, "ALLARCHIVE");
+			} else if (page.equals("memberCPD")) {
+				loadCPDSummaryCount("");
+			}
+		} else {
+			// Load Individual CPD
+			loadCPD(refId, page);
+		}
+	}
+
+	private void loadCPDSummaryCount(final String searchTerm) {
+		fireEvent(new ProcessingEvent());
+		memberDelegate.withCallback(new AbstractAsyncCallback<Integer>() {
+			@Override
+			public void onSuccess(Integer aCount) {
+				fireEvent(new ProcessingCompletedEvent());
+				PagingPanel panel = getView().getCPDSummaryPagingPanel();
+				panel.setTotal(aCount);
+				PagingConfig config = panel.getConfig();
+				loadCPDSummaryData(searchTerm, config.getOffset(), pageLimit);
+			}
+		}).cpd("ALL").getMemberSummaryCount(searchTerm);
+	}
+
+	private void loadCPDSummaryData(String searchTerm, Integer offset,
+			Integer limit) {
+		fireEvent(new ProcessingEvent());
+		memberDelegate
+				.withCallback(new AbstractAsyncCallback<List<MemberCPDDto>>() {
+					@Override
+					public void onSuccess(List<MemberCPDDto> result) {
+						getView().bindMemberSummary(result);
+						fireEvent(new ProcessingCompletedEvent());
+					}
+				}).cpd("ALL").getAllMemberSummary(searchTerm, offset, limit);
 	}
 
 	@Override
@@ -362,12 +381,6 @@ public class CPDManagementPresenter
 		if (event.getAction() == TableActionType.APPROVECPD) {
 			final CPDDto dto = (CPDDto) event.getModel();
 			saveRecord(dto);
-		} else if (event.getAction() == TableActionType.REJECTCPD) {
-			final CPDDto dto = (CPDDto) event.getModel();
-			saveRecord(dto);
-		} else if (event.getAction() == TableActionType.VIEWCPD) {
-			final CPDDto dto = (CPDDto) event.getModel();
-			showForm(dto, true);
 		}
 	}
 

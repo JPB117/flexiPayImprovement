@@ -18,6 +18,7 @@ import com.icpak.rest.models.cpd.CPD;
 import com.icpak.servlet.upload.GetReport;
 import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.shared.model.CPDStatus;
+import com.workpoint.icpak.shared.model.MemberCPDDto;
 import com.workpoint.icpak.tests.base.AbstractDaoTest;
 
 public class TestCPDDao extends AbstractDaoTest {
@@ -71,12 +72,27 @@ public class TestCPDDao extends AbstractDaoTest {
 
 	@Ignore
 	public void testCount() throws ParseException {
-		// System.err.println(helper.getCount("ALL",
-		// formatter.parse("01/01/2015")
-		// .getTime(), new Date().getTime()));
+		System.err.println("Total Archive>>>>"
+				+ helper.getCPDSummary("ALL", 1420059600000L, 1451494912593L)
+						.getTotalArchive()
+				+ "Total Returns"
+				+ helper.getCPDSummary("ALL", 1420059600000L, 1451494912593L)
+						.getTotalReturns());
+	}
 
-		System.err.println(helper.getCount("ALL", formatter.parse("01/01/2000")
-				.getTime(), new Date().getTime()));
+	@Test
+	public void testMemberCPD() {
+		List<MemberCPDDto> memberCPDDtos = cpdDao.getMemberCPD("", 0, 10);
+
+		System.err.println("Dto Size>>" + cpdDao.getMemberCPDCount(""));
+
+		for (MemberCPDDto memberCPD : memberCPDDtos) {
+			System.err.println("No_" + memberCPD.getMemberNo());
+			System.err.println("Category::" + memberCPD.getCustomerType());
+			System.err.println("Status::" + memberCPD.getStatus());
+			System.err.println("2015::" + memberCPD.getYear2015());
+			System.err.println("2011::" + memberCPD.getYear2011());
+		}
 
 	}
 
@@ -100,24 +116,24 @@ public class TestCPDDao extends AbstractDaoTest {
 
 	}
 
-	@Test
+	@Ignore
 	public void testGetAllCPD() throws ParseException {
 		Date today = new Date();
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		Date another = formatter.parse("2015-1-1");
 
-		for (int i = 0; i <= 10; i++) {
-			List<CPDDto> cpdDtos = helper.getAllCPD("ALL", 0, 100,
-					another.getTime(), today.getTime());
-			JSONArray jArray = new JSONArray();
+		List<CPDDto> cpdDtos = helper.getAllCPD("ALLARCHIVE", 0, 100,
+				another.getTime(), today.getTime());
 
-			for (CPDDto dto : cpdDtos) {
-				JSONObject jO = new JSONObject(dto);
-				jArray.put(jO);
-			}
+		Integer count = helper.getCount("ALLARCHIVE", another.getTime(),
+				today.getTime());
+		JSONArray jArray = new JSONArray();
 
-			logger.error("========= List length=== " + cpdDtos.size());
-			logger.error("========= RESULT JARRAY === " + jArray.toString());
+		for (CPDDto dto : cpdDtos) {
+			JSONObject jO = new JSONObject(dto);
+			jArray.put(jO);
 		}
+		logger.error("======= List length=== " + cpdDtos.size());
+		logger.error("======= Count:=== " + count);
 	}
 }

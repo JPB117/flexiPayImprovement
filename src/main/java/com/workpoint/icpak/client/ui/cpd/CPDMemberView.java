@@ -19,8 +19,8 @@ import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.PagingPanel;
 import com.workpoint.icpak.client.ui.component.tabs.TabPanel;
 import com.workpoint.icpak.client.ui.cpd.header.CPDHeader;
-import com.workpoint.icpak.client.ui.cpd.table.CPDTable;
-import com.workpoint.icpak.client.ui.cpd.table.row.CPDTableRow;
+import com.workpoint.icpak.client.ui.cpd.member.table.CPDMemberTable;
+import com.workpoint.icpak.client.ui.cpd.member.table.row.CPDMemberTableRow;
 import com.workpoint.icpak.client.ui.util.DateRange;
 import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.client.util.AppContext;
@@ -39,7 +39,7 @@ public class CPDMemberView extends ViewImpl implements
 	@UiField
 	ActionLink aShowFilter;
 	@UiField
-	CPDTable tblView;
+	CPDMemberTable tblView;
 	@UiField
 	CPDHeader headerContainer;
 	@UiField
@@ -68,6 +68,8 @@ public class CPDMemberView extends ViewImpl implements
 			}
 		});
 
+		tblView.getFilterButton().setText("View CPD");
+
 	}
 
 	public HasClickHandlers getRecordButton() {
@@ -84,7 +86,7 @@ public class CPDMemberView extends ViewImpl implements
 		tblView.clearRows();
 		tblView.setNoRecords(result.size());
 		for (CPDDto dto : result) {
-			tblView.createRow(new CPDTableRow(dto));
+			tblView.createRow(new CPDMemberTableRow(dto));
 		}
 	}
 

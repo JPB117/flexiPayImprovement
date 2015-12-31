@@ -3,7 +3,7 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
 	xmlns:g='urn:import:com.google.gwt.user.client.ui' ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
 	xmlns:d='urn:import:com.workpoint.icpak.client.ui.component' xmlns:p='urn:import:com.workpoint.icpak.client.ui.cpd.header'
-	xmlns:table='urn:import:com.workpoint.icpak.client.ui.cpd.table'
+	xmlns:table='urn:import:com.workpoint.icpak.client.ui.cpd.member.table'
 	xmlns:t='urn:import:com.workpoint.icpak.client.ui.component.tabs'
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
@@ -18,7 +18,7 @@
 		</h3>
 
 		<g:HTMLPanel ui:field="panelDetail" styleName="main-content">
-			<div class="row">
+			<div class="row hide">
 				<div class="col-lg-12">
 					<p:CPDHeader ui:field="headerContainer">
 					</p:CPDHeader>
@@ -27,7 +27,6 @@
 			<div class="row">
 				<div class="col-lg-12">
 					<g:HTMLPanel styleName="panel widget" ui:field="panelListing">
-						<div class="panel-heading">CPD Summary</div>
 						<div class="panel-body">
 							<div ui:field="divTab1Content" class="tab-pane fade in active">
 								<!-- Tabs -->
@@ -47,8 +46,8 @@
 
 							<div class="row">
 								<div class="col-lg-12">
-									<table:CPDTable ui:field="tblView">
-									</table:CPDTable>
+									<table:CPDMemberTable ui:field="tblView">
+									</table:CPDMemberTable>
 								</div>
 							</div>
 						</div>
@@ -56,22 +55,5 @@
 				</div>
 			</div>
 		</g:HTMLPanel>
-
-
-		<g:HTMLPanel styleName="hide">
-			<table class="table table-bordered table-striped">
-				<tbody>
-					<tr>
-						<td width="30%">
-							<Strong>Phone:</Strong>
-						</td>
-						<td>
-							<i ui:field="elPhone"></i>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-		</g:HTMLPanel>
-
 	</g:HTMLPanel>
 </ui:UiBinder>

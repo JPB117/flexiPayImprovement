@@ -16,7 +16,7 @@ public class InvoiceDao extends BaseDao {
 			Integer limit) {
 		StringBuffer sqlBuffer = new StringBuffer("select i.refId, "
 				+ "i.amount as invoiceAmount,i.date as invoiceDate,"
-				+ "i.documentNo,i.description,i.contactName,i.bookingRefId"
+				+ "i.documentNo,i.description,i.contactName,i.bookingRefId,"
 				+ "t.date,t.dueDate,t.status,"
 				+ "t.paymentMode,t.amount,t.memberId " + "from Invoice i "
 				+ "left join Transaction t on (i.refId=t.invoiceRef) "
