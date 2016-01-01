@@ -66,10 +66,8 @@ public class TableView extends Composite {
 	DropDownList<Towns> listTowns;
 	@UiField
 	DropDownList<MemberCategory> listMemberCategory;
-
 	@UiField
 	DivElement divTownList;
-
 	@UiField
 	DivElement divMemberCategory;
 
@@ -332,19 +330,12 @@ public class TableView extends Composite {
 		this.isAutoNumber = isAutoNumber;
 	}
 
-	public void setFooters(List<HTMLPanel> widgets) {
+	public void createFooter(RowWidget footer) {
+		panelFooter.add(footer);
+	}
+
+	public void clearFooter(){
 		panelFooter.clear();
-		HTMLPanel row = new HTMLPanel("");
-		row.addStyleName("tr");
-
-		if (isAutoNumber) {
-			row.add(getTd(new InlineLabel()));
-		}
-
-		for (HTMLPanel widget : widgets) {
-			row.add(getTd(widget));
-		}
-		panelFooter.add(row);
 	}
 
 	public void setFooter(List<Widget> widgets) {

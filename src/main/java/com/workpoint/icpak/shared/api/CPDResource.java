@@ -14,6 +14,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import com.workpoint.icpak.shared.model.CPDDto;
+import com.workpoint.icpak.shared.model.CPDFooterDto;
 import com.workpoint.icpak.shared.model.CPDSummaryDto;
 import com.workpoint.icpak.shared.model.MemberCPDDto;
 
@@ -24,6 +25,13 @@ public interface CPDResource extends BaseResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public List<CPDDto> getAll(@QueryParam("offset") Integer offset,
 			@QueryParam("limit") Integer limit,
+			@QueryParam("startDate") Long startDate,
+			@QueryParam("endDate") Long endDate);
+
+	@GET
+	@Path("/yearSummaries")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public List<CPDFooterDto> getYearSummaries(
 			@QueryParam("startDate") Long startDate,
 			@QueryParam("endDate") Long endDate);
 
@@ -81,4 +89,5 @@ public interface CPDResource extends BaseResource {
 			@QueryParam("searchTerm") String searchTerm,
 			@QueryParam("startDate") Long startDate,
 			@QueryParam("endDate") Long endDate);
+
 }

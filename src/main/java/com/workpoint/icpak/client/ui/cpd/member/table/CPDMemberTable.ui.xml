@@ -5,5 +5,7 @@
 		<d:PagingTable ui:field="tblView" striped="true" isGrid="false"
 			bordered="true" styleName="tabbable" autoNumber="true">
 		</d:PagingTable>
+		<g:HTMLPanel ui:field="panelFooter">
+		</g:HTMLPanel>
 	</g:HTMLPanel>
 </ui:UiBinder>

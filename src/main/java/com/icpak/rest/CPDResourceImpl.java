@@ -27,6 +27,7 @@ import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 import com.workpoint.icpak.shared.api.CPDResource;
 import com.workpoint.icpak.shared.model.CPDDto;
+import com.workpoint.icpak.shared.model.CPDFooterDto;
 import com.workpoint.icpak.shared.model.CPDSummaryDto;
 import com.workpoint.icpak.shared.model.MemberCPDDto;
 
@@ -173,5 +174,14 @@ public class CPDResourceImpl implements CPDResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Integer getCPDsearchCount(@QueryParam("searchTerm") String searchTerm) {
 		return helper.cpdSearchCount(searchTerm);
+	}
+
+	@GET
+	@Path("/yearSummaries")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public List<CPDFooterDto> getYearSummaries(
+			@QueryParam("startDate") Long startDate,
+			@QueryParam("endDate") Long endDate) {
+		return helper.getYearSummaries(memberId, startDate, endDate);
 	}
 }

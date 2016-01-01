@@ -20,11 +20,13 @@ import com.workpoint.icpak.client.ui.component.PagingPanel;
 import com.workpoint.icpak.client.ui.component.tabs.TabPanel;
 import com.workpoint.icpak.client.ui.cpd.header.CPDHeader;
 import com.workpoint.icpak.client.ui.cpd.member.table.CPDMemberTable;
+import com.workpoint.icpak.client.ui.cpd.member.table.footer.CPDMemberFooterRow;
 import com.workpoint.icpak.client.ui.cpd.member.table.row.CPDMemberTableRow;
 import com.workpoint.icpak.client.ui.util.DateRange;
 import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.model.CPDDto;
+import com.workpoint.icpak.shared.model.CPDFooterDto;
 import com.workpoint.icpak.shared.model.CPDSummaryDto;
 
 public class CPDMemberView extends ViewImpl implements
@@ -108,9 +110,8 @@ public class CPDMemberView extends ViewImpl implements
 	}
 
 	@Override
-	public void setInitialDates(DateRange thisYear, Date endDate) {
-		tblView.setInitialDates(DateUtils.getDateByRange(thisYear, true),
-				endDate);
+	public void setInitialDates(Date startDate, Date endDate) {
+		tblView.setInitialDates(startDate, endDate);
 	}
 
 	@Override
@@ -126,5 +127,12 @@ public class CPDMemberView extends ViewImpl implements
 	@Override
 	public Date getStartDate() {
 		return tblView.getStartDate();
+	}
+
+	public void bindCPDFooter(List<CPDFooterDto> results) {
+		tblView.clearFooter();
+		for (CPDFooterDto footer : results) {
+			tblView.createFooter(new CPDMemberFooterRow(footer));
+		}
 	}
 }

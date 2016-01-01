@@ -286,6 +286,11 @@ public class DateUtils {
 			CalendarUtil.setToFirstDayOfMonth(today);
 			return setToMidnight(today);
 
+		case LASTYEAR:
+			CalendarUtil.addMonthsToDate(today, -(today.getMonth() * 2));
+			CalendarUtil.setToFirstDayOfMonth(today);
+			return setToMidnight(today);
+
 		default:
 			return today;
 

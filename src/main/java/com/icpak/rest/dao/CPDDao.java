@@ -2,6 +2,7 @@ package com.icpak.rest.dao;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -14,9 +15,11 @@ import org.apache.log4j.Logger;
 import com.icpak.rest.exceptions.ServiceException;
 import com.icpak.rest.models.ErrorCodes;
 import com.icpak.rest.models.cpd.CPD;
+import com.icpak.rest.models.membership.Member;
 import com.workpoint.icpak.shared.model.AttachmentDto;
 import com.workpoint.icpak.shared.model.CPDCategory;
 import com.workpoint.icpak.shared.model.CPDDto;
+import com.workpoint.icpak.shared.model.CPDFooterDto;
 import com.workpoint.icpak.shared.model.CPDStatus;
 import com.workpoint.icpak.shared.model.CPDSummaryDto;
 import com.workpoint.icpak.shared.model.MemberCPDDto;
@@ -104,9 +107,10 @@ public class CPDDao extends BaseDao {
 			Integer limit) {
 		logger.info(" +++ GETTING MEMBER CPD +++");
 		StringBuffer sql = new StringBuffer(
-				"select n.No_,n.Name,n.`customer Type`,n.status,"
+				"select m.refId,n.No_,n.Name,n.`customer Type`,n.status,"
 						+ "n.Year2016,n.Year2015,n.Year2014,n.Year2013,n.Year2012,n.Year2011 "
-						+ "from navmember n ");
+						+ "from navmember n "
+						+ "INNER JOIN member m ON (n.No_=m.memberNo)");
 
 		Map<String, Object> params = appendParameters(sql, null, null, null,
 				searchTerm);
@@ -123,6 +127,8 @@ public class CPDDao extends BaseDao {
 		for (Object[] row : rows) {
 			int i = 0;
 			Object value = null;
+			String memberRefId = (value = row[i++]) == null ? null : value
+					.toString();
 			String memberNo = (value = row[i++]) == null ? null : value
 					.toString();
 			String memberNames = (value = row[i++]) == null ? null : value
@@ -144,6 +150,7 @@ public class CPDDao extends BaseDao {
 			Double year2011 = (value = row[i++]) == null ? null
 					: (Double) value;
 			MemberCPDDto memberCPDDto = new MemberCPDDto();
+			memberCPDDto.setRefId(memberRefId);
 			memberCPDDto.setMemberNo(memberNo);
 			memberCPDDto.setMemberNames(memberNames);
 			memberCPDDto.setCustomerType(customerType);
@@ -549,7 +556,6 @@ public class CPDDao extends BaseDao {
 	}
 
 	public BigInteger cpdSearchCount(String searchTerm) {
-
 		String sql = "select count(*) "
 				+ "from cpd c "
 				+ "inner join member m on (c.memberRefId=m.refId) "
@@ -573,5 +579,65 @@ public class CPDDao extends BaseDao {
 				"searchTerm", "%" + searchTerm + "%");
 
 		return getSingleResultOrNull(query);
+	}
+
+	public List<CPDFooterDto> getYearSummaries(String memberId, Date startDate,
+			Date endDate) {
+		Member member = findByRefId(memberId, Member.class);
+		Calendar startCalendar = Calendar.getInstance();
+		startCalendar.setTime(startDate);
+
+		Calendar endCalendar = Calendar.getInstance();
+		startCalendar.setTime(startDate);
+
+		int startYear = startCalendar.get(Calendar.YEAR);
+		int endYear = endCalendar.get(Calendar.YEAR);
+
+		// We have Records Upto 2011, so nothing below this Year
+		if (startYear < 2011) {
+			startYear = 2011;
+		}
+		String sql = "select n.Year2016,n.Year2015,n.Year2014,n.Year2013,n.Year2012,n.Year2011 "
+				+ "from navmember n where No_=:memberNo";
+		Query query = getEntityManager().createNativeQuery(sql).setParameter(
+				"memberNo", member.getMemberNo());
+		Object[] row = getSingleResultOrNull(query);
+
+		int i = 0;
+		Object value = null;
+		Double year2016 = (value = row[i++]) == null ? null : (Double) value;
+		Double year2015 = (value = row[i++]) == null ? null : (Double) value;
+		Double year2014 = (value = row[i++]) == null ? null : (Double) value;
+		Double year2013 = (value = row[i++]) == null ? null : (Double) value;
+		Double year2012 = (value = row[i++]) == null ? null : (Double) value;
+		Double year2011 = (value = row[i++]) == null ? null : (Double) value;
+
+		Map<String, Double> allValues = new HashMap<>();
+		allValues.put("Year2016", year2016);
+		allValues.put("Year2015", year2015);
+		allValues.put("Year2014", year2014);
+		allValues.put("Year2013", year2013);
+		allValues.put("Year2012", year2012);
+		allValues.put("Year2011", year2011);
+
+		List<CPDFooterDto> cpdFooters = new ArrayList<>();
+		Double grandTotal = 0.0;
+		for (int start = startYear; start <= endYear; start++) {
+			String description = "TOTAL CREDIT UNITS FOR " + start;
+			Double total = allValues.get("Year" + start);
+			grandTotal = grandTotal + total;
+			if (total != 0.0) {
+				CPDFooterDto cpdFooter = new CPDFooterDto();
+				cpdFooter.setDescription(description);
+				cpdFooter.setCpdUnits(total);
+				cpdFooters.add(cpdFooter);
+			}
+		}
+
+		CPDFooterDto grandTotalDto = new CPDFooterDto();
+		grandTotalDto.setDescription("TOTAL CREDIT UNITS");
+		grandTotalDto.setCpdUnits(grandTotal);
+		cpdFooters.add(grandTotalDto);
+		return cpdFooters;
 	}
 }

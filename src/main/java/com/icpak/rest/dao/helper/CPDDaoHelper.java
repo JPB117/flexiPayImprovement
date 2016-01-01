@@ -28,6 +28,7 @@ import com.icpak.rest.utils.EmailServiceHelper;
 import com.workpoint.icpak.server.util.DateUtils;
 import com.workpoint.icpak.shared.model.CPDCategory;
 import com.workpoint.icpak.shared.model.CPDDto;
+import com.workpoint.icpak.shared.model.CPDFooterDto;
 import com.workpoint.icpak.shared.model.CPDStatus;
 import com.workpoint.icpak.shared.model.CPDSummaryDto;
 import com.workpoint.icpak.shared.model.MemberCPDDto;
@@ -407,7 +408,6 @@ public class CPDDaoHelper {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-
 		logger.info(" +++++ LMS STARTDATE +++ " + cpdDto.getLmsStartDate());
 		logger.info(" +++++ LMS ENDDATE +++ " + cpdDto.getLmsEnddate());
 		logger.info(" +++++ MemberRegistration Number +++ "
@@ -432,6 +432,12 @@ public class CPDDaoHelper {
 
 	public Integer getMemberCPDCount(String searchTerm) {
 		return dao.getMemberCPDCount(searchTerm).intValue();
+	}
+
+	public List<CPDFooterDto> getYearSummaries(String memberId, Long startDate,
+			Long endDate) {
+		return dao.getYearSummaries(memberId, new Date(startDate), new Date(
+				endDate));
 	}
 
 }

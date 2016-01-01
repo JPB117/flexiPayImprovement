@@ -16,6 +16,7 @@ import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.PagingPanel;
 import com.workpoint.icpak.client.ui.component.PagingTable;
 import com.workpoint.icpak.client.ui.component.TableHeader;
+import com.workpoint.icpak.client.ui.cpd.member.table.footer.CPDMemberFooterRow;
 import com.workpoint.icpak.client.ui.cpd.member.table.row.CPDMemberTableRow;
 
 public class CPDMemberTable extends Composite {
@@ -52,7 +53,8 @@ public class CPDMemberTable extends Composite {
 		tblView.addRow(row);
 	}
 
-	public void createFooter() {
+	public void createFooter(CPDMemberFooterRow footer) {
+		tblView.createFooter(footer);
 	}
 
 	public void clearRows() {
@@ -102,5 +104,9 @@ public class CPDMemberTable extends Composite {
 
 	public HasKeyDownHandlers getSearchKeyDownHandler() {
 		return tblView.getSearchKeyDownHandler();
+	}
+
+	public void clearFooter() {
+		tblView.clearFooter();
 	}
 }

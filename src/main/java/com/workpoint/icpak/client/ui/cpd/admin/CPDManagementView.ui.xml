@@ -30,7 +30,6 @@
 				<div class="row">
 					<div class="col-lg-12">
 						<g:HTMLPanel styleName="panel widget" ui:field="panelListing">
-							<div class="panel-heading hide">CPD Summary</div>
 							<div class="panel-body">
 								<div class="row">
 									<div class="col-lg-12">
@@ -70,6 +69,21 @@
 											<!-- Member CPD -->
 											<div class="tab-pane" ui:field="divMemberTable">
 												<br />
+												<div ui:field="panelBreadcrumb" class="hide">
+													<ol class="breadcrumb">
+														<li>
+															<d:ActionLink ui:field="aBack" href="#cpdmgt;p=memberCPD">
+																<i class="fa fa-angle-double-left"></i>
+																Back
+															</d:ActionLink>
+														</li>
+														<li>
+															<span ui:field="spnMemberName">
+															</span>
+														</li>
+													</ol>
+												</div>
+
 												<summary:CPDSummaryTable ui:field="tblSummaryTable"></summary:CPDSummaryTable>
 												<member:CPDMemberTable ui:field="tblMemberTable"
 													styleName="hide"></member:CPDMemberTable>

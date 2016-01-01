@@ -28,9 +28,13 @@ import com.workpoint.icpak.client.ui.cpd.admin.table.CPDAdminTable;
 import com.workpoint.icpak.client.ui.cpd.admin.table.row.CPDAdminTableRow;
 import com.workpoint.icpak.client.ui.cpd.form.RecordCPD;
 import com.workpoint.icpak.client.ui.cpd.header.CPDHeader;
+import com.workpoint.icpak.client.ui.cpd.member.table.CPDMemberTable;
+import com.workpoint.icpak.client.ui.cpd.member.table.footer.CPDMemberFooterRow;
+import com.workpoint.icpak.client.ui.cpd.member.table.row.CPDMemberTableRow;
 import com.workpoint.icpak.client.ui.util.DateRange;
 import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.shared.model.CPDDto;
+import com.workpoint.icpak.shared.model.CPDFooterDto;
 import com.workpoint.icpak.shared.model.CPDSummaryDto;
 import com.workpoint.icpak.shared.model.Listable;
 import com.workpoint.icpak.shared.model.MemberCPDDto;
@@ -76,6 +80,14 @@ public class CPDManagementView extends ViewImpl implements
 	DivElement divCPDArchive;
 	@UiField
 	CPDSummaryTable tblSummaryTable;
+	@UiField
+	CPDMemberTable tblMemberTable;
+
+	@UiField
+	DivElement panelBreadcrumb;
+
+	@UiField
+	SpanElement spnMemberName;
 
 	public interface Binder extends UiBinder<Widget, CPDManagementView> {
 	}
@@ -229,6 +241,16 @@ public class CPDManagementView extends ViewImpl implements
 			liMemberCPD.addClassName("active");
 			divMemberTable.addClassName("active");
 
+			if (!refId.isEmpty()) {
+				tblMemberTable.removeStyleName("hide");
+				tblSummaryTable.addStyleName("hide");
+				panelBreadcrumb.removeClassName("hide");
+			} else {
+				tblMemberTable.addStyleName("hide");
+				tblSummaryTable.removeStyleName("hide");
+				panelBreadcrumb.addClassName("hide");
+			}
+
 		} else if (page.equals("returnArchive")) {
 			liReturnArchive.addClassName("active");
 			divCPDArchive.addClassName("active");
@@ -277,5 +299,32 @@ public class CPDManagementView extends ViewImpl implements
 		for (MemberCPDDto memberCPD : result) {
 			tblSummaryTable.createRow(new CPDSummaryTableRow(memberCPD));
 		}
+	}
+
+	@Override
+	public void bindIndividualCPDFooter(List<CPDFooterDto> result) {
+		tblMemberTable.clearFooter();
+		for (CPDFooterDto footer : result) {
+			tblMemberTable.createFooter(new CPDMemberFooterRow(footer));
+		}
+	}
+
+	@Override
+	public void bindIndividualResults(List<CPDDto> result) {
+		tblMemberTable.clearRows();
+		tblMemberTable.setNoRecords(result.size());
+		for (CPDDto dto : result) {
+			tblMemberTable.createRow(new CPDMemberTableRow(dto));
+		}
+	}
+
+	@Override
+	public PagingPanel getIndividualMemberPagingPanel() {
+		return tblMemberTable.getPagingPanel();
+	}
+
+	@Override
+	public void setIndividualMemberInitialDates(Date startDate, Date endDate) {
+		tblMemberTable.setInitialDates(startDate, endDate);
 	}
 }

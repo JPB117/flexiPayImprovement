@@ -81,19 +81,23 @@ public class TestCPDDao extends AbstractDaoTest {
 	}
 
 	@Test
-	public void testMemberCPD() {
-		List<MemberCPDDto> memberCPDDtos = cpdDao.getMemberCPD("", 0, 10);
+	public void testMemberCPD() throws ParseException {
+		// List<MemberCPDDto> memberCPDDtos = cpdDao.getMemberCPD("", 0, 10);
+		//
+		// System.err.println("Dto Size>>" + cpdDao.getMemberCPDCount(""));
+		//
+		// for (MemberCPDDto memberCPD : memberCPDDtos) {
+		// System.err.println("No_" + memberCPD.getMemberNo());
+		// System.err.println("Category::" + memberCPD.getCustomerType());
+		// System.err.println("Status::" + memberCPD.getStatus());
+		// System.err.println("2015::" + memberCPD.getYear2015());
+		// System.err.println("2011::" + memberCPD.getYear2011());
+		// }
 
-		System.err.println("Dto Size>>" + cpdDao.getMemberCPDCount(""));
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		Date another = formatter.parse("2013-1-1");
 
-		for (MemberCPDDto memberCPD : memberCPDDtos) {
-			System.err.println("No_" + memberCPD.getMemberNo());
-			System.err.println("Category::" + memberCPD.getCustomerType());
-			System.err.println("Status::" + memberCPD.getStatus());
-			System.err.println("2015::" + memberCPD.getYear2015());
-			System.err.println("2011::" + memberCPD.getYear2011());
-		}
-
+		cpdDao.getYearSummaries("iypUNLFxbsEFMJLB", another, new Date());
 	}
 
 	@Ignore

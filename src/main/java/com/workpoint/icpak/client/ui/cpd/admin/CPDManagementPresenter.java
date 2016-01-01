@@ -50,6 +50,7 @@ import com.workpoint.icpak.client.ui.util.DateRange;
 import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.shared.api.MemberResource;
 import com.workpoint.icpak.shared.model.CPDDto;
+import com.workpoint.icpak.shared.model.CPDFooterDto;
 import com.workpoint.icpak.shared.model.CPDSummaryDto;
 import com.workpoint.icpak.shared.model.MemberCPDDto;
 import com.workpoint.icpak.shared.model.TableActionType;
@@ -91,6 +92,14 @@ public class CPDManagementPresenter
 		PagingPanel getArchivePagingPanel();
 
 		PagingPanel getCPDSummaryPagingPanel();
+
+		void bindIndividualCPDFooter(List<CPDFooterDto> result);
+
+		void bindIndividualResults(List<CPDDto> result);
+
+		PagingPanel getIndividualMemberPagingPanel();
+
+		void setIndividualMemberInitialDates(Date startDate, Date endDate);
 
 	}
 
@@ -191,6 +200,14 @@ public class CPDManagementPresenter
 			}
 		});
 
+		getView().getIndividualMemberPagingPanel().setLoader(
+				new PagingLoader() {
+					@Override
+					public void onLoad(int offset, int limit) {
+						loadIndividualData(memberRefId, startDate, endDate);
+					}
+				});
+
 	}
 
 	@Inject
@@ -199,6 +216,7 @@ public class CPDManagementPresenter
 	private Date endDate;
 	private String page;
 	protected int pageLimit = 10;
+	private String memberRefId;
 
 	protected void saveRecord(CPDDto dto) {
 		fireEvent(new ProcessingEvent());
@@ -297,6 +315,50 @@ public class CPDManagementPresenter
 				.getAll(offset, limit, startDate.getTime(), endDate.getTime());
 	}
 
+	protected void loadIndividualData(String memberId, Date startDate,
+			Date endDate) {
+		fireEvent(new ProcessingEvent());
+		memberDelegate.withCallback(new AbstractAsyncCallback<Integer>() {
+			@Override
+			public void onSuccess(Integer aCount) {
+				fireEvent(new ProcessingCompletedEvent());
+				PagingPanel panel = getView().getIndividualMemberPagingPanel();
+				panel.setTotal(aCount);
+				PagingConfig config = panel.getConfig();
+
+				loadIndividualMemberCPD(config.getOffset(), pageLimit);
+			}
+		}).cpd(memberId).getCount(startDate.getTime(), endDate.getTime());
+
+	}
+
+	protected void loadIndividualMemberCPD(int offset, int limit) {
+		fireEvent(new ProcessingEvent());
+		memberDelegate.withCallback(new AbstractAsyncCallback<List<CPDDto>>() {
+			@Override
+			public void onSuccess(List<CPDDto> result) {
+				fireEvent(new ProcessingCompletedEvent());
+				getView().bindIndividualResults(result);
+				loadYearSummaries();
+			}
+		}).cpd(memberRefId)
+				.getAll(offset, limit, startDate.getTime(), endDate.getTime());
+	}
+
+	protected void loadYearSummaries() {
+		fireEvent(new ProcessingEvent());
+		memberDelegate
+				.withCallback(new AbstractAsyncCallback<List<CPDFooterDto>>() {
+					@Override
+					public void onSuccess(List<CPDFooterDto> result) {
+						fireEvent(new ProcessingCompletedEvent());
+						getView().bindIndividualCPDFooter(result);
+					}
+				}).cpd(memberRefId)
+				.getYearSummaries(startDate.getTime(), endDate.getTime());
+
+	}
+
 	protected void loadCPD(String refId, final String loadType) {
 		fireEvent(new ProcessingEvent());
 
@@ -327,11 +389,8 @@ public class CPDManagementPresenter
 		// If there is no refId - Load Table Data else load individual CPD
 		// Record
 		if (refId.isEmpty()) {
-			getView().setInitialDates(DateRange.THISYEAR, new Date());
-			this.startDate = DateUtils
-					.getDateByRange(DateRange.THISYEAR, false);
+			this.startDate = DateUtils.DATEFORMAT_SYS.parse("2011-01-01");
 			this.endDate = new Date();
-
 			if (page.equals("cpdReturns")) {
 				loadData(startDate, endDate, "ALLRETURNS");
 			} else if (page.equals("returnArchive")) {
@@ -340,8 +399,15 @@ public class CPDManagementPresenter
 				loadCPDSummaryCount("");
 			}
 		} else {
-			// Load Individual CPD
-			loadCPD(refId, page);
+			if (page.equals("memberCPD")) {
+				this.memberRefId = refId;
+				loadIndividualData(memberRefId, startDate, endDate);
+			} else {
+				// Load Individual CPD - Return OR Archive
+				getView().setIndividualMemberInitialDates(startDate,endDate);
+				loadCPD(refId, page);
+			}
+
 		}
 	}
 
