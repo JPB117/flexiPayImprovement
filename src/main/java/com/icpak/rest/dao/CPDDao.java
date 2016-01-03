@@ -100,8 +100,8 @@ public class CPDDao extends BaseDao {
 		for (Object[] row : rows) {
 			int i = 0;
 			Object value = null;
-			BigInteger id = (value = row[i++]) == null ? null
-					: (BigInteger) value;
+			Integer id = (value = row[i++]) == null ? null
+					: (Integer) value;
 			String refId = (value = row[i++]) == null ? null : value.toString();
 			Date startDt = (value = row[i++]) == null ? null : (Date) value;
 			Date endDt = (value = row[i++]) == null ? null : (Date) value;
@@ -140,7 +140,7 @@ public class CPDDao extends BaseDao {
 		return cpds;
 	}
 
-	private Set<Attachment> getAllAttachment(BigInteger id) {
+	private Set<Attachment> getAllAttachment(Integer id) {
 		logger.info(" +++ GET Attachments FOR +++++ cpdId == " + id);
 		StringBuffer sql = new StringBuffer(
 				"select refId,name from attachment where cpdid=:passedId");

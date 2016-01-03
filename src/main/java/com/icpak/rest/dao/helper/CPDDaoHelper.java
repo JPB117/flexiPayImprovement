@@ -265,7 +265,7 @@ public class CPDDaoHelper {
 				messages.add("Your Membership status is <strong>"
 						+ status.name()
 						+ "</strong>. "
-						+ "Membership must be <strong>Active</strong> be in good standing.");
+						+ "Membership must be <strong>Active</strong> to be in good standing.");
 			}
 		} else {
 			isGenerate = false;

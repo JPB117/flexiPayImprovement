@@ -31,5 +31,7 @@ public class IcpakPreBootstrapper implements PreBootstrapper {
 				return e;
 			}
 		});
+		
+		LOGGER.info(" ++++ ON PRE BOOTSTRAP ++++ ");
 	}
 }
