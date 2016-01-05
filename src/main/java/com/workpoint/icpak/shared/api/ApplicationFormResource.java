@@ -25,7 +25,8 @@ public interface ApplicationFormResource extends BaseResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<ApplicationFormHeaderDto> getAll(
 			@QueryParam("offset") Integer offset,
-			@QueryParam("limit") Integer limit);
+			@QueryParam("limit") Integer limit,
+			@QueryParam("searchTerm") String searchTerm);
 
 	@GET
 	@Path("/summary")
@@ -77,6 +78,10 @@ public interface ApplicationFormResource extends BaseResource {
 	@Path("/{applicationId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public void delete(@PathParam("applicationId") String applicationId);
+
+	@GET
+	@Path("/searchCount")
+	public Integer getSearchCount(@QueryParam("searchTerm") String searchTerm);
 
 	/**
 	 * Member CPD

@@ -16,6 +16,7 @@ public class IcpakPreBootstrapper implements PreBootstrapper {
 			@Override
 			public void onUncaughtException(Throwable e) {
 				unwrap(e);
+				LOGGER.log(Level.SEVERE, e.getStackTrace() + "");
 			}
 
 			public Throwable unwrap(Throwable e) {

@@ -47,9 +47,10 @@ public class ApplicationFormResourceImpl implements ApplicationFormResource {
 	@ApiOperation(value = "Retrieve all active Applications")
 	public List<ApplicationFormHeaderDto> getAll(
 			@QueryParam("offset") Integer offset,
-			@QueryParam("limit") Integer limit) {
+			@QueryParam("limit") Integer limit,
+			@QueryParam("searchTerm") String searchTerm) {
 		List<ApplicationFormHeaderDto> dtos = helper.getAllApplications(offset,
-				limit, "");
+				limit, "", searchTerm);
 		return dtos;
 	}
 
@@ -57,6 +58,12 @@ public class ApplicationFormResourceImpl implements ApplicationFormResource {
 	@Path("/count")
 	public Integer getCount() {
 		return helper.getApplicationCount();
+	}
+
+	@GET
+	@Path("/searchCount")
+	public Integer getSearchCount(@QueryParam("searchTerm") String searchTerm) {
+		return helper.getApplicationCount(searchTerm);
 	}
 
 	@GET

@@ -8,6 +8,7 @@
 		<g:HTMLPanel styleName="td" ui:field="divContact">
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divDocNum">
+			<d:ActionLink ui:field="aProforma"></d:ActionLink>
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divDescription">
 		</g:HTMLPanel>

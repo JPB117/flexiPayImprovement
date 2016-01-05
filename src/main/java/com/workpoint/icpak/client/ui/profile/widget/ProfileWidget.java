@@ -77,7 +77,6 @@ public class ProfileWidget extends Composite {
 
 	@UiField
 	HTMLPanel divProfileContent;
-
 	@UiField
 	HTMLPanel panelProfile;
 	@UiField
@@ -95,6 +94,8 @@ public class ProfileWidget extends Composite {
 	ActionLink aRefresh;
 	@UiField
 	ActionLink aChangePhoto;
+	@UiField
+	Element aBackToApplications;
 	@UiField
 	Uploader uploader;
 	@UiField
@@ -126,14 +127,22 @@ public class ProfileWidget extends Composite {
 	@UiField
 	Element spnHelpIcon;
 	@UiField
+	Element elSpace;
+	@UiField
 	ProgressBar progressBar;
 	@UiField
 	Anchor aDownloadCert;
-
 	@UiField
 	HTMLPanel panelIssues;
 	@UiField
 	BulletListPanel ulIssues;
+	@UiField
+	HTMLPanel panelBreadcrumb;
+
+	@UiField
+	ActionLink aPreviousApplication;
+	@UiField
+	ActionLink aNextApplication;
 
 	private BasicDetails basicDetail;
 	private EducationDetails educationDetail;
@@ -147,7 +156,6 @@ public class ProfileWidget extends Composite {
 
 	public ProfileWidget() {
 		initWidget(uiBinder.createAndBindUi(this));
-
 		basicDetail = new BasicDetails();
 		educationDetail = new EducationDetails();
 		specializationDetail = new SpecializationDetails();
@@ -229,19 +237,26 @@ public class ProfileWidget extends Composite {
 		educationDetail.setEditMode(editMode);
 		trainingDetail.setEditMode(editMode);
 		specializationDetail.setEditMode(editMode);
+		panelBreadcrumb.getElement().scrollIntoView();
 
 		if (editMode) {
 			divEditDropDown.setVisible(true);
-			divSavePanel.setVisible(true);
+			// divSavePanel.setVisible(true);
 			divStandingStatus.removeClassName("hide");
-			aDownloadCert.setVisible(true);
+			// aDownloadCert.setVisible(true);
 			spnRefreshSection.removeClassName("hide");
+			elSpace.addClassName("hide");
+			aBackToApplications.addClassName("hide");
+			panelBreadcrumb.addStyleName("hide");
 		} else {
 			divEditDropDown.setVisible(false);
-			divSavePanel.setVisible(false);
+			// divSavePanel.setVisible(false);
 			divStandingStatus.addClassName("hide");
-			aDownloadCert.setVisible(false);
+			// aDownloadCert.setVisible(false);
 			spnRefreshSection.addClassName("hide");
+			elSpace.removeClassName("hide");
+			aBackToApplications.removeClassName("hide");
+			panelBreadcrumb.removeStyleName("hide");
 		}
 	}
 
@@ -281,6 +296,7 @@ public class ProfileWidget extends Composite {
 			result.setPercCompletion(50);
 			progressBar.setProgress(result.getPercCompletion());
 		}
+
 	}
 
 	public void bindCurrentUser(CurrentUser user) {
@@ -509,4 +525,21 @@ public class ProfileWidget extends Composite {
 		// Date()));
 	}
 
+	public void setNavigationLinks(String previousRefId, String nextRefId,
+			int maxSize) {
+		if ((Integer.parseInt(nextRefId) + 1) < maxSize) {
+			aNextApplication.removeStyleName("hide");
+			aNextApplication.setHref("#members;counter=" + nextRefId);
+		} else {
+			aNextApplication.addStyleName("hide");
+		}
+
+		if (Integer.parseInt(previousRefId) > 0) {
+			aPreviousApplication.removeStyleName("hide");
+			aPreviousApplication.setHref("#members;counter=" + previousRefId);
+		} else {
+			aPreviousApplication.addStyleName("hide");
+		}
+
+	}
 }

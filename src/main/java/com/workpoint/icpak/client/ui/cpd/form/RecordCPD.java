@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -27,12 +28,15 @@ import com.workpoint.icpak.client.ui.component.DateField;
 import com.workpoint.icpak.client.ui.component.DropDownList;
 import com.workpoint.icpak.client.ui.component.IssuesPanel;
 import com.workpoint.icpak.client.ui.component.TextField;
+import com.workpoint.icpak.client.ui.events.TableActionEvent;
 import com.workpoint.icpak.client.ui.upload.custom.Uploader;
+import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.model.AttachmentDto;
 import com.workpoint.icpak.shared.model.CPDAction;
 import com.workpoint.icpak.shared.model.CPDCategory;
 import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.shared.model.CPDStatus;
+import com.workpoint.icpak.shared.model.TableActionType;
 
 public class RecordCPD extends Composite {
 
@@ -94,12 +98,28 @@ public class RecordCPD extends Composite {
 	TextArea txtMgmtComment;
 
 	@UiField
+	ActionLink aBack;
+
+	@UiField
+	ActionLink aSave;
+
+	@UiField
+	DivElement panelInlineActions;
+	@UiField
+	DivElement panelBreadcrumb;
+
+	@UiField
+	SpanElement spnMemberName;
+
+	@UiField
 	DropDownList<CPDCategory> lstCategory;
 
 	@UiField
 	DropDownList<CPDAction> lstMgmtAction;
 
 	private CPDDto dto;
+
+	private boolean isViewMode;
 
 	public RecordCPD() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -119,10 +139,20 @@ public class RecordCPD extends Composite {
 		}
 		lstMgmtAction.setItems(cpdActions);
 		// uploader.setAutoSubmit(false);
+
+		aSave.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				if (isValid()) {
+					AppContext.fireEvent(new TableActionEvent(getCPD(),
+							TableActionType.APPROVECPD));
+				}
+			}
+		});
 	}
 
 	public void showUploadPanel(boolean showForm) {
-		aStartUpload.setVisible(showForm);
+		aStartUpload.setVisible(!showForm);
 		if (showForm) {
 			panelUploader.removeStyleName("hide");
 			setUploadContext();
@@ -163,6 +193,10 @@ public class RecordCPD extends Composite {
 		if (lstCategory.getValue() == null) {
 			isValid = false;
 			issues.addError("Category is mandatory");
+		}
+		if (isViewMode && txtCPDHours.getValue().equals("0")) {
+			isValid = false;
+			issues.addError("CPD Hours must be greater than 0!");
 		}
 		return isValid;
 	}
@@ -214,7 +248,7 @@ public class RecordCPD extends Composite {
 		txtOrganizer.setValue(dto.getOrganizer());
 		txtCPDHours.setValue(Double.toString(dto.getCpdHours()));
 		txtMgmtComment.setValue(dto.getManagementComment());
-		// Window.alert("Attachment Size::" + dto.getAttachments().size());
+		panelPreviousAttachments.clear();
 
 		if (dto.getAttachments() != null) {
 			for (final AttachmentDto attachment : dto.getAttachments()) {
@@ -244,6 +278,7 @@ public class RecordCPD extends Composite {
 	}
 
 	public void setViewMode(boolean isViewMode) {
+		this.isViewMode = isViewMode;
 		if (isViewMode) {
 			lstCategory.getElement().getFirstChildElement()
 					.setAttribute("disabled", "disabled");
@@ -255,6 +290,9 @@ public class RecordCPD extends Composite {
 			panelUpload.setVisible(false);
 			divCpdHours.removeClassName("hide");
 			divMgtComment.removeClassName("hide");
+			panelInlineActions.removeClassName("hide");
+			panelBreadcrumb.removeClassName("hide");
+
 		} else {
 			lstCategory.getElement().getFirstChildElement()
 					.removeAttribute("disabled");
@@ -264,6 +302,16 @@ public class RecordCPD extends Composite {
 			txtOrganizer.getElement().removeAttribute("disabled");
 			panelUpload.setVisible(true);
 			divCpdHours.addClassName("hide");
+			panelInlineActions.addClassName("hide");
+			panelBreadcrumb.addClassName("hide");
 		}
+	}
+
+	public void setBackHref(String href) {
+		aBack.setHref(href);
+	}
+
+	public void setMemberName(String memberName) {
+		spnMemberName.setInnerText(memberName);
 	}
 }

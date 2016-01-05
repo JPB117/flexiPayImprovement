@@ -3,7 +3,7 @@ package com.workpoint.icpak.client.ui.events;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HasHandlers;
-import com.workpoint.icpak.client.ui.cpd.table.row.CPDTableRow.TableActionType;
+import com.workpoint.icpak.shared.model.TableActionType;
 import com.workpoint.icpak.shared.model.UserDto;
 
 public class TableActionEvent extends

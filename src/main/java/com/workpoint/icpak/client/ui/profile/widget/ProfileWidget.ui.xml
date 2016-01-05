@@ -28,12 +28,38 @@
 		color: white;
 		font-weight: bold;
 	}
+	
+	.previous-link {
+		padding-right: 20px;
+	}
 	</ui:style>
 	<g:HTMLPanel>
 		<g:HTMLPanel ui:field="divProfileContent" styleName="col-xs-12">
 			<g:HTMLPanel styleName="row">
 				<div class="col-xs-12">
 					<div class="panel widget">
+						<g:HTMLPanel ui:field="panelBreadcrumb">
+							<ol class="breadcrumb">
+								<li>
+									<a href="#members" ui:field="aBackToApplications" class="btn btn-fill btn-primary">
+										<i class="fa fa-angle-double-left"></i>
+										Applications
+									</a>
+								</li>
+								<div class="pull-right">
+									<d:ActionLink ui:field="aPreviousApplication"
+										styleName="{style.previous-link} btn btn-default btn-fill">
+										<i class="fa fa-chevron-left"></i>
+										Previous
+									</d:ActionLink>
+									<d:ActionLink ui:field="aNextApplication"
+										styleName="btn btn-default btn-fill">
+										Next
+										<i class="fa fa-chevron-right"></i>
+									</d:ActionLink>
+								</div>
+							</ol>
+						</g:HTMLPanel>
 						<div class="ember-view popovercontainer ribbon hide">
 							<g:HTMLPanel styleName="ribbon-inner ribbon-draft"
 								ui:field="panelApplicationType">
@@ -97,6 +123,7 @@
 									<g:HTMLPanel ui:field="PanelProfileDisplay"
 										styleName="col-md-12">
 										<div class="row">
+											<br ui:field="elSpace" class="hide" />
 											<h3 class="m0">
 												<span ui:field="spnNames"></span>
 											</h3>

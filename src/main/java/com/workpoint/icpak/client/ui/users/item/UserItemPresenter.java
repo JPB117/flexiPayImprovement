@@ -10,23 +10,17 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rest.delegates.client.ResourceDelegate;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.View;
-import com.icpak.rest.models.auth.User;
-import com.workpoint.icpak.client.model.UploadContext;
-import com.workpoint.icpak.client.model.UploadContext.UPLOADACTION;
 import com.workpoint.icpak.client.service.AbstractAsyncCallback;
 import com.workpoint.icpak.client.ui.AppManager;
 import com.workpoint.icpak.client.ui.OnOptionSelected;
-import com.workpoint.icpak.client.ui.OptionControl;
-import com.workpoint.icpak.client.ui.cpd.table.row.CPDTableRow.TableActionType;
-import com.workpoint.icpak.client.ui.events.EditModelEvent;
 import com.workpoint.icpak.client.ui.events.EditUserEvent;
 import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
 import com.workpoint.icpak.client.ui.events.ProcessingEvent;
 import com.workpoint.icpak.client.ui.events.TableActionEvent;
 import com.workpoint.icpak.client.ui.events.TableActionEvent.TableActionHandler;
-import com.workpoint.icpak.client.ui.users.item.statement.MemberStatementWidget;
 import com.workpoint.icpak.shared.api.MemberResource;
 import com.workpoint.icpak.shared.api.UsersResource;
+import com.workpoint.icpak.shared.model.TableActionType;
 import com.workpoint.icpak.shared.model.UserDto;
 
 public class UserItemPresenter extends PresenterWidget<UserItemPresenter.MyView> implements TableActionHandler {

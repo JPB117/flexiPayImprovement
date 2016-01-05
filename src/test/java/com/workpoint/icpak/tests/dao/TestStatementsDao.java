@@ -28,6 +28,7 @@ import com.icpak.rest.dao.InvoiceDaoHelper;
 import com.icpak.rest.dao.StatementDao;
 import com.icpak.rest.dao.helper.StatementDaoHelper;
 import com.icpak.rest.models.cpd.CPD;
+import com.icpak.rest.util.StatementSchedular;
 import com.icpak.servlet.upload.GetReport;
 import com.itextpdf.text.DocumentException;
 import com.workpoint.icpak.shared.model.statement.StatementSummaryDto;
@@ -44,6 +45,8 @@ public class TestStatementsDao extends AbstractDaoTest {
 	GetReport reportServlet;
 	@Inject
 	CPDDao cpdDao;
+	@Inject
+	StatementSchedular schedular;
 
 	@Ignore
 	public void generateReport() throws FileNotFoundException, IOException,
@@ -67,7 +70,7 @@ public class TestStatementsDao extends AbstractDaoTest {
 
 	}
 
-	@Test
+	@Ignore
 	public void generateMemebrCPDReport() throws FileNotFoundException,
 			IOException, SAXException, ParserConfigurationException,
 			FactoryConfigurationError, DocumentException {
@@ -117,7 +120,7 @@ public class TestStatementsDao extends AbstractDaoTest {
 		logger.info(">>>>> Formatted " + date);
 	}
 
-	@Test
+	@Ignore
 	public void testTotals() {
 		Long startDate = 1420059600000L;
 		StatementSummaryDto summary = statementHelper.getSummary(
@@ -126,5 +129,11 @@ public class TestStatementsDao extends AbstractDaoTest {
 		System.err.println("Total Credit>>" + summary.getTotalCredit());
 		System.err.println("Total Balance>>" + summary.getTotalBalance());
 
+	}
+	
+	@Test
+	public void testSchedular(){
+		logger.info(" TRIGGER SCHEDULAR");
+		statementHelper.initiTimer();
 	}
 }

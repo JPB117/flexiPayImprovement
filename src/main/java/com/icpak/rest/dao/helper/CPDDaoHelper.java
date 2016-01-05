@@ -28,8 +28,10 @@ import com.icpak.rest.utils.EmailServiceHelper;
 import com.workpoint.icpak.server.util.DateUtils;
 import com.workpoint.icpak.shared.model.CPDCategory;
 import com.workpoint.icpak.shared.model.CPDDto;
+import com.workpoint.icpak.shared.model.CPDFooterDto;
 import com.workpoint.icpak.shared.model.CPDStatus;
 import com.workpoint.icpak.shared.model.CPDSummaryDto;
+import com.workpoint.icpak.shared.model.MemberCPDDto;
 import com.workpoint.icpak.shared.model.MemberStanding;
 import com.workpoint.icpak.shared.model.MembershipStatus;
 import com.workpoint.icpak.shared.model.events.AttendanceStatus;
@@ -60,8 +62,7 @@ public class CPDDaoHelper {
 	public List<CPDDto> getAllCPD(String memberId, Integer offset,
 			Integer limit, Long startDate, Long endDate) {
 
-		List<CPD> cpds = null;
-
+		List<CPDDto> cpds = null;
 		if (memberId != null && memberId.equals("ALL")) {
 			cpds = dao.getAllCPDs(offset, limit, new Date(startDate), new Date(
 					endDate));
@@ -69,21 +70,11 @@ public class CPDDaoHelper {
 			cpds = dao.getAllCPDs(memberId, offset, limit, new Date(startDate),
 					new Date(endDate));
 		}
-
-		List<CPDDto> rtn = new ArrayList<>();
-		for (CPD cpd : cpds) {
-			CPDDto dto = cpd.toDTO();
-			// dto.setFullNames(userDao.getFullNames(cpd.getMemberRefId()));
-			rtn.add(dto);
-		}
-
 		logger.info(" ++++ TOTAL CPDS FOUND ++++ " + cpds.size());
-
-		return rtn;
+		return cpds;
 	}
 
 	public Integer getCount(String memberId, Long startDate, Long endDate) {
-		System.err.println("memberId" + memberId);
 		return dao
 				.getCPDCount(memberId, new Date(startDate), new Date(endDate));
 	}
@@ -96,15 +87,15 @@ public class CPDDaoHelper {
 		return rtn;
 	}
 
-	public CPDDto getCPDFromMemberRefId(String memberRefId, String cpdId) {
+	public CPDDto getCPDFromRefId(String cpdId) {
 		CPD cpd = dao.findByCPDId(cpdId);
 		CPDDto rtn = cpd.toDTO();
-		rtn.setFullNames(userDao.getFullNames(memberRefId));
+		rtn.setAttachments(dao.getAllAttachment(cpd.getId()));
+		rtn.setFullNames(userDao.getFullNames(cpd.getMemberRefId()));
 		return rtn;
 	}
 
 	public CPDDto create(String memberRefId, CPDDto cpdDto) {
-
 		CPD cpd = new CPD();
 		cpd.copyFrom(cpdDto);
 		cpd.setMemberRefId(memberRefId);
@@ -228,18 +219,16 @@ public class CPDDaoHelper {
 
 	public CPDSummaryDto getCPDSummary(String memberRefId, Long startDate,
 			Long endDate) {
-		logger.info(" ++++ CPD SUMMARY ++++ ");
 		CPDSummaryDto dto = null;
-		if (memberRefId.equals("ALL")) {
-			logger.info(" ++++ CPD SUMMARY FOR ALL ++++ ");
+		logger.info(" ++++ CPD SUMMARY FOR MEMBER REFID " + memberRefId
+				+ " ++++++ ");
+
+		if (memberRefId != null && memberRefId.equals("ALL")) {
 			dto = dao.getCPDSummary(new Date(startDate), new Date(endDate));
-		} else {
-			logger.info(" ++++ CPD SUMMARY FOR MEMBER REFID " + memberRefId
-					+ " ++++++ ");
+		} else if (memberRefId != null) {
 			dto = dao.getCPDSummary(memberRefId, new Date(startDate), new Date(
 					endDate));
 		}
-
 		return dto;
 	}
 
@@ -370,7 +359,6 @@ public class CPDDaoHelper {
 
 		List<CPD> cpds = dao.getAllCPDS(memberRefId, startDate, endDate,
 				offset == null ? 0 : offset, limit == null ? 1000 : limit);
-		logger.info("CPD Records Count = " + cpds.size());
 
 		List<CPDDto> cpdDtos = new ArrayList<>();
 		for (CPD cpd : cpds) {
@@ -382,9 +370,18 @@ public class CPDDaoHelper {
 
 	}
 
+	public List<MemberCPDDto> getAllMemberCPDSummary(String searchTerm,
+			Integer offset, Integer limit) {
+
+		List<MemberCPDDto> memberCPDs = dao.getMemberCPD(searchTerm, offset,
+				limit);
+		return memberCPDs;
+	}
+
 	public List<CPDDto> searchCPD(String searchTerm, Integer offset,
-			Integer limit) {
-		return dao.searchCPD(searchTerm, offset, limit);
+			Integer limit, Long startDate, Long endDate) {
+		return dao.searchCPD(searchTerm, offset, limit, new Date(startDate),
+				new Date(endDate));
 	}
 
 	public Integer cpdSearchCount(String searchTerm) {
@@ -411,7 +408,6 @@ public class CPDDaoHelper {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-
 		logger.info(" +++++ LMS STARTDATE +++ " + cpdDto.getLmsStartDate());
 		logger.info(" +++++ LMS ENDDATE +++ " + cpdDto.getLmsEnddate());
 		logger.info(" +++++ MemberRegistration Number +++ "
@@ -432,6 +428,16 @@ public class CPDDaoHelper {
 		}
 
 		return rtn;
+	}
+
+	public Integer getMemberCPDCount(String searchTerm) {
+		return dao.getMemberCPDCount(searchTerm).intValue();
+	}
+
+	public List<CPDFooterDto> getYearSummaries(String memberId, Long startDate,
+			Long endDate) {
+		return dao.getYearSummaries(memberId, new Date(startDate), new Date(
+				endDate));
 	}
 
 }

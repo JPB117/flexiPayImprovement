@@ -14,20 +14,40 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import com.workpoint.icpak.shared.model.CPDDto;
+import com.workpoint.icpak.shared.model.CPDFooterDto;
 import com.workpoint.icpak.shared.model.CPDSummaryDto;
+import com.workpoint.icpak.shared.model.MemberCPDDto;
 
 @Produces(MediaType.APPLICATION_JSON)
 public interface CPDResource extends BaseResource {
 
 	@GET
 	@Consumes(MediaType.APPLICATION_JSON)
-	public List<CPDDto> getAll(@QueryParam("offset") Integer offset, @QueryParam("limit") Integer limit,
-			@QueryParam("startDate") Long startDate, @QueryParam("endDate") Long endDate);
+	public List<CPDDto> getAll(@QueryParam("offset") Integer offset,
+			@QueryParam("limit") Integer limit,
+			@QueryParam("startDate") Long startDate,
+			@QueryParam("endDate") Long endDate);
+
+	@GET
+	@Path("/yearSummaries")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public List<CPDFooterDto> getYearSummaries(
+			@QueryParam("startDate") Long startDate,
+			@QueryParam("endDate") Long endDate);
+
+	@GET
+	@Path("/cpdmemberSummary")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public List<MemberCPDDto> getAllMemberSummary(
+			@QueryParam("searchTerm") String searchTerm,
+			@QueryParam("offset") Integer offset,
+			@QueryParam("limit") Integer limit);
 
 	@GET
 	@Path("/summary")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public CPDSummaryDto getCPDSummary(@QueryParam("startDate") Long startDate, @QueryParam("endDate") Long endDate);
+	public CPDSummaryDto getCPDSummary(@QueryParam("startDate") Long startDate,
+			@QueryParam("endDate") Long endDate);
 
 	@GET
 	@Path("/{cpdId}")
@@ -48,16 +68,26 @@ public interface CPDResource extends BaseResource {
 
 	@GET
 	@Path("/filteredcount")
-	public Integer getCount(@QueryParam("startDate") Long startDate, @QueryParam("endDate") Long endDate);
+	public Integer getCount(@QueryParam("startDate") Long startDate,
+			@QueryParam("endDate") Long endDate);
+
+	@GET
+	@Path("/summaryCount")
+	public Integer getMemberSummaryCount(
+			@QueryParam("searchTerm") String searchTerm);
 
 	@GET
 	@Path("/countCPDSearch")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Integer getCPDsearchCount(@QueryParam("searchTerm") String searchTerm);
-	
+
 	@GET
 	@Path("/SearchCPD")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public List<CPDDto> searchCPd(@QueryParam("offset") int offset, @QueryParam("limit") int limit,
-			@QueryParam("searchTerm") String searchTerm);
+	public List<CPDDto> searchCPd(@QueryParam("offset") int offset,
+			@QueryParam("limit") int limit,
+			@QueryParam("searchTerm") String searchTerm,
+			@QueryParam("startDate") Long startDate,
+			@QueryParam("endDate") Long endDate);
+
 }

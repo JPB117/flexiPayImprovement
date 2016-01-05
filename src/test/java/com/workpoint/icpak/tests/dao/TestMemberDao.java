@@ -5,8 +5,10 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.mockito.InjectMocks;
 
 import com.google.inject.Inject;
+import com.icpak.rest.dao.MemberDao;
 import com.icpak.rest.dao.helper.MemberDaoHelper;
 import com.icpak.rest.dao.helper.UsersDaoHelper;
 import com.workpoint.icpak.shared.model.MemberDto;
@@ -21,13 +23,15 @@ public class TestMemberDao extends AbstractDaoTest {
 	MemberDaoHelper helper;
 	@Inject
 	UsersDaoHelper userHelper;
+	@Inject
+	MemberDao memberDao;
 
 	@Ignore
 	public void resetPassword() {
 		userHelper.resetAccount("gNtLJ03iEfS3LCac");
 	}
 
-	@Test
+	@Ignore
 	public void testSearchMemberFromOldTable() {
 		List<MemberDto> list = helper.getMembersFromOldTable("FCPA",
 				"nairobi", "all", 0, 0);
@@ -57,5 +61,12 @@ public class TestMemberDao extends AbstractDaoTest {
 			System.err.println(dto.getRefId() + " " + dto.getName() + " ");
 		}
 		System.err.print("Size = " + list.size());
+	}
+	
+	@Test
+	public void testGetMambers(){
+		List<MemberDto> members = memberDao.getMembers(0, 0);
+		
+		logger.info(" Size = "+members.size());
 	}
 }

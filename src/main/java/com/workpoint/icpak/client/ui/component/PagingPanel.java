@@ -48,8 +48,8 @@ public class PagingPanel extends Composite {
 	public PagingPanel() {
 		initWidget(uiBinder.createAndBindUi(this));
 		txtPageNo.setValue(1);
-		txtPageNo.addValueChangeHandler(new ValueChangeHandler<Integer>() {
 
+		txtPageNo.addValueChangeHandler(new ValueChangeHandler<Integer>() {
 			@Override
 			public void onValueChange(ValueChangeEvent<Integer> event) {
 				int count = event.getValue();
@@ -113,13 +113,21 @@ public class PagingPanel extends Composite {
 
 	private void setPageDetails() {
 		spnOffset.setInnerText(NumberUtils.NUMBERFORMAT.format(config
-				.getOffset()+1) + "");
+				.getOffset() + 1) + "");
 		spnPageEnd.setInnerText(NumberUtils.NUMBERFORMAT.format(config
 				.getPageEnd()) + "");
 		spnTotal.setInnerText(NumberUtils.NUMBERFORMAT.format(config.getTotal())
 				+ "");
 		spnTotalPages.setInnerText(NumberUtils.NUMBERFORMAT.format(config
 				.getPages()) + "");
+
+		if (config.getPages() == 1) {
+			aNext.addStyleName("hide");
+			aLastPage.addStyleName("hide");
+		} else {
+			aNext.removeStyleName("hide");
+			aLastPage.removeStyleName("hide");
+		}
 	}
 
 	protected void move(int idx) {

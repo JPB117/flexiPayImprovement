@@ -1,6 +1,5 @@
 package com.icpak.rest.models.cpd;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -26,7 +25,6 @@ import org.hibernate.annotations.Type;
 import com.icpak.rest.models.base.PO;
 import com.icpak.rest.models.util.Attachment;
 import com.wordnik.swagger.annotations.ApiModel;
-import com.workpoint.icpak.shared.model.AttachmentDto;
 import com.workpoint.icpak.shared.model.CPDCategory;
 import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.shared.model.CPDStatus;
@@ -42,14 +40,6 @@ import com.workpoint.icpak.shared.model.CPDStatus;
 @Table(name = "cpd")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class CPD extends PO {
-
-	public Set<Attachment> getAttachments() {
-		return attachments;
-	}
-
-	public void setAttachments(Set<Attachment> attachments) {
-		this.attachments = attachments;
-	}
 
 	/**
 	 * 
@@ -147,18 +137,9 @@ public class CPD extends PO {
 		dto.setEventId(eventId);
 		dto.setEventLocation(eventLocation);
 		dto.setMemberRegistrationNo(memberRegistrationNo);
-		List<AttachmentDto> attachmentDtos = new ArrayList<AttachmentDto>();
-		for (Attachment attachment : attachments) {
-			AttachmentDto attachmentDto = new AttachmentDto();
-			attachmentDto.setAttachmentName(attachment.getName());
-			attachmentDto.setRefId(attachment.getRefId());
-			attachmentDtos.add(attachmentDto);
-		}
-
 		if (fullnames != null) {
 			dto.setFullNames(fullnames);
 		}
-		dto.setAttachments(attachmentDtos);
 		return dto;
 	}
 
@@ -224,6 +205,14 @@ public class CPD extends PO {
 
 	public void setEventLocation(String eventName) {
 		this.eventLocation = eventName;
+	}
+
+	public Set<Attachment> getAttachments() {
+		return attachments;
+	}
+
+	public void setAttachments(Set<Attachment> attachments) {
+		this.attachments = attachments;
 	}
 
 	public String getFullnames() {

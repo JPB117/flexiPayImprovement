@@ -91,6 +91,6 @@ public class DelegatesTable extends Composite {
 	}
 
 	public HasValueChangeHandlers<String> getDelegateSearchKeyDownHander() {
-		return tblView.getSearchKeyDownHander();
+		return tblView.getSearchValueChangeHander();
 	}
 }

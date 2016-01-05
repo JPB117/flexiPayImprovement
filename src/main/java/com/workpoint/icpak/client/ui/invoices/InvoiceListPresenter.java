@@ -29,6 +29,8 @@ import com.workpoint.icpak.client.ui.admin.TabDataExt;
 import com.workpoint.icpak.client.ui.component.PagingConfig;
 import com.workpoint.icpak.client.ui.component.PagingLoader;
 import com.workpoint.icpak.client.ui.component.PagingPanel;
+import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
+import com.workpoint.icpak.client.ui.events.ProcessingEvent;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
 import com.workpoint.icpak.client.ui.security.AdminGateKeeper;
 import com.workpoint.icpak.client.util.AppContext;
@@ -103,6 +105,7 @@ public class InvoiceListPresenter
 		String memberId = (AppContext.isCurrentUserAdmin() ? "ALL" : AppContext
 				.getContextUser().getMemberRefId());
 
+		fireEvent(new ProcessingEvent());
 		invoiceDelegate.withCallback(
 				new AbstractAsyncCallback<InvoiceSummary>() {
 					@Override
@@ -130,6 +133,7 @@ public class InvoiceListPresenter
 					@Override
 					public void onSuccess(List<InvoiceDto> result) {
 						getView().bindInvoices(result);
+						fireEvent(new ProcessingCompletedEvent());
 					}
 				}).getInvoices(memberId, offset, limit);
 	}

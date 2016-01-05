@@ -29,7 +29,6 @@ import com.workpoint.icpak.client.ui.component.PagingConfig;
 import com.workpoint.icpak.client.ui.component.PagingLoader;
 import com.workpoint.icpak.client.ui.component.PagingPanel;
 import com.workpoint.icpak.client.ui.cpd.form.RecordCPD;
-import com.workpoint.icpak.client.ui.cpd.table.row.CPDTableRow.TableActionType;
 import com.workpoint.icpak.client.ui.events.EditModelEvent;
 import com.workpoint.icpak.client.ui.events.EditModelEvent.EditModelHandler;
 import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
@@ -40,11 +39,12 @@ import com.workpoint.icpak.client.ui.home.HomePresenter;
 import com.workpoint.icpak.client.ui.security.MemberGateKeeper;
 import com.workpoint.icpak.client.ui.util.DateRange;
 import com.workpoint.icpak.client.ui.util.DateUtils;
-import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.api.MemberResource;
 import com.workpoint.icpak.shared.model.CPDDto;
+import com.workpoint.icpak.shared.model.CPDFooterDto;
 import com.workpoint.icpak.shared.model.CPDStatus;
 import com.workpoint.icpak.shared.model.CPDSummaryDto;
+import com.workpoint.icpak.shared.model.TableActionType;
 
 public class CPDMemberPresenter extends
 		Presenter<CPDMemberPresenter.ICPDView, CPDMemberPresenter.ICPDProxy>
@@ -61,13 +61,15 @@ public class CPDMemberPresenter extends
 
 		void bindSummary(CPDSummaryDto summary);
 
-		void setInitialDates(DateRange thisquarter, Date date);
+		void setInitialDates(Date startDate, Date date);
 
 		HasClickHandlers getFilterButton();
 
 		Date getStartDate();
 
 		Date getEndDate();
+
+		void bindCPDFooter(List<CPDFooterDto> results);
 
 	}
 
@@ -242,8 +244,9 @@ public class CPDMemberPresenter extends
 	@Override
 	protected void onReveal() {
 		super.onReveal();
-		getView().setInitialDates(DateRange.THISYEAR, new Date());
-		this.startDate = DateUtils.getDateByRange(DateRange.THISYEAR, false);
+		this.startDate = DateUtils.DATEFORMAT_SYS.parse("2011-01-01");
+		getView().setInitialDates(startDate, new Date());
+
 		this.endDate = new Date();
 		loadData(startDate, new Date());
 	}
@@ -251,13 +254,6 @@ public class CPDMemberPresenter extends
 	protected void loadData(Date startDate, Date endDate) {
 		String memberId = currentUser.getUser().getRefId();
 		fireEvent(new ProcessingEvent());
-
-		memberDelegate.withCallback(new AbstractAsyncCallback<CPDSummaryDto>() {
-			@Override
-			public void onSuccess(CPDSummaryDto summary) {
-				getView().bindSummary(summary);
-			}
-		}).cpd(memberId).getCPDSummary(startDate.getTime(), endDate.getTime());
 
 		memberDelegate.withCallback(new AbstractAsyncCallback<Integer>() {
 			@Override
@@ -270,6 +266,7 @@ public class CPDMemberPresenter extends
 				loadCPD(config.getOffset(), config.getLimit());
 			}
 		}).cpd(memberId).getCount(startDate.getTime(), endDate.getTime());
+
 	}
 
 	protected void loadCPD(int offset, int limit) {
@@ -280,9 +277,26 @@ public class CPDMemberPresenter extends
 			public void onSuccess(List<CPDDto> result) {
 				fireEvent(new ProcessingCompletedEvent());
 				getView().bindResults(result);
+				loadYearSummaries();
 			}
-		}).cpd(AppContext.isCurrentUserAdmin() ? "ALL" : memberId)
+		}).cpd(memberId)
 				.getAll(offset, limit, startDate.getTime(), endDate.getTime());
+	}
+
+	protected void loadYearSummaries() {
+		String memberId = currentUser.getUser().getRefId();
+		fireEvent(new ProcessingEvent());
+
+		memberDelegate
+				.withCallback(new AbstractAsyncCallback<List<CPDFooterDto>>() {
+					@Override
+					public void onSuccess(List<CPDFooterDto> result) {
+						fireEvent(new ProcessingCompletedEvent());
+						getView().bindCPDFooter(result);
+					}
+				}).cpd(memberId)
+				.getYearSummaries(startDate.getTime(), endDate.getTime());
+
 	}
 
 	String getApplicationRefId() {

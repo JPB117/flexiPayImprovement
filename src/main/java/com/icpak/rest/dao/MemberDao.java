@@ -104,7 +104,7 @@ public class MemberDao extends BaseDao {
 
 		List<MemberDto> memberDtos = new ArrayList<>();
 
-		String sql = "select concat(u.firstName,' ',u.lastName),m.memberShipStatus,a.`Customer Type` " + "from "
+		String sql = "select concat(u.firstName,' ',u.lastName),u.email,m.memberShipStatus,m.refId,m.memberNo,a.`Customer Type` " + "from "
 				+ "user u inner join member m on (u.id=m.userId) "
 				+ "inner join `Application Form Header` a on (a.memberNo=m.memberNo)";
 
@@ -118,17 +118,56 @@ public class MemberDao extends BaseDao {
 			Object value = null;
 
 			String fullName = (value = row[i++]) == null ? null : value.toString();
+			String email = (value = row[i++]) == null ? null : value.toString();
 			MembershipStatus memberShipStatus = (value = row[i++]) == null ? null
 					: MembershipStatus.valueOf(value.toString());
+			String refId = (value = row[i++]) == null ? null : value.toString();
+			String memberNo = (value = row[i++]) == null ? null : value.toString();
 			ApplicationType customerType = (value = row[i++]) == null ? null
 					: ApplicationType.valueOf(value.toString());
 
 			MemberDto memberDto = new MemberDto();
 
 			memberDto.setFullName(fullName);
+			memberDto.setEmail(email);
 			memberDto.setMembershipStatus(memberShipStatus);
+			memberDto.setRefId(refId);
+			memberDto.setMemberNo(memberNo);
 			memberDto.setCustomerType(customerType);
 			memberDto.setMember("MEMBER");
+
+			memberDtos.add(memberDto);
+		}
+
+		return memberDtos;
+
+	}
+	
+	public List<MemberDto> getMembersForschedular(Integer offSet, Integer limit) {
+
+		List<MemberDto> memberDtos = new ArrayList<>();
+
+		String sql = "select u.email,m.refId,m.memberNo " 
+		        + "from "
+				+ "member m inner join user u on (m.userId=u.id)";
+
+		Query query = getEntityManager().createNativeQuery(sql);
+
+		List<Object[]> rows = getResultList(query, offSet, limit);
+
+		for (Object[] row : rows) {
+
+			int i = 0;
+			Object value = null;
+
+			String email = (value = row[i++]) == null ? null : value.toString();
+			String refId = (value = row[i++]) == null ? null : value.toString();
+			String memberNo = (value = row[i++]) == null ? null : value.toString();
+			MemberDto memberDto = new MemberDto();
+
+			memberDto.setEmail(email);
+			memberDto.setRefId(refId);
+			memberDto.setMemberNo(memberNo);
 
 			memberDtos.add(memberDto);
 		}

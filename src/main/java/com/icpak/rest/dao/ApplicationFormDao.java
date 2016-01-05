@@ -25,14 +25,31 @@ public class ApplicationFormDao extends BaseDao {
 	}
 
 	public List<ApplicationFormHeader> getAllApplications(Integer offSet,
-			Integer limit) {
-		return getResultList(
-				getEntityManager()
-						.createQuery(
-								"select u from ApplicationFormHeader u"
-										+ " where u.isActive=1 and applicationStatus=:status order by id desc")
-						.setParameter("status", ApplicationStatus.PENDING),
-				offSet, limit);
+			Integer limit, String searchTerm) {
+		if (searchTerm.isEmpty()) {
+			return getResultList(
+					getEntityManager()
+							.createQuery(
+									"select u from ApplicationFormHeader u"
+											+ " where u.isActive=1 and applicationStatus=:status "
+											+ "order by id desc").setParameter(
+									"status", ApplicationStatus.PENDING),
+					offSet, limit);
+		} else {
+			return getResultList(
+					getEntityManager()
+							.createQuery(
+									"select u from ApplicationFormHeader u"
+											+ " where u.isActive=1 and applicationStatus=:status "
+											+ "and (surname like :searchTerm or otherNames like :searchTerm "
+											+ "or email like :searchTerm or "
+											+ "concat(surname,' ',otherNames) like :searchTerm) "
+											+ "order by id desc")
+							.setParameter("status", ApplicationStatus.PENDING)
+							.setParameter("searchTerm", "%" + searchTerm + "%"),
+					offSet, limit);
+		}
+
 	}
 
 	public List<MemberImport> importMembers(Integer offSet, Integer limit) {
@@ -45,15 +62,26 @@ public class ApplicationFormDao extends BaseDao {
 		createApplication(application);
 	}
 
-	public int getApplicationCount() {
-
+	public int getApplicationCount(String searchTerm) {
 		Number number = null;
+		if (searchTerm.isEmpty()) {
+			number = getSingleResultOrNull(getEntityManager()
+					.createNativeQuery(
+							"select count(*) from `Application Form Header` "
+									+ "where isactive=1 and applicationStatus=:status ")
+					.setParameter("status", ApplicationStatus.PENDING));
 
-		number = getSingleResultOrNull(getEntityManager()
-				.createNativeQuery(
-						"select count(*) from `Application Form Header` "
-								+ "where isactive=1 and applicationStatus=:status order by id desc")
-				.setParameter("status", ApplicationStatus.PENDING));
+		} else {
+			number = getSingleResultOrNull(getEntityManager()
+					.createNativeQuery(
+							"select count(*) from `Application Form Header` "
+									+ "where isactive=1 and applicationStatus=:status "
+									+ "and (surname like :searchTerm or `Other Names` like :searchTerm "
+									+ "or `E-mail` like :searchTerm or "
+									+ "concat(surname,' ',`Other Names`) like :searchTerm)")
+					.setParameter("status", ApplicationStatus.PENDING)
+					.setParameter("searchTerm", "%" + searchTerm + "%"));
+		}
 
 		return number.intValue();
 	}
@@ -177,7 +205,8 @@ public class ApplicationFormDao extends BaseDao {
 	}
 
 	public ApplicationSummaryDto getApplicationsSummary() {
-		String sql = "select count(*), applicationStatus from `Application Form Header` group by applicationStatus";
+		String sql = "select count(*), applicationStatus from `Application Form Header` "
+				+ "group by applicationStatus";
 
 		List<Object[]> rows = getResultList(getEntityManager()
 				.createNativeQuery(sql));

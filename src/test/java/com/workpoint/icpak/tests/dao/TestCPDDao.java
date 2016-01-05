@@ -18,6 +18,7 @@ import com.icpak.rest.models.cpd.CPD;
 import com.icpak.servlet.upload.GetReport;
 import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.shared.model.CPDStatus;
+import com.workpoint.icpak.shared.model.MemberCPDDto;
 import com.workpoint.icpak.tests.base.AbstractDaoTest;
 
 public class TestCPDDao extends AbstractDaoTest {
@@ -41,7 +42,7 @@ public class TestCPDDao extends AbstractDaoTest {
 
 	}
 
-	@Test
+	@Ignore
 	public void testCreateCPD() {
 		CPD cpd = cpdDao.findByCPDId("xU8Bf2olyPVxWQom");
 		CPDDto dto = cpd.toDTO();
@@ -71,13 +72,32 @@ public class TestCPDDao extends AbstractDaoTest {
 
 	@Ignore
 	public void testCount() throws ParseException {
-		// System.err.println(helper.getCount("ALL",
-		// formatter.parse("01/01/2015")
-		// .getTime(), new Date().getTime()));
+		System.err.println("Total Archive>>>>"
+				+ helper.getCPDSummary("ALL", 1420059600000L, 1451494912593L)
+						.getTotalArchive()
+				+ "Total Returns"
+				+ helper.getCPDSummary("ALL", 1420059600000L, 1451494912593L)
+						.getTotalReturns());
+	}
 
-		System.err.println(helper.getCount("ALL", formatter.parse("01/01/2000")
-				.getTime(), new Date().getTime()));
+	@Test
+	public void testMemberCPD() throws ParseException {
+		// List<MemberCPDDto> memberCPDDtos = cpdDao.getMemberCPD("", 0, 10);
+		//
+		// System.err.println("Dto Size>>" + cpdDao.getMemberCPDCount(""));
+		//
+		// for (MemberCPDDto memberCPD : memberCPDDtos) {
+		// System.err.println("No_" + memberCPD.getMemberNo());
+		// System.err.println("Category::" + memberCPD.getCustomerType());
+		// System.err.println("Status::" + memberCPD.getStatus());
+		// System.err.println("2015::" + memberCPD.getYear2015());
+		// System.err.println("2011::" + memberCPD.getYear2011());
+		// }
 
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		Date another = formatter.parse("2013-1-1");
+
+		cpdDao.getYearSummaries("iypUNLFxbsEFMJLB", another, new Date());
 	}
 
 	@Ignore
@@ -89,11 +109,13 @@ public class TestCPDDao extends AbstractDaoTest {
 	}
 
 	@Ignore
-	public void searchCount() {
-		List<CPDDto> cpdDtos = helper.searchCPD("kimani", null, null);
-
+	public void testSearch() {
+		Long startDate = 1420059600000L;
+		Long endDate = 1450645200000L;
+		List<CPDDto> cpdDtos = helper.searchCPD("2020", 0, 10, startDate,
+				endDate);
 		logger.error("========= CPP search count=== "
-				+ helper.cpdSearchCount("kimani"));
+				+ helper.cpdSearchCount("2020"));
 		logger.error("========= List length=== " + cpdDtos.size());
 
 	}
@@ -103,17 +125,19 @@ public class TestCPDDao extends AbstractDaoTest {
 		Date today = new Date();
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		Date another = formatter.parse("2015-1-1");
-		List<CPDDto> cpdDtos = helper.getAllCPD("ALL", 0, 1000,
+
+		List<CPDDto> cpdDtos = helper.getAllCPD("ALLARCHIVE", 0, 100,
 				another.getTime(), today.getTime());
+
+		Integer count = helper.getCount("ALLARCHIVE", another.getTime(),
+				today.getTime());
 		JSONArray jArray = new JSONArray();
 
 		for (CPDDto dto : cpdDtos) {
 			JSONObject jO = new JSONObject(dto);
 			jArray.put(jO);
 		}
-
-		logger.error("========= List length=== " + cpdDtos.size());
-		logger.error("========= RESULT JARRAY === " + jArray.toString());
+		logger.error("======= List length=== " + cpdDtos.size());
+		logger.error("======= Count:=== " + count);
 	}
-
 }

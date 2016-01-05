@@ -16,7 +16,6 @@ import com.workpoint.icpak.client.ui.AppManager;
 import com.workpoint.icpak.client.ui.OnOptionSelected;
 import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.RowWidget;
-import com.workpoint.icpak.client.ui.cpd.table.row.CPDTableRow.TableActionType;
 import com.workpoint.icpak.client.ui.events.EditModelEvent;
 import com.workpoint.icpak.client.ui.events.TableActionEvent;
 import com.workpoint.icpak.client.ui.eventsandseminars.delegates.updatepayment.UpdatePaymentWidget;
@@ -25,6 +24,7 @@ import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.model.EventType;
 import com.workpoint.icpak.shared.model.PaymentStatus;
+import com.workpoint.icpak.shared.model.TableActionType;
 import com.workpoint.icpak.shared.model.events.AttendanceStatus;
 import com.workpoint.icpak.shared.model.events.DelegateDto;
 

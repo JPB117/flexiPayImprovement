@@ -7,6 +7,7 @@
 	xmlns:p='urn:import:com.workpoint.icpak.client.ui.members.header'
 	xmlns:table='urn:import:com.workpoint.icpak.client.ui.members.table'
 	xmlns:t='urn:import:com.workpoint.icpak.client.ui.component.tabs'
+	xmlns:profile='urn:import:com.workpoint.icpak.client.ui.profile.widget'
 	ui:generateLocales='default'>
 
 	<g:HTMLPanel ui:field="container"
@@ -14,8 +15,8 @@
 		<h3 class="ng-scope">
 			Membership Management
 		</h3>
-		<div class="row main-content">
-			<div class="col-sm-12">
+		<div class="row main-content" ui:field="divAllApplication">
+			<div class="col-sm-12 hide">
 				<p:MembersHeader ui:field="headerContainer">
 				</p:MembersHeader>
 			</div>
@@ -27,6 +28,12 @@
 						</table:MembersTable>
 					</div>
 				</div>
+			</div>
+		</div>
+
+		<div class="row main-content" ui:field="divSingleApplication">
+			<div class="col-sm-12">
+				<profile:ProfileWidget ui:field="panelProfile"></profile:ProfileWidget>
 			</div>
 		</div>
 	</g:HTMLPanel>

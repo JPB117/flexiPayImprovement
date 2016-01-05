@@ -123,6 +123,7 @@ public class EducationDetails extends Composite {
 			panel.add(delete);
 
 			HTMLPanel panelAttachment = new HTMLPanel("");
+			panelAttachment.clear();
 			if (edu.getAttachments() != null) {
 				for (final AttachmentDto attachment : edu.getAttachments()) {
 					final UploadContext ctx = new UploadContext("getreport");

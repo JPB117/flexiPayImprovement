@@ -48,17 +48,11 @@ public class MembersTableRow extends RowWidget {
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 
-	public MembersTableRow(final ApplicationFormHeaderDto application) {
+	public MembersTableRow(final ApplicationFormHeaderDto application,
+			int counter) {
 		this();
 		bind(application);
-
-		aMemberName.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				AppContext.fireEvent(new EditModelEvent(application));
-			}
-		});
-
+		aMemberName.setHref("#members;counter=" + counter);
 	}
 
 	private void bind(ApplicationFormHeaderDto application) {

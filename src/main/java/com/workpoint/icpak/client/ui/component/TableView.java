@@ -8,7 +8,7 @@ import java.util.List;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.HasKeyDownHandlers;
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -66,15 +66,17 @@ public class TableView extends Composite {
 	DropDownList<Towns> listTowns;
 	@UiField
 	DropDownList<MemberCategory> listMemberCategory;
-
 	@UiField
 	DivElement divTownList;
-
 	@UiField
 	DivElement divMemberCategory;
 
 	private boolean isAutoNumber = true;
 	private int count = 0;
+
+	public int getCount() {
+		return count;
+	}
 
 	public TableView() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -328,6 +330,14 @@ public class TableView extends Composite {
 		this.isAutoNumber = isAutoNumber;
 	}
 
+	public void createFooter(RowWidget footer) {
+		panelFooter.add(footer);
+	}
+
+	public void clearFooter(){
+		panelFooter.clear();
+	}
+
 	public void setFooter(List<Widget> widgets) {
 		panelFooter.clear();
 		HTMLPanel row = new HTMLPanel("");
@@ -399,7 +409,7 @@ public class TableView extends Composite {
 		return aDownloadXls;
 	}
 
-	public HasClickHandlers getFilterButton() {
+	public ActionLink getFilterButton() {
 		return aFilter;
 	}
 
@@ -407,7 +417,11 @@ public class TableView extends Composite {
 		return txtSearch.getValue();
 	}
 
-	public HasValueChangeHandlers<String> getSearchKeyDownHander() {
+	public HasValueChangeHandlers<String> getSearchValueChangeHander() {
+		return txtSearch;
+	}
+
+	public HasKeyDownHandlers getSearchKeyDownHandler() {
 		return txtSearch;
 	}
 

@@ -47,8 +47,8 @@ public class UserSaveView extends PopupViewImpl implements
 	@UiField
 	Anchor aClose;
 
-//	@UiField
-//	TextField txtUserName;
+	// @UiField
+	// TextField txtUserName;
 	@UiField
 	TextField txtFirstname;
 	@UiField
@@ -65,12 +65,13 @@ public class UserSaveView extends PopupViewImpl implements
 
 	@UiField
 	ActionLink aResetPassword;
-	
+
 	@UiField
 	DivElement divReset;
 
-	@UiField CheckBox chkSendEmail;
-	
+	@UiField
+	CheckBox chkSendEmail;
+
 	@UiField
 	PopupPanel AddUserDialog;
 	@UiField
@@ -78,9 +79,11 @@ public class UserSaveView extends PopupViewImpl implements
 	@UiField
 	Anchor aSaveUser;
 
-	@UiField HasClickHandlers aCancelUser;
-	@UiField HasClickHandlers aCancelGroup;
-	
+	@UiField
+	HasClickHandlers aCancelUser;
+	@UiField
+	HasClickHandlers aCancelGroup;
+
 	@UiField
 	SpanElement header;
 
@@ -90,6 +93,8 @@ public class UserSaveView extends PopupViewImpl implements
 	Uploader uploader;
 	@UiField
 	MultiSelectField<RoleDto> lstGroups;
+
+	UserDto user;
 
 	TYPE type;
 
@@ -106,14 +111,14 @@ public class UserSaveView extends PopupViewImpl implements
 				hide();
 			}
 		});
-		
+
 		aCancelGroup.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				hide();
 			}
 		});
-		
+
 		aCancelUser.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -202,18 +207,24 @@ public class UserSaveView extends PopupViewImpl implements
 		return user;
 	}
 
-	UserDto user;
-
-	public void setUser(UserDto user) {
+	public void setUser(final UserDto user) {
+		this.user = user;
 		txtEmail.setValue(user.getEmail());
 		txtFirstname.setValue(user.getName());
 		txtLastname.setValue(user.getSurname());
 		txtPhoneNo.setValue(user.getPhoneNumber());
 		lstGroups.select(user.getGroups());
+
+		aResetPassword.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				Window.open("#activateacc;uid=" + user.getRefId(),
+						"Reset User Password", null);
+			}
+		});
+
 		setContext(user.getRefId());
-		
-		if(user.getRefId()!=null){
-			//loaded from db
+		if (user.getRefId() != null) {
 			divReset.removeClassName("hide");
 		}
 
@@ -291,8 +302,7 @@ public class UserSaveView extends PopupViewImpl implements
 	public PopupPanel getPopUpPanel() {
 		return AddUserDialog;
 	}
-	
-	
+
 	public HasClickHandlers getaResetPassword() {
 		return aResetPassword;
 	}
