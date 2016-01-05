@@ -1,7 +1,12 @@
 package com.icpak.rest.dao.helper;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,8 +17,17 @@ import java.util.List;
 import javax.mail.MessagingException;
 import javax.ws.rs.core.UriInfo;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.utils.URIUtils;
+import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.log4j.Logger;
 
+import com.amazonaws.util.json.JSONException;
 import com.amazonaws.util.json.JSONObject;
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
@@ -33,6 +47,7 @@ import com.icpak.rest.models.base.ResourceCollectionModel;
 import com.icpak.rest.models.base.ResourceModel;
 import com.icpak.rest.models.membership.ApplicationFormHeader;
 import com.icpak.rest.models.membership.Member;
+import com.icpak.rest.models.trx.Statement;
 import com.icpak.rest.models.trx.Transaction;
 import com.icpak.rest.models.util.Attachment;
 import com.icpak.rest.security.authentication.AuthenticationException;
@@ -326,13 +341,101 @@ public class UsersDaoHelper {
 	}
 
 	public User getUserByActivationEmail(String userId) {
-		User user = dao.findByUserActivationEmail(userId, true);
+		User user = dao.findByUserActivationEmail(userId, false);
 
 		if (user == null) {
-			throw new ServiceException(ErrorCodes.NOTFOUND, "'" + userId + "'");
+			// Check User From ERP
+			try {
+				user = checkIfUserExistInERP(userId);
+				if (user == null) {
+					throw new ServiceException(ErrorCodes.NOTFOUND, "'"
+							+ userId + "'");
+				}
+			} catch (URISyntaxException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return user.clone();
+	}
+
+	private User checkIfUserExistInERP(String userId)
+			throws URISyntaxException, ParseException, JSONException {
+
+		logger.error(" ===>>><<<< === Checking for this User In ERP ===>><<<>>== ");
+		final HttpClient httpClient = new DefaultHttpClient();
+		final List<NameValuePair> qparams = new ArrayList<NameValuePair>();
+
+		qparams.add(new BasicNameValuePair("type", "activation"));
+		qparams.add(new BasicNameValuePair("email", userId));
+
+		final URI uri = URIUtils.createURI("http", "41.139.138.165/", -1,
+				"members/memberdata.php",
+				URLEncodedUtils.format(qparams, "UTF-8"), null);
+		final HttpGet request = new HttpGet();
+		request.setURI(uri);
+
+		String res = "";
+		HttpResponse response = null;
+
+		StringBuffer result = null;
+
+		try {
+			request.setHeader("accept", "application/json");
+			response = httpClient.execute(request);
+
+			BufferedReader rd = new BufferedReader(new InputStreamReader(
+					response.getEntity().getContent()));
+
+			result = new StringBuffer();
+
+			String line = "";
+
+			while ((line = rd.readLine()) != null) {
+				result.append(line);
+			}
+
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 
-		return user.clone();
+		assert result != null;
+		res = result.toString();
+
+		/**
+		 * Check if the erp server returns null string
+		 */
+		if (res.equals("null")) {
+			logger.error(" ===>>><<<< === User not found in ERP ===>><<<>>== ");
+			return null;
+		} else {
+			JSONObject jo = new JSONObject(res);
+			String memberNo = jo.getString("reg_no");
+			String PractisingNo = jo.getString("Practising No_");
+			String email = jo.getString("E-Mail");
+			String fullNames = jo.getString("Name");
+			String address = jo.getString("Address");
+			String postCode = jo.getString("Post Code");
+			String phoneNo = jo.getString("Phone No_");
+			String customerType = jo.getString("Customer Type");
+			String dateRegistered = jo.getString("Date Registered");
+			Integer status = jo.getInt("Status");
+			String practisingCertDate = jo.getString("Practicing Cert Date");
+
+			User user = dao.findUserByMemberNo(memberNo);
+			user.setEmail(email);
+			BioData userData = new BioData();
+			userData.setFullNames(fullNames);
+			user.setMobileNo(phoneNo);
+			update(user.getRefId(), user);
+			return user;
+		}
 	}
 
 	public void setProfilePic(String userId, byte[] bites, String fileName,

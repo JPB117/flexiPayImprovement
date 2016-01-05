@@ -126,14 +126,12 @@ public class EventsPresenter extends
 	public void prepareFromRequest(PlaceRequest request) {
 		super.prepareFromRequest(request);
 		eventId = request.getParameter("eventId", null);
-
 		// Load Event Details to View
 		if (eventId != null) {
 			getView().showAdvancedView(true);
 		} else {
 			getView().showAdvancedView(false);
 		}
-
 		loadData();
 	}
 
@@ -167,7 +165,6 @@ public class EventsPresenter extends
 					getView().bindEvent(event);
 				}
 			}).getById(eventId);
-
 		} else {
 			// Load Events
 			eventsDelegate.withCallback(new AbstractAsyncCallback<Integer>() {

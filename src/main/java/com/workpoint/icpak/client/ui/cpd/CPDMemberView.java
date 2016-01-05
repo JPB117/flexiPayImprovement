@@ -22,8 +22,6 @@ import com.workpoint.icpak.client.ui.cpd.header.CPDHeader;
 import com.workpoint.icpak.client.ui.cpd.member.table.CPDMemberTable;
 import com.workpoint.icpak.client.ui.cpd.member.table.footer.CPDMemberFooterRow;
 import com.workpoint.icpak.client.ui.cpd.member.table.row.CPDMemberTableRow;
-import com.workpoint.icpak.client.ui.util.DateRange;
-import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.shared.model.CPDFooterDto;

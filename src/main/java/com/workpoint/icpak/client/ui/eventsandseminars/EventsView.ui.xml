@@ -19,11 +19,11 @@
 		<div class="main-content">
 			<g:HTMLPanel styleName="row" ui:field="panelEvents">
 				<div class="col-sm-12">
-					<p:EventsHeader ui:field="headerContainer">
+					<p:EventsHeader ui:field="headerContainer"
+						styleName="hide">
 					</p:EventsHeader>
 				</div>
-				<div class="panel panel-default">
-					<div class="panel-heading">All Event Details</div>
+				<div class="panel widget">
 					<div class="panel-body">
 						<div class="col-sm-12">
 							<table:EventsTable ui:field="tblView">

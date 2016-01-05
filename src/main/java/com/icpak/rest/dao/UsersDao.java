@@ -12,7 +12,7 @@ import com.icpak.rest.models.auth.User;
 import com.icpak.rest.models.util.Attachment;
 
 public class UsersDao extends BaseDao {
-	Logger logger  = Logger.getLogger(UsersDao.class);
+	Logger logger = Logger.getLogger(UsersDao.class);
 
 	public User findUserByUsername(String username) {
 		assert username != null;
@@ -85,7 +85,7 @@ public class UsersDao extends BaseDao {
 		logger.info(" ++++ >>>>><<<<> Updating user ++++++");
 		createUser(user);
 		logger.info(" ++++ >>>>><<<<> user updated ++++++");
-		logger.info(" ++++ >>>>><<<<> Pay Load ++++++"+user.getLmsPayLoad());
+		logger.info(" ++++ >>>>><<<<> Pay Load ++++++" + user.getLmsPayLoad());
 	}
 
 	public int getUserCount(String searchTerm) {
@@ -141,6 +141,7 @@ public class UsersDao extends BaseDao {
 		if (user == null && throwExceptionIfNull) {
 			throw new ServiceException(ErrorCodes.NOTFOUND, "User", "'" + refId
 					+ "'");
+
 		}
 		return user;
 	}

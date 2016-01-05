@@ -423,7 +423,7 @@ public class ProfileWidget extends Composite {
 			}
 			info = info.concat("</ul>");
 
-			spnAccountStatus.setInnerText("Not In GoodStanding");
+			spnAccountStatus.setInnerText("Error Loading");
 			divAccountStatus.addClassName("label-danger");
 			divAccountStatus.removeClassName("label-success");
 			spnHelpIcon.setAttribute("data-content", info);
