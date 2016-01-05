@@ -23,6 +23,7 @@ import org.apache.log4j.Logger;
 
 import com.amazonaws.util.json.JSONException;
 import com.amazonaws.util.json.JSONObject;
+import com.google.gwt.user.client.Timer;
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import com.icpak.rest.dao.MemberDao;
@@ -324,17 +325,31 @@ public class MemberDaoHelper {
 		return memberDao.searchMembersFromOldTable(searchTerm, citySearchTerm, categoryName, offset, limit);
 	}
 
-	public void autoUPdateMembers() {
+	public boolean autoUPdateMembers() {
 		logger.info(" ++++++++ Auto update Member Details +++++ ");
 		List<Member> membersInDb = memberDao.getAllMembers(0, 0);
 
 		for (Member member : membersInDb) {
 			try {
 				updateMemberRecord(member.getRefId(), true);
+				return true;
 			} catch (IllegalStateException | IOException | ParseException e) {
 				e.printStackTrace();
+				return false;
 			}
 		}
+		
+		return true;
+	}
+	
+	public String timer(){
+		 // A keeper of the timer instance in case we need to cancel it
+		  Timer timeoutTimer = null;
+		  
+		  // An indicator when the computation should quit
+		  boolean abortFlag = false;
+		  
+		return null;
 	}
 
 }

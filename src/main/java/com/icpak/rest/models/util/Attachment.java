@@ -1,5 +1,8 @@
 package com.icpak.rest.models.util;
 
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -42,8 +45,9 @@ public class Attachment extends PO {
 	private long size;
 	private String contentType;
 
-	@Lob
-	private byte[] attachment;
+	@Basic(fetch=FetchType.LAZY)
+	@Embedded
+	private DBFile file;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "goodstandingcertid")
@@ -73,11 +77,11 @@ public class Attachment extends PO {
 	@JoinColumn(name = "educationId")
 	private Education education;
 
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name = "cpdid")
 	private CPD cpd;
 
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name = "applicationId")
 	private ApplicationFormHeader application;
 
@@ -91,7 +95,10 @@ public class Attachment extends PO {
 	public Attachment(Long id, String name, byte[] attachment) {
 		this();
 		this.name = name;
-		this.attachment = attachment;
+		if(this.file==null){
+			this.file = new DBFile();
+		}
+		this.file.setAttachment(attachment);;
 		setId(id);
 	}
 
@@ -100,7 +107,10 @@ public class Attachment extends PO {
 	}
 
 	public byte[] getAttachment() {
-		return attachment;
+		if(file==null){
+			return null;
+		}
+		return file.getAttachment();
 	}
 
 	public void setName(String name) {
@@ -108,7 +118,10 @@ public class Attachment extends PO {
 	}
 
 	public void setAttachment(byte[] attachment) {
-		this.attachment = attachment;
+		if(this.file==null){
+			this.file = new DBFile();
+		}
+		this.file.setAttachment(attachment);
 	}
 
 	public long getSize() {
@@ -140,7 +153,8 @@ public class Attachment extends PO {
 		Attachment a = new Attachment();
 
 		if (detail != null && detail != null) {
-			a.setAttachment(attachment);
+			if(file!=null)
+			a.setAttachment(file.getAttachment());
 		}
 		a.setContentType(contentType);
 		a.setName(name);

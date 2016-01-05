@@ -136,6 +136,7 @@ public class ApplicationFormDaoHelper {
 		return u;
 	}
 
+	@SuppressWarnings("unused")
 	private void sendEmail(ApplicationFormHeader application,
 			InvoiceDto invoice, User user) {
 		try {
