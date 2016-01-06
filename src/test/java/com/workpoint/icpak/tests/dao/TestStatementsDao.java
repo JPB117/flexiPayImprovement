@@ -28,6 +28,7 @@ import com.icpak.rest.dao.InvoiceDaoHelper;
 import com.icpak.rest.dao.StatementDao;
 import com.icpak.rest.dao.helper.StatementDaoHelper;
 import com.icpak.rest.models.cpd.CPD;
+import com.icpak.rest.util.ScheduleInjector;
 import com.icpak.rest.util.StatementSchedular;
 import com.icpak.servlet.upload.GetReport;
 import com.itextpdf.text.DocumentException;
@@ -132,8 +133,12 @@ public class TestStatementsDao extends AbstractDaoTest {
 	}
 	
 	@Test
-	public void testSchedular(){
-		logger.info(" TRIGGER SCHEDULAR");
-		statementHelper.initiTimer();
+	public void testSchedular() throws InterruptedException{
+		logger.info(" TRIGGER SCHEDULAR -"+ ScheduleInjector.getStatementDaoHelper());
+		Date today = new Date();
+		long date = today.getTime();
+		schedular.invockTrigger(date);
+		
+		Thread.sleep(10000L);
 	}
 }
