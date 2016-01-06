@@ -30,6 +30,7 @@ import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -94,7 +95,7 @@ public class User extends PO {
 
 	@JsonIgnore
 	@XmlTransient
-	@ManyToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE,
+	@ManyToMany(fetch=FetchType.LAZY,cascade = { CascadeType.DETACH, CascadeType.MERGE,
 			CascadeType.REFRESH, CascadeType.PERSIST })
 	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = @JoinColumn(name = "roleid"))
 	@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -103,7 +104,7 @@ public class User extends PO {
 	@Embedded
 	private BioData userData = null;
 
-	@OneToOne(mappedBy = "user", cascade = { CascadeType.PERSIST,
+	@OneToOne(fetch=FetchType.LAZY,mappedBy = "user", cascade = { CascadeType.PERSIST,
 			CascadeType.REMOVE })
 	private Member member;
 

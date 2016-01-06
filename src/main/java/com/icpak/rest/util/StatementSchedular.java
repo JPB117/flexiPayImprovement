@@ -1,48 +1,51 @@
 package com.icpak.rest.util;
 
-import java.util.Calendar;
 import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
+import org.quartz.JobBuilder;
+import org.quartz.JobDetail;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
+import org.quartz.SchedulerFactory;
+import org.quartz.SimpleScheduleBuilder;
+import org.quartz.Trigger;
+import org.quartz.TriggerBuilder;
+import org.quartz.impl.StdSchedulerFactory;
 
-import com.google.inject.Inject;
-import com.icpak.rest.dao.helper.StatementDaoHelper;
-
-public class StatementSchedular {
+public class StatementSchedular {	
 	Logger logger = Logger.getLogger(StatementSchedular.class);
-	/*
-	 * Report generator Class
-	 */
-	public class ReportGenerator extends TimerTask {
-		@Inject
-		StatementDaoHelper daoHelper;
+
+	public void invockTrigger(long dateTimeValue) {
+		logger.info(" INVOKING TRIGGER ");
 		
-		Logger log = Logger.getLogger(ReportGenerator.class);
-		@Override
-		public void run() {
-			// TODO Auto-generated method stub
-			log.info(" RUNNING SCHEDULAR TRUE ");
-			
-//			StatementDaoHelper daoHelper = new StatementDaoHelper();
-			daoHelper.initiTimer();
-			log.info(" RUNNING SCHEDULAR DONE ");
+		logger.info("DaoHelper = "+ScheduleInjector.getStatementDaoHelper());
+		final Date date = new Date(dateTimeValue);
+
+		//Specifying job details
+		JobDetail jobDetail = JobBuilder.newJob(StatementsJob.class)
+				.withIdentity("Quaterly Annual CPD Reports")
+				.build();
+		
+		//Specifying the schedule time
+		Trigger trigger = TriggerBuilder
+				.newTrigger()
+				.startAt(date)
+				.withIdentity("dummyTriggerName", "group1")
+				.withSchedule(
+					SimpleScheduleBuilder.simpleSchedule()
+						.withIntervalInSeconds(5).withRepeatCount(0))
+				.build();
+		
+		//Scheduling the trigger
+		SchedulerFactory schedulerFactory = new StdSchedulerFactory();
+		try {
+			Scheduler scheduler = schedulerFactory.getScheduler();
+			scheduler.start();
+			scheduler.scheduleJob(jobDetail , trigger);
+		} catch (SchedulerException e) {
+			e.printStackTrace();
 		}
-	}
 
-	@SuppressWarnings("deprecation")
-	public void scheduleReport(Date futureDate) {
-		logger.info(" RUNNING SCHEDULAR ++++");
-		Timer timer = new Timer();
-
-		Calendar date = Calendar.getInstance();
-		date.set(Calendar.DAY_OF_YEAR, futureDate.getDay());
-		date.set(Calendar.HOUR, 12);
-		date.set(Calendar.MINUTE, 25);
-		date.set(Calendar.SECOND, 0);
-		date.set(Calendar.MILLISECOND, 0);
-		// Schedule to run every Tuesday in midnight
-		timer.schedule(new ReportGenerator(), date.getTime(), 1000 * 60 * 60 * 24 * 7);
 	}
 }

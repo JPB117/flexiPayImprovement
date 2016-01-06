@@ -38,6 +38,7 @@ import org.xml.sax.SAXException;
 import com.amazonaws.util.json.JSONException;
 import com.amazonaws.util.json.JSONObject;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.google.inject.persist.Transactional;
 import com.icpak.rest.IDUtils;
 import com.icpak.rest.dao.CPDDao;
