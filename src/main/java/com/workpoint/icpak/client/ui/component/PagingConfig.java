@@ -2,7 +2,7 @@ package com.workpoint.icpak.client.ui.component;
 
 public class PagingConfig {
 
-	public static int PAGE_LIMIT = 100;
+	public static int PAGE_LIMIT = 20;
 	private Integer offset;
 	private Integer limit;
 	private Integer total;// total count

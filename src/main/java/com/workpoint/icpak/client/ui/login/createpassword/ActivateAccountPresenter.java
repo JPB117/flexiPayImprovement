@@ -160,8 +160,6 @@ public class ActivateAccountPresenter
 												.build());
 							}
 						});
-
-				postUserToLMS(user.getRefId());
 			}
 		}
 	}
@@ -438,7 +436,6 @@ public class ActivateAccountPresenter
 		String token = placeManager.getCurrentPlaceRequest().getParameter(
 				ParameterTokens.REDIRECT, NameTokens.getOnLoginDefaultPage());
 		PlaceRequest placeRequest = new Builder().nameToken(token).build();
-
 		placeManager.revealPlace(placeRequest);
 	}
 

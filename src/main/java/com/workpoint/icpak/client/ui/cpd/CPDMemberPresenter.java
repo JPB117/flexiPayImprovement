@@ -37,7 +37,6 @@ import com.workpoint.icpak.client.ui.events.TableActionEvent;
 import com.workpoint.icpak.client.ui.events.TableActionEvent.TableActionHandler;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
 import com.workpoint.icpak.client.ui.security.MemberGateKeeper;
-import com.workpoint.icpak.client.ui.util.DateRange;
 import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.shared.api.MemberResource;
 import com.workpoint.icpak.shared.model.CPDDto;
@@ -70,7 +69,6 @@ public class CPDMemberPresenter extends
 		Date getEndDate();
 
 		void bindCPDFooter(List<CPDFooterDto> results);
-
 	}
 
 	@ProxyCodeSplit
@@ -299,6 +297,17 @@ public class CPDMemberPresenter extends
 
 	}
 
+	protected void loadCPD(String refId) {
+		fireEvent(new ProcessingEvent());
+		memberDelegate.withCallback(new AbstractAsyncCallback<CPDDto>() {
+			@Override
+			public void onSuccess(CPDDto result) {
+				fireEvent(new ProcessingCompletedEvent());
+				showForm(result);
+			}
+		}).cpd("ALL").getById(refId);
+	}
+
 	String getApplicationRefId() {
 		String applicationRefId = currentUser.getUser() == null ? null
 				: currentUser.getUser().getApplicationRefId();
@@ -318,7 +327,7 @@ public class CPDMemberPresenter extends
 			if (event.isDelete()) {
 				delete((CPDDto) event.getModel());
 			} else {
-				showForm((CPDDto) event.getModel());
+				loadCPD(((CPDDto) event.getModel()).getRefId());
 			}
 		}
 	}

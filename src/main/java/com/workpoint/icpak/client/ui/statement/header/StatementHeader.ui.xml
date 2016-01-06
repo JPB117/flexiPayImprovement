@@ -5,7 +5,7 @@
 	<g:HTMLPanel>
 		<div class="row">
 			<div class="col-lg-12">
-				<div class="col-lg-4">
+				<div class="col-lg-4 hide">
 					<div class="panel widget">
 						<div class="row row-table">
 							<div class="col-lg-8 pv-lg text-center">
@@ -21,7 +21,7 @@
 					</div>
 				</div>
 
-				<div class="col-lg-4">
+				<div class="col-lg-4 hide ">
 					<div class="panel widget">
 						<div class="row row-table">
 							<div class="col-xs-8 pv-lg text-center">
