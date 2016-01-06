@@ -77,7 +77,9 @@ public class CPDManagementPresenter
 
 		Date getEndDate();
 
-		HasValueChangeHandlers<String> getSearchValueChangeHander();
+		HasValueChangeHandlers<String> getReturnsSearchValueChangeHander();
+
+		HasValueChangeHandlers<String> getSummarySearchValueChangeHander();
 
 		HasKeyDownHandlers getTxtSearch();
 
@@ -131,9 +133,9 @@ public class CPDManagementPresenter
 		@Override
 		public void onKeyDown(KeyDownEvent event) {
 			if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-				if (!isNullOrEmpty(getView().getSearchValue().trim())) {
-					searchCPD(getView().getSearchValue().trim());
-				}
+				// if (!isNullOrEmpty(getView().getSearchValue().trim())) {
+				searchCPD(getView().getSearchValue().trim());
+				// }
 			}
 		}
 	};
@@ -174,8 +176,8 @@ public class CPDManagementPresenter
 			}
 		});
 
-		getView().getSearchValueChangeHander().addValueChangeHandler(
-				cpdValueChangeHandler);
+		// getView().getReturnsSearchValueChangeHander().addValueChangeHandler(
+		// cpdValueChangeHandler);
 
 		getView().getTxtSearch().addKeyDownHandler(keyHandler);
 
@@ -247,7 +249,7 @@ public class CPDManagementPresenter
 				getCPDSearchResults(pagingConfig.getOffset(), pageLimit,
 						searchTerm);
 			}
-		}).cpd("ALL").getCPDsearchCount(searchTerm);
+		}).cpd(page).getCPDsearchCount(searchTerm);
 	}
 
 	private void getCPDSearchResults(int offset, int limit, String searchTerm) {
@@ -256,32 +258,32 @@ public class CPDManagementPresenter
 				.withCallback(new AbstractAsyncCallback<List<CPDDto>>() {
 					@Override
 					public void onSuccess(List<CPDDto> result) {
-						// getView().bindResults(result);
+						getView().bindResults(result, page);
 						fireEvent(new ProcessingCompletedEvent());
 					}
 				})
-				.cpd("ALL")
-				.searchCPd(offset, limit, searchTerm,
-						getView().getStartDate().getTime(),
-						getView().getEndDate().getTime());
+				.cpd(page)
+				.searchCPd(offset, limit, searchTerm, startDate.getTime(),
+						endDate.getTime());
 	}
 
 	@Override
 	protected void onReveal() {
 		super.onReveal();
-
+		loadSummary();
 	}
 
-	protected void loadData(Date startDate, Date endDate, final String loadType) {
-		fireEvent(new ProcessingEvent());
-
+	protected void loadSummary() {
 		memberDelegate.withCallback(new AbstractAsyncCallback<CPDSummaryDto>() {
 			@Override
 			public void onSuccess(CPDSummaryDto summary) {
 				getView().bindSummary(summary);
 			}
 		}).cpd("ALL").getCPDSummary(startDate.getTime(), endDate.getTime());
+	}
 
+	protected void loadData(Date startDate, Date endDate, final String loadType) {
+		fireEvent(new ProcessingEvent());
 		memberDelegate.withCallback(new AbstractAsyncCallback<Integer>() {
 			@Override
 			public void onSuccess(Integer aCount) {
@@ -404,7 +406,7 @@ public class CPDManagementPresenter
 				loadIndividualData(memberRefId, startDate, endDate);
 			} else {
 				// Load Individual CPD - Return OR Archive
-				getView().setIndividualMemberInitialDates(startDate,endDate);
+				getView().setIndividualMemberInitialDates(startDate, endDate);
 				loadCPD(refId, page);
 			}
 

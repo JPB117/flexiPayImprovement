@@ -101,7 +101,8 @@ public class CPDAdminTableRow extends RowWidget {
 			divRecordDate.add(new InlineLabel(DateUtils.READABLETIMESTAMP
 					.format(dto.getCreated())));
 		}
-		divMember.add(new InlineLabel(dto.getFullNames()));
+		divMember.add(new InlineLabel(dto.getFullNames() + " - "
+				+ dto.getMemberRegistrationNo()));
 		divCPDActivity.add(new InlineLabel(dto.getTitle()));
 		CPDStatus status = dto.getStatus() == null ? CPDStatus.Unconfirmed
 				: dto.getStatus();

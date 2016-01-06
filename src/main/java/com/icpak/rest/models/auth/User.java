@@ -65,12 +65,9 @@ import com.workpoint.icpak.shared.model.auth.AccountStatus;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlSeeAlso({ BioData.class })
 @Entity
-@Table(name = "user", indexes = { @Index(columnList = "username", name = "idx_users_username")
-// ,@Index(columnList = "email", name = "idx_users_email")
-})
+@Table(name = "user", indexes = { @Index(columnList = "username", name = "idx_users_username") })
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class User extends PO {
-
 	/**
 	 * 
 	 */
@@ -118,7 +115,7 @@ public class User extends PO {
 	private String postalCode;
 	private String lmsStatus;
 	private String lmsResponse;
-	@Column(columnDefinition="TEXT")
+	@Column(columnDefinition = "TEXT")
 	private String lmsPayLoad;
 
 	@Enumerated(EnumType.STRING)

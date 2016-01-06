@@ -58,7 +58,8 @@ public class CPDResourceImpl implements CPDResource {
 			@QueryParam("limit") Integer limit,
 			@QueryParam("startDate") Long startDate,
 			@QueryParam("endDate") Long endDate) {
-		return helper.getAllCPD(memberId, offset, limit, startDate, endDate);
+		return helper.getAllCPD(memberId, offset, limit, startDate, endDate,
+				null);
 	}
 
 	@GET
@@ -165,7 +166,8 @@ public class CPDResourceImpl implements CPDResource {
 			@QueryParam("searchTerm") String searchTerm,
 			@QueryParam("startDate") Long startDate,
 			@QueryParam("endDate") Long endDate) {
-		return helper.searchCPD(searchTerm, offset, limit, startDate, endDate);
+		return helper.getAllCPD(memberId, offset, limit, startDate, endDate,
+				searchTerm);
 	}
 
 	@GET

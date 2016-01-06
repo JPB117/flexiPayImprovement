@@ -149,12 +149,13 @@ public class CPDManagementView extends ViewImpl implements
 		tblCPDReturns.clearRows();
 		tblCpdArchive.clearRows();
 
-		if (loadType.equals("ALLRETURNS")) {
+		if (loadType.equals("ALLRETURNS") || loadType.equals("cpdReturns")) {
 			for (CPDDto dto : result) {
 				tblCPDReturns.createRow(new CPDAdminTableRow(dto));
 			}
 
-		} else if (loadType.equals("ALLARCHIVE")) {
+		} else if (loadType.equals("ALLARCHIVE")
+				|| loadType.equals("returnArchive")) {
 			for (CPDDto dto : result) {
 				tblCpdArchive.createRow(new CPDAdminTableRow(dto));
 			}
@@ -209,8 +210,13 @@ public class CPDManagementView extends ViewImpl implements
 	}
 
 	@Override
-	public HasValueChangeHandlers<String> getSearchValueChangeHander() {
+	public HasValueChangeHandlers<String> getReturnsSearchValueChangeHander() {
 		return tblCPDReturns.getSearchField();
+	}
+
+	@Override
+	public HasValueChangeHandlers<String> getSummarySearchValueChangeHander() {
+		return tblMemberTable.getSearchField();
 	}
 
 	@Override

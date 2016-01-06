@@ -9,8 +9,6 @@ import org.apache.log4j.Logger;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.amazonaws.util.json.JSONArray;
-import com.amazonaws.util.json.JSONObject;
 import com.google.inject.Inject;
 import com.icpak.rest.dao.CPDDao;
 import com.icpak.rest.dao.helper.CPDDaoHelper;
@@ -18,7 +16,6 @@ import com.icpak.rest.models.cpd.CPD;
 import com.icpak.servlet.upload.GetReport;
 import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.shared.model.CPDStatus;
-import com.workpoint.icpak.shared.model.MemberCPDDto;
 import com.workpoint.icpak.tests.base.AbstractDaoTest;
 
 public class TestCPDDao extends AbstractDaoTest {
@@ -61,7 +58,8 @@ public class TestCPDDao extends AbstractDaoTest {
 	public void getCPD() throws ParseException {
 		String memberId = "pabGC3dh0OOzLzSC";
 		List<CPDDto> list = helper.getAllCPD("ALL", 0, 1000,
-				formatter.parse("01/01/2000").getTime(), new Date().getTime());
+				formatter.parse("01/01/2000").getTime(), new Date().getTime(),
+				"Another");
 		for (CPDDto dto : list) {
 			System.err.println(dto.getTitle());
 			// System.err.println("Start Date:" + dto.getStartDate()
@@ -80,7 +78,7 @@ public class TestCPDDao extends AbstractDaoTest {
 						.getTotalReturns());
 	}
 
-	@Test
+	// @Test
 	public void testMemberCPD() throws ParseException {
 		// List<MemberCPDDto> memberCPDDtos = cpdDao.getMemberCPD("", 0, 10);
 		//
@@ -112,32 +110,29 @@ public class TestCPDDao extends AbstractDaoTest {
 	public void testSearch() {
 		Long startDate = 1420059600000L;
 		Long endDate = 1450645200000L;
-		List<CPDDto> cpdDtos = helper.searchCPD("2020", 0, 10, startDate,
-				endDate);
-		logger.error("========= CPP search count=== "
-				+ helper.cpdSearchCount("2020"));
-		logger.error("========= List length=== " + cpdDtos.size());
+		// List<CPDDto> cpdDtos = helper.searchCPD("2020", 0, 10, startDate,
+		// endDate);
+		// logger.error("========= CPP search count=== "
+		// + helper.cpdSearchCount("2020"));
+		// logger.error("========= List length=== " + cpdDtos.size());
 
 	}
 
-	@Ignore
+	@Test
 	public void testGetAllCPD() throws ParseException {
 		Date today = new Date();
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		Date another = formatter.parse("2015-1-1");
 
-		List<CPDDto> cpdDtos = helper.getAllCPD("ALLARCHIVE", 0, 100,
-				another.getTime(), today.getTime());
+		List<CPDDto> cpdDtos = helper.getAllCPD("cpdReturns", 0, 100,
+				another.getTime(), today.getTime(), "An");
 
-		Integer count = helper.getCount("ALLARCHIVE", another.getTime(),
-				today.getTime());
-		JSONArray jArray = new JSONArray();
+		// Integer count = helper.getCount("ALLRETURNS", another.getTime(),
+		// today.getTime());
 
 		for (CPDDto dto : cpdDtos) {
-			JSONObject jO = new JSONObject(dto);
-			jArray.put(jO);
+			System.err.println("Title>>" + dto.getTitle());
 		}
 		logger.error("======= List length=== " + cpdDtos.size());
-		logger.error("======= Count:=== " + count);
 	}
 }

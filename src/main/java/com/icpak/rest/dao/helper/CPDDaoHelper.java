@@ -60,7 +60,7 @@ public class CPDDaoHelper {
 	static Logger logger = Logger.getLogger(CPDDaoHelper.class);
 
 	public List<CPDDto> getAllCPD(String memberId, Integer offset,
-			Integer limit, Long startDate, Long endDate) {
+			Integer limit, Long startDate, Long endDate, String searchTerm) {
 
 		List<CPDDto> cpds = null;
 		if (memberId != null && memberId.equals("ALL")) {
@@ -68,7 +68,7 @@ public class CPDDaoHelper {
 					endDate));
 		} else {
 			cpds = dao.getAllCPDs(memberId, offset, limit, new Date(startDate),
-					new Date(endDate));
+					new Date(endDate), searchTerm);
 		}
 		logger.info(" ++++ TOTAL CPDS FOUND ++++ " + cpds.size());
 		return cpds;
@@ -378,10 +378,10 @@ public class CPDDaoHelper {
 		return memberCPDs;
 	}
 
-	public List<CPDDto> searchCPD(String searchTerm, Integer offset,
-			Integer limit, Long startDate, Long endDate) {
-		return dao.searchCPD(searchTerm, offset, limit, new Date(startDate),
-				new Date(endDate));
+	public List<CPDDto> searchCPD(String memberId, String searchTerm,
+			Integer offset, Integer limit, Long startDate, Long endDate) {
+		return dao.searchCPD(memberId, searchTerm, offset, limit, new Date(
+				startDate), new Date(endDate));
 	}
 
 	public Integer cpdSearchCount(String searchTerm) {

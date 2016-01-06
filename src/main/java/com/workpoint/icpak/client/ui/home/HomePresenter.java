@@ -128,6 +128,7 @@ public class HomePresenter extends
 	@Override
 	public void onLogout(LogoutEvent event) {
 
+		fireEvent(new ProcessingEvent());
 		sessionResource.withCallback(new AbstractAsyncCallback<Void>() {
 			@Override
 			public void onSuccess(Void result) {
@@ -135,6 +136,7 @@ public class HomePresenter extends
 				PlaceRequest placeRequest = new Builder().nameToken(
 						NameTokens.login).build();
 				placeManager.revealPlace(placeRequest);
+				fireEvent(new ProcessingCompletedEvent());
 			}
 
 		}).logout();

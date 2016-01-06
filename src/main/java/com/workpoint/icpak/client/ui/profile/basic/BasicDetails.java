@@ -101,14 +101,30 @@ public class BasicDetails extends Composite {
 			allIssues.add("No Email Address registered");
 		}
 
-		elEmployer.setInnerText(result.getEmployer());
-		elIdNo.setInnerText(result.getIdNumber());
-		elResidence.setInnerText(result.getResidence());
-		elAddress.setInnerText(result.getAddress1());
-		elPostalCode.setInnerText(result.getPostCode());
-		elCountry.setInnerText(result.getCountry());
-		elCity.setInnerText(result.getCity1());
-		elSex.setInnerText(result.getGender().name());
+		if (result.getEmployer() != null) {
+			elEmployer.setInnerText(result.getEmployer());
+		}
+		if (result.getIdNumber() != null) {
+			elIdNo.setInnerText(result.getIdNumber());
+		}
+		if (result.getResidence() != null) {
+			elResidence.setInnerText(result.getResidence());
+		}
+		if (result.getAddress1() != null) {
+			elAddress.setInnerText(result.getAddress1());
+		}
+		if (result.getPostCode() != null) {
+			elPostalCode.setInnerText(result.getPostCode());
+		}
+		if (result.getCountry() != null) {
+			elCountry.setInnerText(result.getCountry());
+		}
+		if (result.getCity1() != null) {
+			elCity.setInnerText(result.getCity1());
+		}
+		if (result.getGender() != null) {
+			elSex.setInnerText(result.getGender().name());
+		}
 
 		if (result.getDob() != null) {
 			elDob.setInnerText(DateUtils.DATEFORMAT.format(result.getDob()));

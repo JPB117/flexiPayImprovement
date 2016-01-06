@@ -38,12 +38,13 @@ public class CPDDao extends BaseDao {
 
 	public List<CPDDto> getAllCPDs(Integer offSet, Integer limit,
 			Date startDate, Date endDate) {
-		return getAllCPDs(null, offSet, limit, startDate, endDate);
+		return getAllCPDs(null, offSet, limit, startDate, endDate, null);
 	}
 
 	public List<CPDDto> getAllCPDs(String passedMemberRefId, Integer offSet,
-			Integer limit, Date startDate, Date endDate) {
-		logger.info(" +++ GET CPPD FOR +++++ REFID == " + passedMemberRefId);
+			Integer limit, Date startDate, Date endDate, String searchTerm) {
+		logger.info(" +++ GET CPPD FOR +++++ REFID == " + passedMemberRefId
+				+ " ++SearchTerm>>>>>" + searchTerm);
 		StringBuffer sql = new StringBuffer(
 				"select c.created,c.refId as cpdRefId,"
 						+ "c.title,c.status,c.memberRegistrationNo,c.memberRefId, "
@@ -53,7 +54,7 @@ public class CPDDao extends BaseDao {
 						+ "inner join user u on (u.id=m.userId) ");
 
 		Map<String, Object> params = appendParameters(sql, passedMemberRefId,
-				startDate, endDate, null);
+				startDate, endDate, searchTerm);
 
 		sql.append(" order by c.created desc");
 
@@ -193,7 +194,9 @@ public class CPDDao extends BaseDao {
 		}
 		if (passedMemberRefId != null
 				&& !passedMemberRefId.equals("ALLRETURNS")
-				&& !passedMemberRefId.equals("ALLARCHIVE")) {
+				&& !passedMemberRefId.equals("ALLARCHIVE")
+				&& !passedMemberRefId.equals("cpdReturns")
+				&& !passedMemberRefId.equals("returnArchive")) {
 			if (isFirstParam) {
 				isFirstParam = false;
 				sql.append(" where");
@@ -202,8 +205,11 @@ public class CPDDao extends BaseDao {
 			}
 			params.put("memberRefId", passedMemberRefId);
 			sql.append(" c.memberRefId=:memberRefId");
+
 		}
-		if (passedMemberRefId != null && passedMemberRefId.equals("ALLRETURNS")) {
+		if (passedMemberRefId != null
+				&& (passedMemberRefId.equals("ALLRETURNS") || passedMemberRefId
+						.equals("cpdReturns"))) {
 			if (isFirstParam) {
 				isFirstParam = false;
 				sql.append(" where");
@@ -212,9 +218,21 @@ public class CPDDao extends BaseDao {
 			}
 			params.put("status", "Unconfirmed");
 			sql.append(" c.status=:status");
+
+			if (searchTerm != null) {
+				if (!searchTerm.equals("")) {
+					sql.append(" and (concat(u.firstName,' ',u.lastName) like :searchTerm or"
+							+ " c.title like :searchTerm or "
+							+ " c.memberRegistrationNo like :searchTerm)");
+
+					params.put("searchTerm", "%" + searchTerm + "%");
+				}
+			}
 		}
 
-		if (passedMemberRefId != null && passedMemberRefId.equals("ALLARCHIVE")) {
+		if (passedMemberRefId != null
+				&& (passedMemberRefId.equals("ALLARCHIVE") || passedMemberRefId
+						.equals("returnArchive"))) {
 			if (isFirstParam) {
 				isFirstParam = false;
 				sql.append(" where");
@@ -421,12 +439,13 @@ public class CPDDao extends BaseDao {
 
 	}
 
-	public List<CPDDto> searchCPD(String searchTerm, Integer offset,
-			Integer limit, Date passedStartDate, Date passedEndDate) {
+	public List<CPDDto> searchCPD(String memberId, String searchTerm,
+			Integer offset, Integer limit, Date passedStartDate,
+			Date passedEndDate) {
 		StringBuffer sql = new StringBuffer(
-				"select c.refId,c.startdate,c.enddate, concat(u.firstName,' ',u.lastName),"
-						+ "c.title,c.organizer,c.category,c.cpdhours,c.status,"
-						+ "c.memberRegistrationNo,c.memberRefId "
+				"select c.created,c.refId as cpdRefId,"
+						+ "c.title,c.status,c.memberRegistrationNo,c.memberRefId, "
+						+ "concat(u.firstName,' ',u.lastName),c.startDate,c.endDate,c.cpdHours "
 						+ "from cpd c "
 						+ "inner join member m on (c.memberRefId=m.refId) "
 						+ "inner join user u on (u.id=m.userId) "
@@ -435,33 +454,11 @@ public class CPDDao extends BaseDao {
 						+ "u.lastName like :searchTerm or "
 						+ "concat(u.firstName,' ',u.lastName) like :searchTerm or "
 						+ "c.title like :searchTerm or "
-						+ "c.organizer like :searchTerm or "
 						+ "c.memberRegistrationNo=:memberNoSearch ");
 
 		boolean isFirstParam = false;
-		Map<String, Object> params = new HashMap<>();
-		if (passedStartDate != null) {
-			if (isFirstParam) {
-				isFirstParam = false;
-				sql.append(" where");
-			} else {
-				sql.append(" and");
-			}
-			params.put("startDate", passedStartDate);
-			sql.append(" startDate>=:startDate");
-		}
-
-		if (passedEndDate != null) {
-			if (isFirstParam) {
-				isFirstParam = false;
-				sql.append(" where");
-			} else {
-				sql.append(" and");
-			}
-			params.put("endDate", passedEndDate);
-			sql.append(" endDate<=:endDate");
-		}
-
+		Map<String, Object> params = appendParameters(sql, memberId,
+				passedStartDate, passedEndDate, searchTerm);
 		Query query = getEntityManager().createNativeQuery(sql.toString())
 				.setParameter("searchTerm", "%" + searchTerm + "%")
 				.setParameter("memberNoSearch", searchTerm);

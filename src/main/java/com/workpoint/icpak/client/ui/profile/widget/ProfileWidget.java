@@ -244,16 +244,15 @@ public class ProfileWidget extends Composite {
 			// divSavePanel.setVisible(true);
 			divStandingStatus.removeClassName("hide");
 			// aDownloadCert.setVisible(true);
-			spnRefreshSection.removeClassName("hide");
+			// spnRefreshSection.removeClassName("hide");
 			elSpace.addClassName("hide");
 			aBackToApplications.addClassName("hide");
 			panelBreadcrumb.addStyleName("hide");
 		} else {
-			divEditDropDown.setVisible(false);
 			// divSavePanel.setVisible(false);
 			divStandingStatus.addClassName("hide");
 			// aDownloadCert.setVisible(false);
-			spnRefreshSection.addClassName("hide");
+			// spnRefreshSection.addClassName("hide");
 			elSpace.removeClassName("hide");
 			aBackToApplications.removeClassName("hide");
 			panelBreadcrumb.removeStyleName("hide");
@@ -278,23 +277,19 @@ public class ProfileWidget extends Composite {
 	public void bindBasicDetails(ApplicationFormHeaderDto result) {
 		basicDetail.bindDetails(result);
 		if (result.getRefId() != null) {
-			spnNames.setInnerText(result.getSurname() + " "
-					+ result.getOtherNames());
-			spnApplicationType.setInnerText(result.getApplicationType()
-					.getDisplayName());
 
-			String str = result.getApplicationType().getDisplayName();
-			String[] vals = str.split(" ");
-			String value = "";
-			if (vals.length == 2) {
-				value = vals[0];
-			} else if (vals.length > 2) {
-				value = vals[0] + vals[1];
+			if (result.getSurname() != null && result.getOtherNames() != null) {
+				spnNames.setInnerText(result.getSurname() + " "
+						+ result.getOtherNames());
 			}
-			panelApplicationType.getElement().setInnerText(value);
-
+			if (result.getApplicationType() != null) {
+				spnApplicationType.setInnerText(result.getApplicationType()
+						.getDisplayName());
+			}
 			result.setPercCompletion(50);
-			progressBar.setProgress(result.getPercCompletion());
+			if (result.getPercCompletion() != null) {
+				progressBar.setProgress(result.getPercCompletion());
+			}
 		}
 
 	}
