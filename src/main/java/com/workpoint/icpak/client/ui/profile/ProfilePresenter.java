@@ -497,17 +497,16 @@ public class ProfilePresenter
 	 */
 	private void loadDataFromErp(boolean forceRefesh) {
 		fireEvent(new ProcessingEvent());
-		memberDelegate.withCallback(new AbstractAsyncCallback<Boolean>() {
-			@Override
-			public void onSuccess(Boolean hasLoaded) {
-				fireEvent(new ProcessingCompletedEvent());
-				loadData(getApplicationRefId());
-				getView().setLastUpdateToNow();
-				if (!hasLoaded) {
-					Window.alert("There was a problem loading ERP Data");
-				}
-			}
-		}).getDataFromErp(getMemberId(), forceRefesh);
+
+		/*
+		 * memberDelegate.withCallback(new AbstractAsyncCallback<Boolean>() {
+		 * 
+		 * @Override public void onSuccess(Boolean hasLoaded) { fireEvent(new
+		 * ProcessingCompletedEvent()); loadData(getApplicationRefId());
+		 * getView().setLastUpdateToNow(); if (!hasLoaded) {
+		 * Window.alert("There was a problem loading ERP Data"); } }
+		 * }).getDataFromErp(getMemberId(), forceRefesh);
+		 */
 	}
 
 	private void loadGoodStanding() {

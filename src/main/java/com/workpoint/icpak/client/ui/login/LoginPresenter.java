@@ -169,7 +169,6 @@ public class LoginPresenter extends
 						new AbstractAsyncCallback<LogInResult>() {
 							@Override
 							public void onSuccess(LogInResult result) {
-								// Window.alert("Callback Done!");
 								if (result.getCurrentUserDto().isLoggedIn()) {
 									setLoggedInCookie(result
 											.getLoggedInCookie());

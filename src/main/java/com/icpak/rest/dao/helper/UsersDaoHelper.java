@@ -511,7 +511,9 @@ public class UsersDaoHelper {
 
 		logger.info("LogInHandlerexecut(): actiontype="
 				+ action.getActionType());
-		logger.info("LogInHandlerexecut(): currentUserDto=" + currentUserDto);
+		logger.info("LogInHandlerexecut(): currentUserDto="
+				+ currentUserDto.getUser().getFullName() + " memberNo:"
+				+ currentUserDto.getUser().getMemberNo());
 		logger.info("LogInHandlerexecut(): loggedInCookie=" + loggedInCookie);
 
 		assert action.getActionType() == null;
