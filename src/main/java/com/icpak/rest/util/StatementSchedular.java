@@ -15,13 +15,17 @@ public class StatementSchedular {
 	/*
 	 * Report generator Class
 	 */
-	public static class ReportGenerator extends TimerTask {
+	public class ReportGenerator extends TimerTask {
+		@Inject
+		StatementDaoHelper daoHelper;
+		
 		Logger log = Logger.getLogger(ReportGenerator.class);
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub
 			log.info(" RUNNING SCHEDULAR TRUE ");
-			StatementDaoHelper daoHelper = new StatementDaoHelper();
+			
+//			StatementDaoHelper daoHelper = new StatementDaoHelper();
 			daoHelper.initiTimer();
 			log.info(" RUNNING SCHEDULAR DONE ");
 		}

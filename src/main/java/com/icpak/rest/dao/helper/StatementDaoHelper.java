@@ -32,6 +32,7 @@ import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.log4j.Logger;
+import org.joda.time.DateTime;
 import org.xml.sax.SAXException;
 
 import com.amazonaws.util.json.JSONException;
@@ -331,27 +332,32 @@ public class StatementDaoHelper {
 	}
 
 	public String initiTimer() {
+		logger.info(" INIT ITIMER ");
 		String result = null;
 
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+
 		List<MemberDto> members = memberDao.getMembersForschedular(0, 0);
-		
-		logger.info(" Size "+members.size());
+
+		logger.info(" Size " + members.size());
 
 		Date endDate = new Date();
 		long fromDate = (endDate.getTime() - (7776000 * 1000 * 93));
 		Date startDate = new Date(fromDate);
 
+		DateTime lastThreeMonths = new DateTime().minusMonths(3);
+
 		for (MemberDto member : members) {
-			logger.info(" refId "+member.getRefId());
+			logger.info(" refId " + member.getRefId());
 			try {
-				byte[] cpdStatementPDF = getMemberStatementPDF(member.getRefId(), startDate,
-						endDate);
+				byte[] cpdStatementPDF = getMemberStatementPDF(member.getRefId(), lastThreeMonths.toDate(), endDate);
 
 				Attachment attachment = new Attachment();
 				attachment.setAttachment(cpdStatementPDF);
 				attachment.setName("Quaterly_Statement_as_at_ " + endDate + " for_" + member.getMemberNo() + ".pdf");
 
-				String html = "This is your annual quaterly Statement from " + fromDate + " to " + endDate;
+				String html = "This is your annual quaterly Statement from " + formatter.format(lastThreeMonths.toDate())
+						+ " to " + endDate;
 				String subject = "ANNUAL QUATERLY STATEMENT";
 
 				EmailServiceHelper.sendEmail(html, "RE: ICPAK '" + subject, Arrays.asList("wladek.airo@gmail.com"),
@@ -368,8 +374,8 @@ public class StatementDaoHelper {
 		return result;
 	}
 
-	private byte[] getMemberStatementPDF(String memberRefId, Date startDate, Date endDate)
-			throws IOException, SAXException, ParserConfigurationException, FactoryConfigurationError, DocumentException {
+	private byte[] getMemberStatementPDF(String memberRefId, Date startDate, Date endDate) throws IOException,
+			SAXException, ParserConfigurationException, FactoryConfigurationError, DocumentException {
 		Member member = null;
 		if (memberRefId != null) {
 			member = memberDao.findByRefId(memberRefId, Member.class);

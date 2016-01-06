@@ -134,6 +134,7 @@ public class TestStatementsDao extends AbstractDaoTest {
 	@Test
 	public void testSchedular(){
 		logger.info(" TRIGGER SCHEDULAR");
-		statementHelper.initiTimer();
+//		statementHelper.initiTimer();
+		schedular.scheduleReport(new Date());
 	}
 }
