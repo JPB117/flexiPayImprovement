@@ -8,8 +8,7 @@
 
 	<g:HTMLPanel styleName="tr">
 		<g:HTMLPanel ui:field="panelMemberNo" styleName="td"></g:HTMLPanel>
-		<g:HTMLPanel ui:field="panelFirstName" styleName="td"></g:HTMLPanel>
-		<g:HTMLPanel ui:field="panelLastName" styleName="td"></g:HTMLPanel>
+		<g:HTMLPanel ui:field="panelFullName" styleName="td"></g:HTMLPanel>
 		<g:HTMLPanel ui:field="panelEmail" styleName="td"></g:HTMLPanel>
 		<g:HTMLPanel ui:field="panelGroups" styleName="td"></g:HTMLPanel>
 		<g:HTMLPanel ui:field="panelLMSStatus" styleName="td">

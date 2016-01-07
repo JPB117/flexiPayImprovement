@@ -261,13 +261,7 @@ public class UsersDaoHelper {
 
 	public List<UserDto> getAllUsers(Integer offset, Integer limit,
 			String uriInfo, String searchTerm) {
-		List<User> users = dao.getAllUsers(offset, limit, null, searchTerm);
-		List<UserDto> dtos = new ArrayList<>();
-
-		for (User user : users) {
-			dtos.add(user.toDto());
-		}
-		return dtos;
+		return dao.getAllUsersDtos(offset, limit, null, searchTerm);
 	}
 
 	public Integer getCount(String searchTerm) {

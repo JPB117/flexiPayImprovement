@@ -22,6 +22,7 @@ public class UserDto extends SerializableObj implements Listable, Serializable {
 	private String email;
 	private String surname;
 	private String password;
+	private String fullName;
 	private ArrayList<RoleDto> groups = new ArrayList<RoleDto>();
 	private int participated;
 	private int inbox;
@@ -41,6 +42,10 @@ public class UserDto extends SerializableObj implements Listable, Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
 	}
 
 	public String getName() {
@@ -77,7 +82,7 @@ public class UserDto extends SerializableObj implements Listable, Serializable {
 
 	@JsonIgnore
 	public String getFullName() {
-		return surname + " " + name;
+		return fullName;
 	}
 
 	@Override

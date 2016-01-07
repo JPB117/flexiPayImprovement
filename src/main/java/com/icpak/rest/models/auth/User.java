@@ -92,8 +92,8 @@ public class User extends PO {
 
 	@JsonIgnore
 	@XmlTransient
-	@ManyToMany(fetch=FetchType.LAZY,cascade = { CascadeType.DETACH, CascadeType.MERGE,
-			CascadeType.REFRESH, CascadeType.PERSIST })
+	@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH,
+			CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST })
 	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = @JoinColumn(name = "roleid"))
 	@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 	private Set<Role> roles = new HashSet<Role>();
@@ -101,12 +101,13 @@ public class User extends PO {
 	@Embedded
 	private BioData userData = null;
 
-	@OneToOne(fetch=FetchType.LAZY,mappedBy = "user", cascade = { CascadeType.PERSIST,
-			CascadeType.REMOVE })
+	@OneToOne(fetch = FetchType.LAZY, mappedBy = "user", cascade = {
+			CascadeType.PERSIST, CascadeType.REMOVE })
 	private Member member;
 
 	private String memberNo;
 	private String phoneNumber;
+	private String fullName;
 	private String mobileNo;
 	private String residence;
 	private String address;
@@ -394,6 +395,14 @@ public class User extends PO {
 
 	public void setLmsPayLoad(String lmsPayLoad) {
 		this.lmsPayLoad = lmsPayLoad;
+	}
+
+	public String getFullName() {
+		return fullName;
+	}
+
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
 	}
 
 }

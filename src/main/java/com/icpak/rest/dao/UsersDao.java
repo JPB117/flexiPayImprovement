@@ -1,5 +1,6 @@
 package com.icpak.rest.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -10,6 +11,8 @@ import com.icpak.rest.models.ErrorCodes;
 import com.icpak.rest.models.auth.Role;
 import com.icpak.rest.models.auth.User;
 import com.icpak.rest.models.util.Attachment;
+import com.workpoint.icpak.shared.model.CPDDto;
+import com.workpoint.icpak.shared.model.UserDto;
 
 public class UsersDao extends BaseDao {
 	Logger logger = Logger.getLogger(UsersDao.class);
@@ -31,10 +34,10 @@ public class UsersDao extends BaseDao {
 	public User getUserByUsernameOrMemberNo(String username) {
 
 		User user = findUserByMemberNo(username);
-		if(user==null){
+		if (user == null) {
 			user = findUserByUsername(username);
 		}
-		
+
 		return user;
 	}
 
@@ -62,11 +65,55 @@ public class UsersDao extends BaseDao {
 					+ "(u.memberNo like :searchTerm or "
 					+ "u.userData.fullNames like :searchTerm or "
 					+ "u.email like :searchTerm or "
-					+ "u.memberNo like :searchTerm" + ")" + "order by username";
+					+ "u.memberNo like :searchTerm" + ")" + "order by id";
 
 			return getResultList(getEntityManager().createQuery(query)
 					.setParameter("searchTerm", "%" + searchTerm + "%"),
 					offSet, limit);
+		}
+
+		return getResultList(getEntityManager().createQuery(
+				"select u from User u" + " inner join u.roles roles "
+						+ " where roles=:role " + " and u.isActive=1"
+						+ " order by username").setParameter("role", role),
+				offSet, limit);
+	}
+
+	public List<UserDto> getAllUsersDtos(Integer offSet, Integer limit,
+			Role role, String searchTerm) {
+		if (role == null) {
+			String query = "select memberNo,fullName,email,lmsStatus from User u where isActive=1 and "
+					+ "(u.memberNo like :searchTerm or "
+					+ "u.fullName like :searchTerm or "
+					+ "u.email like :searchTerm or "
+					+ "u.memberNo like :searchTerm" + ")" + "order by id";
+
+			List<Object[]> rows = getResultList(
+					getEntityManager().createNativeQuery(query).setParameter(
+							"searchTerm", "%" + searchTerm + "%"), offSet,
+					limit);
+
+			List<UserDto> userDtos = new ArrayList<>();
+			for (Object[] row : rows) {
+				int i = 0;
+				Object value = null;
+				String memberNo = (value = row[i++]) == null ? null : value
+						.toString().trim();
+				String fullName = (value = row[i++]) == null ? null : value
+						.toString().trim();
+				String email = (value = row[i++]) == null ? null : value
+						.toString().trim();
+				String lmsStatus = (value = row[i++]) == null ? null : value
+						.toString().trim();
+				UserDto user = new UserDto();
+				user.setMemberNo(memberNo);
+				user.setFullName(fullName);
+				user.setEmail(email);
+				user.setLmsStatus(lmsStatus);
+				userDtos.add(user);
+			}
+
+			return userDtos;
 		}
 
 		return getResultList(getEntityManager().createQuery(

@@ -124,8 +124,8 @@ public class TestCPDDao extends AbstractDaoTest {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		Date another = formatter.parse("2015-1-1");
 
-		List<CPDDto> cpdDtos = helper.getAllCPD("cpdReturns", 0, 100,
-				another.getTime(), today.getTime(), "An");
+		List<CPDDto> cpdDtos = helper.getAllCPD("returnArchive", 0, 100,
+				another.getTime(), today.getTime(), "");
 
 		// Integer count = helper.getCount("ALLRETURNS", another.getTime(),
 		// today.getTime());

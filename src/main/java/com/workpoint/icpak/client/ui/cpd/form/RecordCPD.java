@@ -260,10 +260,13 @@ public class RecordCPD extends Composite {
 		}
 
 		if (dto.getStatus() != null) {
-			lstMgmtAction
-					.setValue((dto.getStatus() == CPDStatus.Approved ? CPDAction.APPROVED
-							: CPDAction.REJECTED));
+			if (dto.getStatus() == CPDStatus.Approved) {
+				lstMgmtAction.setValue(CPDAction.APPROVED);
+			} else if (dto.getStatus() == CPDStatus.Rejected) {
+				lstMgmtAction.setValue(CPDAction.REJECTED);
+			}
 		}
+
 		txtMgmtComment.setValue(dto.getManagementComment());
 		panelPreviousAttachments.clear();
 

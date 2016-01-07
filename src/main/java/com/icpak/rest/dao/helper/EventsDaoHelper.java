@@ -29,33 +29,34 @@ public class EventsDaoHelper {
 	}
 
 	public List<EventDto> getAllEvents(String uri, Integer offset,
-			Integer limit, String eventType, String searchTerm){
+			Integer limit, String eventType, String searchTerm) {
 		EventType type = null;
 		List<EventDto> eventsList = new ArrayList<>();
-		
-		try{
+
+		try {
 			if (eventType != null) {
 				type = EventType.valueOf(eventType.toUpperCase());
 			}
-			List<Event> list = dao.getAllEvents(offset, limit, type, searchTerm);
-			
+			List<Event> list = dao
+					.getAllEvents(offset, limit, type, searchTerm);
+
 			for (Event e : list) {
 				EventDto event = e.toDto();
 				// int[] counts = dao.getEventCounts();
 				event.setDelegateCount(dao.getDelegateCount(e.getRefId()));
-				event.setPaidCount(dao.getDelegatePaidCount(e.getId()));
-				event.setUnPaidCount(dao.getDelegateUnPaidCount(e.getId()));
-				event.setTotalPaid(dao.getTotalEventAmount(e.getRefId(),
-						PaymentStatus.PAID));
-				event.setTotalUnpaid(dao.getTotalEventAmount(e.getRefId(),
-						PaymentStatus.NOTPAID));
+				// event.setPaidCount(dao.getDelegatePaidCount(e.getId()));
+				// event.setUnPaidCount(dao.getDelegateUnPaidCount(e.getId()));
+				// event.setTotalPaid(dao.getTotalEventAmount(e.getRefId(),
+				// PaymentStatus.PAID));
+				// event.setTotalUnpaid(dao.getTotalEventAmount(e.getRefId(),
+				// PaymentStatus.NOTPAID));
 				event.setUri(uri + "/" + event.getRefId());
 				eventsList.add(event);
 			}
-		}catch(NullPointerException ex){
+		} catch (NullPointerException ex) {
 			ex.printStackTrace();
 		}
-		
+
 		return eventsList;
 	}
 

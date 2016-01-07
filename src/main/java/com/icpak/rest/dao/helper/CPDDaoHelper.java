@@ -111,12 +111,18 @@ public class CPDDaoHelper {
 		sendReviewNotifications(cpd, poCPD);
 		poCPD.copyFrom(cpd);
 		poCPD.setMemberRefId(memberId);
+		// Update Summary
+		updateSummary(memberId, cpd.getStartDate());
 		dao.save(poCPD);
 
 		CPDDto rtn = poCPD.toDTO();
 		rtn.setFullNames(userDao.getFullNames(memberId));
 
 		return rtn;
+	}
+
+	private void updateSummary(String memberId, Date startDate) {
+
 	}
 
 	public void delete(String memberId, String cpdId) {

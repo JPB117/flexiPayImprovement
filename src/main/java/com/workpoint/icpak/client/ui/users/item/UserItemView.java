@@ -33,9 +33,7 @@ public class UserItemView extends ViewImpl implements UserItemPresenter.MyView {
 	}
 
 	@UiField
-	HTMLPanel panelFirstName;
-	@UiField
-	HTMLPanel panelLastName;
+	HTMLPanel panelFullName;
 	@UiField
 	HTMLPanel panelEmail;
 	@UiField
@@ -75,11 +73,7 @@ public class UserItemView extends ViewImpl implements UserItemPresenter.MyView {
 		}
 
 		if (user.getSurname() != null) {
-			panelFirstName.getElement().setInnerText(user.getSurname());
-		}
-
-		if (user.getName() != null) {
-			panelLastName.getElement().setInnerText(user.getName());
+			panelFullName.getElement().setInnerText(user.getFullName());
 		}
 
 		if (user.getEmail() != null) {
@@ -187,7 +181,7 @@ public class UserItemView extends ViewImpl implements UserItemPresenter.MyView {
 	public HasClickHandlers getDelete() {
 		return aDelete;
 	}
-	
+
 	public HasClickHandlers getAlmsReview() {
 		return almsReview;
 	}

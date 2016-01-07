@@ -56,8 +56,7 @@
 									<div class="thead">
 										<div class="tr">
 											<div class="th">Member No:</div>
-											<div class="th">First Name:</div>
-											<div class="th">Other Names:</div>
+											<div class="th">Member Names:</div>
 											<div class="th">Email</div>
 											<div class="th">Group</div>
 											<div class="th">LMS Status</div>
