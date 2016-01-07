@@ -98,6 +98,9 @@ public class RecordCPD extends Composite {
 	TextArea txtMgmtComment;
 
 	@UiField
+	SpanElement spnMgmntActionBy;
+
+	@UiField
 	ActionLink aBack;
 
 	@UiField
@@ -107,6 +110,8 @@ public class RecordCPD extends Composite {
 	DivElement panelInlineActions;
 	@UiField
 	DivElement panelBreadcrumb;
+	@UiField
+	DivElement divUpdatedBy;
 
 	@UiField
 	SpanElement spnMemberName;
@@ -225,6 +230,8 @@ public class RecordCPD extends Composite {
 			CPDStatus status = (lstMgmtAction.getValue().getName() == "APPROVED" ? CPDStatus.Approved
 					: CPDStatus.Rejected);
 			dto.setStatus(status);
+			dto.setUpdatedBy(AppContext.getCurrentUser().getUser()
+					.getFullName());
 		}
 		if (txtCPDHours.getValue() != null
 				&& !(txtCPDHours.getValue().isEmpty())) {
@@ -247,6 +254,16 @@ public class RecordCPD extends Composite {
 		txtTitle.setValue(dto.getTitle());
 		txtOrganizer.setValue(dto.getOrganizer());
 		txtCPDHours.setValue(Double.toString(dto.getCpdHours()));
+
+		if (dto.getUpdatedBy() != null) {
+			spnMgmntActionBy.setInnerText(dto.getUpdatedBy());
+		}
+
+		if (dto.getStatus() != null) {
+			lstMgmtAction
+					.setValue((dto.getStatus() == CPDStatus.Approved ? CPDAction.APPROVED
+							: CPDAction.REJECTED));
+		}
 		txtMgmtComment.setValue(dto.getManagementComment());
 		panelPreviousAttachments.clear();
 
@@ -280,18 +297,19 @@ public class RecordCPD extends Composite {
 	public void setViewMode(boolean isViewMode) {
 		this.isViewMode = isViewMode;
 		if (isViewMode) {
-			lstCategory.getElement().getFirstChildElement()
-					.setAttribute("disabled", "disabled");
-			dtEndDate.setDisabled(true);
-			dtStartDate.setDisabled(true);
-			txtTitle.getElement().setAttribute("disabled", "disabled");
-			txtOrganizer.getElement().setAttribute("disabled", "disabled");
+			// lstCategory.getElement().getFirstChildElement()
+			// .setAttribute("disabled", "disabled");
+			// dtEndDate.setDisabled(true);
+			// dtStartDate.setDisabled(true);
+			// txtTitle.getElement().setAttribute("disabled", "disabled");
+			// txtOrganizer.getElement().setAttribute("disabled", "disabled");
 			aPreviousForm.setVisible(false);
 			panelUpload.setVisible(false);
 			divCpdHours.removeClassName("hide");
 			divMgtComment.removeClassName("hide");
 			panelInlineActions.removeClassName("hide");
 			panelBreadcrumb.removeClassName("hide");
+			divUpdatedBy.removeClassName("hide");
 
 		} else {
 			lstCategory.getElement().getFirstChildElement()
@@ -304,6 +322,7 @@ public class RecordCPD extends Composite {
 			divCpdHours.addClassName("hide");
 			panelInlineActions.addClassName("hide");
 			panelBreadcrumb.addClassName("hide");
+			divUpdatedBy.addClassName("hide");
 		}
 	}
 

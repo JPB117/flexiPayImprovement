@@ -137,6 +137,7 @@ public class CPD extends PO {
 		dto.setEventId(eventId);
 		dto.setEventLocation(eventLocation);
 		dto.setMemberRegistrationNo(memberRegistrationNo);
+		dto.setUpdatedBy(getUpdatedBy());
 		if (fullnames != null) {
 			dto.setFullNames(fullnames);
 		}

@@ -242,7 +242,7 @@ public class ProfileWidget extends Composite {
 		if (editMode) {
 			divEditDropDown.setVisible(true);
 			// divSavePanel.setVisible(true);
-			divStandingStatus.removeClassName("hide");
+			// divStandingStatus.removeClassName("hide");
 			// aDownloadCert.setVisible(true);
 			// spnRefreshSection.removeClassName("hide");
 			elSpace.addClassName("hide");
@@ -250,7 +250,7 @@ public class ProfileWidget extends Composite {
 			panelBreadcrumb.addStyleName("hide");
 		} else {
 			// divSavePanel.setVisible(false);
-			divStandingStatus.addClassName("hide");
+			// divStandingStatus.addClassName("hide");
 			// aDownloadCert.setVisible(false);
 			// spnRefreshSection.addClassName("hide");
 			elSpace.removeClassName("hide");
@@ -455,13 +455,13 @@ public class ProfileWidget extends Composite {
 		if (show) {
 			spnMembershipNo.getParentElement().addClassName("hide");
 			spnMembershipStatus.setInnerText("Not Confirmed");
-			spnRefreshSection.addClassName("hide");
-			divStandingStatus.addClassName("hide");
+			// spnRefreshSection.addClassName("hide");
+			// divStandingStatus.addClassName("hide");
 			divSubmit.removeClassName("hide");
 		} else {
 			spnMembershipNo.getParentElement().removeClassName("hide");
-			spnRefreshSection.removeClassName("hide");
-			divStandingStatus.removeClassName("hide");
+			// spnRefreshSection.removeClassName("hide");
+			// divStandingStatus.removeClassName("hide");
 			divSubmit.addClassName("hide");
 		}
 	}

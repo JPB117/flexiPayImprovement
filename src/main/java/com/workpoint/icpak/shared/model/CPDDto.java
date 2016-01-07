@@ -18,6 +18,7 @@ public class CPDDto extends SerializableObj {
 	private CPDStatus status;
 	private String memberRefId;
 	private String fullNames;
+	private String updatedBy;
 	private String eventId;
 	private String eventLocation;
 	private String memberRegistrationNo;
@@ -196,5 +197,13 @@ public class CPDDto extends SerializableObj {
 
 	public void setManagementComment(String managementComment) {
 		this.managementComment = managementComment;
+	}
+
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
+
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
 	}
 }

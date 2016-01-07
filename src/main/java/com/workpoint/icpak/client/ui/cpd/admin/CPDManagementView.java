@@ -21,6 +21,7 @@ import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
 import com.workpoint.icpak.client.model.UploadContext;
 import com.workpoint.icpak.client.model.UploadContext.UPLOADACTION;
+import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.PagingPanel;
 import com.workpoint.icpak.client.ui.cpd.admin.summary.table.CPDSummaryTable;
 import com.workpoint.icpak.client.ui.cpd.admin.summary.table.row.CPDSummaryTableRow;
@@ -72,6 +73,8 @@ public class CPDManagementView extends ViewImpl implements
 	Anchor aMemberCPD;
 	@UiField
 	Anchor aReturnArchive;
+	@UiField
+	ActionLink aCreate;
 	@UiField
 	DivElement divCPDReturns;
 	@UiField
@@ -289,13 +292,15 @@ public class CPDManagementView extends ViewImpl implements
 			frmViewReturns.setCPD(result);
 			frmViewReturns.setViewMode(true);
 			frmViewReturns.setBackHref("#cpdmgt;p=cpdReturns");
-			frmViewReturns.setMemberName(result.getFullNames());
+			frmViewReturns.setMemberName(result.getFullNames() + " - "
+					+ result.getMemberRegistrationNo());
 		} else if (loadType.equals("returnArchive")) {
 			frmViewArchive.showForm(true);
 			frmViewArchive.setCPD(result);
 			frmViewArchive.setViewMode(true);
 			frmViewArchive.setBackHref("#cpdmgt;p=returnArchive");
-			frmViewArchive.setMemberName(result.getFullNames());
+			frmViewArchive.setMemberName(result.getFullNames() + " - "
+					+ result.getMemberRegistrationNo());
 		}
 	}
 
@@ -333,4 +338,9 @@ public class CPDManagementView extends ViewImpl implements
 	public void setIndividualMemberInitialDates(Date startDate, Date endDate) {
 		tblMemberTable.setInitialDates(startDate, endDate);
 	}
+
+	public HasClickHandlers getRecordButton() {
+		return aCreate;
+	}
+
 }

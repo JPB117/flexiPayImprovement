@@ -1,9 +1,9 @@
 package com.workpoint.icpak.client.ui.cpd.admin;
 
-import static com.workpoint.icpak.client.ui.util.StringUtils.isNullOrEmpty;
-
 import java.util.Date;
 import java.util.List;
+
+import org.hibernate.event.spi.LoadEventListener.LoadType;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -32,10 +32,14 @@ import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.workpoint.icpak.client.place.NameTokens;
 import com.workpoint.icpak.client.security.CurrentUser;
 import com.workpoint.icpak.client.service.AbstractAsyncCallback;
+import com.workpoint.icpak.client.ui.AppManager;
+import com.workpoint.icpak.client.ui.OnOptionSelected;
+import com.workpoint.icpak.client.ui.OptionControl;
 import com.workpoint.icpak.client.ui.admin.TabDataExt;
 import com.workpoint.icpak.client.ui.component.PagingConfig;
 import com.workpoint.icpak.client.ui.component.PagingLoader;
 import com.workpoint.icpak.client.ui.component.PagingPanel;
+import com.workpoint.icpak.client.ui.cpd.form.RecordCPD;
 import com.workpoint.icpak.client.ui.events.EditModelEvent;
 import com.workpoint.icpak.client.ui.events.EditModelEvent.EditModelHandler;
 import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
@@ -51,6 +55,7 @@ import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.shared.api.MemberResource;
 import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.shared.model.CPDFooterDto;
+import com.workpoint.icpak.shared.model.CPDStatus;
 import com.workpoint.icpak.shared.model.CPDSummaryDto;
 import com.workpoint.icpak.shared.model.MemberCPDDto;
 import com.workpoint.icpak.shared.model.TableActionType;
@@ -102,6 +107,8 @@ public class CPDManagementPresenter
 		PagingPanel getIndividualMemberPagingPanel();
 
 		void setIndividualMemberInitialDates(Date startDate, Date endDate);
+
+		HasClickHandlers getRecordButton();
 
 	}
 
@@ -158,6 +165,13 @@ public class CPDManagementPresenter
 		addRegisteredHandler(EditModelEvent.TYPE, this);
 		addRegisteredHandler(TableActionEvent.TYPE, this);
 
+		getView().getRecordButton().addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				showCreatePopup();
+			}
+		});
+
 		getView().getReturnsPagingPanel().setLoader(new PagingLoader() {
 			@Override
 			public void onLoad(int offset, int limit) {
@@ -184,14 +198,14 @@ public class CPDManagementPresenter
 		getView().getReturnsPagingPanel().setLoader(new PagingLoader() {
 			@Override
 			public void onLoad(int offset, int limit) {
-				loadData(startDate, endDate, page);
+				loadCPD(offset, pageLimit, page);
 			}
 		});
 
 		getView().getArchivePagingPanel().setLoader(new PagingLoader() {
 			@Override
 			public void onLoad(int offset, int limit) {
-				loadData(startDate, endDate, page);
+				loadCPD(offset, pageLimit, page);
 			}
 		});
 
@@ -210,6 +224,51 @@ public class CPDManagementPresenter
 					}
 				});
 
+	}
+
+	protected void showCreatePopup() {
+		final RecordCPD cpdRecord = new RecordCPD();
+		cpdRecord.getStartUploadButton().addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				if (cpdRecord.getCPD().getRefId() == null) {
+					// not saved
+					if (cpdRecord.isValid()) {
+						CPDDto cpd = cpdRecord.getCPD();
+						String memberId = currentUser.getUser().getRefId();
+						String memberRegistrationNo = currentUser.getUser()
+								.getMemberNo();
+						cpd.setMemberRegistrationNo(memberRegistrationNo);
+						memberDelegate
+								.withCallback(
+										new AbstractAsyncCallback<CPDDto>() {
+											@Override
+											public void onSuccess(CPDDto result) {
+												cpdRecord.setCPD(result);
+												cpdRecord.showUploadPanel(true);
+											}
+										}).cpd(memberId).create(cpd);
+					}
+				} else {
+					cpdRecord.showUploadPanel(true);
+				}
+			}
+		});
+		cpdRecord.showForm(true);
+		cpdRecord.setViewMode(false);
+
+		AppManager.showPopUp("Record CPD Wizard", cpdRecord.asWidget(),
+				new OptionControl() {
+					@Override
+					public void onSelect(String name) {
+						if (name.equals("Save")) {
+							if (cpdRecord.isValid()) {
+								saveRecord(cpdRecord.getCPD());
+								hide();
+							}
+						}
+					}
+				}, "Save", "Cancel");
 	}
 
 	@Inject
@@ -282,22 +341,32 @@ public class CPDManagementPresenter
 		}).cpd("ALL").getCPDSummary(startDate.getTime(), endDate.getTime());
 	}
 
-	protected void loadData(Date startDate, Date endDate, final String loadType) {
+	protected void loadData(Date startDate, Date endDate,
+			final String loadType, final Integer offset) {
 		fireEvent(new ProcessingEvent());
 		memberDelegate.withCallback(new AbstractAsyncCallback<Integer>() {
 			@Override
 			public void onSuccess(Integer aCount) {
 				fireEvent(new ProcessingCompletedEvent());
 				PagingPanel panel = null;
-				if (loadType.equals("ALLRETURNS")) {
+				if (loadType.equals("ALLRETURNS")
+						|| loadType.equals("cpdReturns")) {
 					panel = getView().getReturnsPagingPanel();
 					panel.setTotal(aCount);
-				} else if (loadType.equals("ALLARCHIVE")) {
+				} else if (loadType.equals("ALLARCHIVE")
+						|| loadType.equals("returnArchive")) {
 					panel = getView().getArchivePagingPanel();
 					panel.setTotal(aCount);
 				}
 				PagingConfig config = panel.getConfig();
-				loadCPD(config.getOffset(), pageLimit, loadType);
+
+				int passedOffset = 0;
+				if (offset != null) {
+					passedOffset = offset;
+				} else {
+					passedOffset = config.getOffset();
+				}
+				loadCPD(passedOffset, pageLimit, loadType);
 			}
 		}).cpd(loadType).getCount(startDate.getTime(), endDate.getTime());
 
@@ -394,9 +463,9 @@ public class CPDManagementPresenter
 			this.startDate = DateUtils.DATEFORMAT_SYS.parse("2011-01-01");
 			this.endDate = new Date();
 			if (page.equals("cpdReturns")) {
-				loadData(startDate, endDate, "ALLRETURNS");
+				loadData(startDate, endDate, "ALLRETURNS", null);
 			} else if (page.equals("returnArchive")) {
-				loadData(startDate, endDate, "ALLARCHIVE");
+				loadData(startDate, endDate, "ALLARCHIVE", null);
 			} else if (page.equals("memberCPD")) {
 				loadCPDSummaryCount("");
 			}
