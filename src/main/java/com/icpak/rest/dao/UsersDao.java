@@ -82,7 +82,7 @@ public class UsersDao extends BaseDao {
 	public List<UserDto> getAllUsersDtos(Integer offSet, Integer limit,
 			Role role, String searchTerm) {
 		if (role == null) {
-			String query = "select memberNo,fullName,email,lmsStatus from User u where isActive=1 and "
+			String query = "select memberNo,firstName,lastName,fullName,email,lmsStatus from User u where isActive=1 and "
 					+ "(u.memberNo like :searchTerm or "
 					+ "u.fullName like :searchTerm or "
 					+ "u.email like :searchTerm or "
@@ -99,6 +99,10 @@ public class UsersDao extends BaseDao {
 				Object value = null;
 				String memberNo = (value = row[i++]) == null ? null : value
 						.toString().trim();
+				String firstName = (value = row[i++]) == null ? null : value
+						.toString().trim();
+				String lastName = (value = row[i++]) == null ? null : value
+						.toString().trim();
 				String fullName = (value = row[i++]) == null ? null : value
 						.toString().trim();
 				String email = (value = row[i++]) == null ? null : value
@@ -107,6 +111,9 @@ public class UsersDao extends BaseDao {
 						.toString().trim();
 				UserDto user = new UserDto();
 				user.setMemberNo(memberNo);
+				if (fullName == null) {
+					fullName = firstName + " " + lastName;
+				}
 				user.setFullName(fullName);
 				user.setEmail(email);
 				user.setLmsStatus(lmsStatus);

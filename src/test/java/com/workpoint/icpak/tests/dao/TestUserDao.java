@@ -62,6 +62,15 @@ public class TestUserDao extends AbstractDaoTest {
 		System.err.println(userDto.getLastDateUpdateFromErp());
 	}
 
+	@Test
+	public void getAllUsers() {
+		List<UserDto> users = usersDao.getAllUsersDtos(0, 10, null, "");
+
+		for (UserDto user : users) {
+			System.err.println(">>>" + user.getFullName());
+		}
+	}
+
 	@Ignore
 	public void testEmails() {
 		helper.resetAccount("30ZDpATQxFXx9WR7");
@@ -84,7 +93,7 @@ public class TestUserDao extends AbstractDaoTest {
 		}
 	}
 
-	@Test
+	@Ignore
 	public void testLMSIntergration() throws IOException {
 		// helper.postUserToLMS("AOUcFrD0WgflCc1O", "pass");
 		helper.getUserByActivationEmail("ANDREWGROHNEY1@GMAIL.COM");

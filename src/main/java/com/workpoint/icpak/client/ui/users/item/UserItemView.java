@@ -72,7 +72,7 @@ public class UserItemView extends ViewImpl implements UserItemPresenter.MyView {
 			panelMemberNo.getElement().setInnerText(user.getMemberNo());
 		}
 
-		if (user.getSurname() != null) {
+		if (user.getFullName() != null) {
 			panelFullName.getElement().setInnerText(user.getFullName());
 		}
 
