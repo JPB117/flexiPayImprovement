@@ -1,5 +1,7 @@
 package com.icpak.servlet.upload;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -45,6 +47,7 @@ import com.icpak.rest.models.cpd.CPD;
 import com.icpak.rest.models.membership.GoodStandingCertificate;
 import com.icpak.rest.models.membership.Member;
 import com.icpak.rest.models.util.Attachment;
+import com.icpak.rest.util.ApplicationSettings;
 import com.icpak.rest.utils.Doc;
 import com.icpak.rest.utils.DocumentLine;
 import com.icpak.rest.utils.HTMLToPDFConvertor;
@@ -89,19 +92,19 @@ public class GetReport extends HttpServlet {
 	@Inject
 	EventsDaoHelper eventDaoHelper;
 
+	@Inject
+	ApplicationSettings settings;
+
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
-		log.info("LOADED SERVLET " + getClass() + ": ContextPath= "
-				+ config.getServletContext().getContextPath()
-				+ ", ContextName= "
-				+ config.getServletContext().getServletContextName()
-				+ ", ServletName= " + config.getServletName());
+		log.info("LOADED SERVLET " + getClass() + ": ContextPath= " + config.getServletContext().getContextPath()
+				+ ", ContextName= " + config.getServletContext().getServletContextName() + ", ServletName= "
+				+ config.getServletName());
 	}
 
 	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		try {
 			executeGet(req, resp);
 		} catch (Exception e) {
@@ -110,10 +113,8 @@ public class GetReport extends HttpServlet {
 		}
 	}
 
-	protected void executeGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException, SAXException,
-			ParserConfigurationException, FactoryConfigurationError,
-			DocumentException {
+	protected void executeGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException,
+			SAXException, ParserConfigurationException, FactoryConfigurationError, DocumentException {
 
 		String action = req.getParameter("action");
 		if (action == null) {
@@ -168,26 +169,21 @@ public class GetReport extends HttpServlet {
 
 	}
 
-	private void processProformaInvoice(HttpServletRequest req,
-			HttpServletResponse resp) throws FileNotFoundException,
-			IOException, SAXException, ParserConfigurationException,
-			FactoryConfigurationError, DocumentException {
+	private void processProformaInvoice(HttpServletRequest req, HttpServletResponse resp) throws FileNotFoundException,
+			IOException, SAXException, ParserConfigurationException, FactoryConfigurationError, DocumentException {
 		String bookingRefId = null;
 		if (req.getParameter("bookingRefId") != null) {
 			bookingRefId = req.getParameter("bookingRefId");
 		}
 
-		BookingDto booking = bookingsDaoHelper.getBookingById(null,
-				bookingRefId);
+		BookingDto booking = bookingsDaoHelper.getBookingById(null, bookingRefId);
 		byte[] invoicePdf = bookingsDaoHelper.generateInvoicePdf(bookingRefId);
 
-		processAttachmentRequest(resp, invoicePdf, booking.getContact()
-				.getContactName() + ".pdf");
+		processAttachmentRequest(resp, invoicePdf, booking.getContact().getContactName() + ".pdf");
 
 	}
 
-	private void generateDelegateReport(HttpServletRequest req,
-			HttpServletResponse resp) throws IOException {
+	private void generateDelegateReport(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		String eventRefId = null;
 		String docType = null;
 
@@ -199,21 +195,17 @@ public class GetReport extends HttpServlet {
 			docType = req.getParameter("docType");
 		}
 
-		List<DelegateDto> delegateDtos = bookingsDaoHelper.getAllDelegates("",
-				eventRefId, null, 10000, "");
+		List<DelegateDto> delegateDtos = bookingsDaoHelper.getAllDelegates("", eventRefId, null, 10000, "");
 		EventDto event = eventDaoHelper.getEventById(eventRefId);
 
-		GetDelegatesReport report = new GetDelegatesReport(delegateDtos,
-				docType, event.getName());
+		GetDelegatesReport report = new GetDelegatesReport(delegateDtos, docType, event.getName());
 
 		processAttachmentRequest(resp, report.getBytes(), report.getName());
 
 	}
 
-	private void procesStatementsRequest(HttpServletRequest req,
-			HttpServletResponse resp) throws IOException, SAXException,
-			ParserConfigurationException, FactoryConfigurationError,
-			DocumentException {
+	private void procesStatementsRequest(HttpServletRequest req, HttpServletResponse resp) throws IOException,
+			SAXException, ParserConfigurationException, FactoryConfigurationError, DocumentException {
 		Long startDate = null;
 		Long endDate = null;
 		String memberRefId = null;
@@ -233,17 +225,14 @@ public class GetReport extends HttpServlet {
 		Date finalStartDate = startDate == null ? null : new Date(startDate);
 		Date finalEndDate = endDate == null ? null : new Date(endDate);
 
-		byte[] data = processStatementsRequest(memberRefId, finalStartDate,
-				finalEndDate);
+		byte[] data = processStatementsRequest(memberRefId, finalStartDate, finalEndDate);
 
 		processAttachmentRequest(resp, data, "statement.pdf");
 	}
 
 	// cdp statement Request
-	private void processMemberCPDStatementRequest(HttpServletRequest req,
-			HttpServletResponse resp) throws IOException, SAXException,
-			ParserConfigurationException, FactoryConfigurationError,
-			DocumentException {
+	private void processMemberCPDStatementRequest(HttpServletRequest req, HttpServletResponse resp) throws IOException,
+			SAXException, ParserConfigurationException, FactoryConfigurationError, DocumentException {
 		Long startDate = null;
 		Long endDate = null;
 		String memberRefId = null;
@@ -268,8 +257,7 @@ public class GetReport extends HttpServlet {
 		Date finalStartDate = new Date(startDate);
 		Date finalEndDate = new Date(endDate);
 
-		byte[] data = processMemberCPDStatementRequest(memberNo, memberRefId,
-				finalStartDate, finalEndDate, resp);
+		byte[] data = processMemberCPDStatementRequest(memberNo, memberRefId, finalStartDate, finalEndDate, resp);
 
 		processAttachmentRequest(resp, data, "memberCPDStatement.pdf");
 	}
@@ -279,9 +267,8 @@ public class GetReport extends HttpServlet {
 		return formatter.format(price);
 	}
 
-	public byte[] processStatementsRequest(String memberRefId, Date startDate,
-			Date endDate) throws FileNotFoundException, IOException,
-			SAXException, ParserConfigurationException,
+	public byte[] processStatementsRequest(String memberRefId, Date startDate, Date endDate)
+			throws FileNotFoundException, IOException, SAXException, ParserConfigurationException,
 			FactoryConfigurationError, DocumentException {
 
 		Member member = null;
@@ -298,14 +285,12 @@ public class GetReport extends HttpServlet {
 			user = member.getUser();
 		} else {
 			// Probably an admin
-			throw new IllegalArgumentException(
-					"No Member statements found. Kindly confirm you are logged in");
+			throw new IllegalArgumentException("No Member statements found. Kindly confirm you are logged in");
 		}
 
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
-		List<StatementDto> statements = statementDaoHelper.getAllStatements(
-				memberRefId, startDate, endDate, 0, 1000);
+		List<StatementDto> statements = statementDaoHelper.getAllStatements(memberRefId, startDate, endDate, 0, 1000);
 
 		Double totalAmount = 0.00;
 		Double total = 0.00;
@@ -319,8 +304,7 @@ public class GetReport extends HttpServlet {
 		values.put("startingDate", formatter.format(startDate));
 		StatementDto lastStatement = statements.get(statements.size() - 1);
 
-		values.put("endingDate",
-				formatter.format(lastStatement.getPostingDate()));
+		values.put("endingDate", formatter.format(lastStatement.getPostingDate()));
 		values.put("memberAddress", user.getAddress());
 		values.put("memberLocation", user.getCity());
 		values.put("memberNo", user.getMemberNo());
@@ -333,38 +317,29 @@ public class GetReport extends HttpServlet {
 			total = dto.getAmount() + total;
 			values = new HashMap<String, Object>();
 			values.put("postingDate", formatter.format(dto.getPostingDate()));
-			values.put("type", (dto.getDocumentType().equals("null") || dto
-					.getDocumentType() == null) ? "" : dto.getDocumentType());
-			values.put("docNo",
-					(dto.getDocumentNo() == null ? "" : dto.getDocumentNo()));
+			values.put("type", (dto.getDocumentType().equals("null") || dto.getDocumentType() == null) ? ""
+					: dto.getDocumentType());
+			values.put("docNo", (dto.getDocumentNo() == null ? "" : dto.getDocumentNo()));
 			values.put("description", dto.getDescription());
-			values.put("debit",
-					dto.getAmount() < 0 ? priceWithDecimal(dto.getAmount())
-							: 0.00);
-			values.put("credit",
-					dto.getAmount() > 0 ? priceWithDecimal(dto.getAmount())
-							: 0.00);
+			values.put("debit", dto.getAmount() < 0 ? priceWithDecimal(dto.getAmount()) : 0.00);
+			values.put("credit", dto.getAmount() > 0 ? priceWithDecimal(dto.getAmount()) : 0.00);
 			values.put("balance", priceWithDecimal(total));
 			DocumentLine line = new DocumentLine("statementDetail", values);
 			doc.addDetail(line);
 		}
 
 		HTMLToPDFConvertor convertor = new HTMLToPDFConvertor();
-		InputStream is = GetReport.class.getClassLoader().getResourceAsStream(
-				"member-statement.html");
+		InputStream is = GetReport.class.getClassLoader().getResourceAsStream("member-statement.html");
 		String html = IOUtils.toString(is);
 		byte[] data = convertor.convert(doc, html);
 
-		String name = user.getMemberNo() + " " + formatter.format(new Date())
-				+ ".pdf";
+		String name = user.getMemberNo() + " " + formatter.format(new Date()) + ".pdf";
 
 		return data;
 	}
 
-	private void processCPDCertRequest(HttpServletRequest req,
-			HttpServletResponse resp) throws IOException, SAXException,
-			ParserConfigurationException, FactoryConfigurationError,
-			DocumentException {
+	private void processCPDCertRequest(HttpServletRequest req, HttpServletResponse resp) throws IOException,
+			SAXException, ParserConfigurationException, FactoryConfigurationError, DocumentException {
 		String cpdRefId = req.getParameter("cpdRefId");
 		assert cpdRefId != null;
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
@@ -374,34 +349,28 @@ public class GetReport extends HttpServlet {
 
 		Map<String, Object> values = new HashMap<String, Object>();
 		values.put("eventName", cpd.getTitle());
-		values.put("eventDates", formatter.format(cpd.getStartDate()) + " to "
-				+ formatter.format(cpd.getEndDate()));
+		values.put("eventDates", formatter.format(cpd.getStartDate()) + " to " + formatter.format(cpd.getEndDate()));
 		values.put("memberName", cpd.getFullNames());
 		values.put("dateIssued", formatter.format(new Date()));
 		values.put("cpdHours", cpd.getCpdHours());
 		values.put("eventVenue", cpd.getEventLocation());
 		Doc doc = new Doc(values);
 		HTMLToPDFConvertor convertor = new HTMLToPDFConvertor();
-		InputStream is = GetReport.class.getClassLoader().getResourceAsStream(
-				"cpdcertificate.html");
+		InputStream is = GetReport.class.getClassLoader().getResourceAsStream("cpdcertificate.html");
 		String html = IOUtils.toString(is);
 		byte[] data = convertor.convert(doc, html);
 
-		String name = cpd.getFullNames() + " " + cpd.getTitle()
-				+ formatter.format(new Date()) + ".pdf";
+		String name = cpd.getFullNames() + " " + cpd.getTitle() + formatter.format(new Date()) + ".pdf";
 
 		processAttachmentRequest(resp, data, name);
 	}
 
-	private void processCertGoodStanding(HttpServletRequest req,
-			HttpServletResponse resp) throws IOException, SAXException,
-			ParserConfigurationException, FactoryConfigurationError,
-			DocumentException {
+	private void processCertGoodStanding(HttpServletRequest req, HttpServletResponse resp) throws IOException,
+			SAXException, ParserConfigurationException, FactoryConfigurationError, DocumentException {
 
 		String memberId = req.getParameter("memberRefId");
 		if (memberId == null) {
-			writeError(resp,
-					"Member Id must be provied to generate this certificate");
+			writeError(resp, "Member Id must be provied to generate this certificate");
 			return;
 		}
 
@@ -420,14 +389,12 @@ public class GetReport extends HttpServlet {
 		cert.setMember(member);
 		userDao.save(cert);
 		userDao.flush();
-		cert = userDao.findByRefId(cert.getRefId(),
-				GoodStandingCertificate.class); // reload?
+		cert = userDao.findByRefId(cert.getRefId(), GoodStandingCertificate.class); // reload?
 
 		// userDao.merge(cert);
 
 		if (cert.getId() == null) {
-			writeError(resp,
-					"Your Cert reference number was not generated, kindly contact ICPAK for help");
+			writeError(resp, "Your Cert reference number was not generated, kindly contact ICPAK for help");
 			return;
 		}
 
@@ -443,8 +410,7 @@ public class GetReport extends HttpServlet {
 		Doc doc = new Doc(values);
 
 		HTMLToPDFConvertor convertor = new HTMLToPDFConvertor();
-		InputStream is = GetReport.class.getClassLoader().getResourceAsStream(
-				"goodstanding_certificate.html");
+		InputStream is = GetReport.class.getClassLoader().getResourceAsStream("goodstanding_certificate.html");
 		String html = IOUtils.toString(is);
 		byte[] data = convertor.convert(doc, html);
 
@@ -471,8 +437,7 @@ public class GetReport extends HttpServlet {
 
 	}
 
-	private void processOutputDoc(HttpServletRequest req,
-			HttpServletResponse resp) {
+	private void processOutputDoc(HttpServletRequest req, HttpServletResponse resp) {
 		String outdoc = req.getParameter("template");
 		String name = req.getParameter("name");
 		String doc = req.getParameter("doc");
@@ -517,8 +482,7 @@ public class GetReport extends HttpServlet {
 		// processAttachmentRequest(resp, pdf, name);
 	}
 
-	private void processSettingsImage(HttpServletRequest req,
-			HttpServletResponse resp) {
+	private void processSettingsImage(HttpServletRequest req, HttpServletResponse resp) {
 
 		// String settingName = req.getParameter("settingName");
 		// log.debug("Logging- SettingName "+settingName);
@@ -560,8 +524,7 @@ public class GetReport extends HttpServlet {
 		// }
 	}
 
-	private void processUserImage(HttpServletRequest req,
-			HttpServletResponse resp) {
+	private void processUserImage(HttpServletRequest req, HttpServletResponse resp) {
 		String userId = req.getParameter("userRefId");
 		assert userId != null;
 
@@ -602,8 +565,7 @@ public class GetReport extends HttpServlet {
 	 * @param req
 	 * @param resp
 	 */
-	private void processAttachmentRequest(HttpServletRequest req,
-			HttpServletResponse resp) {
+	private void processAttachmentRequest(HttpServletRequest req, HttpServletResponse resp) {
 		String refId = req.getParameter("refId");
 		if (refId == null) {
 			writeError(resp, "RefId is required to download attachment");
@@ -612,8 +574,7 @@ public class GetReport extends HttpServlet {
 
 		Attachment a = attachmentDao.findByRefId(refId, Attachment.class);
 		if (a == null) {
-			writeError(resp, "Attachment with id '" + refId
-					+ "' could not be found");
+			writeError(resp, "Attachment with id '" + refId + "' could not be found");
 		}
 
 		// LocalAttachment attachment = DB.getAttachmentDao().getAttachmentById(
@@ -622,23 +583,31 @@ public class GetReport extends HttpServlet {
 		processAttachmentRequest(resp, a);
 	}
 
-	private void processAttachmentRequest(HttpServletResponse resp,
-			Attachment attachment) {
+	private void processAttachmentRequest(HttpServletResponse resp, Attachment attachment) {
 		resp.setContentType(attachment.getContentType());
-		processAttachmentRequest(resp, attachment.getAttachment(),
-				attachment.getName());
+
+		if (attachment.getAttachment() != null) {
+			processAttachmentRequest(resp, attachment.getAttachment(), attachment.getName());
+		} else {
+			try {
+				processAttachmentRequest(resp,
+						IOUtils.toByteArray(
+								new FileInputStream(new File(attachment.getFileName()))),
+						attachment.getName());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
 	}
 
-	private void processAttachmentRequest(HttpServletResponse resp,
-			byte[] data, String name) {
-		if (name.endsWith("png") || name.endsWith("jpg")
-				|| name.endsWith("html") || name.endsWith("htm")
+	private void processAttachmentRequest(HttpServletResponse resp, byte[] data, String name) {
+		if (name.endsWith("png") || name.endsWith("jpg") || name.endsWith("html") || name.endsWith("htm")
 				|| name.endsWith("svg") || name.endsWith("pdf")) {
 			// displayed automatically
 			resp.setHeader("Content-disposition", "inline;filename=\"" + name);
 		} else {
-			resp.setHeader("Content-disposition", "attachment;filename=\""
-					+ name);
+			resp.setHeader("Content-disposition", "attachment;filename=\"" + name);
 		}
 		resp.setContentLength(data.length);
 		writeOut(resp, data);
@@ -663,11 +632,9 @@ public class GetReport extends HttpServlet {
 	// generate member cpd statement pdf
 	SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
-	public byte[] processMemberCPDStatementRequest(String memberNo,
-			String memberRefId, Date startDate, Date endDate,
-			HttpServletResponse resp) throws FileNotFoundException,
-			IOException, SAXException, ParserConfigurationException,
-			FactoryConfigurationError, DocumentException {
+	public byte[] processMemberCPDStatementRequest(String memberNo, String memberRefId, Date startDate, Date endDate,
+			HttpServletResponse resp) throws FileNotFoundException, IOException, SAXException,
+					ParserConfigurationException, FactoryConfigurationError, DocumentException {
 		Member member = null;
 		if (memberRefId != null) {
 			member = memberDao.findByRefId(memberRefId, Member.class);
@@ -676,8 +643,7 @@ public class GetReport extends HttpServlet {
 		}
 
 		if (member == null) {
-			writeError(resp,
-					"No member found, check if you passed correct memberNo or memberRefId..");
+			writeError(resp, "No member found, check if you passed correct memberNo or memberRefId..");
 			return null;
 		}
 
@@ -686,9 +652,8 @@ public class GetReport extends HttpServlet {
 
 		// List<CPDDto> cpds = cpdHelper.getAllMemberCpd(memberRefId, startDate,
 		// endDate, 0, 1000);
-		List<CPD> cpds = CPDDao.getAllCPDS(member.getRefId(),
-				startDate == null ? null : startDate, endDate == null ? null
-						: endDate, 0, 1000);
+		List<CPD> cpds = CPDDao.getAllCPDS(member.getRefId(), startDate == null ? null : startDate,
+				endDate == null ? null : endDate, 0, 1000);
 		List<CPD> sortedCpd = new ArrayList<>();
 		for (CPD cpd : cpds) {
 			if (cpd.getStatus() != null) {
@@ -748,8 +713,7 @@ public class GetReport extends HttpServlet {
 
 			for (CPD cpd : sortedCpd) {
 
-				String currentCpdYear = formatter_.format(currentCpd
-						.getEndDate());
+				String currentCpdYear = formatter_.format(currentCpd.getEndDate());
 				String comparisonYear = formatter_.format(cpd.getEndDate());
 
 				if (currentCpdYear.equals(comparisonYear)) {
@@ -763,8 +727,7 @@ public class GetReport extends HttpServlet {
 				} else {
 					for (Map.Entry m : cpdStatementSummary.entrySet()) {
 						if (!m.getKey().equals(currentCpdYear)) {
-							cpdStatementSummary2.put(currentCpdYear,
-									cdpTableValues);
+							cpdStatementSummary2.put(currentCpdYear, cdpTableValues);
 						}
 					}
 				}
@@ -787,20 +750,17 @@ public class GetReport extends HttpServlet {
 			for (CPD cpdValue : hashTreeValues) {
 				if (cpdValue.getCategory() == null) {
 
-				} else if (cpdValue.getCategory().toString()
-						.equals("CATEGORY_A")) {
+				} else if (cpdValue.getCategory().toString().equals("CATEGORY_A")) {
 					totalStructured = totalStructured + cpdValue.getCpdHours();
 				} else {
-					totalUnstructured = totalUnstructured
-							+ cpdValue.getCpdHours();
+					totalUnstructured = totalUnstructured + cpdValue.getCpdHours();
 				}
 			}
 
 			Double total = totalStructured + totalUnstructured;
 
 			System.out.println("==total Structured " + totalStructured);
-			System.out
-					.println("==total totalUnstructured " + totalUnstructured);
+			System.out.println("==total totalUnstructured " + totalUnstructured);
 
 			values.put("totalStructured", totalStructured);
 			values.put("totalUnstructured", totalUnstructured);
@@ -813,13 +773,11 @@ public class GetReport extends HttpServlet {
 		}
 
 		HTMLToPDFConvertor convertor = new HTMLToPDFConvertor();
-		InputStream is = GetReport.class.getClassLoader().getResourceAsStream(
-				"cpd-statement.html");
+		InputStream is = GetReport.class.getClassLoader().getResourceAsStream("cpd-statement.html");
 		String html = IOUtils.toString(is);
 		byte[] data = convertor.convert(doc, html);
 
-		String name = userDto.getFullName() + " "
-				+ formatter_.format(new Date()) + ".pdf";
+		String name = userDto.getFullName() + " " + formatter_.format(new Date()) + ".pdf";
 
 		return data;
 	}
@@ -833,5 +791,9 @@ public class GetReport extends HttpServlet {
 		}
 
 		return total;
+	}
+
+	private String getFilePath() {
+		return settings.getProperty("upload_path");
 	}
 }

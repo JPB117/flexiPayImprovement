@@ -47,7 +47,7 @@ public class CPDAttachmentsExecutor extends FileExecutor {
 					String fieldName = item.getFieldName();
 					String contentType = item.getContentType();
 					String name = item.getName();
-					String fileName = getFilePath() + "/" +cpdRefId + "_" + name;
+					String fileName = cpdRefId+ "-CPD-" + name;
 					long size = item.getSize();
 
 					Attachment attachment = new Attachment();
@@ -67,7 +67,7 @@ public class CPDAttachmentsExecutor extends FileExecutor {
 					IOUtils.write(item.get(),
 							new FileOutputStream(new File(fileName)));
 
-					registerFile(request, fieldName, attachment.getId());
+					registerFile(request, getFilePath() + "/"+ fieldName, attachment.getId());
 				} catch (Exception e) {
 					e.printStackTrace();
 					err = e.getMessage();
