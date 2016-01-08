@@ -68,6 +68,7 @@ public class UserItemView extends ViewImpl implements UserItemPresenter.MyView {
 	@Override
 	public void setValues(final UserDto user) {
 		this.user = user;
+
 		if (user.getMemberNo() != null) {
 			panelMemberNo.getElement().setInnerText(user.getMemberNo());
 		}

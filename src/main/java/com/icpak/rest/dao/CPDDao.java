@@ -48,7 +48,7 @@ public class CPDDao extends BaseDao {
 		StringBuffer sql = new StringBuffer(
 				"select c.created,c.refId as cpdRefId,"
 						+ "c.title,c.status,c.memberRegistrationNo,c.memberRefId, "
-						+ "concat(u.firstName,' ',u.lastName),c.startDate,c.endDate,c.cpdHours "
+						+ "u.fullName,c.startDate,c.endDate,c.cpdHours "
 						+ "from cpd c "
 						+ "inner join member m on (c.memberRefId=m.refId) "
 						+ "inner join user u on (u.id=m.userId) ");

@@ -48,6 +48,10 @@ public class UserDto extends SerializableObj implements Listable, Serializable {
 		this.fullName = fullName;
 	}
 
+	public String getFullName() {
+		return fullName;
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -78,11 +82,6 @@ public class UserDto extends SerializableObj implements Listable, Serializable {
 
 	public void setPassword(String password) {
 		this.password = password;
-	}
-
-	@JsonIgnore
-	public String getFullName() {
-		return fullName;
 	}
 
 	@Override

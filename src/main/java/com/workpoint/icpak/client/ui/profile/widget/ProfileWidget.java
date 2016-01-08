@@ -277,11 +277,15 @@ public class ProfileWidget extends Composite {
 	public void bindBasicDetails(ApplicationFormHeaderDto result) {
 		basicDetail.bindDetails(result);
 		if (result.getRefId() != null) {
-
-			if (result.getSurname() != null && result.getOtherNames() != null) {
-				spnNames.setInnerText(result.getSurname() + " "
-						+ result.getOtherNames());
+			if (AppContext.getCurrentUser().getUser().getFullName() != null) {
+				spnNames.setInnerText(AppContext.getCurrentUser().getUser()
+						.getFullName());
 			}
+			// if (result.getSurname() != null && result.getOtherNames() !=
+			// null) {
+			// spnNames.setInnerText(result.getSurname() + " "
+			// + result.getOtherNames());
+			// }
 			if (result.getApplicationType() != null) {
 				spnApplicationType.setInnerText(result.getApplicationType()
 						.getDisplayName());

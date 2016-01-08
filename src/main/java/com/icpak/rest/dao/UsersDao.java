@@ -32,7 +32,6 @@ public class UsersDao extends BaseDao {
 	}
 
 	public User getUserByUsernameOrMemberNo(String username) {
-
 		User user = findUserByMemberNo(username);
 		if (user == null) {
 			user = findUserByUsername(username);

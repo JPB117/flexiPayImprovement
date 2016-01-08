@@ -318,9 +318,6 @@ public class UsersDaoHelper {
 		for (User user : members) {
 			user.setUri(uriInfo.getBaseUri() + "/users/" + user.getRefId());
 		}
-		// clone.setUsers(members);
-
-		// collection.setItems(members);
 		return clone;
 	}
 
@@ -338,7 +335,6 @@ public class UsersDaoHelper {
 		User user = dao.findByUserActivationEmail(userId, false);
 
 		if (user == null) {
-			// Check User From ERP
 			try {
 				user = checkIfUserExistInERP(userId);
 				if (user == null) {
@@ -346,13 +342,10 @@ public class UsersDaoHelper {
 							+ userId + "'");
 				}
 			} catch (URISyntaxException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

@@ -309,6 +309,7 @@ public class User extends PO {
 		dto.setLmsResponse(lmsResponse);
 		dto.setLmsStatus(lmsStatus);
 		dto.setLmsPayload(lmsPayLoad);
+		dto.setFullName(fullName);
 
 		if (member != null) {
 			dto.setLastDateUpdateFromErp(member.getLastUpdate());

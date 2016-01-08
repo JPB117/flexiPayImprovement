@@ -174,8 +174,7 @@ public class EventsPresenter extends
 					PagingPanel panel = getView().getEventsPagingPanel();
 					panel.setTotal(aCount);
 					PagingConfig config = panel.getConfig();
-					config.setPAGE_LIMIT(100);
-					loadEvents(config.getOffset(), 100, "");
+					loadEvents(config.getOffset(), config.getPAGE_LIMIT(), "");
 				}
 			}).getCount();
 		}
