@@ -13,6 +13,7 @@ import com.google.gwt.event.dom.client.HasKeyDownHandlers;
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -54,6 +55,8 @@ public class CPDManagementView extends ViewImpl implements
 	SpanElement spnArchiveCount;
 	@UiField
 	SpanElement spnReturnCount;
+	@UiField
+	ActionLink aBack;
 
 	@UiField
 	RecordCPD frmViewReturns;
@@ -85,7 +88,6 @@ public class CPDManagementView extends ViewImpl implements
 	CPDSummaryTable tblSummaryTable;
 	@UiField
 	CPDMemberTable tblMemberTable;
-
 	@UiField
 	DivElement panelBreadcrumb;
 
@@ -118,6 +120,13 @@ public class CPDManagementView extends ViewImpl implements
 				} else {
 					Window.alert("Please enter a valid memberNo in the search box...");
 				}
+			}
+		});
+
+		aBack.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				History.back();
 			}
 		});
 
@@ -223,13 +232,23 @@ public class CPDManagementView extends ViewImpl implements
 	}
 
 	@Override
-	public String getSearchValue() {
+	public String getReturnsSearchValue() {
 		return tblCPDReturns.getSearchValue();
 	}
 
 	@Override
 	public HasKeyDownHandlers getTxtSearch() {
 		return tblCPDReturns.getSearchKeyDownHandler();
+	}
+
+	@Override
+	public HasKeyDownHandlers getMemberSummaryKeyDownHandler() {
+		return tblSummaryTable.getSearchKeyDownHandler();
+	}
+
+	@Override
+	public String getMemberSummaryTxtSearch() {
+		return tblSummaryTable.getSearchValue();
 	}
 
 	@Override
@@ -341,6 +360,16 @@ public class CPDManagementView extends ViewImpl implements
 
 	public HasClickHandlers getRecordButton() {
 		return aCreate;
+	}
+
+	@Override
+	public HasKeyDownHandlers getArchiveSummaryKeyDownHandler() {
+		return tblCpdArchive.getSearchKeyDownHandler();
+	}
+
+	@Override
+	public String getArchiveSummaryTxtSearch() {
+		return tblCpdArchive.getSearchValue();
 	}
 
 }

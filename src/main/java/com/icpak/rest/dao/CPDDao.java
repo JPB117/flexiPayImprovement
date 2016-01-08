@@ -112,15 +112,15 @@ public class CPDDao extends BaseDao {
 
 	public List<MemberCPDDto> getMemberCPD(String searchTerm, Integer offset,
 			Integer limit) {
-		logger.info(" +++ GETTING MEMBER CPD +++");
+		logger.info(" +++ GETTING MEMBER CPD for searchTerm +++" + searchTerm);
 		StringBuffer sql = new StringBuffer(
 				"select m.refId,n.No_,n.Name,n.`customer Type`,n.status,"
 						+ "n.Year2016,n.Year2015,n.Year2014,n.Year2013,n.Year2012,n.Year2011 "
 						+ "from navmember n "
 						+ "INNER JOIN member m ON (n.No_=m.memberNo)");
 
-		Map<String, Object> params = appendParameters(sql, null, null, null,
-				searchTerm);
+		Map<String, Object> params = appendParameters(sql, "memberCPD", null,
+				null, searchTerm);
 		sql.append(" order by n.No_ asc");
 		Query query = getEntityManager().createNativeQuery(sql.toString());
 		for (String key : params.keySet()) {
@@ -202,7 +202,8 @@ public class CPDDao extends BaseDao {
 				&& !passedMemberRefId.equals("ALLRETURNS")
 				&& !passedMemberRefId.equals("ALLARCHIVE")
 				&& !passedMemberRefId.equals("cpdReturns")
-				&& !passedMemberRefId.equals("returnArchive")) {
+				&& !passedMemberRefId.equals("returnArchive")
+				&& !passedMemberRefId.equals("memberCPD")) {
 			if (isFirstParam) {
 				isFirstParam = false;
 				sql.append(" where");
@@ -227,10 +228,9 @@ public class CPDDao extends BaseDao {
 
 			if (searchTerm != null) {
 				if (!searchTerm.equals("")) {
-					sql.append(" and (concat(u.firstName,' ',u.lastName) like :searchTerm or"
+					sql.append(" and (u.fullName like :searchTerm or"
 							+ " c.title like :searchTerm or "
 							+ " c.memberRegistrationNo like :searchTerm)");
-
 					params.put("searchTerm", "%" + searchTerm + "%");
 				}
 			}
@@ -247,6 +247,26 @@ public class CPDDao extends BaseDao {
 			}
 			params.put("status", "Unconfirmed");
 			sql.append(" c.status <> :status");
+
+			if (searchTerm != null) {
+				if (!searchTerm.equals("")) {
+					sql.append(" and (u.fullName like :searchTerm or"
+							+ " c.title like :searchTerm or "
+							+ " c.memberRegistrationNo like :searchTerm)");
+
+					params.put("searchTerm", "%" + searchTerm + "%");
+				}
+			}
+		}
+
+		if (passedMemberRefId != null && passedMemberRefId.equals("memberCPD")) {
+			if (searchTerm != null) {
+				if (!searchTerm.equals("")) {
+					sql.append(" and (No_ like :searchTerm or"
+							+ " n.Name like :searchTerm)");
+					params.put("searchTerm", "%" + searchTerm + "%");
+				}
+			}
 		}
 
 		return params;
@@ -577,7 +597,7 @@ public class CPDDao extends BaseDao {
 	}
 
 	public BigInteger getMemberCPDCount(String searchTerm) {
-		String sql = "select count(*) from navmember n where No_ like :searchTerm ";
+		String sql = "select count(*) from navmember n where (No_ like :searchTerm or Name like :searchTerm)";
 		Query query = getEntityManager().createNativeQuery(sql).setParameter(
 				"searchTerm", "%" + searchTerm + "%");
 

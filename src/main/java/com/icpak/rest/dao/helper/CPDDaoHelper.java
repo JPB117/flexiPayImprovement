@@ -135,7 +135,8 @@ public class CPDDaoHelper {
 		// Compare cpd status and determine whether to send smses
 		logger.info(" Dto Status == " + cpdDto.getStatus() + " PO Status::"
 				+ poCPD.getStatus());
-		if (cpdDto.getManagementComment() != null) {
+		if (cpdDto.getManagementComment() != null
+				&& !cpdDto.getManagementComment().equals("")) {
 			logger.info(" Status has changed to == " + cpdDto.getStatus());
 			Member member = dao.findByRefId(poCPD.getMemberRefId(),
 					Member.class);
@@ -394,7 +395,6 @@ public class CPDDaoHelper {
 
 	public List<MemberCPDDto> getAllMemberCPDSummary(String searchTerm,
 			Integer offset, Integer limit) {
-
 		List<MemberCPDDto> memberCPDs = dao.getMemberCPD(searchTerm, offset,
 				limit);
 		return memberCPDs;
