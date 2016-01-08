@@ -87,6 +87,8 @@ public class Attachment extends PO {
 
 	// Profile Pic
 	private String profilePicUserId;
+	
+	private String fileName;
 
 	public Attachment() {
 		super();
@@ -211,5 +213,13 @@ public class Attachment extends PO {
 
 	public void setEducation(ApplicationFormEducational education) {
 		this.applicationEducation = education;
+	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
 	}
 }
