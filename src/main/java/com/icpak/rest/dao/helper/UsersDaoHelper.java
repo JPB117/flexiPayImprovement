@@ -47,7 +47,6 @@ import com.icpak.rest.models.base.ResourceCollectionModel;
 import com.icpak.rest.models.base.ResourceModel;
 import com.icpak.rest.models.membership.ApplicationFormHeader;
 import com.icpak.rest.models.membership.Member;
-import com.icpak.rest.models.trx.Statement;
 import com.icpak.rest.models.trx.Transaction;
 import com.icpak.rest.models.util.Attachment;
 import com.icpak.rest.security.authentication.AuthenticationException;
@@ -57,8 +56,6 @@ import com.icpak.rest.utils.EmailServiceHelper;
 import com.workpoint.icpak.server.integration.lms.LMSIntegrationUtil;
 import com.workpoint.icpak.server.integration.lms.LMSResponse;
 import com.workpoint.icpak.shared.lms.LMSMemberDto;
-import com.workpoint.icpak.shared.lms.LMSPassWordDto;
-import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 import com.workpoint.icpak.shared.model.Gender;
 import com.workpoint.icpak.shared.model.RoleDto;
 import com.workpoint.icpak.shared.model.Title;
@@ -261,7 +258,14 @@ public class UsersDaoHelper {
 
 	public List<UserDto> getAllUsers(Integer offset, Integer limit,
 			String uriInfo, String searchTerm) {
-		return dao.getAllUsersDtos(offset, limit, null, searchTerm);
+
+		List<User> users = dao.getAllUsers(offset, limit, null, searchTerm);
+		List<UserDto> dtos = new ArrayList<>();
+
+		for (User user : users) {
+			dtos.add(user.toDto());
+		}
+		return dtos;
 	}
 
 	public Integer getCount(String searchTerm) {
@@ -540,30 +544,28 @@ public class UsersDaoHelper {
 		/**
 		 * Updating lms password upon password change
 		 */
-		if (user.getMemberNo() != null && !user.getMemberNo().isEmpty()) {
-			logger.info(" +++++++ Updating LMS password upon password change +++++++ ");
-
-			LMSResponse lmsRespone = null;
-
-			LMSPassWordDto dto = new LMSPassWordDto();
-			dto.setMembershipID(user.getMemberNo());
-			dto.setPassword(newPassword);
-
-			JSONObject jObject = new JSONObject(dto);
-			try {
-				lmsRespone = LMSIntegrationUtil.getInstance().executeLMSCall(
-						"/Account/Updatepassword", jObject, String.class);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-			if (lmsRespone != null) {
-				if (lmsRespone.equals("Invalid User.")) {
-					return;
-				}
-			}
-
-		}
+		/*
+		 * if (user.getMemberNo() != null && !user.getMemberNo().isEmpty()) {
+		 * logger
+		 * .info(" +++++++ Updating LMS password upon password change +++++++ "
+		 * );
+		 * 
+		 * LMSResponse lmsRespone = null;
+		 * 
+		 * LMSPassWordDto dto = new LMSPassWordDto();
+		 * dto.setMembershipID(user.getMemberNo());
+		 * dto.setPassword(newPassword);
+		 * 
+		 * JSONObject jObject = new JSONObject(dto); try { lmsRespone =
+		 * LMSIntegrationUtil.getInstance().executeLMSCall(
+		 * "/Account/Updatepassword", jObject, String.class); } catch
+		 * (IOException e) { e.printStackTrace(); }
+		 * 
+		 * if (lmsRespone != null) { if (lmsRespone.equals("Invalid User.")) {
+		 * return; } }
+		 * 
+		 * }
+		 */
 
 		dao.changePassword(user);
 

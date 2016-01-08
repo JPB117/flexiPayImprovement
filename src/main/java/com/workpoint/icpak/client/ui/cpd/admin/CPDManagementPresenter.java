@@ -190,9 +190,6 @@ public class CPDManagementPresenter
 			}
 		});
 
-		// getView().getReturnsSearchValueChangeHander().addValueChangeHandler(
-		// cpdValueChangeHandler);
-
 		getView().getTxtSearch().addKeyDownHandler(keyHandler);
 
 		getView().getReturnsPagingPanel().setLoader(new PagingLoader() {
