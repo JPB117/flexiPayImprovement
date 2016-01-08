@@ -14,6 +14,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
@@ -154,6 +155,14 @@ public class RecordCPD extends Composite {
 				}
 			}
 		});
+
+		aBack.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				History.back();
+			}
+		});
+
 	}
 
 	public void showUploadPanel(boolean showForm) {
@@ -331,7 +340,7 @@ public class RecordCPD extends Composite {
 	}
 
 	public void setBackHref(String href) {
-		aBack.setHref(href);
+		// aBack.setHref(href);
 	}
 
 	public void setMemberName(String memberName) {
