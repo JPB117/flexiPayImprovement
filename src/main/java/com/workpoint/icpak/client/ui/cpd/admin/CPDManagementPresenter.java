@@ -190,9 +190,6 @@ public class CPDManagementPresenter
 			}
 		});
 
-		// getView().getReturnsSearchValueChangeHander().addValueChangeHandler(
-		// cpdValueChangeHandler);
-
 		getView().getTxtSearch().addKeyDownHandler(keyHandler);
 
 		getView().getReturnsPagingPanel().setLoader(new PagingLoader() {
@@ -517,6 +514,7 @@ public class CPDManagementPresenter
 	public void onTableAction(TableActionEvent event) {
 		if (event.getAction() == TableActionType.APPROVECPD) {
 			final CPDDto dto = (CPDDto) event.getModel();
+			// Window.alert(dto.getManagementComment());
 			saveRecord(dto);
 		}
 	}

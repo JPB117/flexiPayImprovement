@@ -39,13 +39,12 @@ public class TestCPDDao extends AbstractDaoTest {
 
 	}
 
-	@Ignore
+	@Test
 	public void testCreateCPD() {
-		CPD cpd = cpdDao.findByCPDId("xU8Bf2olyPVxWQom");
+		CPD cpd = cpdDao.findByCPDId("NgmZcYUU0mu7JEyr");
 		CPDDto dto = cpd.toDTO();
-		dto.setStatus(CPDStatus.Rejected);
-		dto.setManagementComment("This is Ok, but please provide the necessary attachments");
-		helper.update("3pzAyw110E2i5VTE", "xU8Bf2olyPVxWQom", dto);
+		dto.setManagementComment("Please provide the necessary attachments");
+		helper.update("3pzAyw110E2i5VTE", "NgmZcYUU0mu7JEyr", dto);
 	}
 
 	@Ignore
@@ -118,7 +117,7 @@ public class TestCPDDao extends AbstractDaoTest {
 
 	}
 
-	@Test
+	// @Test
 	public void testGetAllCPD() throws ParseException {
 		Date today = new Date();
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");

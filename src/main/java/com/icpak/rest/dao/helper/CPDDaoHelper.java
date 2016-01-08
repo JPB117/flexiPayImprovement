@@ -135,7 +135,7 @@ public class CPDDaoHelper {
 		// Compare cpd status and determine whether to send smses
 		logger.info(" Dto Status == " + cpdDto.getStatus() + " PO Status::"
 				+ poCPD.getStatus());
-		if (cpdDto.getStatus() != poCPD.getStatus()) {
+		if (cpdDto.getManagementComment() != null) {
 			logger.info(" Status has changed to == " + cpdDto.getStatus());
 			Member member = dao.findByRefId(poCPD.getMemberRefId(),
 					Member.class);
@@ -145,31 +145,47 @@ public class CPDDaoHelper {
 					+ cpdDto.getStatus()
 					+ ".Please check email for further clarification.";
 			// Send SMS Notification
-			smsIntergration.send(member.getUser().getPhoneNumber(), smsMessage);
+			// smsIntergration.send(member.getUser().getPhoneNumber(),
+			// smsMessage);
+
 			// Send Email Notification
 			sendReviewEmail(member.getUser(), cpdDto);
 		}
 	}
 
 	private void sendReviewEmail(User user, CPDDto cpdDto) {
-		String subject = cpdDto.getTitle() + " has been " + cpdDto.getStatus();
+		String subject = cpdDto.getTitle();
+		String action = "";
+
+		if (cpdDto.getStatus() != null
+				&& cpdDto.getStatus() != CPDStatus.Unconfirmed) {
+			subject = subject + " has been " + cpdDto.getStatus();
+			action = action + " has been " + cpdDto.getStatus();
+		} else {
+			subject = subject + " - Information Required!";
+			action = " has not been approved because of the following reason:<br/>";
+		}
+
 		String link = settings.getApplicationPath() + "#cpd";
 		String body = "Dear "
 				+ user.getUserData().getFullNames()
 				+ ","
 				+ "<br/> "
-				+ "<p>Your CPD record with above title has been "
-				+ cpdDto.getStatus()
-				+ (cpdDto.getManagementComment() == null ? ""
-						: " with the following comments from Training and Development: '"
-								+ cpdDto.getManagementComment() + "'")
-				+ "<p><a href=" + link + ">Click this link </a>"
-				+ " to View Mycpd." + "</p>Thank you";
+				+ "<p>Your CPD activity \""
+				+ cpdDto.getTitle()
+				+ "\""
+				+ action
+				+ (cpdDto.getManagementComment() == null ? "" : " <br/>'"
+						+ cpdDto.getManagementComment() + "'") + "<p><a href="
+				+ link + ">Click this link </a>"
+				+ " to View and rectify the CPD record."
+				+ "</p>Thank you<br/>Member Services";
 
 		try {
-			EmailServiceHelper.sendEmail(body, subject,
-					Arrays.asList(user.getEmail()),
-					Arrays.asList(user.getUserData().getFullNames()));
+			EmailServiceHelper.sendEmail(body, subject, Arrays.asList(
+					user.getEmail(), "molly.mwangi@icpak.com",
+					"dennis.milgo@icpak.com"), Arrays.asList(user.getUserData()
+					.getFullNames(), "Molly Mwangi", "Dennis Milgo"));
 
 		} catch (Exception e) {
 			logger.info("Review Email for " + user.getEmail()

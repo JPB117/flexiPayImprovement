@@ -220,6 +220,7 @@ public class CPDMemberPresenter extends
 	protected void saveRecord(CPDDto dto) {
 		String memberId = currentUser.getUser().getRefId();
 		dto.setMemberRegistrationNo(currentUser.getUser().getMemberNo());
+		fireEvent(new ProcessingEvent());
 		if (dto.getRefId() != null) {
 			memberDelegate.withCallback(new AbstractAsyncCallback<CPDDto>() {
 				@Override

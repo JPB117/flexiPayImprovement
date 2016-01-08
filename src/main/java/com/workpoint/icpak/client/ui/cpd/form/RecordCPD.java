@@ -199,7 +199,8 @@ public class RecordCPD extends Composite {
 			isValid = false;
 			issues.addError("Category is mandatory");
 		}
-		if (isViewMode && txtCPDHours.getValue().equals("0")) {
+		if (isViewMode && txtCPDHours.getValue().equals("0")
+				&& (lstMgmtAction.getValue() != null)) {
 			isValid = false;
 			issues.addError("CPD Hours must be greater than 0!");
 		}
