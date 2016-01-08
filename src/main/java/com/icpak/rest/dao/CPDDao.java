@@ -56,7 +56,13 @@ public class CPDDao extends BaseDao {
 		Map<String, Object> params = appendParameters(sql, passedMemberRefId,
 				startDate, endDate, searchTerm);
 
-		sql.append(" order by c.created asc");
+		if (passedMemberRefId != null
+				&& (passedMemberRefId.equals("ALLRETURNS") || passedMemberRefId
+						.equals("cpdReturns"))) {
+			sql.append(" order by c.created asc");
+		} else {
+			sql.append(" order by c.created desc");
+		}
 
 		Query query = getEntityManager().createNativeQuery(sql.toString());
 		for (String key : params.keySet()) {

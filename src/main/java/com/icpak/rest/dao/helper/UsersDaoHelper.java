@@ -178,11 +178,7 @@ public class UsersDaoHelper {
 		User po = dao.findByUserId(userId);
 		po.setEmail(dto.getEmail());
 		po.setMobileNo(dto.getPhoneNumber());
-
-		// po.setPassword(dto.getPassword());
-		// We do not update password here :Duggan 21/09/2015
-		// updatePassword(userId, dto.getPassword());
-
+		po = po.copyOnUpdate(dto);
 		if (po.getUserData() == null) {
 			po.setUserData(dto);
 		} else {

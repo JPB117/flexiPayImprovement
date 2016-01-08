@@ -514,6 +514,7 @@ public class CPDManagementPresenter
 	public void onTableAction(TableActionEvent event) {
 		if (event.getAction() == TableActionType.APPROVECPD) {
 			final CPDDto dto = (CPDDto) event.getModel();
+			// Window.alert(dto.getManagementComment());
 			saveRecord(dto);
 		}
 	}

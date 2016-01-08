@@ -218,7 +218,23 @@ public class User extends PO {
 		setLmsResponse(dto.getLmsResponse());
 		setLmsStatus(dto.getLmsStatus());
 		setLmsPayLoad(dto.getLmsPayload());
+		setFullName(dto.getFullName());
 		setUserData(bio);
+	}
+
+	public User copyOnUpdate(UserDto dto) {
+		setEmail(dto.getEmail());
+		setPhoneNumber(dto.getPhoneNumber());
+		BioData bio = new BioData();
+		bio.setFirstName(dto.getName());
+		bio.setLastName(dto.getSurname());
+		setMemberNo(dto.getMemberNo());
+		setLmsResponse(dto.getLmsResponse());
+		setLmsStatus(dto.getLmsStatus());
+		setLmsPayLoad(dto.getLmsPayload());
+		setFullName(dto.getFullName());
+		setUserData(bio);
+		return this;
 	}
 
 	public String getEmail() {

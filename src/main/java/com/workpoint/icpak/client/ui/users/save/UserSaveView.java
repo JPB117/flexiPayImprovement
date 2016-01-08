@@ -57,6 +57,10 @@ public class UserSaveView extends PopupViewImpl implements
 	TextField txtEmail;
 	@UiField
 	TextField txtPhoneNo;
+	@UiField
+	TextField txtFullNames;
+	@UiField
+	TextField txtMemberNo;
 
 	@UiField
 	TextField txtGroupname;
@@ -204,6 +208,8 @@ public class UserSaveView extends PopupViewImpl implements
 		user.setSurname(txtLastname.getValue());
 		user.setPhoneNumber(txtPhoneNo.getValue());
 		user.setGroups(lstGroups.getSelectedItems());
+		user.setFullName(txtFullNames.getValue());
+		user.setMemberNo(txtMemberNo.getValue());
 		return user;
 	}
 
@@ -212,6 +218,8 @@ public class UserSaveView extends PopupViewImpl implements
 		txtEmail.setValue(user.getEmail());
 		txtFirstname.setValue(user.getName());
 		txtLastname.setValue(user.getSurname());
+		txtFullNames.setValue(user.getFullName());
+		txtMemberNo.setValue(user.getMemberNo());
 		txtPhoneNo.setValue(user.getPhoneNumber());
 		lstGroups.select(user.getGroups());
 
