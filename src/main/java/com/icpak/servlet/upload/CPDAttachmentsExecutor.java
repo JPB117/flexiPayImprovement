@@ -56,8 +56,8 @@ public class CPDAttachmentsExecutor extends FileExecutor {
 					attachment.setId(null);
 					attachment.setName(name);
 					attachment.setSize(size);
-					String fileName = getFilePath() + "/"+IDUtils.generateId()+ "-CPD-" + name;
-					attachment.setFileName(attachment.getRefId()+fileName);
+					String fileName = getFilePath() + File.separator +IDUtils.generateId()+ "-CPD-" + name;
+					attachment.setFileName(fileName);
 					// attachment.setAttachment(item.get());
 					CPD cpd = dao.findByCPDId(cpdRefId);
 					assert cpd != null;

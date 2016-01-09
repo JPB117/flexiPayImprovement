@@ -56,7 +56,7 @@ public class TrainingAttachmentsExecutor extends FileExecutor {
 					attachment.setId(null);
 					attachment.setName(name);
 					attachment.setSize(size);
-					String fileName = getFilePath() + "/"+IDUtils.generateId()+ "-TRAINING-" + name;
+					String fileName = getFilePath() + File.separator +IDUtils.generateId()+ "-TRAINING-" + name;
 					attachment.setFileName(fileName);
 					if (trainingRefId != null) {
 						ApplicationFormTraining trainingDetails = dao

@@ -623,7 +623,7 @@ public class CPDDao extends BaseDao {
 		logger.info(" DUMPING TO BLOB ");
 		for (Attachment attachment : getAllCPDAttachment()) {
 			if (attachment.getAttachment() != null) {
-				String fileName = getFilePath() + "/" + attachment.getRefId() + "-CPD-" + attachment.getName();
+				String fileName = getFilePath() + File.separator + attachment.getRefId() + "-CPD-" + attachment.getName();
 				attachment.setFileName(fileName);
 
 				try {

@@ -52,7 +52,7 @@ public class UserProfileImageExecutor extends FileExecutor {
 					attachment.setId(null);
 					attachment.setName(name);
 					attachment.setSize(size);
-					String fileName = getFilePath() + "/" + IDUtils.generateId() + "-EDUCATION-" + name;
+					String fileName = getFilePath() + File.separator + IDUtils.generateId() + "-PROFILE-" + name;
 					attachment.setFileName(fileName);
 					attachment.setProfilePicUserId(userRefId);
 
