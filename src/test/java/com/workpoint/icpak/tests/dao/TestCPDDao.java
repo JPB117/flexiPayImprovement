@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.junit.After;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -39,7 +40,7 @@ public class TestCPDDao extends AbstractDaoTest {
 
 	}
 
-	// @Test
+	@Ignore
 	public void testCreateCPD() {
 		CPD cpd = cpdDao.findByCPDId("NgmZcYUU0mu7JEyr");
 		CPDDto dto = cpd.toDTO();
@@ -75,7 +76,7 @@ public class TestCPDDao extends AbstractDaoTest {
 						.getTotalReturns());
 	}
 
-	@Test
+	@Ignore
 	public void testMemberCPD() throws ParseException {
 		List<MemberCPDDto> memberCPDDtos = cpdDao.getMemberCPD("1020", 0, 10);
 		System.err.println("Count>>" + cpdDao.getMemberCPDCount("1020"));
@@ -113,7 +114,7 @@ public class TestCPDDao extends AbstractDaoTest {
 
 	}
 
-	// @Test
+	@Ignore
 	public void testGetAllCPD() throws ParseException {
 		Date today = new Date();
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -129,5 +130,15 @@ public class TestCPDDao extends AbstractDaoTest {
 			System.err.println("Title>>" + dto.getTitle());
 		}
 		logger.error("======= List length=== " + cpdDtos.size());
+	}
+	
+	@Test
+	public void transferCPDBlob(){
+		cpdDao.dumpBlobToFile();
+	}
+	
+	@After
+	public void commitTrx(){
+		//commit();
 	}
 }

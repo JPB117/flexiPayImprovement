@@ -47,7 +47,6 @@ public class CPDAttachmentsExecutor extends FileExecutor {
 					String fieldName = item.getFieldName();
 					String contentType = item.getContentType();
 					String name = item.getName();
-					String fileName = cpdRefId+ "-CPD-" + name;
 					long size = item.getSize();
 
 					Attachment attachment = new Attachment();
@@ -56,7 +55,8 @@ public class CPDAttachmentsExecutor extends FileExecutor {
 					attachment.setId(null);
 					attachment.setName(name);
 					attachment.setSize(size);
-					attachment.setFileName(fileName);
+					String fileName = getFilePath() + "/"+attachment.getRefId()+ "-CPD-" + name;
+					attachment.setFileName(attachment.getRefId()+fileName);
 					// attachment.setAttachment(item.get());
 					CPD cpd = dao.findByCPDId(cpdRefId);
 					assert cpd != null;
