@@ -79,7 +79,7 @@
 												<div ui:field="panelBreadcrumb" class="hide">
 													<ol class="breadcrumb">
 														<li>
-															<d:ActionLink ui:field="aBack" href="#cpdmgt;p=memberCPD">
+															<d:ActionLink ui:field="aBack">
 																<i class="fa fa-angle-double-left"></i>
 																Back
 															</d:ActionLink>

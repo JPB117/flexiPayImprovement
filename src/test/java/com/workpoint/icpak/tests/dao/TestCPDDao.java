@@ -16,7 +16,7 @@ import com.icpak.rest.dao.helper.CPDDaoHelper;
 import com.icpak.rest.models.cpd.CPD;
 import com.icpak.servlet.upload.GetReport;
 import com.workpoint.icpak.shared.model.CPDDto;
-import com.workpoint.icpak.shared.model.CPDStatus;
+import com.workpoint.icpak.shared.model.MemberCPDDto;
 import com.workpoint.icpak.tests.base.AbstractDaoTest;
 
 public class TestCPDDao extends AbstractDaoTest {
@@ -62,8 +62,6 @@ public class TestCPDDao extends AbstractDaoTest {
 				"Another");
 		for (CPDDto dto : list) {
 			System.err.println(dto.getTitle());
-			// System.err.println("Start Date:" + dto.getStartDate()
-			// + " \nEnd Date:" + dto.getEndDate());
 		}
 
 	}
@@ -80,22 +78,20 @@ public class TestCPDDao extends AbstractDaoTest {
 
 	@Ignore
 	public void testMemberCPD() throws ParseException {
-		// List<MemberCPDDto> memberCPDDtos = cpdDao.getMemberCPD("", 0, 10);
-		//
-		// System.err.println("Dto Size>>" + cpdDao.getMemberCPDCount(""));
-		//
-		// for (MemberCPDDto memberCPD : memberCPDDtos) {
-		// System.err.println("No_" + memberCPD.getMemberNo());
-		// System.err.println("Category::" + memberCPD.getCustomerType());
-		// System.err.println("Status::" + memberCPD.getStatus());
-		// System.err.println("2015::" + memberCPD.getYear2015());
-		// System.err.println("2011::" + memberCPD.getYear2011());
-		// }
+		List<MemberCPDDto> memberCPDDtos = cpdDao.getMemberCPD("1020", 0, 10);
+		System.err.println("Count>>" + cpdDao.getMemberCPDCount("1020"));
+		for (MemberCPDDto memberCPD : memberCPDDtos) {
+			System.err.println("No_" + memberCPD.getMemberNo());
+			System.err.println("Category::" + memberCPD.getCustomerType());
+			System.err.println("Status::" + memberCPD.getStatus());
+			System.err.println("2015::" + memberCPD.getYear2015());
+			System.err.println("2011::" + memberCPD.getYear2011());
+		}
 
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-		Date another = formatter.parse("2013-1-1");
-
-		cpdDao.getYearSummaries("iypUNLFxbsEFMJLB", another, new Date());
+		// SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		// Date another = formatter.parse("2013-1-1");
+		//
+		// cpdDao.getYearSummaries("iypUNLFxbsEFMJLB", another, new Date());
 	}
 
 	@Ignore

@@ -77,7 +77,6 @@ public class User extends PO {
 	@ApiModelProperty(value = "username", required = true)
 	@Basic(optional = false)
 	@Column(length = 100, unique = true)
-	// @Index(name="idx_users_username")
 	private String username;
 
 	@ApiModelProperty(value = "user email")
@@ -86,7 +85,6 @@ public class User extends PO {
 	private String email;
 
 	@Basic(optional = true)
-	// Allow an initial user with no password to be created
 	@Column(length = 255)
 	private String password;
 
@@ -97,14 +95,11 @@ public class User extends PO {
 	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = @JoinColumn(name = "roleid"))
 	@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 	private Set<Role> roles = new HashSet<Role>();
-
 	@Embedded
 	private BioData userData = null;
-
 	@OneToOne(fetch = FetchType.LAZY, mappedBy = "user", cascade = {
 			CascadeType.PERSIST, CascadeType.REMOVE })
 	private Member member;
-
 	private String memberNo;
 	private String phoneNumber;
 	private String fullName;
@@ -146,7 +141,6 @@ public class User extends PO {
 
 		User user = new User();
 		user.setRefId(refId);
-		// user.setUsername(getUsername());
 		user.setEmail(email);
 		user.setAddress(address);
 		user.setCity(city);
@@ -170,15 +164,8 @@ public class User extends PO {
 
 		if (expand != null) {
 			for (String token : expand) {
-				// if(token.equals("bookings")){
-				// for(Booking booking: bookings){
-				// user.addBooking(booking.clone());
-				// }
-				// }
 
 				if (token.toUpperCase().equals(ExpandTokens.DETAIL.name())) {
-					// user.setLastName(getLastName());
-					// user.setFirstName(getFirstName());
 					user.setEmail(getEmail());
 				}
 

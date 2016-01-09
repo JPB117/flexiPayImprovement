@@ -1,9 +1,9 @@
 package com.workpoint.icpak.client.ui.cpd.admin;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
-
-import org.hibernate.event.spi.LoadEventListener.LoadType;
+import java.util.Map;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -27,13 +27,13 @@ import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.annotations.TabInfo;
 import com.gwtplatform.mvp.client.annotations.UseGatekeeper;
+import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.TabContentProxyPlace;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.workpoint.icpak.client.place.NameTokens;
 import com.workpoint.icpak.client.security.CurrentUser;
 import com.workpoint.icpak.client.service.AbstractAsyncCallback;
 import com.workpoint.icpak.client.ui.AppManager;
-import com.workpoint.icpak.client.ui.OnOptionSelected;
 import com.workpoint.icpak.client.ui.OptionControl;
 import com.workpoint.icpak.client.ui.admin.TabDataExt;
 import com.workpoint.icpak.client.ui.component.PagingConfig;
@@ -55,7 +55,6 @@ import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.shared.api.MemberResource;
 import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.shared.model.CPDFooterDto;
-import com.workpoint.icpak.shared.model.CPDStatus;
 import com.workpoint.icpak.shared.model.CPDSummaryDto;
 import com.workpoint.icpak.shared.model.MemberCPDDto;
 import com.workpoint.icpak.shared.model.TableActionType;
@@ -88,7 +87,7 @@ public class CPDManagementPresenter
 
 		HasKeyDownHandlers getTxtSearch();
 
-		String getSearchValue();
+		String getReturnsSearchValue();
 
 		void setTab(String page, String refId);
 
@@ -109,6 +108,14 @@ public class CPDManagementPresenter
 		void setIndividualMemberInitialDates(Date startDate, Date endDate);
 
 		HasClickHandlers getRecordButton();
+
+		HasKeyDownHandlers getMemberSummaryKeyDownHandler();
+
+		String getMemberSummaryTxtSearch();
+
+		HasKeyDownHandlers getArchiveSummaryKeyDownHandler();
+
+		String getArchiveSummaryTxtSearch();
 
 	}
 
@@ -132,7 +139,7 @@ public class CPDManagementPresenter
 	ValueChangeHandler<String> cpdValueChangeHandler = new ValueChangeHandler<String>() {
 		@Override
 		public void onValueChange(ValueChangeEvent<String> event) {
-			searchCPD(getView().getSearchValue().trim());
+			searchCPD(getView().getReturnsSearchValue().trim());
 		}
 	};
 
@@ -140,23 +147,62 @@ public class CPDManagementPresenter
 		@Override
 		public void onKeyDown(KeyDownEvent event) {
 			if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-				// if (!isNullOrEmpty(getView().getSearchValue().trim())) {
-				searchCPD(getView().getSearchValue().trim());
-				// }
+				// searchCPD(getView().getSearchValue().trim());
+				Map<String, String> params = new HashMap<String, String>();
+				params.put("p", "cpdReturns");
+				params.put("searchTerm", getView().getReturnsSearchValue()
+						.trim());
+				PlaceRequest placeRequest = new PlaceRequest.Builder()
+						.nameToken(NameTokens.cpdmgt).with(params).build();
+				placeManager.revealPlace(placeRequest);
 			}
 		}
 	};
 	protected String searchTerm = "";
 
+	KeyDownHandler memberSummaryKeyDownHandler = new KeyDownHandler() {
+		@Override
+		public void onKeyDown(KeyDownEvent event) {
+			if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+				// loadCPDSummaryCount(getView().getMemberSummaryTxtSearch());
+
+				Map<String, String> params = new HashMap<String, String>();
+				params.put("p", "memberCPD");
+				params.put("searchTerm", getView().getMemberSummaryTxtSearch());
+				PlaceRequest placeRequest = new PlaceRequest.Builder()
+						.nameToken(NameTokens.cpdmgt).with(params).build();
+				placeManager.revealPlace(placeRequest);
+
+			}
+		}
+	};
+
+	KeyDownHandler archiveKeyDownHandler = new KeyDownHandler() {
+		@Override
+		public void onKeyDown(KeyDownEvent event) {
+			if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+				// searchCPD(getView().getArchiveSummaryTxtSearch().trim());
+				Map<String, String> params = new HashMap<String, String>();
+				params.put("p", "returnArchive");
+				params.put("searchTerm", getView().getArchiveSummaryTxtSearch()
+						.trim());
+				PlaceRequest placeRequest = new PlaceRequest.Builder()
+						.nameToken(NameTokens.cpdmgt).with(params).build();
+				placeManager.revealPlace(placeRequest);
+			}
+		}
+	};
+	private PlaceManager placeManager;
+
 	@Inject
 	public CPDManagementPresenter(final EventBus eventBus,
 			final ICPDManagementView view, final ICPDManagementProxy proxy,
 			final ResourceDelegate<MemberResource> memberDelegate,
-			final CurrentUser currentUser) {
-
+			final CurrentUser currentUser, final PlaceManager placeManager) {
 		super(eventBus, view, proxy, HomePresenter.SLOT_SetTabContent);
 		this.memberDelegate = memberDelegate;
 		this.currentUser = currentUser;
+		this.placeManager = placeManager;
 	}
 
 	@Override
@@ -191,6 +237,12 @@ public class CPDManagementPresenter
 		});
 
 		getView().getTxtSearch().addKeyDownHandler(keyHandler);
+
+		getView().getMemberSummaryKeyDownHandler().addKeyDownHandler(
+				memberSummaryKeyDownHandler);
+
+		getView().getArchiveSummaryKeyDownHandler().addKeyDownHandler(
+				archiveKeyDownHandler);
 
 		getView().getReturnsPagingPanel().setLoader(new PagingLoader() {
 			@Override
@@ -450,6 +502,7 @@ public class CPDManagementPresenter
 		super.prepareFromRequest(request);
 		page = request.getParameter("p", "cpdReturns");
 		String refId = request.getParameter("refId", "");
+		searchTerm = request.getParameter("searchTerm", "");
 
 		// Set Tab to Front End
 		getView().setTab(page, refId);
@@ -460,11 +513,23 @@ public class CPDManagementPresenter
 			this.startDate = DateUtils.DATEFORMAT_SYS.parse("2011-01-01");
 			this.endDate = new Date();
 			if (page.equals("cpdReturns")) {
-				loadData(startDate, endDate, "ALLRETURNS", null);
+				if (searchTerm.equals("")) {
+					loadData(startDate, endDate, "ALLRETURNS", null);
+				} else {
+					searchCPD(getView().getReturnsSearchValue());
+				}
 			} else if (page.equals("returnArchive")) {
-				loadData(startDate, endDate, "ALLARCHIVE", null);
+				if (searchTerm.equals("")) {
+					loadData(startDate, endDate, "ALLARCHIVE", null);
+				} else {
+					searchCPD(getView().getArchiveSummaryTxtSearch());
+				}
 			} else if (page.equals("memberCPD")) {
-				loadCPDSummaryCount("");
+				if (searchTerm.equals("")) {
+					loadCPDSummaryCount("");
+				} else {
+					loadCPDSummaryCount(searchTerm);
+				}
 			}
 		} else {
 			if (page.equals("memberCPD")) {
