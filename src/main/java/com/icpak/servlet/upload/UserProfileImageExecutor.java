@@ -15,6 +15,7 @@ import org.apache.commons.io.IOUtils;
 
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
+import com.icpak.rest.IDUtils;
 import com.icpak.rest.dao.AttachmentsDao;
 import com.icpak.rest.dao.helper.AttachmentDaoHelper;
 import com.icpak.rest.models.util.Attachment;
@@ -51,7 +52,7 @@ public class UserProfileImageExecutor extends FileExecutor {
 					attachment.setId(null);
 					attachment.setName(name);
 					attachment.setSize(size);
-					String fileName = getFilePath() + "/" + attachment.getRefId() + "-EDUCATION-" + name;
+					String fileName = getFilePath() + "/" + IDUtils.generateId() + "-EDUCATION-" + name;
 					attachment.setFileName(fileName);
 					attachment.setProfilePicUserId(userRefId);
 

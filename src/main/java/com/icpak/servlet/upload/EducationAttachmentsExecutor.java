@@ -15,6 +15,7 @@ import org.apache.commons.io.IOUtils;
 
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
+import com.icpak.rest.IDUtils;
 import com.icpak.rest.dao.ApplicationFormDao;
 import com.icpak.rest.dao.AttachmentsDao;
 import com.icpak.rest.models.membership.ApplicationFormEducational;
@@ -53,7 +54,7 @@ public class EducationAttachmentsExecutor extends FileExecutor {
 					attachment.setId(null);
 					attachment.setName(name);
 					attachment.setSize(size);
-					String fileName = getFilePath() + "/" + attachment.getRefId() + "-EDUCATION-" + name;
+					String fileName = getFilePath() + "/" + IDUtils.generateId() + "-EDUCATION-" + name;
 					attachment.setFileName(fileName);
 					ApplicationFormEducational educationDetails = dao.findByRefId(educationRefId,
 							ApplicationFormEducational.class);
