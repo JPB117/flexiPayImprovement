@@ -53,7 +53,7 @@ public class EducationAttachmentsExecutor extends FileExecutor {
 					attachment.setId(null);
 					attachment.setName(name);
 					attachment.setSize(size);
-					String fileName = getFilePath() + "/" + attachment.getRefId() + "-CPD-" + name;
+					String fileName = getFilePath() + "/" + attachment.getRefId() + "-EDUCATION-" + name;
 					attachment.setFileName(fileName);
 					ApplicationFormEducational educationDetails = dao.findByRefId(educationRefId,
 							ApplicationFormEducational.class);
