@@ -2,6 +2,7 @@ package com.icpak.servlet.upload;
 
 import gwtupload.server.exceptions.UploadActionException;
 
+import java.io.File;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
@@ -18,6 +19,7 @@ import com.icpak.rest.dao.CPDDao;
 import com.icpak.rest.models.cpd.CPD;
 import com.icpak.rest.models.membership.ApplicationFormHeader;
 import com.icpak.rest.models.util.Attachment;
+import com.icpak.rest.util.ApplicationSettings;
 
 @Transactional
 public class IDAttachmentsExecutor extends FileExecutor {
@@ -27,6 +29,8 @@ public class IDAttachmentsExecutor extends FileExecutor {
 
 	@Inject
 	AttachmentsDao attachmentsDao;
+	@Inject
+	ApplicationSettings settings;
 
 	@Override
 	String execute(HttpServletRequest request, List<FileItem> sessionFiles)
@@ -49,7 +53,8 @@ public class IDAttachmentsExecutor extends FileExecutor {
 					attachment.setId(null);
 					attachment.setName(name);
 					attachment.setSize(size);
-					attachment.setAttachment(item.get());
+					String fileName = getFilePath() + "/" + attachment.getRefId() + "-EDUCATION-" + name;
+					attachment.setFileName(fileName);
 					ApplicationFormHeader application = dao
 							.findByApplicationId(applicationRefId);
 					assert application != null;
@@ -68,10 +73,19 @@ public class IDAttachmentsExecutor extends FileExecutor {
 	public void removeItem(HttpServletRequest request, String fieldName) {
 		Hashtable<String, Long> receivedFiles = getSessionFiles(request, false);
 		Long fileId = receivedFiles.get(fieldName);
+		
+		Attachment attachment = null;
+		File file = null;
 
 		if (fileId != null)
-			attachmentsDao.delete(attachmentsDao.getById(Attachment.class,
-					fileId));
+			attachment = attachmentsDao.getById(Attachment.class, fileId);
+			file = new File(attachment.getFileName());
+			file.delete();
+			attachmentsDao.delete(attachment);
+	}
+	
+	private String getFilePath(){
+		return settings.getProperty("upload_path");
 	}
 
 }
