@@ -4,31 +4,33 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import org.hibernate.annotations.Type;
+
 import com.icpak.rest.models.base.PO;
 import com.workpoint.icpak.shared.model.InvoiceLineDto;
 
 @Entity
-public class InvoiceLine extends PO{
+public class InvoiceLine extends PO {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	@Type(type = "text")
 	private String description;
 	private double unitPrice;
 	private int quantity = 1;
 	private double totalAmount;
 	private String eventDelegateRefId;
-	
+
 	@ManyToOne
-	@JoinColumn(name="invoiceId")
+	@JoinColumn(name = "invoiceId")
 	private Invoice invoice;
 
 	public InvoiceLine() {
 	}
 
-	public InvoiceLine(String description, double unitPrice,
-			double totalAmount) {
+	public InvoiceLine(String description, double unitPrice, double totalAmount) {
 		this.description = description;
 		this.totalAmount = totalAmount;
 		this.unitPrice = unitPrice;
@@ -74,7 +76,7 @@ public class InvoiceLine extends PO{
 		dto.setTotalAmount(totalAmount);
 		dto.setUnitPrice(unitPrice);
 		dto.setEventDelegateRefId(eventDelegateRefId);
-		
+
 		return dto;
 	}
 
@@ -83,8 +85,8 @@ public class InvoiceLine extends PO{
 		setQuantity(lineDto.getQuantity());
 		setUnitPrice(lineDto.getUnitPrice());
 		setTotalAmount(lineDto.getTotalAmount());
-		
-		if(lineDto.getEventDelegateRefId()!=null)
+
+		if (lineDto.getEventDelegateRefId() != null)
 			setEventDelegateRefId(lineDto.getEventDelegateRefId());
 	}
 

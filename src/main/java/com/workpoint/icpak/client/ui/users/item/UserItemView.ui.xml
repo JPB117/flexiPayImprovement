@@ -3,18 +3,35 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
 	xmlns:g='urn:import:com.google.gwt.user.client.ui' ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
+	xmlns:d='urn:import:com.workpoint.icpak.client.ui.component'
 	ui:generateLocales='default'>
 
 	<g:HTMLPanel styleName="tr">
-		<g:HTMLPanel ui:field="panelMemberNo" styleName="td"></g:HTMLPanel>	
-		<g:HTMLPanel ui:field="panelFirstName" styleName="td"></g:HTMLPanel>
-		<g:HTMLPanel ui:field="panelLastName" styleName="td"></g:HTMLPanel>
+		<g:HTMLPanel ui:field="panelMemberNo" styleName="td"></g:HTMLPanel>
+		<g:HTMLPanel ui:field="panelFullName" styleName="td"></g:HTMLPanel>
 		<g:HTMLPanel ui:field="panelEmail" styleName="td"></g:HTMLPanel>
 		<g:HTMLPanel ui:field="panelGroups" styleName="td"></g:HTMLPanel>
+		<g:HTMLPanel ui:field="panelLMSStatus" styleName="td">
+			<span ui:field="spnLMSStatus" class="label" data-toggle="popover"
+				data-trigger="hover" title="Reasons for this:"></span>
+			<d:PopOver></d:PopOver>
+		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td">
 			<div class="action-commands">
 				<g:Anchor styleName="btn btn-success" ui:field="aEdit">
 					<i class="icon-pencil helper-14"></i>
+				</g:Anchor>
+				<g:Anchor styleName="btn btn-success" ui:field="aGoodStanding"
+					title="Download GoodStanding">
+					<i class="fa fa-certificate helper-14"></i>
+				</g:Anchor>
+				<g:Anchor styleName="btn btn-success" ui:field="aStatementDownload"
+					title="Download Member Statements">
+					<i class="fa fa-money helper-14"></i>
+				</g:Anchor>
+				<g:Anchor styleName="btn btn-success" ui:field="almsReview"
+					title="Review LMS Status">
+					<i class="fa fa-money helper-14"></i>
 				</g:Anchor>
 				<g:Anchor styleName="btn btn-danger" ui:field="aDelete">
 					<i class="icon-trash"></i>

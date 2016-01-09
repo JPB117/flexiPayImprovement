@@ -32,14 +32,16 @@ import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
 import com.workpoint.icpak.client.ui.events.ProcessingEvent;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
 import com.workpoint.icpak.client.ui.membership.form.MemberRegistrationForm;
+import com.workpoint.icpak.client.ui.profile.accountancy.form.AccountancyRegistrationForm;
 import com.workpoint.icpak.client.ui.profile.education.form.EducationRegistrationForm;
 import com.workpoint.icpak.client.ui.profile.specialization.form.SpecializationRegistrationForm;
 import com.workpoint.icpak.client.ui.profile.training.form.TrainingRegistrationForm;
-import com.workpoint.icpak.client.ui.security.LoginGateKeeper;
-import com.workpoint.icpak.client.ui.security.MemberGateKeeper;
+import com.workpoint.icpak.client.ui.security.BasicMemberGateKeeper;
+import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.api.ApplicationFormResource;
 import com.workpoint.icpak.shared.api.CountriesResource;
 import com.workpoint.icpak.shared.api.MemberResource;
+import com.workpoint.icpak.shared.model.ApplicationFormAccountancyDto;
 import com.workpoint.icpak.shared.model.ApplicationFormEducationalDto;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 import com.workpoint.icpak.shared.model.ApplicationFormSpecializationDto;
@@ -98,21 +100,33 @@ public class ProfilePresenter
 		HasClickHandlers getErpRefreshButton();
 
 		void setApplicationStaus(ApplicationStatus applicationStatus);
+
+		void showBasicMember(boolean show);
+
+		void bindAccountancyDetails(List<ApplicationFormAccountancyDto> result);
+
+		HasClickHandlers getAccountancyAddButton();
+
+		HasClickHandlers getSubmitButton();
+
+		boolean validateBasicDetailIssues();
+
+		void setLastUpdateToNow();
 	}
 
 	private final CurrentUser currentUser;
 
 	@ProxyCodeSplit
 	@NameToken(NameTokens.profile)
-	@UseGatekeeper(LoginGateKeeper.class)
+	@UseGatekeeper(BasicMemberGateKeeper.class)
 	public interface IProfileProxy extends
 			TabContentProxyPlace<ProfilePresenter> {
 	}
 
 	@TabInfo(container = HomePresenter.class)
-	static TabData getTabLabel(MemberGateKeeper memberGatekeeper) {
+	static TabData getTabLabel(BasicMemberGateKeeper basicGatekeeper) {
 		TabDataExt data = new TabDataExt("My Profile", "icon-user", 9,
-				memberGatekeeper, true);
+				basicGatekeeper, true);
 		return data;
 	}
 
@@ -138,6 +152,8 @@ public class ProfilePresenter
 	EducationRegistrationForm educationForm = new EducationRegistrationForm();
 	TrainingRegistrationForm trainingForm = new TrainingRegistrationForm();
 	SpecializationRegistrationForm specializationForm = new SpecializationRegistrationForm();
+	AccountancyRegistrationForm accountancyForm = new AccountancyRegistrationForm();
+
 	protected ApplicationStatus applicationStatus;
 
 	@Override
@@ -165,11 +181,49 @@ public class ProfilePresenter
 			}
 		});
 
+		getView().getSubmitButton().addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				getView().validateBasicDetailIssues();
+			}
+		});
+
+		educationForm.getStartUploadButton().addClickHandler(
+				new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {
+						saveEducationInformation();
+					}
+				});
+
+		trainingForm.getStartUploadButton().addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				saveTrainingInformation();
+			}
+		});
+
+		accountancyForm.getStartUploadButton().addClickHandler(
+				new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {
+						saveAccountancyInformation();
+					}
+				});
+
 		getView().getEducationAddButton().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				educationForm.clear();
 				showPopUp(educationForm);
+			}
+		});
+
+		getView().getAccountancyAddButton().addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				accountancyForm.clear();
+				showPopUp(accountancyForm);
 			}
 		});
 
@@ -186,6 +240,7 @@ public class ProfilePresenter
 					@Override
 					public void onClick(ClickEvent event) {
 						specializationForm.clear();
+						specializationForm.setEditMode(true);
 						loadSpecializations();
 						showPopUp(specializationForm);
 					}
@@ -218,10 +273,58 @@ public class ProfilePresenter
 								if (saveSpecializationInformation()) {
 									hide();
 								}
+							} else if (passedForm instanceof AccountancyRegistrationForm) {
+								if (saveAccountancyInformation()) {
+									hide();
+								}
 							}
+
 						}
 					}
 				}, "Save");
+	}
+
+	protected boolean saveAccountancyInformation() {
+		if (accountancyForm.isValid()) {
+			fireEvent(new ProcessingEvent());
+			ApplicationFormAccountancyDto dto = accountancyForm
+					.getAccountancyDto();
+
+			// Updating
+			if (dto.getRefId() != null) {
+				applicationDelegate
+						.withCallback(
+								new AbstractAsyncCallback<ApplicationFormAccountancyDto>() {
+									@Override
+									public void onSuccess(
+											ApplicationFormAccountancyDto result) {
+										fireEvent(new ProcessingCompletedEvent());
+										accountancyForm.bindDetail(result);
+										loadAccountancyExamination();
+									}
+								}).accountancy(getApplicationRefId())
+						.update(dto.getRefId(), dto);
+
+			} else {
+				applicationDelegate
+						.withCallback(
+								new AbstractAsyncCallback<ApplicationFormAccountancyDto>() {
+									@Override
+									public void onSuccess(
+											ApplicationFormAccountancyDto result) {
+										fireEvent(new ProcessingCompletedEvent());
+										accountancyForm.bindDetail(result);
+										accountancyForm.showUploadPanel(true);
+										loadAccountancyExamination();
+									}
+								}).accountancy(getApplicationRefId())
+						.create(dto);
+			}
+
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	protected boolean saveSpecializationInformation() {
@@ -254,6 +357,8 @@ public class ProfilePresenter
 									public void onSuccess(
 											ApplicationFormTrainingDto result) {
 										loadTrainings();
+										trainingForm.bindDetail(result);
+										trainingForm.showUploadPanel(true);
 									}
 								}).training(applicationId).create(dto);
 			} else {
@@ -265,6 +370,7 @@ public class ProfilePresenter
 											ApplicationFormTrainingDto trainingDto) {
 										loadTrainings();
 										trainingForm.bindDetail(trainingDto);
+										trainingForm.showUploadPanel(true);
 									}
 								}).training(applicationId)
 						.update(dto.getRefId(), dto);
@@ -308,7 +414,8 @@ public class ProfilePresenter
 									public void onSuccess(
 											ApplicationFormEducationalDto result) {
 										fireEvent(new ProcessingCompletedEvent());
-										// getView().setEditMode(false);
+										educationForm.bindDetail(result);
+										// getView().setEditMode(true);
 										loadData();
 									}
 								}).education(getApplicationRefId())
@@ -322,7 +429,8 @@ public class ProfilePresenter
 									public void onSuccess(
 											ApplicationFormEducationalDto result) {
 										fireEvent(new ProcessingCompletedEvent());
-										// getView().setEditMode(false);
+										educationForm.bindDetail(result);
+										educationForm.showUploadPanel(true);
 										loadData();
 									}
 								}).education(getApplicationRefId()).create(dto);
@@ -350,8 +458,8 @@ public class ProfilePresenter
 						@Override
 						public void onSuccess(ApplicationFormHeaderDto result) {
 							// result;
-							getView().bindBasicDetails(result);
-							getView().setEditMode(false);
+							getView().setEditMode(true);
+							loadMemberDetails();
 							fireEvent(new ProcessingCompletedEvent());
 						}
 
@@ -372,10 +480,12 @@ public class ProfilePresenter
 	}
 
 	private void loadData() {
-		// Window.alert("Passed ERP Check");
-		getView().bindCurrentUser(currentUser);
-
-		loadDataFromErp(false);
+		if (AppContext.isCurrentUserMember()) {
+			getView().showBasicMember(false);
+			loadDataFromErp(false);
+		} else {
+			getView().showBasicMember(true);
+		}
 
 		String applicationRefId = getApplicationRefId();
 		loadData(applicationRefId);
@@ -387,18 +497,16 @@ public class ProfilePresenter
 	 */
 	private void loadDataFromErp(boolean forceRefesh) {
 		fireEvent(new ProcessingEvent());
-		memberDelegate.withCallback(new AbstractAsyncCallback<Boolean>() {
-			@Override
-			public void onSuccess(Boolean hasLoaded) {
-				fireEvent(new ProcessingCompletedEvent());
-				// TODO Reload All Member Information
-				if (hasLoaded) {
-					loadData(getApplicationRefId());
-				} else {
-					Window.alert("There was a problem loading ERP Data");
-				}
-			}
-		}).getDataFromErp(getMemberId(), forceRefesh);
+
+		/*
+		 * memberDelegate.withCallback(new AbstractAsyncCallback<Boolean>() {
+		 * 
+		 * @Override public void onSuccess(Boolean hasLoaded) { fireEvent(new
+		 * ProcessingCompletedEvent()); loadData(getApplicationRefId());
+		 * getView().setLastUpdateToNow(); if (!hasLoaded) {
+		 * Window.alert("There was a problem loading ERP Data"); } }
+		 * }).getDataFromErp(getMemberId(), forceRefesh);
+		 */
 	}
 
 	private void loadGoodStanding() {
@@ -413,6 +521,7 @@ public class ProfilePresenter
 
 	private void loadData(String applicationRefId) {
 		getView().clear();
+		getView().bindCurrentUser(currentUser);
 		countriesResource.withCallback(
 				new AbstractAsyncCallback<List<Country>>() {
 					public void onSuccess(List<Country> countries) {
@@ -424,7 +533,6 @@ public class ProfilePresenter
 							}
 						});
 						memberForm.setCountries(countries);
-						// getView().setCountries(countries);
 					};
 				}).getAll();
 
@@ -433,13 +541,28 @@ public class ProfilePresenter
 			loadEducation();
 			loadTrainings();
 			loadSpecializations();
-			if (applicationStatus == ApplicationStatus.APPROVED) {
-				loadGoodStanding();
-			}
+			loadGoodStanding();
+			loadAccountancyExamination();
 		} else {
 			// Window.alert("User refId not sent in this request!");
 		}
 
+	}
+
+	private void loadAccountancyExamination() {
+		String applicationRefId = getApplicationRefId();
+		if (applicationRefId == null) {
+			return;
+		}
+		applicationDelegate
+				.withCallback(
+						new AbstractAsyncCallback<List<ApplicationFormAccountancyDto>>() {
+							@Override
+							public void onSuccess(
+									List<ApplicationFormAccountancyDto> result) {
+								getView().bindAccountancyDetails(result);
+							}
+						}).accountancy(applicationRefId).getAll(0, 100);
 	}
 
 	private void loadMemberDetails() {
@@ -453,10 +576,9 @@ public class ProfilePresenter
 					public void onSuccess(ApplicationFormHeaderDto result) {
 						memberForm.bind(result);
 						getView().bindBasicDetails(result);
-						ProfilePresenter.this.applicationStatus = result
-								.getApplicationStatus();
-						getView().setApplicationStaus(applicationStatus);
-						Window.alert(applicationStatus + "");
+						// ProfilePresenter.this.applicationStatus = result
+						// .getApplicationStatus();
+						// getView().setApplicationStaus(applicationStatus);
 					}
 				}).getById(applicationRefId);
 	}
@@ -480,6 +602,7 @@ public class ProfilePresenter
 
 	private void loadSpecializations() {
 		String applicationId = getApplicationRefId();
+		fireEvent(new ProcessingEvent());
 		if (applicationId == null) {
 			return;
 		}
@@ -492,6 +615,7 @@ public class ProfilePresenter
 								// bind Training details
 								getView().bindSpecializations(result);
 								specializationForm.bindDetails(result);
+								fireEvent(new ProcessingCompletedEvent());
 							}
 						}).specialization(applicationId).getAll(0, 50);
 	}
@@ -538,6 +662,17 @@ public class ProfilePresenter
 			}
 		}
 
+		else if ((event.getModel() instanceof ApplicationFormAccountancyDto)) {
+			ApplicationFormAccountancyDto dto = (ApplicationFormAccountancyDto) event
+					.getModel();
+			if (event.isDelete()) {
+				delete(dto);
+			} else {
+				showPopUp(accountancyForm);
+				accountancyForm.bindDetail(dto);
+			}
+		}
+
 	}
 
 	private void saveSpecialization(ApplicationFormSpecializationDto dto) {
@@ -575,7 +710,16 @@ public class ProfilePresenter
 			public void onSuccess(Void result) {
 				loadData();
 			}
-		}).education(getApplicationRefId()).delete(dto.getRefId());
+		}).training(getApplicationRefId()).delete(dto.getRefId());
+	}
+
+	private void delete(ApplicationFormAccountancyDto dto) {
+		applicationDelegate.withCallback(new AbstractAsyncCallback<Void>() {
+			@Override
+			public void onSuccess(Void result) {
+				loadData();
+			}
+		}).accountancy(getApplicationRefId()).delete(dto.getRefId());
 	}
 
 }

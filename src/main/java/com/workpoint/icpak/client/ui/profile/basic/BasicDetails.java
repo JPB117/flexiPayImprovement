@@ -1,20 +1,28 @@
 package com.workpoint.icpak.client.ui.profile.basic;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.workpoint.icpak.client.model.UploadContext;
+import com.workpoint.icpak.client.model.UploadContext.UPLOADACTION;
 import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.membership.form.MemberRegistrationForm;
 import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
+import com.workpoint.icpak.shared.model.AttachmentDto;
 import com.workpoint.icpak.shared.model.Country;
 
 public class BasicDetails extends Composite {
@@ -51,15 +59,21 @@ public class BasicDetails extends Composite {
 	@UiField
 	Element elCity;
 	@UiField
+	Element elIdNo;
+	@UiField
+	HTMLPanel panelPassportCopy;
+
+	@UiField
 	Anchor aSave;
 	@UiField
 	Anchor aCancel;
-
 	@UiField
 	ActionLink aEdit;
 
 	@UiField
 	MemberRegistrationForm panelRegistration;
+
+	List<String> allIssues = new ArrayList<>();
 
 	public BasicDetails() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -76,32 +90,70 @@ public class BasicDetails extends Composite {
 	}
 
 	public void bindDetails(ApplicationFormHeaderDto result) {
-		elPhone.setInnerText(result.getTelephone1());
-		elEmail.setInnerText(result.getEmail());
+		if (result.getTelephone1() != null) {
+			elPhone.setInnerText(result.getTelephone1());
+		} else {
+			allIssues.add("No phone Number registered");
+		}
+		if (result.getEmail() != null) {
+			elEmail.setInnerText(result.getEmail());
+		} else {
+			allIssues.add("No Email Address registered");
+		}
 
-		elEmployer.setInnerText(result.getEmployer());
-		elResidence.setInnerText(result.getResidence());
-		elAddress.setInnerText(result.getAddress1());
-		elPostalCode.setInnerText(result.getPostCode());
-		elCountry.setInnerText(result.getCountry());
-		elCity.setInnerText(result.getCity1());
-		
+		if (result.getEmployer() != null) {
+			elEmployer.setInnerText(result.getEmployer());
+		}
+		if (result.getIdNumber() != null) {
+			elIdNo.setInnerText(result.getIdNumber());
+		}
+		if (result.getResidence() != null) {
+			elResidence.setInnerText(result.getResidence());
+		}
+		if (result.getAddress1() != null) {
+			elAddress.setInnerText(result.getAddress1());
+		}
+		if (result.getPostCode() != null) {
+			elPostalCode.setInnerText(result.getPostCode());
+		}
+		if (result.getCountry() != null) {
+			elCountry.setInnerText(result.getCountry());
+		}
+		if (result.getCity1() != null) {
+			elCity.setInnerText(result.getCity1());
+		}
 		if (result.getGender() != null) {
 			elSex.setInnerText(result.getGender().name());
 		}
-		
+
 		if (result.getDob() != null) {
 			elDob.setInnerText(DateUtils.DATEFORMAT.format(result.getDob()));
 		}
 
-		
+		panelPassportCopy.clear();
+		if (result.getAttachments() != null
+				&& !result.getAttachments().isEmpty()) {
+			for (final AttachmentDto attachment : result.getAttachments()) {
+				final UploadContext ctx = new UploadContext("getreport");
+				ctx.setAction(UPLOADACTION.GETATTACHMENT);
+				ctx.setContext("refId", attachment.getRefId());
 
-		//panelRegistration.bind(result);
+				ActionLink link = new ActionLink(attachment.getAttachmentName());
+				link.addClickHandler(new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {
+						Window.open(ctx.toUrl(),
+								attachment.getAttachmentName(), "");
+					}
+				});
+				panelPassportCopy.add(link);
+				panelPassportCopy.add(new HTML("<br/>"));
+			}
+		} else {
+
+			allIssues.add("Your ID/Passport Copy is required.");
+		}
 	}
-
-//	public ApplicationFormHeaderDto getApplicationForm() {
-//		return panelRegistration.getApplicationForm();
-//	}
 
 	public HasClickHandlers getSaveButton() {
 		return aSave;
@@ -130,12 +182,14 @@ public class BasicDetails extends Composite {
 		elPostalCode.setInnerText(null);
 		elCountry.setInnerText(null);
 		elCity.setInnerText(null);
-
 		panelRegistration.clear();
-				
 	}
 
 	public void setCountries(List<Country> countries) {
 		panelRegistration.setCountries(countries);
+	}
+
+	public List<String> getBasicDetailIssues() {
+		return allIssues;
 	}
 }

@@ -56,7 +56,7 @@ public class EnrollmentsDaoHelper {
 		if(eventId!=null){
 			list = dao.getAllBookings(eventId, offset, limit);
 		}else{
-			list = dao.getAllBookings(offset, limit);
+			list = dao.getAllBookings("",offset, limit);
 		}
 		 
 

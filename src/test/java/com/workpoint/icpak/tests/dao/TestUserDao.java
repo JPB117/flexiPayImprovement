@@ -1,7 +1,11 @@
 package com.workpoint.icpak.tests.dao;
 
+import java.io.IOException;
+import java.util.List;
+
 import javax.inject.Inject;
 
+import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -17,6 +21,7 @@ import com.workpoint.icpak.shared.model.UserDto;
 import com.workpoint.icpak.tests.base.AbstractDaoTest;
 
 public class TestUserDao extends AbstractDaoTest {
+	Logger logger = Logger.getLogger(TestUserDao.class);
 
 	@Inject
 	UsersDaoHelper helper;
@@ -25,7 +30,7 @@ public class TestUserDao extends AbstractDaoTest {
 	@Inject
 	UsersDao usersDao;
 
-	@Test
+	@Ignore
 	public void hashPassword() {
 		System.out.println(usersDao.encrypt("pass"));
 	}
@@ -49,7 +54,7 @@ public class TestUserDao extends AbstractDaoTest {
 		Assert.assertNotNull(saved.getRefId());
 	}
 
-	@Test
+	@Ignore
 	public void getUser() {
 		User user = usersDao.findByUserId("cJJooj0U1kizZ9bY");
 		UserDto userDto = new UserDto();
@@ -57,4 +62,40 @@ public class TestUserDao extends AbstractDaoTest {
 		System.err.println(userDto.getLastDateUpdateFromErp());
 	}
 
+	@Test
+	public void getAllUsers() {
+		List<UserDto> users = usersDao.getAllUsersDtos(0, 10, null, "");
+
+		for (UserDto user : users) {
+			System.err.println(">>>" + user.getFullName());
+		}
+	}
+
+	@Ignore
+	public void testEmails() {
+		helper.resetAccount("30ZDpATQxFXx9WR7");
+	}
+
+	@Ignore
+	public void testLMS() throws IOException {
+		helper.postUserToLMS("bf4j7WfaMDBph6nP", "pass");
+	}
+
+	@Ignore
+	public void updatePwd() {
+		List<User> users = usersDao.getAllUsers();
+		logger.error("== Users found = " + users.size());
+		int count = 1;
+		for (User u : users) {
+			logger.error("== Updating password user = " + count);
+			helper.updatePassword(u.getRefId(), "pass");
+			count++;
+		}
+	}
+
+	@Ignore
+	public void testLMSIntergration() throws IOException {
+		// helper.postUserToLMS("AOUcFrD0WgflCc1O", "pass");
+		helper.getUserByActivationEmail("ANDREWGROHNEY1@GMAIL.COM");
+	}
 }

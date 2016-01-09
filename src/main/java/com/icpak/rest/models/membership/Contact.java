@@ -12,76 +12,72 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import com.wordnik.swagger.annotations.ApiModel;
 import com.workpoint.icpak.shared.model.events.ContactDto;
 
-
-@ApiModel(description="A Persons or organizations contacts")
-
+@ApiModel(description = "A Persons or organizations contacts")
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-
-//@Entity
-//@Table(name="contact")
+// @Entity
+// @Table(name="contact")
 @Embeddable
-@Cache(usage= CacheConcurrencyStrategy.READ_WRITE)
-public class Contact{
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+public class Contact {
 
 	/**
 	 * 
 	 */
 	private ContactType type;
-	private boolean isPrimaryContact=true;
-	
+	private boolean isPrimaryContact = true;
+
 	private String company;
-	
-	@Column(name="`Address`",  columnDefinition="varchar(50)")
+
+	@Column(name = "`Address`", columnDefinition = "varchar(255)")
 	private String address;
-	
-	@Column(name="`Address 2`", columnDefinition="varchar(50)")
+
+	@Column(name = "`Address 2`", columnDefinition = "varchar(255)")
 	private String address2;
-	
-	@Column(name="`City`", columnDefinition="varchar(30)")
+
+	@Column(name = "`City`", columnDefinition = "varchar(255)")
 	private String city;
-	
-	@Column(name="`Contact`", columnDefinition="varchar(50)")
+
+	@Column(name = "`Contact`", columnDefinition = "varchar(255)")
 	private String contactName;
-	
-	@Column(name="`Phone No_`", columnDefinition="varchar(37)")
+
+	@Column(name = "`Phone No_`", columnDefinition = "varchar(255)")
 	private String telephoneNumbers;
-	
-	@Column(name="`Telex No_`", columnDefinition="varchar(20)")
+
+	@Column(name = "`Telex No_`", columnDefinition = "varchar(255)")
 	private String telexNo;
-	
-	@Column(name="`Territory Code`", columnDefinition="varchar(10)")
+
+	@Column(name = "`Territory Code`", columnDefinition = "varchar(255)")
 	private String territoryCode;
-	
-	@Column(name="`Fax No_`", columnDefinition="varchar(30)")
+
+	@Column(name = "`Fax No_`", columnDefinition = "varchar(255)")
 	private String fax;
-	
-	@Column(name="`Telex Answer Back`", columnDefinition="varchar(20)")
+
+	@Column(name = "`Telex Answer Back`", columnDefinition = "varchar(255)")
 	private String telexAnswerBack;
-	
-	@Column(name="`Post Code`", columnDefinition="varchar(20)")
+
+	@Column(name = "`Post Code`", columnDefinition = "varchar(255)")
 	private String postCode;
-	
-	@Column(name="`County`", columnDefinition="varchar(20)")
+
+	@Column(name = "`County`", columnDefinition = "varchar(255)")
 	private String county;
-	
-	@Column(name="`E-Mail`", columnDefinition="varchar(80)")
+
+	@Column(name = "`E-Mail`", columnDefinition = "varchar(255)")
 	private String email;
-	
-	@Column(name="`Home Page`", columnDefinition="varchar(60)")
+
+	@Column(name = "`Home Page`", columnDefinition = "varchar(255)")
 	private String website;
-	
+
 	private String mobileNumbers;
-	
-	@Column(length=500)
+
+	@Column(length = 500)
 	private String physicalAddress;
-	
+
 	private String country;
-	
-//	@OneToOne
-//	@XmlTransient
-//	private Booking booking;
-	
+
+	// @OneToOne
+	// @XmlTransient
+	// private Booking booking;
 
 	public ContactType getType() {
 		return type;
@@ -122,7 +118,7 @@ public class Contact{
 	public void setContactName(String contactName) {
 		this.contactName = contactName;
 	}
-	
+
 	public String getWebsite() {
 		return website;
 	}
@@ -236,7 +232,7 @@ public class Contact{
 	}
 
 	public void copyFrom(ContactDto contactDto) {
-		setAddress(contactDto.getAddress() );
+		setAddress(contactDto.getAddress());
 		setAddress2(contactDto.getAddress2());
 		setCompany(contactDto.getCompany());
 		setCity(contactDto.getCity());
@@ -270,7 +266,7 @@ public class Contact{
 		contact.setTelexNo(telexNo);
 		contact.setTerritoryCode(territoryCode);
 		contact.setWebsite(website);
-		
+
 		return contact;
 	}
 

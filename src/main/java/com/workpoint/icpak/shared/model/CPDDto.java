@@ -1,9 +1,9 @@
 package com.workpoint.icpak.shared.model;
 
 import java.util.Date;
+import java.util.List;
 
 public class CPDDto extends SerializableObj {
-
 	/**
 	 * 
 	 */
@@ -18,9 +18,23 @@ public class CPDDto extends SerializableObj {
 	private CPDStatus status;
 	private String memberRefId;
 	private String fullNames;
+	private String updatedBy;
 	private String eventId;
 	private String eventLocation;
 	private String memberRegistrationNo;
+	private List<AttachmentDto> attachments;
+	private String managementComment;
+
+	// lms Fields
+	private String lmsMemberId;
+	private String lmsStartDate;
+	private String lmsEnddate;
+	private Integer lmsCourseId;
+
+	/**
+	 * Response back to lms
+	 */
+	private String lmsResponse;
 
 	public CPDDto() {
 	}
@@ -127,5 +141,69 @@ public class CPDDto extends SerializableObj {
 
 	public void setMemberRegistrationNo(String memberRegistrationNo) {
 		this.memberRegistrationNo = memberRegistrationNo;
+	}
+
+	public List<AttachmentDto> getAttachments() {
+		return attachments;
+	}
+
+	public void setAttachments(List<AttachmentDto> attachments) {
+		this.attachments = attachments;
+	}
+
+	public String getLmsMemberId() {
+		return lmsMemberId;
+	}
+
+	public void setLmsMemberId(String lmsMemberId) {
+		this.lmsMemberId = lmsMemberId;
+	}
+
+	public String getLmsStartDate() {
+		return lmsStartDate;
+	}
+
+	public void setLmsStartDate(String lmsStartDate) {
+		this.lmsStartDate = lmsStartDate;
+	}
+
+	public String getLmsEnddate() {
+		return lmsEnddate;
+	}
+
+	public void setLmsEnddate(String lmsEnddate) {
+		this.lmsEnddate = lmsEnddate;
+	}
+
+	public String getLmsResponse() {
+		return lmsResponse;
+	}
+
+	public void setLmsResponse(String lmsResponse) {
+		this.lmsResponse = lmsResponse;
+	}
+
+	public Integer getLmsCourseId() {
+		return lmsCourseId;
+	}
+
+	public void setLmsCourseId(Integer lmsCourseId) {
+		this.lmsCourseId = lmsCourseId;
+	}
+
+	public String getManagementComment() {
+		return managementComment;
+	}
+
+	public void setManagementComment(String managementComment) {
+		this.managementComment = managementComment;
+	}
+
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
+
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
 	}
 }

@@ -1,0 +1,56 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.workpoint.icpak.client.ui.component">
+
+	<g:HTMLPanel styleName="tr" ui:field="row">
+		<g:HTMLPanel styleName="td" ui:field="divCount">
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td" ui:field="divCourseName">
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td" ui:field="divStartDate">
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td" ui:field="divEndDate">
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td" ui:field="divCPD">
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td" ui:field="divCPDStatus">
+			<span ui:field="spnStatus" class="label label-success"></span>
+		</g:HTMLPanel>
+
+		<g:HTMLPanel styleName="td" ui:field="divAction">
+			<div class="dropdown">
+				<d:ActionLink styleName="btn btn-default btn-fill dropdown-toggle"
+					dataToggle="dropdown" ariaExpanded="true" ui:field="aActions"
+					htmlId="dropdownMenu1">
+					-Select-
+					<span class="caret"></span>
+				</d:ActionLink>
+
+				<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+					<li>
+						<span ui:field="spnNoAction" style="padding:10px">No Action Possible</span>
+					</li>
+					<li>
+						<d:ActionLink ui:field="aEdit">Edit</d:ActionLink>
+					</li>
+					<li>
+						<d:ActionLink ui:field="aView">View</d:ActionLink>
+					</li>
+					<li>
+						<d:ActionLink ui:field="aDelete">Delete</d:ActionLink>
+					</li>
+					<li>
+						<d:ActionLink ui:field="aDownloadCert">Download Certificate</d:ActionLink>
+					</li>
+					<li>
+						<d:ActionLink ui:field="aApprove">Approve</d:ActionLink>
+					</li>
+					<li>
+						<d:ActionLink ui:field="aReject">Reject</d:ActionLink>
+					</li>
+				</ul>
+			</div>
+		</g:HTMLPanel>
+
+	</g:HTMLPanel>
+</ui:UiBinder> 

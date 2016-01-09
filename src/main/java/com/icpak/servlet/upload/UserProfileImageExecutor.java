@@ -2,6 +2,8 @@ package com.icpak.servlet.upload;
 
 import gwtupload.server.exceptions.UploadActionException;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
@@ -9,12 +11,14 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.io.IOUtils;
 
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import com.icpak.rest.dao.AttachmentsDao;
 import com.icpak.rest.dao.helper.AttachmentDaoHelper;
 import com.icpak.rest.models.util.Attachment;
+import com.icpak.rest.util.ApplicationSettings;
 
 @Transactional
 public class UserProfileImageExecutor extends FileExecutor {
@@ -23,6 +27,8 @@ public class UserProfileImageExecutor extends FileExecutor {
 	AttachmentDaoHelper helper;
 	@Inject
 	AttachmentsDao attachmentsDao;
+	@Inject
+	ApplicationSettings settings;
 
 	@Override
 	String execute(HttpServletRequest request, List<FileItem> sessionFiles)
@@ -45,11 +51,14 @@ public class UserProfileImageExecutor extends FileExecutor {
 					attachment.setId(null);
 					attachment.setName(name);
 					attachment.setSize(size);
-					attachment.setAttachment(item.get());
+					String fileName = getFilePath() + "/" + attachment.getRefId() + "-EDUCATION-" + name;
+					attachment.setFileName(fileName);
 					attachment.setProfilePicUserId(userRefId);
 
 					attachmentsDao.deleteUserImage(userRefId);
 					attachmentsDao.save(attachment);
+					
+					IOUtils.write(item.get(), new FileOutputStream(new File(fileName)));
 
 					registerFile(request, fieldName, attachment.getId());
 				} catch (Exception e) {
@@ -64,10 +73,19 @@ public class UserProfileImageExecutor extends FileExecutor {
 	public void removeItem(HttpServletRequest request, String fieldName) {
 		Hashtable<String, Long> receivedFiles = getSessionFiles(request, false);
 		Long fileId = receivedFiles.get(fieldName);
+		
+		Attachment attachment = null;
+		File file = null;
 
 		if (fileId != null)
-			attachmentsDao.delete(attachmentsDao.getById(Attachment.class,
-					fileId));
+			attachment = attachmentsDao.getById(Attachment.class, fileId);
+			file = new File(attachment.getFileName());
+			file.delete();
+			attachmentsDao.delete(attachment);
+	}
+	
+	private String getFilePath(){
+		return settings.getProperty("upload_path");
 	}
 
 }

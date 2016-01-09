@@ -11,7 +11,9 @@ import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.user.client.Cookies;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -72,6 +74,7 @@ public class LoginPresenter extends
 		void setOrgName(String orgName);
 
 		void setLoginButtonEnabled(boolean b);
+
 	}
 
 	@ProxyCodeSplit
@@ -116,7 +119,6 @@ public class LoginPresenter extends
 	public void prepareFromRequest(PlaceRequest request) {
 		super.prepareFromRequest(request);
 		tryLoggingInWithCookieFirst();
-
 	}
 
 	@Override
@@ -127,7 +129,6 @@ public class LoginPresenter extends
 	@Override
 	protected void onBind() {
 		super.onBind();
-
 		getView().getLoginBtn().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -161,7 +162,8 @@ public class LoginPresenter extends
 	private void callServerLoginAction(final LogInAction logInAction) {
 		getView().clearErrors();
 		getView().showLoginProgress();
-
+		// Window.alert("Before CallBack!");
+		// getView().getPanelParent().getElement().setInnerText("Loading...");
 		usersDelegate.withCallback(
 				ManualRevealCallback.create(this,
 						new AbstractAsyncCallback<LogInResult>() {
@@ -194,6 +196,11 @@ public class LoginPresenter extends
 
 	}
 
+	@Override
+	protected void onReveal() {
+		super.onReveal();
+	}
+
 	private void onLoginCallSucceededForCookie(CurrentUserDto currentUserDto) {
 		getView().setLoginButtonEnabled(true);
 		if (currentUserDto.isLoggedIn()) {
@@ -205,7 +212,6 @@ public class LoginPresenter extends
 		if (currentUserDto.isLoggedIn()) {
 			currentUser.fromCurrentUserDto(currentUserDto);
 			fireEvent(new ContextLoadedEvent(currentUser.getUser(), null));
-
 			redirectToLoggedOnPage();
 		} else {
 			LOGGER.log(Level.SEVERE, "Wrong username or password......");
@@ -215,7 +221,6 @@ public class LoginPresenter extends
 
 	private void tryLoggingInWithCookieFirst() {
 		getView().setLoginButtonEnabled(false);
-
 		String loggedInCookie = AppContext.getLoggedInCookie();
 		LogInAction logInAction = new LogInAction(loggedInCookie);
 		callServerLoginAction(logInAction);
@@ -223,6 +228,9 @@ public class LoginPresenter extends
 
 	public void redirectToLoggedOnPage() {
 		String redirect = "";
+		String redirectType = "";
+		String resource = "";
+
 		if (AppContext.isCurrentUserAdmin()) {
 			redirect = NameTokens.getAdminDefaultPage();
 		} else {
@@ -230,21 +238,33 @@ public class LoginPresenter extends
 		}
 		String token = placeManager.getCurrentPlaceRequest().getParameter(
 				ParameterTokens.REDIRECT, redirect);
-		PlaceRequest placeRequest = new Builder().nameToken(token).build();
+		String type = placeManager.getCurrentPlaceRequest().getParameter(
+				ParameterTokens.REDIRECTTYPE, redirectType);
+		String resourceValue = placeManager.getCurrentPlaceRequest()
+				.getParameter(ParameterTokens.RESOURCE, resource);
 
-		placeManager.revealPlace(placeRequest);
+		if (type.equals("website")) {
+			Window.Location.replace("https://icpak.com/resource/"
+					+ resourceValue);
+		} else {
+			PlaceRequest placeRequest = new Builder().nameToken(token).build();
+			placeManager.revealPlace(placeRequest);
+		}
 
 	}
 
 	public void setLoggedInCookie(String value) {
 		String path = "/";
 		String domain = getDomain();
+		// Window.alert(domain);
 		int maxAge = REMEMBER_ME_DAYS * 24 * 60 * 60 * 1000;
 		Date expires = DateUtils.addDays(new Date(), REMEMBER_ME_DAYS);
-		boolean secure = false;
+		boolean secure = true;
 
 		Cookies.setCookie(ApiParameters.LOGIN_COOKIE, value, expires, domain,
 				path, secure);
+
+		setCookie(ApiParameters.LOGIN_COOKIE, value);
 
 		// NewCookie newCookie = new NewCookie(ApiParameters.LOGIN_COOKIE,
 		// value,
@@ -261,5 +281,12 @@ public class LoginPresenter extends
 
 		return "localhost".equalsIgnoreCase(domain) ? null : domain;
 	}
+
+	public static native void setCookie(String cname, String cvalue) /*-{
+																		var d = new Date();
+																		d.setTime(d.getTime() + (10*24*60*60*1000));
+																		var expires = "expires="+d.toUTCString();
+																		$doc.cookie = cname + "=" + cvalue + "; " + expires+"; path=/";
+																		}-*/;
 
 }

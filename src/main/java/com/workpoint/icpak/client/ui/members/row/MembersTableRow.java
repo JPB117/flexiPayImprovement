@@ -31,8 +31,6 @@ public class MembersTableRow extends RowWidget {
 	HTMLPanel row;
 	@UiField
 	HTMLPanel divDate;
-//	@UiField
-//	HTMLPanel divMemberNo;
 	@UiField
 	HTMLPanel divMemberName;
 	@UiField
@@ -41,10 +39,8 @@ public class MembersTableRow extends RowWidget {
 	HTMLPanel divAction;
 	@UiField
 	HTMLPanel divEmail;
-
 	@UiField
 	ActionLink aMemberName;
-
 	@UiField
 	Element divCompletion;
 
@@ -52,17 +48,11 @@ public class MembersTableRow extends RowWidget {
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 
-	public MembersTableRow(final ApplicationFormHeaderDto application) {
+	public MembersTableRow(final ApplicationFormHeaderDto application,
+			int counter) {
 		this();
 		bind(application);
-
-		aMemberName.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				AppContext.fireEvent(new EditModelEvent(application));
-			}
-		});
-
+		aMemberName.setHref("#members;counter=" + counter);
 	}
 
 	private void bind(ApplicationFormHeaderDto application) {
@@ -71,14 +61,13 @@ public class MembersTableRow extends RowWidget {
 				: application.getDate() != null ? application.getDate()
 						: application.getCreated();
 
-		divDate.add(new InlineLabel(DateUtils.DATEFORMAT.format(regDate)));
-//		divMemberNo.add(new InlineLabel(application.getMemberNo()));
+		divDate.add(new InlineLabel(DateUtils.FULLTIMESTAMP.format(regDate)));
 		aMemberName.setText(application.fullNames());
 		divEmail.add(new InlineLabel(application.getEmail()));
-		divCompletion.setAttribute("data-label", application.getPercCompletion()+""
-				+ "%");
-		divCompletion
-				.addClassName("radial-bar-" + application.getPercCompletion()+"");
+		divCompletion.setAttribute("data-label",
+				application.getPercCompletion() + "" + "%");
+		divCompletion.addClassName("radial-bar-"
+				+ application.getPercCompletion() + "");
 		spnStatus.setInnerText("Pending");
 	}
 }

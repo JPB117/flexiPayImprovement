@@ -7,7 +7,6 @@ import java.util.List;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.GwtEvent.Type;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -185,7 +184,16 @@ public class EventBookingPresenter extends
 	protected void submit(BookingDto dto) {
 		getView().showmask(true);
 
-		if (bookingId != null) {
+		if (bookingId == null) {
+			eventsResource
+					.withCallback(new AbstractAsyncCallback<BookingDto>() {
+						@Override
+						public void onSuccess(BookingDto booking) {
+							getView().showmask(false);
+							bindBooking(booking);
+						}
+					}).bookings(eventId).create(dto);
+		} else {
 			eventsResource
 					.withCallback(new AbstractAsyncCallback<BookingDto>() {
 						@Override
@@ -195,16 +203,8 @@ public class EventBookingPresenter extends
 						}
 					}).bookings(eventId).update(bookingId, dto);
 
-		} else {
-			eventsResource
-					.withCallback(new AbstractAsyncCallback<BookingDto>() {
-						@Override
-						public void onSuccess(BookingDto booking) {
-							getView().showmask(false);
-							bindBooking(booking);
-						}
-					}).bookings(eventId).create(dto);
 		}
+
 	}
 
 	protected void bindBooking(BookingDto booking) {
@@ -232,6 +232,11 @@ public class EventBookingPresenter extends
 
 						getView().setCountries(countries);
 					};
+
+					@Override
+					public void onFailure(Throwable caught) {
+						super.onFailure(caught);
+					}
 				}).getAll();
 
 		eventsResource.withCallback(new AbstractAsyncCallback<EventDto>() {
@@ -248,9 +253,6 @@ public class EventBookingPresenter extends
 					buffer.append(elem.getLineNumber() + ">>"
 							+ elem.getClassName() + ">>" + elem.getMethodName());
 				}
-
-				Window.alert(caught + " " + caught.getMessage() + " "
-						+ caught.getStackTrace().toString());
 
 				super.onFailure(caught);
 			}
@@ -290,6 +292,9 @@ public class EventBookingPresenter extends
 			@Override
 			public void onSuccess(InvoiceDto invoice) {
 				getView().bindInvoice(invoice);
+				eventsResource.withoutCallback().bookings(eventId)
+						.sendAlert(bookingId);
+
 				if (invoice.getInvoiceAmount() != null) {
 					paymentPresenter.setAmount(invoice.getInvoiceAmount()
 							.toString());
@@ -307,7 +312,6 @@ public class EventBookingPresenter extends
 			@Override
 			public void onFailure(Throwable caught) {
 				super.onFailure(caught);
-				Window.alert("Ooops..! Something went wrong and we ve noted. Report to ICPAK Customer Care");
 			}
 		}).getInvoice(invoiceRef);
 
@@ -318,7 +322,6 @@ public class EventBookingPresenter extends
 		super.onReset();
 		getView().setMiddleHeight();
 		setInSlot(PAYMENTS_SLOT, paymentPresenter);
-
 	}
 
 	@Override

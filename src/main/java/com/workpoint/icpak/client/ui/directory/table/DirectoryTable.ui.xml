@@ -1,0 +1,11 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.workpoint.icpak.client.ui.component">
+	<g:HTMLPanel>
+		<span style="font-size:16px; color:#C29D07" ui:field="spnResults"></span>
+		<hr />
+		<d:PagingTable ui:field="tblView" striped="true" isGrid="false"
+			bordered="false" styleName="tabbable">
+		</d:PagingTable>
+	</g:HTMLPanel>
+</ui:UiBinder>

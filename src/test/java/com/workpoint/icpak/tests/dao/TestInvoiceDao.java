@@ -1,11 +1,22 @@
 package com.workpoint.icpak.tests.dao;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
+import javax.xml.parsers.FactoryConfigurationError;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.apache.commons.io.IOUtils;
+import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.xml.sax.SAXException;
 
 import com.google.inject.Inject;
 import com.icpak.rest.dao.BookingsDao;
@@ -14,11 +25,14 @@ import com.icpak.rest.dao.InvoiceDaoHelper;
 import com.icpak.rest.dao.helper.BookingsDaoHelper;
 import com.icpak.rest.dao.helper.TransactionDaoHelper;
 import com.icpak.rest.models.event.Booking;
+import com.itextpdf.text.DocumentException;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.InvoiceLineDto;
 import com.workpoint.icpak.tests.base.AbstractDaoTest;
 
 public class TestInvoiceDao extends AbstractDaoTest {
+
+	Logger logger = Logger.getLogger(TestInvoiceDao.class);
 
 	@Inject
 	InvoiceDaoHelper invoiceHelper;
@@ -49,21 +63,17 @@ public class TestInvoiceDao extends AbstractDaoTest {
 
 	@Ignore
 	public void getInvoices() {
-		// CQuyDBuiNLZPwPRX
-		// List<InvoiceDto> dtos = invoiceHelper.getAllInvoices("ALL", 0, 10);
-		// System.err.println(dtos.size());
-
 		InvoiceDto invoice = invoiceDao.getInvoiceByDocumentNo("INV-0024");
 		System.err.println(invoice.getDescription());
 	}
 
 	@Ignore
 	public void testPayment() {
-		trxHelper.receivePaymentUsingInvoiceNo("INV-0030", "722722",
-				"INV-0030", "", "JGV1SYJTR5", "", "");
+		trxHelper.receivePaymentUsingInvoiceNo("INV-0031", "722722",
+				"INV-0031", "MPESA", "JGV1SYJTR5", "254729472421", "26000");
 	}
 
-	@Test
+	@Ignore
 	public void checkPaymentStatus() {
 		System.err.println("Invoice>>>"
 				+ invoiceHelper.checkInvoicePaymentStatus("c0qgum0Bn8oxyLhO"));
@@ -80,7 +90,6 @@ public class TestInvoiceDao extends AbstractDaoTest {
 			dto.setUnitPrice(20 * i);
 			dto.setTotalAmount(20 * i);
 			invoice.addLine(dto);
-
 			amount += dto.getUnitPrice();
 		}
 
@@ -94,6 +103,21 @@ public class TestInvoiceDao extends AbstractDaoTest {
 		invoice.setBookingRefId("433dsfsfds");
 
 		invoiceHelper.save(invoice);
+	}
+
+	@Test
+	public void testInvoiceLine() throws FileNotFoundException, IOException,
+			SAXException, ParserConfigurationException,
+			FactoryConfigurationError, DocumentException {
+		List<InvoiceLineDto> invoiceLineDtos = invoiceDao
+				.getByLinesByDocumentNo("INV-0045");
+
+		byte[] doc = bookingHelper.generateInvoicePdf("vp5euYle2YLN2bxn");
+
+		FileOutputStream output = new FileOutputStream(new File(
+				"/home/wladek/Documents/profoma.pdf"));
+		IOUtils.write(doc, output);
+
 	}
 
 }

@@ -23,6 +23,7 @@ import org.apache.log4j.Logger;
 
 import com.amazonaws.util.json.JSONException;
 import com.amazonaws.util.json.JSONObject;
+import com.google.gwt.user.client.Timer;
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import com.icpak.rest.dao.MemberDao;
@@ -262,7 +263,7 @@ public class MemberDaoHelper {
 			User memberUser = memberInDb.getUser();
 
 			memberUser.setAddress(jObject.getString("Address"));
-			memberUser.setEmail(jObject.getString("E-Mail"));
+			// memberUser.setEmail(jObject.getString("E-Mail"));
 			memberUser.setMobileNo(jObject.getString("Mobile No_"));
 			memberUser.setPostalCode(jObject.getString("Post Code"));
 			memberUser.setPhoneNumber(jObject.getString("Phone No_"));
@@ -297,6 +298,58 @@ public class MemberDaoHelper {
 			e.printStackTrace();
 			return false;
 		}
+	}
+
+	/*
+	 * Methods to be used by members presenter for website iframe
+	 */
+
+	public int getMembersCount(String searchTerm, String citySearchTerm, String categoryName) {
+		return memberDao.getMembersCount(searchTerm, citySearchTerm, categoryName);
+	}
+
+	public List<MemberDto> getMembers(Integer offSet, Integer limit) {
+		return memberDao.getMembers(offSet, limit);
+	}
+
+	public int getsearchMembersCount(String searchTerm) {
+		return memberDao.getMembersSearchCount(searchTerm);
+	}
+
+	public List<MemberDto> searchMembers(String searchTerm, Integer offSet, Integer limit) {
+		return memberDao.searchMembers(searchTerm, offSet, limit);
+	}
+
+	public List<MemberDto> getMembersFromOldTable(String searchTerm, String citySearchTerm, String categoryName,
+			int offset, int limit) {
+		return memberDao.searchMembersFromOldTable(searchTerm, citySearchTerm, categoryName, offset, limit);
+	}
+
+	public boolean autoUPdateMembers() {
+		logger.info(" ++++++++ Auto update Member Details +++++ ");
+		List<Member> membersInDb = memberDao.getAllMembers(0, 0);
+
+		for (Member member : membersInDb) {
+			try {
+				updateMemberRecord(member.getRefId(), true);
+				return true;
+			} catch (IllegalStateException | IOException | ParseException e) {
+				e.printStackTrace();
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	public String timer(){
+		 // A keeper of the timer instance in case we need to cancel it
+		  Timer timeoutTimer = null;
+		  
+		  // An indicator when the computation should quit
+		  boolean abortFlag = false;
+		  
+		return null;
 	}
 
 }

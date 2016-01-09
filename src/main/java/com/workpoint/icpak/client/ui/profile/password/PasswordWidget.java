@@ -6,6 +6,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.HasKeyDownHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
@@ -35,7 +36,26 @@ public class PasswordWidget extends Composite {
 	ActionLink aResendAct;
 
 	@UiField
+	ActionLink aSendActivation;
+
+	@UiField
+	ActionLink aProceedToLogin;
+
+	@UiField
+	HTMLPanel panelMessage;
+	@UiField
+	SpanElement spnMessageIcon;
+	@UiField
+	SpanElement spnIssues;
+
+	@UiField
+	Element divActionButtons;
+	@UiField
+	Element divInstructionItems;
+
+	@UiField
 	IssuesPanel issues;
+
 	@UiField
 	TextField txtEmail;
 	@UiField
@@ -58,6 +78,7 @@ public class PasswordWidget extends Composite {
 
 	public PasswordWidget() {
 		initWidget(uiBinder.createAndBindUi(this));
+		txtEmail.setValue("");
 	}
 
 	public HasClickHandlers getSaveButton() {
@@ -99,6 +120,12 @@ public class PasswordWidget extends Composite {
 			isValid = false;
 		}
 
+		if (isValid) {
+			issues.removeStyleName("hide");
+		} else {
+			issues.addStyleName("hide");
+		}
+
 		return isValid;
 	}
 
@@ -119,13 +146,21 @@ public class PasswordWidget extends Composite {
 		}
 	}
 
+	public HasClickHandlers getSendActivationLink() {
+		return aSendActivation;
+	}
+
 	public void showProcessing(boolean isProcessing) {
 		if (isProcessing) {
 			aResendAct.getElement().setAttribute("disabled", "dsiabled");
 			aResendAct.setText("Processing");
+			aSendActivation.getElement().setAttribute("disabled", "dsiabled");
+			aSendActivation.setText("Processing");
 		} else {
 			aResendAct.getElement().removeAttribute("disabled");
 			aResendAct.setText("Resend Activation");
+			aSendActivation.getElement().removeAttribute("disabled");
+			aSendActivation.setText("Send Activation");
 		}
 	}
 
@@ -138,6 +173,7 @@ public class PasswordWidget extends Composite {
 	}
 
 	public void changeWidget(String reason) {
+		showSuccess(false);
 		if (reason.equals("forgot")) {
 			this.doValidation = false;
 			spnInfo.setInnerText("Enter the E-mail you used to do registration, and email will be sent with Reset Instructions");
@@ -146,15 +182,16 @@ public class PasswordWidget extends Composite {
 			divPassword.addClassName("hide");
 			aResendAct.removeStyleName("hide");
 			aSave.addStyleName("hide");
+			aSendActivation.addStyleName("hide");
 		} else if (reason.equals("activate")) {
 			this.doValidation = false;
 			spnInfo.setInnerText("Enter the E-mail you used to do registration, and email will be sent with Activation Instructions.");
 			txtEmail.getElement().removeAttribute("disabled");
 			divConfirmPassword.addClassName("hide");
 			divPassword.addClassName("hide");
-			aResendAct.removeStyleName("hide");
+			aResendAct.addStyleName("hide");
 			aSave.addStyleName("hide");
-			aResendAct.setText("Send Activation Email");
+			aSendActivation.removeStyleName("hide");
 		} else {
 			this.doValidation = true;
 			spnInfo.setInnerText("This page allows you to create your password that you will use to access your account.");
@@ -163,6 +200,7 @@ public class PasswordWidget extends Composite {
 			divPassword.removeClassName("hide");
 			aResendAct.addStyleName("hide");
 			aSave.removeStyleName("hide");
+			aSendActivation.addStyleName("hide");
 		}
 	}
 
@@ -170,4 +208,50 @@ public class PasswordWidget extends Composite {
 		return txtEmail.getValue();
 	}
 
+	public HasKeyDownHandlers getEmailTextField() {
+		return txtEmail;
+	}
+
+	public HasKeyDownHandlers getPasswordTextField() {
+		return txtConfirmPassword;
+	}
+
+	public void showMessage(String errorMessage, String errorType) {
+		if (errorType.equals("success")) {
+			spnIssues.setInnerText(errorMessage);
+			panelMessage.removeStyleName("hide");
+			panelMessage.setStyleDependentName("alert-", true);
+			panelMessage.addStyleDependentName(errorType);
+		} else {
+			issues.clear();
+			issues.removeStyleName("hide");
+			issues.addError(errorMessage);
+		}
+	}
+
+	public HasClickHandlers getProceedToLogin() {
+		showSuccess(true);
+		return aProceedToLogin;
+	}
+
+	private void showSuccess(boolean show) {
+		if (show) {
+			aProceedToLogin.setVisible(true);
+			aResendAct.addStyleName("hide");
+			aSave.addStyleName("hide");
+			aSendActivation.addStyleName("hide");
+			aCancel.addStyleName("hide");
+			divInstructionItems.addClassName("hide");
+			issues.addStyleName("hide");
+			panelMessage.removeStyleName("hide");
+		} else {
+			aProceedToLogin.setVisible(false);
+			aResendAct.removeStyleName("hide");
+			aSave.removeStyleName("hide");
+			aSendActivation.removeStyleName("hide");
+			aCancel.removeStyleName("hide");
+			divInstructionItems.removeClassName("hide");
+			panelMessage.addStyleName("hide");
+		}
+	}
 }

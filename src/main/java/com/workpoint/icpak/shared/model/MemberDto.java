@@ -17,10 +17,15 @@ public class MemberDto extends SerializableObj implements Listable {
 	private String lastName;
 	private String firstName;
 	private String title;
+	private String address;
+	private String city;
 	private String practisingNo;
-	private String customerType;
+	private ApplicationType customerType;
+	private String customerPostingGroup;
 	private Date practisingCertDate;
-
+	private MembershipStatus membershipStatus;
+	private String fullName;
+	private String member;
 
 	public MemberDto() {
 	}
@@ -115,14 +120,6 @@ public class MemberDto extends SerializableObj implements Listable {
 		this.practisingNo = practisingNo;
 	}
 
-	public String getCustomerType() {
-		return customerType;
-	}
-
-	public void setCustomerType(String customerType) {
-		this.customerType = customerType;
-	}
-
 	public Date getPractisingCertDate() {
 		return practisingCertDate;
 	}
@@ -131,5 +128,60 @@ public class MemberDto extends SerializableObj implements Listable {
 		this.practisingCertDate = practisingCertDate;
 	}
 
+	public MembershipStatus getMembershipStatus() {
+		return membershipStatus;
+	}
+
+	public void setMembershipStatus(MembershipStatus membershipStatus) {
+		this.membershipStatus = membershipStatus;
+	}
+
+	public String getFullName() {
+		return fullName;
+	}
+
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
+	}
+
+	public String getMember() {
+		return member;
+	}
+
+	public void setMember(String member) {
+		this.member = member;
+	}
+
+	public ApplicationType getCustomerType() {
+		return customerType;
+	}
+
+	public void setCustomerType(ApplicationType customerType) {
+		this.customerType = customerType;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public String getCustomerPostingGroup() {
+		return customerPostingGroup;
+	}
+
+	public void setCustomerPostingGroup(String customerPostingGroup) {
+		this.customerPostingGroup = customerPostingGroup;
+	}
 
 }

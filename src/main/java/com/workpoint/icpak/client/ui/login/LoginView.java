@@ -1,6 +1,9 @@
 package com.workpoint.icpak.client.ui.login;
 
+import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Anchor;
@@ -30,6 +33,8 @@ public class LoginView extends ViewImpl implements LoginPresenter.ILoginView {
 	SpanElement loading;
 	@UiField
 	HTMLPanel loadingbox;
+	@UiField
+	HTMLPanel divLoginPanel;
 
 	@Inject
 	public LoginView(final Binder binder) {
@@ -104,7 +109,7 @@ public class LoginView extends ViewImpl implements LoginPresenter.ILoginView {
 
 	@Override
 	public void clearErrors() {
-		//issues.clear();
+		// issues.clear();
 	}
 
 	@Override
@@ -127,7 +132,6 @@ public class LoginView extends ViewImpl implements LoginPresenter.ILoginView {
 		loadingbox.removeStyleName("loading");
 		loading.addClassName("hide");
 		issues.addStyleName("hide");
-
 		// remove any Data written
 		username.setText("");
 		password.setText("");
@@ -139,6 +143,6 @@ public class LoginView extends ViewImpl implements LoginPresenter.ILoginView {
 
 	@Override
 	public void setLoginButtonEnabled(boolean b) {
-		
+
 	}
 }

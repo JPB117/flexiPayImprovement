@@ -118,7 +118,10 @@ public class Statement extends PO {
 		statementDto.setDescription(getDescription());
 		statementDto.setAmount(getAmount());
 		statementDto.setDocumentNo(getDocumentNo());
-		statementDto.setDocumentType(getDocumentType());
+		statementDto
+				.setDocumentType(((getDocumentType() == null)
+						|| (getDocumentType().equals("null")) ? ""
+						: getDocumentType()));
 		statementDto.setPostingDate(getPostingDate());
 		statementDto.setEntryType(getEntryType());
 		statementDto.setCustLedgerEntryNo(getCustLedgerEntryNo());

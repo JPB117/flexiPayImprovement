@@ -49,8 +49,7 @@ public class Member extends PO {
 	/**
 	 * TODO - Link this to the membership approval process<br/>
 	 * - Also Link this to the membership annual renewal process.<br/>
-	 * - Check also whether Admin can deactivate account for whatever reason
-	 * <br/>
+	 * - Check also whether Admin can deactivate account for whatever reason <br/>
 	 */
 	@Enumerated(EnumType.STRING)
 	private MembershipStatus memberShipStatus;
@@ -133,7 +132,8 @@ public class Member extends PO {
 		return goodStandingCerts;
 	}
 
-	public void setGoodStandingCerts(Set<GoodStandingCertificate> goodStandingCerts) {
+	public void setGoodStandingCerts(
+			Set<GoodStandingCertificate> goodStandingCerts) {
 		this.goodStandingCerts = goodStandingCerts;
 	}
 

@@ -6,16 +6,27 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.workpoint.icpak.client.model.UploadContext;
+import com.workpoint.icpak.client.model.UploadContext.UPLOADACTION;
+import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.DateField;
 import com.workpoint.icpak.client.ui.component.DropDownList;
 import com.workpoint.icpak.client.ui.component.IssuesPanel;
 import com.workpoint.icpak.client.ui.component.TextField;
+import com.workpoint.icpak.client.ui.upload.custom.Uploader;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 import com.workpoint.icpak.shared.model.ApplicationType;
+import com.workpoint.icpak.shared.model.AttachmentDto;
 import com.workpoint.icpak.shared.model.Country;
 import com.workpoint.icpak.shared.model.Gender;
 
@@ -39,12 +50,20 @@ public class MemberRegistrationForm extends Composite {
 	TextField txtAddress;
 	@UiField
 	TextField txtPostalCode;
-
+	@UiField
+	TextField txtResidence;
+	@UiField
+	TextField txtIdNo;
 	@UiField
 	DateField dtDOB;
-
+	@UiField
+	Uploader uploaderIdCopy;
+	@UiField
+	DivElement divIdCopy;
 	@UiField
 	DropDownList<Gender> lstGender;
+	@UiField
+	HTMLPanel panelPreviousAttachments;
 
 	@UiField
 	DropDownList<Country> lstCountry;
@@ -55,6 +74,7 @@ public class MemberRegistrationForm extends Composite {
 			.create(MemberRegistrationFormUiBinder.class);
 	private int counter;
 	private ApplicationType type;
+	private ApplicationFormHeaderDto application;
 
 	interface MemberRegistrationFormUiBinder extends
 			UiBinder<Widget, MemberRegistrationForm> {
@@ -107,6 +127,11 @@ public class MemberRegistrationForm extends Composite {
 				issuesPanel.addError("Address is required");
 			}
 
+			if (isNullOrEmpty(txtIdNo.getValue())) {
+				isValid = false;
+				issuesPanel.addError("IdNumber is required");
+			}
+
 			if (lstGender.getValue() == null) {
 				isValid = false;
 				issuesPanel.addError("Gender is required");
@@ -130,6 +155,15 @@ public class MemberRegistrationForm extends Composite {
 		return txtEmailAddress;
 	}
 
+	private void setIDUploadContext(String applicationRefId) {
+		UploadContext context = new UploadContext();
+		context.setContext("applicationRefId", applicationRefId);
+		context.setAction(UPLOADACTION.UPLOADIDPHOTOCOPY);
+		context.setAccept(Arrays.asList("doc", "pdf", "jpg", "jpeg", "png",
+				"docx"));
+		uploaderIdCopy.setContext(context);
+	}
+
 	public ApplicationFormHeaderDto getApplicationForm() {
 		ApplicationFormHeaderDto dto = new ApplicationFormHeaderDto();
 		dto.setSurname(txtSurname.getValue());
@@ -144,8 +178,9 @@ public class MemberRegistrationForm extends Composite {
 		dto.setPostCode(txtPostalCode.getValue());
 		dto.setApplicationType(type);
 		dto.setDob(dtDOB.getValueDate());
-		// dto.setTimezone(TimeZone.createTimeZone(timeZoneOffsetInMinutes));
 		dto.setGender(lstGender.getValue());
+		dto.setResidence(txtResidence.getValue());
+		dto.setIdNumber(txtIdNo.getValue());
 		return dto;
 	}
 
@@ -170,18 +205,45 @@ public class MemberRegistrationForm extends Composite {
 	}
 
 	public void bind(ApplicationFormHeaderDto application) {
+		this.application = application;
 		txtSurname.setValue(application.getSurname());
 		txtOtherNames.setValue(application.getOtherNames());
 		txtEmailAddress.setValue(application.getEmail());
 		txtEmployer.setValue(application.getEmployer());
 		txtCity.setValue(application.getCity1());
-		// lstCountry.setValue(application.getCountry());
 		dtDOB.setValue(application.getDob());
 		lstGender.setValue(application.getGender());
 		txtPhone.setValue(application.getTelephone1());
 		txtAddress.setValue(application.getAddress1());
 		txtPostalCode.setValue(application.getPostCode());
+		txtResidence.setValue(application.getResidence());
+		txtIdNo.setValue(application.getIdNumber());
+
+		if (application.getAttachments() != null) {
+			for (final AttachmentDto attachment : application.getAttachments()) {
+				final UploadContext ctx = new UploadContext("getreport");
+				ctx.setAction(UPLOADACTION.GETATTACHMENT);
+				ctx.setContext("refId", attachment.getRefId());
+
+				ActionLink link = new ActionLink(attachment.getAttachmentName());
+				link.addClickHandler(new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {
+						Window.open(ctx.toUrl(),
+								attachment.getAttachmentName(), "");
+					}
+				});
+				panelPreviousAttachments.add(link);
+				panelPreviousAttachments.add(new HTML("<br/>"));
+			}
+		}
 		type = application.getApplicationType();
+		if (application.getRefId() != null) {
+			divIdCopy.removeClassName("hide");
+			setIDUploadContext(application.getRefId());
+		} else {
+			divIdCopy.addClassName("hide");
+		}
 	}
 
 	public void clear() {

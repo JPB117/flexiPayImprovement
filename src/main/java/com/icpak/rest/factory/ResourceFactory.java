@@ -1,8 +1,10 @@
 package com.icpak.rest.factory;
 
 import com.icpak.rest.AccommodationsResourceImpl;
+import com.icpak.rest.AccountancyResourceImpl;
 import com.icpak.rest.BookingsResourceImpl;
 import com.icpak.rest.CPDResourceImpl;
+import com.icpak.rest.DelegatesResourceImpl;
 import com.icpak.rest.EducationResourceImpl;
 import com.icpak.rest.EnquiriesResourceImpl;
 import com.icpak.rest.EnrollmentsResourceImpl;
@@ -15,6 +17,9 @@ public interface ResourceFactory {
 	public BookingsResourceImpl createBookingResource(String eventId);
 
 	public EducationResourceImpl createEducationResource(String applicationId);
+
+	public AccountancyResourceImpl createAccountancyResource(
+			String applicationId);
 
 	public TrainingsResourceImpl createTrainingsResource(String applicationId);
 
@@ -33,4 +38,6 @@ public interface ResourceFactory {
 	public CPDResourceImpl downloadCert(String cpdRefId);
 
 	public StatementResourceImpl createStatementResource(String memberId);
+
+	public DelegatesResourceImpl createDelegatesResource(String eventId);
 }

@@ -19,11 +19,11 @@
 		<div class="main-content">
 			<g:HTMLPanel styleName="row" ui:field="panelEvents">
 				<div class="col-sm-12">
-					<p:EventsHeader ui:field="headerContainer">
+					<p:EventsHeader ui:field="headerContainer"
+						styleName="hide">
 					</p:EventsHeader>
 				</div>
-				<div class="panel panel-default">
-					<div class="panel-heading">All Event Details</div>
+				<div class="panel widget">
 					<div class="panel-body">
 						<div class="col-sm-12">
 							<table:EventsTable ui:field="tblView">
@@ -37,6 +37,8 @@
 			<g:HTMLPanel styleName="row" ui:field="panelEventDrillDown">
 				<div class="col-sm-12">
 					<h4 class="info-text">
+						<a href="#events">Back to Events</a>
+						/
 						<span ui:field="spnEventTitle"></span>
 					</h4>
 					<hr />

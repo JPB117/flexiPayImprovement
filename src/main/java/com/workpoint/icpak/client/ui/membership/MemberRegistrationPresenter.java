@@ -68,7 +68,7 @@ public class MemberRegistrationPresenter
 
 		ActionLink getANext();
 
-		HasClickHandlers getABack();
+		Anchor getABack();
 
 		Anchor getActivateAccLink();
 
@@ -244,13 +244,16 @@ public class MemberRegistrationPresenter
 				MemberRegistrationPresenter.this.applicationDetails = result;
 				getView().showmask(false);
 				removeError();
-				// result;
 				getView().bindForm(result);
-
 				getView().getActivateAccLink().setHref(
 						"#activateacc;uid=" + result.getUserRefId());
-				getInvoice(result.getInvoiceRef());
+				getView().getABack().addStyleName("hide");
+				getView().getANext().addStyleName("hide");
+				// This section removed on 5/12/2015
+				// User Only pays once all documents have been submitted
+				// getInvoice(result.getInvoiceRef());
 				getView().next();
+
 			}
 
 			private void removeError() {
@@ -261,7 +264,6 @@ public class MemberRegistrationPresenter
 			@Override
 			public void onFailure(Throwable caught) {
 				getView().showmask(false);
-
 				Window.alert("There was a problem when submitting your data. Contact Us for more details..");
 				removeError();
 				super.onFailure(caught);
@@ -269,7 +271,6 @@ public class MemberRegistrationPresenter
 		};
 
 		if (applicationRefId == null) {
-			// update
 			applicationDelegate.withCallback(callback).create(applicationForm);
 		} else {
 			applicationDelegate.withCallback(callback).update(applicationRefId,
@@ -279,7 +280,6 @@ public class MemberRegistrationPresenter
 	}
 
 	protected void getInvoice(String invoiceRef) {
-
 		invoiceResource.withCallback(new AbstractAsyncCallback<InvoiceDto>() {
 			@Override
 			public void onSuccess(InvoiceDto invoice) {
@@ -320,17 +320,17 @@ public class MemberRegistrationPresenter
 				 * email exists esp. duplicate entries errors
 				 * (NonUniqueResultExceptions)
 				 */
-				
-				/* 
-				 * Do not allow the user to continue lest they input duplicate records
+
+				/*
+				 * Do not allow the user to continue lest they input duplicate
+				 * records
 				 */
 				getView().setEmailValid(false);
-				
+
 				/*
-				 * Add an error message 
+				 * Add an error message
 				 */
 				getView().getRegistrationForm().addError(message);
-
 				return false;
 			}
 		}).getById(email);

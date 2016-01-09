@@ -21,15 +21,17 @@ public interface EventsResource extends BaseResource {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<EventDto> getAll(@QueryParam("offset") Integer offset,
-			@QueryParam("limit") Integer limit);
+	public List<EventDto> getAll(@QueryParam("offset") Integer offset, @QueryParam("limit") Integer limit,
+			@QueryParam("searchTerm") String searchTerm);
 
 	@Path("/{eventId}/bookings")
 	public BookingsResource bookings(@PathParam("eventId") String eventId);
 
+	@Path("/{eventId}/delegates")
+	public DelegatesResource delegates(@PathParam("eventId") String eventId);
+
 	@Path("/{eventId}/accommodations")
-	public AccommodationsResource accommodations(
-			@PathParam("eventId") String eventId);
+	public AccommodationsResource accommodations(@PathParam("eventId") String eventId);
 
 	@GET
 	@Path("/{eventId}")
@@ -56,5 +58,9 @@ public interface EventsResource extends BaseResource {
 	@Path("/{eventId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public void delete(@PathParam("eventId") String eventId);
+
+	@GET
+	@Path("/searchCount")
+	public Integer getSearchCount(@QueryParam("searchTerm") String searchTerm);
 
 }

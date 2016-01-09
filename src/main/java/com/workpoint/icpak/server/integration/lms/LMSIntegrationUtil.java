@@ -5,6 +5,13 @@ import java.util.Properties;
 
 import javax.ws.rs.core.MediaType;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
 
 import com.sun.jersey.api.client.Client;
@@ -29,7 +36,6 @@ public class LMSIntegrationUtil {
 	 * Jersey Client
 	 */
 	private Client jclient;
-
 	private static LMSIntegrationUtil util = null;
 
 	public static LMSIntegrationUtil getInstance() throws IOException {
@@ -37,6 +43,7 @@ public class LMSIntegrationUtil {
 			synchronized (logger) {
 				if (util == null) {
 					util = new LMSIntegrationUtil();
+					logger.error(">>>>>>Util Class:" + util.getResourceUri("Course/EnrollCourse"));
 				}
 			}
 		}
@@ -45,14 +52,13 @@ public class LMSIntegrationUtil {
 
 	private LMSIntegrationUtil() throws IOException {
 		DefaultClientConfig config = new DefaultClientConfig();
-//		config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING,
-//				Boolean.TRUE);
+		// config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING,
+		// Boolean.TRUE);
 		jclient = Client.create(config);
 		jclient.setConnectTimeout(15000);
 
 		Properties props = new Properties();
-		props.load(LMSIntegrationUtil.class.getClassLoader()
-				.getResourceAsStream("bootstrap.properties"));
+		props.load(LMSIntegrationUtil.class.getClassLoader().getResourceAsStream("bootstrap.properties"));
 		baseUri = props.getProperty("lms_base_path");
 		assert baseUri != null && !baseUri.isEmpty();
 	}
@@ -64,24 +70,20 @@ public class LMSIntegrationUtil {
 	 * @param payLoad
 	 * @return
 	 */
-	public <T> T executeCall(String resourcePath, Object payLoad,
-			final Class<T> returnTypeClazz) {
+	public <T> T executeCall(String resourcePath, Object payLoad, final Class<T> returnTypeClazz) {
 
 		if (resourcePath == null || resourcePath.isEmpty()) {
-			throw new IllegalArgumentException(
-					"ResourcePath cannot be null for rest service");
+			throw new IllegalArgumentException("ResourcePath cannot be null for rest service");
 		}
 
-		logger.info("Submitting payload to " + getResourceUri(resourcePath)
-				+ " ;payLoad " + payLoad);
+		logger.info("Submitting payload to " + getResourceUri(resourcePath) + " ;payLoad " + payLoad);
 
 		WebResource resource = jclient.resource(getResourceUri(resourcePath));
 
 		ClientResponse clientResponse = null;
 
 		try {
-			clientResponse = resource.type(MediaType.APPLICATION_JSON)
-					.accept(MediaType.APPLICATION_JSON)
+			clientResponse = resource.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
 					.post(ClientResponse.class, payLoad);
 
 			// response.getHeaders()
@@ -90,51 +92,83 @@ public class LMSIntegrationUtil {
 			throw new RuntimeException(e);
 		}
 
+		T response = null;
+
 		if (clientResponse.getClientResponseStatus() != ClientResponse.Status.OK) {
 			throw new RuntimeException(clientResponse.getEntity(String.class));
+			// response = (T) clientResponse.getEntity(String.class);
+		} else {
+			response = clientResponse.getEntity(returnTypeClazz);
 		}
-
-		T response = null;
-		response = clientResponse.getEntity(returnTypeClazz);
-
 		return response;
 
 	}
 
-	public <T> T executeLMSCall(String resourcePath, Object payLoad,
-			final Class<T> returnTypeClazz) throws IOException {
+	public <T> LMSResponse executeLMSCall(String resourcePath, Object payLoad, final Class<T> returnTypeClazz)
+			throws IOException {
 
-		Client client = Client.create();
+		final HttpClient httpClient = new DefaultHttpClient();
+		logger.error("=== Payload =====" + payLoad.toString());
+		HttpPost request = new HttpPost(baseUri+resourcePath);
+		request.setHeader("accept", "application/json");
+		@SuppressWarnings("deprecation")
+		StringEntity stringEntity = new StringEntity(payLoad.toString(), "application/json", "UTF-8");
+		request.setEntity(stringEntity);
 
-		if (resourcePath == null || resourcePath.isEmpty()) {
-			throw new IllegalArgumentException(
-					"ResourcePath cannot be null for rest service");
+		HttpResponse httpResponse = null;
+
+		String responseString = null;
+
+		int rsponseCode = 0;
+
+		try {
+
+			httpResponse = httpClient.execute(request);
+
+			rsponseCode = httpResponse.getStatusLine().getStatusCode();
+
+			HttpEntity entity = httpResponse.getEntity();
+
+			/**
+			 * Get the response String
+			 */
+			responseString = EntityUtils.toString(entity, "UTF-8");
+
+			logger.info(" >>>>>>>>>>>> httpResponseStatus <<<<<<<<< " + responseString + "  == Code " + rsponseCode);
+
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 
-		logger.info("Submitting payload to " + getResourceUri(resourcePath)
-				+ " ;payLoad " + payLoad);
+		logger.info("Submitting payload to " + getResourceUri(resourcePath) + " ;payLoad " + payLoad);
+		System.err.println(">>>>>>>>" + payLoad);
 
-		WebResource resource = client.resource(getResourceUri(resourcePath));
+		LMSResponse response = new LMSResponse();
+		response.setPayload(payLoad.toString());
 
-		ClientResponse clientResponse = resource
-				.type(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON)
-				.post(ClientResponse.class, payLoad);
-
-		if (clientResponse.getClientResponseStatus() != ClientResponse.Status.OK) {
-			throw new RuntimeException(clientResponse.getEntity(String.class));
+		if (rsponseCode != 200 && rsponseCode != 400) {
+			response.setMessage(responseString);
+			response.setStatus("Failed");
+			logger.error(response);
+		} else if (responseString.isEmpty()) {
+			response.setMessage("No Response from LMS...");
+			response.setStatus("Failed");
+			logger.error(response);
+		} else if(rsponseCode == 400){
+			response.setMessage(responseString);
+			response.setStatus("Success");
+		}else{
+			response.setMessage(responseString);
+			response.setStatus("Success");
 		}
-
-		T response = null;
-		response = clientResponse.getEntity(returnTypeClazz);
-
 		return response;
-
 	}
 
 	private String getResourceUri(String resourcePath) {
-		return baseUri + (resourcePath.startsWith("/") ? "" : "/")
-				+ resourcePath;
+		if (baseUri == null) {
+			logger.error(">>> base uri cannot be null");
+		}
+		return baseUri + (resourcePath.startsWith("/") ? "" : "/") + resourcePath;
 	}
 
 	public static void main(String[] args) throws IOException {
@@ -148,9 +182,8 @@ public class LMSIntegrationUtil {
 		header.setCity1("Nairobi");
 		header.setEmployer("Workpoint Limited");
 		header.setApplicationType(ApplicationType.NON_PRACTISING);
-		ApplicationFormHeaderDto saved = LMSIntegrationUtil.getInstance()
-				.executeCall("/applications", header,
-						ApplicationFormHeaderDto.class);
+		ApplicationFormHeaderDto saved = LMSIntegrationUtil.getInstance().executeCall("/applications", header,
+				ApplicationFormHeaderDto.class);
 		assert saved.getRefId() != null;
 
 		System.err.println(saved.getRefId());

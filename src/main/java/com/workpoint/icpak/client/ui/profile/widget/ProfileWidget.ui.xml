@@ -13,12 +13,53 @@
 	.help-icon:hover {
 		text-decoration: none;
 	}
+	
+	.change-photo {
+		background-color: #000;
+		padding: 5px;
+		opacity: .8;
+		text-align: center !important;
+		position: absolute;
+		width: 160px;
+		top: 141px;
+	}
+	
+	.change-photo a {
+		color: white;
+		font-weight: bold;
+	}
+	
+	.previous-link {
+		padding-right: 20px;
+	}
 	</ui:style>
 	<g:HTMLPanel>
 		<g:HTMLPanel ui:field="divProfileContent" styleName="col-xs-12">
 			<g:HTMLPanel styleName="row">
 				<div class="col-xs-12">
 					<div class="panel widget">
+						<g:HTMLPanel ui:field="panelBreadcrumb">
+							<ol class="breadcrumb">
+								<li>
+									<a href="#members" ui:field="aBackToApplications" class="btn btn-fill btn-primary">
+										<i class="fa fa-angle-double-left"></i>
+										Applications
+									</a>
+								</li>
+								<div class="pull-right">
+									<d:ActionLink ui:field="aPreviousApplication"
+										styleName="{style.previous-link} btn btn-default btn-fill">
+										<i class="fa fa-chevron-left"></i>
+										Previous
+									</d:ActionLink>
+									<d:ActionLink ui:field="aNextApplication"
+										styleName="btn btn-default btn-fill">
+										Next
+										<i class="fa fa-chevron-right"></i>
+									</d:ActionLink>
+								</div>
+							</ol>
+						</g:HTMLPanel>
 						<div class="ember-view popovercontainer ribbon hide">
 							<g:HTMLPanel styleName="ribbon-inner ribbon-draft"
 								ui:field="panelApplicationType">
@@ -59,20 +100,30 @@
 									<g:HTMLPanel ui:field="profileViewEditMode">
 										<div>
 											<g:FocusPanel ui:field="panelPicture">
-												<g:Image ui:field="imgUser" styleName="thumbnail col-sm-offset-1" />
+												<g:HTMLPanel>
+													<g:Image ui:field="imgUser" styleName="thumbnail col-sm-offset-1" />
+													<div class="{style.change-photo}">
+														<d:ActionLink ui:field="aChangePhoto">
+															Change Photo
+														</d:ActionLink>
+													</div>
+												</g:HTMLPanel>
 											</g:FocusPanel>
 										</div>
 									</g:HTMLPanel>
 								</div>
 
-								<div class="col-lg-6 profile-overview">
+								<div class="col-lg-9 profile-overview">
 									<g:HTMLPanel ui:field="panelProfile" styleName="col-md-12">
+										<div class="text-muted">(Click on Browse to attach a picture from your
+											computer)</div>
 										<up:Uploader ui:field="uploader" styleName="custom-file-input"></up:Uploader>
 									</g:HTMLPanel>
 
 									<g:HTMLPanel ui:field="PanelProfileDisplay"
 										styleName="col-md-12">
 										<div class="row">
+											<br ui:field="elSpace" class="hide" />
 											<h3 class="m0">
 												<span ui:field="spnNames"></span>
 											</h3>
@@ -94,7 +145,7 @@
 											<span ui:field="spnMembershipStatus" class="text-muted">
 											</span>
 
-											<span ui:field="spnErpSection">
+											<span ui:field="spnRefreshSection" class="hide">
 												<span class="muted">
 													(last Update:
 													<span ui:field="spnLastUpdated"></span>
@@ -111,15 +162,27 @@
 											</div>
 										</div>
 
-										<div ui:field="divPayNow">
+										<br />
+										<div ui:field="divSubmit" class="hide">
 											<div class="row">
-												Account Balance:
-												<span ui:field="spnBalance" class="text-muted"></span>
-												<d:ActionLink ui:field="aPayNow" styleName="hide"></d:ActionLink>
+												<d:ActionLink ui:field="aSubmit" styleName="btn btn-fill btn-gold">Submit
+													And Pay</d:ActionLink>
+												<div class="text-muted">
+													<span ui:field="spnInfo">
+														(Fill all sections here and
+														click
+														submit
+														to complete your registration)
+													</span>
+												</div>
+												<g:HTMLPanel ui:field="panelIssues" styleName="alert alert-danger hide">
+													<d:BulletListPanel ui:field="ulIssues">
+													</d:BulletListPanel>
+												</g:HTMLPanel>
 											</div>
 										</div>
 
-										<div ui:field="divStandingStatus">
+										<div ui:field="divStandingStatus" class="hide">
 											<div class="row">
 												<br />
 												Standing Status:

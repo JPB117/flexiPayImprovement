@@ -5,9 +5,10 @@
 	ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
-	<g:HTMLPanel>
+
+	<g:HTMLPanel ui:field="PanelParent">
 		<div>
-			<nav class="navbar">
+			<nav class="navbar top-navbar">
 				<div class="container">
 					<div class="navbar-header" style="width: 100%; text-align: center;">
 						<a class="brand">
@@ -17,7 +18,26 @@
 				</div>
 			</nav>
 		</div>
-		<g:HTMLPanel styleName="image-container set-full-height">
+
+		<div class="col s6 col-offset-6 hide" ui:field="divProgress">
+			<div class="row">
+				<div class="progress">
+					<div class="progress-bar progress-bar-striped active" role="progressbar"
+						aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+					</div>
+					<span class="">Please wait as the application Launches....</span>
+				</div>
+			</div>
+		</div>
+
+		<div class="col s12 hide" ui:field="divLaunchErrors">
+			<div class="alert alert-danger" ui:field="divErrorMessage">
+				<g:Anchor ui:field="aRefresh" styleName="btn btn-fill btn-success">Reload Page</g:Anchor>
+			</div>
+		</div>
+
+		<g:HTMLPanel styleName="image-container set-full-height"
+			ui:field="divLoginPanel">
 			<g:HTMLPanel styleName="login-bg">
 				<g:HTMLPanel styleName="row-fluid login-wrapper">
 					<g:HTMLPanel styleName="span4 box" ui:field="loadingbox">
@@ -52,6 +72,9 @@
 									<br />
 									New Member ?
 									<a href="#signup">Register here</a>
+									<br />
+									Existing Member ?
+									<a href="#activateacc;r=activate">Activate Account</a>
 								</div>
 
 							</fieldset>
@@ -60,5 +83,18 @@
 				</g:HTMLPanel>
 			</g:HTMLPanel>
 		</g:HTMLPanel>
+
+		<footer class="footer-navbar-wrapper footer-skinny" role="contentinfo"
+			data-ng-controller="footerController">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12 text-center">
+						<p class="copyright">
+							© 2015 ICPAK
+						</p>
+					</div>
+				</div>
+			</div>
+		</footer>
 	</g:HTMLPanel>
 </ui:UiBinder>

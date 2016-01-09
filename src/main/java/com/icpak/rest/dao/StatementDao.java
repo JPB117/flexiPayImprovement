@@ -7,35 +7,54 @@ import java.util.Map;
 
 import javax.persistence.Query;
 
+import org.apache.log4j.Logger;
+
 import com.icpak.rest.exceptions.ServiceException;
 import com.icpak.rest.models.ErrorCodes;
 import com.icpak.rest.models.trx.Statement;
 import com.workpoint.icpak.shared.model.statement.StatementDto;
 
 public class StatementDao extends BaseDao {
+	Logger logger = Logger.getLogger(StatementDao.class);
 
 	public Statement getByStatementId(String refId) {
 		return getByStatementId(refId, true);
 	}
 
 	public Statement getByStatementId(String refId, boolean throwExceptionIfNull) {
-
-		Statement statement = getSingleResultOrNull(
-				getEntityManager().createQuery("from Statement u where u.refId=:refId")
+		Statement statement = getSingleResultOrNull(getEntityManager()
+				.createQuery("from Statement u where u.refId=:refId")
 				.setParameter("refId", refId));
 
 		if (throwExceptionIfNull && statement == null) {
-			throw new ServiceException(ErrorCodes.NOTFOUND, "Statement", "'" + refId + "'");
+			throw new ServiceException(ErrorCodes.NOTFOUND, "Statement", "'"
+					+ refId + "'");
 		}
-
 		return statement;
 	}
 
 	public Statement getByEntryNo(String entryNo, boolean throwExceptionIfNull) {
+		logger.info(">>>>>>>>>><<<<<<<<<< entryNo = " + entryNo);
+		Statement statement = null;
+		Query query = getEntityManager().createQuery(
+				"from Statement u where u.entryNo=:entryNo");
 
-		Statement statement = getSingleResultOrNull(getEntityManager()
-				.createQuery("from Statement u where u.entryNo=:entryNo")
-				.setParameter("entryNo", entryNo));
+		List<Statement> statements = getResultList(query.setParameter(
+				"entryNo", entryNo));
+
+		if (!statements.isEmpty()) {
+			statement = statements.get(0);
+			statements.remove(0);
+
+			/**
+			 * If duplicates exist, delete duplicates
+			 */
+			if (statements.size() > 0) {
+				for (Statement st : statements) {
+					delete(st);
+				}
+			}
+		}
 
 		return statement;
 	}
@@ -49,7 +68,8 @@ public class StatementDao extends BaseDao {
 	}
 
 	public int getStatementCount() {
-		Number number = getSingleResultOrNull(getEntityManager().createNativeQuery("select count(*) from statement"));
+		Number number = getSingleResultOrNull(getEntityManager()
+				.createNativeQuery("select count(*) from statement"));
 
 		return number.intValue();
 	}
@@ -61,13 +81,14 @@ public class StatementDao extends BaseDao {
 	 * @param limit
 	 * @return
 	 */
-	public List<Statement> getAllStatements(Date startDate, Date endDate, Integer offset, Integer limit) {
+	public List<Statement> getAllStatements(Date startDate, Date endDate,
+			Integer offset, Integer limit) {
 		return getAllStatements(null, startDate, endDate, offset, limit);
 
 	}
 
-	public List<Statement> getAllStatements(String memberRegistrationNo, Date startDate, Date endDate, Integer offset,
-			Integer limit) {
+	public List<Statement> getAllStatements(String memberRegistrationNo,
+			Date startDate, Date endDate, Integer offset, Integer limit) {
 
 		StringBuffer sql = new StringBuffer("FROM Statement");
 
@@ -80,7 +101,7 @@ public class StatementDao extends BaseDao {
 				sql.append(" where");
 			}
 			params.put("startDate", startDate);
-			sql.append(" postingDate>:startDate");
+			sql.append(" postingDate>=:startDate");
 		}
 
 		if (endDate != null) {
@@ -91,7 +112,7 @@ public class StatementDao extends BaseDao {
 				sql.append(" and");
 			}
 			params.put("endDate", endDate);
-			sql.append(" postingDate<:endDate");
+			sql.append(" postingDate<=:endDate");
 		}
 
 		if (memberRegistrationNo != null && !memberRegistrationNo.equals("ALL")) {
@@ -120,7 +141,8 @@ public class StatementDao extends BaseDao {
 		// .setParameter("regNo", memberRegistrationNo), offset, limit);
 	}
 
-	public Integer getStatementCount(String memberNo, Date startDate, Date endDate) {
+	public Integer getStatementCount(String memberNo, Date startDate,
+			Date endDate) {
 		Number count = null;
 
 		StringBuffer sql = new StringBuffer("select count(*) from statement");
@@ -134,7 +156,7 @@ public class StatementDao extends BaseDao {
 				sql.append(" where");
 			}
 			params.put("startDate", startDate);
-			sql.append(" postingDate>:startDate");
+			sql.append(" postingDate>=:startDate");
 		}
 
 		if (endDate != null) {
@@ -145,7 +167,7 @@ public class StatementDao extends BaseDao {
 				sql.append(" and");
 			}
 			params.put("endDate", endDate);
-			sql.append(" postingDate<:endDate");
+			sql.append(" postingDate<=:endDate");
 		}
 
 		if (memberNo != null && !memberNo.equals("ALL")) {
@@ -168,9 +190,80 @@ public class StatementDao extends BaseDao {
 		return count.intValue();
 	}
 
-	public StatementDto getBalanceCD(String memberNo, Date startDate) {
+	public Double getTotalDebit(String memberNo, Date startDate) {
+		StringBuffer sql = new StringBuffer(
+				"select sum(amount) from statement where amount < 0 ");
+		System.err.println("Getting total debit for " + memberNo);
+		boolean isFirstParam = false;
+		Map<String, Object> params = new HashMap<>();
 
-		// System.err.println("MemberNo = "+memberNo+" startDate="+startDate);
+		if (startDate != null) {
+			if (isFirstParam) {
+				isFirstParam = false;
+				sql.append(" where");
+			} else {
+				sql.append(" and ");
+			}
+			params.put("startDate", startDate);
+			sql.append(" postingDate>=:startDate");
+		}
+
+		if (memberNo != null && !memberNo.equals("ALL")) {
+			if (isFirstParam) {
+				isFirstParam = false;
+				sql.append(" where ");
+			} else {
+				sql.append(" and ");
+			}
+			params.put("regNo", memberNo);
+			sql.append(" customerNo=:regNo");
+		}
+		Query query = getEntityManager().createNativeQuery(sql.toString());
+		for (String key : params.keySet()) {
+			query.setParameter(key, params.get(key));
+		}
+
+		Double totalDebit = getSingleResultOrNull(query);
+		return totalDebit;
+	}
+
+	public Double getTotalCredit(String memberNo, Date startDate) {
+		System.err.println("Getting total credit for " + memberNo);
+		StringBuffer sql = new StringBuffer(
+				"select sum(amount) from statement where amount > 0 ");
+		boolean isFirstParam = false;
+		Map<String, Object> params = new HashMap<>();
+
+		if (startDate != null) {
+			if (isFirstParam) {
+				isFirstParam = false;
+				sql.append(" where");
+			} else {
+				sql.append(" and ");
+			}
+			params.put("startDate", startDate);
+			sql.append(" postingDate>=:startDate");
+		}
+
+		if (memberNo != null && !memberNo.equals("ALL")) {
+			if (isFirstParam) {
+				isFirstParam = false;
+				sql.append(" where");
+			} else {
+				sql.append(" and ");
+			}
+			params.put("regNo", memberNo);
+			sql.append(" customerNo=:regNo");
+		}
+		Query query = getEntityManager().createNativeQuery(sql.toString());
+		for (String key : params.keySet()) {
+			query.setParameter(key, params.get(key));
+		}
+		Double totalDebit = getSingleResultOrNull(query);
+		return totalDebit;
+	}
+
+	public StatementDto getOpeningBalance(String memberNo, Date startDate) {
 		String sql = "select sum(amount) from statement where customerNo=:memberNo ";
 		if (startDate != null) {
 			sql = sql + "and postingDate<:startDate";
@@ -182,14 +275,12 @@ public class StatementDao extends BaseDao {
 		if (startDate != null) {
 			query.setParameter("startDate", startDate);
 		}
-
 		List<Double> rows = getResultList(query);
-
 		StatementDto dto = new StatementDto();
 		dto.setCustomerNo(memberNo);
 		dto.setDueDate(startDate);
-		dto.setDescription("Balance C/D");
-		dto.setDocumentType("Balance C/D");
+		dto.setDescription("Balance");
+		dto.setDocumentType("Balance");
 		dto.setPostingDate(startDate);
 
 		for (Double value : rows) {

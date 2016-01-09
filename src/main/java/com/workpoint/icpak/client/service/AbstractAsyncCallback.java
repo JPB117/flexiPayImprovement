@@ -1,6 +1,7 @@
 package com.workpoint.icpak.client.service;
 
 import com.google.gwt.http.client.Response;
+import com.google.gwt.user.client.Window;
 import com.gwtplatform.dispatch.rest.client.RestCallback;
 import com.workpoint.icpak.client.ui.events.ClientDisconnectionEvent;
 import com.workpoint.icpak.client.ui.events.ErrorEvent;
@@ -11,7 +12,6 @@ public abstract class AbstractAsyncCallback<T> implements RestCallback<T> {
 
 	@Override
 	public void onFailure(Throwable caught) {
-
 		// if (caught instanceof ServiceException) {
 		// Window.alert("On Error SE >> " + caught.getClass());
 		// String msg = "Cannot connect to server...";
@@ -59,23 +59,27 @@ public abstract class AbstractAsyncCallback<T> implements RestCallback<T> {
 		// message = caught.getClass() + "\n" + caught.getCause().getMessage();
 		// }
 		//
-		
+
 		AppContext.getEventBus().fireEvent(new ProcessingCompletedEvent());
-		//AppContext.getEventBus().fireEvent(new ErrorEvent(message, 0L));
+		// AppContext.getEventBus().fireEvent(new ErrorEvent(message, 0L));
 	}
 
 	@Override
 	public void setResponse(Response aResponse) {
 		int code = aResponse.getStatusCode();
 		AppContext.getEventBus().fireEvent(new ProcessingCompletedEvent());
-		
+
 		if (code == 200 || code == 202 || code == 203 || code == 204
 				|| code == 304) {
 			return;
 		}
+
+		AppContext.getEventBus().fireEvent(
+				new ErrorEvent(code, aResponse.getStatusText()));
+
+		boolean isContinue = handleCustomError(aResponse);
 		
-		boolean isContinue =  handleCustomError(aResponse);
-		if(!isContinue){
+		if (!isContinue) {
 			return;
 		}
 
@@ -97,7 +101,7 @@ public abstract class AbstractAsyncCallback<T> implements RestCallback<T> {
 			return;
 		}
 
-		if (code == 408 || code==0) {
+		if (code == 408 || code == 0) {
 			// HTTP Request Timeout
 			AppContext.getEventBus().fireEvent(new ProcessingCompletedEvent());
 			AppContext.getEventBus()

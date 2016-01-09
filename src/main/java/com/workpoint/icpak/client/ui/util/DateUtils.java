@@ -25,6 +25,7 @@ public class DateUtils {
 	static String MonthTime = "MMM d, hh:mm a";
 	static String shortTimeStamp = "yyyy-MM-dd";
 	static String fullTimeStamp = "yyyy-MM-dd hh:mm:ss";
+	static String ReadableTimeStamp = "dd/MM/yyyy hh:mm a";
 
 	public static final DateTimeFormat CREATEDFORMAT = DateTimeFormat
 			.getFormat(createdpattern);
@@ -54,6 +55,8 @@ public class DateUtils {
 			.getFormat(monthOnlyPattern);
 	public static final DateTimeFormat FULLTIMESTAMP = DateTimeFormat
 			.getFormat(fullTimeStamp);
+	public static final DateTimeFormat READABLETIMESTAMP = DateTimeFormat
+			.getFormat(ReadableTimeStamp);
 
 	static long dayInMillis = 24 * 3600 * 1000;
 	static long hourInMillis = 3600 * 1000;
@@ -114,6 +117,13 @@ public class DateUtils {
 		long now = today.getTime();
 		long created = createdDate.getTime();
 		long diff = now - created;
+
+		if (diff < 0) {
+			// Date in th future
+			int days = (int) (diff / dayInMillis);
+
+			return days + "";
+		}
 
 		StringBuffer buff = new StringBuffer();
 
@@ -276,6 +286,11 @@ public class DateUtils {
 			CalendarUtil.setToFirstDayOfMonth(today);
 			return setToMidnight(today);
 
+		case LASTYEAR:
+			CalendarUtil.addMonthsToDate(today, -(today.getMonth() * 2));
+			CalendarUtil.setToFirstDayOfMonth(today);
+			return setToMidnight(today);
+
 		default:
 			return today;
 
@@ -286,8 +301,7 @@ public class DateUtils {
 		String todayText = SHORTTIMESTAMP.format(passedDate);
 		return SHORTTIMESTAMP.parse(todayText);
 	}
-	
-	
+
 	public static String format(Date date, DateTimeFormat formatter) {
 		if (date == null) {
 			return null;
@@ -299,7 +313,7 @@ public class DateUtils {
 		if (date == null || date.isEmpty()) {
 			return null;
 		}
-		
+
 		try {
 			return formatter.parse(date);
 		} catch (Exception e) {

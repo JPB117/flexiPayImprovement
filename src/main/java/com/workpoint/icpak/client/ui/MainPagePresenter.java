@@ -103,7 +103,7 @@ public class MainPagePresenter extends
 	@Override
 	public void onError(final ErrorEvent event) {
 		// addToPopupSlot(null);
-		Window.alert(event.getMessage() + "---" + event.getSource());
+		// Window.alert(event.getMessage() + "---" + event.getSource());
 
 		errorFactory.get(new ServiceCallback<ErrorPresenter>() {
 			@Override
@@ -122,7 +122,6 @@ public class MainPagePresenter extends
 	@Override
 	public void setInSlot(Object slot, PresenterWidget<?> content) {
 		super.setInSlot(slot, content);
-
 		if (slot == CONTENT_SLOT) {
 			if (content != null && content instanceof AdminHomePresenter) {
 				fireEvent(new AdminPageLoadEvent(true));

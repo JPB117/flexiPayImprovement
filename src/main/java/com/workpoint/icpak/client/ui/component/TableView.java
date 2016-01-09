@@ -8,7 +8,8 @@ import java.util.List;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.HasKeyDownHandlers;
+import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
@@ -16,6 +17,8 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Widget;
+import com.workpoint.icpak.client.ui.frontmember.model.MemberCategory;
+import com.workpoint.icpak.shared.model.Listable;
 
 public class TableView extends Composite {
 
@@ -41,29 +44,46 @@ public class TableView extends Composite {
 	HTMLPanel panelPaging;
 	@UiField
 	ActionLink aDownloadPdf;
-
+	@UiField
+	ActionLink aDownloadXls;
+	@UiField
+	TextField txtSearch;
 	@UiField
 	ActionLink aFilter;
-
 	@UiField
 	HTMLPanel panelSearch;
 	@UiField
 	HTMLPanel panelDates;
 	@UiField
 	HTMLPanel panelActionButtons;
-
 	@UiField
 	DateField dtStartDate;
 	@UiField
 	DateField dtEndDate;
+	@UiField
+	HTMLPanel panelTowns;
+	@UiField
+	DropDownList<Towns> listTowns;
+	@UiField
+	DropDownList<MemberCategory> listMemberCategory;
+	@UiField
+	DivElement divTownList;
+	@UiField
+	DivElement divMemberCategory;
 
 	private boolean isAutoNumber = true;
 	private int count = 0;
+
+	public int getCount() {
+		return count;
+	}
 
 	public TableView() {
 		initWidget(uiBinder.createAndBindUi(this));
 		setSearchSectionVisible(false);
 		setDatesVisible(false);
+		setTownListVisible(false);
+		setMemberCategoryVisible(false);
 	}
 
 	public void setHeaders(List<String> names) {
@@ -86,6 +106,26 @@ public class TableView extends Composite {
 		}
 	}
 
+	public void setTowns(List<Towns> townNames) {
+		listTowns.setItems(townNames, "All Towns");
+	}
+
+	public void setMemberCategories(List<MemberCategory> categories) {
+		listMemberCategory.setItems(categories, "All Members");
+	}
+
+	public DropDownList<Towns> getTowns() {
+		return listTowns;
+	}
+
+	public DropDownList<MemberCategory> getCategoryDropdown() {
+		return listMemberCategory;
+	}
+
+	public String getCategorySelected() {
+		return listMemberCategory.getValue().getName();
+	}
+
 	public void setActionsVisible(boolean show) {
 		if (show) {
 			panelActionButtons.setVisible(true);
@@ -104,7 +144,6 @@ public class TableView extends Composite {
 
 	public void setHeaders(List<String> tdStyles, List<String> names) {
 		List<Widget> widgets = new ArrayList<Widget>();
-
 		for (String name : names) {
 			InlineLabel label = new InlineLabel(name);
 			widgets.add(label);
@@ -237,9 +276,27 @@ public class TableView extends Composite {
 
 	public void setSearchSectionVisible(Boolean status) {
 		if (status) {
+			tblContainer.removeStyleName("border-top");
 			divSearch.removeClassName("hide");
 		} else {
+			tblContainer.addStyleName("border-top");
 			divSearch.addClassName("hide");
+		}
+	}
+
+	public void setTownListVisible(Boolean status) {
+		if (status) {
+			divTownList.removeClassName("hide");
+		} else {
+			divTownList.addClassName("hide");
+		}
+	}
+
+	public void setMemberCategoryVisible(Boolean status) {
+		if (status) {
+			divMemberCategory.removeClassName("hide");
+		} else {
+			divMemberCategory.addClassName("hide");
 		}
 	}
 
@@ -271,6 +328,14 @@ public class TableView extends Composite {
 
 	public void setAutoNumber(boolean isAutoNumber) {
 		this.isAutoNumber = isAutoNumber;
+	}
+
+	public void createFooter(RowWidget footer) {
+		panelFooter.add(footer);
+	}
+
+	public void clearFooter(){
+		panelFooter.clear();
 	}
 
 	public void setFooter(List<Widget> widgets) {
@@ -336,11 +401,46 @@ public class TableView extends Composite {
 		dtEndDate.setValue(endDate);
 	}
 
-	public HasClickHandlers getDownloadPdf() {
+	public ActionLink getDownloadPdf() {
 		return aDownloadPdf;
 	}
 
-	public HasClickHandlers getFilterButton() {
+	public ActionLink getDownloadXls() {
+		return aDownloadXls;
+	}
+
+	public ActionLink getFilterButton() {
 		return aFilter;
+	}
+
+	public String getSearchValue() {
+		return txtSearch.getValue();
+	}
+
+	public HasValueChangeHandlers<String> getSearchValueChangeHander() {
+		return txtSearch;
+	}
+
+	public HasKeyDownHandlers getSearchKeyDownHandler() {
+		return txtSearch;
+	}
+
+	public class Towns implements Listable {
+		private String townName;
+
+		public Towns(String townName) {
+			this.townName = townName;
+		}
+
+		@Override
+		public String getName() {
+			return townName;
+		}
+
+		@Override
+		public String getDisplayName() {
+			return townName;
+		}
+
 	}
 }

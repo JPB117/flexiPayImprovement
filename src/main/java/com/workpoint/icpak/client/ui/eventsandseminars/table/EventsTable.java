@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.HasKeyDownHandlers;
+import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.CheckBox;
@@ -37,11 +39,12 @@ public class EventsTable extends Composite {
 		List<TableHeader> th = new ArrayList<TableHeader>();
 		th.add(new TableHeader("Dates"));
 		th.add(new TableHeader("Event Name"));
+		th.add(new TableHeader("Event Type"));
 		th.add(new TableHeader("Location"));
 		th.add(new TableHeader("CPD Hours"));
 		th.add(new TableHeader("Total Delegates"));
-		th.add(new TableHeader("Paid Amount(Kshs.)"));
-		th.add(new TableHeader("Un-Paid Amount(Kshs.)"));
+		th.add(new TableHeader("Total Paid"));
+		th.add(new TableHeader("Total UnPaid"));
 
 		tblView.setTableHeaders(th);
 	}
@@ -62,9 +65,16 @@ public class EventsTable extends Composite {
 	public void setAutoNumber(boolean autoNumber) {
 		tblView.setAutoNumber(false);
 	}
-	
-	public PagingPanel getPagingPanel(){
+
+	public PagingPanel getPagingPanel() {
 		return tblView.getPagingPanel();
 	}
 
+	public String getSearchValue() {
+		return tblView.getSearchValue();
+	}
+
+	public HasValueChangeHandlers<String> getSearchKeyDownHander() {
+		return tblView.getSearchValueChangeHander();
+	}
 }

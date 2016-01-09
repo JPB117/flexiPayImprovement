@@ -1,6 +1,9 @@
 package com.icpak.rest.dao.helper;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,13 +16,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.xml.parsers.FactoryConfigurationError;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
+import org.xml.sax.SAXException;
 
+import com.amazonaws.util.json.JSONException;
+import com.amazonaws.util.json.JSONObject;
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import com.icpak.rest.dao.BookingsDao;
 import com.icpak.rest.dao.EventsDao;
+import com.icpak.rest.dao.InvoiceDao;
 import com.icpak.rest.dao.InvoiceDaoHelper;
 import com.icpak.rest.dao.MemberDao;
 import com.icpak.rest.dao.UsersDao;
@@ -39,37 +49,42 @@ import com.icpak.rest.utils.DocumentHTMLMapper;
 import com.icpak.rest.utils.DocumentLine;
 import com.icpak.rest.utils.EmailServiceHelper;
 import com.icpak.rest.utils.HTMLToPDFConvertor;
+import com.itextpdf.text.DocumentException;
+import com.workpoint.icpak.server.integration.lms.LMSIntegrationUtil;
+import com.workpoint.icpak.server.integration.lms.LMSResponse;
+import com.workpoint.icpak.shared.model.EventType;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.InvoiceLineDto;
+import com.workpoint.icpak.shared.model.events.AttendanceStatus;
 import com.workpoint.icpak.shared.model.events.BookingDto;
 import com.workpoint.icpak.shared.model.events.ContactDto;
+import com.workpoint.icpak.shared.model.events.CourseRegDetailsPojo;
 import com.workpoint.icpak.shared.model.events.DelegateDto;
 import com.workpoint.icpak.shared.model.events.MemberBookingDto;
 
 @Transactional
 public class BookingsDaoHelper {
 
+	Logger logger = Logger.getLogger(BookingsDaoHelper.class);
+
 	@Inject
 	BookingsDao dao;
 	@Inject
 	UsersDao userDao;
-
 	@Inject
 	MemberDao memberDao;
 	@Inject
 	MemberDaoHelper memberDaoHelper;
-
 	@Inject
 	EventsDao eventDao;
-
 	@Inject
 	CPDDaoHelper cpdDao;
-
 	@Inject
 	InvoiceDaoHelper invoiceHelper;
-
 	@Inject
 	TransactionDaoHelper trxHelper;
+	@Inject
+	InvoiceDao invoiceDao;
 
 	@Inject
 	SMSIntegration smsIntergration;
@@ -79,19 +94,20 @@ public class BookingsDaoHelper {
 
 	@Inject
 	AccommodationsDaoHelper accommodationsDaoHelper;
-	
-	Logger log = Logger.getLogger(BookingsDaoHelper.class);
 
-	public List<BookingDto> getAllBookings(String uriInfo, String eventId, Integer offset, Integer limit) {
+	SimpleDateFormat formatter = new SimpleDateFormat("MMM d Y");
 
+	public List<BookingDto> getAllBookings(String uriInfo, String eventId, Integer offset, Integer limit,
+			String searchTerm) {
 		List<Booking> list = null;
-		if (eventId != null) {
-			list = dao.getAllBookings(eventId, offset, limit);
+		List<BookingDto> clones = new ArrayList<>();
+
+		if (searchTerm != null) {
+			list = dao.getAllBookings(eventId, offset, limit, searchTerm);
 		} else {
-			list = dao.getAllBookings(offset, limit);
+			list = dao.getAllBookings(eventId, offset, limit);
 		}
 
-		List<BookingDto> clones = new ArrayList<>();
 		for (Booking booking : list) {
 			BookingDto dto = booking.toDto();
 			dto.setUri(uriInfo + "/" + dto.getRefId());
@@ -102,8 +118,14 @@ public class BookingsDaoHelper {
 		return clones;
 	}
 
+	public List<DelegateDto> getAllDelegates(String uriInfo, String eventId, Integer offset, Integer limit,
+			String searchTerm) {
+		List<DelegateDto> delegateDtos = dao.getAllDelegates(eventId, offset, limit, searchTerm);
+		return delegateDtos;
+	}
+
 	public Integer getCount(String eventId) {
-		return dao.getBookingCount(eventId);
+		return dao.getDelegateCount(eventId);
 	}
 
 	public BookingDto getBookingById(String eventId, String bookingId) {
@@ -116,12 +138,15 @@ public class BookingsDaoHelper {
 	public BookingDto createBooking(String eventId, BookingDto dto) {
 		Event event = eventDao.getByEventId(eventId);
 
-		Booking booking = new Booking();
+		Booking booking = null;
 		if (dto.getRefId() != null) {
 			booking = dao.getByBookingId(dto.getRefId());
+		} else {
+			booking = new Booking();
 		}
-		
+
 		booking.setEvent(event);
+
 		if (dto.getContact() != null) {
 			Contact poContact = booking.getContact();
 			if (poContact == null) {
@@ -140,10 +165,7 @@ public class BookingsDaoHelper {
 		if (dtos != null)
 			for (DelegateDto delegateDto : dtos) {
 				Delegate d = initDelegate(delegateDto, event);
-				// Set Booking
-				// d.setBooking(booking);
 				delegates.add(d);
-				// dao.save(d);
 				total += d.getAmount();
 			}
 		booking.setAmountDue(total);// Total
@@ -151,9 +173,9 @@ public class BookingsDaoHelper {
 		dao.createBooking(booking);
 
 		deleteExistingInvoices(booking.getRefId());
-
-		sendProInvoice(booking);
-		sendDelegateSMS(booking);
+		InvoiceDto invoice = generateInvoice(booking);
+		dto.setInvoiceRef(invoice.getRefId());
+		dto.setRefId(eventId);
 
 		// Copy into dto
 		dto.setRefId(booking.getRefId());
@@ -162,97 +184,128 @@ public class BookingsDaoHelper {
 			dto.getDelegates().get(i).setRefId(delegate.getRefId());
 			dto.getDelegates().get(i).setErn(delegate.getErn());
 		}
-
-		dto.setInvoiceRef(dao.getInvoiceRef(booking.getRefId()));
-
 		return dto;
 	}
 
 	private void deleteExistingInvoices(String bookingId) {
 		if (bookingId == null)
 			return;
-
 		dao.deleteAllBookingInvoice(bookingId);
 	}
 
-	private void sendProInvoice(Booking booking) {
-		InvoiceDto invoice = generateInvoice(booking);
-		Event event = booking.getEvent();
-		String subject = booking.getEvent().getName() + "' Event Registration";
-		SimpleDateFormat formatter = new SimpleDateFormat("MMM d Y");
+	public byte[] generateInvoicePdf(String bookingRefId) throws FileNotFoundException, IOException, SAXException,
+			ParserConfigurationException, FactoryConfigurationError, DocumentException {
+		assert bookingRefId != null;
+		Booking bookingInDb = dao.findByRefId(bookingRefId, Booking.class);
+		InvoiceDto invoice = invoiceHelper.getInvoice(dao.getInvoiceRef(bookingRefId));
+		// Generate Email Document to be used to Map to HTML
+		Map<String, Object> emailValues = generateEmailValues(invoice, bookingInDb);
+		byte[] invoicePdf = generatePDFDocument(invoice, emailValues);
+
+		return invoicePdf;
+	}
+
+	public void sendProInvoice(String bookingRefId) {
+		assert bookingRefId != null;
+		Booking bookingInDb = dao.findByRefId(bookingRefId, Booking.class);
+		InvoiceDto invoice = invoiceHelper.getInvoice(dao.getInvoiceRef(bookingRefId));
+
+		String subject = bookingInDb.getEvent().getName() + "' Event Registration";
+
+		// Generate Email Document to be used to Map to HTML
+		Map<String, Object> emailValues = generateEmailValues(invoice, bookingInDb);
+		Doc emailDocument = new Doc(emailValues);
+
 		try {
-			Map<String, Object> emailValues = new HashMap<String, Object>();
-			emailValues.put("companyName", invoice.getCompanyName());
-			emailValues.put("companyAddress", invoice.getCompanyAddress());
-			emailValues.put("companyLocation", booking.getContact().getPhysicalAddress());
-			emailValues.put("contactPhone", booking.getContact().getPhysicalAddress());
-
-			emailValues.put("quoteNo", invoice.getDocumentNo());
-			emailValues.put("date", invoice.getDate());
-			emailValues.put("firstName", invoice.getContactName());
-			emailValues.put("eventName", booking.getEvent().getName());
-			emailValues.put("eventStartDate", formatter.format(booking.getEvent().getStartDate()));
-			emailValues.put("DocumentURL", settings.getApplicationPath());
-			emailValues.put("email", booking.getContact().getEmail());
-			emailValues.put("eventId", booking.getEvent().getRefId());
-			emailValues.put("bookingId", booking.getRefId());
-			Doc emailDocument = new Doc(emailValues);
-
-			// Collection of Delegates
-			Collection<Delegate> delegates = booking.getDelegates();
-			int counter = 0;
-
-			for (Delegate delegate : delegates) {
-				counter++;
-				emailValues.put("counter", counter);
-				emailValues.put("delegateNames", delegate.getSurname() + " " + delegate.getOtherNames());
-
-				if (delegate.getMemberRegistrationNo() != null) {
-					emailValues.put("memberType", "Member");
-				} else {
-					emailValues.put("memberType", "Non-Member");
-				}
-				emailValues.put("ernNo", delegate.getErn());
-
-				emailValues.put("accomodationName", (delegate.getAccommodation() == null ? "None"
-						: delegate.getAccommodation().getHotel() + " " + delegate.getAccommodation().getNights()));
-
-				DocumentLine docLine = new DocumentLine("accomadationDetails", emailValues);
-				emailDocument.addDetail(docLine);
-			}
-
-			Map<String, Object> line = new HashMap<String, Object>();
-			Doc proformaDocument = new Doc(emailValues);
-			for (InvoiceLineDto dto : invoice.getLines()) {
-				line.put("description", dto.getDescription());
-				line.put("unitPrice", dto.getUnitPrice());
-				line.put("amount", dto.getTotalAmount());
-				proformaDocument.addDetail(new DocumentLine("invoiceDetails", line));
-			}
-			emailValues.put("totalAmount", invoice.getInvoiceAmount());
-
-			// PDF Invoice Generation
-			InputStream inv = EmailServiceHelper.class.getClassLoader().getResourceAsStream("proforma-invoice.html");
-			String invoiceHTML = IOUtils.toString(inv);
-			byte[] invoicePDF = new HTMLToPDFConvertor().convert(proformaDocument, new String(invoiceHTML));
+			byte[] invoicePdf = generatePDFDocument(invoice, emailValues);
 			Attachment attachment = new Attachment();
-			attachment.setAttachment(invoicePDF);
-			attachment.setName("ProForma Invoice_" + booking.getContact().getContactName() + ".pdf");
+			attachment.setAttachment(invoicePdf);
+			attachment.setName("ProForma Invoice_" + bookingInDb.getContact().getContactName() + ".pdf");
 
 			// Email Template parse and map variables
 			InputStream is = EmailServiceHelper.class.getClassLoader().getResourceAsStream("booking-email.html");
 			String html = IOUtils.toString(is);
 			html = new DocumentHTMLMapper().map(emailDocument, html);
 
-			EmailServiceHelper.sendEmail(html, "RE: ICPAK '" + subject, Arrays.asList(booking.getContact().getEmail()),
-					Arrays.asList(booking.getContact().getContactName()), attachment);
+			EmailServiceHelper.sendEmail(html, "RE: ICPAK '" + subject,
+					Arrays.asList(bookingInDb.getContact().getEmail()),
+					Arrays.asList(bookingInDb.getContact().getContactName()), attachment);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
 
-		String trxRef = trxHelper.charge(booking.getMemberId(), booking.getBookingDate(), subject, event.getStartDate(),
-				invoice.getInvoiceAmount(), "Booking #" + booking.getId(), invoice.getRefId());
+	private byte[] generatePDFDocument(InvoiceDto invoice, Map<String, Object> emailValues)
+			throws FileNotFoundException, IOException, SAXException, ParserConfigurationException,
+			FactoryConfigurationError, DocumentException {
+
+		String documentNo = invoice.getDocumentNo();
+
+		List<InvoiceLineDto> invoiceLines = invoiceDao.getByLinesByDocumentNo(documentNo);
+
+		Doc proformaDocument = new Doc(emailValues);
+
+		for (InvoiceLineDto dto : invoiceLines) {
+			Map<String, Object> line = new HashMap<>();
+			line.put("description", dto.getDescription());
+			line.put("quantity", NumberFormat.getNumberInstance().format(dto.getQuantity()));
+			line.put("unitPrice", NumberFormat.getNumberInstance().format(dto.getUnitPrice()));
+			line.put("amount", NumberFormat.getNumberInstance().format(dto.getTotalAmount()));
+			logger.warn("InvoiceDto: " + dto.getRefId() + " | " + dto.getDescription() + " | " + dto.getTotalAmount());
+			proformaDocument.addDetail(new DocumentLine("invoiceDetails", line));
+		}
+
+		emailValues.put("totalAmount", NumberFormat.getNumberInstance().format(invoice.getInvoiceAmount()));
+		logger.warn("Values = " + proformaDocument);
+
+		// PDF Invoice Generation
+		InputStream inv = EmailServiceHelper.class.getClassLoader().getResourceAsStream("proforma-invoice.html");
+		String invoiceHTML = IOUtils.toString(inv);
+
+		byte[] invoicePDF = new HTMLToPDFConvertor().convert(proformaDocument, new String(invoiceHTML));
+
+		return invoicePDF;
+	}
+
+	public Map<String, Object> generateEmailValues(InvoiceDto invoice, Booking bookingInDb) {
+		Map<String, Object> emailValues = new HashMap<String, Object>();
+		emailValues.put("companyName", invoice.getCompanyName());
+		emailValues.put("companyAddress", invoice.getCompanyAddress());
+		emailValues.put("companyLocation", bookingInDb.getContact().getPhysicalAddress());
+		emailValues.put("contactPhone", bookingInDb.getContact().getPhysicalAddress());
+
+		emailValues.put("quoteNo", invoice.getDocumentNo());
+		emailValues.put("date", invoice.getDate());
+		emailValues.put("firstName", invoice.getContactName());
+		emailValues.put("eventName", bookingInDb.getEvent().getName());
+		emailValues.put("eventStartDate", formatter.format(bookingInDb.getEvent().getStartDate()));
+		emailValues.put("DocumentURL", settings.getApplicationPath());
+		emailValues.put("email", bookingInDb.getContact().getEmail());
+		emailValues.put("eventId", bookingInDb.getEvent().getRefId());
+		emailValues.put("bookingId", bookingInDb.getRefId());
+		Doc emailDocument = new Doc(emailValues);
+
+		// Collection of Delegates
+		Collection<Delegate> delegates = bookingInDb.getDelegates();
+		int counter = 0;
+
+		for (Delegate delegate : delegates) {
+			counter++;
+			emailValues.put("counter", counter);
+			emailValues.put("delegateNames", delegate.getSurname() + " " + delegate.getOtherNames());
+
+			emailValues.put("memberType", (delegate.getMemberRegistrationNo() == null ? "Non-Member" : "Member"));
+
+			emailValues.put("ernNo", (delegate.getErn() == null ? "----" : delegate.getErn()));
+
+			emailValues.put("accomodationName", (delegate.getAccommodation() == null ? "None"
+					: delegate.getAccommodation().getHotel() + " " + delegate.getAccommodation().getNights()));
+			DocumentLine docLine = new DocumentLine("accomadationDetails", emailValues);
+			emailDocument.addDetail(docLine);
+		}
+
+		return emailValues;
 	}
 
 	public InvoiceDto generateInvoice(Booking booking) {
@@ -302,7 +355,8 @@ public class BookingsDaoHelper {
 				memberInvoice.setQuantity(qty);
 				memberInvoice.setUnitPrice(delegate.getAmount());
 				memberInvoice.setTotalAmount(qty * delegate.getAmount());
-				amount += delegate.getAmount();//memberInvoice.getTotalAmount();
+
+				amount += delegate.getAmount();// memberInvoice.getTotalAmount();
 			} else {
 				String description = "%s - %s fees for %d non-members: %s";
 				int qty = nonMemberInvoice.getQuantity() + 1;
@@ -317,7 +371,7 @@ public class BookingsDaoHelper {
 				nonMemberInvoice.setQuantity(qty);
 				nonMemberInvoice.setUnitPrice(delegate.getAmount());
 				nonMemberInvoice.setTotalAmount(qty * delegate.getAmount());
-				amount += delegate.getAmount();//nonMemberInvoice.getTotalAmount();
+				amount += delegate.getAmount();// nonMemberInvoice.getTotalAmount();
 			}
 
 			if (delegate.getAccommodation() != null) {
@@ -340,7 +394,7 @@ public class BookingsDaoHelper {
 					line.setQuantity(qty);
 					line.setUnitPrice(delegate.getAccommodation().getFee());
 					line.setTotalAmount(qty * delegate.getAccommodation().getFee());
-					amount += delegate.getAccommodation().getFee();//line.getTotalAmount();
+					amount += delegate.getAccommodation().getFee();// line.getTotalAmount();
 				} else {
 
 					InvoiceLineDto line = nonMemberRefLineMap.get(delegate.getAccommodation().getRefId());
@@ -361,11 +415,8 @@ public class BookingsDaoHelper {
 					line.setQuantity(qty);
 					line.setUnitPrice(delegate.getAccommodation().getFee());
 					line.setTotalAmount(qty * delegate.getAccommodation().getFee());
-					amount += delegate.getAccommodation().getFee();//line.getTotalAmount();
+					amount += delegate.getAccommodation().getFee();// line.getTotalAmount();
 				}
-
-				// delegate.getAccommodation().getRefId();
-
 			}
 		}
 
@@ -387,13 +438,18 @@ public class BookingsDaoHelper {
 		invoice.setContactName(booking.getContact().getContactName());
 		invoice.setPhoneNumber(booking.getContact().getTelephoneNumbers());
 		invoice.setBookingRefId(booking.getRefId());
-
 		invoice = invoiceHelper.save(invoice);
 
+		// System.err.println("Invoice RefId>>>" + invoice.getRefId());
+
+		// Create a Charge Record
+		trxHelper.charge(booking.getMemberId(), booking.getBookingDate(), event.getName() + " Event Booking",
+				event.getStartDate(), invoice.getInvoiceAmount(), "Booking #" + booking.getId(), invoice.getRefId());
 		return invoice;
 	}
 
 	public BookingDto updateBooking(String eventId, String bookingId, BookingDto dto) {
+		logger.error("==== Booking ref Id === " + bookingId);
 		dto.setRefId(bookingId);
 		return createBooking(eventId, dto);
 
@@ -430,9 +486,12 @@ public class BookingsDaoHelper {
 		// return bookingDto;
 	}
 
-	private void sendDelegateSMS(Booking booking) {
-		Event event = booking.getEvent();
-		Collection<Delegate> delegates = booking.getDelegates();
+	public void sendDelegateSMS(String bookingRefId) {
+
+		Booking bookingInDb = dao.findByRefId(bookingRefId, Booking.class);
+
+		Event event = bookingInDb.getEvent();
+		Collection<Delegate> delegates = bookingInDb.getDelegates();
 		List<Delegate> delegateList = new ArrayList<>();
 		delegateList.addAll(delegates);
 
@@ -444,13 +503,18 @@ public class BookingsDaoHelper {
 
 			if (delegate.getMemberRefId() != null) {
 				Member member = memberDao.findByRefId(delegate.getMemberRefId(), Member.class);
-				log.debug("Sending SMS to " + member.getUser().getPhoneNumber());
+				System.err.println("Sending SMS to " + member.getUser().getPhoneNumber());
 
 				if (member.getUser().getPhoneNumber() != null) {
-					smsIntergration.send(member.getUser().getPhoneNumber(), smsMemssage);
+					try {
+						smsIntergration.send(member.getUser().getPhoneNumber(), smsMemssage);
+					} catch (RuntimeException e) {
+						System.err.println("Invalid Phone Number...!");
+						e.printStackTrace();
+					}
 				}
 			} else {
-				log.debug("Non-member cannot be send sms..");
+				System.err.println("Non-member cannot be send sms..");
 			}
 		}
 
@@ -463,12 +527,12 @@ public class BookingsDaoHelper {
 		}
 
 		d.copyFrom(delegateDto);
-		// assert delegate.getMemberRegistrationNo()!=null;
 
 		if (delegateDto.getAccommodation() != null) {
 			Accommodation accommodation = dao.findByRefId(delegateDto.getAccommodation().getRefId(),
 					Accommodation.class);
 			if (accommodation != null) {
+				accommodation.setSpaces(accommodation.getSpaces() - 1);
 				d.setAccommodation(accommodation);
 				dao.save(accommodation);
 			}
@@ -476,7 +540,7 @@ public class BookingsDaoHelper {
 
 		// Event Pricing
 		Double price = event.getNonMemberPrice();
-		if (delegateDto.getMemberId() != null) {
+		if (delegateDto.getMemberNo() != null) {
 			price = event.getMemberPrice();
 		}
 
@@ -513,19 +577,35 @@ public class BookingsDaoHelper {
 		return booking.toDto();
 	}
 
-	public DelegateDto updateDelegate(String bookingId, String delegateId, DelegateDto delegateDto) {
+	public DelegateDto updateDelegate(String delegateId, DelegateDto delegateDto) {
+		logger.error("+++++ <><>>>>>>>>>>>>> UPDATE DELEGATW +++++++++++++++++");
+
+		int counter = 0;
 
 		Delegate delegate = dao.findByRefId(delegateId, Delegate.class);
+		Event event = dao.findByRefId(delegate.getBooking().getEvent().getRefId(), Event.class);
 
-		if (delegate.getMemberRefId() != null && delegate.getAttendance() != delegateDto.getAttendance()) {
+		if (delegate.getMemberRefId() != null && delegate.getAttendance() != delegateDto.getAttendance()
+				&& event.getType() != EventType.COURSE) {
 			// send and SMS
 			Member member = dao.findByRefId(delegate.getMemberRefId(), Member.class);
-			Event event = dao.findByRefId(delegateDto.getEventId(), Event.class);
-			String smsMemssage = "Dear" + " " + delegateDto.getSurname() + ",Thank you for attending the "
+			String smsMessage = "Dear" + " " + delegateDto.getSurname() + ",Thank you for attending the "
 					+ event.getName() + "." + "Your ERN No. is " + delegate.getErn();
-			smsIntergration.send(member.getUser().getPhoneNumber(), smsMemssage);
+			smsIntergration.send(member.getUser().getPhoneNumber(), smsMessage);
+		} else {
+			List<DelegateDto> delegates = new ArrayList<>();
+			delegates.add(delegate.toDto());
+			try {
+				enrolDelegateToLMS(delegates , event);
+			} catch (JSONException | IOException e) {
+				e.printStackTrace();
+			}
+
 		}
-		delegate.setAttendance(delegateDto.getAttendance());
+
+		logger.error(delegateDto.getReceiptNo() + "== RCPT NO");
+		delegate.copyFrom(delegateDto);
+
 		dao.save(delegate);
 
 		cpdDao.updateCPDFromAttendance(delegate, delegate.getAttendance());
@@ -537,4 +617,45 @@ public class BookingsDaoHelper {
 		return dao.getMemberBookings(memberRefId, offset, limit);
 	}
 
+	public void updateAccomodationEntry(Event event) {
+		Set<Accommodation> accommodations = event.getAccommodation();
+
+		for (Accommodation accommodation : accommodations) {
+			Set<Delegate> delegates = accommodation.getDelegates();
+			int spacesOccupied = delegates.size();
+			accommodation.setSpaces(accommodation.getSpaces() - spacesOccupied);
+
+			accommodationsDaoHelper.update(event.getRefId(), accommodation.getRefId(), accommodation.toDto());
+		}
+
+	}
+
+	public Integer getDelegatesCount(String eventId, String searchTerm) {
+		logger.error("== Counting delegates ===");
+		return dao.getDelegateCount(eventId, searchTerm);
+	}
+
+	public void enrolDelegateToLMS(List<DelegateDto> delegates, Event event) throws JSONException, IOException {
+		logger.info("Delgates size::" + delegates.size());
+		for (DelegateDto delegate : delegates) {
+			CourseRegDetailsPojo details = new CourseRegDetailsPojo();
+			details.setCourseId(event.getLmsCourseId() + "");
+			details.setMembershipID(delegate.getMemberNo());
+			JSONObject json = new JSONObject(details);
+			logger.info("JSON::" + json);
+			LMSResponse response = LMSIntegrationUtil.getInstance().executeLMSCall("/Course/EnrollCourse", json,
+					String.class);
+			logger.info("LMS Response::" + response.getMessage());
+			logger.info("LMS Status::" + response.getStatus());
+			delegate.setEventRefId(event.getRefId());
+			delegate.setLmsResponse(response.getMessage());
+			if (response.getStatus().equals("Success")) {
+				delegate.setAttendance(AttendanceStatus.ENROLLED);
+			}
+			String refId = delegate.getRefId();
+			logger.info("Delegate RefId::" + refId);
+			logger.info("Event RefId::" + event.getRefId());
+		}
+
+	}
 }

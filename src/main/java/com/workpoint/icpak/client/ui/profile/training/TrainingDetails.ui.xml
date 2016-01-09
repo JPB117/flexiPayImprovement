@@ -3,9 +3,10 @@
 	xmlns:d='urn:import:com.workpoint.icpak.client.ui.component' xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	<g:HTMLPanel>
 		<g:HTMLPanel styleName="row">
+			<br />
 			<div class="row">
 				<div class="col-sm-12">
-					<d:ActionLink styleName="btn btn-next btn-fill btn-primary btn-wd btn-sm"
+					<d:ActionLink styleName="btn btn-next btn-fill btn-default btn-wd btn-sm"
 						ui:field="aAdd">
 						<i class="fa fa-plus"></i>
 						Add Training

@@ -10,6 +10,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
+import com.workpoint.icpak.client.ui.util.NumberUtils;
 
 public class PagingPanel extends Composite {
 
@@ -27,13 +28,10 @@ public class PagingPanel extends Composite {
 	SpanElement spnPageEnd;
 	@UiField
 	SpanElement spnTotal;
-
 	@UiField
 	SpanElement spnTotalPages;
-
 	@UiField
 	IntegerField txtPageNo;
-
 	@UiField
 	ActionLink aNext;
 	@UiField
@@ -49,9 +47,9 @@ public class PagingPanel extends Composite {
 
 	public PagingPanel() {
 		initWidget(uiBinder.createAndBindUi(this));
-		txtPageNo.setValue(0);
-		txtPageNo.addValueChangeHandler(new ValueChangeHandler<Integer>() {
+		txtPageNo.setValue(1);
 
+		txtPageNo.addValueChangeHandler(new ValueChangeHandler<Integer>() {
 			@Override
 			public void onValueChange(ValueChangeEvent<Integer> event) {
 				int count = event.getValue();
@@ -114,10 +112,22 @@ public class PagingPanel extends Composite {
 	}
 
 	private void setPageDetails() {
-		spnOffset.setInnerText(config.getOffset() + "");
-		spnPageEnd.setInnerText(config.getPageEnd() + "");
-		spnTotal.setInnerText(config.getTotal() + "");
-		spnTotalPages.setInnerText(config.getPages() + "");
+		spnOffset.setInnerText(NumberUtils.NUMBERFORMAT.format(config
+				.getOffset() + 1) + "");
+		spnPageEnd.setInnerText(NumberUtils.NUMBERFORMAT.format(config
+				.getPageEnd()) + "");
+		spnTotal.setInnerText(NumberUtils.NUMBERFORMAT.format(config.getTotal())
+				+ "");
+		spnTotalPages.setInnerText(NumberUtils.NUMBERFORMAT.format(config
+				.getPages()) + "");
+
+		if (config.getPages() == 1) {
+			aNext.addStyleName("hide");
+			aLastPage.addStyleName("hide");
+		} else {
+			aNext.removeStyleName("hide");
+			aLastPage.removeStyleName("hide");
+		}
 	}
 
 	protected void move(int idx) {
@@ -126,29 +136,29 @@ public class PagingPanel extends Composite {
 			// previous
 			if (config.hasPrevious()) {
 				config.previous();
-//				ankaPanel.getWidget(widgetIdx).removeStyleName("active");
-//				ankaPanel.getWidget(widgetIdx - 1).addStyleName("active");
+				// ankaPanel.getWidget(widgetIdx).removeStyleName("active");
+				// ankaPanel.getWidget(widgetIdx - 1).addStyleName("active");
 				load(config.getOffset());
 			}
 		} else if (idx == -1) {
 			// Next
 			if (config.hasNext()) {
 				config.next();
-//				ankaPanel.getWidget(widgetIdx).removeStyleName("active");
-//				ankaPanel.getWidget(widgetIdx + 1).addStyleName("active");
+				// ankaPanel.getWidget(widgetIdx).removeStyleName("active");
+				// ankaPanel.getWidget(widgetIdx + 1).addStyleName("active");
 				load(config.getOffset());
 			}
 		} else {
-			if(idx==config.getPages()){
-				//move to last
+			if (idx == config.getPages()) {
+				// move to last
 				load(config.last());
-			}else{
+			} else {
 				config.setPage(idx);
 				load(config.getOffset());
 			}
-//			ankaPanel.getWidget(widgetIdx).removeStyleName("active");
-//			ankaPanel.getWidget(idx + 1).addStyleName("active");
-			
+			// ankaPanel.getWidget(widgetIdx).removeStyleName("active");
+			// ankaPanel.getWidget(idx + 1).addStyleName("active");
+
 		}
 
 		txtPageNo.setValue(config.getCurrentPage());

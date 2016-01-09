@@ -4,15 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.HasKeyDownHandlers;
+import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
+import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.PagingPanel;
 import com.workpoint.icpak.client.ui.component.PagingTable;
 import com.workpoint.icpak.client.ui.component.TableHeader;
 import com.workpoint.icpak.client.ui.eventsandseminars.delegates.row.DelegateTableRow;
+import com.workpoint.icpak.shared.model.EventType;
 
 public class DelegatesTable extends Composite {
 
@@ -25,7 +30,6 @@ public class DelegatesTable extends Composite {
 	@UiField
 	PagingTable tblView;
 	CheckBox selected = null;
-	boolean isSalesTable = false;
 
 	public DelegatesTable() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -37,17 +41,19 @@ public class DelegatesTable extends Composite {
 
 	public void createHeader() {
 		List<TableHeader> th = new ArrayList<TableHeader>();
+		th.add(new TableHeader("Booking Date"));
+		th.add(new TableHeader("Proforma Invoice"));
+		th.add(new TableHeader("ERN No"));
+		th.add(new TableHeader("Sponsor Name"));
+		th.add(new TableHeader("Contact Names"));
+		th.add(new TableHeader("Contact Email"));
+		th.add(new TableHeader("ICPAK Member"));
 		th.add(new TableHeader("Member No"));
-		th.add(new TableHeader("Title"));
-		th.add(new TableHeader("SurNames"));
-		th.add(new TableHeader("Other Names"));
-		th.add(new TableHeader("Email"));
+		th.add(new TableHeader("Delegate Names"));
 		th.add(new TableHeader("Accomodation"));
-		th.add(new TableHeader("Total Amount"));
 		th.add(new TableHeader("Payment Status"));
 		th.add(new TableHeader("Attendance"));
-		th.add(new TableHeader("Action"));
-
+		th.add(new TableHeader("Actions"));
 		tblView.setTableHeaders(th);
 	}
 
@@ -67,9 +73,24 @@ public class DelegatesTable extends Composite {
 	public void setAutoNumber(boolean autoNumber) {
 		tblView.setAutoNumber(false);
 	}
-	
-	public PagingPanel getPagingPanel(){
+
+	public PagingPanel getPagingPanel() {
 		return tblView.getPagingPanel();
 	}
 
+	public ActionLink getDownloadPDFLink() {
+		return tblView.getDownloadPdf();
+	}
+
+	public ActionLink getDownloadXLSLink() {
+		return tblView.getDownloadXls();
+	}
+
+	public String getDelegateSearchValue() {
+		return tblView.getSearchValue();
+	}
+
+	public HasValueChangeHandlers<String> getDelegateSearchKeyDownHander() {
+		return tblView.getSearchValueChangeHander();
+	}
 }

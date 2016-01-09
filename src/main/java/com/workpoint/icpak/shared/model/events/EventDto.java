@@ -10,24 +10,24 @@ import com.workpoint.icpak.shared.model.Listable;
 import com.workpoint.icpak.shared.model.SerializableObj;
 
 /**
- * Event DTO 
+ * Event DTO
  * <p>
- * For simplicity, all dates will be transmitted as strings and parsed by corresponding recipients
- * <br/>
+ * For simplicity, all dates will be transmitted as strings and parsed by
+ * corresponding recipients <br/>
  * The utilized format for the dates is yyyy-MM-dd hh:mm:ss
- *	<p>
+ * <p>
+ * 
  * @author duggan
  *
  */
-public class EventDto extends SerializableObj implements Listable{
-
+public class EventDto extends SerializableObj implements Listable {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	private String name;
 	private String description;
-	private Integer cpdHours;
+	private Double cpdHours;
 	private String venue;
 	private String startDate;
 	private String endDate;
@@ -41,6 +41,9 @@ public class EventDto extends SerializableObj implements Listable{
 	private int delegateCount;
 	private Double totalPaid;
 	private Double totalUnpaid;
+	private Integer paidCount;
+	private Integer unPaidCount;
+	private Integer courseId;
 
 	public EventDto() {
 		accommodation = new ArrayList<AccommodationDto>();
@@ -62,11 +65,11 @@ public class EventDto extends SerializableObj implements Listable{
 		this.description = description;
 	}
 
-	public Integer getCpdHours() {
+	public Double getCpdHours() {
 		return cpdHours;
 	}
 
-	public void setCpdHours(Integer cpdHours) {
+	public void setCpdHours(Double cpdHours) {
 		this.cpdHours = cpdHours;
 	}
 
@@ -162,18 +165,18 @@ public class EventDto extends SerializableObj implements Listable{
 	public String getDisplayName() {
 		return name;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
-		if(!(obj instanceof EventDto)){
+		if (!(obj instanceof EventDto)) {
 			return false;
 		}
-		
-		EventDto other = (EventDto)obj;
-		if(other.getRefId()==null || getRefId()==null){
+
+		EventDto other = (EventDto) obj;
+		if (other.getRefId() == null || getRefId() == null) {
 			return false;
 		}
-		
+
 		return other.getRefId().equals(getRefId());
 	}
 
@@ -191,6 +194,30 @@ public class EventDto extends SerializableObj implements Listable{
 
 	public void setAssociatePrice(Double associatePrice) {
 		this.associatePrice = associatePrice;
+	}
+
+	public Integer getCourseId() {
+		return courseId;
+	}
+
+	public void setCourseId(Integer courseId) {
+		this.courseId = courseId;
+	}
+
+	public Integer getUnPaidCount() {
+		return unPaidCount;
+	}
+
+	public void setUnPaidCount(Integer unPaidCount) {
+		this.unPaidCount = unPaidCount;
+	}
+
+	public Integer getPaidCount() {
+		return paidCount;
+	}
+
+	public void setPaidCount(Integer paidCount) {
+		this.paidCount = paidCount;
 	}
 
 }

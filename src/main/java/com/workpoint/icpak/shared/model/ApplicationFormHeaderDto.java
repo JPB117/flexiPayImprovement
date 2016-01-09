@@ -1,6 +1,7 @@
 package com.workpoint.icpak.shared.model;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -20,6 +21,7 @@ public class ApplicationFormHeaderDto extends SerializableObj {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	private Title title;
 	private String applicationNo;
 	private Date date;
 	private Date created;
@@ -36,6 +38,8 @@ public class ApplicationFormHeaderDto extends SerializableObj {
 	private String address3;
 	private String telephone1;
 	private String telephone2;
+	private String mobileNumber;
+	private Date practicingCertDate;
 	private ApplicationType applicationType;
 	private String receiptNo;
 	private Date receiptDate;
@@ -105,8 +109,10 @@ public class ApplicationFormHeaderDto extends SerializableObj {
 	private String memberNo;
 	private Integer percCompletion; // Percentage completion
 	private String timezone;
-
+	private List<AttachmentDto> attachments;
 	private ApplicationStatus applicationStatus;
+	private String nextRefId;
+	private String previousRefId;
 
 	public ApplicationStatus getApplicationStatus() {
 		return applicationStatus;
@@ -808,6 +814,54 @@ public class ApplicationFormHeaderDto extends SerializableObj {
 	public void setApplicationStatus(ApplicationStatus applicationStatus) {
 		this.applicationStatus = applicationStatus;
 
+	}
+
+	public String getMobileNumber() {
+		return mobileNumber;
+	}
+
+	public void setMobileNumber(String mobileNumber) {
+		this.mobileNumber = mobileNumber;
+	}
+
+	public Date getPracticingCertDate() {
+		return practicingCertDate;
+	}
+
+	public void setPracticingCertDate(Date practicingCertDate) {
+		this.practicingCertDate = practicingCertDate;
+	}
+
+	public Title getTitle() {
+		return title;
+	}
+
+	public void setTitle(Title title) {
+		this.title = title;
+	}
+
+	public List<AttachmentDto> getAttachments() {
+		return attachments;
+	}
+
+	public void setAttachments(List<AttachmentDto> attachments) {
+		this.attachments = attachments;
+	}
+
+	public String getNextRefId() {
+		return nextRefId;
+	}
+
+	public void setNextRefId(String nextRefId) {
+		this.nextRefId = nextRefId;
+	}
+
+	public String getPreviousRefId() {
+		return previousRefId;
+	}
+
+	public void setPreviousRefId(String previousRefId) {
+		this.previousRefId = previousRefId;
 	}
 
 }

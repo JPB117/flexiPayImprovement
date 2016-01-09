@@ -10,11 +10,28 @@
 						styleName="form-control"></d:TextField>
 				</div>
 			</g:HTMLPanel>
+			<g:HTMLPanel ui:field="panelTowns">
+				<div class="col-md-3" ui:field="divTownList">
+					<d:DropDownList ui:field="listTowns" styleName="form-control"></d:DropDownList>
+				</div>
+			</g:HTMLPanel>
+			<g:HTMLPanel ui:field="panelMemberCategory">
+				<div class="col-md-3" ui:field="divMemberCategory">
+					<d:DropDownList ui:field="listMemberCategory"
+						styleName="form-control"></d:DropDownList>
+				</div>
+			</g:HTMLPanel>
 			<g:HTMLPanel ui:field="panelDates">
-				<div class="col-lg-3">
+				<div class="col-lg-2" style="margin-top:10px;">
+					<Strong>Specify Period From:</Strong>
+				</div>
+				<div class="col-lg-2" style="padding:0px;">
 					<d:DateField ui:field="dtStartDate" />
 				</div>
-				<div class="col-lg-3">
+				<div class="col-lg-1" style="margin-top: 10px;width: 4%;margin-left: 8px;">
+					<Strong style="margin-top: 10px;width:4%;margin-left:8px;">To:</Strong>
+				</div>
+				<div class="col-lg-2">
 					<d:DateField ui:field="dtEndDate" />
 				</div>
 				<div class="col-lg-1">
@@ -29,6 +46,11 @@
 					<i class="fa fa-file-pdf-o"></i>
 					Download as Pdf
 				</d:ActionLink>
+
+				<d:ActionLink ui:field="aDownloadXls" styleName="hide">
+					<i class="fa fa-file-pdf-o"></i>
+					Download as xls
+				</d:ActionLink>
 			</g:HTMLPanel>
 		</div>
 		<g:HTMLPanel styleName="table table-striped table-hover table-bordered"
@@ -38,10 +60,10 @@
 				</g:HTMLPanel>
 			</div>
 
-			<g:FlowPanel ui:field="panelBody" styleName='tbody'>
+			<g:FlowPanel ui:field="panelBody" styleName="tbody">
 			</g:FlowPanel>
 
-			<g:HTMLPanel ui:field="panelFooter" styleName='tbody'>
+			<g:HTMLPanel ui:field="panelFooter" styleName="tfoot">
 			</g:HTMLPanel>
 		</g:HTMLPanel>
 

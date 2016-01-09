@@ -2,10 +2,11 @@ package com.workpoint.icpak.shared.trx;
 
 import java.util.Date;
 
+import com.workpoint.icpak.shared.model.PaymentMode;
 import com.workpoint.icpak.shared.model.PaymentStatus;
 import com.workpoint.icpak.shared.model.SerializableObj;
 
-public class TransactionDto extends SerializableObj{
+public class TransactionDto extends SerializableObj {
 
 	/**
 	 * 
@@ -16,18 +17,18 @@ public class TransactionDto extends SerializableObj{
 	private String description;
 	private Date dueDate;
 	private Double amount;
-	private String paymentMode;
+	private PaymentMode paymentMode;
 	private PaymentStatus status;
-	
-	//MPESA
+
+	// MPESA
 	private String businessNo;
 	private String accountNo;
-	
-	//MPESA, VISA, MasterCard
+
+	// MPESA, VISA, MasterCard
 	private String trxNumber;
-	
+
 	private String documentNo;
-	
+
 	public TransactionDto() {
 	}
 
@@ -71,14 +72,6 @@ public class TransactionDto extends SerializableObj{
 		this.amount = amount;
 	}
 
-	public String getPaymentMode() {
-		return paymentMode;
-	}
-
-	public void setPaymentMode(String paymentMode) {
-		this.paymentMode = paymentMode;
-	}
-
 	public PaymentStatus getStatus() {
 		return status;
 	}
@@ -118,6 +111,13 @@ public class TransactionDto extends SerializableObj{
 	public void setDocumentNo(String documentNo) {
 		this.documentNo = documentNo;
 	}
-	
+
+	public PaymentMode getPaymentMode() {
+		return paymentMode;
+	}
+
+	public void setPaymentMode(PaymentMode paymentMode) {
+		this.paymentMode = paymentMode;
+	}
 
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.HasKeyDownHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.CheckBox;
@@ -25,23 +26,22 @@ public class MembersTable extends Composite {
 	@UiField
 	PagingTable tblView;
 	CheckBox selected = null;
-	boolean isSalesTable = false;
 
 	public MembersTable() {
 		initWidget(uiBinder.createAndBindUi(this));
 		tblView.setAutoNumber(false);
 		createHeader();
+		tblView.setSearchSectionVisible(true);
+		tblView.getDownloadPdf().setVisible(false);
 	}
 
 	public void createHeader() {
 		List<TableHeader> th = new ArrayList<TableHeader>();
 		th.add(new TableHeader("Registration Date"));
-		// th.add(new TableHeader("Member No"));
 		th.add(new TableHeader("Applicant Name"));
 		th.add(new TableHeader("Email"));
 		th.add(new TableHeader("Profile Completion"));
 		th.add(new TableHeader("Status"));
-
 		tblView.setTableHeaders(th);
 	}
 
@@ -65,4 +65,13 @@ public class MembersTable extends Composite {
 	public PagingPanel getPagingPanel() {
 		return tblView.getPagingPanel();
 	}
+
+	public String getSearchValue() {
+		return tblView.getSearchValue();
+	}
+
+	public HasKeyDownHandlers getSearchKeyDownHandler() {
+		return tblView.getSearchKeyDownHandler();
+	}
+
 }

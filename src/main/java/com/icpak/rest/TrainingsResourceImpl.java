@@ -22,13 +22,14 @@ import com.wordnik.swagger.annotations.ApiParam;
 import com.workpoint.icpak.shared.api.TrainingsResource;
 import com.workpoint.icpak.shared.model.ApplicationFormTrainingDto;
 
-@Api(value="", description="Handles CRUD for event Application Form Training")
-public class TrainingsResourceImpl implements TrainingsResource{
+@Api(value = "", description = "Handles CRUD for event Application Form Training")
+public class TrainingsResourceImpl implements TrainingsResource {
 
-	@Inject TrainingDaoHelper helper;
-	
+	@Inject
+	TrainingDaoHelper helper;
+
 	private final String applicationId;
-	
+
 	@Inject
 	public TrainingsResourceImpl(@Assisted String applicationId) {
 		this.applicationId = applicationId;
@@ -36,57 +37,57 @@ public class TrainingsResourceImpl implements TrainingsResource{
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	@ApiOperation(value="Retrieve all active training entries")
+	@ApiOperation(value = "Retrieve all active training entries")
 	public List<ApplicationFormTrainingDto> getAll(
-			@ApiParam(value="Starting point to fetch") @QueryParam("offset") Integer offset,
-			@ApiParam(value="No of Items to fetch") @QueryParam("limit") Integer limit) {
-		
+			@ApiParam(value = "Starting point to fetch") @QueryParam("offset") Integer offset,
+			@ApiParam(value = "No of Items to fetch") @QueryParam("limit") Integer limit) {
+
 		return helper.getAllTrainingEntrys("", applicationId, offset, limit);
 	}
-	
+
 	@GET
 	@Path("/{eduEntryId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	@ApiOperation(value="Get training by eduEntryId", response=ApplicationFormTrainingDto.class, consumes=MediaType.APPLICATION_JSON)
-	public ApplicationFormTrainingDto getById( 
-			@ApiParam(value="Entry Id of the training to fetch", required=true) @PathParam("eduEntryId") String eduEntryId) {
-		
-		ApplicationFormTrainingDto training = helper.getTrainingEntryById(applicationId,eduEntryId);
+	@ApiOperation(value = "Get training by eduEntryId", response = ApplicationFormTrainingDto.class, consumes = MediaType.APPLICATION_JSON)
+	public ApplicationFormTrainingDto getById(
+			@ApiParam(value = "Entry Id of the training to fetch", required = true) @PathParam("eduEntryId") String eduEntryId) {
+
+		ApplicationFormTrainingDto training = helper.getTrainingEntryById(
+				applicationId, eduEntryId);
 		return training;
 	}
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	@ApiOperation(value="Create a new training entry", response=ApplicationFormTrainingDto.class, consumes=MediaType.APPLICATION_JSON)
-	public ApplicationFormTrainingDto create(
-			ApplicationFormTrainingDto training) {
-		training = helper.createTrainingEntry(applicationId,training);
+	@ApiOperation(value = "Create a new training entry", response = ApplicationFormTrainingDto.class, consumes = MediaType.APPLICATION_JSON)
+	public ApplicationFormTrainingDto create(ApplicationFormTrainingDto training) {
+		training = helper.createTrainingEntry(applicationId, training);
 		String uri = "";
 		return training;
 	}
 
 	@PUT
-	@Path("/{eduEntryId}")
+	@Path("/{trainingId}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	@ApiOperation(value="Update an existing training", response=ApplicationFormTrainingDto.class, 
-	consumes=MediaType.APPLICATION_JSON, produces=MediaType.APPLICATION_JSON)
-	public ApplicationFormTrainingDto update( 
-			@ApiParam(value="Entry Id of the training to update", required=true) @PathParam("eduEntryId") String eduEntryId, 
+	@ApiOperation(value = "Update an existing training", response = ApplicationFormTrainingDto.class, consumes = MediaType.APPLICATION_JSON, produces = MediaType.APPLICATION_JSON)
+	public ApplicationFormTrainingDto update(
+			@ApiParam(value = "Entry Id of the training to update", required = true) @PathParam("trainingId") String trainingId,
 			ApplicationFormTrainingDto training) {
-		
-		training = helper.updateTrainingEntry(applicationId,eduEntryId, training);
+
+		training = helper.updateTrainingEntry(applicationId, trainingId,
+				training);
 		return training;
 	}
 
 	@DELETE
 	@Path("/{eduEntryId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	@ApiOperation(value="Delete an existing training")
+	@ApiOperation(value = "Delete an existing training")
 	public void delete(
-			@ApiParam(value="Entry Id of the training to delete", required=true) @PathParam("eduEntryId") String eduEntryId) {
-		helper.deleteTrainingEntry(applicationId,eduEntryId);
+			@ApiParam(value = "Entry Id of the training to delete", required = true) @PathParam("eduEntryId") String eduEntryId) {
+		helper.deleteTrainingEntry(applicationId, eduEntryId);
 	}
 
 }

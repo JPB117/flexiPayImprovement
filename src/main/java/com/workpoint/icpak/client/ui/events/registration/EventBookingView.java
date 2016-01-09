@@ -250,7 +250,7 @@ public class EventBookingView extends ViewImpl implements
 					DelegateDto delegate = mapper.getData(row.getData());
 					// delegate.setMember(dto);
 					if (dto != null) {
-						delegate.setMemberId(dto.getMemberNo());
+						delegate.setMemberNo(dto.getMemberNo());
 						delegate.setMemberRefId(dto.getRefId());
 					}
 					delegate.setSurname(dto.getLastName());
@@ -650,7 +650,7 @@ public class EventBookingView extends ViewImpl implements
 				member = null;
 			} else {
 				member.setRefId(dto.getMemberRefId());
-				member.setMemberNo(dto.getMemberId());
+				member.setMemberNo(dto.getMemberNo());
 				member.setFirstName(dto.getOtherNames());
 				member.setLastName(dto.getSurname());
 			}
@@ -681,7 +681,7 @@ public class EventBookingView extends ViewImpl implements
 					: ((MemberDto) model.get("memberNo"));
 			dto.setRefId(model.getId() == null ? null : model.getId()
 					.toString());
-			dto.setMemberId(memberDto == null ? null : memberDto.getMemberNo());
+			dto.setMemberNo(memberDto == null ? null : memberDto.getMemberNo());
 			dto.setMemberRefId(memberDto == null ? null : memberDto.getRefId());
 			dto.setTitle(model.get("title") == null ? null : model.get("title")
 					.toString());

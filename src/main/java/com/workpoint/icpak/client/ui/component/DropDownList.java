@@ -18,7 +18,8 @@ import com.google.gwt.user.client.ui.Widget;
 import com.workpoint.icpak.client.ui.grid.AggregationGridRow;
 import com.workpoint.icpak.shared.model.Listable;
 
-public class DropDownList<T extends Listable> extends Composite implements HasValueChangeHandlers<T>,HasValue<T>{
+public class DropDownList<T extends Listable> extends Composite implements
+		HasValueChangeHandlers<T>, HasValue<T> {
 
 	private static DropDownListUiBinder uiBinder = GWT
 			.create(DropDownListUiBinder.class);
@@ -26,55 +27,58 @@ public class DropDownList<T extends Listable> extends Composite implements HasVa
 	interface DropDownListUiBinder extends UiBinder<Widget, DropDownList> {
 	}
 
-	@UiField ListBox listBox;
-	
+	@UiField
+	ListBox listBox;
+
 	private List<T> items;
 	private String nullText = "--Select--";
-	
+
 	T value = null;
 
 	private AggregationGridRow aggregationGridRow;
-	
+
 	public DropDownList() {
 		initWidget(uiBinder.createAndBindUi(this));
 		initComponents();
 	}
-	
-	
-	
-	void initComponents(){
+
+	public void initComponents() {
 		listBox.addChangeHandler(new ChangeHandler() {
-			
+
 			@Override
 			public void onChange(ChangeEvent event) {
 				int selectedIndex = listBox.getSelectedIndex();
-				
+
 				String code = listBox.getValue(selectedIndex);
 				value = null;
-				if(code.isEmpty()){
-					//setting null
-					value=null;
-				}else{
-					value =  items.get(selectedIndex-1);
+				if (code.isEmpty()) {
+					// setting null
+					value = null;
+				} else {
+					value = items.get(selectedIndex - 1);
 				}
-				
-				ValueChangeEvent.fire(DropDownList.this,value);
+
+				ValueChangeEvent.fire(DropDownList.this, value);
 			}
 		});
 	}
-	
-	public void setItems(List<T> items){
+
+	public void setItems(List<T> items, String firstItemText) {
 		this.items = items;
-		
+
 		listBox.clear();
-		listBox.addItem(nullText, "");
-		
-		for(T item: items){
+		listBox.addItem(firstItemText, "");
+
+		for (T item : items) {
 			listBox.addItem(item.getDisplayName(), item.getName());
 		}
 	}
-	
-	public T getValue(){
+
+	public void setItems(List<T> items) {
+		setItems(items, nullText);
+	}
+
+	public T getValue() {
 		return value;
 	}
 
@@ -86,31 +90,31 @@ public class DropDownList<T extends Listable> extends Composite implements HasVa
 	}
 
 	public void setValue(T value) {
-		if(value==null){
+		if (value == null) {
 			listBox.setSelectedIndex(0);
 			this.value = null;
 			return;
 		}
-		
-		for(int i=0; i<listBox.getItemCount(); i++){
-			
-			if(listBox.getValue(i).equals(value.getName())){
+
+		for (int i = 0; i < listBox.getItemCount(); i++) {
+
+			if (listBox.getValue(i).equals(value.getName())) {
 				listBox.setSelectedIndex(i);
 				this.value = value;
 			}
-			
+
 		}
-		
+
 	}
-	
-	public void setValueByKey(String key){
-		for(int i=0; i<listBox.getItemCount(); i++){
-			
-			if(listBox.getValue(i).equals(key)){
+
+	public void setValueByKey(String key) {
+		for (int i = 0; i < listBox.getItemCount(); i++) {
+
+			if (listBox.getValue(i).equals(key)) {
 				listBox.setSelectedIndex(i);
-				value =  items.get(i-1);
+				value = items.get(i - 1);
 			}
-			
+
 		}
 	}
 
@@ -120,20 +124,20 @@ public class DropDownList<T extends Listable> extends Composite implements HasVa
 	}
 
 	public void setReadOnly(boolean readOnly) {
-		if(readOnly){
+		if (readOnly) {
 			listBox.setEnabled(false);
 		}
 	}
-	
-	public List<T> values(){
+
+	public List<T> values() {
 		return items;
 	}
-	
+
 	@Override
 	public void addStyleName(String style) {
 		listBox.addStyleName(style);
 	}
-	
+
 	@Override
 	public void removeStyleName(String style) {
 		listBox.removeStyleName(style);
@@ -160,7 +164,7 @@ public class DropDownList<T extends Listable> extends Composite implements HasVa
 	public AggregationGridRow getParentRow() {
 		return aggregationGridRow;
 	}
-	
+
 	public void setParentRow(AggregationGridRow aggregationGridRow) {
 		this.aggregationGridRow = aggregationGridRow;
 

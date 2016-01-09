@@ -3,7 +3,7 @@
 	xmlns:d='urn:import:com.workpoint.icpak.client.ui.component' xmlns:g="urn:import:com.google.gwt.user.client.ui"
 	xmlns:form='urn:import:com.workpoint.icpak.client.ui.membership.form'>
 	<g:HTMLPanel>
-		<br/>
+		<br />
 		<div class="row">
 			<div class="row">
 				<div class="col-sm-12">
@@ -26,6 +26,22 @@
 								</td>
 								<td>
 									<i ui:field="elPhone"></i>
+								</td>
+							</tr>
+							<tr>
+								<td width="30%">
+									<Strong>Id/Passport Number:</Strong>
+								</td>
+								<td>
+									<i ui:field="elIdNo"></i>
+								</td>
+							</tr>
+							<tr>
+								<td width="30%">
+									<Strong>Id/Passport PhotoCopy:</Strong>
+								</td>
+								<td>
+									<g:HTMLPanel ui:field="panelPassportCopy"></g:HTMLPanel>
 								</td>
 							</tr>
 							<tr>

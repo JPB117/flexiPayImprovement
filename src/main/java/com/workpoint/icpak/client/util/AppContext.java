@@ -155,7 +155,7 @@ public class AppContext {
 	}
 
 	public static boolean isCurrentUserAdmin() {
-		boolean isAdmin = user==null? false : user.getUser().isAdmin();
+		boolean isAdmin = user == null ? false : user.getUser().isAdmin();
 		return isAdmin;
 	}
 
@@ -210,4 +210,7 @@ public class AppContext {
 		return user;
 	}
 
+	public static boolean isCurrentUserMember() {
+		return user.getUser().getMemberNo() != null;
+	}
 }

@@ -43,7 +43,6 @@ public class Doc {
 			lines = new ArrayList<DocumentLine>();
 			details.put(name, lines);
 		}
-		
 		lines.add(line);
 	}
 
@@ -51,4 +50,9 @@ public class Doc {
 		return "";
 	}
 
+	@Override
+	public String toString() {
+		return "{values:"+values+","
+				+ "details:"+details+"}";
+	}
 }

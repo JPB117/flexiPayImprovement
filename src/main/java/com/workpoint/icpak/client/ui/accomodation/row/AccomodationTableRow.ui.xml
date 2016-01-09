@@ -3,7 +3,7 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.workpoint.icpak.client.ui.component">
 
 	<g:HTMLPanel styleName="tr" ui:field="row">
-		<g:HTMLPanel styleName="td" ui:field="divEventName">
+		<g:HTMLPanel styleName="td hide" ui:field="divEventName">
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divHotelName">
 			<g:Anchor ui:field="aHotelName"></g:Anchor>

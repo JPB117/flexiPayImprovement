@@ -1,5 +1,8 @@
 package com.icpak.rest.models.util;
 
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -15,22 +18,23 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.icpak.rest.models.base.PO;
 import com.icpak.rest.models.cpd.CPD;
+import com.icpak.rest.models.membership.ApplicationFormAccountancy;
+import com.icpak.rest.models.membership.ApplicationFormEducational;
+import com.icpak.rest.models.membership.ApplicationFormEmployment;
+import com.icpak.rest.models.membership.ApplicationFormHeader;
+import com.icpak.rest.models.membership.ApplicationFormTraining;
 import com.icpak.rest.models.membership.Education;
 import com.icpak.rest.models.membership.GoodStandingCertificate;
 import com.icpak.rest.models.membership.TrainingAndExperience;
 import com.wordnik.swagger.annotations.ApiModel;
 
-
-
-@ApiModel(description="File attachment model")
-
+@ApiModel(description = "File attachment model")
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-
 @Entity
-@Table(name="attachment")
-@Cache(usage= CacheConcurrencyStrategy.READ_WRITE)
-public class Attachment extends PO{
+@Table(name = "attachment")
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+public class Attachment extends PO {
 
 	/**
 		 * 
@@ -41,28 +45,51 @@ public class Attachment extends PO{
 	private long size;
 	private String contentType;
 
-	@Lob
-	private byte[] attachment;
+	@Basic(fetch=FetchType.LAZY)
+	@Embedded
+	private DBFile file;
 
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="goodstandingcertid")
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "goodstandingcertid")
 	private GoodStandingCertificate goodStandingCert;
-	
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="educationid")
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "applicationEducationId")
+	private ApplicationFormEducational applicationEducation;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "employmentId")
+	private ApplicationFormEmployment employment;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "accountancyId")
+	private ApplicationFormAccountancy applicationAccountancy;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "applicationTrainingId")
+	private ApplicationFormTraining applicationTraining;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "trainingExperienceId")
+	private TrainingAndExperience trainingAndExperience;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "educationId")
 	private Education education;
 
 	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="trainingExperienceId")
-	private TrainingAndExperience trainingAndExperience;
-	
-	//Profile Pic
+	@JoinColumn(name = "cpdid")
+	private CPD cpd;
+
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name = "applicationId")
+	private ApplicationFormHeader application;
+
+	// Profile Pic
 	private String profilePicUserId;
 	
-	@ManyToOne
-	@JoinColumn(name="cpdid")
-	private CPD cpd;
-	
+	private String fileName;
+
 	public Attachment() {
 		super();
 	}
@@ -70,7 +97,10 @@ public class Attachment extends PO{
 	public Attachment(Long id, String name, byte[] attachment) {
 		this();
 		this.name = name;
-		this.attachment = attachment;
+		if(this.file==null){
+			this.file = new DBFile();
+		}
+		this.file.setAttachment(attachment);;
 		setId(id);
 	}
 
@@ -79,7 +109,10 @@ public class Attachment extends PO{
 	}
 
 	public byte[] getAttachment() {
-		return attachment;
+		if(file==null){
+			return null;
+		}
+		return file.getAttachment();
 	}
 
 	public void setName(String name) {
@@ -87,7 +120,10 @@ public class Attachment extends PO{
 	}
 
 	public void setAttachment(byte[] attachment) {
-		this.attachment = attachment;
+		if(this.file==null){
+			this.file = new DBFile();
+		}
+		this.file.setAttachment(attachment);
 	}
 
 	public long getSize() {
@@ -106,22 +142,41 @@ public class Attachment extends PO{
 		this.contentType = contentType;
 	}
 
+	public ApplicationFormAccountancy getApplicationAccountancy() {
+		return applicationAccountancy;
+	}
+
+	public void setApplicationAccountancy(
+			ApplicationFormAccountancy applicationAccountancy) {
+		this.applicationAccountancy = applicationAccountancy;
+	}
+
 	public Attachment clone(String detail) {
 		Attachment a = new Attachment();
-		
-		if(detail!=null && detail!=null){
-			a.setAttachment(attachment);
+
+		if (detail != null && detail != null) {
+			if(file!=null)
+			a.setAttachment(file.getAttachment());
 		}
 		a.setContentType(contentType);
 		a.setName(name);
 		a.setSize(size);
 		a.setRefId(refId);
-		
+
 		return a;
 	}
 
 	public String getProfilePicUserId() {
 		return profilePicUserId;
+	}
+
+	public ApplicationFormTraining getApplicationTraining() {
+		return applicationTraining;
+	}
+
+	public void setApplicationTraining(
+			ApplicationFormTraining applicationTraining) {
+		this.applicationTraining = applicationTraining;
 	}
 
 	public void setProfilePicUserId(String profilePicUserId) {
@@ -142,5 +197,29 @@ public class Attachment extends PO{
 
 	public void setGoodStandingCert(GoodStandingCertificate goodStandingCert) {
 		this.goodStandingCert = goodStandingCert;
+	}
+
+	public void setApplication(ApplicationFormHeader application) {
+		this.application = application;
+	}
+
+	public ApplicationFormHeader getApplication() {
+		return application;
+	}
+
+	public ApplicationFormEducational getEducation() {
+		return applicationEducation;
+	}
+
+	public void setEducation(ApplicationFormEducational education) {
+		this.applicationEducation = education;
+	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
 	}
 }

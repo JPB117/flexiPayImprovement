@@ -7,11 +7,19 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.InlineLabel;
+import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.Widget;
 import com.workpoint.icpak.client.model.UploadContext;
 import com.workpoint.icpak.client.model.UploadContext.UPLOADACTION;
@@ -20,9 +28,15 @@ import com.workpoint.icpak.client.ui.component.DateField;
 import com.workpoint.icpak.client.ui.component.DropDownList;
 import com.workpoint.icpak.client.ui.component.IssuesPanel;
 import com.workpoint.icpak.client.ui.component.TextField;
+import com.workpoint.icpak.client.ui.events.TableActionEvent;
 import com.workpoint.icpak.client.ui.upload.custom.Uploader;
+import com.workpoint.icpak.client.util.AppContext;
+import com.workpoint.icpak.shared.model.AttachmentDto;
+import com.workpoint.icpak.shared.model.CPDAction;
 import com.workpoint.icpak.shared.model.CPDCategory;
 import com.workpoint.icpak.shared.model.CPDDto;
+import com.workpoint.icpak.shared.model.CPDStatus;
+import com.workpoint.icpak.shared.model.TableActionType;
 
 public class RecordCPD extends Composite {
 
@@ -60,15 +74,57 @@ public class RecordCPD extends Composite {
 	Uploader uploader;
 
 	@UiField
+	DivElement divCpdHours;
+
+	@UiField
+	DivElement divMgtComment;
+
+	@UiField
+	TextField txtCPDHours;
+
+	@UiField
 	ActionLink aStartUpload;
 
 	@UiField
 	HTMLPanel panelUploader;
 
 	@UiField
+	HTMLPanel panelUpload;
+
+	@UiField
+	HTMLPanel panelPreviousAttachments;
+
+	@UiField
+	TextArea txtMgmtComment;
+
+	@UiField
+	SpanElement spnMgmntActionBy;
+
+	@UiField
+	ActionLink aBack;
+
+	@UiField
+	ActionLink aSave;
+
+	@UiField
+	DivElement panelInlineActions;
+	@UiField
+	DivElement panelBreadcrumb;
+	@UiField
+	DivElement divUpdatedBy;
+
+	@UiField
+	SpanElement spnMemberName;
+
+	@UiField
 	DropDownList<CPDCategory> lstCategory;
 
+	@UiField
+	DropDownList<CPDAction> lstMgmtAction;
+
 	private CPDDto dto;
+
+	private boolean isViewMode;
 
 	public RecordCPD() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -76,14 +132,32 @@ public class RecordCPD extends Composite {
 
 		List<CPDCategory> categories = new ArrayList<CPDCategory>();
 		for (CPDCategory cat : CPDCategory.values()) {
-			categories.add(cat);
+			if (cat != CPDCategory.NO_CATEGORY) {
+				categories.add(cat);
+			}
 		}
 		lstCategory.setItems(categories);
-		//uploader.setAutoSubmit(false);
+
+		List<CPDAction> cpdActions = new ArrayList<CPDAction>();
+		for (CPDAction cpd : CPDAction.values()) {
+			cpdActions.add(cpd);
+		}
+		lstMgmtAction.setItems(cpdActions);
+		// uploader.setAutoSubmit(false);
+
+		aSave.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				if (isValid()) {
+					AppContext.fireEvent(new TableActionEvent(getCPD(),
+							TableActionType.APPROVECPD));
+				}
+			}
+		});
 	}
 
 	public void showUploadPanel(boolean showForm) {
-		aStartUpload.setVisible(showForm);
+		aStartUpload.setVisible(!showForm);
 		if (showForm) {
 			panelUploader.removeStyleName("hide");
 			setUploadContext();
@@ -97,8 +171,9 @@ public class RecordCPD extends Composite {
 		UploadContext context = new UploadContext();
 		context.setContext("cpdRefId", getCPD().getRefId());
 		context.setAction(UPLOADACTION.UPLOADCPD);
-		context.setAccept(Arrays.asList("doc","pdf","jpg","jpeg","png","docx"));
-		uploader.setContext(context);	
+		context.setAccept(Arrays.asList("doc", "pdf", "jpg", "jpeg", "png",
+				"docx"));
+		uploader.setContext(context);
 	}
 
 	public boolean isValid() {
@@ -124,6 +199,11 @@ public class RecordCPD extends Composite {
 			isValid = false;
 			issues.addError("Category is mandatory");
 		}
+		if (isViewMode && txtCPDHours.getValue().equals("0")
+				&& (lstMgmtAction.getValue() != null)) {
+			isValid = false;
+			issues.addError("CPD Hours must be greater than 0!");
+		}
 		return isValid;
 	}
 
@@ -138,21 +218,29 @@ public class RecordCPD extends Composite {
 	}
 
 	public CPDDto getCPD() {
-
 		CPDDto dto = new CPDDto();
 		if (this.dto != null) {
 			dto = this.dto;
 		}
-
 		dto.setCategory(lstCategory.getValue());
-		// dto.setCpdHours();
-		dto.setEndDate(dtEndDate.getValueDate());
-		// dto.setMemberId(memberId);
-		dto.setOrganizer(txtOrganizer.getValue());
 		dto.setStartDate(dtStartDate.getValueDate());
-		// dto.setStatus();
+		dto.setEndDate(dtEndDate.getValueDate());
+		dto.setOrganizer(txtOrganizer.getValue());
 		dto.setTitle(txtTitle.getValue());
-
+		if (lstMgmtAction.getValue() != null) {
+			CPDStatus status = (lstMgmtAction.getValue().getName() == "APPROVED" ? CPDStatus.Approved
+					: CPDStatus.Rejected);
+			dto.setStatus(status);
+			dto.setUpdatedBy(AppContext.getCurrentUser().getUser()
+					.getFullName());
+		}
+		if (txtCPDHours.getValue() != null
+				&& !(txtCPDHours.getValue().isEmpty())) {
+			dto.setCpdHours(Double.valueOf(txtCPDHours.getValue()));
+		}
+		if (txtMgmtComment.getValue() != null) {
+			dto.setManagementComment(txtMgmtComment.getValue());
+		}
 		return dto;
 	}
 
@@ -161,16 +249,92 @@ public class RecordCPD extends Composite {
 		if (dto == null) {
 			return;
 		}
-
 		lstCategory.setValue(dto.getCategory());
 		dtEndDate.setValue(dto.getEndDate());
 		dtStartDate.setValue(dto.getStartDate());
 		txtTitle.setValue(dto.getTitle());
 		txtOrganizer.setValue(dto.getOrganizer());
+		txtCPDHours.setValue(Double.toString(dto.getCpdHours()));
+
+		if (dto.getUpdatedBy() != null) {
+			spnMgmntActionBy.setInnerText(dto.getUpdatedBy());
+		}
+
+		if (dto.getStatus() != null) {
+			if (dto.getStatus() == CPDStatus.Approved) {
+				lstMgmtAction.setValue(CPDAction.APPROVED);
+			} else if (dto.getStatus() == CPDStatus.Rejected) {
+				lstMgmtAction.setValue(CPDAction.REJECTED);
+			}
+		}
+
+		txtMgmtComment.setValue(dto.getManagementComment());
+		panelPreviousAttachments.clear();
+
+		if (dto.getAttachments() != null) {
+			for (final AttachmentDto attachment : dto.getAttachments()) {
+				final UploadContext ctx = new UploadContext("getreport");
+				ctx.setAction(UPLOADACTION.GETATTACHMENT);
+				ctx.setContext("refId", attachment.getRefId());
+
+				ActionLink link = new ActionLink(attachment.getAttachmentName());
+				link.addClickHandler(new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {
+						Window.open(ctx.toUrl(),
+								attachment.getAttachmentName(), "");
+					}
+				});
+				panelPreviousAttachments.add(new HTML("<br/>"));
+				panelPreviousAttachments.add(link);
+			}
+		} else {
+			panelPreviousAttachments.add(new InlineLabel(
+					"No attachments available"));
+		}
 	}
 
 	public HasClickHandlers getStartUploadButton() {
 		return aStartUpload;
 	}
 
+	public void setViewMode(boolean isViewMode) {
+		this.isViewMode = isViewMode;
+		if (isViewMode) {
+			// lstCategory.getElement().getFirstChildElement()
+			// .setAttribute("disabled", "disabled");
+			// dtEndDate.setDisabled(true);
+			// dtStartDate.setDisabled(true);
+			// txtTitle.getElement().setAttribute("disabled", "disabled");
+			// txtOrganizer.getElement().setAttribute("disabled", "disabled");
+			aPreviousForm.setVisible(false);
+			panelUpload.setVisible(false);
+			divCpdHours.removeClassName("hide");
+			divMgtComment.removeClassName("hide");
+			panelInlineActions.removeClassName("hide");
+			panelBreadcrumb.removeClassName("hide");
+			divUpdatedBy.removeClassName("hide");
+
+		} else {
+			lstCategory.getElement().getFirstChildElement()
+					.removeAttribute("disabled");
+			dtEndDate.setDisabled(false);
+			dtStartDate.setDisabled(false);
+			txtTitle.getElement().removeAttribute("disabled");
+			txtOrganizer.getElement().removeAttribute("disabled");
+			panelUpload.setVisible(true);
+			divCpdHours.addClassName("hide");
+			panelInlineActions.addClassName("hide");
+			panelBreadcrumb.addClassName("hide");
+			divUpdatedBy.addClassName("hide");
+		}
+	}
+
+	public void setBackHref(String href) {
+		aBack.setHref(href);
+	}
+
+	public void setMemberName(String memberName) {
+		spnMemberName.setInnerText(memberName);
+	}
 }

@@ -38,12 +38,10 @@ public class UserView extends ViewImpl implements UserPresenter.MyView {
 	HTMLPanel panelUsers;
 	@UiField
 	HTMLPanel panelGroup;
-
 	@UiField
 	Element divUserContent;
 	@UiField
 	Element divGroupContent;
-
 	@UiField
 	Element liGroup;
 	@UiField

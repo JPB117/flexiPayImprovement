@@ -11,6 +11,7 @@ import javax.ws.rs.core.MediaType;
 
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.workpoint.icpak.shared.model.statement.StatementDto;
+import com.workpoint.icpak.shared.model.statement.StatementSummaryDto;
 
 @Produces(MediaType.APPLICATION_JSON)
 public interface StatementsResource extends BaseResource {
@@ -21,10 +22,17 @@ public interface StatementsResource extends BaseResource {
 			@QueryParam("enddate") Long endDate);
 
 	@GET
+	@Path("/statementSummary")
+	public StatementSummaryDto getSummary(
+			@QueryParam("startdate") Long startDate,
+			@QueryParam("enddate") Long endDate);
+
+	@GET
 	@Consumes(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Retrieve all member statement")
 	public List<StatementDto> getAll(@QueryParam("startdate") Long startDate,
 			@QueryParam("enddate") Long endDate,
 			@QueryParam("offset") Integer offset,
 			@QueryParam("limit") Integer limit);
+
 }

@@ -34,7 +34,7 @@ import com.workpoint.icpak.shared.model.events.EventDto;
  *
  */
 
-@ApiModel(value = "Events Model", description = "An event represents an ICPAK Event/Seminar/Webinar/Course")
+@ApiModel(value = "Events Model", description = "An event represents an ICPAK Event/Course")
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlSeeAlso({ Booking.class, Accommodation.class })
@@ -51,7 +51,7 @@ public class Event extends PO {
 	@Column(length = 5000)
 	private String description;
 	@Column(length = 255)
-	private Integer cpdHours;
+	private Double cpdHours;
 	private String venue;
 	private String categoryName;
 
@@ -65,19 +65,16 @@ public class Event extends PO {
 	private Double memberPrice;
 	@Column(nullable = false)
 	private Double nonMemberPrice;
-	@Column(nullable = false)
 	private Double associatePrice;
-
+	private Integer lmsCourseId;
 	private String code;
-
 	private Date registrationDate;
+	private Integer oldSystemId;
 
 	@XmlTransient
 	@OneToMany(mappedBy = "event")
 	Set<Booking> bookings = new HashSet<>();
-
-	@OneToMany(mappedBy = "event", cascade = { CascadeType.PERSIST,
-			CascadeType.REMOVE })
+	@OneToMany(mappedBy = "event", cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
 	Set<Accommodation> accommodation = new HashSet<>();
 
 	public Event() {
@@ -175,11 +172,11 @@ public class Event extends PO {
 		this.type = type;
 	}
 
-	public Integer getCpdHours() {
+	public Double getCpdHours() {
 		return cpdHours;
 	}
 
-	public void setCpdHours(Integer cpdHours) {
+	public void setCpdHours(Double cpdHours) {
 		this.cpdHours = cpdHours;
 	}
 
@@ -214,7 +211,7 @@ public class Event extends PO {
 		if (endDate != null)
 			dto.setEndDate(DateUtils.format(endDate, DateUtils.FULLTIMESTAMP));
 
-		if (startDate != null){
+		if (startDate != null) {
 			dto.setStartDate(DateUtils.format(startDate, DateUtils.FULLTIMESTAMP));
 		}
 		dto.setMemberPrice(memberPrice);
@@ -242,12 +239,11 @@ public class Event extends PO {
 	public void copyFrom(EventDto dto) {
 		setCpdHours(dto.getCpdHours());
 		setDescription(dto.getDescription());
-
 		if (dto.getEndDate() != null)
-			setEndDate(DateUtils.parse(dto.getEndDate(), DateUtils.FULLTIMESTAMP));
+			setEndDate(DateUtils.parse(dto.getEndDate(), DateUtils.SHORTTIMESTAMP));
 
 		if (dto.getStartDate() != null)
-			setStartDate(DateUtils.parse(dto.getStartDate(), DateUtils.FULLTIMESTAMP));
+			setStartDate(DateUtils.parse(dto.getStartDate(), DateUtils.SHORTTIMESTAMP));
 
 		setMemberPrice(dto.getMemberPrice());
 		setName(dto.getName());
@@ -257,6 +253,10 @@ public class Event extends PO {
 		setType(dto.getType());
 		setVenue(dto.getVenue());
 		setCategoryName(dto.getCategoryName());
+
+		if (dto.getCourseId() != null) {
+			setLmsCourseId(dto.getCourseId());
+		}
 
 		if (dto.getAccommodation() != null) {
 			List<Accommodation> accommodations = new ArrayList<>();
@@ -286,39 +286,68 @@ public class Event extends PO {
 		dto.setRefId(getRefId());
 		dto.setCpdHours(cpdHours);
 		dto.setDescription(description);
-
-		if (endDate != null)
-			dto.setEndDate(endDate.getTime());
-
-		if (startDate != null)
-			dto.setStartDate(startDate.getTime());
 		dto.setMemberPrice(memberPrice);
 		dto.setName(name);
 		dto.setNonMemberPrice(nonMemberPrice);
 		dto.setStatus(status);
 		dto.setType(type);
 		dto.setVenue(venue);
-
+		dto.setCourseId(lmsCourseId);
+		dto.setStartDate(startDate+"");
+		dto.setEndDate(endDate+"");
 		return dto;
 	}
 
 	public void copyFromCourse(CourseDto dto) {
-		setCpdHours(dto.getCpdHours());
-		setDescription(dto.getDescription());
 
-		if (dto.getEndDate() != null)
-			setEndDate(new Date(dto.getEndDate()));
+		if (dto.getCpdHours() != null) {
+			setCpdHours(dto.getCpdHours());
+		}
 
-		if (dto.getStartDate() != null)
-			setStartDate(new Date(dto.getStartDate()));
+		if (dto.getDescription() != null) {
+			setDescription(dto.getDescription());
+		}
 
-		setMemberPrice(dto.getMemberPrice());
-		setName(dto.getName());
-		setNonMemberPrice(dto.getNonMemberPrice());
-		setStatus(dto.getStatus());
-		setType(dto.getType());
-		setVenue(dto.getVenue());
-		setCode(dto.getCode());
+		if (dto.getMemberPrice() != null) {
+			setMemberPrice(dto.getMemberPrice());
+		}
+
+		if (dto.getEndDate() != null) {
+			setEndDate(DateUtils.parse(dto.getEndDate(), DateUtils.SHORTTIMESTAMP));
+		}
+
+		if (dto.getStartDate() != null) {
+			setStartDate(DateUtils.parse(dto.getStartDate(), DateUtils.SHORTTIMESTAMP));
+		}
+
+		if (dto.getName() != null) {
+			setName(dto.getName());
+		}
+
+		if (dto.getNonMemberPrice() != null) {
+			setNonMemberPrice(dto.getNonMemberPrice());
+		}
+
+		if (dto.getStatus() != null) {
+			setStatus(dto.getStatus());
+		}
+
+		if (dto.getType() != null) {
+			setType(dto.getType());
+		}
+
+		if (dto.getVenue() != null) {
+			setVenue(dto.getVenue());
+		}
+
+		if (dto.getCode() != null) {
+			setCode(dto.getCode());
+		}
+
+		if (dto.getCourseId() != null) {
+			setLmsCourseId(dto.getCourseId());
+		}
+
 	}
 
 	public String getCode() {
@@ -351,6 +380,22 @@ public class Event extends PO {
 
 	public void setAssociatePrice(Double associatePrice) {
 		this.associatePrice = associatePrice;
+	}
+
+	public Integer getLmsCourseId() {
+		return lmsCourseId;
+	}
+
+	public void setLmsCourseId(Integer lmsCourseId) {
+		this.lmsCourseId = lmsCourseId;
+	}
+
+	public Integer getOldSystemId() {
+		return oldSystemId;
+	}
+
+	public void setOldSystemId(Integer oldSystemId) {
+		this.oldSystemId = oldSystemId;
 	}
 
 }

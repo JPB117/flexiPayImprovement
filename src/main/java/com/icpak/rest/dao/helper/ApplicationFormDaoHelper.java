@@ -37,6 +37,7 @@ import com.workpoint.icpak.shared.model.ApplicationSummaryDto;
 import com.workpoint.icpak.shared.model.ApplicationType;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.InvoiceLineDto;
+import com.workpoint.icpak.shared.model.auth.ApplicationStatus;
 
 @Transactional
 public class ApplicationFormDaoHelper {
@@ -51,8 +52,9 @@ public class ApplicationFormDaoHelper {
 	InvoiceDaoHelper invoiceHelper;
 	@Inject
 	TransactionDaoHelper trxHelper;
-	
-	@Inject ApplicationSettings settings;
+
+	@Inject
+	ApplicationSettings settings;
 
 	public void createApplication(ApplicationFormHeaderDto application) {
 
@@ -64,14 +66,15 @@ public class ApplicationFormDaoHelper {
 		// Copy into PO
 		ApplicationFormHeader po = new ApplicationFormHeader();
 		po.copyFrom(application);
+		po.setApplicationStatus(ApplicationStatus.PENDING);
 
 		// Create Temp User
 		User user = createTempUser(po);
 		po.setUserRefId(user.getRefId());
 
 		// Generate Invoice
-		InvoiceDto invoice = generateInvoice(po);
-		po.setInvoiceRef(invoice.getRefId());
+		// InvoiceDto invoice = generateInvoice(po);
+		// po.setInvoiceRef(invoice.getRefId());
 
 		// Save Data
 		applicationDao.createApplication(po);
@@ -79,7 +82,29 @@ public class ApplicationFormDaoHelper {
 		// setCategory(po);
 
 		// Send Email
-		sendEmail(po, invoice, user);
+		// sendEmail(po, invoice, user);
+
+		// Copy into DTO
+		po.copyInto(application);
+	}
+
+	public void createApplicationFromImport(ApplicationFormHeaderDto application) {
+
+		if (application.getRefId() != null) {
+			updateApplication(application.getRefId(), application);
+			return;
+		}
+		// Copy into PO
+		ApplicationFormHeader po = new ApplicationFormHeader();
+		po.copyFrom(application);
+		po.setApplicationStatus(ApplicationStatus.APPROVED);
+
+		// Create Temp User
+		User user = createTempUser(po);
+		po.setUserRefId(user.getRefId());
+
+		// Save Data
+		applicationDao.createApplication(po);
 
 		// Copy into DTO
 		po.copyInto(application);
@@ -88,13 +113,12 @@ public class ApplicationFormDaoHelper {
 	private User createTempUser(ApplicationFormHeader application) {
 		User po = new User();
 		po.setEmail(application.getEmail());
-		// po.setUsername(user.getUsername());
 		po.setRefId(application.getRefId());
 		po.setAddress(application.getAddress1());
 		po.setCity(application.getCity1());
 		po.setNationality(application.getNationality());
 		po.setMemberNo(application.getMemberNo());
-
+		po.setPhoneNumber(application.getMobileNo());
 		BioData bioData = new BioData();
 		bioData.setFirstName(application.getOtherNames());
 		bioData.setLastName(application.getSurname());
@@ -112,6 +136,7 @@ public class ApplicationFormDaoHelper {
 		return u;
 	}
 
+	@SuppressWarnings("unused")
 	private void sendEmail(ApplicationFormHeader application,
 			InvoiceDto invoice, User user) {
 		try {
@@ -121,7 +146,7 @@ public class ApplicationFormDaoHelper {
 			values.put("quoteNo", application.getId());
 			values.put("date", application.getDate());
 			values.put("firstName", application.getOtherNames());
-			//http://localhost:8080/icpakportal/#eventBooking;eventId=Jx4Ca6HpOutf2ic7;bookingId=ttDzH7OkgAHk5CSk
+			// https://www.icpak.com/icpakportal/#eventBooking;eventId=Jx4Ca6HpOutf2ic7;bookingId=ttDzH7OkgAHk5CSk
 			values.put("DocumentURL", settings.getApplicationPath());
 			values.put("userRefId", user.getRefId());
 			values.put("email", application.getEmail());
@@ -160,9 +185,9 @@ public class ApplicationFormDaoHelper {
 					Arrays.asList(application.getSurname() + " "
 							+ application.getOtherNames()), attachment);
 
-			trxHelper.charge(user.getMember()==null? null: user.getMember().getRefId(),
-					new Date(), subject, null,
-					invoice.getInvoiceAmount(), documentNo, invoice.getRefId());
+			trxHelper.charge(user.getMember() == null ? null : user.getMember()
+					.getRefId(), new Date(), subject, null, invoice
+					.getInvoiceAmount(), documentNo, invoice.getRefId());
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -194,16 +219,13 @@ public class ApplicationFormDaoHelper {
 		dto.setContactName(application.getSurname() + " "
 				+ application.getOtherNames());
 		dto.setDate(new Date().getTime());
-		
-		
-		dto.addLine(new InvoiceLineDto(
-				dto.getContactName()+", "+
-				"'"+category.getType().getDisplayName()+"' member registration fee", category
-				.getApplicationAmount(), category.getApplicationAmount()));
+
+		dto.addLine(new InvoiceLineDto(dto.getContactName() + ", " + "'"
+				+ category.getType().getDisplayName()
+				+ "' member registration fee", category.getApplicationAmount(),
+				category.getApplicationAmount()));
 
 		dto = invoiceHelper.save(dto);
-		
-		
 
 		return dto;
 	}
@@ -230,16 +252,25 @@ public class ApplicationFormDaoHelper {
 	}
 
 	public List<ApplicationFormHeaderDto> getAllApplications(Integer offset,
-			Integer limit, String uri) {
+			Integer limit, String uri, String searchTerm) {
 
 		List<ApplicationFormHeader> applications = applicationDao
-				.getAllApplications(offset, limit);
+				.getAllApplications(offset, limit, searchTerm);
 		List<ApplicationFormHeaderDto> rtn = new ArrayList<>();
 
+		int counter = 0;
 		for (ApplicationFormHeader application : applications) {
 			ApplicationFormHeaderDto dto = application.toDto();
 			dto.setUri(uri + "/" + application.getRefId());
+			if (counter < applications.size() - 1) {
+				dto.setNextRefId(applications.get(counter + 1).getRefId());
+			}
+			if (counter > 0) {
+				dto.setPreviousRefId(applications.get(counter - 1).getRefId());
+			}
+			counter++;
 			rtn.add(dto);
+//			applicationDao.updateApplication();
 		}
 		return rtn;
 	}
@@ -258,8 +289,8 @@ public class ApplicationFormDaoHelper {
 		return rtn;
 	}
 
-	public Integer getApplicationCount() {
-		return applicationDao.getApplicationCount();
+	public Integer getApplicationCount(String searchTerm) {
+		return applicationDao.getApplicationCount(searchTerm);
 	}
 
 	public ApplicationFormHeader getApplicationById(String applicationId) {
@@ -318,12 +349,16 @@ public class ApplicationFormDaoHelper {
 	}
 
 	public ApplicationSummaryDto getApplicationSummary() {
-		
+
 		return applicationDao.getApplicationsSummary();
 	}
-	
-	public void forwardToLMS(Member member){
-		
+
+	public void forwardToLMS(Member member) {
+
+	}
+
+	public Integer getApplicationCount() {
+		return getApplicationCount("");
 	}
 
 }

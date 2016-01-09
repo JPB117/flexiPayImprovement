@@ -1,7 +1,11 @@
 package com.icpak.rest.dao.helper;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -9,14 +13,26 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Logger;
 
 import javax.mail.MessagingException;
 import javax.ws.rs.core.UriInfo;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.utils.URIUtils;
+import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.log4j.Logger;
+
+import com.amazonaws.util.json.JSONException;
+import com.amazonaws.util.json.JSONObject;
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import com.icpak.rest.BaseResource;
+import com.icpak.rest.dao.ApplicationFormDao;
 import com.icpak.rest.dao.RolesDao;
 import com.icpak.rest.dao.TransactionsDao;
 import com.icpak.rest.dao.UserSessionDao;
@@ -29,6 +45,7 @@ import com.icpak.rest.models.auth.User;
 import com.icpak.rest.models.base.ExpandTokens;
 import com.icpak.rest.models.base.ResourceCollectionModel;
 import com.icpak.rest.models.base.ResourceModel;
+import com.icpak.rest.models.membership.ApplicationFormHeader;
 import com.icpak.rest.models.membership.Member;
 import com.icpak.rest.models.trx.Transaction;
 import com.icpak.rest.models.util.Attachment;
@@ -37,6 +54,7 @@ import com.icpak.rest.security.authentication.Authenticator;
 import com.icpak.rest.util.ApplicationSettings;
 import com.icpak.rest.utils.EmailServiceHelper;
 import com.workpoint.icpak.server.integration.lms.LMSIntegrationUtil;
+import com.workpoint.icpak.server.integration.lms.LMSResponse;
 import com.workpoint.icpak.shared.lms.LMSMemberDto;
 import com.workpoint.icpak.shared.model.Gender;
 import com.workpoint.icpak.shared.model.RoleDto;
@@ -55,6 +73,8 @@ public class UsersDaoHelper {
 	Logger logger = Logger.getLogger(UsersDaoHelper.class.getName());
 	@Inject
 	UsersDao dao;
+	@Inject
+	ApplicationFormDao applicationDao;
 	@Inject
 	RolesDao roleDao;
 	@Inject
@@ -76,7 +96,6 @@ public class UsersDaoHelper {
 	 * @return
 	 */
 	public UserDto create(UserDto dto) {
-
 		return create(dto, true);
 	}
 
@@ -98,15 +117,29 @@ public class UsersDaoHelper {
 		return user.toDto();
 	}
 
+	public void sendActivationEmail(String userId, String emailAddress) {
+		User user = dao.findByUserId(userId);
+		user.setEmail(emailAddress);
+		dao.updateUser(user);
+		ApplicationFormHeader application = applicationDao
+				.getApplicationByUserRef(user.getRefId());
+		application.setEmail(emailAddress);
+		applicationDao.updateApplication(application);
+
+		sendActivationEmail(user);
+	}
+
 	private void sendActivationEmail(User user) {
 		String subject = "Welcome to ICPAK Portal!";
 		String link = settings.getApplicationPath() + "#activateacc;uid="
 				+ user.getRefId();
-		String body = "Dear User,"
-				+ "<br/>An account has been created for you onthe ICPAK portal. "
-				+ "You will need to reset your password on the portal using the following details."
-				+ "<p/>Username: " + user.getEmail() + "<br/>Click this link "
-				+ link + " to reset your account." + "<p>Thank you";
+		String body = "Dear "
+				+ user.getUserData().getFullNames()
+				+ ","
+				+ "<br/>An account has been created for you on the ICPAK portal. "
+				+ "You will need to create your password on the portal using the following details."
+				+ "<p/><a href=" + link + ">Click this link </a>"
+				+ " to create your password." + "<p>Thank you";
 
 		try {
 			EmailServiceHelper.sendEmail(body, subject,
@@ -114,7 +147,7 @@ public class UsersDaoHelper {
 					Arrays.asList(user.getUserData().getFullNames()));
 
 		} catch (Exception e) {
-			logger.warning("Activation Email for " + user.getEmail()
+			logger.info("Activation Email for " + user.getEmail()
 					+ " failed. Cause: " + e.getMessage());
 			e.printStackTrace();
 			// throw new Run
@@ -143,13 +176,9 @@ public class UsersDaoHelper {
 	 */
 	public UserDto update(String userId, UserDto dto) {
 		User po = dao.findByUserId(userId);
-
 		po.setEmail(dto.getEmail());
-		// po.setPassword(dto.getPassword());
-
-		// We do not update password here :Duggan 21/09/2015
-		// updatePassword(userId, dto.getPassword());
-
+		po.setMobileNo(dto.getPhoneNumber());
+		po = po.copyOnUpdate(dto);
 		if (po.getUserData() == null) {
 			po.setUserData(dto);
 		} else {
@@ -207,6 +236,9 @@ public class UsersDaoHelper {
 		Member member = new Member(user.getRefId());
 		member.setRefId(user.getRefId());
 		member.setUser(user);
+		if (user.getMemberNo() != null) {
+			member.setMemberNo(user.getMemberNo());
+		}
 		dao.save(member);
 	}
 
@@ -222,6 +254,7 @@ public class UsersDaoHelper {
 
 	public List<UserDto> getAllUsers(Integer offset, Integer limit,
 			String uriInfo, String searchTerm) {
+
 		List<User> users = dao.getAllUsers(offset, limit, null, searchTerm);
 		List<UserDto> dtos = new ArrayList<>();
 
@@ -285,9 +318,6 @@ public class UsersDaoHelper {
 		for (User user : members) {
 			user.setUri(uriInfo.getBaseUri() + "/users/" + user.getRefId());
 		}
-		// clone.setUsers(members);
-
-		// collection.setItems(members);
 		return clone;
 	}
 
@@ -299,6 +329,100 @@ public class UsersDaoHelper {
 		}
 
 		return user.clone();
+	}
+
+	public User getUserByActivationEmail(String userId) {
+		User user = dao.findByUserActivationEmail(userId, false);
+
+		if (user == null) {
+			try {
+				user = checkIfUserExistInERP(userId);
+				if (user == null) {
+					throw new ServiceException(ErrorCodes.NOTFOUND, "'"
+							+ userId + "'");
+				}
+			} catch (URISyntaxException e) {
+				e.printStackTrace();
+			} catch (ParseException e) {
+				e.printStackTrace();
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
+		return user.clone();
+	}
+
+	private User checkIfUserExistInERP(String userId)
+			throws URISyntaxException, ParseException, JSONException {
+
+		logger.error(" ===>>><<<< === Checking for this User In ERP ===>><<<>>== ");
+		final HttpClient httpClient = new DefaultHttpClient();
+		final List<NameValuePair> qparams = new ArrayList<NameValuePair>();
+
+		qparams.add(new BasicNameValuePair("type", "activation"));
+		qparams.add(new BasicNameValuePair("email", userId));
+
+		final URI uri = URIUtils.createURI("http", "41.139.138.165/", -1,
+				"members/memberdata.php",
+				URLEncodedUtils.format(qparams, "UTF-8"), null);
+		final HttpGet request = new HttpGet();
+		request.setURI(uri);
+
+		String res = "";
+		HttpResponse response = null;
+
+		StringBuffer result = null;
+
+		try {
+			request.setHeader("accept", "application/json");
+			response = httpClient.execute(request);
+
+			BufferedReader rd = new BufferedReader(new InputStreamReader(
+					response.getEntity().getContent()));
+
+			result = new StringBuffer();
+
+			String line = "";
+
+			while ((line = rd.readLine()) != null) {
+				result.append(line);
+			}
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		assert result != null;
+		res = result.toString();
+
+		/**
+		 * Check if the erp server returns null string
+		 */
+		if (res.equals("null")) {
+			logger.error(" ===>>><<<< === User not found in ERP ===>><<<>>== ");
+			return null;
+		} else {
+			JSONObject jo = new JSONObject(res);
+			String memberNo = jo.getString("reg_no");
+			String PractisingNo = jo.getString("Practising No_");
+			String email = jo.getString("E-Mail");
+			String fullNames = jo.getString("Name");
+			String address = jo.getString("Address");
+			String postCode = jo.getString("Post Code");
+			String phoneNo = jo.getString("Phone No_");
+			String customerType = jo.getString("Customer Type");
+			String dateRegistered = jo.getString("Date Registered");
+			Integer status = jo.getInt("Status");
+			String practisingCertDate = jo.getString("Practicing Cert Date");
+
+			User user = dao.findUserByMemberNo(memberNo);
+			user.setEmail(email);
+			BioData userData = new BioData();
+			userData.setFullNames(fullNames);
+			user.setMobileNo(phoneNo);
+			update(user.getRefId(), user);
+			return user;
+		}
 	}
 
 	public void setProfilePic(String userId, byte[] bites, String fileName,
@@ -374,7 +498,10 @@ public class UsersDaoHelper {
 
 		logger.info("LogInHandlerexecut(): actiontype="
 				+ action.getActionType());
-		logger.info("LogInHandlerexecut(): currentUserDto=" + currentUserDto);
+		if (currentUserDto != null) {
+			logger.info("LogInHandlerexecut(): currentUserDto="
+					+ currentUserDto);
+		}
 		logger.info("LogInHandlerexecut(): loggedInCookie=" + loggedInCookie);
 
 		assert action.getActionType() == null;
@@ -409,46 +536,95 @@ public class UsersDaoHelper {
 	public void changePassword(String userId, String newPassword) {
 		User user = dao.findByUserId(userId);
 		user.setPassword(newPassword);
+
+		/**
+		 * Updating lms password upon password change
+		 */
+		/*
+		 * if (user.getMemberNo() != null && !user.getMemberNo().isEmpty()) {
+		 * logger
+		 * .info(" +++++++ Updating LMS password upon password change +++++++ "
+		 * );
+		 * 
+		 * LMSResponse lmsRespone = null;
+		 * 
+		 * LMSPassWordDto dto = new LMSPassWordDto();
+		 * dto.setMembershipID(user.getMemberNo());
+		 * dto.setPassword(newPassword);
+		 * 
+		 * JSONObject jObject = new JSONObject(dto); try { lmsRespone =
+		 * LMSIntegrationUtil.getInstance().executeLMSCall(
+		 * "/Account/Updatepassword", jObject, String.class); } catch
+		 * (IOException e) { e.printStackTrace(); }
+		 * 
+		 * if (lmsRespone != null) { if (lmsRespone.equals("Invalid User.")) {
+		 * return; } }
+		 * 
+		 * }
+		 */
+
 		dao.changePassword(user);
 
 	}
 
-	public String postUserToLMS(String userId) throws IOException {
-		User user = dao.findByUserId(userId);
+	public String postUserToLMS(String userRefId, String password)
+			throws IOException {
+		User user = dao.findByUserId(userRefId);
+
+		if (user.getLmsPayLoad() == null || user.getLmsPayLoad().isEmpty()) {
+			logger.info(" ++++++++ Sending Activation mail on post user to lms +++++ ");
+			sendActivationEmail(user);
+		}
+
 		LMSMemberDto dto = new LMSMemberDto();
 		dto.setFirstName(user.getUserData().getFirstName());
 		dto.setLastName(user.getUserData().getLastName());
 		dto.setGender((user.getUserData().getGender() == Gender.MALE ? Gender.MALE
-				.getCode() : Gender.FEMALE.getCode()));
-		dto.setMobileNo(user.getPhoneNumber());
-		dto.setPassword(user.getPassword());
+				.getCode() + ""
+				: Gender.FEMALE.getCode() + ""));
+		if (user.getPhoneNumber() != null && !user.getPhoneNumber().isEmpty()) {
+			dto.setMobileNo(user.getPhoneNumber());
+		} else {
+			dto.setMobileNo("0722333333");
+		}
+		dto.setPassword(password);
 		dto.setTimeZone("E. Africa Standard Time");
-		dto.setTitle(Title.Mr.getCode());
+		dto.setTitle(Title.Mr.getCode() + "");
 		if (user.getUserData().getDob() != null) {
-			dto.setDOB(new SimpleDateFormat("dd-mm-yyyy").format(user
+			dto.setDOB(new SimpleDateFormat("dd-MM-yyyy").format(user
 					.getUserData().getDob()));
 		} else {
-			dto.setDOB(new SimpleDateFormat("dd-mm-yyyy").format(new Date()));
+			dto.setDOB(new SimpleDateFormat("dd-MM-yyyy").format(new Date()));
 		}
+
 		if (user.getMemberNo() != null) {
-			dto.setUserName(user.getMemberNo() + "@wira.io");
-			// dto.setUserName(user.getMemberNo());
 			dto.setMembershipID(user.getMemberNo());
-		} else if (user.getEmail() != null) {
+		}
+
+		if (user.getEmail() != null) {
 			dto.setUserName(user.getEmail());
-			dto.setMembershipID("");
 		}
 		dto.setRefID(user.getRefId());
 
-		String response = LMSIntegrationUtil.getInstance().executeLMSCall(
-				"/Account/Register", dto, String.class);
-		// messages -for testing
-		return response;
+		JSONObject jObject = new JSONObject(dto);
+		LMSResponse response = LMSIntegrationUtil.getInstance().executeLMSCall(
+				"/account/register", jObject, String.class);
+		logger.info("LMS Response::" + response.getMessage());
+		logger.info("LMS Status::" + response.getStatus());
+		logger.info("LMS PayLoad::" + jObject.toString());
+		user.setLmsResponse(response.getMessage());
+		user.setLmsStatus(response.getStatus());
+		user.setLmsPayLoad(jObject.toString());
+		dao.updateUser(user);
+
+		return response.getStatus();
 	}
 
 	public void activateAccount(String userId, AccountStatus activated) {
 		User user = dao.findByUserId(userId);
 		user.setStatus(activated);
+
+		dao.save(user);
 	}
 
 	public String getApplicationRefId(String userRef) {
@@ -462,27 +638,66 @@ public class UsersDaoHelper {
 		String resetUrl = settings.getApplicationPath() + "/#activateacc;uid="
 				+ userId;
 
-		String body = "Password Reset Instructions For: <br/>" + "<div>"
-				+ "Name: " + user.getUserData().getFullNames()
-				+ "<br/>Member No: " + user.getMemberNo() == null ? "N/A"
-				: user.getMemberNo()
-						+ "</div>"
-						+ "<a href='"
-						+ resetUrl
-						+ "'>Reset Your Password</a> and follow onscreen instructions."
-						+ "This email can be ignored if you did not request a password reset. The link is only "
-						+ "available for a short time";
+		assert (user != null);
+		String body = "Dear "
+				+ user.getUserData().getFirstName()
+				+ ",<br/>"
+				+ "Your password has been successfully reset. "
+				+ "<a href='"
+				+ resetUrl
+				+ "'>Click Here to Create Password</a><br/>"
+				+ "This email can be ignored if you did not request a password reset on the portal. The link is only "
+				+ "available for a short time";
+
+		// System.err.println(">>>>>" + body);
 
 		try {
 			EmailServiceHelper.sendEmail(body, subject,
 					Arrays.asList(user.getEmail()),
 					Arrays.asList(user.getUserData().getFirstName()));
 		} catch (UnsupportedEncodingException | MessagingException e) {
-			logger.warning("Send Reset Email Failed: email= " + user.getEmail()
+			logger.info("Send Reset Email Failed: email= " + user.getEmail()
 					+ ", refId= " + user.getRefId());
 			e.printStackTrace();
 
 		}
 	}
 
+	public UserDto rePostToLms(String userRefId) {
+		logger.info(" ++++++++++++++++ REPOST TO LMS ++++++++++++++ ");
+		User user = dao.findByUserId(userRefId);
+		LMSResponse response = null;
+		try {
+			if (user.getLmsPayLoad() != null) {
+				response = LMSIntegrationUtil.getInstance()
+						.executeLMSCall("/account/register",
+								user.getLmsPayLoad(), String.class);
+			} else {
+				response = new LMSResponse();
+
+				if (user.getLmsStatus() == null
+						|| user.getLmsStatus().equals("Failed")
+						|| user.getLmsStatus().isEmpty()
+						|| user.getLmsResponse() == null) {
+					sendActivationEmail(user);
+				}
+
+				response.setMessage("No payload available");
+				response.setStatus("Failed");
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		if (response != null) {
+			logger.info("LMS Response on Repost::" + response.getMessage());
+			logger.info("LMS Status on Repost::" + response.getStatus());
+			logger.info("LMS PayLoad on Repost::" + user.getLmsPayLoad());
+			user.setLmsResponse(response.getMessage());
+			user.setLmsStatus(response.getStatus());
+			dao.updateUser(user);
+		}
+
+		return user.toDto();
+	}
 }

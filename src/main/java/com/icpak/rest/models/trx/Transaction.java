@@ -12,51 +12,49 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.icpak.rest.models.base.PO;
 import com.wordnik.swagger.annotations.ApiModel;
+import com.workpoint.icpak.shared.model.PaymentMode;
 import com.workpoint.icpak.shared.model.PaymentStatus;
 import com.workpoint.icpak.shared.trx.TransactionDto;
 
 /**
- * Transaction model 
+ * Transaction model
+ * 
  * @author duggan
  *
  */
 
-@ApiModel(value="Transaction Model", description="A transaction model")
-
+@ApiModel(value = "Transaction Model", description = "A transaction model")
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-
 @Entity
-@Table(name="transaction")
-public class Transaction extends PO{
+@Table(name = "transaction")
+public class Transaction extends PO {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	private String memberId;
 	private Date date;
 	private String description;
 	private Date dueDate;
 	private Double amount;
-	private String paymentMode;
-	
+
 	@Enumerated(EnumType.STRING)
-	private PaymentStatus status=PaymentStatus.NOTPAID;
-	
-	//MPESA
+	private PaymentMode paymentMode;
+
+	@Enumerated(EnumType.STRING)
+	private PaymentStatus status = PaymentStatus.NOTPAID;
+	// MPESA
 	private String businessNo;
 	private String accountNo;
-	
-	//MPESA, VISA, MasterCard
+	// MPESA, VISA, MasterCard
 	private String trxNumber;
-	
-	//Document Specific
+	// Document Specific
 	private String documentNo;
-	
 	private String invoiceRef;
-	
+
 	public Transaction() {
 	}
 
@@ -101,7 +99,6 @@ public class Transaction extends PO{
 	}
 
 	public TransactionDto toDto() {
-		
 		TransactionDto dto = new TransactionDto();
 		dto.setAmount(amount);
 		dto.setDate(date);
@@ -124,14 +121,6 @@ public class Transaction extends PO{
 
 	public void setStatus(PaymentStatus status) {
 		this.status = status;
-	}
-
-	public String getPaymentMode() {
-		return paymentMode;
-	}
-
-	public void setPaymentMode(String paymentMode) {
-		this.paymentMode = paymentMode;
 	}
 
 	public String getBusinessNo() {
@@ -162,6 +151,14 @@ public class Transaction extends PO{
 		return documentNo;
 	}
 
+	public PaymentMode getPaymentMode() {
+		return paymentMode;
+	}
+
+	public void setPaymentMode(PaymentMode paymentMode) {
+		this.paymentMode = paymentMode;
+	}
+
 	public void setDocumentNo(String documentNo) {
 		this.documentNo = documentNo;
 	}
@@ -172,6 +169,6 @@ public class Transaction extends PO{
 
 	public void setInvoiceRef(String invoiceRef) {
 		this.invoiceRef = invoiceRef;
-	}	
-	
+	}
+
 }

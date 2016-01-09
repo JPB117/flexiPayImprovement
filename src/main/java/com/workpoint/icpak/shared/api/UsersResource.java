@@ -32,6 +32,10 @@ public interface UsersResource extends BaseResource {
 	public UserDto getById(@PathParam("userId") String userId);
 
 	@GET
+	@Path("/getUserByActivationEmail/{userId}")
+	public UserDto getUserByActivationEmail(@PathParam("userId") String userId);
+
+	@GET
 	@Path("/auth")
 	public UserDto login(@QueryParam("username") String username,
 			@QueryParam("password") String password);
@@ -54,6 +58,11 @@ public interface UsersResource extends BaseResource {
 	@Path("/{userId}/account-status/activate")
 	public void activateAccount(@PathParam("userId") String userId);
 
+	@GET
+	@Path("/{userId}/sendActivationEmail/{emailAddress}")
+	public void sendActivationEmail(@PathParam("userId") String userId,
+			@PathParam("emailAddress") String emailAddress);
+
 	@POST
 	@Path("/{userId}/password")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -61,13 +70,15 @@ public interface UsersResource extends BaseResource {
 			@QueryParam("password") String newPassword);
 
 	@POST
-	@Path("/{userId}/lmsPost")
+	@Path("/{userId}/lmsPost/{password}")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public String postUserLMS(@PathParam("userId") String userId);
+	public String postUserLMS(@PathParam("userId") String userId,
+			@PathParam("password") String password);
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	public UserDto create(UserDto user,@QueryParam("isSendEmail") boolean isSendEmail);
+	public UserDto create(UserDto user,
+			@QueryParam("isSendEmail") boolean isSendEmail);
 
 	@PUT
 	@Path("/{userId}")
@@ -77,6 +88,10 @@ public interface UsersResource extends BaseResource {
 	@DELETE
 	@Path("/{userId}")
 	public void delete(@PathParam("userId") String userId);
+	
+	@PUT
+	@Path("/repost")
+	public UserDto repostToLms(@QueryParam("userRefId") String userRefId);
 
 	// @PUT
 	// @Path("/{userId}/password")

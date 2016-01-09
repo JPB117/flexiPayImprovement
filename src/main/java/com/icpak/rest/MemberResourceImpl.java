@@ -137,4 +137,39 @@ public class MemberResourceImpl implements MemberResource {
 		return bookingsDaoHelper.getMemberBookings(memberId, offset, limit);
 	}
 
+	@GET
+	@Path("/frontMembers")
+	public List<MemberDto> getMembers(@QueryParam("offset") Integer offset,
+			@QueryParam("limit") Integer limit) {
+		return membersHelper.getMembers(offset, limit);
+	}
+
+	@GET
+	@Path("/frontMemberCount")
+	public Integer getMembersCount() {
+		return membersHelper.getMembersCount("all", "all", "all");
+	}
+
+	@GET
+	@Path("/frontMembers/{searchTerm}/{citySearchTerm}/{categoryName}")
+	public List<MemberDto> searchMembers(
+			@PathParam("searchTerm") String searchTerm,
+			@PathParam("citySearchTerm") String citySearchTerm,
+			@PathParam("categoryName") String categoryName,
+			@QueryParam("offset") Integer offset,
+			@QueryParam("limit") Integer limit) {
+		return membersHelper.getMembersFromOldTable(searchTerm, citySearchTerm,
+				categoryName, offset, limit);
+	}
+
+	@GET
+	@Path("/frontMembers/searcCount/{searchTerm}/{citySearchTerm}/{categoryName}")
+	public Integer getMembersSearchCount(
+			@PathParam("searchTerm") String searchTerm,
+			@PathParam("citySearchTerm") String citySearchTerm,
+			@PathParam("categoryName") String categoryName) {
+		return membersHelper.getMembersCount(searchTerm, citySearchTerm,
+				categoryName);
+	}
+
 }

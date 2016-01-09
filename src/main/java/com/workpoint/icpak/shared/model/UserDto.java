@@ -22,14 +22,16 @@ public class UserDto extends SerializableObj implements Listable, Serializable {
 	private String email;
 	private String surname;
 	private String password;
+	private String fullName;
 	private ArrayList<RoleDto> groups = new ArrayList<RoleDto>();
 	private int participated;
 	private int inbox;
 	private AccountStatus status = AccountStatus.NEWACC;
 	private String phoneNumber;
 	private Date lastDateUpdateFromErp;
-
-	
+	private String lmsStatus;
+	private String lmsResponse;
+	private String lmsPayload;
 
 	public UserDto() {
 	}
@@ -40,6 +42,14 @@ public class UserDto extends SerializableObj implements Listable, Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
+	}
+
+	public String getFullName() {
+		return fullName;
 	}
 
 	public String getName() {
@@ -72,11 +82,6 @@ public class UserDto extends SerializableObj implements Listable, Serializable {
 
 	public void setPassword(String password) {
 		this.password = password;
-	}
-
-	@JsonIgnore
-	public String getFullName() {
-		return surname + " " + name;
 	}
 
 	@Override
@@ -202,12 +207,36 @@ public class UserDto extends SerializableObj implements Listable, Serializable {
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
-	
+
 	public void setLastDateUpdateFromErp(Date lastDateUpdateFromErp) {
 		this.lastDateUpdateFromErp = lastDateUpdateFromErp;
 	}
 
 	public Date getLastDateUpdateFromErp() {
 		return lastDateUpdateFromErp;
+	}
+
+	public String getLmsStatus() {
+		return lmsStatus;
+	}
+
+	public void setLmsStatus(String lmsStatus) {
+		this.lmsStatus = lmsStatus;
+	}
+
+	public String getLmsResponse() {
+		return lmsResponse;
+	}
+
+	public void setLmsResponse(String lmsResponse) {
+		this.lmsResponse = lmsResponse;
+	}
+
+	public String getLmsPayload() {
+		return lmsPayload;
+	}
+
+	public void setLmsPayload(String lmsPayload) {
+		this.lmsPayload = lmsPayload;
 	}
 }

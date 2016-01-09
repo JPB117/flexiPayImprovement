@@ -1,6 +1,7 @@
 package com.workpoint.icpak.client.ui.login.createpassword;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.HasKeyDownHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Widget;
@@ -71,6 +72,10 @@ public class ActivateAccountView extends ViewImpl implements
 		return panelPasswordWidget.getResendButton();
 	}
 
+	public HasClickHandlers getSendActivationLink() {
+		return panelPasswordWidget.getSendActivationLink();
+	}
+
 	@Override
 	public String getEmail() {
 		return panelPasswordWidget.getEmail();
@@ -86,4 +91,21 @@ public class ActivateAccountView extends ViewImpl implements
 		panelPasswordWidget.addError(message);
 	}
 
+	@Override
+	public void showMessage(String errorMessage, String errorType) {
+		panelPasswordWidget.showMessage(errorMessage, errorType);
+	}
+
+	@Override
+	public HasClickHandlers getProceedToLogin() {
+		return panelPasswordWidget.getProceedToLogin();
+	}
+
+	public HasKeyDownHandlers getEmailTextField() {
+		return panelPasswordWidget.getEmailTextField();
+	}
+
+	public HasKeyDownHandlers getPasswordTextField() {
+		return panelPasswordWidget.getPasswordTextField();
+	}
 }

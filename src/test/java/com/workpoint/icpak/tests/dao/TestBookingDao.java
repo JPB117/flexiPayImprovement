@@ -3,7 +3,8 @@ package com.workpoint.icpak.tests.dao;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
- 
+
+import org.apache.log4j.Logger;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -12,6 +13,7 @@ import com.icpak.rest.dao.BookingsDao;
 import com.icpak.rest.dao.EventsDao;
 import com.icpak.rest.dao.helper.BookingsDaoHelper;
 import com.icpak.rest.dao.helper.CPDDaoHelper;
+import com.icpak.rest.models.event.Booking;
 import com.icpak.rest.models.event.Delegate;
 import com.workpoint.icpak.shared.model.PaymentStatus;
 import com.workpoint.icpak.shared.model.events.AttendanceStatus;
@@ -21,6 +23,8 @@ import com.workpoint.icpak.shared.model.events.DelegateDto;
 import com.workpoint.icpak.tests.base.AbstractDaoTest;
 
 public class TestBookingDao extends AbstractDaoTest {
+
+	Logger logger = Logger.getLogger(TestBookingDao.class);
 
 	@Inject
 	BookingsDaoHelper bookingsHelper;
@@ -54,17 +58,32 @@ public class TestBookingDao extends AbstractDaoTest {
 	}
 
 	@Ignore
+	public void testGenerateEmail() {
+		bookingsHelper.sendProInvoice("C6lcgHyPYUDCcUBi");
+	}
+
+	@Ignore
+	public void testGetDelegate() {
+		List<DelegateDto> delegates = bookingsHelper.getAllDelegates(null,
+				"QEyf2DasD3X7Pybt", 0, 10, "");
+
+		for (DelegateDto del : delegates) {
+			System.err.println("Booking Ref>>" + del.getBookingRefId() + " "
+					+ del.getErn());
+		}
+	}
+
+	@Test
 	public void createBooking() {
 		BookingDto dto = new BookingDto();
-
 		dto.setStatus("");
 		dto.setPaymentStatus(PaymentStatus.NOTPAID);
 		dto.setBookingDate(new Date().getTime());
 		ContactDto contact = new ContactDto();
 		contact.setAddress("P.o Box 3434");
 		contact.setCity("Nrb");
-		contact.setCompany("Workpoint");
-		contact.setContactName("Kimani");
+		contact.setCompany("Nairobi City County Assembly");
+		contact.setContactName("The County Assembly Clerk");
 		contact.setCountry("KENYA");
 		contact.setEmail("tomkim@wira.io");
 		contact.setPostCode("00200");
@@ -73,22 +92,76 @@ public class TestBookingDao extends AbstractDaoTest {
 
 		List<DelegateDto> delegates = new ArrayList<>();
 		DelegateDto delegate = new DelegateDto();
-		delegate.setEmail("kim@wira.io");
-		delegate.setOtherNames("Kimani");
-		delegate.setSurname("Tom");
-		delegate.setMemberId("10000");
-		// delegate.setMemberRefId("LCJ4fe1eoOdxwq69");
+		delegate.setEmail("ekayaalumasi@yahoo.com");
+		delegate.setOtherNames("Cheboi");
+		delegate.setSurname("Thomas");
 		delegates.add(delegate);
 		dto.setDelegates(delegates);
 
 		// dto.setCurrency(currency);
-		bookingsHelper.createBooking("PrjIf8x4RIDaPZIv", dto);
+		BookingDto booking = bookingsHelper.createBooking("f8bvwNmvya9697MH",
+				dto);
+		System.err.println(booking.getRefId());
+		bookingsHelper.sendProInvoice(booking.getRefId());
+	}
+
+	@Ignore
+	public void TestImportBookings() {
+		bookingDao.importAllEvents();
+	}
+
+	@Ignore
+	public void testDeleteInvoiceFrombooking() {
+		String bookingRefid = "RVfeXiMtWWETmQRi";
+		bookingDao.deleteAllBookingInvoice(bookingRefid);
+	}
+
+	@Ignore
+	public void testSearch() {
+		List<DelegateDto> delegates = bookingsHelper.getAllDelegates("",
+				"Jx4Ca6HpOutf2ic7", null, 1000, "ki");
+		System.err.println(bookingsHelper.getDelegatesCount("Jx4Ca6HpOutf2ic7",
+				"ki"));
+
+		for (DelegateDto d : delegates) {
+			logger.error(" Delegate Ref Id = " + d.getRefId());
+		}
+
+		System.err.println(delegates.size());
 
 	}
-	
-	@Test
-	public void testDeleteInvoiceFrombooking(){
-		String bookingRefid="RVfeXiMtWWETmQRi";
-		bookingDao.deleteAllBookingInvoice(bookingRefid);
+
+	@Ignore
+	public void testSearchCount() {
+		System.err.println(bookingsHelper.getDelegatesCount("Jx4Ca6HpOutf2ic7",
+				"ki"));
+	}
+
+	@Ignore
+	public void testEnrolCourse() {
+		// bookingsHelper.enrolDelegateToLMS(delegates, bookingId);
+	}
+
+	@Ignore
+	public void testSearchEvents() {
+		System.err.println(eventDao.getAllEvents(0, 1000, null, "Fina").size());
+		System.err.println(eventDao.getSearchEventCount("Fin"));
+	}
+
+	@Ignore
+	public void testUpdate() {
+
+		Delegate delInDb = eventDao.findByRefId("ZOrfIhI5IBnVvuNn",
+				Delegate.class);
+		DelegateDto delegate = delInDb.toDto();
+
+		delegate.setClearanceNo("5252852");
+		delegate.setLpoNo("2828662368238");
+		delegate.setReceiptNo("552528528525");
+		delegate.setIsCredit(1);
+		delegate.setAttendance(AttendanceStatus.ATTENDED);
+		delegate.setEventRefId("Jx4Ca6HpOutf2ic7");
+
+		// bookingsHelper.updateDelegate(null, delegate.getRefId(), delegate);
 	}
 }

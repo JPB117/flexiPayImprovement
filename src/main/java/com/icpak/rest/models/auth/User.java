@@ -30,6 +30,7 @@ import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -65,12 +66,9 @@ import com.workpoint.icpak.shared.model.auth.AccountStatus;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlSeeAlso({ BioData.class })
 @Entity
-@Table(name = "user", indexes = { @Index(columnList = "username", name = "idx_users_username")
-		// ,@Index(columnList = "email", name = "idx_users_email")
-})
+@Table(name = "user", indexes = { @Index(columnList = "username", name = "idx_users_username") })
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class User extends PO {
-
 	/**
 	 * 
 	 */
@@ -79,7 +77,6 @@ public class User extends PO {
 	@ApiModelProperty(value = "username", required = true)
 	@Basic(optional = false)
 	@Column(length = 100, unique = true)
-	// @Index(name="idx_users_username")
 	private String username;
 
 	@ApiModelProperty(value = "user email")
@@ -88,25 +85,24 @@ public class User extends PO {
 	private String email;
 
 	@Basic(optional = true)
-	// Allow an initial user with no password to be created
 	@Column(length = 255)
 	private String password;
 
 	@JsonIgnore
 	@XmlTransient
-	@ManyToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST })
-	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "userid") , inverseJoinColumns = @JoinColumn(name = "roleid") )
+	@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH,
+			CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST })
+	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = @JoinColumn(name = "roleid"))
 	@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 	private Set<Role> roles = new HashSet<Role>();
-
 	@Embedded
 	private BioData userData = null;
-
-	@OneToOne(mappedBy = "user", cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
+	@OneToOne(fetch = FetchType.LAZY, mappedBy = "user", cascade = {
+			CascadeType.PERSIST, CascadeType.REMOVE })
 	private Member member;
-
 	private String memberNo;
 	private String phoneNumber;
+	private String fullName;
 	private String mobileNo;
 	private String residence;
 	private String address;
@@ -114,6 +110,10 @@ public class User extends PO {
 	private String nationality;
 	private String address2;
 	private String postalCode;
+	private String lmsStatus;
+	private String lmsResponse;
+	@Column(columnDefinition = "TEXT")
+	private String lmsPayLoad;
 
 	@Enumerated(EnumType.STRING)
 	private AccountStatus status = AccountStatus.NEWACC;
@@ -141,7 +141,6 @@ public class User extends PO {
 
 		User user = new User();
 		user.setRefId(refId);
-		// user.setUsername(getUsername());
 		user.setEmail(email);
 		user.setAddress(address);
 		user.setCity(city);
@@ -165,15 +164,8 @@ public class User extends PO {
 
 		if (expand != null) {
 			for (String token : expand) {
-				// if(token.equals("bookings")){
-				// for(Booking booking: bookings){
-				// user.addBooking(booking.clone());
-				// }
-				// }
 
 				if (token.toUpperCase().equals(ExpandTokens.DETAIL.name())) {
-					// user.setLastName(getLastName());
-					// user.setFirstName(getFirstName());
 					user.setEmail(getEmail());
 				}
 
@@ -209,8 +201,27 @@ public class User extends PO {
 		BioData bio = new BioData();
 		bio.setFirstName(dto.getName());
 		bio.setLastName(dto.getSurname());
-		// bio.setGender(dto.get);
+		setMemberNo(dto.getMemberNo());
+		setLmsResponse(dto.getLmsResponse());
+		setLmsStatus(dto.getLmsStatus());
+		setLmsPayLoad(dto.getLmsPayload());
+		setFullName(dto.getFullName());
 		setUserData(bio);
+	}
+
+	public User copyOnUpdate(UserDto dto) {
+		setEmail(dto.getEmail());
+		setPhoneNumber(dto.getPhoneNumber());
+		BioData bio = new BioData();
+		bio.setFirstName(dto.getName());
+		bio.setLastName(dto.getSurname());
+		setMemberNo(dto.getMemberNo());
+		setLmsResponse(dto.getLmsResponse());
+		setLmsStatus(dto.getLmsStatus());
+		setLmsPayLoad(dto.getLmsPayload());
+		setFullName(dto.getFullName());
+		setUserData(bio);
+		return this;
 	}
 
 	public String getEmail() {
@@ -290,11 +301,18 @@ public class User extends PO {
 		UserDto dto = new UserDto();
 		dto.setMemberNo(memberNo);
 		dto.setEmail(email);
+		if (member != null && member.getRefId() != null) {
+			dto.setMemberRefId(member.getRefId());
+		}
 		dto.setName(userData.getFirstName());
 		dto.setSurname(userData.getLastName());
 		dto.setPhoneNumber(phoneNumber);
 		dto.setRefId(refId);
 		dto.setStatus(status);
+		dto.setLmsResponse(lmsResponse);
+		dto.setLmsStatus(lmsStatus);
+		dto.setLmsPayload(lmsPayLoad);
+		dto.setFullName(fullName);
 
 		if (member != null) {
 			dto.setLastDateUpdateFromErp(member.getLastUpdate());
@@ -357,6 +375,38 @@ public class User extends PO {
 
 	public void setPostalCode(String postalCode) {
 		this.postalCode = postalCode;
+	}
+
+	public String getLmsStatus() {
+		return lmsStatus;
+	}
+
+	public void setLmsStatus(String lmsStatus) {
+		this.lmsStatus = lmsStatus;
+	}
+
+	public String getLmsResponse() {
+		return lmsResponse;
+	}
+
+	public void setLmsResponse(String lmsResponse) {
+		this.lmsResponse = lmsResponse;
+	}
+
+	public String getLmsPayLoad() {
+		return lmsPayLoad;
+	}
+
+	public void setLmsPayLoad(String lmsPayLoad) {
+		this.lmsPayLoad = lmsPayLoad;
+	}
+
+	public String getFullName() {
+		return fullName;
+	}
+
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
 	}
 
 }

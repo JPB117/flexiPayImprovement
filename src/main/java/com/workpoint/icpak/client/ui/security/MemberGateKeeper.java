@@ -7,7 +7,7 @@ public class MemberGateKeeper implements Gatekeeper {
 
 	@Override
 	public boolean canReveal() {
-		return AppContext.isLoggedIn() && !AppContext.isCurrentUserAdmin();
+		return AppContext.isLoggedIn() && !AppContext.isCurrentUserAdmin()
+				&& AppContext.isCurrentUserMember();
 	}
-
 }

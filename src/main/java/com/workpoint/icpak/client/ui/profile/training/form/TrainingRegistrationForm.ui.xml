@@ -1,6 +1,7 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d='urn:import:com.workpoint.icpak.client.ui.component'>
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d='urn:import:com.workpoint.icpak.client.ui.component'
+	xmlns:up='urn:import:com.workpoint.icpak.client.ui.upload.custom'>
 	<g:HTMLPanel styleName="col-md-12">
 		<div class="row">
 			<div class="col-sm-12">
@@ -9,18 +10,14 @@
 
 
 			<div class="col-sm-12">
-				<div class="row">
-					<div class="col-xs-6">
-						<label for="firstname">Organization</label>
-						<d:TextField ui:field="txtOrganization" styleName="form-control"
-							placeholder="Organization Name" value="" required="true">
-						</d:TextField>
-					</div>
-					<div class="col-xs-6">
-						<label for="lastname">Position</label>
-						<d:TextField ui:field="txtPosition" styleName="form-control"
-							placeholder="Enter Position" value="" required="true">
-						</d:TextField>
+				<div class="form-group">
+					<div class="row">
+						<div class="col-xs-12">
+							<label for="firstname">Name and Address of Organization</label>
+							<d:TextField ui:field="txtOrganization" styleName="form-control"
+								placeholder="Organization Name" value="" required="true">
+							</d:TextField>
+						</div>
 					</div>
 				</div>
 
@@ -42,16 +39,27 @@
 					</div>
 				</div>
 
-
 				<div class="form-group">
 					<div class="row">
 						<div class="col-xs-6">
-							<label for="emailaddress">Task Nature:</label>
+							<label for="lastname">Position</label>
+							<d:TextField ui:field="txtPosition" styleName="form-control"
+								placeholder="Enter Position" value="" required="true">
+							</d:TextField>
+						</div>
+
+						<div class="col-xs-6">
+							<label for="emailaddress">Nature of Training / Tasks performed or
+								completed</label>
 							<d:TextField ui:field="txtTaskNature" styleName="form-control"
 								placeholder="Task Nature">
 							</d:TextField>
 						</div>
+					</div>
+				</div>
 
+				<div class="form-group hide">
+					<div class="row">
 						<div class="col-xs-6">
 							<label for="applicationCategory">Responsibilities:</label>
 							<d:TextArea ui:field="txtResponsibility" styleName="form-control"
@@ -59,20 +67,62 @@
 							</d:TextArea>
 						</div>
 					</div>
+				</div>
+
+				<div class="form-group hide">
+					<div class="row">
+						<div class="col-xs-6">
+							<label for="emailaddress">Training Type:</label>
+							<d:DropDownList ui:field="lstTrainingType"></d:DropDownList>
+						</div>
+
+						<div class="col-xs-6">
+							<label for="applicationCategory">Date passed:</label>
+							<d:DateField ui:field="dtDatePassed" placeholder="Enter Date passed"
+								required="true">
+							</d:DateField>
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<div class="row">
+						<div class="col-xs-12">
+							<label for="enddate">Attachments:</label>
+							<p class="text-small text-muted">
+								Provide details of professional experience/employment
+								record
+								during the last three (3) years starting from present
+								appointment by way of letter(s) from the employer(s) in
+								question. NB: The confirmation(s) should be made on
+								official/business notepaper, should be addressed to the
+								Chairman, Registration and Quality Assurance Committee and
+								should specify the character and professional conduct of
+								applicant.
+							</p>
+						</div>
+					</div>
 
 					<div class="form-group">
 						<div class="row">
 							<div class="col-xs-6">
-								<label for="emailaddress">Training Type:</label>
-								<d:DropDownList ui:field="lstTrainingType"></d:DropDownList>
+								<g:HTMLPanel ui:field="panelPreviousAttachments"></g:HTMLPanel>
 							</div>
+						</div>
+					</div>
 
-							<div class="col-xs-6">
-								<label for="applicationCategory">Date passed:</label>
-								<d:DateField ui:field="dtDatePassed" placeholder="Enter Date passed"
-									required="true">
-								</d:DateField>
-							</div>
+					<div class="form-group">
+						<div class="row">
+							<g:HTMLPanel ui:field="panelUpload">
+								<d:ActionLink ui:field="aStartUpload"
+									styleName="btn btn-default btn-primary">Click
+									Here to Upload Documents</d:ActionLink>
+							</g:HTMLPanel>
+							<g:HTMLPanel styleName="col-xs-6 hide" ui:field="panelUploader">
+								<label for="firstname">Click Browse to attach Files from your
+									computer..</label>
+								<up:Uploader ui:field="uploader" styleName="custom-file-input"></up:Uploader>
+							</g:HTMLPanel>
 						</div>
 					</div>
 				</div>

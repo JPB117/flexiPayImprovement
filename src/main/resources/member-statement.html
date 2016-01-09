@@ -2,6 +2,10 @@
 <html>
 <head>
 <style type="text/css">
+body {
+	font-family: Arial;
+}
+
 h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 	font-family: inherit;
 	font-weight: 500;
@@ -495,6 +499,7 @@ div.footer {
 
 @page {
 	size: 11.69in 8.27in;
+	font-family: Arial;
 }
 </style>
 </head>
@@ -510,8 +515,7 @@ div.footer {
 					<p>Mobile:0727-531006/0733-856262 | Wireless:020 2304226/7</p>
 				</div>
 				<div class="col-print-4 text-center">
-					<img
-						src="http://localhost:8080/icpakportal/img/icpak_logo.png"
+					<img src="http://localhost:8080/icpakportal/img/icpak_logo.png"
 						width="250px" height="150px" class="text-center"></img>
 				</div>
 				<div class="col-print-4 text-right">
@@ -527,12 +531,19 @@ div.footer {
 				<h1 class="text-center">Statement</h1>
 			</div>
 			<div class="row-fluid">
-				<div class="col-print-10">
-					@#memberNo<br /> @#memberNames <br /> @#memberAddress<br />
-					@#memberLocation <br />
+				<div class="col-print-6">
+					<strong>Customer No:</strong>@#memberNo<br /> @#memberNames <br />
+					@#memberAddress<br /> @#memberLocation <br />
 				</div>
-				<div class="col-print-2 text-right">
-					<b>Date:</b>@#date
+				<div class="col-print-5 text-right">
+					<p>Starting Date: @#startingDate</p>
+					<p>Ending Date: @#endingDate</p>
+				</div>
+			</div>
+
+			<div class="row-fluid">
+				<div class="col-print-12">
+					<br /> <b>Date:</b>@#date
 				</div>
 			</div>
 		</div>
@@ -542,23 +553,25 @@ div.footer {
 			<table class="table table-condensed">
 				<thead>
 					<tr>
-						<th>Posting Date</th>
+						<th>Date</th>
+						<th>Type</th>
 						<th>Doc No</th>
-						<th>Description</th>
-						<th>Original Amount(Ksh)</th>
-						<th>Credit</th>
-						<th>Balance</th>
+						<th style="text-align: right">Description</th>
+						<th style="text-align: right">Debit</th>
+						<th style="text-align: right">Credit</th>
+						<th style="text-align: right">Balance</th>
 					</tr>
 				</thead>
 				<tbody>
 					<!--@>statementDetail-->
 					<tr>
 						<td>@#postingDate</td>
+						<td>@#type</td>
 						<td>@#docNo</td>
-						<td>@#description</td>
-						<td>@#originalAmount</td>
-						<td>@#credit</td>
-						<td class="num">@#balance</td>
+						<td style="text-align: right">@#description</td>
+						<td style="text-align: right">@#debit</td>
+						<td style="text-align: right">@#credit</td>
+						<td style="text-align: right" class="num">@#balance</td>
 					</tr>
 					<!--@<statementDetail-->
 					<tr>
@@ -566,7 +579,8 @@ div.footer {
 						<td></td>
 						<td></td>
 						<td></td>
-						<td class="num"><b>Total</b></td>
+						<td></td>
+						<td class="num"><b>Total Balance</b></td>
 						<td class="num"><b style="border-bottom: 3px double;">KES
 								@#totalAmount</b></td>
 					</tr>

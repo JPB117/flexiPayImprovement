@@ -2,15 +2,27 @@ package com.workpoint.icpak.client.ui.profile.education.form;
 
 import static com.workpoint.icpak.client.ui.util.StringUtils.isNullOrEmpty;
 
+import java.util.Arrays;
+
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.workpoint.icpak.client.model.UploadContext;
+import com.workpoint.icpak.client.model.UploadContext.UPLOADACTION;
+import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.DateField;
 import com.workpoint.icpak.client.ui.component.IssuesPanel;
 import com.workpoint.icpak.client.ui.component.TextField;
+import com.workpoint.icpak.client.ui.upload.custom.Uploader;
 import com.workpoint.icpak.shared.model.ApplicationFormEducationalDto;
+import com.workpoint.icpak.shared.model.AttachmentDto;
 
 public class EducationRegistrationForm extends Composite {
 
@@ -35,6 +47,20 @@ public class EducationRegistrationForm extends Composite {
 	TextField txtAward;
 	@UiField
 	TextField txtEduType;
+	@UiField
+	Uploader uploader;
+
+	@UiField
+	ActionLink aStartUpload;
+
+	@UiField
+	HTMLPanel panelUploader;
+
+	@UiField
+	HTMLPanel panelUpload;
+
+	@UiField
+	HTMLPanel panelPreviousAttachments;
 
 	@UiField
 	IssuesPanel issues;
@@ -47,6 +73,7 @@ public class EducationRegistrationForm extends Composite {
 
 	public EducationRegistrationForm() {
 		initWidget(uiBinder.createAndBindUi(this));
+		showUploadPanel(false);
 	}
 
 	public EducationRegistrationForm(String firstName) {
@@ -76,15 +103,6 @@ public class EducationRegistrationForm extends Composite {
 			issues.addError("Date Completed is mandatory");
 		}
 
-		if (isNullOrEmpty(txtSectionsPassed.getValue())) {
-			isValid = false;
-			issues.addError("Sections Passed is mandatory");
-		}
-
-		if (isNullOrEmpty(txtRegistrationNo.getValue())) {
-			isValid = false;
-			issues.addError("Registration No is mandatory");
-		}
 		if (isNullOrEmpty(txtClassOrDivision.getValue())) {
 			isValid = false;
 			issues.addError("Class/Division is mandatory");
@@ -105,10 +123,13 @@ public class EducationRegistrationForm extends Composite {
 		txtSectionsPassed.setValue("");
 		txtRegistrationNo.setValue("");
 		txtClassOrDivision.setValue("");
+		txtAward.setValue("");
+		panelPreviousAttachments.clear();
+		showUploadPanel(false);
+		uploader.clear();
 	}
 
 	public ApplicationFormEducationalDto getEducationDto() {
-
 		ApplicationFormEducationalDto dto = new ApplicationFormEducationalDto();
 		if (educationDto != null) {
 			dto = educationDto;
@@ -120,15 +141,13 @@ public class EducationRegistrationForm extends Composite {
 		dto.setSections(txtSectionsPassed.getValue());
 		dto.setRegNo(txtRegistrationNo.getValue());
 		dto.setClassDivisionAttained(txtClassOrDivision.getValue());
-		// dto.setCertificateAwarded(txtAward.getValue());
-		// dto.setType(txtEduType.getValue());
-
+		dto.setCertificateAwarded(txtAward.getValue());
 		return dto;
 	}
 
 	public void bindDetail(ApplicationFormEducationalDto educationDto) {
 		this.educationDto = educationDto;
-
+		clear();
 		txtInstitution.setValue(educationDto.getWhereObtained());
 		txtExaminingBody.setValue(educationDto.getExaminingBody());
 		dtStartDate.setValue(educationDto.getFromDate());
@@ -136,8 +155,50 @@ public class EducationRegistrationForm extends Composite {
 		txtSectionsPassed.setValue(educationDto.getSections());
 		txtRegistrationNo.setValue(educationDto.getRegNo());
 		txtClassOrDivision.setValue(educationDto.getClassDivisionAttained());
-		// txtAward.setValue(educationDto.getCertificateAwarded());
-		// txtEduType.setValue(educationDto.getType().name());
+		txtAward.setValue(educationDto.getCertificateAwarded());
+
+		if (educationDto.getAttachments() != null) {
+			for (final AttachmentDto attachment : educationDto.getAttachments()) {
+				final UploadContext ctx = new UploadContext("getreport");
+				ctx.setAction(UPLOADACTION.GETATTACHMENT);
+				ctx.setContext("refId", attachment.getRefId());
+
+				ActionLink link = new ActionLink(attachment.getAttachmentName());
+				link.addClickHandler(new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {
+						Window.open(ctx.toUrl(),
+								attachment.getAttachmentName(), "");
+					}
+				});
+				panelPreviousAttachments.add(link);
+			}
+		}
+		setUploadContext();
+		showUploadPanel(true);
+	}
+
+	public void showUploadPanel(boolean showForm) {
+		aStartUpload.setVisible(!showForm);
+		if (showForm) {
+			panelUploader.removeStyleName("hide");
+			setUploadContext();
+		} else {
+			panelUploader.addStyleName("hide");
+		}
+	}
+
+	private void setUploadContext() {
+		UploadContext context = new UploadContext();
+		context.setContext("educationRefId", getEducationDto().getRefId());
+		context.setAction(UPLOADACTION.UPLOADEDUCATIONATTATCHMENTS);
+		context.setAccept(Arrays.asList("doc", "pdf", "jpg", "jpeg", "png",
+				"docx"));
+		uploader.setContext(context);
+	}
+
+	public HasClickHandlers getStartUploadButton() {
+		return aStartUpload;
 	}
 
 }

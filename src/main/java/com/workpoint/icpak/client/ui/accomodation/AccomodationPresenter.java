@@ -149,7 +149,7 @@ public class AccomodationPresenter
 					getView().showCreate(true);
 				}
 			}
-		}).getAll(0, 100);
+		}).getAll(0, 100, "");
 	}
 
 	protected void showPopUp(AccommodationDto dto) {

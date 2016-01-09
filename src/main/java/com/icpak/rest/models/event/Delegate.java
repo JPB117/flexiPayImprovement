@@ -1,6 +1,8 @@
 package com.icpak.rest.models.event;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -28,9 +30,8 @@ public class Delegate extends PO {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
 	private String memberRegistrationNo;
-	private String ern;// ERN Number - see trigger generate_booking_ern_no
+	private String ern;
 	private String memberRefId;
 	private String title;
 	private String surname;
@@ -39,19 +40,52 @@ public class Delegate extends PO {
 
 	@Transient
 	private String bookingId;
-
 	@ManyToOne
 	@JoinColumn(name = "booking_id")
 	@XmlTransient
 	private Booking booking;
-
+	private Double amount;
+	@Enumerated(EnumType.ORDINAL)
+	private AttendanceStatus attendance = AttendanceStatus.NOTATTENDED;
 	@ManyToOne
 	@JoinColumn(name = "accommodationId")
 	private Accommodation accommodation;
+	private String receiptNo;
+	private String lpoNo;
+	private int isCredit;
+	private String clearanceNo;
 
-	private Double amount;
+	public String getBookingId() {
+		return bookingId;
+	}
 
-	private AttendanceStatus attendance = AttendanceStatus.NOTATTENDED;
+	public void setBookingId(String bookingId) {
+		this.bookingId = bookingId;
+	}
+
+	public String getReceiptNo() {
+		return receiptNo;
+	}
+
+	public void setReceiptNo(String receiptNo) {
+		this.receiptNo = receiptNo;
+	}
+
+	public String getLpoNo() {
+		return lpoNo;
+	}
+
+	public void setLpoNo(String lpoNo) {
+		this.lpoNo = lpoNo;
+	}
+
+	public int getIsCredit() {
+		return isCredit;
+	}
+
+	public void setIsCredit(int isCredit) {
+		this.isCredit = isCredit;
+	}
 
 	public String getMemberRegistrationNo() {
 		return memberRegistrationNo;
@@ -113,34 +147,41 @@ public class Delegate extends PO {
 
 	public void copyFrom(DelegateDto delegateDto) {
 		setEmail(delegateDto.getEmail());
-
-		setMemberRegistrationNo(delegateDto.getMemberId());
+		setMemberRegistrationNo(delegateDto.getMemberNo());
 		setMemberRefId(delegateDto.getMemberRefId());
 		setOtherNames(delegateDto.getOtherNames());
 		setSurname(delegateDto.getSurname());
 		setTitle(delegateDto.getTitle());
-
-		if (delegateDto.getAttendance() != null)
+		if (delegateDto.getAttendance() != null) {
 			setAttendance(delegateDto.getAttendance());
+		}
+		setIsCredit(delegateDto.getIsCredit());
+		setLpoNo(delegateDto.getLpoNo());
+		setReceiptNo(delegateDto.getLpoNo());
+		setClearanceNo(delegateDto.getClearanceNo());
 	}
 
 	public DelegateDto toDto() {
 		DelegateDto dto = new DelegateDto();
 		dto.setEmail(email);
-		dto.setMemberId(memberRegistrationNo);
+		dto.setMemberNo(memberRegistrationNo);
 		dto.setMemberRefId(memberRefId);
 		dto.setOtherNames(otherNames);
 		dto.setRefId(getRefId());
 		dto.setErn(ern);
 		dto.setSurname(surname);
 		dto.setTitle(title);
+		dto.setBookingId(bookingId);
+		dto.setBookingRefId(booking.getRefId());
 		if (getAccommodation() != null) {
 			dto.setAccommodation(getAccommodation().toDto());
 		}
-
 		dto.setAttendance(attendance);
 		dto.setAmount(amount);
-
+		dto.setIsCredit(isCredit);
+		dto.setLpoNo(lpoNo);
+		dto.setReceiptNo(receiptNo);
+		dto.setClearanceNo(clearanceNo);
 		return dto;
 	}
 
@@ -188,6 +229,14 @@ public class Delegate extends PO {
 
 	public void setErn(String ern) {
 		this.ern = ern;
+	}
+
+	public String getClearanceNo() {
+		return clearanceNo;
+	}
+
+	public void setClearanceNo(String clearanceNo) {
+		this.clearanceNo = clearanceNo;
 	}
 
 }

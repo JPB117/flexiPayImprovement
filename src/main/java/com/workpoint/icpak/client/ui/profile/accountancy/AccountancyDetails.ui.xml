@@ -1,0 +1,25 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:d='urn:import:com.workpoint.icpak.client.ui.component' xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<g:HTMLPanel>
+		<g:HTMLPanel styleName="row">
+			<br />
+			<div class="row">
+				<div class="col-sm-12">
+					<d:ActionLink styleName="btn btn-next btn-fill btn-default btn-wd btn-sm"
+						ui:field="aAdd">
+						<i class="fa fa-plus"></i>
+						Add Record
+					</d:ActionLink>
+				</div>
+			</div>
+			<br />
+			<g:HTMLPanel ui:field="panelTable" styleName="row">
+				<div class="col-sm-12">
+					<d:TableView ui:field="tblTrainingDetails">
+					</d:TableView>
+				</div>
+			</g:HTMLPanel>
+		</g:HTMLPanel>
+	</g:HTMLPanel>
+</ui:UiBinder> 

@@ -63,6 +63,7 @@ public class MemberRegistrationView extends ViewImpl implements
 
 	@UiField
 	Anchor aAccount;
+
 	@UiField
 	DivElement divPackage;
 	@UiField
@@ -127,9 +128,11 @@ public class MemberRegistrationView extends ViewImpl implements
 
 	@UiField
 	SpanElement spnSelected;
-
 	@UiField
 	ProformaInvoice proformaInv;
+
+	@UiField
+	ActionLink aSetUpPassword;
 
 	// List of Items
 	private List<LIElement> liElements = new ArrayList<LIElement>();
@@ -159,7 +162,7 @@ public class MemberRegistrationView extends ViewImpl implements
 		// Li Elements
 		liElements.add(liTab1);
 		liElements.add(liTab2);
-		liElements.add(liTab3);
+		// liElements.add(liTab3);
 		liElements.add(liTab4);
 
 		aNonPractising.addClickHandler(selectHandler);
@@ -170,16 +173,16 @@ public class MemberRegistrationView extends ViewImpl implements
 		pageElements.add(new PageElement(divPackage, "Proceed", liTab1));
 		pageElements.add(new PageElement(divCategories, "Submit", "Back",
 				liTab2));
-		pageElements
-				.add(new PageElement(divProforma, "Proceed to Pay", liTab3));
-		pageElements.add(new PageElement(divPayment, "Finish", "Back", liTab4));
+		// pageElements
+		// .add(new PageElement(divProforma, "Proceed to Pay", liTab3));
+		pageElements.add(new PageElement(divPasswordConfiguration, null, null,
+				liTab4));
 
 		setActive(liElements.get(counter), pageElements.get(counter));
 		aBack.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				counter = counter - 1;
-				showMyAccountLink(counter);
 				removeActive(liElements.get(counter), pageElements.get(counter));
 				setActive(liElements.get(counter), pageElements.get(counter));
 			}
@@ -236,14 +239,6 @@ public class MemberRegistrationView extends ViewImpl implements
 			break;
 		default:
 			break;
-		}
-	}
-
-	protected void showMyAccountLink(int counter) {
-		if (counter == 2) {
-			aAccount.removeStyleName("hide");
-		} else {
-			aAccount.addStyleName("hide");
 		}
 	}
 
@@ -324,7 +319,7 @@ public class MemberRegistrationView extends ViewImpl implements
 	}
 
 	@Override
-	public HasClickHandlers getABack() {
+	public Anchor getABack() {
 		return aBack;
 	}
 
@@ -401,7 +396,6 @@ public class MemberRegistrationView extends ViewImpl implements
 	public void next() {
 		pageElements.get(counter).setCompletion(true);
 		counter = counter + 1;
-		showMyAccountLink(counter);
 		setActive(liElements.get(counter), pageElements.get(counter));
 	}
 
@@ -438,13 +432,12 @@ public class MemberRegistrationView extends ViewImpl implements
 	}
 
 	public Anchor getActivateAccLink() {
-		return aAccount;
+		return aSetUpPassword;
 	}
 
 	@Override
 	public void setCounter(int counter) {
 		this.counter = counter;
-
 		for (int i = 0; i < counter; i++) {
 			setActive(liElements.get(i), pageElements.get(i));
 			pageElements.get(i).setCompletion(true);

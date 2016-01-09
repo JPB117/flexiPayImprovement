@@ -15,6 +15,7 @@ import javax.ws.rs.core.MediaType;
 
 import com.google.inject.Inject;
 import com.icpak.rest.dao.EventsDao;
+import com.icpak.rest.dao.helper.BookingsDaoHelper;
 import com.icpak.rest.dao.helper.EventsDaoHelper;
 import com.icpak.rest.factory.ResourceFactory;
 import com.icpak.rest.models.event.Event;
@@ -38,15 +39,18 @@ public class EventsResourceImpl implements EventsResource {
 	ResourceFactory factory;
 	@Inject
 	CreditCardServiceImpl creditCardService;
+	@Inject
+	BookingsDaoHelper bookingsDaoHelper;
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Retrieve all active Events")
 	public List<EventDto> getAll(
 			@ApiParam(value = "Starting index", required = true) @QueryParam("offset") Integer offset,
-			@ApiParam(value = "Number of items to retrieve", required = true) @QueryParam("limit") Integer limit) {
+			@ApiParam(value = "Number of items to retrieve", required = true) @QueryParam("limit") Integer limit,
+			@QueryParam("searchTerm") String searchTerm) {
 
-		List<EventDto> dtos = helper.getAllEvents("", offset, limit);
+		List<EventDto> dtos = helper.getAllEvents("", offset, limit, null, searchTerm);
 		return dtos;
 	}
 
@@ -54,6 +58,12 @@ public class EventsResourceImpl implements EventsResource {
 	@Path("/count")
 	public Integer getCount() {
 		return helper.getCount();
+	}
+
+	@GET
+	@Path("/searchCount")
+	public Integer getSearchCount(@QueryParam("searchTerm") String searchTerm) {
+		return helper.getCount(searchTerm);
 	}
 
 	@Path("/type/{eventType}")
@@ -74,9 +84,13 @@ public class EventsResourceImpl implements EventsResource {
 		return factory.createBookingResource(eventId);
 	}
 
+	@Path("/{eventId}/delegates")
+	public DelegatesResourceImpl delegates(@PathParam("eventId") String eventId) {
+		return factory.createDelegatesResource(eventId);
+	}
+
 	@Path("/{eventId}/accommodations")
-	public AccommodationsResourceImpl accommodations(
-			@PathParam("eventId") String eventId) {
+	public AccommodationsResourceImpl accommodations(@PathParam("eventId") String eventId) {
 		return factory.createAccommodationsResource(eventId);
 	}
 

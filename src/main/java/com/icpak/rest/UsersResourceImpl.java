@@ -102,8 +102,15 @@ public class UsersResourceImpl implements UsersResource {
 	@ApiOperation(value = "Get a user by userId", response = User.class, consumes = MediaType.APPLICATION_JSON)
 	public UserDto getById(
 			@ApiParam(value = "User Id of the user to fetch", required = true) @PathParam("userId") String userId) {
-
 		User user = helper.getUser(userId);
+		return user.toDto();
+	}
+
+	@GET
+	@Path("/getUserByActivationEmail/{userId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public UserDto getUserByActivationEmail(@PathParam("userId") String userId) {
+		User user = helper.getUserByActivationEmail(userId);
 		return user.toDto();
 	}
 
@@ -137,8 +144,9 @@ public class UsersResourceImpl implements UsersResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Create a new user", response = UserDto.class, consumes = MediaType.APPLICATION_JSON)
-	public UserDto create(UserDto user,@QueryParam("isSendEmail") boolean isSendEmail) {
-		return helper.create(user,isSendEmail);
+	public UserDto create(UserDto user,
+			@QueryParam("isSendEmail") boolean isSendEmail) {
+		return helper.create(user, isSendEmail);
 	}
 
 	/**
@@ -146,7 +154,7 @@ public class UsersResourceImpl implements UsersResource {
 	 * <p/>
 	 * curl -v -F 'filename=POvBCBE-PO-NRB-1_1.pdf' -F
 	 * 'file=@/home/duggan/Downloads/PO_BCBE-PO-NRB-1_1.pdf;type=application/pdf
-	 * ' http://localhost:8080/icpak/api/users/xIXcSQNcXmqMDrth/profile
+	 * ' https://localhost:8080/icpak/api/users/xIXcSQNcXmqMDrth/profile
 	 * <p/>
 	 * 
 	 * @param userId
@@ -254,6 +262,13 @@ public class UsersResourceImpl implements UsersResource {
 		helper.activateAccount(userId, AccountStatus.ACTIVATED);
 	}
 
+	@GET
+	@Path("/{userId}/sendActivationEmail/{emailAddress}")
+	public void sendActivationEmail(@PathParam("userId") String userId,
+			@PathParam("emailAddress") String emailAddress) {
+		helper.sendActivationEmail(userId, emailAddress);
+	}
+
 	@POST
 	@Path("/{userId}/password")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -286,17 +301,21 @@ public class UsersResourceImpl implements UsersResource {
 	}
 
 	@POST
-	@Path("/{userId}/lmsPost")
+	@Path("/{userId}/lmsPost/{password}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public String postUserLMS(@PathParam("userId") String userId) {
-		return "Success";
-//		try {
-//			//return helper.postUserToLMS(userId);
-//			return "";
-//		} catch (IOException e) {
-//			return e.getStackTrace().toString();
-//		}
+	public String postUserLMS(@PathParam("userId") String userId,
+			@PathParam("password") String password) {
+		try {
+			return helper.postUserToLMS(userId, password);
+		} catch (IOException e) {
+			return e.getStackTrace().toString();
+		}
 	}
 
+	@PUT
+	@Path("/repost")
+	public UserDto repostToLms(@QueryParam("userRefId") String userRefId) {
+		return helper.rePostToLms(userRefId);
+	}
 }

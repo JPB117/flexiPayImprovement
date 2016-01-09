@@ -7,6 +7,7 @@ import java.util.List;
 import javax.persistence.Query;
 
 import com.workpoint.icpak.shared.model.InvoiceDto;
+import com.workpoint.icpak.shared.model.InvoiceLineDto;
 import com.workpoint.icpak.shared.model.InvoiceSummary;
 
 public class InvoiceDao extends BaseDao {
@@ -15,7 +16,7 @@ public class InvoiceDao extends BaseDao {
 			Integer limit) {
 		StringBuffer sqlBuffer = new StringBuffer("select i.refId, "
 				+ "i.amount as invoiceAmount,i.date as invoiceDate,"
-				+ "i.documentNo,i.description,i.contactName,"
+				+ "i.documentNo,i.description,i.contactName,i.bookingRefId,"
 				+ "t.date,t.dueDate,t.status,"
 				+ "t.paymentMode,t.amount,t.memberId " + "from Invoice i "
 				+ "left join Transaction t on (i.refId=t.invoiceRef) "
@@ -53,7 +54,8 @@ public class InvoiceDao extends BaseDao {
 
 			String contactName = (value = row[i++]) == null ? null : value
 					.toString();
-
+			String bookingRefId = (value = row[i++]) == null ? null : value
+					.toString();
 			Date transactionDate = (value = row[i++]) == null ? null
 					: (Date) value;
 			Date dueDate = (value = row[i++]) == null ? null : (Date) value;
@@ -70,6 +72,7 @@ public class InvoiceDao extends BaseDao {
 					documentNo, description, invoiceDate, transactionDate,
 					dueDate, paymentStatus, paymentMode, transactionAmount,
 					userRefId, contactName);
+			statement.setBookingRefId(bookingRefId);
 			statements.add(statement);
 
 		}
@@ -259,6 +262,44 @@ public class InvoiceDao extends BaseDao {
 		}
 
 		return summary;
+	}
+
+	public List<InvoiceLineDto> getByLinesByDocumentNo(String documentNo) {
+		List<InvoiceLineDto> invoiceLines = new ArrayList<>();
+
+		String sql = "select "
+				+ "l.description,l.quantity,l.unitprice,l.totalamount "
+				+ "from " + "invoiceline l " + "where " + "l.invoiceId="
+				+ "(select n.id from invoice n where n.documentNo=:documentNo)";
+
+		Query query = getEntityManager().createNativeQuery(sql).setParameter(
+				"documentNo", documentNo);
+
+		List<Object[]> rows = getResultList(query);
+
+		for (Object[] row : rows) {
+			int i = 0;
+			Object value = null;
+
+			String description = (value = row[i++]) == null ? null : value
+					.toString();
+			int quantity = (value = row[i++]) == null ? null : (Integer) value;
+			Double unitPrice = (value = row[i++]) == null ? null
+					: (Double) value;
+			Double totalAmount = (value = row[i++]) == null ? null
+					: (Double) value;
+
+			InvoiceLineDto dto = new InvoiceLineDto();
+			dto.setDescription(description);
+			dto.setQuantity(quantity);
+			dto.setUnitPrice(unitPrice);
+			dto.setTotalAmount(totalAmount);
+
+			invoiceLines.add(dto);
+
+		}
+
+		return invoiceLines;
 	}
 
 }

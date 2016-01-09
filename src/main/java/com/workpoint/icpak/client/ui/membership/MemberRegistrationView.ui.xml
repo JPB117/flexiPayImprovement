@@ -8,10 +8,15 @@
 	xmlns:password='urn:import:com.workpoint.icpak.client.ui.profile.password'
 	ui:generateLocales='default'>
 
-	<g:HTMLPanel ui:field="divMainContainer">
+	<ui:style>
+	.text-center {
+		text-align: center;
+	}
+	</ui:style>
 
+	<g:HTMLPanel ui:field="divMainContainer">
 		<g:HTMLPanel ui:field="divHeaderContainer" styleName="top-header">
-			<nav class="navbar">
+			<nav class="navbar top-navbar">
 				<div class="container">
 					<div class="navbar-header" style="width: 100%; text-align: center;">
 						<a class="brand">
@@ -38,36 +43,34 @@
 								</div>
 
 								<ul class="nav nav-pills">
-									<li class="active" style="width: 25%;" ui:field="liTab1">
+									<li class="active" style="width: 33.33%;" ui:field="liTab1">
 										<a>
 											<span class="fa fa-check-circle hide"></span>
 											1 - Personal Information
 										</a>
 									</li>
-									<li style="width: 25%;" ui:field="liTab2">
+									<li style="width: 33.33%;" ui:field="liTab2">
 										<a>
 											<span class="fa fa-check-circle hide"></span>
 											2 - Membership Category
 										</a>
 									</li>
-
-									<li style="width: 25%;" ui:field="liTab3">
+									<li style="width:33.33%;" ui:field="liTab3" class="hide">
 										<a>
 											<span class="fa fa-check-circle hide"></span>
-											3 - Proforma Invoice
+											4 - Attatchments
 										</a>
 									</li>
-									<li style="width:25%;" ui:field="liTab4">
+									<li style="width:33.33%;" ui:field="liTab4">
 										<a>
 											<span class="fa fa-check-circle hide"></span>
-											4 - Make Payment
+											3 - Set Password
 										</a>
 									</li>
 								</ul>
 
 								<!-- Tab Content 1 -->
 								<div class="">
-
 								</div>
 
 
@@ -81,7 +84,28 @@
 
 									<div class="tab-pane" ui:field="divPasswordConfiguration">
 										<div class="row">
-											<password:PasswordWidget></password:PasswordWidget>
+											<g:HTMLPanel styleName="alert {style.text-center}"
+												ui:field="panelMessage">
+												<span class="fa fa-thumbs-up fa-5x" ui:field="spnMessageIcon"></span>
+												<br />
+												<span ui:field="spnIssues" style="font-size: 24px;">
+													Your application
+													details have been saved Successfully. A
+													temporary account
+													has been created to allow you fill the
+													rest of the
+													application and later Pay for your
+													Membership.
+													Click on
+													'Proceed to set password' for your account.
+												</span>
+												<br />
+												<br />
+												<d:ActionLink styleName='btn btn-next btn-fill btn-gold btn-wd btn-sm'
+													ui:field="aSetUpPassword">
+													Proceed to Set Password
+												</d:ActionLink>
+											</g:HTMLPanel>
 										</div>
 									</div>
 
@@ -191,7 +215,7 @@
 												<div class="pricing-table col-xs-4" ui:field="divOverseas">
 													<div class="panel panel-primary" style="border:none;">
 														<div class="controle-header panel-heading panel-heading-landing">
-															<h1 class="panel-title panel-title-landing">OverSeas Member</h1>
+															<h1 class="panel-title panel-title-landing">Associate</h1>
 														</div>
 
 														<div class="panel-body panel-body-landing">
@@ -226,7 +250,7 @@
 														</div>
 														<div class="panel-footer panel-footer-landing">
 															<g:Anchor styleName="btn btn-price btn-block btn-success"
-																ui:field="aOverseas" name="Overseas">SELECT</g:Anchor>
+																ui:field="aAssociate" name="Overseas">SELECT</g:Anchor>
 														</div>
 													</div>
 												</div>
@@ -234,7 +258,7 @@
 												<div class="pricing-table col-xs-4" ui:field="divAssociate">
 													<div class="panel panel-primary" style="border:none;">
 														<div class="controle-header panel-heading panel-heading-landing">
-															<h1 class="panel-title panel-title-landing">Associate</h1>
+															<h1 class="panel-title panel-title-landing">OverSeas Member</h1>
 														</div>
 
 														<div class="panel-body panel-body-landing">
@@ -269,7 +293,7 @@
 														</div>
 														<div class="panel-footer panel-footer-landing">
 															<g:Anchor styleName="btn btn-price btn-block btn-success"
-																ui:field="aAssociate" name="Associate">SELECT</g:Anchor>
+																ui:field="aOverseas" name="Associate">SELECT</g:Anchor>
 														</div>
 													</div>
 												</div>
@@ -302,6 +326,7 @@
 									</div>
 
 
+
 									<div class="wizard-footer">
 										<div class="pull-right">
 											<d:ActionLink styleName='hide' ui:field="aAccount"
@@ -320,7 +345,6 @@
 												ui:field="aBack">Back
 											</d:ActionLink>
 										</div>
-
 										<div class="clearfix"></div>
 									</div>
 								</div>

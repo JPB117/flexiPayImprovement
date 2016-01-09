@@ -13,10 +13,10 @@
 						styleName="btn btn-default btn-fill fa fa-chevron-circle-left"></d:ActionLink>
 				</div>
 				<div class="col-lg-1"
-					style="width: 110px;margin-top: 5px;padding: 0px !important;">
+					style="width:initial;margin-top: 5px;padding: 0px !important;">
 					Page
 					<d:IntegerField ui:field="txtPageNo" width="30px"></d:IntegerField>
-					of 
+					of
 					<span ui:field="spnTotalPages"></span>
 				</div>
 
@@ -30,7 +30,7 @@
 
 				<div class="col-lg-2" style="width:50px;padding:0px !important">
 					<d:ActionLink ui:field="aRefresh"
-						styleName="btn btn-default btn-fill fa fa-refresh"></d:ActionLink>
+						styleName="btn btn-default btn-fill fa fa-refresh hide"></d:ActionLink>
 				</div>
 			</div>
 		</div>

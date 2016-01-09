@@ -38,34 +38,33 @@ public class TestApplicationForm extends AbstractDaoTest {
 
 	@Ignore
 	public void Import() {
-		List<ApplicationFormHeaderDto> members = helper.importMembers(0, 20000);
+		List<ApplicationFormHeaderDto> members = helper.importMembers(0, 30000);
 		for (ApplicationFormHeaderDto dto : members) {
-			helper.createApplication(dto);
+			// System.err.println("Member No>>>" + dto.getMemberNo());
+			helper.createApplicationFromImport(dto);
 		}
 	}
 
-	@Ignore
+	@Test
 	public void getApplications() {
 		List<ApplicationFormHeaderDto> members = helper.getAllApplications(0,
-				100, "");
+				10, "", "");
 		for (ApplicationFormHeaderDto dto : members) {
-			System.out.println("Application:" + dto.getUserRefId());
+			System.out.println("Previous>>" + dto.getPreviousRefId());
+			System.out.println("Next>>" + dto.getNextRefId());
 		}
 	}
 
 	@Ignore
 	public void getUser() {
-
 		List<UserDto> users = usersDaoHelper.getAllUsers(0, 20, "");
-
 		for (UserDto user : users) {
 			System.err.println("Names:" + user.getMemberNo());
 		}
 	}
 
-	@Test
+	@Ignore
 	public void getCount() throws IOException {
-		System.err.println("Response>>"
-				+ usersDaoHelper.postUserToLMS("50LMW3Qrv3SsLySW"));
+
 	}
 }

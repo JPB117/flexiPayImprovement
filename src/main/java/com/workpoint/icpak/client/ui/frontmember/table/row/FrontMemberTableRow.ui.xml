@@ -1,0 +1,47 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.workpoint.icpak.client.ui.component">
+
+	<g:HTMLPanel styleName="tr" ui:field="row">
+
+		<g:HTMLPanel styleName="td" ui:field="divMemberNo">
+			<div>
+				<p>
+					<g:Label ui:field="lMemberNo" />
+				</p>
+			</div>
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td" ui:field="divName">
+			<div>
+				<p>
+					<strong>
+						<g:Label ui:field="lName" />
+					</strong>
+				</p>
+			</div>
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td" ui:field="divCategory">
+			<div>
+				<p>
+					<g:Label ui:field="lCategory" />
+				</p>
+			</div>
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td" ui:field="divMemberShip">
+			<div>
+				<p>
+					<strong>
+						<span ui:field="lMemberShip" style="color:blue" />
+					</strong>
+				</p>
+			</div>
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td" ui:field="divPracStatus">
+			<div>
+				<p>
+					<g:Label ui:field="lPracStatus" />
+				</p>
+			</div>
+		</g:HTMLPanel>
+	</g:HTMLPanel>
+</ui:UiBinder> 

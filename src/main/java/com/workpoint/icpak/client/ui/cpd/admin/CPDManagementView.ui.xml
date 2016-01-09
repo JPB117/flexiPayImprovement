@@ -3,8 +3,11 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
 	xmlns:g='urn:import:com.google.gwt.user.client.ui' ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
 	xmlns:d='urn:import:com.workpoint.icpak.client.ui.component' xmlns:p='urn:import:com.workpoint.icpak.client.ui.cpd.header'
-	xmlns:table='urn:import:com.workpoint.icpak.client.ui.cpd.table'
 	xmlns:t='urn:import:com.workpoint.icpak.client.ui.component.tabs'
+	xmlns:admin='urn:import:com.workpoint.icpak.client.ui.cpd.admin.table'
+	xmlns:summary='urn:import:com.workpoint.icpak.client.ui.cpd.admin.summary.table'
+	xmlns:member='urn:import:com.workpoint.icpak.client.ui.cpd.member.table'
+	xmlns:form='urn:import:com.workpoint.icpak.client.ui.cpd.form'
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
 
@@ -17,23 +20,8 @@
 
 
 		<div class="main-content">
-			<g:HTMLPanel styleName="row hide" ui:field="panelDates">
-				<div class="col-lg-12">
-					<form class="form-inline">
-						<div class="form-group">
-							<label for="from">From:</label>
-							<d:DropDownList ui:field="lstFrom" styleName="form-control"></d:DropDownList>
-						</div>
-						<div class="form-group">
-							<label for="to">to:</label>
-							<d:DropDownList ui:field="lstTo" styleName="form-control"></d:DropDownList>
-						</div>
-					</form>
-				</div>
-			</g:HTMLPanel>
-
 			<g:HTMLPanel ui:field="panelDetail">
-				<div class="row">
+				<div class="row hide">
 					<div class="col-lg-12">
 						<p:CPDHeader ui:field="headerContainer">
 						</p:CPDHeader>
@@ -42,14 +30,7 @@
 				<div class="row">
 					<div class="col-lg-12">
 						<g:HTMLPanel styleName="panel widget" ui:field="panelListing">
-							<div class="panel-heading">CPD Summary</div>
 							<div class="panel-body">
-								<div ui:field="divTab1Content" class="tab-pane fade in active">
-									<!-- Tabs -->
-									<t:TabPanel ui:field="divTabs" styleName="hide">
-									</t:TabPanel>
-								</div>
-
 								<div class="row">
 									<div class="col-lg-12">
 										<d:ActionLink ui:field="aCreate" styleName="btn btn-primary btn-fill">
@@ -58,15 +39,76 @@
 										</d:ActionLink>
 									</div>
 									<br />
-								</div>
-
-								<div class="row">
 									<div class="col-lg-12">
-										<table:CPDTable ui:field="tblView">
-										</table:CPDTable>
+										<ul class="nav nav-tabs">
+											<li class="active" ui:field="licpdReturns">
+												<g:Anchor href="#cpdmgt;p=cpdReturns" ui:field="aCPDReturns">
+													CPD
+													Returns(
+													<span ui:field="spnReturnCount"></span>
+													)
+												</g:Anchor>
+
+											</li>
+											<li ui:field="liMemberCPD">
+												<g:Anchor href="#cpdmgt;p=memberCPD" ui:field="aMemberCPD">Member
+													CPD</g:Anchor>
+											</li>
+											<li ui:field="liReturnArchive">
+												<g:Anchor href="#cpdmgt;p=returnArchive" ui:field="aReturnArchive">
+													Returns
+													Archive(
+													<span ui:field="spnArchiveCount"></span>
+													)
+												</g:Anchor>
+											</li>
+										</ul>
+
+										<div class="tab-content">
+											<!-- CPD Returns -->
+											<div class="tab-pane active" ui:field="divCPDReturns">
+												<br />
+												<admin:CPDAdminTable ui:field="tblCPDReturns"></admin:CPDAdminTable>
+												<form:RecordCPD ui:field="frmViewReturns"
+													styleName="hide"></form:RecordCPD>
+											</div>
+
+											<!-- Member CPD -->
+											<div class="tab-pane" ui:field="divMemberTable">
+												<br />
+												<div ui:field="panelBreadcrumb" class="hide">
+													<ol class="breadcrumb">
+														<li>
+															<d:ActionLink ui:field="aBack">
+																<i class="fa fa-angle-double-left"></i>
+																Back
+															</d:ActionLink>
+														</li>
+														<li>
+															<span ui:field="spnMemberName">
+															</span>
+														</li>
+													</ol>
+												</div>
+
+												<summary:CPDSummaryTable ui:field="tblSummaryTable"></summary:CPDSummaryTable>
+												<member:CPDMemberTable ui:field="tblMemberTable"
+													styleName="hide"></member:CPDMemberTable>
+											</div>
+
+											<!-- CPD Archive -->
+											<div class="tab-pane" ui:field="divCPDArchive">
+												<br />
+												<admin:CPDAdminTable ui:field="tblCpdArchive"></admin:CPDAdminTable>
+												<form:RecordCPD ui:field="frmViewArchive"
+													styleName="hide"></form:RecordCPD>
+											</div>
+										</div>
 									</div>
 								</div>
 							</div>
+
+
 						</g:HTMLPanel>
 					</div>
 				</div>

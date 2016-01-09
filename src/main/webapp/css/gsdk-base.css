@@ -51,7 +51,7 @@ html, body {
 }
 /*     General overwrite     */
 a {
-	color: #2CA8FF;
+	/* color: #2CA8FF; */
 	cursor: pointer;
 }
 
@@ -138,6 +138,12 @@ h1 .subtitle {
 	-o-transition: all 300ms linear;
 	-ms-transition: all 300ms linear;
 	transition: all 300ms linear;
+}
+
+.attachment-text {
+	font-size: 14px;
+	font-weight: bold;
+	font-style: italic;
 }
 
 .btn {
@@ -491,7 +497,6 @@ h1 .subtitle {
 	border-radius: 4px;
 }
 */
-
 .form-control:focus+.input-group-addon, .form-control:focus ~
 	.input-group-addon {
 	background-color: #FFFFFF;
@@ -502,11 +507,23 @@ h1 .subtitle {
 
 
 
+
+
+
  
 
 
 
+
+
+
 .form-control
+
+
+
+
+
+
 
 
 
@@ -522,9 +539,21 @@ h1 .subtitle {
 
 
 
+
+
+
+
+
+
 :first-child
 ,
 .input-group-btn
+
+
+
+
+
+
 
 
 
@@ -536,6 +565,12 @@ h1 .subtitle {
 .btn
 ,
 .input-group-btn
+
+
+
+
+
+
 
 
 
@@ -553,9 +588,21 @@ h1 .subtitle {
 
 
 
+
+
+
+
+
+
 :last-child
 >
 .btn
+
+
+
+
+
+
 
 
 
@@ -566,7 +613,13 @@ h1 .subtitle {
 
 
 
+
+
+
  
+
+
+
 
 
 
@@ -575,7 +628,13 @@ h1 .subtitle {
 
 
 
+
+
+
  
+
+
+
 
 
 
@@ -584,7 +643,13 @@ h1 .subtitle {
 
 
 
+
+
+
  
+
+
+
 
 
 
@@ -594,7 +659,13 @@ h1 .subtitle {
 
 
 
+
+
+
 	
+
+
+
 
 
 
@@ -607,7 +678,16 @@ border-right
 
 
 
+
+
+
+
+
+
 :
+
+
+
 
 
 
@@ -615,8 +695,17 @@ border-right
 
 
 
+
+
+
 0
 none
+
+
+
+
+
+
 
 
 
@@ -629,11 +718,23 @@ none
 
 
 
+
+
+
  
 
 
 
+
+
+
 .form-control
+
+
+
+
+
+
 
 
 
@@ -649,9 +750,21 @@ none
 
 
 
+
+
+
+
+
+
 :last-child
 ,
 .input-group-btn
+
+
+
+
+
+
 
 
 
@@ -663,6 +776,12 @@ none
 .btn
 ,
 .input-group-btn
+
+
+
+
+
+
 
 
 
@@ -680,9 +799,21 @@ none
 
 
 
+
+
+
+
+
+
 :first-child
 >
 .btn
+
+
+
+
+
+
 
 
 
@@ -693,7 +824,13 @@ none
 
 
 
+
+
+
  
+
+
+
 
 
 
@@ -702,7 +839,13 @@ none
 
 
 
+
+
+
  
+
+
+
 
 
 
@@ -715,7 +858,16 @@ border-left
 
 
 
+
+
+
+
+
+
 :
+
+
+
 
 
 
@@ -723,8 +875,17 @@ border-left
 
 
 
+
+
+
 0
 none
+
+
+
+
+
+
 
 
 
@@ -1594,41 +1755,28 @@ body .GWTUpld .gwt-FileUpload {
 .gwt-FileUpload::before {
 	content: 'Browse';
 	display: inline-block;
-	background: linear-gradient(to bottom, #4d90fe, #3078eb);
+	/* background: linear-gradient(to bottom, #4d90fe, #3078eb); */
 	/* border: 1px solid #999; */
 	border-radius: 3px;
-	padding: 0px;
+	padding: 8px;
 	outline: none;
 	white-space: nowrap;
 	-webkit-user-select: none;
 	cursor: pointer;
 	font-weight: 700;
 	font-size: 10pt;
-	width: 100%;
+	width: 75%;
 	text-align: center;
 	color: #fff;
-	text-decoration: underline;
-	opacity: 0.9;
+	/* text-decoration: underline; */
+	opacity: 1;
+	background-color: #333;
+	border-color: #deb509;
 }
 
 .gwt-FileUpload:hover:before, .gwt-FileUpload:active:before,
 	.gwt-FileUpload.active:before {
-	/* border: 1px solid #196aeb; */
-	color: #ffffff;
-	background-color: #4186f6;
-	cursor: pointer;
-	background-image: -moz-linear-gradient(top, #4d90fe, #3078eb);
-	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#4d90fe),
-		to(#3078eb));
-	background-image: -webkit-linear-gradient(top, #4d90fe, #3078eb);
-	background-image: -o-linear-gradient(top, #4d90fe, #3078eb);
-	/* background-image: linear-gradient(to bottom, #4d90fe, #3078eb); */
-	background-repeat: repeat-x;
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff4d90fe',
-		endColorstr='#ff3078eb', GradientType=0);
-	filter: progid:DXImageTransform.Microsoft.gradient(enabled= false);
-	background-color: #3078eb;
-	background-color: #3078eb \9;
+	
 }
 
 /*Payments*/

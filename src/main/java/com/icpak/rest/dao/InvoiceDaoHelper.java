@@ -1,9 +1,20 @@
 package com.icpak.rest.dao;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigInteger;
+import java.text.NumberFormat;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.Query;
+import javax.xml.parsers.FactoryConfigurationError;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.apache.commons.io.IOUtils;
+import org.xml.sax.SAXException;
 
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
@@ -11,6 +22,11 @@ import com.icpak.rest.IDUtils;
 import com.icpak.rest.models.event.Delegate;
 import com.icpak.rest.models.trx.Invoice;
 import com.icpak.rest.models.trx.InvoiceLine;
+import com.icpak.rest.utils.Doc;
+import com.icpak.rest.utils.DocumentLine;
+import com.icpak.rest.utils.EmailServiceHelper;
+import com.icpak.rest.utils.HTMLToPDFConvertor;
+import com.itextpdf.text.DocumentException;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.InvoiceLineDto;
 import com.workpoint.icpak.shared.model.InvoiceSummary;
@@ -22,6 +38,8 @@ public class InvoiceDaoHelper {
 	InvoiceDao dao;
 	@Inject
 	BookingsDao bookingsDao;
+	@Inject
+	InvoiceDao invoiceDao;
 
 	public InvoiceDto getInvoice(String invoiceRef) {
 		Invoice invoice = dao.findByRefId(invoiceRef, Invoice.class);
@@ -102,7 +120,46 @@ public class InvoiceDaoHelper {
 	// }
 	//
 	// return dtos;
-	// }
+	// }4
+
+	public byte[] generatePDFDocument(InvoiceDto invoice)
+			throws FileNotFoundException, IOException, SAXException,
+			ParserConfigurationException, FactoryConfigurationError,
+			DocumentException {
+
+		String documentNo = invoice.getDocumentNo();
+
+		List<InvoiceLineDto> invoiceLines = invoiceDao
+				.getByLinesByDocumentNo(documentNo);
+
+		Map<String, Object> emailValues = new HashMap<>();
+		Doc proformaDocument = new Doc(emailValues);
+
+		for (InvoiceLineDto dto : invoiceLines) {
+			Map<String, Object> line = new HashMap<>();
+			line.put("description", dto.getDescription());
+			line.put("quantity",
+					NumberFormat.getNumberInstance().format(dto.getQuantity()));
+			line.put("unitPrice",
+					NumberFormat.getNumberInstance().format(dto.getUnitPrice()));
+			line.put(
+					"amount",
+					NumberFormat.getNumberInstance().format(
+							dto.getTotalAmount()));
+			proformaDocument
+					.addDetail(new DocumentLine("invoiceDetails", line));
+		}
+
+		// PDF Invoice Generation
+		InputStream inv = EmailServiceHelper.class.getClassLoader()
+				.getResourceAsStream("proforma-invoice.html");
+		String invoiceHTML = IOUtils.toString(inv);
+
+		byte[] invoicePDF = new HTMLToPDFConvertor().convert(proformaDocument,
+				new String(invoiceHTML));
+
+		return invoicePDF;
+	}
 
 	public Integer getInvoiceCount(String memberId) {
 		return dao.getInvoiceCount(memberId);

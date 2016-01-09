@@ -13,24 +13,35 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import org.apache.log4j.Logger;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.icpak.rest.dao.CPDDao;
 import com.icpak.rest.dao.helper.CPDDaoHelper;
+import com.icpak.rest.dao.helper.CoursesDaoHelper;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 import com.workpoint.icpak.shared.api.CPDResource;
 import com.workpoint.icpak.shared.model.CPDDto;
+import com.workpoint.icpak.shared.model.CPDFooterDto;
 import com.workpoint.icpak.shared.model.CPDSummaryDto;
+import com.workpoint.icpak.shared.model.MemberCPDDto;
 
+@Produces(MediaType.APPLICATION_JSON)
 @Api(value = "", description = "Handles CRUD on cpd data")
 public class CPDResourceImpl implements CPDResource {
+	Logger logger = Logger.getLogger(CPDResourceImpl.class);
 
 	@Inject
 	CPDDaoHelper helper;
 	@Inject
 	CPDDao cpdDao;
+	@Inject
+	CoursesDaoHelper cHelper;
 
 	private final String memberId;
 
@@ -47,8 +58,19 @@ public class CPDResourceImpl implements CPDResource {
 			@QueryParam("limit") Integer limit,
 			@QueryParam("startDate") Long startDate,
 			@QueryParam("endDate") Long endDate) {
+		return helper.getAllCPD(memberId, offset, limit, startDate, endDate,
+				null);
+	}
 
-		return helper.getAllCPD(memberId, offset, limit, startDate, endDate);
+	@GET
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/cpdmemberSummary")
+	@ApiOperation(value = "Get a list of all cpds", response = MemberCPDDto.class, consumes = MediaType.APPLICATION_JSON)
+	public List<MemberCPDDto> getAllMemberSummary(
+			@QueryParam("searchTerm") String searchTerm,
+			@QueryParam("offset") Integer offset,
+			@QueryParam("limit") Integer limit) {
+		return helper.getAllMemberCPDSummary(searchTerm, offset, limit);
 	}
 
 	@GET
@@ -73,8 +95,7 @@ public class CPDResourceImpl implements CPDResource {
 	@ApiOperation(value = "Get a cpd by cpdId", response = CPDDto.class, consumes = MediaType.APPLICATION_JSON)
 	public CPDDto getById(
 			@ApiParam(value = "CPD Id of the cpd to fetch", required = true) @PathParam("cpdId") String cpdId) {
-
-		CPDDto cpd = helper.getCPDFromMemberRefId(memberId, cpdId);
+		CPDDto cpd = helper.getCPDFromRefId(cpdId);
 		return cpd;
 	}
 
@@ -83,7 +104,21 @@ public class CPDResourceImpl implements CPDResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Create a new cpd", response = CPDDto.class, consumes = MediaType.APPLICATION_JSON)
 	public CPDDto create(CPDDto cpd) {
-		return helper.create(memberId, cpd);
+		logger.error("++++++ API CALL ++++++++");
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			logger.error(mapper.writeValueAsString(cpd));
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+
+		if (cpd.getLmsMemberId() == null) {
+			return helper.create(memberId, cpd);
+		} else {
+			logger.error("++++++ API CALL EXECUTE ++++++++");
+			return helper.create(cpd);
+		}
+
 	}
 
 	@PUT
@@ -113,5 +148,42 @@ public class CPDResourceImpl implements CPDResource {
 	@Path("/count")
 	public Integer getCount() {
 		return helper.getCount(memberId, null, null);
+	}
+
+	@GET
+	@Path("/summaryCount")
+	public Integer getMemberSummaryCount(
+			@QueryParam("searchTerm") String searchTerm) {
+		return helper.getMemberCPDCount(searchTerm);
+	}
+
+	@GET
+	@Path("/SearchCPD")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<CPDDto> searchCPd(@QueryParam("offset") int offset,
+			@QueryParam("limit") int limit,
+			@QueryParam("searchTerm") String searchTerm,
+			@QueryParam("startDate") Long startDate,
+			@QueryParam("endDate") Long endDate) {
+		return helper.getAllCPD(memberId, offset, limit, startDate, endDate,
+				searchTerm);
+	}
+
+	@GET
+	@Path("/countCPDSearch")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Integer getCPDsearchCount(@QueryParam("searchTerm") String searchTerm) {
+		return helper.cpdSearchCount(searchTerm);
+	}
+
+	@GET
+	@Path("/yearSummaries")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public List<CPDFooterDto> getYearSummaries(
+			@QueryParam("startDate") Long startDate,
+			@QueryParam("endDate") Long endDate) {
+		return helper.getYearSummaries(memberId, startDate, endDate);
 	}
 }
