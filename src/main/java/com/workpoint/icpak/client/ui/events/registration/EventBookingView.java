@@ -198,7 +198,6 @@ public class EventBookingView extends ViewImpl implements
 							return;
 						}
 
-						// Window.alert("Accommodations selection change");
 						Widget source = (Widget) event.getSource();
 						DropDownList<AccommodationDto> field = (DropDownList) source;
 						AggregationGridRow row = field.getParentRow();

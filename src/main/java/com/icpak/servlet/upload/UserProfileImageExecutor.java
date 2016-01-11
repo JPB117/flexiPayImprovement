@@ -51,7 +51,7 @@ public class UserProfileImageExecutor extends FileExecutor {
 					attachment.setId(null);
 					attachment.setName(name);
 					attachment.setSize(size);
-					String fileName = getFilePath() + "/" + attachment.getRefId() + "-EDUCATION-" + name;
+					String fileName = getFilePath() + "/" + attachment.getRefId() + "-PROFILE-" + name;
 					attachment.setFileName(fileName);
 					attachment.setProfilePicUserId(userRefId);
 

@@ -82,6 +82,25 @@
 
 			<d:ActionLink ui:field="aPreviousForm" styleName="hide">Back to
 				Categories</d:ActionLink>
+
+			<div class="form-group hide" ui:field="panelMemberNo">
+				<div class="row">
+					<div class="col-xs-12">
+						<label for="firstname">Member No:</label>
+						<div class="input-group">
+							<d:TextField ui:field="txtMemberNo"></d:TextField>
+							<span class="input-group-btn hide">
+								<d:ActionLink styleName="btn btn-default btn-fill"
+									ui:field="aSearch">Search</d:ActionLink>
+							</span>
+						</div>
+
+						<span class="fa fa-circle-o-notch fa-spin hide" ui:field="spnSpinner"></span>
+						<span ui:field="spnFullNames"></span>
+					</div>
+				</div>
+			</div>
+
 			<div class="form-group">
 				<div class="row">
 					<div class="col-xs-12">

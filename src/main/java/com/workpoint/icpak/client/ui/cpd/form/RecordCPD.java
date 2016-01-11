@@ -12,6 +12,9 @@ import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.HasKeyDownHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.History;
@@ -25,6 +28,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.workpoint.icpak.client.model.UploadContext;
 import com.workpoint.icpak.client.model.UploadContext.UPLOADACTION;
 import com.workpoint.icpak.client.ui.component.ActionLink;
+import com.workpoint.icpak.client.ui.component.AutoCompleteField;
 import com.workpoint.icpak.client.ui.component.DateField;
 import com.workpoint.icpak.client.ui.component.DropDownList;
 import com.workpoint.icpak.client.ui.component.IssuesPanel;
@@ -37,6 +41,7 @@ import com.workpoint.icpak.shared.model.CPDAction;
 import com.workpoint.icpak.shared.model.CPDCategory;
 import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.shared.model.CPDStatus;
+import com.workpoint.icpak.shared.model.MemberDto;
 import com.workpoint.icpak.shared.model.TableActionType;
 
 public class RecordCPD extends Composite {
@@ -49,13 +54,10 @@ public class RecordCPD extends Composite {
 
 	@UiField
 	HTMLPanel panelForm;
-
 	@UiField
 	HTMLPanel panelCategories;
-
 	@UiField
 	ActionLink aPreviousForm;
-
 	@UiField
 	IssuesPanel issues;
 
@@ -123,9 +125,20 @@ public class RecordCPD extends Composite {
 	@UiField
 	DropDownList<CPDAction> lstMgmtAction;
 
-	private CPDDto dto;
+	@UiField
+	TextField txtMemberNo;
+	@UiField
+	ActionLink aSearch;
+	@UiField
+	DivElement panelMemberNo;
 
+	private CPDDto dto;
 	private boolean isViewMode;
+
+	@UiField
+	SpanElement spnFullNames;
+	@UiField
+	SpanElement spnSpinner;
 
 	public RecordCPD() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -307,7 +320,7 @@ public class RecordCPD extends Composite {
 		return aStartUpload;
 	}
 
-	public void setViewMode(boolean isViewMode) {
+	public void setAdminMode(boolean isViewMode) {
 		this.isViewMode = isViewMode;
 		if (isViewMode) {
 			// lstCategory.getElement().getFirstChildElement()
@@ -336,6 +349,7 @@ public class RecordCPD extends Composite {
 			panelInlineActions.addClassName("hide");
 			panelBreadcrumb.addClassName("hide");
 			divUpdatedBy.addClassName("hide");
+			panelMemberNo.addClassName("hide");
 		}
 	}
 
@@ -343,7 +357,36 @@ public class RecordCPD extends Composite {
 		// aBack.setHref(href);
 	}
 
+	public void showMemberNoPanel(boolean show) {
+		if (show) {
+			panelMemberNo.removeClassName("hide");
+		} else {
+			panelMemberNo.addClassName("hide");
+		}
+	}
+
 	public void setMemberName(String memberName) {
 		spnMemberName.setInnerText(memberName);
 	}
+
+	public String getMemberNoValue() {
+		return txtMemberNo.getValue();
+	}
+
+	public HasKeyDownHandlers getMemberNoKeyDownHandler() {
+		return txtMemberNo;
+	}
+
+	public void setFullNames(String fullNames) {
+		spnFullNames.setInnerText(fullNames);
+	}
+
+	public void showMemberLoading(boolean show) {
+		if (show) {
+			spnSpinner.removeClassName("hide");
+		} else {
+			spnSpinner.addClassName("hide");
+		}
+	}
+
 }

@@ -91,6 +91,13 @@ public class MemberResourceImpl implements MemberResource {
 		return membersHelper.getAllMembers(offset, limit, "", searchTerm);
 	}
 
+	@GET
+	@Path("/searchIndividualMember/{searchTerm}")
+	public MemberDto searchIndividualByMemberNo(
+			@PathParam("searchTerm") String searchTerm) {
+		return membersHelper.getMemberByMemberNo(searchTerm);
+	}
+
 	// @GET
 	// @Consumes(MediaType.APPLICATION_JSON)
 	// @ApiParam(value="Number of items to retrieve", required=true)

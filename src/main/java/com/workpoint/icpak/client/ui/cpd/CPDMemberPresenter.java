@@ -192,7 +192,7 @@ public class CPDMemberPresenter extends
 			}
 		});
 		cpdRecord.showForm(true);
-		cpdRecord.setViewMode(isViewMode);
+		cpdRecord.setAdminMode(isViewMode);
 
 		AppManager.showPopUp("Record CPD Wizard", cpdRecord.asWidget(),
 				new OptionControl() {

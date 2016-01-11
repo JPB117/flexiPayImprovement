@@ -53,6 +53,11 @@ public interface MemberResource extends BaseResource {
 			@QueryParam("offset") Integer offset,
 			@QueryParam("limit") Integer limit);
 
+	@GET
+	@Path("/searchIndividualMember/{searchTerm}")
+	public MemberDto searchIndividualByMemberNo(
+			@PathParam("searchTerm") String searchTerm);
+
 	@Path("/{memberId}/cpd")
 	public CPDResource cpd(@PathParam("memberId") String memberId);
 
