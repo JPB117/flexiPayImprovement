@@ -1,5 +1,6 @@
 package com.icpak.rest.dao;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -101,6 +102,8 @@ public class MemberDao extends BaseDao {
 	 */
 
 	public List<MemberDto> getMembers(Integer offSet, Integer limit) {
+		
+		logger.info(" GETTING MEMBERS ");
 
 		List<MemberDto> memberDtos = new ArrayList<>();
 
@@ -396,6 +399,33 @@ public class MemberDao extends BaseDao {
 	
 	public Member getByMemberNo(String memberNo){
 		return getByMemberNo(memberNo , true);
+	}
+	
+	public List<String> getAllMemberNumbers(int offset , int limit){
+		String mememberNos = "select m.memberNo from member m where m.memberNo is not null";
+				
+		Query query = getEntityManager().createNativeQuery(mememberNos);
+		
+		return getResultList(query , offset , limit);
+		
+	}
+	
+	public Integer getMembersCount(){
+		String  count = "select count(*) from member where memberNo is not null";
+		
+		Query query = getEntityManager().createNativeQuery(count);
+		
+		Number number = getSingleResultOrNull(query);
+		
+		return number.intValue();
+	}
+	
+	public Member findByMemberNo(String memberNo){
+		String sql = "FROM Member where memberNo=:memberNo";
+		
+		Query query = getEntityManager().createQuery(sql).setParameter("memberNo", memberNo);
+		
+		return getSingleResultOrNull(query);
 	}
 
 }

@@ -615,7 +615,7 @@ public class CPDDao extends BaseDao {
 		String sql = "From Attachment WHERE attachment is not null";
 		Query query = getEntityManager().createQuery(sql);
 
-		return getResultList(query,0,10);
+		return getResultList(query , 0 , 2000);
 	}
 
 	

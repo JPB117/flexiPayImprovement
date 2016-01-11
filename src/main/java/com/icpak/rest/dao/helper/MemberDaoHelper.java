@@ -267,7 +267,11 @@ public class MemberDaoHelper {
 			memberUser.setMobileNo(jObject.getString("Mobile No_"));
 			memberUser.setPostalCode(jObject.getString("Post Code"));
 			memberUser.setPhoneNumber(jObject.getString("Phone No_"));
-
+			
+			if(jObject.getString("Name") != null){
+				memberUser.setFullName(jObject.getString("Name"));
+			}
+			
 			/*
 			 * update this member user in db
 			 */
@@ -350,6 +354,10 @@ public class MemberDaoHelper {
 		  boolean abortFlag = false;
 		  
 		return null;
+	}
+	
+	public Member findByMemberNo(String memberNo){
+		return memberDao.findByMemberNo(memberNo);
 	}
 
 }
