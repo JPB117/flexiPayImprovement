@@ -326,6 +326,7 @@ public class MemberRegistrationPresenter
 				 * records
 				 */
 				getView().setEmailValid(false);
+				 
 
 				/*
 				 * Add an error message

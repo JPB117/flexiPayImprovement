@@ -80,10 +80,6 @@ public class ApplicationFormHeader extends PO {
 
 	private String employer;
 
-	// @Basic(fetch = FetchType.LAZY)
-	// @Embedded
-	// private ApplicationFormHeaderDetail formDetails;
-
 	@Column(name = "`Nationality`", columnDefinition = "varchar(20) ")
 	private String nationality;
 

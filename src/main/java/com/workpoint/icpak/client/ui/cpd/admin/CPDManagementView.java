@@ -157,7 +157,7 @@ public class CPDManagementView extends ViewImpl implements
 
 	@Override
 	public void showDetailedView() {
-
+		
 	}
 
 	@Override
