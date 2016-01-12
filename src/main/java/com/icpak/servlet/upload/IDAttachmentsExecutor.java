@@ -13,6 +13,7 @@ import org.apache.commons.fileupload.FileItem;
 
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
+import com.icpak.rest.IDUtils;
 import com.icpak.rest.dao.ApplicationFormDao;
 import com.icpak.rest.dao.AttachmentsDao;
 import com.icpak.rest.dao.CPDDao;
@@ -53,7 +54,7 @@ public class IDAttachmentsExecutor extends FileExecutor {
 					attachment.setId(null);
 					attachment.setName(name);
 					attachment.setSize(size);
-					String fileName = getFilePath() + "/" + attachment.getRefId() + "-EDUCATION-" + name;
+					String fileName = getFilePath() + File.separator + IDUtils.generateId() + "-EDUCATION-" + name;
 					attachment.setFileName(fileName);
 					ApplicationFormHeader application = dao
 							.findByApplicationId(applicationRefId);

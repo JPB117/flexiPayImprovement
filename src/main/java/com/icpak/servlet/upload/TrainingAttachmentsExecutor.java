@@ -15,6 +15,7 @@ import org.apache.commons.io.IOUtils;
 
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
+import com.icpak.rest.IDUtils;
 import com.icpak.rest.dao.ApplicationFormDao;
 import com.icpak.rest.dao.AttachmentsDao;
 import com.icpak.rest.models.membership.ApplicationFormAccountancy;
@@ -55,7 +56,7 @@ public class TrainingAttachmentsExecutor extends FileExecutor {
 					attachment.setId(null);
 					attachment.setName(name);
 					attachment.setSize(size);
-					String fileName = getFilePath() + "/"+attachment.getRefId()+ "-TRAINING-" + name;
+					String fileName = getFilePath() + File.separator +IDUtils.generateId()+ "-TRAINING-" + name;
 					attachment.setFileName(fileName);
 					if (trainingRefId != null) {
 						ApplicationFormTraining trainingDetails = dao

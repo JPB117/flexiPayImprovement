@@ -16,6 +16,7 @@ import org.apache.log4j.Logger;
 
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
+import com.icpak.rest.IDUtils;
 import com.icpak.rest.dao.AttachmentsDao;
 import com.icpak.rest.dao.CPDDao;
 import com.icpak.rest.models.cpd.CPD;
@@ -55,8 +56,8 @@ public class CPDAttachmentsExecutor extends FileExecutor {
 					attachment.setId(null);
 					attachment.setName(name);
 					attachment.setSize(size);
-					String fileName = getFilePath() + "/"+attachment.getRefId()+ "-CPD-" + name;
-					attachment.setFileName(attachment.getRefId()+fileName);
+					String fileName = getFilePath() + File.separator +IDUtils.generateId()+ "-CPD-" + name;
+					attachment.setFileName(fileName);
 					// attachment.setAttachment(item.get());
 					CPD cpd = dao.findByCPDId(cpdRefId);
 					assert cpd != null;

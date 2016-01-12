@@ -615,7 +615,7 @@ public class CPDDao extends BaseDao {
 		String sql = "From Attachment WHERE attachment is not null";
 		Query query = getEntityManager().createQuery(sql);
 
-		return getResultList(query,0,10);
+		return getResultList(query , 0 , 2000);
 	}
 
 	
@@ -623,7 +623,7 @@ public class CPDDao extends BaseDao {
 		logger.info(" DUMPING TO BLOB ");
 		for (Attachment attachment : getAllCPDAttachment()) {
 			if (attachment.getAttachment() != null) {
-				String fileName = getFilePath() + "/" + attachment.getRefId() + "-CPD-" + attachment.getName();
+				String fileName = getFilePath() + File.separator + attachment.getRefId() + "-CPD-" + attachment.getName();
 				attachment.setFileName(fileName);
 
 				try {
