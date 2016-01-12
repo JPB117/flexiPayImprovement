@@ -56,6 +56,7 @@ import com.icpak.rest.utils.EmailServiceHelper;
 import com.workpoint.icpak.server.integration.lms.LMSIntegrationUtil;
 import com.workpoint.icpak.server.integration.lms.LMSResponse;
 import com.workpoint.icpak.shared.lms.LMSMemberDto;
+import com.workpoint.icpak.shared.model.ApplicationType;
 import com.workpoint.icpak.shared.model.Gender;
 import com.workpoint.icpak.shared.model.MembershipStatus;
 import com.workpoint.icpak.shared.model.RoleDto;
@@ -86,6 +87,8 @@ public class UsersDaoHelper {
 	UserSessionDao loginCookieDao;
 	@Inject
 	ApplicationSettings settings;
+	@Inject
+	ApplicationFormDao applicationFormDao;
 
 	@Inject
 	MemberDaoHelper memberDaoHelper;
@@ -133,8 +136,7 @@ public class UsersDaoHelper {
 		String fullNames = user.getUserData().getFullNames();
 		String subject = "Welcome to ICPAK Portal!";
 		String link = settings.getApplicationPath() + "#activateacc;uid=" + user.getRefId();
-		String body = "Dear " + fullNames + ","
-				+ "<br/>An account has been created for you on the ICPAK portal. "
+		String body = "Dear " + fullNames + "," + "<br/>An account has been created for you on the ICPAK portal. "
 				+ "You will need to create your password on the portal using the following details." + "<p/><a href="
 				+ link + ">Click this link </a>" + " to create your password." + "<p>Thank you";
 
@@ -149,23 +151,21 @@ public class UsersDaoHelper {
 		}
 
 	}
-	
+
 	private void sendActivationEmail2(User user) {
-		
+
 		String fullNames = user.getFullName();
-		
+
 		logger.info("Activation Email for " + user.getEmail());
-		
+
 		String subject = "Welcome to ICPAK Portal!";
 		String link = settings.getApplicationPath() + "#activateacc;uid=" + user.getRefId();
-		String body = "Dear " + fullNames + ","
-				+ "<br/>An account has been created for you on the ICPAK portal. "
+		String body = "Dear " + fullNames + "," + "<br/>An account has been created for you on the ICPAK portal. "
 				+ "You will need to create your password on the portal using the following details." + "<p/><a href="
 				+ link + ">Click this link </a>" + " to create your password." + "<p>Thank you";
 
 		try {
-			EmailServiceHelper.sendEmail(body, subject, Arrays.asList(user.getEmail()),
-					Arrays.asList(fullNames));
+			EmailServiceHelper.sendEmail(body, subject, Arrays.asList(user.getEmail()), Arrays.asList(fullNames));
 
 		} catch (Exception e) {
 			logger.info("Activation Email for " + user.getEmail() + " failed. Cause: " + e.getMessage());
@@ -395,8 +395,8 @@ public class UsersDaoHelper {
 
 		assert result != null;
 		res = result.toString();
-		
-		logger.error(" ===>>><<<< === RESULT ===>><<<>>== "+res);
+
+		logger.error(" ===>>><<<< === RESULT ===>><<<>>== " + res);
 
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
 
@@ -416,7 +416,19 @@ public class UsersDaoHelper {
 			String postCode = jo.getString("Post Code");
 			String phoneNo = jo.getString("Phone No_");
 			String mobileNo = jo.getString("Mobile No_");
-			String customerType = jo.getString("Customer Type");
+			String idNo = jo.getString("ID No");
+			
+			String customerType = null;
+			
+			if (jo.getString("Customer Type").equals("PRAC MEMBER")) {
+				customerType = "PRAC_MEMBER";
+			} else if (jo.getString("Customer Type").equals("PRACTICING RT")) {
+				customerType = "PRACTISING_RT";
+			} else {
+				customerType = jo.getString("Customer Type");
+			}
+
+			String customerPostingGroup = jo.getString("Customer Posting Group");
 			Date dateRegistered = formatter.parse((jo.getString("Date Registered")));
 			Integer status = jo.getInt("Status");
 			Date practisingCertDate = formatter.parse((jo.getString("Practicing Cert Date")));
@@ -464,8 +476,8 @@ public class UsersDaoHelper {
 				}
 
 			}
-			
-			logger.error(" ===>>><<<< === MEMBER EMAIL ===>><<<>>== "+email);
+
+			logger.error(" ===>>><<<< === MEMBER EMAIL ===>><<<>>== " + email);
 			if (userInDb != null) {
 				logger.error(" ===>>><<<< === USER IN DB NOT NULL ===>><<<>>== ");
 				memberInDb.setUser(userInDb);
@@ -485,7 +497,8 @@ public class UsersDaoHelper {
 				userInDb.setPassword("pass1");
 				userInDb.setEmail(email);
 				userInDb.setUsername(email);
-				
+				userInDb.setFullName(fullNames);
+
 				dao.createUser(userInDb);
 
 			} else {
@@ -508,23 +521,57 @@ public class UsersDaoHelper {
 				userInDb.setEmail(email);
 				userInDb.setUsername(email);
 				userInDb.setUserData(userData);
-				
+				userInDb.setFullName(fullNames);
+
 				dao.createUser(userInDb);
 
 			}
-			
-			updateUserMemberRecords(userInDb, memberInDb);
+
+			ApplicationFormHeader userFormHeader = new ApplicationFormHeader();
+			userFormHeader.setMobileNo(mobileNo);
+			userFormHeader.setIdNumber(idNo);
+			userFormHeader.setEmail(email);
+			userFormHeader.setOtherNames(fullNames);
+			userFormHeader.setApplicationDate(dateRegistered);
+			userFormHeader.setAddress1(address);
+			userFormHeader.setTelephone1(phoneNo);
+			userFormHeader.setContactTelephone(phoneNo);
+			userFormHeader.setApplicationType(ApplicationType.valueOf(customerPostingGroup.toUpperCase()));
+
+			updateUserMemberRecords(userInDb, memberInDb, userFormHeader);
 
 			return userInDb;
 		}
 	}
 
-	private void updateUserMemberRecords(User userInDb, Member memberInDb) {
+	private void updateUserMemberRecords(User userInDb, Member memberInDb, ApplicationFormHeader userForm) {
+		dao.save(memberInDb);
+
 		logger.error(" ===>>><<<< === UPDATE MEMBER RECORDS ===>><<<>>== ");
 		logger.error(" ===>>><<<< === MEMBER NO ===>><<<>>== " + memberInDb.getMemberNo());
-		dao.save(memberInDb);
+
+		ApplicationFormHeader userFormHeaderInDb = applicationDao.getApplicationByUserRef(userInDb.getRefId());
+
+		if (userFormHeaderInDb != null) {
+
+			userFormHeaderInDb.setMobileNo(userForm.getMemberNo());
+			userFormHeaderInDb.setIdNumber(userForm.getIdNumber());
+			userFormHeaderInDb.setEmail(userForm.getEmail());
+			userFormHeaderInDb.setOtherNames(userForm.getOtherNames());
+			userFormHeaderInDb.setApplicationDate(userForm.getApplicationDate());
+			userFormHeaderInDb.setAddress1(userForm.getAddress1());
+			userFormHeaderInDb.setTelephone1(userForm.getTelephone1());
+			userFormHeaderInDb.setContactTelephone(userForm.getContactTelephone());
+			userFormHeaderInDb.setApplicationType(userForm.getApplicationType());
+
+			dao.save(userFormHeaderInDb);
+		} else {
+			User user = dao.findUserByEmail(userInDb.getEmail());
+			userForm.setUserRefId(user.getRefId());
+			dao.save(userForm);
+		}
+
 		sendActivationEmail2(userInDb);
-		// dao.save(userInDb);
 	}
 
 	public void setProfilePic(String userId, byte[] bites, String fileName, String contentType) {
