@@ -130,12 +130,30 @@ public class UsersDaoHelper {
 	}
 
 	private void sendActivationEmail(User user) {
-		String fullNames = null;
-		if (user.getUserData().getFullNames() != null) {
-			fullNames = user.getUserData().getFullNames();
-		} else {
-			fullNames = user.getFullName();
+		String fullNames = user.getUserData().getFullNames();
+		String subject = "Welcome to ICPAK Portal!";
+		String link = settings.getApplicationPath() + "#activateacc;uid=" + user.getRefId();
+		String body = "Dear " + fullNames + ","
+				+ "<br/>An account has been created for you on the ICPAK portal. "
+				+ "You will need to create your password on the portal using the following details." + "<p/><a href="
+				+ link + ">Click this link </a>" + " to create your password." + "<p>Thank you";
+
+		try {
+			EmailServiceHelper.sendEmail(body, subject, Arrays.asList(user.getEmail()),
+					Arrays.asList(user.getUserData().getFullNames()));
+
+		} catch (Exception e) {
+			logger.info("Activation Email for " + user.getEmail() + " failed. Cause: " + e.getMessage());
+			e.printStackTrace();
+			// throw new Run
 		}
+
+	}
+	
+	private void sendActivationEmail2(User user) {
+		
+		String fullNames = user.getFullName();
+		
 		String subject = "Welcome to ICPAK Portal!";
 		String link = settings.getApplicationPath() + "#activateacc;uid=" + user.getRefId();
 		String body = "Dear " + fullNames + ","
@@ -461,6 +479,7 @@ public class UsersDaoHelper {
 				userInDb.setMobileNo(phoneNo);
 				userInDb.setMemberNo(memberNo);
 				userInDb.setMember(memberInDb);
+				userInDb.setUserData(userData);
 
 			} else {
 				logger.error(" ===>>><<<< === USER IN DB NULL ===>><<<>>== ");
@@ -481,8 +500,11 @@ public class UsersDaoHelper {
 				userInDb.setPassword("pass1");
 				userInDb.setEmail(email);
 				userInDb.setUsername(email);
+				userInDb.setUserData(userData);
 
 			}
+			
+			dao.save(userInDb);
 
 			updateUserMemberRecords(userInDb, memberInDb);
 
@@ -494,7 +516,7 @@ public class UsersDaoHelper {
 		logger.error(" ===>>><<<< === UPDATE MEMBER RECORDS ===>><<<>>== ");
 		logger.error(" ===>>><<<< === MEMBER NO ===>><<<>>== " + memberInDb.getMemberNo());
 		dao.save(memberInDb);
-		sendActivationEmail(userInDb);
+		sendActivationEmail2(userInDb);
 		// dao.save(userInDb);
 	}
 
