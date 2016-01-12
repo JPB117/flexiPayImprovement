@@ -143,6 +143,7 @@ public class CPDManagementPresenter
 	protected final CurrentUser currentUser;
 	private String recordMemberRefId;
 	private String recordMemberNo;
+	protected String searchTerm = "";
 
 	ValueChangeHandler<String> cpdValueChangeHandler = new ValueChangeHandler<String>() {
 		@Override
@@ -166,7 +167,6 @@ public class CPDManagementPresenter
 			}
 		}
 	};
-	protected String searchTerm = "";
 
 	KeyDownHandler memberSummaryKeyDownHandler = new KeyDownHandler() {
 		@Override
@@ -360,8 +360,10 @@ public class CPDManagementPresenter
 											@Override
 											public void onSuccess(
 													MemberDto member) {
+
 												cpdRecord
 														.showMemberLoading(false);
+
 												if (member.getFullName() != null) {
 													cpdRecord
 															.setFullNames(member
@@ -370,6 +372,10 @@ public class CPDManagementPresenter
 															.getRefId();
 													recordMemberNo = member
 															.getMemberNo();
+
+													cpdRecord
+															.showRecordingPanel(true);
+
 												} else {
 													cpdRecord
 															.setFullNames("Member not found!");
@@ -398,9 +404,9 @@ public class CPDManagementPresenter
 						if (name.equals("Save")) {
 							if (cpdRecord.isValid()) {
 								saveRecord(cpdRecord.getCPD());
-								hide();
 							}
 						}
+						hide();
 					}
 				}, "Save", "Cancel");
 
@@ -416,8 +422,9 @@ public class CPDManagementPresenter
 
 	protected void saveRecord(CPDDto dto) {
 		fireEvent(new ProcessingEvent());
-		if (recordMemberRefId != null) {
+		if (recordMemberRefId != null || dto.getMemberRefId() != null) {
 			dto.setMemberRegistrationNo(recordMemberNo);
+
 			if (dto.getRefId() != null) {
 				memberDelegate
 						.withCallback(new AbstractAsyncCallback<CPDDto>() {
@@ -439,7 +446,7 @@ public class CPDManagementPresenter
 			}
 
 		} else {
-			Window.alert("You need to first search for that member!");
+			Window.alert("Member records not found!");
 			return;
 		}
 

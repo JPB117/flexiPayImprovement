@@ -63,7 +63,7 @@
 		</g:HTMLPanel>
 
 		<g:HTMLPanel styleName="col-lg-12" ui:field="panelForm">
-			<d:IssuesPanel ui:field="issues"></d:IssuesPanel>
+			<d:IssuesPanel ui:field="issues" styleName="alert alert-danger hide"></d:IssuesPanel>
 
 			<div ui:field="panelBreadcrumb" class="hide">
 				<ol class="breadcrumb">
@@ -86,7 +86,7 @@
 			<div class="form-group hide" ui:field="panelMemberNo">
 				<div class="row">
 					<div class="col-xs-12">
-						<label for="firstname">Member No:</label>
+						<label for="firstname">Enter Member No:</label>
 						<div class="input-group">
 							<d:TextField ui:field="txtMemberNo"></d:TextField>
 							<span class="input-group-btn hide">
@@ -101,110 +101,114 @@
 				</div>
 			</div>
 
-			<div class="form-group">
-				<div class="row">
-					<div class="col-xs-12">
-						<label for="firstname">Title:</label>
-						<d:TextField ui:field="txtTitle" styleName="form-control"
-							placeholder="Enter Title" value="" required="true">
-						</d:TextField>
-					</div>
-				</div>
-			</div>
 
-			<div class="form-group">
-				<div class="row">
-					<div class="col-lg-6">
-						<label for="firstname">Organizer:</label>
-						<d:TextField ui:field="txtOrganizer" styleName="form-control"
-							placeholder="Event Organiser" value="" required="true">
-						</d:TextField>
-					</div>
-
-					<div class="col-lg-6">
-						<label for="firstname">Category:</label>
-						<d:DropDownList ui:field="lstCategory"></d:DropDownList>
-						<p class="text-muted">(Refer to Categories listing in the previous page)</p>
-					</div>
-				</div>
-			</div>
-
-			<div class="form-group">
-				<div class="row">
-					<div class="col-xs-6">
-						<label for="from">From:</label>
-						<div id="datetimepicker2" class="date">
-							<d:DateField ui:field="dtStartDate"></d:DateField>
-						</div>
-					</div>
-
-					<div class="col-xs-6">
-						<label for="endDate">End Date:</label>
-						<div id="datetimepicker1" class="date">
-							<d:DateField ui:field="dtEndDate"></d:DateField>
+			<div ui:field="panelRecordingPanel">
+				<div class="form-group">
+					<div class="row">
+						<div class="col-xs-12">
+							<label for="firstname">Title:</label>
+							<d:TextField ui:field="txtTitle" styleName="form-control"
+								placeholder="Enter Title" value="" required="true">
+							</d:TextField>
 						</div>
 					</div>
 				</div>
-			</div>
 
-			<div class="form-group">
-				<div class="row">
-					<div class="col-xs-6">
-						<label for="endDate">Attachments:</label>
-						<g:HTMLPanel ui:field="panelPreviousAttachments"></g:HTMLPanel>
+				<div class="form-group">
+					<div class="row">
+						<div class="col-lg-6">
+							<label for="firstname">Organizer:</label>
+							<d:TextField ui:field="txtOrganizer" styleName="form-control"
+								placeholder="Event Organiser" value="" required="true">
+							</d:TextField>
+						</div>
+
+						<div class="col-lg-6">
+							<label for="firstname">Category:</label>
+							<d:DropDownList ui:field="lstCategory"></d:DropDownList>
+							<p class="text-muted">(Refer to Categories listing in the previous page)</p>
+						</div>
 					</div>
 				</div>
-			</div>
 
-			<hr />
+				<div class="form-group">
+					<div class="row">
+						<div class="col-xs-6">
+							<label for="from">From:</label>
+							<div id="datetimepicker2" class="date">
+								<d:DateField ui:field="dtStartDate"></d:DateField>
+							</div>
+						</div>
 
-			<div class="form-group hide" ui:field="divCpdHours">
-				<div class="row">
-					<div class="col-xs-6">
-						<label for="from">CPD Hours:</label>
-						<d:TextField ui:field="txtCPDHours" styleName="form-control"
-							placeholder="CPD Hours" value="" required="true" />
-					</div>
-
-					<div class="col-xs-6">
-						<label for="from">Management Action:</label>
-						<d:DropDownList ui:field="lstMgmtAction"></d:DropDownList>
-					</div>
-				</div>
-			</div>
-
-			<div class="form-group hide" ui:field="divMgtComment">
-				<div class="row">
-					<div class="col-xs-12">
-						<label for="from">Comment:</label>
-						<d:TextArea ui:field="txtMgmtComment" styleName="form-control"
-							rows="5"></d:TextArea>
+						<div class="col-xs-6">
+							<label for="endDate">End Date:</label>
+							<div id="datetimepicker1" class="date">
+								<d:DateField ui:field="dtEndDate"></d:DateField>
+							</div>
+						</div>
 					</div>
 				</div>
-			</div>
 
-			<div class="form-group hide" ui:field="divUpdatedBy">
-				<div class="row">
-					<div class="col-xs-12">
-						<label for="from">Updated By:</label>
-						<span ui:field="spnMgmntActionBy"></span>
+				<div class="form-group">
+					<div class="row">
+						<div class="col-xs-6">
+							<label for="endDate">Attachments:</label>
+							<g:HTMLPanel ui:field="panelPreviousAttachments"></g:HTMLPanel>
+						</div>
 					</div>
 				</div>
-			</div>
 
+				<hr />
 
-			<div class="form-group">
-				<div class="row">
-					<g:HTMLPanel ui:field="panelUpload">
-						<d:ActionLink ui:field="aStartUpload" styleName="btn btn-default btn-primary">Click
-							Here to Upload Documents</d:ActionLink>
-					</g:HTMLPanel>
-					<g:HTMLPanel styleName="col-xs-6 hide" ui:field="panelUploader">
-						<label for="firstname">Please attach relevant documents to show as
-							proof.</label>
-						<up:Uploader ui:field="uploader" styleName="custom-file-input"></up:Uploader>
-					</g:HTMLPanel>
+				<div class="form-group hide" ui:field="divCpdHours">
+					<div class="row">
+						<div class="col-xs-6">
+							<label for="from">CPD Hours:</label>
+							<d:TextField ui:field="txtCPDHours" styleName="form-control"
+								placeholder="CPD Hours" value="" required="true" />
+						</div>
+
+						<div class="col-xs-6">
+							<label for="from">Management Action:</label>
+							<d:DropDownList ui:field="lstMgmtAction"></d:DropDownList>
+						</div>
+					</div>
 				</div>
+
+				<div class="form-group hide" ui:field="divMgtComment">
+					<div class="row">
+						<div class="col-xs-12">
+							<label for="from">Comment:</label>
+							<d:TextArea ui:field="txtMgmtComment" styleName="form-control"
+								rows="5"></d:TextArea>
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group hide" ui:field="divUpdatedBy">
+					<div class="row">
+						<div class="col-xs-12">
+							<label for="from">Updated By:</label>
+							<span ui:field="spnMgmntActionBy"></span>
+						</div>
+					</div>
+				</div>
+
+
+				<div class="form-group">
+					<div class="row">
+						<g:HTMLPanel ui:field="panelUpload">
+							<d:ActionLink ui:field="aStartUpload" styleName="btn btn-default btn-primary">Click
+								Here to Upload Documents</d:ActionLink>
+						</g:HTMLPanel>
+						<g:HTMLPanel styleName="col-xs-6 hide" ui:field="panelUploader">
+							<label for="firstname">Please attach relevant documents to show as
+								proof.</label>
+							<up:Uploader ui:field="uploader" styleName="custom-file-input"></up:Uploader>
+						</g:HTMLPanel>
+					</div>
+				</div>
+
 			</div>
 
 			<div class="form-group hide" ui:field="panelInlineActions">

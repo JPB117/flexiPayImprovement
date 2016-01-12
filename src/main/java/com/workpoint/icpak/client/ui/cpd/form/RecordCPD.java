@@ -13,8 +13,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasKeyDownHandlers;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.History;
@@ -28,7 +26,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.workpoint.icpak.client.model.UploadContext;
 import com.workpoint.icpak.client.model.UploadContext.UPLOADACTION;
 import com.workpoint.icpak.client.ui.component.ActionLink;
-import com.workpoint.icpak.client.ui.component.AutoCompleteField;
 import com.workpoint.icpak.client.ui.component.DateField;
 import com.workpoint.icpak.client.ui.component.DropDownList;
 import com.workpoint.icpak.client.ui.component.IssuesPanel;
@@ -41,7 +38,6 @@ import com.workpoint.icpak.shared.model.CPDAction;
 import com.workpoint.icpak.shared.model.CPDCategory;
 import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.shared.model.CPDStatus;
-import com.workpoint.icpak.shared.model.MemberDto;
 import com.workpoint.icpak.shared.model.TableActionType;
 
 public class RecordCPD extends Composite {
@@ -131,6 +127,8 @@ public class RecordCPD extends Composite {
 	ActionLink aSearch;
 	@UiField
 	DivElement panelMemberNo;
+	@UiField
+	DivElement panelRecordingPanel;
 
 	private CPDDto dto;
 	private boolean isViewMode;
@@ -222,9 +220,15 @@ public class RecordCPD extends Composite {
 			issues.addError("Category is mandatory");
 		}
 		if (isViewMode && txtCPDHours.getValue().equals("0")
-				&& (lstMgmtAction.getValue() != null)) {
+				&& (lstMgmtAction.getValue() == CPDAction.APPROVED)) {
 			isValid = false;
 			issues.addError("CPD Hours must be greater than 0!");
+		}
+		if (!isValid) {
+			issues.getElement().scrollIntoView();
+			issues.removeStyleName("hide");
+		} else {
+			issues.addStyleName("hide");
 		}
 		return isValid;
 	}
@@ -360,8 +364,10 @@ public class RecordCPD extends Composite {
 	public void showMemberNoPanel(boolean show) {
 		if (show) {
 			panelMemberNo.removeClassName("hide");
+			panelRecordingPanel.addClassName("hide");
 		} else {
 			panelMemberNo.addClassName("hide");
+			panelRecordingPanel.removeClassName("hide");
 		}
 	}
 
@@ -386,6 +392,14 @@ public class RecordCPD extends Composite {
 			spnSpinner.removeClassName("hide");
 		} else {
 			spnSpinner.addClassName("hide");
+		}
+	}
+
+	public void showRecordingPanel(boolean show) {
+		if (show) {
+			panelRecordingPanel.removeClassName("hide");
+		} else {
+			panelRecordingPanel.addClassName("hide");
 		}
 	}
 

@@ -25,7 +25,7 @@
 					</div>
 
 					<div class="col-sm-12">
-						<p:TransactionsHeader ui:field="headerContainer">
+						<p:TransactionsHeader ui:field="headerContainer" styleName="hide">
 						</p:TransactionsHeader>
 					</div>
 				</g:HTMLPanel>

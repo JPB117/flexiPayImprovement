@@ -167,7 +167,19 @@ public class CPDDaoHelper {
 			action = " has not been approved because of the following reason:<br/>";
 		}
 
+		boolean isApproved = cpdDto.getStatus() == CPDStatus.Approved;
+		boolean isNotConfirmed = cpdDto.getStatus() == CPDStatus.Unconfirmed;
 		String link = settings.getApplicationPath() + "#cpd";
+
+		String additionLink = "";
+		if (isApproved) {
+			additionLink = "<p><a href=" + link + ">Click this link </a>"
+					+ " to View the CPD record.</p>";
+		} else if (isNotConfirmed) {
+			additionLink = "<p><a href=" + link + ">Click this link </a>"
+					+ " to View and Rectify the CPD record.</p>";
+		}
+
 		String body = "Dear "
 				+ user.getUserData().getFullNames()
 				+ ","
@@ -177,9 +189,7 @@ public class CPDDaoHelper {
 				+ "\""
 				+ action
 				+ (cpdDto.getManagementComment() == null ? "" : " <br/>'"
-						+ cpdDto.getManagementComment() + "'") + "<p><a href="
-				+ link + ">Click this link </a>"
-				+ " to View and rectify the CPD record."
+						+ cpdDto.getManagementComment() + "'") + additionLink
 				+ "</p>Thank you<br/>Member Services";
 
 		try {
