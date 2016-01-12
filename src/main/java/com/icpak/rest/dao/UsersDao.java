@@ -44,12 +44,12 @@ public class UsersDao extends BaseDao {
 		return user;
 	}
 
-	public void createUser(User user) {
+	public User createUser(User user) {
 		if (user.getHashedPassword() != null && user.getId() == null) {
 			// Encrypt passwords for new entries only, not on user info update
 			user.setPassword(encrypt(user.getHashedPassword()));
 		}
-		save(user);
+		return (User) save(user);
 	}
 
 	public void changePassword(User user) {

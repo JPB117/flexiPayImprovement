@@ -182,7 +182,7 @@
 											</div>
 										</div>
 
-										<div ui:field="divStandingStatus" class="hide">
+										<div ui:field="divStandingStatus">
 											<div class="row">
 												<br />
 												Standing Status:
@@ -198,6 +198,10 @@
 												<d:PopOver></d:PopOver>
 											</div>
 											<div class="row">
+												<br />
+												<d:ActionLink ui:field="aCheckStandingStatus"
+													styleName="btn btn-default btn-fill">Check GoodStanding Status
+													</d:ActionLink>
 												<br />
 												<d:ActionLink ui:field="aDownloadCert"
 													styleName="btn btn-success btn-fill">Download

@@ -12,6 +12,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.icpak.rest.exceptions.ServiceException;
 import com.icpak.rest.models.ErrorCodes;
+import com.icpak.rest.models.auth.User;
 import com.icpak.rest.models.base.PO;
 
 public class BaseDao {
@@ -24,12 +25,13 @@ public class BaseDao {
 		return em;
 	}
 
-	public void save(PO po) throws RuntimeException {
+	public PO save(PO po) throws RuntimeException {
 		try {
 			getEntityManager().persist(po);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return po;
 
 	}
 

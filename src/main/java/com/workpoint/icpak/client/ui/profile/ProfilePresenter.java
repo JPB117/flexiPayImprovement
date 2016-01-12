@@ -8,6 +8,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -112,6 +113,10 @@ public class ProfilePresenter
 		boolean validateBasicDetailIssues();
 
 		void setLastUpdateToNow();
+		
+		HasClickHandlers getCertStatusButton();
+		
+		void updateStatement();
 	}
 
 	private final CurrentUser currentUser;

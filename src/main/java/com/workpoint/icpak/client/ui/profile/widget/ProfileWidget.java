@@ -19,6 +19,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -54,8 +55,7 @@ import com.workpoint.icpak.shared.model.auth.ApplicationStatus;
 
 public class ProfileWidget extends Composite {
 
-	private static ProfileWidgetUiBinder uiBinder = GWT
-			.create(ProfileWidgetUiBinder.class);
+	private static ProfileWidgetUiBinder uiBinder = GWT.create(ProfileWidgetUiBinder.class);
 
 	@UiField
 	TabPanel divTabs;
@@ -143,6 +143,8 @@ public class ProfileWidget extends Composite {
 	ActionLink aPreviousApplication;
 	@UiField
 	ActionLink aNextApplication;
+	@UiField
+	ActionLink aCheckStandingStatus;
 
 	private BasicDetails basicDetail;
 	private EducationDetails educationDetail;
@@ -163,24 +165,20 @@ public class ProfileWidget extends Composite {
 		accountancyDetail = new AccountancyDetails();
 		setEditMode(true);
 		setChangeProfilePicture(false);
+		aCheckStandingStatus.setVisible(true);
+		aDownloadCert.setVisible(false);
 
-		divTabs.setHeaders(Arrays.asList(new TabHeader("Basic Information",
-				true, "basic_details"), new TabHeader("Education Background",
-				false, "education_details"), new TabHeader(
-				"Practical Training", false, "training_details"),
-				new TabHeader("Accountancy Examinations", false,
-						"accountancy_details"),
-				new TabHeader("Specialization Areas", false,
-						"specialisation_details")));
+		divTabs.setHeaders(Arrays.asList(new TabHeader("Basic Information", true, "basic_details"),
+				new TabHeader("Education Background", false, "education_details"),
+				new TabHeader("Practical Training", false, "training_details"),
+				new TabHeader("Accountancy Examinations", false, "accountancy_details"),
+				new TabHeader("Specialization Areas", false, "specialisation_details")));
 		divTabs.setPosition(TabPosition.PILLS);
-		divTabs.setContent(Arrays
-				.asList(new TabContent(basicDetail, "basic_details", true),
-						new TabContent(educationDetail, "education_details",
-								false), new TabContent(specializationDetail,
-								"specialisation_details", false),
-						new TabContent(accountancyDetail,
-								"accountancy_details", false), new TabContent(
-								trainingDetail, "training_details", false)));
+		divTabs.setContent(Arrays.asList(new TabContent(basicDetail, "basic_details", true),
+				new TabContent(educationDetail, "education_details", false),
+				new TabContent(specializationDetail, "specialisation_details", false),
+				new TabContent(accountancyDetail, "accountancy_details", false),
+				new TabContent(trainingDetail, "training_details", false)));
 
 		/* Set Edit Mode */
 		aEditPicture.addClickHandler(new ClickHandler() {
@@ -224,9 +222,17 @@ public class ProfileWidget extends Composite {
 			public void onClick(ClickEvent arg0) {
 				UploadContext ctx = new UploadContext("getreport");
 				ctx.setAction(UPLOADACTION.DownloadCertGoodStanding);
-				ctx.setContext("memberRefId", AppContext.getContextUser()
-						.getMemberRefId());
+				ctx.setContext("memberRefId", AppContext.getContextUser().getMemberRefId());
 				Window.open(ctx.toUrl(), "Certificate Of Good Standing", "");
+			}
+		});
+		
+		aCheckStandingStatus.addClickHandler(new ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent event) {
+//				aDownloadCert.setVisible(true);
+				Window.alert("Clicked");
 			}
 		});
 
@@ -278,8 +284,7 @@ public class ProfileWidget extends Composite {
 		basicDetail.bindDetails(result);
 		if (result.getRefId() != null) {
 			if (AppContext.getCurrentUser().getUser().getFullName() != null) {
-				spnNames.setInnerText(AppContext.getCurrentUser().getUser()
-						.getFullName());
+				spnNames.setInnerText(AppContext.getCurrentUser().getUser().getFullName());
 			}
 			// if (result.getSurname() != null && result.getOtherNames() !=
 			// null) {
@@ -287,8 +292,7 @@ public class ProfileWidget extends Composite {
 			// + result.getOtherNames());
 			// }
 			if (result.getApplicationType() != null) {
-				spnApplicationType.setInnerText(result.getApplicationType()
-						.getDisplayName());
+				spnApplicationType.setInnerText(result.getApplicationType().getDisplayName());
 			}
 			result.setPercCompletion(50);
 			if (result.getPercCompletion() != null) {
@@ -309,8 +313,7 @@ public class ProfileWidget extends Composite {
 		spnMembershipStatus.setInnerText(user.getUser().getMemberNo());
 
 		if (user.getUser().getLastDateUpdateFromErp() != null) {
-			spnLastUpdated.setInnerText(DateUtils.CREATEDFORMAT.format(user
-					.getUser().getLastDateUpdateFromErp()));
+			spnLastUpdated.setInnerText(DateUtils.CREATEDFORMAT.format(user.getUser().getLastDateUpdateFromErp()));
 
 		}
 
@@ -397,21 +400,18 @@ public class ProfileWidget extends Composite {
 		basicDetail.setCountries(countries);
 	}
 
-	public void bindSpecializations(
-			List<ApplicationFormSpecializationDto> result) {
+	public void bindSpecializations(List<ApplicationFormSpecializationDto> result) {
 		specializationDetail.bindSpecializations(result);
 	}
 
-	public void bindAccountancyDetails(
-			List<ApplicationFormAccountancyDto> result) {
+	public void bindAccountancyDetails(List<ApplicationFormAccountancyDto> result) {
 		accountancyDetail.bindDetails(result);
 	}
 
 	public void bindMemberStanding(MemberStanding standing) {
 
 		if (standing.getMembershipStatus() != null) {
-			spnMembershipStatus.setInnerText(standing.getMembershipStatus()
-					.getDisplayName());
+			spnMembershipStatus.setInnerText(standing.getMembershipStatus().getDisplayName());
 		}
 
 		if (standing.getStanding() == 0) {
@@ -437,10 +437,8 @@ public class ProfileWidget extends Composite {
 			divAccountStatus.removeClassName("label-danger");
 			iconFail.addClassName("hide");
 			iconSuccess.removeClassName("hide");
-			spnHelpIcon
-					.setAttribute(
-							"data-content",
-							"Your account is in Good-Standing, You can download proceed to download the certificate for your own use.");
+			spnHelpIcon.setAttribute("data-content",
+					"Your account is in Good-Standing, You can download proceed to download the certificate for your own use.");
 			aDownloadCert.setVisible(true);
 		}
 	}
@@ -480,16 +478,11 @@ public class ProfileWidget extends Composite {
 
 	public boolean validateAllIssues() {
 		ulIssues.clear();
-		boolean isBasicDetailOK = basicDetail.getBasicDetailIssues().size() != 0 ? true
-				: false;
-		boolean isEducationDetailOk = educationDetail
-				.getEducationDetailIssues().size() != 0 ? true : false;
-		boolean isTrainingDetailOk = trainingDetail.getTrainingDetailIssues()
-				.size() != 0 ? true : false;
-		boolean isExaminationDetailOk = accountancyDetail
-				.getExaminationDetailIssues().size() != 0 ? true : false;
-		if (isBasicDetailOK && isEducationDetailOk && isTrainingDetailOk
-				&& isExaminationDetailOk) {
+		boolean isBasicDetailOK = basicDetail.getBasicDetailIssues().size() != 0 ? true : false;
+		boolean isEducationDetailOk = educationDetail.getEducationDetailIssues().size() != 0 ? true : false;
+		boolean isTrainingDetailOk = trainingDetail.getTrainingDetailIssues().size() != 0 ? true : false;
+		boolean isExaminationDetailOk = accountancyDetail.getExaminationDetailIssues().size() != 0 ? true : false;
+		if (isBasicDetailOK && isEducationDetailOk && isTrainingDetailOk && isExaminationDetailOk) {
 			panelIssues.addStyleName("hide");
 			return true;
 		} else {
@@ -524,8 +517,7 @@ public class ProfileWidget extends Composite {
 		// Date()));
 	}
 
-	public void setNavigationLinks(String previousRefId, String nextRefId,
-			int maxSize) {
+	public void setNavigationLinks(String previousRefId, String nextRefId, int maxSize) {
 		if ((Integer.parseInt(nextRefId) + 1) < maxSize) {
 			aNextApplication.removeStyleName("hide");
 			aNextApplication.setHref("#members;counter=" + nextRefId);
@@ -541,4 +533,9 @@ public class ProfileWidget extends Composite {
 		}
 
 	}
+
+	public ActionLink getAcheckStandingStatus() {
+		return aCheckStandingStatus;
+	}
+
 }
