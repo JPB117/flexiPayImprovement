@@ -130,9 +130,15 @@ public class UsersDaoHelper {
 	}
 
 	private void sendActivationEmail(User user) {
+		String fullNames = null;
+		if (user.getUserData().getFullNames() != null) {
+			fullNames = user.getUserData().getFullNames();
+		} else {
+			fullNames = user.getFullName();
+		}
 		String subject = "Welcome to ICPAK Portal!";
 		String link = settings.getApplicationPath() + "#activateacc;uid=" + user.getRefId();
-		String body = "Dear " + user.getUserData().getFullNames() + ","
+		String body = "Dear " + fullNames + ","
 				+ "<br/>An account has been created for you on the ICPAK portal. "
 				+ "You will need to create your password on the portal using the following details." + "<p/><a href="
 				+ link + ">Click this link </a>" + " to create your password." + "<p>Thank you";
@@ -370,6 +376,8 @@ public class UsersDaoHelper {
 
 		assert result != null;
 		res = result.toString();
+		
+		logger.error(" ===>>><<<< === RESULT ===>><<<>>== "+res);
 
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
 
@@ -398,7 +406,7 @@ public class UsersDaoHelper {
 			Member memberInDb = memberDaoHelper.findByMemberNo(memberNo);
 
 			if (memberInDb != null) {
-				
+
 				logger.error(" ===>>><<<< === MEMBER IN DB NOT NULL ===>><<<>>== ");
 
 				memberInDb.setLastUpdate(new Date());
@@ -406,6 +414,7 @@ public class UsersDaoHelper {
 				memberInDb.setPractisingCertDate(practisingCertDate);
 				memberInDb.setPractisingNo(practisingNo);
 				memberInDb.setCustomerType(customerType);
+				memberInDb.setMemberNo(memberNo);
 
 				if (status == 0) {
 					memberInDb.setMemberShipStatus(MembershipStatus.ACTIVE);
@@ -416,7 +425,7 @@ public class UsersDaoHelper {
 				}
 
 			} else {
-				
+
 				logger.error(" ===>>><<<< === MEMBER IN DB NULL ===>><<<>>== ");
 
 				memberInDb = new Member();
@@ -425,6 +434,7 @@ public class UsersDaoHelper {
 				memberInDb.setPractisingCertDate(practisingCertDate);
 				memberInDb.setPractisingNo(practisingNo);
 				memberInDb.setCustomerType(customerType);
+				memberInDb.setMemberNo(memberNo);
 
 				if (status == 0) {
 					memberInDb.setMemberShipStatus(MembershipStatus.ACTIVE);
@@ -435,7 +445,7 @@ public class UsersDaoHelper {
 				}
 
 			}
-			
+
 			if (userInDb != null) {
 				logger.error(" ===>>><<<< === USER IN DB NOT NULL ===>><<<>>== ");
 				memberInDb.setUser(userInDb);
@@ -451,8 +461,8 @@ public class UsersDaoHelper {
 				userInDb.setMobileNo(phoneNo);
 				userInDb.setMemberNo(memberNo);
 				userInDb.setMember(memberInDb);
-				
-			}else{
+
+			} else {
 				logger.error(" ===>>><<<< === USER IN DB NULL ===>><<<>>== ");
 				userInDb = new User();
 				memberInDb.setUser(userInDb);
@@ -469,7 +479,9 @@ public class UsersDaoHelper {
 				userInDb.setMemberNo(memberNo);
 				userInDb.setMember(memberInDb);
 				userInDb.setPassword("pass1");
-				
+				userInDb.setEmail(email);
+				userInDb.setUsername(email);
+
 			}
 
 			updateUserMemberRecords(userInDb, memberInDb);
@@ -480,9 +492,10 @@ public class UsersDaoHelper {
 
 	private void updateUserMemberRecords(User userInDb, Member memberInDb) {
 		logger.error(" ===>>><<<< === UPDATE MEMBER RECORDS ===>><<<>>== ");
-		sendActivationEmail(userInDb);
+		logger.error(" ===>>><<<< === MEMBER NO ===>><<<>>== " + memberInDb.getMemberNo());
 		dao.save(memberInDb);
-//		dao.save(userInDb);
+		sendActivationEmail(userInDb);
+		// dao.save(userInDb);
 	}
 
 	public void setProfilePic(String userId, byte[] bites, String fileName, String contentType) {
