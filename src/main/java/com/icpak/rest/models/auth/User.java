@@ -96,7 +96,7 @@ public class User extends PO {
 	@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 	private Set<Role> roles = new HashSet<Role>();
 	@Embedded
-	private BioData userData = null;
+	private BioData userData;
 	@OneToOne(fetch = FetchType.LAZY, mappedBy = "user", cascade = {
 			CascadeType.PERSIST, CascadeType.REMOVE })
 	private Member member;
