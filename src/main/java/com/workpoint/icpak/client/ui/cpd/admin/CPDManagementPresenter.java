@@ -30,6 +30,8 @@ import com.gwtplatform.mvp.client.annotations.UseGatekeeper;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.TabContentProxyPlace;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
+import com.workpoint.icpak.client.model.UploadContext;
+import com.workpoint.icpak.client.model.UploadContext.UPLOADACTION;
 import com.workpoint.icpak.client.place.NameTokens;
 import com.workpoint.icpak.client.security.CurrentUser;
 import com.workpoint.icpak.client.service.AbstractAsyncCallback;
@@ -40,6 +42,7 @@ import com.workpoint.icpak.client.ui.component.PagingConfig;
 import com.workpoint.icpak.client.ui.component.PagingLoader;
 import com.workpoint.icpak.client.ui.component.PagingPanel;
 import com.workpoint.icpak.client.ui.cpd.form.RecordCPD;
+import com.workpoint.icpak.client.ui.cpd.member.table.CPDMemberTable;
 import com.workpoint.icpak.client.ui.events.EditModelEvent;
 import com.workpoint.icpak.client.ui.events.EditModelEvent.EditModelHandler;
 import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
@@ -57,6 +60,7 @@ import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.shared.model.CPDFooterDto;
 import com.workpoint.icpak.shared.model.CPDSummaryDto;
 import com.workpoint.icpak.shared.model.MemberCPDDto;
+import com.workpoint.icpak.shared.model.MemberDto;
 import com.workpoint.icpak.shared.model.TableActionType;
 
 public class CPDManagementPresenter
@@ -117,6 +121,8 @@ public class CPDManagementPresenter
 
 		String getArchiveSummaryTxtSearch();
 
+		CPDMemberTable getMemberSummaryTable();
+
 	}
 
 	@ProxyCodeSplit
@@ -135,6 +141,8 @@ public class CPDManagementPresenter
 
 	protected final ResourceDelegate<MemberResource> memberDelegate;
 	protected final CurrentUser currentUser;
+	private String recordMemberRefId;
+	private String recordMemberNo;
 
 	ValueChangeHandler<String> cpdValueChangeHandler = new ValueChangeHandler<String>() {
 		@Override
@@ -165,7 +173,6 @@ public class CPDManagementPresenter
 		public void onKeyDown(KeyDownEvent event) {
 			if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
 				// loadCPDSummaryCount(getView().getMemberSummaryTxtSearch());
-
 				Map<String, String> params = new HashMap<String, String>();
 				params.put("p", "memberCPD");
 				params.put("searchTerm", getView().getMemberSummaryTxtSearch());
@@ -273,6 +280,42 @@ public class CPDManagementPresenter
 					}
 				});
 
+		getView().getMemberSummaryTable().getFilterButton()
+				.addClickHandler(new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {
+						loadIndividualData(memberRefId, getView()
+								.getMemberSummaryTable().getStartDate(),
+								getView().getMemberSummaryTable().getEndDate());
+					}
+				});
+
+		getView().getMemberSummaryTable().getDownloadButton()
+				.addClickHandler(new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {
+						if (memberRefId != null) {
+							UploadContext ctx = new UploadContext("getreport");
+							if (getView().getMemberSummaryTable()
+									.getStartDate() != null)
+								ctx.setContext("startdate", getView()
+										.getMemberSummaryTable().getStartDate()
+										.getTime()
+										+ "");
+							if (getView().getMemberSummaryTable().getEndDate() != null)
+								ctx.setContext("enddate", getView()
+										.getMemberSummaryTable().getEndDate()
+										.getTime()
+										+ "");
+							ctx.setContext("memberRefId", memberRefId);
+							ctx.setAction(UPLOADACTION.GETCPDSTATEMENT);
+							Window.open(ctx.toUrl(), "", null);
+						} else {
+							Window.alert("Please enter a valid memberNo in the search box...");
+						}
+					}
+				});
+
 	}
 
 	protected void showCreatePopup() {
@@ -281,12 +324,10 @@ public class CPDManagementPresenter
 			@Override
 			public void onClick(ClickEvent event) {
 				if (cpdRecord.getCPD().getRefId() == null) {
-					// not saved
 					if (cpdRecord.isValid()) {
 						CPDDto cpd = cpdRecord.getCPD();
-						String memberId = currentUser.getUser().getRefId();
-						String memberRegistrationNo = currentUser.getUser()
-								.getMemberNo();
+						String memberId = recordMemberRefId;
+						String memberRegistrationNo = recordMemberNo;
 						cpd.setMemberRegistrationNo(memberRegistrationNo);
 						memberDelegate
 								.withCallback(
@@ -304,7 +345,51 @@ public class CPDManagementPresenter
 			}
 		});
 		cpdRecord.showForm(true);
-		cpdRecord.setViewMode(false);
+		cpdRecord.setAdminMode(false);
+		cpdRecord.showMemberNoPanel(true);
+
+		cpdRecord.getMemberNoKeyDownHandler().addKeyDownHandler(
+				new KeyDownHandler() {
+					@Override
+					public void onKeyDown(KeyDownEvent event) {
+						if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+							cpdRecord.showMemberLoading(true);
+							if (!cpdRecord.getMemberNoValue().equals("")) {
+								memberDelegate.withCallback(
+										new AbstractAsyncCallback<MemberDto>() {
+											@Override
+											public void onSuccess(
+													MemberDto member) {
+												cpdRecord
+														.showMemberLoading(false);
+												if (member.getFullName() != null) {
+													cpdRecord
+															.setFullNames(member
+																	.getFullName());
+													recordMemberRefId = member
+															.getRefId();
+													recordMemberNo = member
+															.getMemberNo();
+												} else {
+													cpdRecord
+															.setFullNames("Member not found!");
+												}
+											}
+
+											public void onFailure(
+													Throwable caught) {
+												cpdRecord
+														.showMemberLoading(false);
+												cpdRecord
+														.setFullNames("Member not found!");
+											};
+
+										}).searchIndividualByMemberNo(
+										cpdRecord.getMemberNoValue());
+							}
+						}
+					}
+				});
 
 		AppManager.showPopUp("Record CPD Wizard", cpdRecord.asWidget(),
 				new OptionControl() {
@@ -318,6 +403,7 @@ public class CPDManagementPresenter
 						}
 					}
 				}, "Save", "Cancel");
+
 	}
 
 	@Inject
@@ -330,17 +416,31 @@ public class CPDManagementPresenter
 
 	protected void saveRecord(CPDDto dto) {
 		fireEvent(new ProcessingEvent());
-		if (dto.getMemberRefId() != null) {
-			memberDelegate.withCallback(new AbstractAsyncCallback<CPDDto>() {
-				@Override
-				public void onSuccess(CPDDto result) {
-					fireEvent(new ProcessingCompletedEvent());
-					History.back();
-				}
-			}).cpd(dto.getMemberRefId()).update(dto.getRefId(), dto);
+		if (recordMemberRefId != null) {
+			dto.setMemberRegistrationNo(recordMemberNo);
+			if (dto.getRefId() != null) {
+				memberDelegate
+						.withCallback(new AbstractAsyncCallback<CPDDto>() {
+							@Override
+							public void onSuccess(CPDDto result) {
+								fireEvent(new ProcessingCompletedEvent());
+								History.back();
+							}
+						}).cpd(recordMemberRefId).update(dto.getRefId(), dto);
+			} else {
+				memberDelegate
+						.withCallback(new AbstractAsyncCallback<CPDDto>() {
+							@Override
+							public void onSuccess(CPDDto result) {
+								fireEvent(new ProcessingCompletedEvent());
+								History.back();
+							}
+						}).cpd(recordMemberRefId).create(dto);
+			}
 
 		} else {
-			Window.alert("MemberRefId cannot be null!");
+			Window.alert("You need to first search for that member!");
+			return;
 		}
 
 	}
@@ -429,7 +529,6 @@ public class CPDManagementPresenter
 			public void onSuccess(List<CPDDto> result) {
 				fireEvent(new ProcessingCompletedEvent());
 				getView().bindResults(result, loadType);
-
 			}
 		}).cpd(loadType)
 				.getAll(offset, limit, startDate.getTime(), endDate.getTime());
@@ -445,7 +544,6 @@ public class CPDManagementPresenter
 				PagingPanel panel = getView().getIndividualMemberPagingPanel();
 				panel.setTotal(aCount);
 				PagingConfig config = panel.getConfig();
-
 				loadIndividualMemberCPD(config.getOffset(), pageLimit);
 			}
 		}).cpd(memberId).getCount(startDate.getTime(), endDate.getTime());
@@ -463,6 +561,7 @@ public class CPDManagementPresenter
 			}
 		}).cpd(memberRefId)
 				.getAll(offset, limit, startDate.getTime(), endDate.getTime());
+
 	}
 
 	protected void loadYearSummaries() {
@@ -476,7 +575,6 @@ public class CPDManagementPresenter
 					}
 				}).cpd(memberRefId)
 				.getYearSummaries(startDate.getTime(), endDate.getTime());
-
 	}
 
 	protected void loadCPD(String refId, final String loadType) {
@@ -535,6 +633,7 @@ public class CPDManagementPresenter
 			if (page.equals("memberCPD")) {
 				this.memberRefId = refId;
 				loadIndividualData(memberRefId, startDate, endDate);
+				getView().setIndividualMemberInitialDates(startDate, endDate);
 			} else {
 				// Load Individual CPD - Return OR Archive
 				getView().setIndividualMemberInitialDates(startDate, endDate);

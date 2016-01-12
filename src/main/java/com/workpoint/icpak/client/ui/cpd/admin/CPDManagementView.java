@@ -33,6 +33,7 @@ import com.workpoint.icpak.client.ui.cpd.header.CPDHeader;
 import com.workpoint.icpak.client.ui.cpd.member.table.CPDMemberTable;
 import com.workpoint.icpak.client.ui.cpd.member.table.footer.CPDMemberFooterRow;
 import com.workpoint.icpak.client.ui.cpd.member.table.row.CPDMemberTableRow;
+import com.workpoint.icpak.client.ui.members.table.MembersTable;
 import com.workpoint.icpak.client.ui.util.DateRange;
 import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.shared.model.CPDDto;
@@ -90,7 +91,6 @@ public class CPDManagementView extends ViewImpl implements
 	CPDMemberTable tblMemberTable;
 	@UiField
 	DivElement panelBreadcrumb;
-
 	@UiField
 	SpanElement spnMemberName;
 
@@ -100,28 +100,9 @@ public class CPDManagementView extends ViewImpl implements
 	@Inject
 	public CPDManagementView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
+
 		headerContainer.setTitles("Total CPD Requests", "Total Processed",
 				"Total Pending");
-
-		tblCPDReturns.getDownloadButton().addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				if (!tblCPDReturns.getSearchValue().isEmpty()) {
-					UploadContext ctx = new UploadContext("getreport");
-					if (tblCPDReturns.getStartDate() != null)
-						ctx.setContext("startdate", tblCPDReturns
-								.getStartDate().getTime() + "");
-					if (tblCPDReturns.getEndDate() != null)
-						ctx.setContext("enddate", tblCPDReturns.getEndDate()
-								.getTime() + "");
-					ctx.setContext("memberNo", tblCPDReturns.getSearchValue());
-					ctx.setAction(UPLOADACTION.GETCPDSTATEMENT);
-					Window.open(ctx.toUrl(), "", null);
-				} else {
-					Window.alert("Please enter a valid memberNo in the search box...");
-				}
-			}
-		});
 
 		aBack.addClickHandler(new ClickHandler() {
 			@Override
@@ -204,6 +185,8 @@ public class CPDManagementView extends ViewImpl implements
 	public void setInitialDates(DateRange thisYear, Date endDate) {
 		tblCPDReturns.setInitialDates(DateUtils.getDateByRange(thisYear, true),
 				endDate);
+		tblMemberTable.setInitialDates(
+				DateUtils.getDateByRange(thisYear, true), endDate);
 	}
 
 	@Override
@@ -249,6 +232,10 @@ public class CPDManagementView extends ViewImpl implements
 	@Override
 	public String getMemberSummaryTxtSearch() {
 		return tblSummaryTable.getSearchValue();
+	}
+
+	public CPDMemberTable getMemberSummaryTable() {
+		return tblMemberTable;
 	}
 
 	@Override
@@ -309,14 +296,14 @@ public class CPDManagementView extends ViewImpl implements
 		if (loadType.equals("cpdReturns")) {
 			frmViewReturns.showForm(true);
 			frmViewReturns.setCPD(result);
-			frmViewReturns.setViewMode(true);
+			frmViewReturns.setAdminMode(true);
 			frmViewReturns.setBackHref("#cpdmgt;p=cpdReturns");
 			frmViewReturns.setMemberName(result.getFullNames() + " - "
 					+ result.getMemberRegistrationNo());
 		} else if (loadType.equals("returnArchive")) {
 			frmViewArchive.showForm(true);
 			frmViewArchive.setCPD(result);
-			frmViewArchive.setViewMode(true);
+			frmViewArchive.setAdminMode(true);
 			frmViewArchive.setBackHref("#cpdmgt;p=returnArchive");
 			frmViewArchive.setMemberName(result.getFullNames() + " - "
 					+ result.getMemberRegistrationNo());

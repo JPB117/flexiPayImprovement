@@ -81,6 +81,7 @@ public class Member extends PO {
 		dto.setRefId(getRefId());
 		dto.setUserId(userRefId);
 		dto.setMemberNo(memberNo);
+		dto.setFullName(user.getFullName());
 		return dto;
 	}
 
