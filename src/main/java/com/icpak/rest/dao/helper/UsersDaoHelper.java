@@ -154,6 +154,8 @@ public class UsersDaoHelper {
 		
 		String fullNames = user.getFullName();
 		
+		logger.info("Activation Email for " + user.getEmail());
+		
 		String subject = "Welcome to ICPAK Portal!";
 		String link = settings.getApplicationPath() + "#activateacc;uid=" + user.getRefId();
 		String body = "Dear " + fullNames + ","
@@ -163,12 +165,11 @@ public class UsersDaoHelper {
 
 		try {
 			EmailServiceHelper.sendEmail(body, subject, Arrays.asList(user.getEmail()),
-					Arrays.asList(user.getUserData().getFullNames()));
+					Arrays.asList(fullNames));
 
 		} catch (Exception e) {
 			logger.info("Activation Email for " + user.getEmail() + " failed. Cause: " + e.getMessage());
 			e.printStackTrace();
-			// throw new Run
 		}
 
 	}
@@ -409,7 +410,7 @@ public class UsersDaoHelper {
 			JSONObject jo = new JSONObject(res);
 			String memberNo = jo.getString("reg_no");
 			String practisingNo = jo.getString("Practising No_");
-			String email = jo.getString("E-Mail");
+			String email = userEmail;
 			String fullNames = jo.getString("Name");
 			String address = jo.getString("Address");
 			String postCode = jo.getString("Post Code");
@@ -463,7 +464,8 @@ public class UsersDaoHelper {
 				}
 
 			}
-
+			
+			logger.error(" ===>>><<<< === MEMBER EMAIL ===>><<<>>== "+email);
 			if (userInDb != null) {
 				logger.error(" ===>>><<<< === USER IN DB NOT NULL ===>><<<>>== ");
 				memberInDb.setUser(userInDb);
@@ -480,6 +482,11 @@ public class UsersDaoHelper {
 				userInDb.setMemberNo(memberNo);
 				userInDb.setMember(memberInDb);
 				userInDb.setUserData(userData);
+				userInDb.setPassword("pass1");
+				userInDb.setEmail(email);
+				userInDb.setUsername(email);
+				
+				dao.createUser(userInDb);
 
 			} else {
 				logger.error(" ===>>><<<< === USER IN DB NULL ===>><<<>>== ");
@@ -501,11 +508,11 @@ public class UsersDaoHelper {
 				userInDb.setEmail(email);
 				userInDb.setUsername(email);
 				userInDb.setUserData(userData);
+				
+				dao.createUser(userInDb);
 
 			}
 			
-			dao.save(userInDb);
-
 			updateUserMemberRecords(userInDb, memberInDb);
 
 			return userInDb;
