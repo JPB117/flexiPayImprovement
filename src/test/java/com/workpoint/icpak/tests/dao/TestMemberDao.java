@@ -1,11 +1,18 @@
 package com.workpoint.icpak.tests.dao;
 
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.junit.Ignore;
 import org.junit.Test;
 
+<<<<<<< HEAD
+=======
+import com.amazonaws.util.json.JSONArray;
+import com.amazonaws.util.json.JSONException;
+>>>>>>> 167c9a839aca798289c8d57e8a346d27944bde60
 import com.amazonaws.util.json.JSONObject;
 import com.google.inject.Inject;
 import com.icpak.rest.dao.MemberDao;
@@ -68,37 +75,41 @@ public class TestMemberDao extends AbstractDaoTest {
 
 		logger.info(" Size = " + members.size());
 	}
-
-	// @Test
-	public void updateMemberStatements() {
+	@Test
+	public void updateMemberStatements() throws JSONException {
 		Integer count = memberDao.getMembersCount();
 
 		int offset = 0;
 		int limit = 10;
+		
+		int trips = (count / limit) + 1;
+		
+		logger.info(" TOTAL TRIP = " + trips);
 
-		double trips = (count / limit);
-
-		// for (double trips = (countInt / limit); trips > 0; trips++) {
-		// logger.info(" TRIP" + trips);
-		// }
-		int count2 = 3;
-		while (count2 > 1) {
+//		for (double trips = (countInt / limit); trips > 0; trips++) {
+//			logger.info(" TRIP" + trips);
+//		}
+		while(trips > 0){
 			logger.info(" TRIP = " + trips);
 			logger.info(" Offset = " + offset);
-
-			List<String> memberNos = memberDao.getAllMemberNumbers(offset,
-					limit);
-
-			logger.info(" LENGTH " + memberNos.size());
-			if (!memberNos.isEmpty()) {
-				JSONObject jo = new JSONObject(memberNos);
-				logger.info(" ITEMS = " + memberNos);
+			
+			List<String> memberNos = memberDao.getAllMemberNumbers(offset, limit);
+			
+			logger.info(" LENGTH "+memberNos.size());
+			if(!memberNos.isEmpty()){
+				logger.info(" NOT EMPTY ");
+				for(String memberNo : memberNos){
+					logger.info(" i = ");
+					try {
+						helper.updateMemberRecord(memberNo, true);
+					} catch (IllegalStateException | IOException | ParseException e) {
+						e.printStackTrace();
+					}
+				}				
 			}
-
+						
 			offset = offset + limit + 1;
-			trips = trips - 1;
-
-			count2--;
+			trips -- ; 
 		}
 	}
 }
