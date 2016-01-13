@@ -167,6 +167,8 @@ public class ProfileWidget extends Composite {
 		setChangeProfilePicture(false);
 		aCheckStandingStatus.setVisible(true);
 		aDownloadCert.setVisible(false);
+		divAccountStatus.setClassName("hide");
+//		spnHelpIcon.setClassName("hide");
 
 		divTabs.setHeaders(Arrays.asList(new TabHeader("Basic Information", true, "basic_details"),
 				new TabHeader("Education Background", false, "education_details"),
@@ -227,15 +229,6 @@ public class ProfileWidget extends Composite {
 			}
 		});
 		
-		aCheckStandingStatus.addClickHandler(new ClickHandler() {
-			
-			@Override
-			public void onClick(ClickEvent event) {
-//				aDownloadCert.setVisible(true);
-				Window.alert("Clicked");
-			}
-		});
-
 	}
 
 	public void setEditMode(boolean editMode) {
@@ -422,24 +415,30 @@ public class ProfileWidget extends Composite {
 			}
 			info = info.concat("</ul>");
 
-			spnAccountStatus.setInnerText("Error Loading");
-			divAccountStatus.addClassName("label-danger");
+			spnAccountStatus.setInnerText("Not in Goodstanding");
+			divAccountStatus.addClassName("label-alert");
 			divAccountStatus.removeClassName("label-success");
 			spnHelpIcon.setAttribute("data-content", info);
 			spnHelpIcon.removeClassName("hide");
 			iconFail.removeClassName("hide");
 			iconSuccess.addClassName("hide");
 			aDownloadCert.setVisible(false);
-
+			
+			aCheckStandingStatus.setVisible(false);
+			divAccountStatus.removeClassName("hide");
+			
 		} else {
 			spnAccountStatus.setInnerText("In good standing");
 			divAccountStatus.addClassName("label-success");
 			divAccountStatus.removeClassName("label-danger");
 			iconFail.addClassName("hide");
 			iconSuccess.removeClassName("hide");
+			spnHelpIcon.removeClassName("hide");
 			spnHelpIcon.setAttribute("data-content",
 					"Your account is in Good-Standing, You can download proceed to download the certificate for your own use.");
 			aDownloadCert.setVisible(true);
+			aCheckStandingStatus.setVisible(false);
+			divAccountStatus.removeClassName("hide");
 		}
 	}
 
