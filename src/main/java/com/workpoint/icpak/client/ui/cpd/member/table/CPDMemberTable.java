@@ -40,12 +40,12 @@ public class CPDMemberTable extends Composite {
 	public void createHeader() {
 		List<TableHeader> th = new ArrayList<TableHeader>();
 		tblView.setSearchFieldVisible(false);
-		th.add(new TableHeader("COURSE/EVENT NAME"));
+		th.add(new TableHeader("COURSE/EVENT NAME", 40.0));
 		th.add(new TableHeader("BEGIN DATE:"));
 		th.add(new TableHeader("END DATE:"));
 		th.add(new TableHeader("UNITS"));
-		th.add(new TableHeader("STATUS"));
-		th.add(new TableHeader("ACTION"));
+		th.add(new TableHeader("STATUS", 10.0));
+		th.add(new TableHeader("ACTION", 8.0));
 		tblView.setTableHeaders(th);
 	}
 

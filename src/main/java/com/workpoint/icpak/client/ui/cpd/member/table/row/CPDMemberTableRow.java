@@ -99,9 +99,16 @@ public class CPDMemberTableRow extends RowWidget {
 
 		divCourseName.add(new InlineLabel(dto.getTitle().toUpperCase()));
 		divCPD.add(new InlineLabel(dto.getCpdHours() + ""));
+
+		divCount.add(new InlineLabel(dto.getId() + ""));
 		CPDStatus status = dto.getStatus() == null ? CPDStatus.Unconfirmed
 				: dto.getStatus();
 		spnStatus.setInnerText(status.name());
+
+		if (dto.getCategory() != null) {
+			row.getElement().setTitle(dto.getCategory() + "");
+		}
+
 		if (status.equals(CPDStatus.Approved)) {
 			spnStatus.removeClassName("label-danger");
 			spnStatus.addClassName("label-success");

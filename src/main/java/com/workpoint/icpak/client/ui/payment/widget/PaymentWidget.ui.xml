@@ -1,10 +1,19 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d='urn:import:com.workpoint.icpak.client.ui.component'>
+	<ui:style>
+	.left {
+		padding-left: 34px;
+	}
+	
+	.bottom {
+		margin-bottom: 24px;
+	}
+	</ui:style>
+	
 	<g:HTMLPanel styleName="col-sm-12">
 		<br />
 		<br />
-
 		<g:HTMLPanel styleName="row-fluid container hide"
 			ui:field="panelSuccess">
 			<br />
@@ -30,7 +39,7 @@
 
 				<li role="presentation">
 					<!-- <span class="fa fa-credit-card"></span> -->
-					<a href="#cards" aria-controls="home" role="tab" data-toggle="tab">Offline
+					<a href="#offline" aria-controls="home" role="tab" data-toggle="tab">Offline
 						Payment</a>
 				</li>
 			</ul>
@@ -202,26 +211,33 @@
 						</div>
 					</div>
 				</div>
-			</div>
+				<div role="tabpanel" class="tab-pane" id="offline">
+					<div class="row">
+						<div class="col-lg-8">
+							The following are offline modes of payment to ICPAK;
+							<p class="{style.left}" style="margin-bottom:10px;">
+								<strong>A: BARCLAYS BANK OF KENYA</strong>
+								<br />
+								Branch: Moi Avenue
+								<br />
+								Bank Account No: 03-075-1597134
+								<br />
+								Swift Code: BARCKENX
+							</p>
 
-			<div role="tabpanel" class="tab-pane" id="cards">
-				<div class="row">
-					<div class="col lg-12">
-						The following are offline modes of payment to ICPAK;
-						<br />
-						<strong>BARCLAYS BANK OF KENYA</strong>
-						<p>Branch: Moi Avenue</p>
-						<p>Bank Account No: 03-075-1597134</p>
-						<p>Swift Code: BARCKENX</p>
-
-						<br />
-						<strong>STANDARD CHARTERED BANK</strong>
-						<p>Branch: Ruaraka</p>
-						<p>Bank Account No: 010-2093120900</p>
+							<br />
+							<p class="{style.left}">
+								<strong>B: STANDARD CHARTERED BANK</strong>
+								<br />
+								Branch: Ruaraka
+								<br />
+								Bank Account No: 010-2093120900
+							</p>
+						</div>
 					</div>
-				</div>
-				<div class="row">
-					<div class="col lg-12">
+					<div class="row">
+						<div class="col lg-12">
+						</div>
 					</div>
 				</div>
 			</div>

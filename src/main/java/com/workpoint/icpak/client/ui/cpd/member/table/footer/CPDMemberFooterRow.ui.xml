@@ -10,6 +10,20 @@
 	.right {
 		text-align: right;
 	}
+	
+	.group {
+		display: table-row-group;
+	}
+	
+	.row {
+		display: table-row;
+	}
+	
+	.cell {
+		display: table-cell;
+		width: 100%;
+		border: 1px solid grey;
+	}
 	</ui:style>
 	<g:HTMLPanel styleName="tr {style.summary}" ui:field="row">
 		<g:HTMLPanel styleName="td" ui:field="divCount">

@@ -398,8 +398,12 @@ public class RecordCPD extends Composite {
 	public void showRecordingPanel(boolean show) {
 		if (show) {
 			panelRecordingPanel.removeClassName("hide");
+			divCpdHours.removeClassName("hide");
+			divMgtComment.removeClassName("hide");
 		} else {
 			panelRecordingPanel.addClassName("hide");
+			divCpdHours.addClassName("hide");
+			divMgtComment.addClassName("hide");
 		}
 	}
 

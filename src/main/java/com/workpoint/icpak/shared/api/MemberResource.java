@@ -56,7 +56,7 @@ public interface MemberResource extends BaseResource {
 	@GET
 	@Path("/searchIndividualMember/{searchTerm}")
 	public MemberDto searchIndividualByMemberNo(
-			@PathParam("searchTerm") String searchTerm);
+			@QueryParam("searchTerm") String searchTerm);
 
 	@Path("/{memberId}/cpd")
 	public CPDResource cpd(@PathParam("memberId") String memberId);

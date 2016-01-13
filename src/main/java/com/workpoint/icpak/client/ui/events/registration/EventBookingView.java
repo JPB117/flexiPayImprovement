@@ -124,19 +124,14 @@ public class EventBookingView extends ViewImpl implements
 	TextField txtContactPerson;
 	@UiField
 	TextField txtContactEmail;
-
 	@UiField
 	DropDownList<Country> lstCountry;
-
 	@UiField
 	IssuesPanel issuesPanel;
-
 	@UiField
 	IssuesPanel issuesPanelDelegate;
-
 	@UiField
 	AggregationGrid tblDelegates;
-
 	@UiField
 	SpanElement spnNames;
 
@@ -166,6 +161,9 @@ public class EventBookingView extends ViewImpl implements
 	ColumnConfig accommodationConfig = new ColumnConfig("accommodation",
 			"Accommodation", DataType.SELECTBASIC);
 
+	ColumnConfig fullNameConfig = new ColumnConfig("fullName", "FullNames:",
+			DataType.STRING, "Delegate FullNames", "form-control", false);
+
 	@Inject
 	public EventBookingView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
@@ -179,12 +177,8 @@ public class EventBookingView extends ViewImpl implements
 		config.setDropDownItems(Arrays.asList(Title.values()));
 
 		configs.add(config);
-		config = new ColumnConfig("surname", "First Name:", DataType.STRING,
-				"", "form-control");
-		configs.add(config);
-		config = new ColumnConfig("otherNames", "Other Names:",
-				DataType.STRING, "", "form-control");
-		configs.add(config);
+
+		configs.add(fullNameConfig);
 
 		configs.add(accommodationConfig);
 
@@ -247,13 +241,12 @@ public class EventBookingView extends ViewImpl implements
 				if (event.getValue() != null) {
 					MemberDto dto = (MemberDto) event.getValue();
 					DelegateDto delegate = mapper.getData(row.getData());
-					// delegate.setMember(dto);
 					if (dto != null) {
 						delegate.setMemberNo(dto.getMemberNo());
 						delegate.setMemberRefId(dto.getRefId());
 					}
-					delegate.setSurname(dto.getLastName());
-					delegate.setOtherNames(dto.getFirstName());
+
+					delegate.setFullName(dto.getFullName());
 					delegate.setEmail(dto.getEmail());
 					delegate.setTitle(dto.getTitle());
 
@@ -267,6 +260,7 @@ public class EventBookingView extends ViewImpl implements
 			@Override
 			public void onClick(ClickEvent event) {
 				memberColumn.setEnabled(true);
+				fullNameConfig.setEnabled(false);
 				tblDelegates.addRowData(new DataModel());
 			}
 		});
@@ -650,8 +644,7 @@ public class EventBookingView extends ViewImpl implements
 			} else {
 				member.setRefId(dto.getMemberRefId());
 				member.setMemberNo(dto.getMemberNo());
-				member.setFirstName(dto.getOtherNames());
-				member.setLastName(dto.getSurname());
+				member.setFullName(dto.getFullName());
 			}
 
 			DataModel model = new DataModel();
@@ -661,8 +654,7 @@ public class EventBookingView extends ViewImpl implements
 					"title",
 					dto.getTitle() == null ? null : Title.valueOf(dto
 							.getTitle()));
-			model.set("surname", dto.getSurname());
-			model.set("otherNames", dto.getOtherNames());
+			model.set("fullName", dto.getFullName());
 			model.set("email", dto.getEmail());
 			model.set("accommodation", dto.getAccommodation());
 			return model;
@@ -684,10 +676,8 @@ public class EventBookingView extends ViewImpl implements
 			dto.setMemberRefId(memberDto == null ? null : memberDto.getRefId());
 			dto.setTitle(model.get("title") == null ? null : model.get("title")
 					.toString());
-			dto.setSurname(model.get("surname") == null ? null : model.get(
-					"surname").toString());
-			dto.setOtherNames(model.get("otherNames") == null ? null : model
-					.get("otherNames").toString());
+			dto.setFullName(model.get("fullName") == null ? null : model.get(
+					"fullName").toString());
 			dto.setEmail(model.get("email") == null ? null : model.get("email")
 					.toString());
 			dto.setAccommodation(model.get("accommodation") == null ? null

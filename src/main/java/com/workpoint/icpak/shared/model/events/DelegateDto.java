@@ -21,6 +21,7 @@ public class DelegateDto extends SerializableObj {
 	private String title;
 	private String surname;
 	private String otherNames;
+	private String fullName;
 	private String email;
 	private AccommodationDto accommodation;
 	private Double amount;
@@ -289,6 +290,14 @@ public class DelegateDto extends SerializableObj {
 
 	public void setBookingRefId(String bookingRefId) {
 		this.bookingRefId = bookingRefId;
+	}
+
+	public String getFullName() {
+		return fullName;
+	}
+
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
 	}
 
 }

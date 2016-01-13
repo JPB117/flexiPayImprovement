@@ -94,7 +94,7 @@ public class MemberResourceImpl implements MemberResource {
 	@GET
 	@Path("/searchIndividualMember/{searchTerm}")
 	public MemberDto searchIndividualByMemberNo(
-			@PathParam("searchTerm") String searchTerm) {
+			@QueryParam("searchTerm") String searchTerm) {
 		return membersHelper.getMemberByMemberNo(searchTerm);
 	}
 

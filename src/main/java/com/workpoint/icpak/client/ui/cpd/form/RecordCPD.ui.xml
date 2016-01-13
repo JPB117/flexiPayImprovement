@@ -158,6 +158,21 @@
 					</div>
 				</div>
 
+				<div class="form-group">
+					<div class="row">
+						<g:HTMLPanel ui:field="panelUpload">
+							<d:ActionLink ui:field="aStartUpload" styleName="btn btn-default btn-primary">Click
+								Here to Upload Documents</d:ActionLink>
+						</g:HTMLPanel>
+						<g:HTMLPanel styleName="col-xs-6 hide" ui:field="panelUploader">
+							<label for="firstname">Please attach relevant documents to show as
+								proof.</label>
+							<up:Uploader ui:field="uploader" styleName="custom-file-input"></up:Uploader>
+						</g:HTMLPanel>
+					</div>
+				</div>
+
+
 				<hr />
 
 				<div class="form-group hide" ui:field="divCpdHours">
@@ -193,22 +208,6 @@
 						</div>
 					</div>
 				</div>
-
-
-				<div class="form-group">
-					<div class="row">
-						<g:HTMLPanel ui:field="panelUpload">
-							<d:ActionLink ui:field="aStartUpload" styleName="btn btn-default btn-primary">Click
-								Here to Upload Documents</d:ActionLink>
-						</g:HTMLPanel>
-						<g:HTMLPanel styleName="col-xs-6 hide" ui:field="panelUploader">
-							<label for="firstname">Please attach relevant documents to show as
-								proof.</label>
-							<up:Uploader ui:field="uploader" styleName="custom-file-input"></up:Uploader>
-						</g:HTMLPanel>
-					</div>
-				</div>
-
 			</div>
 
 			<div class="form-group hide" ui:field="panelInlineActions">

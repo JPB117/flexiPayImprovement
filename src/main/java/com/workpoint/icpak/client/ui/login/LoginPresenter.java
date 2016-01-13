@@ -173,7 +173,6 @@ public class LoginPresenter extends
 									setLoggedInCookie(result
 											.getLoggedInCookie());
 								}
-
 								if (result.getActionType() == ActionType.VIA_COOKIE) {
 									onLoginCallSucceededForCookie(result
 											.getCurrentUserDto());

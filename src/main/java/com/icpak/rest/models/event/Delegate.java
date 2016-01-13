@@ -36,6 +36,7 @@ public class Delegate extends PO {
 	private String title;
 	private String surname;
 	private String otherNames;
+	private String fullName;
 	private String email;
 
 	@Transient
@@ -151,6 +152,7 @@ public class Delegate extends PO {
 		setMemberRefId(delegateDto.getMemberRefId());
 		setOtherNames(delegateDto.getOtherNames());
 		setSurname(delegateDto.getSurname());
+		setFullName(delegateDto.getFullName());
 		setTitle(delegateDto.getTitle());
 		if (delegateDto.getAttendance() != null) {
 			setAttendance(delegateDto.getAttendance());
@@ -167,6 +169,7 @@ public class Delegate extends PO {
 		dto.setMemberNo(memberRegistrationNo);
 		dto.setMemberRefId(memberRefId);
 		dto.setOtherNames(otherNames);
+		dto.setFullName(fullName);
 		dto.setRefId(getRefId());
 		dto.setErn(ern);
 		dto.setSurname(surname);
@@ -223,8 +226,7 @@ public class Delegate extends PO {
 
 	@Override
 	public String toString() {
-
-		return surname + " " + otherNames + " (" + ern + ")";
+		return fullName + " (" + ern + ")";
 	}
 
 	public void setErn(String ern) {
@@ -237,6 +239,14 @@ public class Delegate extends PO {
 
 	public void setClearanceNo(String clearanceNo) {
 		this.clearanceNo = clearanceNo;
+	}
+
+	public String getFullName() {
+		return fullName;
+	}
+
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
 	}
 
 }

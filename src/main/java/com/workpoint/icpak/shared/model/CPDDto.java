@@ -8,6 +8,7 @@ public class CPDDto extends SerializableObj {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private Integer id;
 	private Date created;
 	private Date startDate; // Copied from Event details;
 	private Date endDate;
@@ -205,5 +206,13 @@ public class CPDDto extends SerializableObj {
 
 	public void setUpdatedBy(String updatedBy) {
 		this.updatedBy = updatedBy;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 }

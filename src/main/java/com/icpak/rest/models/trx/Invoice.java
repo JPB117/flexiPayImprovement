@@ -94,7 +94,6 @@ public class Invoice extends PO {
 	}
 
 	public InvoiceDto toDto() {
-
 		InvoiceDto dto = new InvoiceDto();
 		dto.setAmount(amount);
 		dto.setRefId(getRefId());

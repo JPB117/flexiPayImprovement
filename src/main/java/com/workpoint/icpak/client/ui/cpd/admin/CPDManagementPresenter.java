@@ -360,10 +360,8 @@ public class CPDManagementPresenter
 											@Override
 											public void onSuccess(
 													MemberDto member) {
-
 												cpdRecord
 														.showMemberLoading(false);
-
 												if (member.getFullName() != null) {
 													cpdRecord
 															.setFullNames(member

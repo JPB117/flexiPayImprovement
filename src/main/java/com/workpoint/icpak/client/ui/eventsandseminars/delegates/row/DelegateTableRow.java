@@ -30,9 +30,11 @@ import com.workpoint.icpak.shared.model.events.DelegateDto;
 
 public class DelegateTableRow extends RowWidget {
 
-	private static ActivitiesTableRowUiBinder uiBinder = GWT.create(ActivitiesTableRowUiBinder.class);
+	private static ActivitiesTableRowUiBinder uiBinder = GWT
+			.create(ActivitiesTableRowUiBinder.class);
 
-	interface ActivitiesTableRowUiBinder extends UiBinder<Widget, DelegateTableRow> {
+	interface ActivitiesTableRowUiBinder extends
+			UiBinder<Widget, DelegateTableRow> {
 	}
 
 	@UiField
@@ -107,16 +109,18 @@ public class DelegateTableRow extends RowWidget {
 			@Override
 			public void onClick(ClickEvent event) {
 				final ResendProforma resendWidget = new ResendProforma(delegate);
-				AppManager.showPopUp("Resend Proforma", resendWidget, new OnOptionSelected() {
-					@Override
-					public void onSelect(String name) {
-						if (name.equals("Resend")) {
-							AppContext.fireEvent(new TableActionEvent(resendWidget.getResendObject(),
-									TableActionType.RESENDPROFORMA));
+				AppManager.showPopUp("Resend Proforma", resendWidget,
+						new OnOptionSelected() {
+							@Override
+							public void onSelect(String name) {
+								if (name.equals("Resend")) {
+									AppContext.fireEvent(new TableActionEvent(
+											resendWidget.getResendObject(),
+											TableActionType.RESENDPROFORMA));
 
-						}
-					}
-				}, "Resend", "Cancel");
+								}
+							}
+						}, "Resend", "Cancel");
 
 			}
 		});
@@ -137,21 +141,24 @@ public class DelegateTableRow extends RowWidget {
 	}
 
 	protected void updatePaymentInfo() {
-		final UpdatePaymentWidget paymentWidget = new UpdatePaymentWidget(delegate);
-		AppManager.showPopUp("Update Payment Info", paymentWidget, new OnOptionSelected() {
-			@Override
-			public void onSelect(String name) {
-				if (name.equals("Save")) {
-					DelegateDto d = paymentWidget.getDelegate();
-					AppContext.fireEvent(new EditModelEvent(paymentWidget.getDelegate()));
-				}
-			}
-		}, "Save", "Cancel");
+		final UpdatePaymentWidget paymentWidget = new UpdatePaymentWidget(
+				delegate);
+		AppManager.showPopUp("Update Payment Info", paymentWidget,
+				new OnOptionSelected() {
+					@Override
+					public void onSelect(String name) {
+						if (name.equals("Save")) {
+							DelegateDto d = paymentWidget.getDelegate();
+							AppContext.fireEvent(new EditModelEvent(
+									paymentWidget.getDelegate()));
+						}
+					}
+				}, "Save", "Cancel");
 	}
 
 	protected void onAttendanceChanged(final AttendanceStatus attendanceStatus) {
-		AppManager.showPopUp("Confirm",
-				"Confirm " + delegate.getSurname() + " " + attendanceStatus.getDisplayName() + " this event?",
+		AppManager.showPopUp("Confirm", "Confirm " + delegate.getSurname()
+				+ " " + attendanceStatus.getDisplayName() + " this event?",
 				new OnOptionSelected() {
 					@Override
 					public void onSelect(String name) {
@@ -168,9 +175,11 @@ public class DelegateTableRow extends RowWidget {
 	public DelegateTableRow(DelegateDto delegate, EventType eventType) {
 		this();
 		this.delegate = delegate;
-		divBookingDate.getElement().setInnerText(DateUtils.CREATEDFORMAT.format(delegate.getCreatedDate()));
+		divBookingDate.getElement().setInnerText(
+				DateUtils.CREATEDFORMAT.format(delegate.getCreatedDate()));
 		if (delegate.getCompanyName() != null) {
-			divSponsorNames.getElement().setInnerText(delegate.getCompanyName());
+			divSponsorNames.getElement()
+					.setInnerText(delegate.getCompanyName());
 		}
 
 		if (delegate.getErn() != null) {
@@ -181,13 +190,21 @@ public class DelegateTableRow extends RowWidget {
 		if (delegate.getMemberNo() != null) {
 			divMemberNo.getElement().setInnerText(delegate.getMemberNo());
 		}
-		divDelegateNames.getElement()
-				.setInnerText((delegate.getTitle() == null ? "" : delegate.getTitle() + " ")
-						+ (delegate.getSurname() == null ? "" : delegate.getSurname() + " ")
-						+ (delegate.getOtherNames() == null ? "" : delegate.getOtherNames() + " "));
+		if (delegate.getFullName() != null) {
+			delegate.setFullName(delegate.getFullName());
+		} else {
+			divDelegateNames.getElement().setInnerText(
+					(delegate.getTitle() == null ? "" : delegate.getTitle()
+							+ " ")
+							+ (delegate.getSurname() == null ? "" : delegate
+									.getSurname() + " ")
+							+ (delegate.getOtherNames() == null ? "" : delegate
+									.getOtherNames() + " "));
+		}
 
 		if (delegate.getAccommodation() != null) {
-			divAccomodation.add(new InlineLabel(delegate.getAccommodation().getHotel() + ""));
+			divAccomodation.add(new InlineLabel(delegate.getAccommodation()
+					.getHotel() + ""));
 		} else {
 			divAccomodation.getElement().setInnerText("None");
 		}
@@ -218,7 +235,8 @@ public class DelegateTableRow extends RowWidget {
 	private void setAttendance(AttendanceStatus attendance) {
 		if (attendance != null) {
 			// spnAttendance.setInnerText(attendance.getDisplayName());
-			if (attendance == AttendanceStatus.NOTATTENDED || attendance == AttendanceStatus.NOTENROLLED) {
+			if (attendance == AttendanceStatus.NOTATTENDED
+					|| attendance == AttendanceStatus.NOTENROLLED) {
 				// spnAttendance.removeClassName("label-success");
 				// spnAttendance.addClassName("label-danger");
 				spnAttendance.setClassName("fa fa-times");

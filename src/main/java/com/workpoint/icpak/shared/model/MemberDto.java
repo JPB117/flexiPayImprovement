@@ -86,8 +86,7 @@ public class MemberDto extends SerializableObj implements Listable {
 
 	@JsonIgnore
 	public String getName() {
-		return (lastName == null ? "" : lastName) + " "
-				+ (firstName == null ? "" : firstName);
+		return fullName;
 	}
 
 	public String getTitle() {
