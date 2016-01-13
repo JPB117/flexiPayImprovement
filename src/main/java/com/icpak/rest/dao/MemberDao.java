@@ -402,7 +402,7 @@ public class MemberDao extends BaseDao {
 	}
 	
 	public List<String> getAllMemberNumbers(int offset , int limit){
-		String mememberNos = "select m.memberNo from member m where m.memberNo is not null";
+		String mememberNos = "select m.refId from member m where m.memberNo is not null";
 				
 		Query query = getEntityManager().createNativeQuery(mememberNos);
 		

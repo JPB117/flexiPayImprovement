@@ -1,5 +1,7 @@
 package com.workpoint.icpak.tests.dao;
 
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -7,6 +9,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import com.amazonaws.util.json.JSONArray;
+import com.amazonaws.util.json.JSONException;
 import com.amazonaws.util.json.JSONObject;
 import com.google.inject.Inject;
 import com.icpak.rest.dao.MemberDao;
@@ -70,19 +73,20 @@ public class TestMemberDao extends AbstractDaoTest {
 	}
 
 	@Test
-	public void updateMemberStatements() {
+	public void updateMemberStatements() throws JSONException {
 		Integer count = memberDao.getMembersCount();
 
 		int offset = 0;
 		int limit = 10;
 		
-		double trips = (count / limit);
+		int trips = (count / limit) + 1;
+		
+		logger.info(" TOTAL TRIP = " + trips);
 
 //		for (double trips = (countInt / limit); trips > 0; trips++) {
 //			logger.info(" TRIP" + trips);
 //		}
-		int count2 = 3;
-		while(count2 > 1){
+		while(trips > 0){
 			logger.info(" TRIP = " + trips);
 			logger.info(" Offset = " + offset);
 			
@@ -90,14 +94,19 @@ public class TestMemberDao extends AbstractDaoTest {
 			
 			logger.info(" LENGTH "+memberNos.size());
 			if(!memberNos.isEmpty()){
-				JSONObject jo = new JSONObject(memberNos);
-				logger.info(" ITEMS = " + memberNos);
+				logger.info(" NOT EMPTY ");
+				for(String memberNo : memberNos){
+					logger.info(" i = ");
+					try {
+						helper.updateMemberRecord(memberNo, true);
+					} catch (IllegalStateException | IOException | ParseException e) {
+						e.printStackTrace();
+					}
+				}				
 			}
 						
-			offset = offset + limit +1;
-			trips = trips -1 ; 
-			
-			count2 --;
+			offset = offset + limit + 1;
+			trips -- ; 
 		}
 	}
 }
