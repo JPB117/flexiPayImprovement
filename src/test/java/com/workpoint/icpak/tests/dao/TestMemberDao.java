@@ -8,12 +8,7 @@ import org.apache.log4j.Logger;
 import org.junit.Ignore;
 import org.junit.Test;
 
-<<<<<<< HEAD
-=======
-import com.amazonaws.util.json.JSONArray;
 import com.amazonaws.util.json.JSONException;
->>>>>>> 167c9a839aca798289c8d57e8a346d27944bde60
-import com.amazonaws.util.json.JSONObject;
 import com.google.inject.Inject;
 import com.icpak.rest.dao.MemberDao;
 import com.icpak.rest.dao.helper.MemberDaoHelper;
@@ -75,41 +70,44 @@ public class TestMemberDao extends AbstractDaoTest {
 
 		logger.info(" Size = " + members.size());
 	}
+
 	@Test
 	public void updateMemberStatements() throws JSONException {
 		Integer count = memberDao.getMembersCount();
 
 		int offset = 0;
 		int limit = 10;
-		
+
 		int trips = (count / limit) + 1;
-		
+
 		logger.info(" TOTAL TRIP = " + trips);
 
-//		for (double trips = (countInt / limit); trips > 0; trips++) {
-//			logger.info(" TRIP" + trips);
-//		}
-		while(trips > 0){
+		// for (double trips = (countInt / limit); trips > 0; trips++) {
+		// logger.info(" TRIP" + trips);
+		// }
+		while (trips > 0) {
 			logger.info(" TRIP = " + trips);
 			logger.info(" Offset = " + offset);
-			
-			List<String> memberNos = memberDao.getAllMemberNumbers(offset, limit);
-			
-			logger.info(" LENGTH "+memberNos.size());
-			if(!memberNos.isEmpty()){
+
+			List<String> memberNos = memberDao.getAllMemberNumbers(offset,
+					limit);
+
+			logger.info(" LENGTH " + memberNos.size());
+			if (!memberNos.isEmpty()) {
 				logger.info(" NOT EMPTY ");
-				for(String memberNo : memberNos){
+				for (String memberNo : memberNos) {
 					logger.info(" i = ");
 					try {
 						helper.updateMemberRecord(memberNo, true);
-					} catch (IllegalStateException | IOException | ParseException e) {
+					} catch (IllegalStateException | IOException
+							| ParseException e) {
 						e.printStackTrace();
 					}
-				}				
+				}
 			}
-						
+
 			offset = offset + limit + 1;
-			trips -- ; 
+			trips--;
 		}
 	}
 }
