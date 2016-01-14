@@ -1,4 +1,4 @@
-package com.workpoint.icpak.client.ui.login;
+package com.workpoint.icpak.client.ui.splashscreen;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -9,15 +9,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyDownEvent;
-import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rest.client.RestDispatch;
@@ -27,6 +20,7 @@ import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.NoGatekeeper;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
+import com.gwtplatform.mvp.client.proxy.ManualRevealCallback;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealRootLayoutContentEvent;
@@ -47,68 +41,40 @@ import com.workpoint.icpak.shared.model.auth.CurrentUserDto;
 import com.workpoint.icpak.shared.model.auth.LogInAction;
 import com.workpoint.icpak.shared.model.auth.LogInResult;
 
-public class LoginPresenter extends
-		Presenter<LoginPresenter.ILoginView, LoginPresenter.ILoginProxy> {
+public class SplashScreenPresenter
+		extends
+		Presenter<SplashScreenPresenter.ILoginView, SplashScreenPresenter.ILoginProxy> {
 
 	public interface ILoginView extends View {
-		String getUsername();
-
-		String getPassword();
-
-		Anchor getLoginBtn();
-
-		TextBox getPasswordBox();
-
-		boolean isValid();
-
-		void setError(String err);
-
-		void showLoginProgress();
-
-		void clearLoginProgress();
-
-		void clearViewItems(boolean status);
-
-		TextBox getUserNameBox();
-
-		void clearErrors();
-
-		void setOrgName(String orgName);
-
-		void setLoginButtonEnabled(boolean b);
-
 	}
 
 	@ProxyCodeSplit
-	@NameToken(NameTokens.login)
+	@NameToken(NameTokens.splash)
 	@NoGatekeeper
-	public interface ILoginProxy extends ProxyPlace<LoginPresenter> {
+	public interface ILoginProxy extends ProxyPlace<SplashScreenPresenter> {
 	}
 
+	@Inject
+	RestDispatch requestHelper;
+	@Inject
+	PlaceManager placeManager;
+	private static final Logger LOGGER = Logger
+			.getLogger(SplashScreenPresenter.class.getName());
+	private ResourceDelegate<UsersResource> usersDelegate;
 	private final CurrentUser currentUser;
+	private ResourceDelegate<SessionResource> sessionResource;
 
 	private static final int REMEMBER_ME_DAYS = 14;
 
 	@Inject
-	RestDispatch requestHelper;
-
-	@Inject
-	PlaceManager placeManager;
-
-	private static final Logger LOGGER = Logger.getLogger(LoginPresenter.class
-			.getName());
-	private ResourceDelegate<UsersResource> usersDelegate;
-
-	private ResourceDelegate<SessionResource> sessionResource;
-
-	@Inject
-	public LoginPresenter(final EventBus eventBus, final ILoginView view,
-			final ILoginProxy proxy, final CurrentUser currentUser,
+	public SplashScreenPresenter(final EventBus eventBus,
+			final ILoginView view, final ILoginProxy proxy,
+			final CurrentUser currentUser,
 			ResourceDelegate<UsersResource> usersDelegate,
 			ResourceDelegate<SessionResource> sessionResource) {
 		super(eventBus, view, proxy);
-		this.usersDelegate = usersDelegate;
 		this.currentUser = currentUser;
+		this.usersDelegate = usersDelegate;
 		this.sessionResource = sessionResource;
 	}
 
@@ -117,87 +83,36 @@ public class LoginPresenter extends
 		RevealRootLayoutContentEvent.fire(this, this);
 	}
 
-	@Override
-	public void prepareFromRequest(PlaceRequest request) {
-		super.prepareFromRequest(request);
+	private void tryLoggingInWithCookieFirst() {
+		String loggedInCookie = AppContext.getLoggedInCookie();
+		LogInAction logInAction = new LogInAction(loggedInCookie);
+		callServerLoginAction(logInAction);
 	}
-
-	@Override
-	public boolean useManualReveal() {
-		return false;
-	}
-
-	@Override
-	protected void onBind() {
-		super.onBind();
-		getView().getLoginBtn().addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				if (getView().isValid()) {
-					callServerLoginAction(new LogInAction(getView()
-							.getUsername(), getView().getPassword()));
-				}
-			}
-		});
-
-		KeyDownHandler keyHandler = new KeyDownHandler() {
-			@Override
-			public void onKeyDown(KeyDownEvent event) {
-				if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-					if (getView().isValid()) {
-						callServerLoginAction(new LogInAction(getView()
-								.getUsername(), getView().getPassword()));
-					}
-				}
-			}
-		};
-
-		getView().getUserNameBox().addKeyDownHandler(keyHandler);
-		getView().getPasswordBox().addKeyDownHandler(keyHandler);
-	}
-
-	protected void onReset() {
-		getView().clearViewItems(true);
-	};
 
 	private void callServerLoginAction(final LogInAction logInAction) {
-		getView().clearErrors();
-		getView().showLoginProgress();
-		// Window.alert("Before CallBack!");
-		// getView().getPanelParent().getElement().setInnerText("Loading...");
 		usersDelegate.withCallback(new AbstractAsyncCallback<LogInResult>() {
 			@Override
 			public void onSuccess(LogInResult result) {
 				if (result.getCurrentUserDto().isLoggedIn()) {
 					setLoggedInCookie(result.getLoggedInCookie());
 				}
-				if (result.getActionType() == ActionType.VIA_COOKIE) {
-					onLoginCallSucceededForCookie(result.getCurrentUserDto());
-				} else {
-					onLoginCallSucceeded(result.getCurrentUserDto());
-				}
+				onLoginCallSucceeded(result.getCurrentUserDto());
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				getView().clearLoginProgress();
-				LOGGER.log(Level.SEVERE, "Wrong username or password......");
-				getView().setError("Wrong username or password");
 				super.onFailure(caught);
+				// Show Login Screen
+
 			}
 		}).execLogin(logInAction);
 
 	}
 
 	@Override
-	protected void onReveal() {
-		super.onReveal();
-	}
-
-	private void onLoginCallSucceededForCookie(CurrentUserDto currentUserDto) {
-		if (currentUserDto.isLoggedIn()) {
-			onLoginCallSucceeded(currentUserDto);
-		}
+	public void prepareFromRequest(PlaceRequest request) {
+		super.prepareFromRequest(request);
+		tryLoggingInWithCookieFirst();
 	}
 
 	private void onLoginCallSucceeded(CurrentUserDto currentUserDto) {
@@ -206,15 +121,11 @@ public class LoginPresenter extends
 			fireEvent(new ContextLoadedEvent(currentUser.getUser(), null));
 			redirectToLoggedOnPage();
 		} else {
-			LOGGER.log(Level.SEVERE, "Wrong username or password......");
-			getView().setError("Wrong username or password");
+			PlaceRequest placeRequest = new Builder().nameToken(
+					NameTokens.login).build();
+			placeManager.revealPlace(placeRequest);
+			// Window.alert("To Login>>");
 		}
-	}
-
-	private void tryLoggingInWithCookieFirst() {
-		String loggedInCookie = AppContext.getLoggedInCookie();
-		LogInAction logInAction = new LogInAction(loggedInCookie);
-		callServerLoginAction(logInAction);
 	}
 
 	public void redirectToLoggedOnPage() {
@@ -252,9 +163,21 @@ public class LoginPresenter extends
 			PlaceRequest placeRequest = new Builder().nameToken(token)
 					.with(params).build();
 			placeManager.revealPlace(placeRequest);
-
 		}
 
+	}
+
+	@Override
+	protected void onBind() {
+		super.onBind();
+	}
+
+	protected void onReset() {
+	};
+
+	@Override
+	protected void onReveal() {
+		super.onReveal();
 	}
 
 	public void setLoggedInCookie(String value) {

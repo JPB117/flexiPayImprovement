@@ -35,7 +35,7 @@
 							</div>
 
 							<div class="row">
-								<div class="col-lg-12">
+								<div class="col-lg-12" style="margin-bottom: 12px;">
 									<d:ActionLink ui:field="aCreate" styleName="btn btn-primary btn-fill">
 										<span class="fa fa-plus"></span>
 										Record CPD
