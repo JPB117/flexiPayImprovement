@@ -54,7 +54,7 @@ public interface MemberResource extends BaseResource {
 			@QueryParam("limit") Integer limit);
 
 	@GET
-	@Path("/searchIndividualMember/{searchTerm}")
+	@Path("/searchIndividualMember")
 	public MemberDto searchIndividualByMemberNo(
 			@QueryParam("searchTerm") String searchTerm);
 
