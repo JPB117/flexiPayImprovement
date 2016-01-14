@@ -421,7 +421,9 @@ public class CPDManagementPresenter
 	protected void saveRecord(CPDDto dto) {
 		fireEvent(new ProcessingEvent());
 		if (recordMemberRefId != null || dto.getMemberRefId() != null) {
-			dto.setMemberRegistrationNo(recordMemberNo);
+			if (recordMemberNo != null) {
+				dto.setMemberRegistrationNo(recordMemberNo);
+			}
 
 			if (dto.getRefId() != null) {
 				memberDelegate
