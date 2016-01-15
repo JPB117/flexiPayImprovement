@@ -425,6 +425,10 @@ public class CPDManagementPresenter
 				dto.setMemberRegistrationNo(recordMemberNo);
 			}
 
+			if (recordMemberRefId == null) {
+				recordMemberRefId = dto.getMemberRefId();
+			}
+
 			if (dto.getRefId() != null) {
 				memberDelegate
 						.withCallback(new AbstractAsyncCallback<CPDDto>() {
@@ -685,7 +689,6 @@ public class CPDManagementPresenter
 	public void onTableAction(TableActionEvent event) {
 		if (event.getAction() == TableActionType.APPROVECPD) {
 			final CPDDto dto = (CPDDto) event.getModel();
-			// Window.alert(dto.getManagementComment());
 			saveRecord(dto);
 		}
 	}
