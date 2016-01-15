@@ -183,7 +183,7 @@
 											</div>
 										</div>
 
-										<div ui:field="divStandingStatus" class="hide">
+										<div ui:field="divStandingStatus">
 											<div class="row">
 												<br />
 												Standing Status:

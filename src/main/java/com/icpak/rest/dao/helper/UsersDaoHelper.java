@@ -160,7 +160,7 @@ public class UsersDaoHelper {
 
 	}
 
-	private void sendActivationEmail2(User user) {
+	public void sendActivationEmail2(User user) {
 
 		String fullNames = user.getFullName();
 
@@ -671,7 +671,7 @@ public class UsersDaoHelper {
 			loggedInCookie = loginCookieDao.createSessionCookie(
 					action.getLoggedInCookie(), userDto);
 			userDto.setApplicationRefId(getApplicationRefId(userDto.getRefId()));
-			userDto.setMemberRefId(dao.getMemberRefId(userDto.getRefId()));
+			userDto.setMemberRefId(dao.getMemberRefId(userDto.getUserLongId()));
 
 		}
 
