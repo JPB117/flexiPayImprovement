@@ -1,3 +1,20 @@
+.pre-loader {
+		position: fixed;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		background-color: #FAFAFA;
+	}
+	
+	.pre-loader .app-loading {
+		font-family: Helvetica, Arial, sans-serif;
+		position: absolute;
+		top: 40%;
+		left: 40%;
+		width: 300px;
+	}
+
 @CHARSET "ISO-8859-1";
 
 .m0 {
@@ -43165,6 +43182,21 @@ fieldset .form-group {
 	box-shadow: 0 0 0 #000
 }
 
+.progress.active .progress-bar,
+.progress-bar.active {
+  -webkit-animation: progress-bar-stripes 2s linear infinite;
+  -o-animation: progress-bar-stripes 2s linear infinite;
+  animation: progress-bar-stripes 2s linear infinite;
+}
+
+.progress-bar-striped, .progress-striped .progress-bar {
+    background-image: -webkit-linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);
+    background-image: -o-linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);
+    background-image: linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);
+    -webkit-background-size: 40px 40px;
+    background-size: 40px 40px;
+}
+
 .popover {
 	/* box-shadow: 0 0 0 #000; */
 	/* border-color: #eee; */
@@ -85092,4 +85124,5 @@ body .jvectormap-zoomout {
 	margin-bottom: 0px;
 	padding-bottom: 6px;
 	border-bottom: 2px solid #e7e7e7;
+	background-color: #fff;
 }

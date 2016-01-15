@@ -75,6 +75,8 @@ public class ActivateAccountPresenter
 
 		HasKeyDownHandlers getEmailTextField();
 
+		void showmask(boolean processing);
+
 	}
 
 	@ProxyCodeSplit
@@ -310,8 +312,8 @@ public class ActivateAccountPresenter
 					 */
 					getView()
 							.showMessage(
-									"Your email exist more than once in our records."
-											+ " Contact Us to correct. (Error code:500)",
+									"We are unable to find your email from our records."
+											+ " Kindly Contact Us to correct. (Error code:500)",
 									"error");
 					// let this be handled by the the onFailure
 					// below
@@ -367,9 +369,12 @@ public class ActivateAccountPresenter
 	private void sendActivationLink(String userRefId, String emailAddress) {
 		usersDelegate.withoutCallback().sendActivationEmail(userRefId,
 				emailAddress);
-		getView().showMessage(
-				"Your Activation Instructions have been sent to your email",
-				"success");
+		getView()
+				.showMessage(
+						"Activation Instructions have been sent to your email. "
+								+ "Also check the spam folder in email, incase you can't see inbox. "
+								+ "Click on the link in the email to proceed..",
+						"success");
 
 		getView().getProceedToLogin().addClickHandler(new ClickHandler() {
 			@Override

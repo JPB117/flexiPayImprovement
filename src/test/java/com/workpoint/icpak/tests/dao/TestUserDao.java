@@ -96,7 +96,7 @@ public class TestUserDao extends AbstractDaoTest {
 	@Ignore
 	public void testLMSIntergration() throws IOException {
 		// helper.postUserToLMS("AOUcFrD0WgflCc1O", "pass");
-		helper.getUserByActivationEmail("nyams74@yahoo.com");
+		helper.getUserByActivationEmail("sammurez@gmail.com");
 	}
 	
 	@Test

@@ -134,7 +134,7 @@ public class UsersDaoHelper {
 	}
 
 	private void sendActivationEmail(User user) {
-		String fullNames = user.getUserData().getFullNames();
+		String fullNames = user.getFullName();
 		String subject = "Welcome to ICPAK Portal!";
 		String link = settings.getApplicationPath() + "#activateacc;uid="
 				+ user.getRefId();
@@ -149,7 +149,7 @@ public class UsersDaoHelper {
 		try {
 			EmailServiceHelper.sendEmail(body, subject,
 					Arrays.asList(user.getEmail()),
-					Arrays.asList(user.getUserData().getFullNames()));
+					Arrays.asList(user.getFullName()));
 
 		} catch (Exception e) {
 			logger.info("Activation Email for " + user.getEmail()
