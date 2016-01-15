@@ -330,7 +330,7 @@ public class GetReport extends HttpServlet {
 		values.put("memberAddress", user.getAddress());
 		values.put("memberLocation", user.getCity());
 		values.put("memberNo", user.getMemberNo());
-		values.put("memberNames", user.getUserData().getFullNames());
+		values.put("memberNames", user.getFullName());
 		values.put("totalAmount", priceWithDecimal(totalAmount));
 
 		Doc doc = new Doc(values);
