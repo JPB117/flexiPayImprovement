@@ -84,6 +84,7 @@ public class ActivateAccountView extends ViewImpl implements
 	@Override
 	public void showProcessing(boolean showProcessing) {
 		panelPasswordWidget.showProcessing(showProcessing);
+		showmask(showProcessing);
 	}
 
 	@Override
@@ -107,5 +108,14 @@ public class ActivateAccountView extends ViewImpl implements
 
 	public HasKeyDownHandlers getPasswordTextField() {
 		return panelPasswordWidget.getPasswordTextField();
+	}
+
+	@Override
+	public void showmask(boolean processing) {
+		if (processing) {
+			panelPasswordWidget.addStyleName("whirl traditional");
+		} else {
+			panelPasswordWidget.removeStyleName("whirl traditional");
+		}
 	}
 }

@@ -9,7 +9,7 @@
 	ui:generateLocales='default'>
 	<g:HTMLPanel>
 		<div>
-			<nav class="navbar">
+			<nav class="navbar top-navbar">
 				<div class="container">
 					<div class="navbar-header" style="width: 100%; text-align: center;">
 						<a class="brand">

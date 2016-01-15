@@ -236,7 +236,6 @@ public class PasswordWidget extends Composite {
 
 	private void showSuccess(boolean show) {
 		if (show) {
-			aProceedToLogin.setVisible(true);
 			aResendAct.addStyleName("hide");
 			aSave.addStyleName("hide");
 			aSendActivation.addStyleName("hide");
