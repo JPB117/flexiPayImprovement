@@ -1,1 +1,77 @@
-.pricing-table{max-width:368px;margin:0 auto;transition:all .3s ease;-o-transition:all .3s ease;-moz-transition:all .3s ease;-webkit-transition:all .3s ease}.pricing-table.active>.panel-footer-landing,.pricing-table:hover>.panel-footer-landing{box-shadow:0px 0px 30px rgba(0,0,0, .05) inset;-webkit-transition:all .3s ease}.pricing-table:hover>.panel>.panel-body-landing,.pricing-table.active>.panel>.panel-body-landing{background:#5CB85C;-webkit-transition:all .3s ease}.pricing-table:hover>.panel>.panel-heading-landing-box,.pricing-table.active>.panel>.panel-heading-landing-box{background:#f0f0f0 !important;color:#333 !important;-webkit-transition:all .3s ease}.pricing-table:hover>.panel>.controle-header,.pricing-table.active>.panel>.controle-header{background:#5CB85C !important;-webkit-transition:all .3s ease}.pricing-table:hover>.panel>.panel-footer,.pricing-table.active>.panel>.panel-footer{background:#5CB85C !important;-webkit-transition:all .3s ease}.pricing-table:hover>.panel>.panel-footer>.btn{border:solid 1px #fff !important;-webkit-transition:all .3s ease}.pricing-table.active>.panel>.panel-footer>.btn{display:none}.btn-price:hover{background:#fff !important;color:#5CB85C !important;-webkit-transition:all .3s ease}.panel-heading-landing{background:#f7f7f7 !important;padding:20px !important;border-top-left-radius:10px !important;border-top-right-radius:10px !important;border:solid 2px #5CB85C !important;border-bottom:none !important}.panel-heading-landing-box{background:#5CB85C !important;color:#fff !important;font-size:16px !important;padding:3px !important;border:solid 2px #5CB85C !important;border-top:none !important}.panel-title-landing{color:#626367 !important;font-size:25px;font-weight:bold}.panel-body-landing{border:solid 2px #ccc !important;border-top:none !important;border-bottom:none !important}.panel-footer-landing{border:solid 2px #ccc !important;border-bottom-left-radius:10px !important;border-bottom-right-radius:10px !important;border-top:none !important}
+.pricing-table {
+    max-width: 368px;
+    margin: 0 auto;
+    transition: all .3s ease;
+    -o-transition: all .3s ease;
+    -moz-transition: all .3s ease;
+    -webkit-transition: all .3s ease;
+}
+.pricing-table.active>.panel-footer-landing ,.pricing-table:hover>.panel-footer-landing {
+    box-shadow: 0px 0px 30px rgba(0,0,0, .05) inset;
+    -webkit-transition:  all .3s ease;
+}
+
+.pricing-table:hover>.panel>.panel-body-landing, .pricing-table.active>.panel>.panel-body-landing {
+    background: #5CB85C;
+    -webkit-transition:  all .3s ease;
+}
+.pricing-table:hover>.panel>.panel-heading-landing-box, .pricing-table.active>.panel>.panel-heading-landing-box {
+    background: #f0f0f0 !important;
+    color: #333 !important;
+    -webkit-transition:  all .3s ease;
+}
+.pricing-table:hover>.panel>.controle-header,.pricing-table.active>.panel>.controle-header {
+    background: #5CB85C !important;
+    -webkit-transition:  all .3s ease;
+}
+.pricing-table:hover>.panel>.panel-footer,.pricing-table.active>.panel>.panel-footer {
+    background: #5CB85C !important;
+    -webkit-transition:  all .3s ease;
+}
+.pricing-table:hover>.panel>.panel-footer>.btn {
+    border: solid 1px #fff !important;
+    -webkit-transition:  all .3s ease;
+}
+
+.pricing-table.active>.panel>.panel-footer>.btn {
+    display:none;
+}
+
+.btn-price:hover {
+    background: #fff !important;
+    color: #5CB85C !important;
+    -webkit-transition:  all .3s ease;
+}
+
+.panel-heading-landing {
+    background: #f7f7f7 !important; 
+    padding: 20px !important; 
+    border-top-left-radius: 10px !important;  
+    border-top-right-radius: 10px !important; 
+    border: solid 2px #5CB85C !important; 
+    border-bottom: none !important;
+}
+.panel-heading-landing-box {
+    background: #5CB85C !important; 
+    color: #fff !important; 
+    font-size: 16px !important; 
+    padding: 3px !important; 
+    border: solid 2px #5CB85C !important; 
+    border-top: none !important;
+}
+.panel-title-landing {
+    color: #626367 !important;
+    font-size: 25px;
+    font-weight: bold;
+}
+.panel-body-landing {
+    border: solid 2px #ccc !important; 
+    border-top: none !important; 
+    border-bottom: none !important;
+}
+.panel-footer-landing {
+    border: solid 2px #ccc !important; 
+    border-bottom-left-radius: 10px !important; 
+    border-bottom-right-radius: 10px !important; 
+    border-top: none !important;
+}
