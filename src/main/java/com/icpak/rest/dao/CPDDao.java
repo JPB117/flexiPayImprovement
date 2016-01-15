@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -48,29 +49,22 @@ public class CPDDao extends BaseDao {
 		save(cpd);
 	}
 
-	public List<CPDDto> getAllCPDs(Integer offSet, Integer limit,
-			Date startDate, Date endDate) {
+	public List<CPDDto> getAllCPDs(Integer offSet, Integer limit, Date startDate, Date endDate) {
 		return getAllCPDs(null, offSet, limit, startDate, endDate, null);
 	}
 
-	public List<CPDDto> getAllCPDs(String passedMemberRefId, Integer offSet,
-			Integer limit, Date startDate, Date endDate, String searchTerm) {
-		logger.info(" +++ GET CPPD FOR +++++ REFID == " + passedMemberRefId
-				+ " ++SearchTerm>>>>>" + searchTerm);
+	public List<CPDDto> getAllCPDs(String passedMemberRefId, Integer offSet, Integer limit, Date startDate,
+			Date endDate, String searchTerm) {
+		logger.info(" +++ GET CPPD FOR +++++ REFID == " + passedMemberRefId + " ++SearchTerm>>>>>" + searchTerm);
 		StringBuffer sql = new StringBuffer(
-				"select c.id,c.created,c.refId as cpdRefId,"
-						+ "c.title,c.status,c.memberRegistrationNo,c.memberRefId, "
-						+ "u.fullName,c.startDate,c.endDate,c.cpdHours "
-						+ "from cpd c "
-						+ "inner join member m on (c.memberRefId=m.refId) "
-						+ "inner join user u on (u.id=m.userId) ");
+				"select c.id,c.created,c.refId as cpdRefId," + "c.title,c.status,c.memberRegistrationNo,c.memberRefId, "
+						+ "u.fullName,c.startDate,c.endDate,c.cpdHours " + "from cpd c "
+						+ "inner join member m on (c.memberRefId=m.refId) " + "inner join user u on (u.id=m.userId) ");
 
-		Map<String, Object> params = appendParameters(sql, passedMemberRefId,
-				startDate, endDate, searchTerm);
+		Map<String, Object> params = appendParameters(sql, passedMemberRefId, startDate, endDate, searchTerm);
 
 		if (passedMemberRefId != null
-				&& (passedMemberRefId.equals("ALLRETURNS") || passedMemberRefId
-						.equals("cpdReturns"))) {
+				&& (passedMemberRefId.equals("ALLRETURNS") || passedMemberRefId.equals("cpdReturns"))) {
 			sql.append(" order by c.created asc");
 		} else {
 			sql.append(" order by c.created desc");
@@ -89,23 +83,17 @@ public class CPDDao extends BaseDao {
 		for (Object[] row : rows) {
 			int i = 0;
 			Object value = null;
-			Integer id = (value = row[i++]) == null ? null
-					: ((BigInteger) value).intValue();
+			Integer id = (value = row[i++]) == null ? null : ((BigInteger) value).intValue();
 			Date created = (value = row[i++]) == null ? null : (Date) value;
 			String refId = (value = row[i++]) == null ? null : value.toString();
 			String title = (value = row[i++]) == null ? null : value.toString();
-			String status = (value = row[i++]) == null ? null : value
-					.toString();
-			String memberRegNo = (value = row[i++]) == null ? null : value
-					.toString();
-			String memberRefId = (value = row[i++]) == null ? null : value
-					.toString();
-			String fullNames = (value = row[i++]) == null ? null : value
-					.toString();
+			String status = (value = row[i++]) == null ? null : value.toString();
+			String memberRegNo = (value = row[i++]) == null ? null : value.toString();
+			String memberRefId = (value = row[i++]) == null ? null : value.toString();
+			String fullNames = (value = row[i++]) == null ? null : value.toString();
 			Date dbStartDate = (value = row[i++]) == null ? null : (Date) value;
 			Date dbEndDate = (value = row[i++]) == null ? null : (Date) value;
-			Double cpdHours = (value = row[i++]) == null ? null
-					: (Double) value;
+			Double cpdHours = (value = row[i++]) == null ? null : (Double) value;
 			CPDDto cpd = new CPDDto();
 			cpd.setId(id);
 			cpd.setRefId(refId);
@@ -124,17 +112,13 @@ public class CPDDao extends BaseDao {
 	}
 
 	// get All members and Years Summary
-	public List<MemberCPDDto> getMemberCPD(String searchTerm, Integer offset,
-			Integer limit) {
+	public List<MemberCPDDto> getMemberCPD(String searchTerm, Integer offset, Integer limit) {
 		logger.info(" +++ GETTING MEMBER CPD for searchTerm +++" + searchTerm);
-		StringBuffer sql = new StringBuffer(
-				"select m.refId,n.No_,n.Name,n.`customer Type`,n.status,"
-						+ "n.Year2016,n.Year2015,n.Year2014,n.Year2013,n.Year2012,n.Year2011 "
-						+ "from navmember n "
-						+ "INNER JOIN member m ON (n.No_=m.memberNo)");
+		StringBuffer sql = new StringBuffer("select m.refId,n.No_,n.Name,n.`customer Type`,n.status,"
+				+ "n.Year2016,n.Year2015,n.Year2014,n.Year2013,n.Year2012,n.Year2011 " + "from navmember n "
+				+ "INNER JOIN member m ON (n.No_=m.memberNo)");
 
-		Map<String, Object> params = appendParameters(sql, "memberCPD", null,
-				null, searchTerm);
+		Map<String, Object> params = appendParameters(sql, "memberCPD", null, null, searchTerm);
 		sql.append(" order by n.No_ asc");
 		Query query = getEntityManager().createNativeQuery(sql.toString());
 		for (String key : params.keySet()) {
@@ -148,28 +132,17 @@ public class CPDDao extends BaseDao {
 		for (Object[] row : rows) {
 			int i = 0;
 			Object value = null;
-			String memberRefId = (value = row[i++]) == null ? null : value
-					.toString();
-			String memberNo = (value = row[i++]) == null ? null : value
-					.toString();
-			String memberNames = (value = row[i++]) == null ? null : value
-					.toString();
-			String customerType = (value = row[i++]) == null ? null : value
-					.toString();
-			String status = (value = row[i++]) == null ? null : value
-					.toString();
-			Double year2016 = (value = row[i++]) == null ? null
-					: (Double) value;
-			Double year2015 = (value = row[i++]) == null ? null
-					: (Double) value;
-			Double year2014 = (value = row[i++]) == null ? null
-					: (Double) value;
-			Double year2013 = (value = row[i++]) == null ? null
-					: (Double) value;
-			Double year2012 = (value = row[i++]) == null ? null
-					: (Double) value;
-			Double year2011 = (value = row[i++]) == null ? null
-					: (Double) value;
+			String memberRefId = (value = row[i++]) == null ? null : value.toString();
+			String memberNo = (value = row[i++]) == null ? null : value.toString();
+			String memberNames = (value = row[i++]) == null ? null : value.toString();
+			String customerType = (value = row[i++]) == null ? null : value.toString();
+			String status = (value = row[i++]) == null ? null : value.toString();
+			Double year2016 = (value = row[i++]) == null ? null : (Double) value;
+			Double year2015 = (value = row[i++]) == null ? null : (Double) value;
+			Double year2014 = (value = row[i++]) == null ? null : (Double) value;
+			Double year2013 = (value = row[i++]) == null ? null : (Double) value;
+			Double year2012 = (value = row[i++]) == null ? null : (Double) value;
+			Double year2011 = (value = row[i++]) == null ? null : (Double) value;
 			MemberCPDDto memberCPDDto = new MemberCPDDto();
 			memberCPDDto.setRefId(memberRefId);
 			memberCPDDto.setMemberNo(memberNo);
@@ -188,9 +161,8 @@ public class CPDDao extends BaseDao {
 		return memberCPDs;
 	}
 
-	private Map<String, Object> appendParameters(StringBuffer sql,
-			String passedMemberRefId, Date startDate, Date endDate,
-			String searchTerm) {
+	private Map<String, Object> appendParameters(StringBuffer sql, String passedMemberRefId, Date startDate,
+			Date endDate, String searchTerm) {
 		Map<String, Object> params = new HashMap<>();
 		boolean isFirstParam = true;
 
@@ -213,12 +185,9 @@ public class CPDDao extends BaseDao {
 			sql.append(" endDate<=:endDate");
 		}
 
-		if (passedMemberRefId != null
-				&& !passedMemberRefId.equals("ALLRETURNS")
-				&& !passedMemberRefId.equals("ALLARCHIVE")
-				&& !passedMemberRefId.equals("cpdReturns")
-				&& !passedMemberRefId.equals("returnArchive")
-				&& !passedMemberRefId.equals("memberCPD")) {
+		if (passedMemberRefId != null && !passedMemberRefId.equals("ALLRETURNS")
+				&& !passedMemberRefId.equals("ALLARCHIVE") && !passedMemberRefId.equals("cpdReturns")
+				&& !passedMemberRefId.equals("returnArchive") && !passedMemberRefId.equals("memberCPD")) {
 			if (isFirstParam) {
 				isFirstParam = false;
 				sql.append(" where");
@@ -230,8 +199,7 @@ public class CPDDao extends BaseDao {
 
 		}
 		if (passedMemberRefId != null
-				&& (passedMemberRefId.equals("ALLRETURNS") || passedMemberRefId
-						.equals("cpdReturns"))) {
+				&& (passedMemberRefId.equals("ALLRETURNS") || passedMemberRefId.equals("cpdReturns"))) {
 			if (isFirstParam) {
 				isFirstParam = false;
 				sql.append(" where");
@@ -244,10 +212,8 @@ public class CPDDao extends BaseDao {
 			if (searchTerm != null) {
 				if (!searchTerm.equals("")) {
 
-					sql.append(" and (u.fullName like :searchTerm or"
-							+ " c.title like :searchTerm or "
-							+ " c.memberRegistrationNo like :searchTerm or "
-							+ " c.id like :searchTerm)");
+					sql.append(" and (u.fullName like :searchTerm or" + " c.title like :searchTerm or "
+							+ " c.memberRegistrationNo like :searchTerm or " + " c.id like :searchTerm)");
 
 					params.put("searchTerm", "%" + searchTerm + "%");
 				}
@@ -255,8 +221,7 @@ public class CPDDao extends BaseDao {
 		}
 
 		if (passedMemberRefId != null
-				&& (passedMemberRefId.equals("ALLARCHIVE") || passedMemberRefId
-						.equals("returnArchive"))) {
+				&& (passedMemberRefId.equals("ALLARCHIVE") || passedMemberRefId.equals("returnArchive"))) {
 			if (isFirstParam) {
 				isFirstParam = false;
 				sql.append(" where");
@@ -268,10 +233,8 @@ public class CPDDao extends BaseDao {
 
 			if (searchTerm != null) {
 				if (!searchTerm.equals("")) {
-					sql.append(" and (u.fullName like :searchTerm or"
-							+ " c.title like :searchTerm or "
-							+ " c.memberRegistrationNo like :searchTerm or "
-							+ " c.id like :searchTerm)");
+					sql.append(" and (u.fullName like :searchTerm or" + " c.title like :searchTerm or "
+							+ " c.memberRegistrationNo like :searchTerm or " + " c.id like :searchTerm)");
 
 					params.put("searchTerm", "%" + searchTerm + "%");
 				}
@@ -281,8 +244,7 @@ public class CPDDao extends BaseDao {
 		if (passedMemberRefId != null && passedMemberRefId.equals("memberCPD")) {
 			if (searchTerm != null) {
 				if (!searchTerm.equals("")) {
-					sql.append(" and (No_ like :searchTerm or"
-							+ " n.Name like :searchTerm)");
+					sql.append(" and (No_ like :searchTerm or" + " n.Name like :searchTerm)");
 					params.put("searchTerm", "%" + searchTerm + "%");
 				}
 			}
@@ -293,10 +255,8 @@ public class CPDDao extends BaseDao {
 
 	public List<AttachmentDto> getAllAttachment(Long id) {
 		logger.info(" +++ GET Attachments FOR +++++ cpdId == " + id);
-		StringBuffer sql = new StringBuffer(
-				"select refId,name from attachment where cpdid=:passedId");
-		Query query = getEntityManager().createNativeQuery(sql.toString())
-				.setParameter("passedId", id);
+		StringBuffer sql = new StringBuffer("select refId,name from attachment where cpdid=:passedId");
+		Query query = getEntityManager().createNativeQuery(sql.toString()).setParameter("passedId", id);
 		List<Object[]> rows = getResultList(query, 0, 1000);
 		List<AttachmentDto> attachmentDtos = new ArrayList<>();
 		for (Object[] row : rows) {
@@ -309,8 +269,7 @@ public class CPDDao extends BaseDao {
 			attachment.setAttachmentName(name);
 			attachmentDtos.add(attachment);
 		}
-		logger.info(" Found this number of attachments == "
-				+ attachmentDtos.size());
+		logger.info(" Found this number of attachments == " + attachmentDtos.size());
 		return attachmentDtos;
 	}
 
@@ -319,16 +278,14 @@ public class CPDDao extends BaseDao {
 	}
 
 	public int getCPDCount(String memberRefId, Date startDate, Date endDate) {
-		logger.info(" +++ GET RESULT COUNT FOR CPD +++++ REFID == "
-				+ memberRefId);
+		logger.info(" +++ GET RESULT COUNT FOR CPD +++++ REFID == " + memberRefId);
 		Number number = null;
 		if (memberRefId != null) {
 			logger.info(" +++ COUNT FOR MEMBER ++++ ");
 
 			StringBuffer sql = new StringBuffer("select count(*) from cpd c ");
 
-			Map<String, Object> params = appendParameters(sql, memberRefId,
-					startDate, endDate, null);
+			Map<String, Object> params = appendParameters(sql, memberRefId, startDate, endDate, null);
 
 			Query query = getEntityManager().createNativeQuery(sql.toString());
 			for (String key : params.keySet()) {
@@ -337,8 +294,7 @@ public class CPDDao extends BaseDao {
 			number = getSingleResultOrNull(query);
 
 		} else {
-			throw new ServiceException(ErrorCodes.ILLEGAL_ARGUMENT, "CPD",
-					"'MemberRefId'");
+			throw new ServiceException(ErrorCodes.ILLEGAL_ARGUMENT, "CPD", "'MemberRefId'");
 		}
 
 		logger.info(" +++ COUNT RESULT +++++ == " + number.intValue());
@@ -351,12 +307,11 @@ public class CPDDao extends BaseDao {
 	}
 
 	public CPD findByCPDId(String refId, boolean throwExceptionIfNull) {
-		CPD cpd = getSingleResultOrNull(getEntityManager().createQuery(
-				"from CPD u where u.refId=:refId").setParameter("refId", refId));
+		CPD cpd = getSingleResultOrNull(
+				getEntityManager().createQuery("from CPD u where u.refId=:refId").setParameter("refId", refId));
 
 		if (cpd == null && throwExceptionIfNull) {
-			throw new ServiceException(ErrorCodes.NOTFOUND, "CPD", "'" + refId
-					+ "'");
+			throw new ServiceException(ErrorCodes.NOTFOUND, "CPD", "'" + refId + "'");
 		}
 
 		return cpd;
@@ -368,37 +323,29 @@ public class CPDDao extends BaseDao {
 	}
 
 	public CPD getCPDByMemberAndEvent(String memberRefId, String eventId) {
-		CPD cpd = getSingleResultOrNull(getEntityManager()
-				.createQuery(
-						"from CPD u where u.memberRefId=:memberRefId and u.eventId=:eventId")
-				.setParameter("memberRefId", memberRefId)
-				.setParameter("eventId", eventId));
+		CPD cpd = getSingleResultOrNull(
+				getEntityManager().createQuery("from CPD u where u.memberRefId=:memberRefId and u.eventId=:eventId")
+						.setParameter("memberRefId", memberRefId).setParameter("eventId", eventId));
 
 		return cpd;
 	}
 
-	public CPDSummaryDto getCPDSummary(String memberRefId, Date startDate,
-			Date endDate) {
+	public CPDSummaryDto getCPDSummary(String memberRefId, Date startDate, Date endDate) {
 		logger.info(" +++++ GET CPD SUMMARY FOR MEMBER +++++++ ");
 		String sql = "select sum(cpdHours), status from cpd where "
-				+ "memberRefId=:memberRefId and startDate>=:startDate "
-				+ "and endDate<=:endDate group by status";
+				+ "memberRefId=:memberRefId and startDate>=:startDate " + "and endDate<=:endDate group by status";
 
-		List<Object[]> rows = getResultList(getEntityManager()
-				.createNativeQuery(sql)
-				.setParameter("memberRefId", memberRefId)
-				.setParameter("startDate", startDate)
-				.setParameter("endDate", endDate));
+		List<Object[]> rows = getResultList(
+				getEntityManager().createNativeQuery(sql).setParameter("memberRefId", memberRefId)
+						.setParameter("startDate", startDate).setParameter("endDate", endDate));
 
 		CPDSummaryDto summary = new CPDSummaryDto();
 
 		for (Object[] row : rows) {
 			int i = 0;
 			Object value = null;
-			Integer count = (value = row[i++]) == null ? null
-					: ((Number) value).intValue();
-			String status = (value = row[i++]) == null ? null : value
-					.toString();
+			Integer count = (value = row[i++]) == null ? null : ((Number) value).intValue();
+			String status = (value = row[i++]) == null ? null : value.toString();
 
 			if (status != null && status.equals(CPDStatus.Unconfirmed.name())) {
 				summary.setUnconfirmedCPD(count);
@@ -422,16 +369,14 @@ public class CPDDao extends BaseDao {
 		String sql = "select sum(cpdhours) cpdhours from cpd "
 				+ "where memberRefId= :memberRefId and status='Approved' limit 1 ";
 
-		Number value = (Number) getSingleResultOrNull(getEntityManager()
-				.createNativeQuery(sql)
-				.setParameter("memberRefId", memberRefId));
+		Number value = (Number) getSingleResultOrNull(
+				getEntityManager().createNativeQuery(sql).setParameter("memberRefId", memberRefId));
 
 		return value == null ? 0.0 : value.doubleValue();
 
 	}
 
-	public List<CPD> getAllCPDS(String memberRefId, Date startDate,
-			Date endDate, Integer offset, Integer limit) {
+	public List<CPD> getAllCPDS(String memberRefId, Date startDate, Date endDate, Integer offset, Integer limit) {
 
 		logger.debug("Member reg no ===<<>>==" + memberRefId);
 		logger.debug("startDate ===<<>>==" + startDate);
@@ -484,29 +429,20 @@ public class CPDDao extends BaseDao {
 
 	}
 
-	public List<CPDDto> searchCPD(String memberId, String searchTerm,
-			Integer offset, Integer limit, Date passedStartDate,
-			Date passedEndDate) {
+	public List<CPDDto> searchCPD(String memberId, String searchTerm, Integer offset, Integer limit,
+			Date passedStartDate, Date passedEndDate) {
 		StringBuffer sql = new StringBuffer(
-				"select c.created,c.refId as cpdRefId,"
-						+ "c.title,c.status,c.memberRegistrationNo,c.memberRefId, "
-						+ "concat(u.firstName,' ',u.lastName),c.startDate,c.endDate,c.cpdHours "
-						+ "from cpd c "
-						+ "inner join member m on (c.memberRefId=m.refId) "
-						+ "inner join user u on (u.id=m.userId) "
-						+ "where "
-						+ "u.firstName like :searchTerm or "
-						+ "u.lastName like :searchTerm or "
-						+ "concat(u.firstName,' ',u.lastName) like :searchTerm or "
-						+ "c.title like :searchTerm or "
+				"select c.created,c.refId as cpdRefId," + "c.title,c.status,c.memberRegistrationNo,c.memberRefId, "
+						+ "concat(u.firstName,' ',u.lastName),c.startDate,c.endDate,c.cpdHours " + "from cpd c "
+						+ "inner join member m on (c.memberRefId=m.refId) " + "inner join user u on (u.id=m.userId) "
+						+ "where " + "u.firstName like :searchTerm or " + "u.lastName like :searchTerm or "
+						+ "concat(u.firstName,' ',u.lastName) like :searchTerm or " + "c.title like :searchTerm or "
 						+ "c.memberRegistrationNo=:memberNoSearch ");
 
 		boolean isFirstParam = false;
-		Map<String, Object> params = appendParameters(sql, memberId,
-				passedStartDate, passedEndDate, searchTerm);
+		Map<String, Object> params = appendParameters(sql, memberId, passedStartDate, passedEndDate, searchTerm);
 		Query query = getEntityManager().createNativeQuery(sql.toString())
-				.setParameter("searchTerm", "%" + searchTerm + "%")
-				.setParameter("memberNoSearch", searchTerm);
+				.setParameter("searchTerm", "%" + searchTerm + "%").setParameter("memberNoSearch", searchTerm);
 		for (String key : params.keySet()) {
 			query.setParameter(key, params.get(key));
 		}
@@ -517,25 +453,17 @@ public class CPDDao extends BaseDao {
 		for (Object[] row : rows) {
 			int i = 0;
 			Object value = null;
-			String refId = (value = row[i++]) == null ? null : value.toString()
-					.trim();
+			String refId = (value = row[i++]) == null ? null : value.toString().trim();
 			Date startDate = (value = row[i++]) == null ? null : (Date) value;
 			Date endDate = (value = row[i++]) == null ? null : (Date) value;
-			String fullName = (value = row[i++]) == null ? null : value
-					.toString();
+			String fullName = (value = row[i++]) == null ? null : value.toString();
 			String title = (value = row[i++]) == null ? null : value.toString();
-			String organizer = (value = row[i++]) == null ? null : value
-					.toString();
-			String category = (value = row[i++]) == null ? null : value
-					.toString().trim();
-			Double cpdHours = (value = row[i++]) == null ? null
-					: (Double) value;
-			String status = (value = row[i++]) == null ? null : value
-					.toString().trim();
-			String memberRegistrationNo = (value = row[i++]) == null ? null
-					: value.toString().trim();
-			String memberRefId = (value = row[i++]) == null ? null : value
-					.toString().trim();
+			String organizer = (value = row[i++]) == null ? null : value.toString();
+			String category = (value = row[i++]) == null ? null : value.toString().trim();
+			Double cpdHours = (value = row[i++]) == null ? null : (Double) value;
+			String status = (value = row[i++]) == null ? null : value.toString().trim();
+			String memberRegistrationNo = (value = row[i++]) == null ? null : value.toString().trim();
+			String memberRefId = (value = row[i++]) == null ? null : value.toString().trim();
 
 			CPDDto cpdDto = new CPDDto();
 			cpdDto.setRefId(refId);
@@ -598,19 +526,13 @@ public class CPDDao extends BaseDao {
 	}
 
 	public BigInteger cpdSearchCount(String searchTerm) {
-		String sql = "select count(*) "
-				+ "from cpd c "
-				+ "inner join member m on (c.memberRefId=m.refId) "
-				+ "inner join user u on (u.id=m.userId) "
-				+ "where "
-				+ "u.firstName like :searchTerm or "
-				+ "u.lastName like :searchTerm or "
-				+ "concat(u.firstName,' ',u.lastName) like :searchTerm or "
+		String sql = "select count(*) " + "from cpd c " + "inner join member m on (c.memberRefId=m.refId) "
+				+ "inner join user u on (u.id=m.userId) " + "where " + "u.firstName like :searchTerm or "
+				+ "u.lastName like :searchTerm or " + "concat(u.firstName,' ',u.lastName) like :searchTerm or "
 				+ "c.title like :searchTerm or "
 				+ "c.organizer like :searchTerm or c.memberRegistrationNo like :searchTerm";
 
-		Query query = getEntityManager().createNativeQuery(sql).setParameter(
-				"searchTerm", "%" + searchTerm + "%");
+		Query query = getEntityManager().createNativeQuery(sql).setParameter("searchTerm", "%" + searchTerm + "%");
 
 		return getSingleResultOrNull(query);
 	}
@@ -618,14 +540,12 @@ public class CPDDao extends BaseDao {
 	public BigInteger getMemberCPDCount(String searchTerm) {
 
 		String sql = "select count(*) from navmember n where (No_ like :searchTerm or Name like :searchTerm)";
-		Query query = getEntityManager().createNativeQuery(sql).setParameter(
-				"searchTerm", "%" + searchTerm + "%");
+		Query query = getEntityManager().createNativeQuery(sql).setParameter("searchTerm", "%" + searchTerm + "%");
 
 		return getSingleResultOrNull(query);
 	}
 
-	public List<CPDFooterDto> getYearSummaries(String memberId, Date startDate,
-			Date endDate) {
+	public List<CPDFooterDto> getYearSummaries(String memberId, Date startDate, Date endDate) {
 		Member member = findByRefId(memberId, Member.class);
 		Calendar startCalendar = Calendar.getInstance();
 		startCalendar.setTime(startDate);
@@ -642,8 +562,7 @@ public class CPDDao extends BaseDao {
 		}
 		String sql = "select n.Year2016,n.Year2015,n.Year2014,n.Year2013,n.Year2012,n.Year2011 "
 				+ "from navmember n where No_=:memberNo";
-		Query query = getEntityManager().createNativeQuery(sql).setParameter(
-				"memberNo", member.getMemberNo());
+		Query query = getEntityManager().createNativeQuery(sql).setParameter("memberNo", member.getMemberNo());
 		Object[] row = getSingleResultOrNull(query);
 
 		int i = 0;
@@ -684,46 +603,76 @@ public class CPDDao extends BaseDao {
 		return cpdFooters;
 	}
 
-	public List<Attachment> getAllCPDAttachment() {
+	public Integer getAllAttachmentCount() {
+		String count = "select count(*) from attachment where attachment is not null";
+
+		Query query = getEntityManager().createNativeQuery(count);
+
+		Number number = getSingleResultOrNull(query);
+
+		return number.intValue();
+	}
+
+	public List<Attachment> getAllCPDAttachment(int offset, int limit) {
+
+		
+
 		String sql = "From Attachment WHERE attachment is not null";
+
 		Query query = getEntityManager().createQuery(sql);
 
-		return getResultList(query, 0, 2000);
+		return getResultList(query, offset, limit);
 	}
 
 	public void dumpBlobToFile() {
+		
 		logger.info(" DUMPING TO BLOB ");
-		for (Attachment attachment : getAllCPDAttachment()) {
-			if (attachment.getAttachment() != null) {
-				String fileName = getFilePath() + File.separator
-						+ attachment.getRefId() + "-CPD-"
-						+ attachment.getName();
-				attachment.setFileName(fileName);
+		
+		Integer count = getAllAttachmentCount();
+		
+		logger.info(" TOTAL COUNT "+count);
+		
+		int offset = 0;
+		int limit = 50;
+		
+		int trips = (count/limit) + 1;
+		
+		while (trips > 0) {
 
-				try {
-					IOUtils.write(attachment.getAttachment(),
-							new FileOutputStream(new File(fileName)));
-				} catch (IOException e) {
-					e.printStackTrace();
+			logger.info(" TRIP = " + trips);
+			logger.info(" Offset = " + offset);
+			
+			
+			for (Attachment attachment : getAllCPDAttachment(offset , limit)) {
+				if (attachment.getAttachment() != null) {
+					String fileName = getFilePath() + File.separator + attachment.getRefId() + "-CPD-"
+							+ attachment.getName();
+					attachment.setFileName(fileName);
+
+					try {
+						IOUtils.write(attachment.getAttachment(), new FileOutputStream(new File(fileName)));
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+
+					logger.info(" SAVING ATTACHMENT " + fileName);
+
+					attachment.setAttachment(null);
+
+					String query = "UPDATE attachment SET " + "fileName=:fileName,attachment=:attachment " + "WHERE id=:id";
+
+					Query query2 = getEntityManager().createNativeQuery(query).setParameter("fileName", fileName)
+							.setParameter("attachment", null).setParameter("id", attachment.getId());
+
+					query2.executeUpdate();
+
+					logger.info(" ATTACHMENT SAVED ");
 				}
-
-				logger.info(" SAVING ATTACHMENT " + fileName);
-
-				attachment.setAttachment(null);
-
-				String query = "UPDATE attachment SET "
-						+ "fileName=:fileName,attachment=:attachment "
-						+ "WHERE id=:id";
-
-				Query query2 = getEntityManager().createNativeQuery(query)
-						.setParameter("fileName", fileName)
-						.setParameter("attachment", null)
-						.setParameter("id", attachment.getId());
-
-				query2.executeUpdate();
-
-				logger.info(" ATTACHMENT SAVED ");
 			}
+
+			offset = offset + limit + 1;
+			
+			trips--;
 		}
 
 	}
