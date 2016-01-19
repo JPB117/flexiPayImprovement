@@ -43,6 +43,7 @@ import com.workpoint.icpak.client.ui.component.PagingLoader;
 import com.workpoint.icpak.client.ui.component.PagingPanel;
 import com.workpoint.icpak.client.ui.cpd.form.RecordCPD;
 import com.workpoint.icpak.client.ui.cpd.member.table.CPDMemberTable;
+import com.workpoint.icpak.client.ui.events.AfterSaveEvent;
 import com.workpoint.icpak.client.ui.events.EditModelEvent;
 import com.workpoint.icpak.client.ui.events.EditModelEvent.EditModelHandler;
 import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
@@ -276,7 +277,7 @@ public class CPDManagementPresenter
 				new PagingLoader() {
 					@Override
 					public void onLoad(int offset, int limit) {
-						loadIndividualData(memberRefId, startDate, endDate);
+						loadIndividualMemberCPD(offset, pageLimit);
 					}
 				});
 
@@ -284,9 +285,12 @@ public class CPDManagementPresenter
 				.addClickHandler(new ClickHandler() {
 					@Override
 					public void onClick(ClickEvent event) {
-						loadIndividualData(memberRefId, getView()
-								.getMemberSummaryTable().getStartDate(),
-								getView().getMemberSummaryTable().getEndDate());
+						startDate = getView().getMemberSummaryTable()
+								.getStartDate();
+
+						endDate = getView().getMemberSummaryTable()
+								.getEndDate();
+						loadIndividualData(memberRefId, startDate, endDate);
 					}
 				});
 
@@ -436,6 +440,8 @@ public class CPDManagementPresenter
 							public void onSuccess(CPDDto result) {
 								fireEvent(new ProcessingCompletedEvent());
 								History.back();
+								fireEvent(new AfterSaveEvent(
+										"CPD Record successfully updated."));
 							}
 						}).cpd(recordMemberRefId).update(dto.getRefId(), dto);
 			} else {
@@ -445,6 +451,8 @@ public class CPDManagementPresenter
 							public void onSuccess(CPDDto result) {
 								fireEvent(new ProcessingCompletedEvent());
 								History.back();
+								fireEvent(new AfterSaveEvent(
+										"CPD Record successfully created."));
 							}
 						}).cpd(recordMemberRefId).create(dto);
 			}

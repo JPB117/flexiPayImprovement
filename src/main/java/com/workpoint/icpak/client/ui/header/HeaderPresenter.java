@@ -24,45 +24,46 @@ import com.workpoint.icpak.client.ui.events.LogoutEvent;
 import com.workpoint.icpak.client.ui.notifications.NotificationsPresenter;
 import com.workpoint.icpak.shared.model.UserDto;
 
-public class HeaderPresenter extends PresenterWidget<HeaderPresenter.IHeaderView> 
-implements AfterSaveHandler, AdminPageLoadHandler, ContextLoadedHandler, LoadAlertsHandler{
+public class HeaderPresenter extends
+		PresenterWidget<HeaderPresenter.IHeaderView> implements
+		AfterSaveHandler, AdminPageLoadHandler, ContextLoadedHandler,
+		LoadAlertsHandler {
 
 	public interface IHeaderView extends View {
 		public HasClickHandlers getALogout();
 
 		public void setLoggedInUser(UserDto currentUser);
+
+		void showPopUpMessage(String message);
 	}
 
-	//@Inject DispatchAsync dispatcher;
-	
-	@Inject PlaceManager placeManager;
-	
-	@Inject NotificationsPresenter notifications;
-	
-	boolean onFocus =true;
-	
-	
+	@Inject
+	PlaceManager placeManager;
+
+	@Inject
+	NotificationsPresenter notifications;
+
+	boolean onFocus = true;
+
 	@ContentSlot
 	public static final Type<RevealContentHandler<?>> NOTIFICATIONS_SLOT = new Type<RevealContentHandler<?>>();
-	
+
 	@Inject
 	public HeaderPresenter(final EventBus eventBus, final IHeaderView view) {
-		
+
 		super(eventBus, view);
 		alertTimer.scheduleRepeating(alertReloadInterval);
 	}
 
-	
-	static int alertReloadInterval = 60 * 1000 * 5; //5 mins
-	static long lastLoad=0;
-    private Timer alertTimer = new Timer() {
+	static int alertReloadInterval = 60 * 1000 * 5; // 5 mins
+	static long lastLoad = 0;
+	private Timer alertTimer = new Timer() {
+		@Override
+		public void run() {
+			loadAlertCount();
+		}
+	};
 
-        @Override
-        public void run() {
-            loadAlertCount();
-        }
-    };
-    
 	@Override
 	protected void onBind() {
 		super.onBind();
@@ -70,9 +71,9 @@ implements AfterSaveHandler, AdminPageLoadHandler, ContextLoadedHandler, LoadAle
 		this.addRegisteredHandler(AdminPageLoadEvent.TYPE, this);
 		this.addRegisteredHandler(ContextLoadedEvent.TYPE, this);
 		this.addRegisteredHandler(LoadAlertsEvent.TYPE, this);
-		
+
 		getView().getALogout().addClickHandler(new ClickHandler() {
-			
+
 			@Override
 			public void onClick(ClickEvent event) {
 				fireEvent(new LogoutEvent());
@@ -80,27 +81,26 @@ implements AfterSaveHandler, AdminPageLoadHandler, ContextLoadedHandler, LoadAle
 		});
 	}
 
-
 	/**
-	 * Called too many times - reloading context/ alert counts from here
-	 * slows the application down.
+	 * Called too many times - reloading context/ alert counts from here slows
+	 * the application down.
 	 * 
 	 * TODO: Find Out why
 	 */
 	@Override
-	protected void onReset() {		
+	protected void onReset() {
 		super.onReset();
 		setInSlot(NOTIFICATIONS_SLOT, notifications);
 	}
-	
+
 	protected void loadAlertCount() {
 		alertTimer.cancel();
-		
+
 	}
 
 	@Override
 	public void onAfterSave(AfterSaveEvent event) {
-		loadAlertCount();
+		getView().showPopUpMessage(event.getMessage());
 	}
 
 	@Override
@@ -117,6 +117,5 @@ implements AfterSaveHandler, AdminPageLoadHandler, ContextLoadedHandler, LoadAle
 	public void onLoadAlerts(LoadAlertsEvent event) {
 		loadAlertCount();
 	}
-	
-	
+
 }

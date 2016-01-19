@@ -323,8 +323,12 @@ public class GetDelegatesReport {
 			}
 
 			if (j == 3) {
-				cell.setCellValue(detail.getSurname() + " "
-						+ detail.getOtherNames());
+				if (detail.getFullName() != null) {
+					cell.setCellValue(detail.getFullName());
+				} else {
+					cell.setCellValue(detail.getSurname() + " "
+							+ detail.getOtherNames());
+				}
 			}
 
 			if (j == 4) {

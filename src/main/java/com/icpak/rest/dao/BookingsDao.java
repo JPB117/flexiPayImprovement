@@ -31,10 +31,12 @@ public class BookingsDao extends BaseDao {
 	BookingsDaoHelper daoHelper;
 
 	public Booking getByBookingId(String refId) {
-		Booking booking = getSingleResultOrNull(
-				getEntityManager().createQuery("from Booking u where u.refId=:refId").setParameter("refId", refId));
+		Booking booking = getSingleResultOrNull(getEntityManager().createQuery(
+				"from Booking u where u.refId=:refId").setParameter("refId",
+				refId));
 		if (booking == null) {
-			throw new ServiceException(ErrorCodes.NOTFOUND, "Booking", "'" + refId + "'");
+			throw new ServiceException(ErrorCodes.NOTFOUND, "Booking", "'"
+					+ refId + "'");
 		}
 		return booking;
 	}
@@ -43,21 +45,28 @@ public class BookingsDao extends BaseDao {
 		save(booking);
 	}
 
-	public List<Booking> getAllBookings(String eventId, Integer offSet, Integer limit, String searchTerm) throws QueryException{
+	public List<Booking> getAllBookings(String eventId, Integer offSet,
+			Integer limit, String searchTerm) throws QueryException {
 
 		if (searchTerm.isEmpty()) {
 			return getResultList(
-					getEntityManager().createQuery("from Booking where isActive=1 order by startDate desc"), offSet,
-					limit);
+					getEntityManager()
+							.createQuery(
+									"from Booking where isActive=1 order by startDate desc"),
+					offSet, limit);
 		}
 
-		String query = "select count(*) from Booking b where b.isActive=1 " + "and b.event.refId=:refId and"
-				+ "(e.name like :searchTerm or " + "e.description like :searchTerm or " + "e.venue like :searchTerm or "
-				+ "e.categoryName like :searchTerm or " + "e.type like :searchTerm " + ")"
+		String query = "select count(*) from Booking b where b.isActive=1 "
+				+ "and b.event.refId=:refId and"
+				+ "(e.name like :searchTerm or "
+				+ "e.description like :searchTerm or "
+				+ "e.venue like :searchTerm or "
+				+ "e.categoryName like :searchTerm or "
+				+ "e.type like :searchTerm " + ")"
 				+ " order by e.startDate desc";
 
-		return getResultList(getEntityManager().createQuery(query).setParameter("searchTerm", searchTerm), offSet,
-				limit);
+		return getResultList(getEntityManager().createQuery(query)
+				.setParameter("searchTerm", searchTerm), offSet, limit);
 	}
 
 	public void importAllEvents() {
@@ -65,7 +74,8 @@ public class BookingsDao extends BaseDao {
 				+ "where oldSystemId IN (480,479,474,469)";
 		// String sqlQuery =
 		// "select oldSystemId,refId from icpakdb.event where oldSystemId=424";
-		List<Object[]> rows = getResultList(getEntityManager().createNativeQuery(sqlQuery));
+		List<Object[]> rows = getResultList(getEntityManager()
+				.createNativeQuery(sqlQuery));
 		for (Object[] row : rows) {
 			int i = 0;
 			Object value = null;
@@ -105,13 +115,20 @@ public class BookingsDao extends BaseDao {
 
 			Date bookingDate = (value = row[i++]) == null ? null : (Date) value;
 			booking.setBookingDate(bookingDate.getTime());
-			String sponsorCountry = (value = row[i++]) == null ? null : value.toString();
-			String sponsorAddress = (value = row[i++]) == null ? null : value.toString();
-			String sponsorTown = (value = row[i++]) == null ? null : value.toString();
-			String sponsorTelephone = (value = row[i++]) == null ? null : value.toString();
-			String sponsorContact = (value = row[i++]) == null ? null : value.toString();
-			String sponsorEmail = (value = row[i++]) == null ? null : value.toString();
-			String postalCode = (value = row[i++]) == null ? null : value.toString();
+			String sponsorCountry = (value = row[i++]) == null ? null : value
+					.toString();
+			String sponsorAddress = (value = row[i++]) == null ? null : value
+					.toString();
+			String sponsorTown = (value = row[i++]) == null ? null : value
+					.toString();
+			String sponsorTelephone = (value = row[i++]) == null ? null : value
+					.toString();
+			String sponsorContact = (value = row[i++]) == null ? null : value
+					.toString();
+			String sponsorEmail = (value = row[i++]) == null ? null : value
+					.toString();
+			String postalCode = (value = row[i++]) == null ? null : value
+					.toString();
 
 			ContactDto contact = new ContactDto();
 			contact.setAddress(sponsorAddress);
@@ -127,7 +144,8 @@ public class BookingsDao extends BaseDao {
 			System.err.println(">>" + booking.getContact().getContactName());
 
 			// System.err.println("Company Name>>" + contact.getCompany());
-			resultArray = importDelegates(batchId, booking, eventRefId, seminarId);
+			resultArray = importDelegates(batchId, booking, eventRefId,
+					seminarId);
 			totalDelegateCount += resultArray[0];
 			totalPaidCount += resultArray[1];
 			totalUnpaidCount += resultArray[2];
@@ -142,15 +160,19 @@ public class BookingsDao extends BaseDao {
 
 	}
 
-	public int[] importDelegates(Integer batchId, BookingDto booking, String eventRefId, Integer seminarId) {
+	public int[] importDelegates(Integer batchId, BookingDto booking,
+			String eventRefId, Integer seminarId) {
 		List<Object[]> rows = getResultList(getEntityManager()
-				.createNativeQuery("SELECT b.title,b.surname,b.othernames,b.is_member,b.reg_no,"
-						+ "b.email,a.refId,b.accomodation,b.accomodation_days,b.payment_mode,"
-						+ "b.receipt,b.lpo,b.credit,b.clearance_no  "
-						+ "FROM icpakco_main.bookings b left join icpakdb.accommodation a "
-						+ "on (a.hotel = b.accomodation) " + "WHERE b.batch_ID = :batchId and "
-						+ "seminar_id=:seminarId")
-				.setParameter("batchId", batchId).setParameter("seminarId", seminarId));
+				.createNativeQuery(
+						"SELECT b.title,b.surname,b.othernames,b.is_member,b.reg_no,"
+								+ "b.email,a.refId,b.accomodation,b.accomodation_days,b.payment_mode,"
+								+ "b.receipt,b.lpo,b.credit,b.clearance_no  "
+								+ "FROM icpakco_main.bookings b left join icpakdb.accommodation a "
+								+ "on (a.hotel = b.accomodation) "
+								+ "WHERE b.batch_ID = :batchId and "
+								+ "seminar_id=:seminarId")
+				.setParameter("batchId", batchId)
+				.setParameter("seminarId", seminarId));
 
 		List<DelegateDto> delegates = new ArrayList<>();
 		int paidCounter = 0;
@@ -159,32 +181,43 @@ public class BookingsDao extends BaseDao {
 			DelegateDto delegate = new DelegateDto();
 			int i = 0;
 			Object value = null;
-			String delegateTitle = (value = row[i++]) == null ? null : value.toString();
+			String delegateTitle = (value = row[i++]) == null ? null : value
+					.toString();
 			delegate.setTitle(delegateTitle);
-			String delegateSurName = (value = row[i++]) == null ? null : value.toString();
+			String delegateSurName = (value = row[i++]) == null ? null : value
+					.toString();
 			delegate.setSurname(delegateSurName);
-			String delegateOtherName = (value = row[i++]) == null ? null : value.toString();
+			String delegateOtherName = (value = row[i++]) == null ? null
+					: value.toString();
 			delegate.setOtherNames(delegateOtherName);
-			String isMember = (value = row[i++]) == null ? null : (String) value;
-			String delegateMemberNo = (value = row[i++]) == null ? null : value.toString();
+			String isMember = (value = row[i++]) == null ? null
+					: (String) value;
+			String delegateMemberNo = (value = row[i++]) == null ? null : value
+					.toString();
 			if (isMember != null && isMember.equals("1")) {
 				delegate.setMemberNo(delegateMemberNo);
 			}
-			String delegateEmail = (value = row[i++]) == null ? null : value.toString();
+			String delegateEmail = (value = row[i++]) == null ? null : value
+					.toString();
 			delegate.setEmail(delegateEmail);
-			String accomodationRefId = (value = row[i++]) == null ? null : value.toString();
+			String accomodationRefId = (value = row[i++]) == null ? null
+					: value.toString();
 			if (accomodationRefId != null) {
-				Accommodation accomodation = findByRefId(accomodationRefId, Accommodation.class);
+				Accommodation accomodation = findByRefId(accomodationRefId,
+						Accommodation.class);
 				delegate.setAccommodation(accomodation.toDto());
 				// System.err.println("Accomodation for " +
 				// delegate.getSurname()
 				// + " " + accomodation.getHotel());
 			}
-			String delegateAccomodation = (value = row[i++]) == null ? null : value.toString();
-			String delegateAccomodationDays = (value = row[i++]) == null ? null : value.toString();
+			String delegateAccomodation = (value = row[i++]) == null ? null
+					: value.toString();
+			String delegateAccomodationDays = (value = row[i++]) == null ? null
+					: value.toString();
 			delegate.setAttendance(AttendanceStatus.NOTATTENDED);
 
-			String paymentMode = (value = row[i++]) == null ? null : value.toString();
+			String paymentMode = (value = row[i++]) == null ? null : value
+					.toString();
 			// System.err.println("PaymentMode>>>" + paymentMode);
 			if (paymentMode != null) {
 				if (!paymentMode.equals("N/A") || !paymentMode.isEmpty()) {
@@ -200,9 +233,11 @@ public class BookingsDao extends BaseDao {
 				booking.setPaymentStatus(PaymentStatus.NOTPAID);
 			}
 
-			String receiptNo = (value = row[i++]) == null ? null : value.toString();
+			String receiptNo = (value = row[i++]) == null ? null : value
+					.toString();
 			delegate.setReceiptNo(receiptNo);
-			String isCredit = (value = row[i++]) == null ? null : value.toString();
+			String isCredit = (value = row[i++]) == null ? null : value
+					.toString();
 			if (isCredit != null && !isCredit.isEmpty()) {
 				delegate.setIsCredit(1);
 			} else {
@@ -211,7 +246,8 @@ public class BookingsDao extends BaseDao {
 
 			String lpoNo = (value = row[i++]) == null ? null : value.toString();
 			delegate.setLpoNo(lpoNo);
-			String clearanceNo = (value = row[i++]) == null ? null : value.toString();
+			String clearanceNo = (value = row[i++]) == null ? null : value
+					.toString();
 			delegate.setClearanceNo(clearanceNo);
 			delegates.add(delegate);
 		}
@@ -228,9 +264,11 @@ public class BookingsDao extends BaseDao {
 		return results;
 	}
 
-	public List<Booking> getAllBookings(String eventId, Integer offSet, Integer limit) {
-		return getResultList(getEntityManager()
-				.createQuery("from Booking b where b.isActive=1 " + "and b.event.refId=:refId order by created")
+	public List<Booking> getAllBookings(String eventId, Integer offSet,
+			Integer limit) {
+		return getResultList(getEntityManager().createQuery(
+				"from Booking b where b.isActive=1 "
+						+ "and b.event.refId=:refId order by created")
 				.setParameter("refId", eventId), offSet, limit);
 	}
 
@@ -243,60 +281,82 @@ public class BookingsDao extends BaseDao {
 	}
 
 	public String getInvoiceRef(String bookingRefId) {
-		return getSingleResultOrNull(
-				getEntityManager().createNativeQuery("select refId from Invoice where bookingRefId=:bookingRefId")
-						.setParameter("bookingRefId", bookingRefId));
+		return getSingleResultOrNull(getEntityManager().createNativeQuery(
+				"select refId from Invoice where bookingRefId=:bookingRefId")
+				.setParameter("bookingRefId", bookingRefId));
 	}
 
 	public void deleteAllBookingInvoice(String bookingRefId) {
 		logger.error("Deleteing invoice line ====== ><><<>>>>>>>>===");
-		Query deleteQuery = getEntityManager().createNativeQuery("delete from InvoiceLine " + "where invoiceId in ( "
-				+ "select d.id from Invoice d " + "where d.bookingRefId = :bookingRefId)");
+		Query deleteQuery = getEntityManager().createNativeQuery(
+				"delete from InvoiceLine " + "where invoiceId in ( "
+						+ "select d.id from Invoice d "
+						+ "where d.bookingRefId = :bookingRefId)");
 		deleteQuery.setParameter("bookingRefId", bookingRefId);
 		deleteQuery.executeUpdate();
 
 		logger.error("Deleteing invoice ====== ><><<>>>>>>>>===");
-		deleteQuery = getEntityManager()
-				.createNativeQuery("delete from Invoice " + "where bookingRefId = :bookingRefId");
+		deleteQuery = getEntityManager().createNativeQuery(
+				"delete from Invoice " + "where bookingRefId = :bookingRefId");
 		deleteQuery.setParameter("bookingRefId", bookingRefId);
 		deleteQuery.executeUpdate();
 
 		logger.error("Deleteing Success ====== ><><<>>>>>>>>===");
 	}
 
-	public List<MemberBookingDto> getMemberBookings(String memberRefId, int offset, int limit) {
-		String sql = "select b.refId bookingRefId, " + "e.refId eventRefId, " + "d.refId delegateRefId, " + "e.name, "
-				+ "e.startdate, " + "e.enddate, " + "e.venue, " + "e.cpdhours, "
-				+ "(case when e.enddate<current_date then 'CLOSED' else 'OPEN' end) eventStatus, " + "d.attendance,"
-				+ "b.paymentStatus, " + "t.status trxStatus, " + "a.hotel " + "from event e "
-				+ "inner join booking b on (e.id=b.event_Id)  " + "inner join delegate d on (d.booking_id=b.id) "
+	public List<MemberBookingDto> getMemberBookings(String memberRefId,
+			int offset, int limit) {
+		String sql = "select b.refId bookingRefId, "
+				+ "e.refId eventRefId, "
+				+ "d.refId delegateRefId, "
+				+ "e.name, "
+				+ "e.startdate, "
+				+ "e.enddate, "
+				+ "e.venue, "
+				+ "e.cpdhours, "
+				+ "(case when e.enddate<current_date then 'CLOSED' else 'OPEN' end) eventStatus, "
+				+ "d.attendance," + "b.paymentStatus, "
+				+ "t.status trxStatus, " + "a.hotel " + "from event e "
+				+ "inner join booking b on (e.id=b.event_Id)  "
+				+ "inner join delegate d on (d.booking_id=b.id) "
 				+ "left join accommodation a on (a.id=d.accommodationid) "
 				+ "left join invoice i on (i.bookingRefId=b.refId) "
-				+ "left join transaction t on (t.invoiceRef=i.refId) " + "where d.memberRefId=:memberRefId";
+				+ "left join transaction t on (t.invoiceRef=i.refId) "
+				+ "where d.memberRefId=:memberRefId";
 
-		List<Object[]> rows = getResultList(
-				getEntityManager().createNativeQuery(sql).setParameter("memberRefId", memberRefId), offset, limit);
+		List<Object[]> rows = getResultList(getEntityManager()
+				.createNativeQuery(sql)
+				.setParameter("memberRefId", memberRefId), offset, limit);
 		List<MemberBookingDto> memberEvents = new ArrayList<>();
 
 		for (Object[] row : rows) {
 			int i = 0;
 			Object value = null;
-			String bookingRefId = (value = row[i++]) == null ? null : value.toString();
-			String eventRefId = (value = row[i++]) == null ? null : value.toString();
-			String delegateRefId = (value = row[i++]) == null ? null : value.toString();
-			String eventName = (value = row[i++]) == null ? null : value.toString();
+			String bookingRefId = (value = row[i++]) == null ? null : value
+					.toString();
+			String eventRefId = (value = row[i++]) == null ? null : value
+					.toString();
+			String delegateRefId = (value = row[i++]) == null ? null : value
+					.toString();
+			String eventName = (value = row[i++]) == null ? null : value
+					.toString();
 			Date startDate = (value = row[i++]) == null ? null : (Date) value;
 			Date endDate = (value = row[i++]) == null ? null : (Date) value;
 			String venue = (value = row[i++]) == null ? null : value.toString();
-			String cpdHours = (value = row[i++]) == null ? null : value.toString();
-			String eventStatus = (value = row[i++]) == null ? null : value.toString();
-			Integer attendance = (value = row[i++]) == null ? null : ((Number) value).intValue();
-			Integer paymentStatus = (value = row[i++]) == null ? null : ((Number) value).intValue();// Should
-																									// remove
-																									// this
-																									// field
-			String trxStatus = (value = row[i++]) == null ? null : value.toString();// From
-																					// Transactions
+			String cpdHours = (value = row[i++]) == null ? null : value
+					.toString();
+			String eventStatus = (value = row[i++]) == null ? null : value
+					.toString();
+			Integer attendance = (value = row[i++]) == null ? null
+					: ((Number) value).intValue();
+			Integer paymentStatus = (value = row[i++]) == null ? null
+					: ((Number) value).intValue();// Should
+													// remove
+													// this
+													// field
+			String trxStatus = (value = row[i++]) == null ? null : value
+					.toString();// From
+								// Transactions
 			String hotel = (value = row[i++]) == null ? null : value.toString();
 
 			MemberBookingDto dto = new MemberBookingDto();
@@ -313,7 +373,8 @@ public class BookingsDao extends BaseDao {
 			dto.setLocation(venue);
 			// dto.setPaymentStatus(PaymentStatus.PAID.ordinal()==paymentStatus?
 			// PaymentStatus.PAID: PaymentStatus.NOTPAID);
-			dto.setPaymentStatus(trxStatus == null ? PaymentStatus.NOTPAID : PaymentStatus.valueOf(trxStatus));
+			dto.setPaymentStatus(trxStatus == null ? PaymentStatus.NOTPAID
+					: PaymentStatus.valueOf(trxStatus));
 
 			dto.setStartDate(startDate);
 			memberEvents.add(dto);
@@ -324,8 +385,9 @@ public class BookingsDao extends BaseDao {
 
 	public String getErn(String refId) {
 
-		return getSingleResultOrNull(getEntityManager().createNativeQuery("select ern from delegate where refId=:refId")
-				.setParameter("refId", refId));
+		return getSingleResultOrNull(getEntityManager().createNativeQuery(
+				"select ern from delegate where refId=:refId").setParameter(
+				"refId", refId));
 	}
 
 	public int getDelegateCount(String eventId) {
@@ -337,15 +399,22 @@ public class BookingsDao extends BaseDao {
 		Number number = null;
 
 		if (eventId != null && searchTerm != null && !searchTerm.isEmpty()) {
-			String sql = "select count(*) " + "from delegate d inner join booking b on (d.booking_id=b.id) "
-					+ "inner join event e on (b.event_id=e.id) " + "left join accommodation a on (a.eventId=e.id) "
+			String sql = "select count(*) "
+					+ "from delegate d inner join booking b on (d.booking_id=b.id) "
+					+ "inner join event e on (b.event_id=e.id) "
+					+ "left join accommodation a on (a.eventId=e.id) "
 					+ "where e.refId=:eventRefId";
 
-			sql = sql.concat(" and " + "(d.memberRegistrationNo like :searchTerm or " + "a.hotel like :searchTerm or "
-					+ "d.title like :searchTerm or " + "d.email like :searchTerm or "
-					+ "d.otherNames like :searchTerm or " + "d.ern like :searchTerm)");
+			sql = sql.concat(" and "
+					+ "(d.memberRegistrationNo like :searchTerm or "
+					+ "a.hotel like :searchTerm or "
+					+ "d.title like :searchTerm or "
+					+ "d.email like :searchTerm or "
+					+ "d.otherNames like :searchTerm or "
+					+ "d.ern like :searchTerm)");
 
-			Query query = getEntityManager().createNativeQuery(sql).setParameter("eventRefId", eventId);
+			Query query = getEntityManager().createNativeQuery(sql)
+					.setParameter("eventRefId", eventId);
 			if (searchTerm != null && !searchTerm.isEmpty()) {
 				query.setParameter("searchTerm", "%" + searchTerm + "%");
 			}
@@ -354,12 +423,14 @@ public class BookingsDao extends BaseDao {
 
 		} else {
 
-			String sql = "select count(*) " + "from delegate d inner join booking b on (d.booking_id=b.id) "
-					+ "inner join event e on (b.event_id=e.id) " + "left join accommodation a on (a.eventId=e.id) "
+			String sql = "select count(*) "
+					+ "from delegate d inner join booking b on (d.booking_id=b.id) "
+					+ "inner join event e on (b.event_id=e.id) "
+					+ "left join accommodation a on (a.eventId=e.id) "
 					+ "where e.refId=:eventRefId";
 
-			number = getSingleResultOrNull(
-					getEntityManager().createNativeQuery(sql).setParameter("eventRefId", eventId));
+			number = getSingleResultOrNull(getEntityManager()
+					.createNativeQuery(sql).setParameter("eventRefId", eventId));
 		}
 
 		logger.error("=== Delegate Count ==== " + number.intValue());
@@ -367,27 +438,35 @@ public class BookingsDao extends BaseDao {
 		return number.intValue();
 	}
 
-	public List<DelegateDto> getAllDelegates(String passedRefId, Integer offset, Integer limit, String searchTerm) {
+	public List<DelegateDto> getAllDelegates(String passedRefId,
+			Integer offset, Integer limit, String searchTerm) {
 		logger.error("==>>>>>>>>>>>>>>><<<<<<<<<<<>> eventRefId " + passedRefId);
 
 		List<DelegateDto> delegateList = new ArrayList<>();
-		String sql = "select b.refId as bookingRefId,b.bookingDate," + "b.company,b.Contact, b.`E-Mail`,"
+		String sql = "select b.refId as bookingRefId,b.bookingDate,"
+				+ "b.company,b.Contact, b.`E-Mail`,"
 				+ "d.refId,d.memberRefId,d.memberRegistrationNo,d.ern,"
-				+ "d.title,d.otherNames,a.hotel,b.paymentStatus,"
+				+ "d.title,d.otherNames,d.fullName,a.hotel,b.paymentStatus,"
 				+ "d.attendance,d.surname,d.email,e.refid,d.booking_id,"
 				+ "d.receiptNo,d.lpoNo,d.isCredit,d.clearanceNo "
 				+ "from delegate d inner join booking b on (d.booking_id=b.id) "
-				+ "inner join event e on (b.event_id=e.id) " + "left join accommodation a on (d.accommodationId=a.id) "
+				+ "inner join event e on (b.event_id=e.id) "
+				+ "left join accommodation a on (d.accommodationId=a.id) "
 				+ "where e.refId=:eventRefId";
 
 		if (searchTerm != null && !searchTerm.isEmpty()) {
-			sql = sql.concat(" and " + "(d.memberRegistrationNo like :searchTerm or " + "a.hotel like :searchTerm or "
-					+ "d.email like :searchTerm or " + "d.otherNames like :searchTerm or " + "d.ern like :searchTerm)");
+			sql = sql.concat(" and "
+					+ "(d.memberRegistrationNo like :searchTerm or "
+					+ "a.hotel like :searchTerm or "
+					+ "d.email like :searchTerm or "
+					+ "d.otherNames like :searchTerm or "
+					+ "d.ern like :searchTerm)");
 		}
 
 		sql = sql.concat(" order by d.created DESC");
 
-		Query query = getEntityManager().createNativeQuery(sql).setParameter("eventRefId", passedRefId);
+		Query query = getEntityManager().createNativeQuery(sql).setParameter(
+				"eventRefId", passedRefId);
 
 		if (searchTerm != null && !searchTerm.isEmpty()) {
 			query.setParameter("searchTerm", "%" + searchTerm + "%");
@@ -400,28 +479,44 @@ public class BookingsDao extends BaseDao {
 			int i = 0;
 			Object value = null;
 
-			String bookingRefId = (value = o[i++]) == null ? null : value.toString();
+			String bookingRefId = (value = o[i++]) == null ? null : value
+					.toString();
 			Date bookingDate = (value = o[i++]) == null ? null : (Date) value;
-			String companyName = (value = o[i++]) == null ? null : value.toString();
-			String contactName = (value = o[i++]) == null ? null : value.toString();
-			String contactEmail = (value = o[i++]) == null ? null : value.toString();
+			String companyName = (value = o[i++]) == null ? null : value
+					.toString();
+			String contactName = (value = o[i++]) == null ? null : value
+					.toString();
+			String contactEmail = (value = o[i++]) == null ? null : value
+					.toString();
 			String refId = (value = o[i++]) == null ? null : value.toString();
-			String memberRefId = (value = o[i++]) == null ? null : value.toString();
-			String memberNo = (value = o[i++]) == null ? null : value.toString();
+			String memberRefId = (value = o[i++]) == null ? null : value
+					.toString();
+			String memberNo = (value = o[i++]) == null ? null : value
+					.toString();
 			String ern = (value = o[i++]) == null ? null : value.toString();
 			String title = (value = o[i++]) == null ? null : value.toString();
-			String otherNames = (value = o[i++]) == null ? null : value.toString();
+			String otherNames = (value = o[i++]) == null ? null : value
+					.toString();
+			String fullName = (value = o[i++]) == null ? null : value
+					.toString();
 			String hotel = (value = o[i++]) == null ? null : value.toString();
-			Integer paymentStatus = (value = o[i++]) == null ? null : (Integer) value;
-			Integer attendance = (value = o[i++]) == null ? null : (Integer) value;
+			Integer paymentStatus = (value = o[i++]) == null ? null
+					: (Integer) value;
+			Integer attendance = (value = o[i++]) == null ? null
+					: (Integer) value;
 			String surname = (value = o[i++]) == null ? null : value.toString();
 			String email = (value = o[i++]) == null ? null : value.toString();
-			String eventRefId = (value = o[i++]) == null ? null : value.toString();
-			BigInteger bookingId = (value = o[i++]) == null ? null : (BigInteger) value;
-			String receiptNo = (value = o[i++]) == null ? null : value.toString();
+			String eventRefId = (value = o[i++]) == null ? null : value
+					.toString();
+			BigInteger bookingId = (value = o[i++]) == null ? null
+					: (BigInteger) value;
+			String receiptNo = (value = o[i++]) == null ? null : value
+					.toString();
 			String lpoNo = (value = o[i++]) == null ? null : value.toString();
-			Integer isCredit = (value = o[i++]) == null ? null : (Integer) value;
-			String clearanceNo = (value = o[i++]) == null ? null : value.toString();
+			Integer isCredit = (value = o[i++]) == null ? null
+					: (Integer) value;
+			String clearanceNo = (value = o[i++]) == null ? null : value
+					.toString();
 
 			DelegateDto delegateDto = new DelegateDto();
 			delegateDto.setCreatedDate(bookingDate);
@@ -429,6 +524,7 @@ public class BookingsDao extends BaseDao {
 			delegateDto.setContactName(contactName);
 			delegateDto.setContactEmail(contactEmail);
 			delegateDto.setBookingRefId(bookingRefId);
+			delegateDto.setFullName(fullName);
 			delegateDto.setRefId(refId);
 			delegateDto.setMemberRefId(memberRefId);
 			delegateDto.setMemberNo(memberNo);
@@ -443,7 +539,7 @@ public class BookingsDao extends BaseDao {
 			} else {
 				delegateDto.setPaymentStatus(PaymentStatus.NOTPAID);
 			}
-			
+
 			if (attendance == 0) {
 				delegateDto.setAttendance(AttendanceStatus.ATTENDED);
 			}

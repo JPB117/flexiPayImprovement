@@ -222,6 +222,8 @@ public class PasswordWidget extends Composite {
 			panelMessage.removeStyleName("hide");
 			panelMessage.setStyleDependentName("alert-", true);
 			panelMessage.addStyleDependentName(errorType);
+			showSuccess(true);
+			aProceedToLogin.setVisible(false);
 		} else {
 			issues.clear();
 			issues.removeStyleName("hide");
@@ -243,6 +245,7 @@ public class PasswordWidget extends Composite {
 			divInstructionItems.addClassName("hide");
 			issues.addStyleName("hide");
 			panelMessage.removeStyleName("hide");
+			aProceedToLogin.setVisible(true);
 		} else {
 			aProceedToLogin.setVisible(false);
 			aResendAct.removeStyleName("hide");

@@ -356,13 +356,6 @@ public class ActivateAccountPresenter
 		getView().showMessage(
 				"Reset Password Instructions have been sent to your email",
 				"success");
-		getView().getProceedToLogin().addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				placeManager.revealPlace(new PlaceRequest.Builder().nameToken(
-						NameTokens.login).build());
-			}
-		});
 
 	}
 
@@ -376,13 +369,6 @@ public class ActivateAccountPresenter
 								+ "Click on the link in the email to proceed..",
 						"success");
 
-		getView().getProceedToLogin().addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				placeManager.revealPlace(new PlaceRequest.Builder().nameToken(
-						NameTokens.login).build());
-			}
-		});
 	}
 
 	protected void executeLogin(String email, String password) {

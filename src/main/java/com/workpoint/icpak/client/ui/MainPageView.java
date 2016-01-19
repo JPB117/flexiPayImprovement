@@ -23,19 +23,10 @@ public class MainPageView extends ViewImpl implements MainPagePresenter.MyView {
 	@UiField
 	HTMLPanel panelContent;
 
-	Timer timer = new Timer() {
-
-		@Override
-		public void run() {
-			hideAlert();
-		}
-	};
-
+	
 	@Inject
 	public MainPageView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
-		// loadingtext.setId("loading-text");
-
 	}
 
 	@Override
@@ -65,7 +56,7 @@ public class MainPageView extends ViewImpl implements MainPagePresenter.MyView {
 
 	@Override
 	public void showProcessing(boolean processing, String message) {
-		
+
 	}
 
 	@Override

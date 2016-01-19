@@ -366,7 +366,6 @@ public class UsersDaoHelper {
 	}
 
 	public User getUserByActivationEmail(String userEmail) {
-
 		User user = null;
 		try {
 			user = checkIfUserExistInERP(userEmail);
