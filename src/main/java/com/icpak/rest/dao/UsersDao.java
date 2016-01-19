@@ -211,12 +211,14 @@ public class UsersDao extends BaseDao {
 		return val.intValue() > 0;
 	}
 
-	public String getMemberRefId(String userRefId) {
+	public String getMemberRefId(Long userId) {
+		
+		String sql = "select m.refId from member m where m.userId=:id";
 
-		String memberNo = getSingleResultOrNull(getEntityManager()
-				.createQuery("select refId from Member where userRefId=:userId").setParameter("userId", userRefId));
+		String memberRefId = getSingleResultOrNull(getEntityManager()
+				.createNativeQuery(sql).setParameter("id", userId));
 
-		return memberNo;
+		return memberRefId;
 	}
 
 	public String getFullNames(String refId) {

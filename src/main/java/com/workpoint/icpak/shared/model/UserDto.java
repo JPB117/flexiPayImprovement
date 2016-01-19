@@ -32,7 +32,8 @@ public class UserDto extends SerializableObj implements Listable, Serializable {
 	private String lmsStatus;
 	private String lmsResponse;
 	private String lmsPayload;
-
+	private Long userLongId;
+	
 	public UserDto() {
 	}
 
@@ -82,6 +83,16 @@ public class UserDto extends SerializableObj implements Listable, Serializable {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	
+	
+
+	public Long getUserLongId() {
+		return userLongId;
+	}
+
+	public void setUserLongId(Long userLongId) {
+		this.userLongId = userLongId;
 	}
 
 	@Override

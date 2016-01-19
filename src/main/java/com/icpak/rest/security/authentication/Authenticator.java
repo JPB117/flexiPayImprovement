@@ -20,6 +20,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -42,6 +43,8 @@ public class Authenticator {
 	private final CurrentUserDtoProvider currentUserDtoProvider;
 	private final UserSessionDao userSessionDao;
 	private final ICPAKAuthenticatingRealm realm;
+	
+	Logger logger = Logger.getLogger(Authenticator.class);
 
 	@Inject
 	Authenticator(UsersDao userDao, Provider<HttpSession> sessionProvider,
@@ -93,6 +96,13 @@ public class Authenticator {
 		if (!isMatch) {
 			throw new ServiceException(ErrorCodes.UNAUTHORIZEDACCESS);
 		}
+		
+		String memberRefId = userDao.getMemberRefId(user.getId());
+		
+		logger.info(" MEMBER REF ID "+memberRefId);
+		
+		UserDto userDto = user.toDto();
+		userDto.setMemberRefId(memberRefId);
 
 		return user.toDto();
 	}
