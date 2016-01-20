@@ -38,10 +38,10 @@ public class ApplicationFormHeader extends PO {
 	@Column(name = "`Application Date`", columnDefinition = "datetime")
 	private Date applicationDate;
 
-	@Column(name = "`Surname`", length = 30)
+	@Column(name = "`Surname`",length = 255)
 	private String surname;
 
-	@Column(name = "`Other Names`", length = 30)
+	@Column(name = "`Other Names`",length = 255)
 	private String otherNames;
 
 	@Column(name = "`Date Of Birth`", columnDefinition = "datetime")

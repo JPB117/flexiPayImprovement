@@ -324,13 +324,15 @@ public class CPDManagementPresenter
 
 	protected void showCreatePopup() {
 		final RecordCPD cpdRecord = new RecordCPD();
+
+		// Upload Mechanism
 		cpdRecord.getStartUploadButton().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				if (cpdRecord.getCPD().getRefId() == null) {
 					if (cpdRecord.isValid()) {
 						CPDDto cpd = cpdRecord.getCPD();
-						String memberId = recordMemberRefId;
+						String memberRefId = recordMemberRefId;
 						String memberRegistrationNo = recordMemberNo;
 						cpd.setMemberRegistrationNo(memberRegistrationNo);
 						memberDelegate
@@ -341,7 +343,7 @@ public class CPDManagementPresenter
 												cpdRecord.setCPD(result);
 												cpdRecord.showUploadPanel(true);
 											}
-										}).cpd(memberId).create(cpd);
+										}).cpd(memberRefId).create(cpd);
 					}
 				} else {
 					cpdRecord.showUploadPanel(true);
@@ -366,7 +368,7 @@ public class CPDManagementPresenter
 													MemberDto member) {
 												cpdRecord
 														.showMemberLoading(false);
-												if (member.getFullName() != null) {
+												if (member.getRefId() != null) {
 													cpdRecord
 															.setFullNames(member
 																	.getFullName());
@@ -374,7 +376,6 @@ public class CPDManagementPresenter
 															.getRefId();
 													recordMemberNo = member
 															.getMemberNo();
-
 													cpdRecord
 															.showRecordingPanel(true);
 
@@ -405,7 +406,12 @@ public class CPDManagementPresenter
 					public void onSelect(String name) {
 						if (name.equals("Save")) {
 							if (cpdRecord.isValid()) {
-								saveRecord(cpdRecord.getCPD());
+								CPDDto cpdSave = cpdRecord.getCPD();
+								if (cpdSave.getMemberRefId() == null) {
+									cpdSave.setMemberRefId(recordMemberRefId);
+									cpdSave.setMemberRegistrationNo(recordMemberNo);
+								}
+								saveRecord(cpdSave);
 							}
 						}
 						hide();
@@ -424,15 +430,7 @@ public class CPDManagementPresenter
 
 	protected void saveRecord(CPDDto dto) {
 		fireEvent(new ProcessingEvent());
-		if (recordMemberRefId != null || dto.getMemberRefId() != null) {
-			if (recordMemberNo != null) {
-				dto.setMemberRegistrationNo(recordMemberNo);
-			}
-
-			if (recordMemberRefId == null) {
-				recordMemberRefId = dto.getMemberRefId();
-			}
-
+		if (dto.getMemberRefId() != null) {
 			if (dto.getRefId() != null) {
 				memberDelegate
 						.withCallback(new AbstractAsyncCallback<CPDDto>() {
@@ -443,7 +441,8 @@ public class CPDManagementPresenter
 								fireEvent(new AfterSaveEvent(
 										"CPD Record successfully updated."));
 							}
-						}).cpd(recordMemberRefId).update(dto.getRefId(), dto);
+						}).cpd(dto.getMemberRefId())
+						.update(dto.getRefId(), dto);
 			} else {
 				memberDelegate
 						.withCallback(new AbstractAsyncCallback<CPDDto>() {
@@ -454,7 +453,7 @@ public class CPDManagementPresenter
 								fireEvent(new AfterSaveEvent(
 										"CPD Record successfully created."));
 							}
-						}).cpd(recordMemberRefId).create(dto);
+						}).cpd(dto.getMemberRefId()).create(dto);
 			}
 
 		} else {

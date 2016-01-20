@@ -12,7 +12,7 @@ DELIMITER $$
 CREATE procedure `proc_updatecpdsummary`(p_memberRegistrationNo varchar(45), p_created date)
 BEGIN
 	declare v_year int;
-	declare v_sum double(10,8);
+	declare v_sum double(10,2);
 	declare v_email varchar(50);
 	declare v_status varchar(50);
 	declare v_customerType varchar(50);
@@ -24,7 +24,10 @@ BEGIN
 	set v_year=YEAR(p_created); 
 	
 	select sum(cpdHours) into v_sum from cpd where memberRegistrationNo=p_memberRegistrationNo and YEAR(startdate)=v_year and status='Approved';
-
+	if(v_sum is null) then
+		set v_sum=0.0;
+	end if;
+	
 	if(select exists(select * from navmember where No_=p_memberRegistrationNo)=false) then
 	
 		select u.Name,u.email,m.customerType,m.practisingNo,u.Gender
@@ -80,9 +83,7 @@ CREATE TRIGGER updatecpdsummary
 AFTER UPDATE ON cpd
 FOR EACH ROW
 BEGIN
-	if(NEW.status='Approved') then
-	call proc_updatecpdFromCPDHours(NEW.memberRegistrationNo, NEW.startdate);
-    end if;
+	call proc_updatecpdsummary(NEW.memberRegistrationNo, NEW.startdate);
 END
 $$
 DELIMITER ;
