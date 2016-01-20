@@ -209,7 +209,7 @@ public class FrontMemberPresenter
 						pagingConfig.getLimit());
 			}
 
-		}).getMembersSearchCount(searchTerm, townSearchTerm, categoryName);
+		}).getMembersSearchCount(searchTerm, citySearchTerm, categoryName);
 	}
 
 	public void searchMembers(String searchTerm, String citySearchTerm, String categoryName, int offset, int limit) {
