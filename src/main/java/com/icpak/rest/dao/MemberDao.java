@@ -1,6 +1,5 @@
 package com.icpak.rest.dao;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,8 +28,7 @@ public class MemberDao extends BaseDao {
 		save(member);
 	}
 
-	public List<MemberDto> getAllMembers(Integer offSet, Integer limit,
-			String searchTerm) {
+	public List<MemberDto> getAllMembers(Integer offSet, Integer limit, String searchTerm) {
 		List<Object[]> rows = getResultList(
 				getEntityManager()
 						.createNativeQuery(
@@ -46,20 +44,14 @@ public class MemberDao extends BaseDao {
 		for (Object[] row : rows) {
 			int i = 0;
 			Object value = null;
-			String userRefId = (value = row[i++]) == null ? null : value
-					.toString();
+			String userRefId = (value = row[i++]) == null ? null : value.toString();
 			String email = (value = row[i++]) == null ? null : value.toString();
-			String firstName = (value = row[i++]) == null ? null : value
-					.toString();
-			String lastName = (value = row[i++]) == null ? null : value
-					.toString();
-			String fullName = (value = row[i++]) == null ? null : value
-					.toString();
+			String firstName = (value = row[i++]) == null ? null : value.toString();
+			String lastName = (value = row[i++]) == null ? null : value.toString();
+			String fullName = (value = row[i++]) == null ? null : value.toString();
 			String title = (value = row[i++]) == null ? null : value.toString();
-			String memberId = (value = row[i++]) == null ? null : value
-					.toString();
-			String memberRefId = (value = row[i++]) == null ? null : value
-					.toString();
+			String memberId = (value = row[i++]) == null ? null : value.toString();
+			String memberRefId = (value = row[i++]) == null ? null : value.toString();
 
 			MemberDto dto = new MemberDto();
 			dto.setUserId(userRefId);
@@ -77,8 +69,7 @@ public class MemberDao extends BaseDao {
 	}
 
 	public List<Member> getAllMembers(Integer offSet, Integer limit) {
-		return getResultList(getEntityManager().createQuery(
-				"select m from Member m " + "where m.isActive=1"), offSet,
+		return getResultList(getEntityManager().createQuery("select m from Member m " + "where m.isActive=1"), offSet,
 				limit);
 	}
 
@@ -94,14 +85,11 @@ public class MemberDao extends BaseDao {
 
 		Number number = null;
 		if (roleId == null) {
-			number = getSingleResultOrNull(getEntityManager()
-					.createNativeQuery(
-							"select count(*) from Member " + "where isactive=1"));
+			number = getSingleResultOrNull(
+					getEntityManager().createNativeQuery("select count(*) from Member " + "where isactive=1"));
 		} else {
-			number = getSingleResultOrNull(getEntityManager()
-					.createNativeQuery(
-							"select count(*) from Member u "
-									+ "where u.isactive=1"));
+			number = getSingleResultOrNull(
+					getEntityManager().createNativeQuery("select count(*) from Member u " + "where u.isactive=1"));
 		}
 
 		return number.intValue();
@@ -109,9 +97,9 @@ public class MemberDao extends BaseDao {
 
 	public String getGoodStandingCertDocNumber(Long id) {
 
-		return getSingleResultOrNull(getEntityManager().createNativeQuery(
-				"select documentNo from goodstandingcertificate where id=:id")
-				.setParameter("id", id));
+		return getSingleResultOrNull(
+				getEntityManager().createNativeQuery("select documentNo from goodstandingcertificate where id=:id")
+						.setParameter("id", id));
 	}
 
 	/*
@@ -125,8 +113,7 @@ public class MemberDao extends BaseDao {
 		List<MemberDto> memberDtos = new ArrayList<>();
 
 		String sql = "select concat(u.firstName,' ',u.lastName),u.email,m.memberShipStatus,m.refId,m.memberNo,a.`Customer Type` "
-				+ "from "
-				+ "user u inner join member m on (u.id=m.userId) "
+				+ "from " + "user u inner join member m on (u.id=m.userId) "
 				+ "inner join `Application Form Header` a on (a.memberNo=m.memberNo)";
 
 		Query query = getEntityManager().createNativeQuery(sql);
@@ -138,14 +125,12 @@ public class MemberDao extends BaseDao {
 			int i = 0;
 			Object value = null;
 
-			String fullName = (value = row[i++]) == null ? null : value
-					.toString();
+			String fullName = (value = row[i++]) == null ? null : value.toString();
 			String email = (value = row[i++]) == null ? null : value.toString();
 			MembershipStatus memberShipStatus = (value = row[i++]) == null ? null
 					: MembershipStatus.valueOf(value.toString());
 			String refId = (value = row[i++]) == null ? null : value.toString();
-			String memberNo = (value = row[i++]) == null ? null : value
-					.toString();
+			String memberNo = (value = row[i++]) == null ? null : value.toString();
 			ApplicationType customerType = (value = row[i++]) == null ? null
 					: ApplicationType.valueOf(value.toString());
 
@@ -170,8 +155,7 @@ public class MemberDao extends BaseDao {
 
 		List<MemberDto> memberDtos = new ArrayList<>();
 
-		String sql = "select u.email,m.refId,m.memberNo " + "from "
-				+ "member m inner join user u on (m.userId=u.id)";
+		String sql = "select u.email,m.refId,m.memberNo " + "from " + "member m inner join user u on (m.userId=u.id)";
 
 		Query query = getEntityManager().createNativeQuery(sql);
 
@@ -184,8 +168,7 @@ public class MemberDao extends BaseDao {
 
 			String email = (value = row[i++]) == null ? null : value.toString();
 			String refId = (value = row[i++]) == null ? null : value.toString();
-			String memberNo = (value = row[i++]) == null ? null : value
-					.toString();
+			String memberNo = (value = row[i++]) == null ? null : value.toString();
 			MemberDto memberDto = new MemberDto();
 
 			memberDto.setEmail(email);
@@ -199,12 +182,11 @@ public class MemberDao extends BaseDao {
 
 	}
 
-	public Integer getMembersCount(String searchTerm, String citySearchTerm,
-			String categoryName) {
-		StringBuffer sql = new StringBuffer("select count(*) "
-				+ " from allicpakmembers_5 m");
-		Map<String, Object> params = appendParameters(searchTerm,
-				citySearchTerm, categoryName, sql);
+	public Integer getMembersCount(String searchTerm, String citySearchTerm, String categoryName) {
+		StringBuffer sql = new StringBuffer("select count(*) from " 
+	            + " member m inner join user u on (m.userId=u.id) "
+				+ "inner join allicpakmembers_5 a on (a.No_=m.memberNo)");
+		Map<String, Object> params = appendParameters(searchTerm, citySearchTerm, categoryName, sql);
 		Query query = getEntityManager().createNativeQuery(sql.toString());
 		for (String key : params.keySet()) {
 			query.setParameter(key, params.get(key));
@@ -214,19 +196,15 @@ public class MemberDao extends BaseDao {
 
 	}
 
-	public List<MemberDto> searchMembersFromOldTable(String searchTerm,
-			String citySearchTerm, String categoryName, Integer offSet,
-			Integer limit) {
+	public List<MemberDto> searchMembersFromOldTable(String searchTerm, String citySearchTerm, String categoryName,
+			Integer offSet, Integer limit) {
 
 		List<MemberDto> memberDtos = new ArrayList<>();
 
-		StringBuffer sql = new StringBuffer(
-				"select m.No_,m.Name,m.Address,m.City,"
-						+ "m.`Customer Posting Group`,m.`Customer Type`,"
-						+ "m.Status,m.PractisingNo "
-						+ " from allicpakmembers_5 m ");
-		Map<String, Object> params = appendParameters(searchTerm,
-				citySearchTerm, categoryName, sql);
+		StringBuffer sql = new StringBuffer("select m.memberNo,u.fullName,m.customerType,m.memberShipStatus " + "from "
+				+ "member m inner join user u on (m.userId=u.id) "
+				+ "inner join allicpakmembers_5 a on (a.No_=m.memberNo)");
+		Map<String, Object> params = appendParameters(searchTerm, citySearchTerm, categoryName, sql);
 		Query query = getEntityManager().createNativeQuery(sql.toString());
 
 		if (!params.isEmpty()) {
@@ -240,52 +218,35 @@ public class MemberDao extends BaseDao {
 			int i = 0;
 			Object value = null;
 
-			Double memberNo = (value = row[i++]) == null ? null
-					: (Double) value;
-			String fullName = (value = row[i++]) == null ? null : value
-					.toString();
-			String address = (value = row[i++]) == null ? null : value
-					.toString();
-			String city = (value = row[i++]) == null ? null : value.toString();
-			String customerPostingGroup = (value = row[i++]) == null ? null
-					: value.toString();
-			String customerType = (value = row[i++]) == null ? null : value
-					.toString();
-			Double status = (value = row[i++]) == null ? null
-					: ((Double) value);
-			String practisingNo = (value = row[i++]) == null ? null : value
-					.toString();
+			String memberNo = (value = row[i++]) == null ? null : value.toString();
+			String fullName = (value = row[i++]) == null ? null : value.toString();
+			String customerType = (value = row[i++]) == null ? null : value.toString();
+			String status = (value = row[i++]) == null ? null : value.toString();
 
 			MemberDto memberDto = new MemberDto();
 
-			memberDto.setMemberNo(memberNo == null ? "Not Available" : Double
-					.toString(memberNo));
+			memberDto.setMemberNo(memberNo == null ? "Not Available" : memberNo);
 			memberDto.setFullName(fullName);
-			memberDto.setAddress(address);
-			memberDto.setCity(city);
 			// Customer Type
-			if (customerType.equals("MEMBER")) {
-				memberDto.setCustomerType(ApplicationType.NON_PRACTISING);
-			} else if (customerType.equals("PRACTICING RT")) {
-				memberDto.setCustomerType(ApplicationType.PRACTISING_RT);
-			} else if (customerType.equals("PRAC MEMBER")) {
-				memberDto.setCustomerType(ApplicationType.PRACTISING);
-			} else if (customerType.equals("FOREIGN")) {
-				memberDto.setCustomerType(ApplicationType.OVERSEAS);
-			} else if (customerType.equals("RETIRED")) {
-				memberDto.setCustomerType(ApplicationType.RETIRED);
-			} else {
-				memberDto.setCustomerType(ApplicationType.NON_PRACTISING);
+			if (customerType != null) {
+				if (customerType.equals("MEMBER")) {
+					memberDto.setCustomerType(ApplicationType.NON_PRACTISING);
+				} else if (customerType.equals("PRACTICING RT")) {
+					memberDto.setCustomerType(ApplicationType.PRACTISING_RT);
+				} else if (customerType.equals("PRAC MEMBER")) {
+					memberDto.setCustomerType(ApplicationType.PRACTISING);
+				} else if (customerType.equals("FOREIGN")) {
+					memberDto.setCustomerType(ApplicationType.OVERSEAS);
+				} else if (customerType.equals("RETIRED")) {
+					memberDto.setCustomerType(ApplicationType.RETIRED);
+				} else {
+					memberDto.setCustomerType(ApplicationType.NON_PRACTISING);
+				}
 			}
 
-			// Set Membership Status
-			if (status == 1) {
-				memberDto.setMembershipStatus(MembershipStatus.ACTIVE);
-			} else {
-				memberDto.setMembershipStatus(MembershipStatus.INACTIVE);
+			if (status != null) {
+				memberDto.setMembershipStatus(MembershipStatus.valueOf(status.toUpperCase()));
 			}
-			memberDto.setPractisingNo(practisingNo);
-			memberDto.setCustomerPostingGroup(customerPostingGroup);
 			memberDtos.add(memberDto);
 		}
 
@@ -293,22 +254,18 @@ public class MemberDao extends BaseDao {
 
 	}
 
-	public List<MemberDto> searchMembers(String searchTerm, Integer offSet,
-			Integer limit) {
+	public List<MemberDto> searchMembers(String searchTerm, Integer offSet, Integer limit) {
 
 		List<MemberDto> memberDtos = new ArrayList<>();
 
 		String sql = "select m.memberNo,concat(u.firstName,' ',u.lastName),m.memberShipStatus,a.`Customer Type` "
-				+ "from "
-				+ "member m inner join user u on (u.id=m.userId) "
+				+ "from " + "member m inner join user u on (u.id=m.userId) "
 				+ "inner join `Application Form Header` a on (a.memberNo=m.memberNo) "
 				+ "where member where memberNo IS NOT NULL and "
-				+ "concat(u.firstName,' ',u.lastName) like :searchTerm or "
-				+ "m.memberShipStatus like :searchTerm or "
+				+ "concat(u.firstName,' ',u.lastName) like :searchTerm or " + "m.memberShipStatus like :searchTerm or "
 				+ "a.`Customer Type` like :searchTerm";
 
-		Query query = getEntityManager().createNativeQuery(sql).setParameter(
-				"searchTerm", "%" + searchTerm + "%");
+		Query query = getEntityManager().createNativeQuery(sql).setParameter("searchTerm", "%" + searchTerm + "%");
 
 		List<Object[]> rows = getResultList(query, offSet, limit);
 
@@ -317,8 +274,8 @@ public class MemberDao extends BaseDao {
 			int i = 0;
 			Object value = null;
 
-			String fullName = (value = row[i++]) == null ? null : value
-					.toString();
+			String memberNo = (value = row[i++]) == null ? null : value.toString();
+			String fullName = (value = row[i++]) == null ? null : value.toString();
 			MembershipStatus memberShipStatus = (value = row[i++]) == null ? null
 					: MembershipStatus.valueOf(value.toString());
 			ApplicationType customerType = (value = row[i++]) == null ? null
@@ -340,17 +297,12 @@ public class MemberDao extends BaseDao {
 
 	public Integer getMembersSearchCount(String searchTerm) {
 
-		String sql = "select count(*) "
-				+ "from "
-				+ "user u inner join member m on (u.id=m.userId) "
-				+ "inner join `Application Form Header` a on (a.memberNo=m.memberNo) "
-				+ "where "
-				+ "concat(u.firstName,' ',u.lastName) like :searchTerm or "
-				+ "m.memberShipStatus like :searchTerm or "
+		String sql = "select count(*) " + "from " + "user u inner join member m on (u.id=m.userId) "
+				+ "inner join `Application Form Header` a on (a.memberNo=m.memberNo) " + "where "
+				+ "concat(u.firstName,' ',u.lastName) like :searchTerm or " + "m.memberShipStatus like :searchTerm or "
 				+ "a.`Customer Type` like :searchTerm";
 
-		Query query = getEntityManager().createNativeQuery(sql).setParameter(
-				"searchTerm", "%" + searchTerm + "%");
+		Query query = getEntityManager().createNativeQuery(sql).setParameter("searchTerm", "%" + searchTerm + "%");
 
 		Number number = getSingleResultOrNull(query);
 
@@ -365,70 +317,64 @@ public class MemberDao extends BaseDao {
 	 * @param sqlQuery
 	 * @return Filter parameter values
 	 */
-	private Map<String, Object> appendParameters(String searchTerm,
-			String citySearchTerm, String categoryName, StringBuffer sqlQuery) {
+	private Map<String, Object> appendParameters(String searchTerm, String citySearchTerm, String categoryName,
+			StringBuffer sqlQuery) {
 		Map<String, Object> params = new HashMap<>();
 
-		if (!searchTerm.equals("all") && !citySearchTerm.equals("all")
-				&& !categoryName.equals("all")) {
+		if (!searchTerm.equals("all") && !citySearchTerm.equals("all") && !categoryName.equals("all")) {
 			logger.error(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> exec T T T ");
 			sqlQuery.append(" where ");
-			sqlQuery.append(" m.Name like :searchTerm or ");
-			sqlQuery.append(" m.No_ like :searchTerm and ");
-			sqlQuery.append(" (m.Address like :citySearchTerm or ");
-			sqlQuery.append(" m.City like :citySearchTerm) and ");
-			sqlQuery.append(" (m.`Customer Type`=:categoryName)");
+			sqlQuery.append(" u.fullName like :searchTerm or ");
+			sqlQuery.append(" m.memberNo like :searchTerm and ");
+			sqlQuery.append(" (a.Address like :citySearchTerm or ");
+			sqlQuery.append(" a.City like :citySearchTerm) and ");
+			sqlQuery.append(" (m.customerType=:categoryName)");
 			params.put("searchTerm", "%" + searchTerm + "%");
 			params.put("citySearchTerm", "%" + citySearchTerm + "%");
 			params.put("categoryName", categoryName);
 		}
 
-		if (!searchTerm.equals("all") && !citySearchTerm.equals("all")
-				&& categoryName.equals("all")) {
+		if (!searchTerm.equals("all") && !citySearchTerm.equals("all") && categoryName.equals("all")) {
 			logger.error(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> exec T T F ");
 			sqlQuery.append(" where ");
-			sqlQuery.append(" m.Name like :searchTerm or ");
-			sqlQuery.append(" m.No_ like :searchTerm and ");
-			sqlQuery.append(" (m.Address like :citySearchTerm or ");
-			sqlQuery.append(" m.City like :citySearchTerm)");
+			sqlQuery.append(" u.fullName like :searchTerm or ");
+			sqlQuery.append(" m.memberNo like :searchTerm and ");
+			sqlQuery.append(" (a.Address like :citySearchTerm or ");
+			sqlQuery.append(" a.City like :citySearchTerm)");
 			params.put("searchTerm", "%" + searchTerm + "%");
 			params.put("citySearchTerm", "%" + citySearchTerm + "%");
 		}
 
-		if (!searchTerm.equals("all") && citySearchTerm.equals("all")
-				&& categoryName.equals("all")) {
+		if (!searchTerm.equals("all") && citySearchTerm.equals("all") && categoryName.equals("all")) {
 			logger.error(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> exec T F F ");
 			sqlQuery.append(" where ");
-			sqlQuery.append(" m.Name like :searchTerm or ");
-			sqlQuery.append(" m.No_ like :searchTerm");
+			sqlQuery.append(" u.fullName like :searchTerm or ");
+			sqlQuery.append(" m.memberNo like :searchTerm");
 			params.put("searchTerm", "%" + searchTerm + "%");
 		}
 
-		if (searchTerm.equals("all") && !citySearchTerm.equals("all")
-				&& !categoryName.equals("all")) {
+		if (searchTerm.equals("all") && !citySearchTerm.equals("all") && !categoryName.equals("all")) {
 			logger.error(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> exec F T T ");
 			sqlQuery.append(" where ");
-			sqlQuery.append(" m.Address like :citySearchTerm or ");
-			sqlQuery.append(" m.City like :citySearchTerm and ");
-			sqlQuery.append(" (m.`Customer Type`=:categoryName)");
+			sqlQuery.append(" a.Address like :citySearchTerm or ");
+			sqlQuery.append(" a.City like :citySearchTerm and ");
+			sqlQuery.append(" (m.customerType=:categoryName)");
 			params.put("citySearchTerm", "%" + citySearchTerm + "%");
 			params.put("categoryName", categoryName);
 		}
 
-		if (searchTerm.equals("all") && citySearchTerm.equals("all")
-				&& !categoryName.equals("all")) {
+		if (searchTerm.equals("all") && citySearchTerm.equals("all") && !categoryName.equals("all")) {
 			logger.error(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> exec F F T ");
 			sqlQuery.append(" where ");
-			sqlQuery.append(" m.`Customer Type`=:categoryName");
+			sqlQuery.append(" m.customerType=:categoryName");
 			params.put("categoryName", categoryName);
 		}
 
-		if (searchTerm.equals("all") && !citySearchTerm.equals("all")
-				&& categoryName.equals("all")) {
+		if (searchTerm.equals("all") && !citySearchTerm.equals("all") && categoryName.equals("all")) {
 			logger.error(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> exec F T F ");
 			sqlQuery.append(" where ");
-			sqlQuery.append(" (m.Address like :citySearchTerm or ");
-			sqlQuery.append(" m.City like :citySearchTerm)");
+			sqlQuery.append(" (a.Address like :citySearchTerm or ");
+			sqlQuery.append(" a.City like :citySearchTerm)");
 			params.put("citySearchTerm", "%" + citySearchTerm + "%");
 		}
 
@@ -436,13 +382,11 @@ public class MemberDao extends BaseDao {
 	}
 
 	public Member getByMemberNo(String memberNo, boolean throwExceptionIfNull) {
-		Member member = getSingleResultOrNull(getEntityManager().createQuery(
-				"from Member m where m.memberNo=:memberNo").setParameter(
-				"memberNo", memberNo));
+		Member member = getSingleResultOrNull(getEntityManager().createQuery("from Member m where m.memberNo=:memberNo")
+				.setParameter("memberNo", memberNo));
 
 		if (throwExceptionIfNull && member == null) {
-			throw new ServiceException(ErrorCodes.NOTFOUND, "Member", "'"
-					+ memberNo + "'");
+			throw new ServiceException(ErrorCodes.NOTFOUND, "Member", "'" + memberNo + "'");
 		}
 
 		return member;
@@ -472,8 +416,7 @@ public class MemberDao extends BaseDao {
 	public Member findByMemberNo(String memberNo) {
 		String sql = "FROM Member where memberNo=:memberNo";
 
-		Query query = getEntityManager().createQuery(sql).setParameter(
-				"memberNo", memberNo);
+		Query query = getEntityManager().createQuery(sql).setParameter("memberNo", memberNo);
 
 		return getSingleResultOrNull(query);
 	}
