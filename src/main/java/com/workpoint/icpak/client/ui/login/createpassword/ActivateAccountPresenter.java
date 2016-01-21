@@ -233,6 +233,10 @@ public class ActivateAccountPresenter
 				@Override
 				public void onSuccess(UserDto result) {
 					getView().showProcessing(false);
+					getView()
+							.showMessage(
+									"Reset Password Instructions have been sent to your email",
+									"success");
 					// sendResetEmail(result.getRefId());
 				}
 
