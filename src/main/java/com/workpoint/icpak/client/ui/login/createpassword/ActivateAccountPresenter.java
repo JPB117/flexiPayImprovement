@@ -274,7 +274,7 @@ public class ActivateAccountPresenter
 								"Your Email Address was not found. Kindly contact ICPAK Support "
 										+ "to update your Email", "error");
 				};
-			}).getById(getView().getEmail());
+			}).getUserByActivationEmail(getView().getEmail());
 		}
 	}
 

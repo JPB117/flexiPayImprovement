@@ -242,16 +242,20 @@ public class UserSaveView extends PopupViewImpl implements
 		issues.clear();
 		boolean valid = true;
 
-		// if (isNullOrEmpty(txtFirstname.getValue())) {
-		// valid = false;
-		// issues.addError("First Name is mandatory");
-		// }
-		//
-		// if (isNullOrEmpty(txtLastname.getValue())) {
-		// valid = false;
-		// issues.addError("First Name is mandatory");
-		// }
+		if (isNullOrEmpty(txtFirstname.getValue())) {
+			valid = false;
+			issues.addError("First Name is mandatory");
+		}
 
+		if (isNullOrEmpty(txtLastname.getValue())) {
+			valid = false;
+			issues.addError("Last Name is mandatory");
+		}
+
+		if (isNullOrEmpty(txtMemberNo.getValue())) {
+			valid = false;
+			issues.addError("Member No is mandatory");
+		}
 		if (isNullOrEmpty(txtEmail.getValue())) {
 			valid = false;
 			issues.addError("Email is mandatory");

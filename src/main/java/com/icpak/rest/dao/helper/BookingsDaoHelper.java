@@ -561,7 +561,7 @@ public class BookingsDaoHelper {
 					.getStartDate());
 			String endDate = new SimpleDateFormat("dd/MM/yyyy").format(event
 					.getEndDate());
-			String smsMemssage = "Dear" + " " + delegate.getSurname() + ","
+			String smsMemssage = "Dear" + " " + delegate.getFullName() + ","
 					+ "Thank you for booking for the " + event.getName()
 					+ ". Your booking status is NOT PAID. Your ERN No. is "
 					+ delegate.getErn();

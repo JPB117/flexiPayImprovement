@@ -16,7 +16,7 @@
 			My Bookings(All Events Booked)
 		</h3>
 		<g:HTMLPanel styleName="row main-content" ui:field="panelEvents">
-			<div class="col-sm-12">
+			<div class="col-sm-12 hide">
 				<p:EventsHeader ui:field="headerContainer">
 				</p:EventsHeader>
 			</div>

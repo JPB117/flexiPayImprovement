@@ -2,6 +2,7 @@ package com.icpak.rest.dao.helper;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -193,11 +194,13 @@ public class TransactionDaoHelper {
 					logger.error("sending sms to :" + finalPhoneNumber);
 				}
 
-				if (delegate.getEmail() != null) {
+				if (booking.getContact().getEmail() != null) {
 					String subject = "PAYMENT CONFIRMATION FOR "
 							+ booking.getEvent().getName().toUpperCase();
-					EmailServiceHelper.sendEmail(smsMessage, subject,
-							delegate.getEmail());
+					EmailServiceHelper.sendEmail(smsMessage, "RE: ICPAK '"
+							+ subject, Arrays.asList(booking.getContact()
+							.getEmail()), Arrays.asList(booking.getContact()
+							.getContactName()));
 				}
 			}
 		} else if (paymentType != null
@@ -223,8 +226,12 @@ public class TransactionDaoHelper {
 				String subject = "PAYMENT CONFIRMATION FOR "
 						+ application.getSurname().toUpperCase()
 						+ " MEMBER SUBSCRIPTION ";
-				EmailServiceHelper.sendEmail(smsMessage, subject,
-						application.getEmail());
+				EmailServiceHelper.sendEmail(
+						smsMessage,
+						"RE: ICPAK '" + subject,
+						Arrays.asList(application.getEmail()),
+						Arrays.asList(application.getSurname() + " "
+								+ application.getOtherNames()));
 			}
 
 		} else {

@@ -80,11 +80,11 @@ public class UserSavePresenter extends
 		super.onBind();
 
 		getView().getSaveUser().addClickHandler(new ClickHandler() {
-
 			@Override
 			public void onClick(ClickEvent event) {
 				if (getView().isValid()) {
 					UserDto userDto = getView().getUser();
+					getView().hide();
 					if (user != null) {
 
 						usersDelegate.withCallback(
@@ -150,7 +150,6 @@ public class UserSavePresenter extends
 	private void bindUser(UserDto savedDto) {
 		user = savedDto;
 		getView().setUser(user);
-		getView().hide();
 		fireEvent(new LoadUsersEvent());
 	}
 
