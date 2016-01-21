@@ -95,7 +95,43 @@ public class TransactionDaoHelper {
 	public void receivePaymentUsingInvoiceNo(String paymentRef,
 			String businessNo, String accountNo, String paymentMode,
 			String trxNumber, String phoneNumber, String amount) {
-		InvoiceDto invoiceDto = invoiceDao.getInvoiceByDocumentNo(paymentRef);
+
+		logger.info("Account Number sent::::" + accountNo);
+		if (accountNo == null || accountNo.isEmpty()) {
+			logger.info("Account No is NULL, please set a valid account number"
+					+ accountNo);
+			String smsMessage = " Thank-you for your payment of KES "
+					+ amount
+					+ ".Please send details of this payment to memberservices@icpak.com. ";
+
+			String finalPhoneNumber = phoneNumber.replace("254", "0");
+			if (phoneNumber != null) {
+				smsIntergration.send(finalPhoneNumber, smsMessage);
+				logger.error("sending sms to :" + finalPhoneNumber);
+			}
+
+			return;
+		}
+		InvoiceDto invoiceDto = invoiceDao.getInvoiceByDocumentNo(accountNo);
+
+		if (invoiceDto.getTrxRefId() == null) {
+			logger.info("Invoice TransactionRefId is NULL, this invoice "
+					+ invoiceDto.getRefId()
+					+ " did not set corresponding transaction refId"
+					+ invoiceDto.getTrxRefId());
+
+			String smsMessage = " Thank-you for your payment of KES "
+					+ amount
+					+ ".Please send details of this payment to memberservices@icpak.com. ";
+
+			String finalPhoneNumber = phoneNumber.replace("254", "0");
+			if (phoneNumber != null) {
+				smsIntergration.send(finalPhoneNumber, smsMessage);
+				logger.error("sending sms to :" + finalPhoneNumber);
+			}
+
+			return;
+		}
 		Transaction trx = dao.findByRefId(invoiceDto.getTrxRefId(),
 				Transaction.class);
 
@@ -181,9 +217,10 @@ public class TransactionDaoHelper {
 			throws UnsupportedEncodingException, MessagingException {
 		if (paymentType != null && paymentType instanceof Booking) {
 			Booking booking = (Booking) paymentType;
+			String smsMessage = "";
 			for (Delegate delegate : booking.getDelegates()) {
-				String smsMessage = "Dear" + " " + senderName + ","
-						+ " Thank-you for booking for the "
+				smsMessage = "Dear" + " " + senderName + ","
+						+ " Thank-you for booking the "
 						+ booking.getEvent().getName()
 						+ ".Your booking status is PAID. Your ERN No. is "
 						+ delegate.getErn();
@@ -193,16 +230,17 @@ public class TransactionDaoHelper {
 					smsIntergration.send(finalPhoneNumber, smsMessage);
 					logger.error("sending sms to :" + finalPhoneNumber);
 				}
-
-				if (booking.getContact().getEmail() != null) {
-					String subject = "PAYMENT CONFIRMATION FOR "
-							+ booking.getEvent().getName().toUpperCase();
-					EmailServiceHelper.sendEmail(smsMessage, "RE: ICPAK '"
-							+ subject, Arrays.asList(booking.getContact()
-							.getEmail()), Arrays.asList(booking.getContact()
-							.getContactName()));
-				}
 			}
+
+			if (booking.getContact().getEmail() != null) {
+				String subject = "PAYMENT CONFIRMATION FOR "
+						+ booking.getEvent().getName().toUpperCase();
+				EmailServiceHelper.sendEmail(smsMessage, "RE: ICPAK '"
+						+ subject,
+						Arrays.asList(booking.getContact().getEmail()),
+						Arrays.asList(booking.getContact().getContactName()));
+			}
+
 		} else if (paymentType != null
 				&& paymentType instanceof ApplicationFormHeader) {
 			ApplicationFormHeader application = (ApplicationFormHeader) paymentType;

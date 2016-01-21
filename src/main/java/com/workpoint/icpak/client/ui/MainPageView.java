@@ -2,7 +2,6 @@ package com.workpoint.icpak.client.ui;
 
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
@@ -23,7 +22,6 @@ public class MainPageView extends ViewImpl implements MainPagePresenter.MyView {
 	@UiField
 	HTMLPanel panelContent;
 
-	
 	@Inject
 	public MainPageView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
@@ -72,13 +70,21 @@ public class MainPageView extends ViewImpl implements MainPagePresenter.MyView {
 		if (message == null) {
 			message = "Cannot connect to server....";
 		}
-		// disconnectionText.setInnerText(message);
-		// disconnectionText.removeClassName("hide");
 	}
 
 	@Override
 	public void clearDisconnectionMsg() {
 		// disconnectionText.addClassName("hide");
 	}
+
+	@Override
+	protected void onAttach() {
+		super.onAttach();
+		hidePreLoader();
+	}
+
+	private static native void hidePreLoader()/*-{
+												$wnd.jQuery('#preLoader').addClass("hide");
+												}-*/;
 
 }

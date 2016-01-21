@@ -13,13 +13,13 @@ public interface TransactionsResource {
 
 	@GET
 	@Path("/payment")
-	public String makePayment(@QueryParam("mpesa_acc") String paymentRef,
+	public String makePayment(@QueryParam("mpesa_code") String paymentRef,
 			@QueryParam("business_number") String businessNo,
 			@QueryParam("mpesa_acc") String accountNo,
 			@QueryParam("id") String mpesaRef,
 			@QueryParam("paymentMode") String paymentMode,
 			@QueryParam("trxNumber") String trxNumber,
-			@QueryParam("mpesaAmt") String mpesaAmt, 
+			@QueryParam("mpesaAmt") String mpesaAmt,
 			@QueryParam("msisdn") String phoneNumber);
 
 	@GET

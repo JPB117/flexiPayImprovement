@@ -437,7 +437,6 @@ public class CPDManagementPresenter
 							@Override
 							public void onSuccess(CPDDto result) {
 								fireEvent(new ProcessingCompletedEvent());
-								History.back();
 								fireEvent(new AfterSaveEvent(
 										"CPD Record successfully updated."));
 							}
@@ -449,7 +448,6 @@ public class CPDManagementPresenter
 							@Override
 							public void onSuccess(CPDDto result) {
 								fireEvent(new ProcessingCompletedEvent());
-								History.back();
 								fireEvent(new AfterSaveEvent(
 										"CPD Record successfully created."));
 							}

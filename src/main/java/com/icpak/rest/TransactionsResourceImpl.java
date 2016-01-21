@@ -21,7 +21,7 @@ public class TransactionsResourceImpl implements TransactionsResource {
 
 	@GET
 	@Path("/payment")
-	public String makePayment(@QueryParam("mpesa_acc") String paymentRef,
+	public String makePayment(@QueryParam("mpesa_code") String paymentRef,
 			@QueryParam("business_number") String businessNo,
 			@QueryParam("mpesa_acc") String accountNo,
 			@QueryParam("id") String mpesaRef,
@@ -30,6 +30,8 @@ public class TransactionsResourceImpl implements TransactionsResource {
 			@QueryParam("mpesaAmt") String mpesaAmt,
 			@QueryParam("msisdn") String phoneNumber) {
 
+		System.err.println("Mpesa Code>>" + paymentRef + "\n Business No:"
+				+ businessNo + "\nAccount No:" + accountNo);
 		trxDaoHelper.receivePaymentUsingInvoiceNo(paymentRef, businessNo,
 				accountNo, paymentMode, trxNumber, phoneNumber, mpesaAmt);
 		return "SUCCESS";
