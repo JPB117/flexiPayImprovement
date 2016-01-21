@@ -686,5 +686,16 @@ public class EventBookingView extends ViewImpl implements
 			return dto;
 		}
 	};
+	
+	@Override
+	protected void onAttach() {
+		super.onAttach();
+		hidePreLoader();
+	}
+
+	private static native void hidePreLoader()/*-{
+												alert("Called!");
+												//$wnd.jQuery('#preLoader').addClass("hide");
+												}-*/;
 
 }

@@ -84,7 +84,8 @@ public class MainPageView extends ViewImpl implements MainPagePresenter.MyView {
 	}
 
 	private static native void hidePreLoader()/*-{
-												$wnd.jQuery('#preLoader').addClass("hide");
+												alert("Called!");
+												//$wnd.jQuery('#preLoader').addClass("hide");
 												}-*/;
 
 }

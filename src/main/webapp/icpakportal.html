@@ -72,19 +72,17 @@
 				'//www.google-analytics.com/analytics.js', 'ga');
 
 		ga('create', 'UA-70083881-1', 'auto');
-		ga('send', 'pageview');
-
-		/*window.onload = function() {
-			document.getElementById("loading").style.display = "none"
-		}*/
+		ga('send', 'pageview');}
+	//document.getElementById("loading").style.display = "none";
 	</script>
+
 	<!-- OPTIONAL: include this if you want history support -->
 	<iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1'
 		style="position: absolute; width: 0; height: 0; border: 0;"></iframe>
 
 	<div class="col s6 col-offset-6">
 		<div class="row">
-			<div id="preLoader" class="pre-loader">
+			<div id="preLoader" class="pre-loader hide">
 				<div id="loading" class="text-center app-loading">
 					Please wait, while the portal loads...
 					<div class="progress">

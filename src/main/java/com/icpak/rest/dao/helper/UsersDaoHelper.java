@@ -161,7 +161,6 @@ public class UsersDaoHelper {
 	}
 
 	public void sendActivationEmail2(User user) {
-
 		String fullNames = user.getFullName();
 
 		logger.info("Activation Email for " + user.getEmail());
@@ -366,14 +365,18 @@ public class UsersDaoHelper {
 	}
 
 	public User getUserByActivationEmail(String userEmail) {
-		User user = null;
-		try {
-			user = checkIfUserExistInERP(userEmail);
-		} catch (URISyntaxException | ParseException | JSONException e) {
-			e.printStackTrace();
+		User user = dao.findByUserActivationEmail(userEmail, false);
+		if (user != null) {
+			sendActivationEmail2(user);
+			return user;
+		} else {
+			try {
+				user = checkIfUserExistInERP(userEmail);
+			} catch (URISyntaxException | ParseException | JSONException e) {
+				e.printStackTrace();
+			}
+			return user.clone();
 		}
-
-		return user.clone();
 	}
 
 	private User checkIfUserExistInERP(String userEmail)
@@ -819,7 +822,7 @@ public class UsersDaoHelper {
 
 		assert (user != null);
 		String body = "Dear "
-				+ user.getUserData().getFirstName()
+				+ user.getFullName()
 				+ ",<br/>"
 				+ "Your password has been successfully reset. "
 				+ "<a href='"

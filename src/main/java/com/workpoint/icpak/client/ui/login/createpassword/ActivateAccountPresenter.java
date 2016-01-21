@@ -233,7 +233,7 @@ public class ActivateAccountPresenter
 				@Override
 				public void onSuccess(UserDto result) {
 					getView().showProcessing(false);
-					sendResetEmail(result.getRefId());
+					// sendResetEmail(result.getRefId());
 				}
 
 				public boolean handleCustomError(
@@ -258,9 +258,9 @@ public class ActivateAccountPresenter
 					 */
 					getView()
 							.showMessage(
-									"Your email exist more than once."
-											+ " Contact Administrator to correct. (Error code:500)",
-									"error");
+									"Your Email Address was not found. "
+											+ "Kindly contact memberservices@icpak.com to update your details "
+											+ "to update your Email", "error");
 					// let this be handled by the the onFailure
 					// below
 					customErrorThrown = true;
@@ -270,9 +270,12 @@ public class ActivateAccountPresenter
 				public void onFailure(Throwable caught) {
 					getView().showProcessing(false);
 					if (!customErrorThrown)
-						getView().showMessage(
-								"Your Email Address was not found. Kindly contact ICPAK Support "
-										+ "to update your Email", "error");
+						getView()
+								.showMessage(
+										"Your Email Address was not found. "
+												+ "Kindly contact memberservices@icpak.com to update your details "
+												+ "to update your Email",
+										"error");
 				};
 			}).getUserByActivationEmail(getView().getEmail());
 		}

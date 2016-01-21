@@ -98,10 +98,11 @@ public class TestUserDao extends AbstractDaoTest {
 		// helper.postUserToLMS("AOUcFrD0WgflCc1O", "pass");
 		helper.getUserByActivationEmail("sammurez@gmail.com");
 	}
-	
+
 	@Test
-	public void testActivationMail(){
-		User userInDb = usersDao.findByUserId("AoencYogwvoPxa7T");
-		helper.sendActivationEmail2(userInDb);
+	public void testActivationMail() {
+		// User userInDb = usersDao.findByUserId("AoencYogwvoPxa7T");
+		// helper.sendActivationEmail2(userInDb);
+		helper.getUserByActivationEmail("tomkim@wira.io");
 	}
 }
