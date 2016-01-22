@@ -264,7 +264,7 @@ public class InvoiceDao extends BaseDao {
 		return summary;
 	}
 
-	public List<InvoiceLineDto> getByLinesByDocumentNo(String documentNo) {
+	public List<InvoiceLineDto> getInvoiceLinesByDocumentNo(String documentNo) {
 		List<InvoiceLineDto> invoiceLines = new ArrayList<>();
 
 		String sql = "select "

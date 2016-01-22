@@ -1,6 +1,8 @@
 package com.icpak.rest.models.trx;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
@@ -8,6 +10,7 @@ import org.hibernate.annotations.Type;
 
 import com.icpak.rest.models.base.PO;
 import com.workpoint.icpak.shared.model.InvoiceLineDto;
+import com.workpoint.icpak.shared.model.InvoiceLineType;
 
 @Entity
 public class InvoiceLine extends PO {
@@ -22,6 +25,8 @@ public class InvoiceLine extends PO {
 	private int quantity = 1;
 	private double totalAmount;
 	private String eventDelegateRefId;
+	@Enumerated(EnumType.STRING)
+	private InvoiceLineType type;
 
 	@ManyToOne
 	@JoinColumn(name = "invoiceId")
@@ -104,5 +109,13 @@ public class InvoiceLine extends PO {
 
 	public void setEventDelegateRefId(String eventDelegateRefId) {
 		this.eventDelegateRefId = eventDelegateRefId;
+	}
+
+	public InvoiceLineType getType() {
+		return type;
+	}
+
+	public void setType(InvoiceLineType type) {
+		this.type = type;
 	}
 }

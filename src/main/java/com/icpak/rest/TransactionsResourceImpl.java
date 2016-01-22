@@ -27,8 +27,8 @@ public class TransactionsResourceImpl implements TransactionsResource {
 			@QueryParam("id") String mpesaRef,
 			@QueryParam("paymentMode") String paymentMode,
 			@QueryParam("trxNumber") String trxNumber,
-			@QueryParam("mpesaAmt") String mpesaAmt,
-			@QueryParam("msisdn") String phoneNumber) {
+			@QueryParam("mpesa_amt") String mpesaAmt,
+			@QueryParam("mpesa_msisdn") String phoneNumber) {
 
 		System.err.println("Mpesa Code>>" + paymentRef + "\n Business No:"
 				+ businessNo + "\nAccount No:" + accountNo);

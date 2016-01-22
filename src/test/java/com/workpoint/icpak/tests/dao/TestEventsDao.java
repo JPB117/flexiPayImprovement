@@ -35,21 +35,30 @@ public class TestEventsDao extends AbstractDaoTest {
 		createEvent();
 	}
 
-	@Ignore
+	@Test
 	public void createEvent() {
 		EventDto event = new EventDto();
-		event.setName("ICPAK NYANZA BRANCH HOSTS ITS INAUGURAL END OF YEAR GALA DINNER");
+		event.setName("ICPAK NAIROBI TRAINING ON ICT");
 		event.setDescription("");
 		event.setStartDate("2015-12-18");
 		event.setEndDate("2015-12-18");
-		event.setNonMemberPrice(3750.00);
+		event.setNonMemberPrice(23750.00);
+		event.setDiscountNonMemberPrice(21750.00);
+		event.setPenaltyNonMemberPrice(24750.00);
 		event.setMemberPrice(20000.00);
+		event.setDiscountMemberPrice(18000.00);
+		event.setPenaltyMemberPrice(21000.00);
+		event.setAssociatePrice(15000.00);
+		event.setDiscountAssociatePrice(13000.00);
+		event.setPenaltyAssociatePrice(16000.00);
+		event.setDiscountDate("2015-12-09");
+		event.setPenaltyDate("2015-12-16");
 		event.setVenue("Acacia Premier Hotel");
 		event.setType(EventType.EVENT);
 		event.setCategoryName("Conferences");
 		event.setCpdHours(new Double(2.5));
-		 helper.createEvent(event);
-//		helper.getAllEvents(null, 0, 10);
+		helper.createEvent(event);
+		// helper.getAllEvents(null, 0, 10);
 		eventId1 = event.getRefId();
 
 		System.out.println("Event Id::" + eventId1);
@@ -121,28 +130,28 @@ public class TestEventsDao extends AbstractDaoTest {
 		GetDelegatesReport report = new GetDelegatesReport();
 		report.generateDelegateReport(delegateDtos, docType);
 	}
-	
+
 	@Ignore
-	public void testFindbyLongId(){
+	public void testFindbyLongId() {
 		CourseDto courseDto = courseHelper.getCourseByLongId(22);
-		
+
 		JSONObject json = new JSONObject(courseDto);
-		 logger.info(" +++ Result ++ "+ json.toString());
+		logger.info(" +++ Result ++ " + json.toString());
 	}
-	
-	@Test
-	public void testUpdate(){
-	
+
+	@Ignore
+	public void testUpdate() {
 		CourseDto courseDto = new CourseDto();
 		courseDto.setStartDate("2015-4-20");
 		courseDto.setEndDate("2015-8-20");
 		courseDto.setCode("8767");
 		courseDto.setDescription("Description");
-		
-		CourseDto updatedDto = courseHelper.updateEvent("QEyf2DasD3X7Pybt", courseDto);
-		
+
+		CourseDto updatedDto = courseHelper.updateEvent("QEyf2DasD3X7Pybt",
+				courseDto);
+
 		JSONObject json = new JSONObject(updatedDto);
-		 logger.info(" +++ Result ++ "+ json.toString());
+		logger.info(" +++ Result ++ " + json.toString());
 	}
 
 }

@@ -130,7 +130,7 @@ public class InvoiceDaoHelper {
 		String documentNo = invoice.getDocumentNo();
 
 		List<InvoiceLineDto> invoiceLines = invoiceDao
-				.getByLinesByDocumentNo(documentNo);
+				.getInvoiceLinesByDocumentNo(documentNo);
 
 		Map<String, Object> emailValues = new HashMap<>();
 		Doc proformaDocument = new Doc(emailValues);

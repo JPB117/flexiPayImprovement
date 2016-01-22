@@ -110,7 +110,7 @@ public class TestInvoiceDao extends AbstractDaoTest {
 			SAXException, ParserConfigurationException,
 			FactoryConfigurationError, DocumentException {
 		List<InvoiceLineDto> invoiceLineDtos = invoiceDao
-				.getByLinesByDocumentNo("INV-0045");
+				.getInvoiceLinesByDocumentNo("INV-0045");
 
 		byte[] doc = bookingHelper.generateInvoicePdf("vp5euYle2YLN2bxn");
 

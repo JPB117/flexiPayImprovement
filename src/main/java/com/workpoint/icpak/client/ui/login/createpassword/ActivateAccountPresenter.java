@@ -191,7 +191,6 @@ public class ActivateAccountPresenter
 				}
 			}).getById(userId);
 		}
-
 	}
 
 	@Override
@@ -263,8 +262,8 @@ public class ActivateAccountPresenter
 					getView()
 							.showMessage(
 									"Your Email Address was not found. "
-											+ "Kindly contact memberservices@icpak.com to update your details "
-											+ "to update your Email", "error");
+											+ "Kindly contact memberservices@icpak.com to update your Email. ",
+									"error");
 					// let this be handled by the the onFailure
 					// below
 					customErrorThrown = true;
@@ -277,8 +276,7 @@ public class ActivateAccountPresenter
 						getView()
 								.showMessage(
 										"Your Email Address was not found. "
-												+ "Kindly contact memberservices@icpak.com to update your details "
-												+ "to update your Email",
+												+ "Kindly contact memberservices@icpak.com to update your Email.",
 										"error");
 				};
 			}).getUserByActivationEmail(getView().getEmail());

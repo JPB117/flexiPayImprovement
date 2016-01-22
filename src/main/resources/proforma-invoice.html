@@ -476,15 +476,15 @@ table td[class*="span"], table th[class*="span"], .row-fluid table td[class*="sp
 }
 
 .text-left {
-	text-align: left;
+	text-align: left !important;
 }
 
 .text-right {
-	text-align: right;
+	text-align: right !important;
 }
 
 .text-center {
-	text-align: center;
+	text-align: center !important;
 }
 
 div.footer {
@@ -511,8 +511,7 @@ div.footer {
 					<p>Mobile:0727-531006/0733-856262 | Wireless:020 2304226/7</p>
 				</div>
 				<div class="col-print-4 text-center">
-					<img
-						src="http://localhost:8080/icpakportal/img/icpak_logo.png"
+					<img src="http://localhost:8080/icpakportal/img/icpak_logo.png"
 						width="250px" height="150px" class="text-center"></img>
 				</div>
 				<div class="col-print-4 text-right">
@@ -541,27 +540,87 @@ div.footer {
 				<table class="table table-bordered table-condensed">
 					<thead>
 						<tr>
-							<th>Description</th>
-							<th>Quantity</th>
-							<th>Unit Price(Ksh)</th>
-							<th>Amount(Ksh)</th>
+							<th class="num">Description</th>
+							<th class="num">Quantity</th>
+							<th class="num">Unit Price(Ksh)</th>
+							<th class="num">Amount(Ksh)</th>
 						</tr>
 					</thead>
 					<tbody>
 						<!--@>invoiceDetails-->
 						<tr>
-							<td>@#description</td>
-							<td>@#quantity</td>
-							<td>@#unitPrice</td>
+							<td class="num">@#description</td>
+							<td class="num">@#quantity</td>
+							<td class="num">@#unitPrice</td>
 							<td class="num">@#amount</td>
 						</tr>
-						<!--@<invoiceDetails-->
+						<!--@<Totals-->
 						<tr>
 							<td></td>
 							<td></td>
 							<td class="num"><b>Grand Total</b></td>
 							<td class="num"><b style="border-bottom: 3px double;">KES
 									@#totalAmount</b></td>
+						</tr>
+					</tbody>
+				</table>
+
+				<br />
+				<h4>
+					<Strong>Discounts & Penalties Applicable:</Strong>
+				</h4>
+				<table class="table table-bordered table-condensed">
+					<thead>
+						<tr>
+							<th class="num">Description</th>
+							<th class="num">Quantity</th>
+							<th class="num">Unit Price(Ksh)</th>
+							<th class="num">Amount(Ksh)</th>
+						</tr>
+					</thead>
+
+					<tbody>
+						<!--@>DiscountDetails-->
+						<tr>
+							<td class="num">@#discDescription</td>
+							<td class="num">@#discQuantity</td>
+							<td class="num">@#discUnitPrice</td>
+							<td class="num">@#discAmount</td>
+						</tr>
+						<!--@>DTotals-->
+						<tr>
+							<td></td>
+							<td></td>
+							<td class="num"><b>@#totalDiscountDesc</b></td>
+							<td class="num"><b style="border-bottom: 3px double;">KES
+									@#totalDiscAmount</b></td>
+						</tr>
+
+						<tr style="background-color: #f9f9f9;">
+							<td class="text-center" colspan="4"><Strong>Penalties</Strong></td>
+						</tr>
+						<!--@>PenaltyDetails-->
+						<tr>
+							<td class="num">Penalty for Member(Payment after 21st Jan
+								2016)</td>
+							<td class="num">2</td>
+							<td class="num">3000</td>
+							<td class="num">6000</td>
+						</tr>
+						<tr>
+							<td class="num">Penalty for Non-Member(Payment after 21st
+								Jan 2016)</td>
+							<td class="num">3</td>
+							<td class="num">1000</td>
+							<td class="num">3000</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td class="num"><b>Total Penalty(Payment after 21st Jan
+									2016)</b></td>
+							<td class="num"><b style="border-bottom: 3px double;">KES
+									@KES 10000</b></td>
 						</tr>
 					</tbody>
 				</table>

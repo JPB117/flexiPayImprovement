@@ -2,8 +2,12 @@ package com.workpoint.icpak.shared.model;
 
 import com.workpoint.icpak.shared.model.events.AccommodationDto;
 
-public class InvoiceLineDto extends SerializableObj{
+public class InvoiceLineDto extends SerializableObj {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String description;
 	private double unitPrice;
 	private int quantity = 0;
@@ -12,14 +16,15 @@ public class InvoiceLineDto extends SerializableObj{
 	private String memberId;
 	private String eventDelegateRefId;
 	private String delegateERN;
-	private transient String memberNames; 
+	private transient String memberNames;
+	private InvoiceLineType type;
 
 	public InvoiceLineDto() {
 	}
 
 	public InvoiceLineDto(String description, double unitPrice,
 			double totalAmount) {
-		quantity=1;
+		quantity = 1;
 		this.description = description;
 		this.totalAmount = totalAmount;
 		this.unitPrice = unitPrice;
@@ -43,6 +48,14 @@ public class InvoiceLineDto extends SerializableObj{
 
 	public int getQuantity() {
 		return quantity;
+	}
+
+	public InvoiceLineType getType() {
+		return type;
+	}
+
+	public void setType(InvoiceLineType type) {
+		this.type = type;
 	}
 
 	public void setQuantity(int quantity) {

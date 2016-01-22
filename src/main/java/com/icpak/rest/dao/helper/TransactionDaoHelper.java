@@ -132,8 +132,26 @@ public class TransactionDaoHelper {
 
 			return;
 		}
+
 		Transaction trx = dao.findByRefId(invoiceDto.getTrxRefId(),
 				Transaction.class);
+
+		if (trx != null) {
+			logger.info("Transaction Found!!! ");
+
+			String smsMessage = " Thank-you for your payment of KES " + amount
+					+ " The payment has been well received.";
+
+			String finalPhoneNumber = phoneNumber.replace("254", "0");
+			if (phoneNumber != null) {
+				smsIntergration.send(finalPhoneNumber, smsMessage);
+				logger.error("sending sms to :" + finalPhoneNumber);
+			}
+
+			return;
+		}
+
+		return;
 
 		// Ensure that payments are equal
 		// if (invoiceDto.getInvoiceAmount() != Double.valueOf(amount)) {
@@ -149,56 +167,58 @@ public class TransactionDaoHelper {
 		// }
 
 		// Update of Transaction Details
-		trx.setAccountNo(accountNo);
-		trx.setPaymentMode((paymentMode == null || paymentMode.equals("") ? PaymentMode.MPESA
-				: PaymentMode.MPESA));
-		trx.setTrxNumber(trxNumber);
-		trx.setBusinessNo(businessNo);
-		trx.setStatus(PaymentStatus.PAID);
-		dao.save(trx);
-
-		Invoice inv = new Invoice();
-		inv.copyFrom(invoiceDto);
-
-		Booking booking = new Booking();
-		booking = dao.findByRefId(inv.getBookingRefId(), Booking.class, false);
-
-		if (booking != null) {
-			/*
-			 * This is temporary: - You should check this from Transaction
-			 * Object to get the payment info
-			 */
-
-			if (invoiceDto != null) {
-				System.err.println("Looking for a booking record....");
-			}
-
-			booking.setPaymentStatus(PaymentStatus.PAID);
-			booking.setPaymentDate(new Date());
-			booking.setPaymentMode(paymentMode);
-			booking.setPaymentRef(paymentRef);
-			try {
-				sendPaymentConfirmationSMSAndEmail(phoneNumber, trxNumber,
-						inv.getContactName(), booking);
-			} catch (UnsupportedEncodingException | MessagingException e) {
-				e.printStackTrace();
-			}
-		} else {
-			// Get the Application if this payment was for Member
-			// Registration
-			System.err.println("Looking for application using Invoice Ref::"
-					+ invoiceDto.getInvoiceRefId());
-			ApplicationFormHeader application = applicationDao
-					.getApplicationByInvoiceRef(invoiceDto.getInvoiceRefId());
-			// assert (application != null);
-			try {
-				sendPaymentConfirmationSMSAndEmail(phoneNumber, trxNumber,
-						inv.getContactName(), application);
-			} catch (UnsupportedEncodingException | MessagingException e) {
-				e.printStackTrace();
-			}
-
-		}
+		// trx.setAccountNo(accountNo);
+		// trx.setPaymentMode((paymentMode == null || paymentMode.equals("") ?
+		// PaymentMode.MPESA
+		// : PaymentMode.MPESA));
+		// trx.setTrxNumber(trxNumber);
+		// trx.setBusinessNo(businessNo);
+		// trx.setStatus(PaymentStatus.PAID);
+		// dao.save(trx);
+		//
+		// Invoice inv = new Invoice();
+		// inv.copyFrom(invoiceDto);
+		//
+		// Booking booking = new Booking();
+		// booking = dao.findByRefId(inv.getBookingRefId(), Booking.class,
+		// false);
+		//
+		// if (booking != null) {
+		// /*
+		// * This is temporary: - You should check this from Transaction
+		// * Object to get the payment info
+		// */
+		//
+		// if (invoiceDto != null) {
+		// System.err.println("Looking for a booking record....");
+		// }
+		//
+		// booking.setPaymentStatus(PaymentStatus.PAID);
+		// booking.setPaymentDate(new Date());
+		// booking.setPaymentMode(paymentMode);
+		// booking.setPaymentRef(paymentRef);
+		// try {
+		// sendPaymentConfirmationSMSAndEmail(phoneNumber, trxNumber,
+		// inv.getContactName(), booking);
+		// } catch (UnsupportedEncodingException | MessagingException e) {
+		// e.printStackTrace();
+		// }
+		// } else {
+		// // Get the Application if this payment was for Member
+		// // Registration
+		// System.err.println("Looking for application using Invoice Ref::"
+		// + invoiceDto.getInvoiceRefId());
+		// ApplicationFormHeader application = applicationDao
+		// .getApplicationByInvoiceRef(invoiceDto.getInvoiceRefId());
+		// // assert (application != null);
+		// try {
+		// sendPaymentConfirmationSMSAndEmail(phoneNumber, trxNumber,
+		// inv.getContactName(), application);
+		// } catch (UnsupportedEncodingException | MessagingException e) {
+		// e.printStackTrace();
+		// }
+		//
+		// }
 
 	}
 

@@ -1,6 +1,7 @@
 package com.workpoint.icpak.shared.model.events;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -34,9 +35,17 @@ public class EventDto extends SerializableObj implements Listable {
 	private EventStatus status;
 	private EventType type;
 	private Double memberPrice;
+	private Double discountMemberPrice;
+	private Double penaltyMemberPrice;
 	private Double associatePrice;
+	private Double discountAssociatePrice;
+	private Double penaltyAssociatePrice;
 	private Double nonMemberPrice;
+	private Double discountNonMemberPrice;
+	private Double penaltyNonMemberPrice;
 	private String categoryName;
+	private String discountDate;
+	private String penaltyDate;
 	private List<AccommodationDto> accommodation;
 	private int delegateCount;
 	private Double totalPaid;
@@ -131,6 +140,70 @@ public class EventDto extends SerializableObj implements Listable {
 
 	public Double getTotalPaid() {
 		return totalPaid;
+	}
+
+	public Double getDiscountMemberPrice() {
+		return discountMemberPrice;
+	}
+
+	public void setDiscountMemberPrice(Double discountMemberPrice) {
+		this.discountMemberPrice = discountMemberPrice;
+	}
+
+	public Double getPenaltyMemberPrice() {
+		return penaltyMemberPrice;
+	}
+
+	public void setPenaltyMemberPrice(Double penaltyMemberPrice) {
+		this.penaltyMemberPrice = penaltyMemberPrice;
+	}
+
+	public Double getDiscountAssociatePrice() {
+		return discountAssociatePrice;
+	}
+
+	public void setDiscountAssociatePrice(Double discountAssociatePrice) {
+		this.discountAssociatePrice = discountAssociatePrice;
+	}
+
+	public Double getPenaltyAssociatePrice() {
+		return penaltyAssociatePrice;
+	}
+
+	public void setPenaltyAssociatePrice(Double penaltyAssociatePrice) {
+		this.penaltyAssociatePrice = penaltyAssociatePrice;
+	}
+
+	public Double getDiscountNonMemberPrice() {
+		return discountNonMemberPrice;
+	}
+
+	public void setDiscountNonMemberPrice(Double discountNonMemberPrice) {
+		this.discountNonMemberPrice = discountNonMemberPrice;
+	}
+
+	public Double getPenaltyNonMemberPrice() {
+		return penaltyNonMemberPrice;
+	}
+
+	public void setPenaltyNonMemberPrice(Double penaltyNonMemberPrice) {
+		this.penaltyNonMemberPrice = penaltyNonMemberPrice;
+	}
+
+	public String getDiscountDate() {
+		return discountDate;
+	}
+
+	public void setDiscountDate(String discountDate) {
+		this.discountDate = discountDate;
+	}
+
+	public String getPenaltyDate() {
+		return penaltyDate;
+	}
+
+	public void setPenaltyDate(String penaltyDate) {
+		this.penaltyDate = penaltyDate;
 	}
 
 	public void setTotalPaid(Double totalPaid) {

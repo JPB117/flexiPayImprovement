@@ -54,27 +54,32 @@ public class Event extends PO {
 	private Double cpdHours;
 	private String venue;
 	private String categoryName;
-
 	private Date startDate;
 	private Date endDate;
 	private EventStatus status;
 	@Column(nullable = false)
 	private EventType type;
-
 	@Column(nullable = false)
 	private Double memberPrice;
+	private Double discountMemberPrice;
+	private Double penaltyMemberPrice;
 	@Column(nullable = false)
 	private Double nonMemberPrice;
+	private Double discountNonMemberPrice;
+	private Double penaltyNonMemberPrice;
 	private Double associatePrice;
+	private Double discountAssociatePrice;
+	private Double penaltyAssociatePrice;
+	private Date discountDate;
+	private Date penaltyDate;
 	private Integer lmsCourseId;
 	private String code;
 	private Date registrationDate;
-	private Integer oldSystemId;
-
 	@XmlTransient
 	@OneToMany(mappedBy = "event")
 	Set<Booking> bookings = new HashSet<>();
-	@OneToMany(mappedBy = "event", cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
+	@OneToMany(mappedBy = "event", cascade = { CascadeType.PERSIST,
+			CascadeType.REMOVE })
 	Set<Accommodation> accommodation = new HashSet<>();
 
 	public Event() {
@@ -180,6 +185,58 @@ public class Event extends PO {
 		this.cpdHours = cpdHours;
 	}
 
+	public Double getDiscountMemberPrice() {
+		return discountMemberPrice;
+	}
+
+	public void setDiscountMemberPrice(Double discountMemberPrice) {
+		this.discountMemberPrice = discountMemberPrice;
+	}
+
+	public Double getPenaltyMemberPrice() {
+		return penaltyMemberPrice;
+	}
+
+	public void setPenaltyMemberPrice(Double penaltyMemberPrice) {
+		this.penaltyMemberPrice = penaltyMemberPrice;
+	}
+
+	public Double getDiscountNonMemberPrice() {
+		return discountNonMemberPrice;
+	}
+
+	public void setDiscountNonMemberPrice(Double discountNonMemberPrice) {
+		this.discountNonMemberPrice = discountNonMemberPrice;
+	}
+
+	public Double getPenaltyNonMemberPrice() {
+		return penaltyNonMemberPrice;
+	}
+
+	public void setPenaltyNonMemberPrice(Double penaltyNonMemberPrice) {
+		this.penaltyNonMemberPrice = penaltyNonMemberPrice;
+	}
+
+	public Double getDiscountAssociatePrice() {
+		return discountAssociatePrice;
+	}
+
+	public void setDiscountAssociatePrice(Double discountAssociatePrice) {
+		this.discountAssociatePrice = discountAssociatePrice;
+	}
+
+	public Double getPenaltyAssociatePrice() {
+		return penaltyAssociatePrice;
+	}
+
+	public void setPenaltyAssociatePrice(Double penaltyAssociatePrice) {
+		this.penaltyAssociatePrice = penaltyAssociatePrice;
+	}
+
+	public void setAccommodation(Set<Accommodation> accommodation) {
+		this.accommodation = accommodation;
+	}
+
 	public Double getMemberPrice() {
 		return memberPrice;
 	}
@@ -212,7 +269,8 @@ public class Event extends PO {
 			dto.setEndDate(DateUtils.format(endDate, DateUtils.FULLTIMESTAMP));
 
 		if (startDate != null) {
-			dto.setStartDate(DateUtils.format(startDate, DateUtils.FULLTIMESTAMP));
+			dto.setStartDate(DateUtils.format(startDate,
+					DateUtils.FULLTIMESTAMP));
 		}
 		dto.setMemberPrice(memberPrice);
 		dto.setName(name);
@@ -239,16 +297,55 @@ public class Event extends PO {
 	public void copyFrom(EventDto dto) {
 		setCpdHours(dto.getCpdHours());
 		setDescription(dto.getDescription());
-		if (dto.getEndDate() != null)
-			setEndDate(DateUtils.parse(dto.getEndDate(), DateUtils.SHORTTIMESTAMP));
+		if (dto.getEndDate() != null) {
+			setEndDate(DateUtils.parse(dto.getEndDate(),
+					DateUtils.SHORTTIMESTAMP));
+		}
+		if (dto.getStartDate() != null) {
+			setStartDate(DateUtils.parse(dto.getStartDate(),
+					DateUtils.SHORTTIMESTAMP));
+		}
 
-		if (dto.getStartDate() != null)
-			setStartDate(DateUtils.parse(dto.getStartDate(), DateUtils.SHORTTIMESTAMP));
-
+		// Member Price
 		setMemberPrice(dto.getMemberPrice());
-		setName(dto.getName());
+		if (dto.getDiscountMemberPrice() != null) {
+			setDiscountMemberPrice(dto.getDiscountMemberPrice());
+		}
+		if (dto.getPenaltyMemberPrice() != null) {
+			setPenaltyMemberPrice(dto.getPenaltyMemberPrice());
+		}
+
+		// Non-Member Price
 		setNonMemberPrice(dto.getNonMemberPrice());
+		if (dto.getDiscountNonMemberPrice() != null) {
+			setDiscountNonMemberPrice(dto.getDiscountNonMemberPrice());
+		}
+		if (dto.getPenaltyNonMemberPrice() != null) {
+			setPenaltyNonMemberPrice(dto.getPenaltyNonMemberPrice());
+		}
+
+		// Associate Price
 		setAssociatePrice(dto.getAssociatePrice());
+		if (dto.getDiscountAssociatePrice() != null) {
+			setDiscountAssociatePrice(dto.getDiscountAssociatePrice());
+		}
+		if (dto.getPenaltyAssociatePrice() != null) {
+			setPenaltyAssociatePrice(dto.getPenaltyAssociatePrice());
+		}
+
+		// Discount Date
+		if (dto.getDiscountDate() != null) {
+			setDiscountDate(DateUtils.parse(dto.getDiscountDate(),
+					DateUtils.SHORTTIMESTAMP));
+		}
+
+		// Penalty Date
+		if (dto.getPenaltyDate() != null) {
+			setPenaltyDate(DateUtils.parse(dto.getPenaltyDate(),
+					DateUtils.SHORTTIMESTAMP));
+		}
+
+		setName(dto.getName());
 		setStatus(dto.getStatus());
 		setType(dto.getType());
 		setVenue(dto.getVenue());
@@ -293,8 +390,8 @@ public class Event extends PO {
 		dto.setType(type);
 		dto.setVenue(venue);
 		dto.setCourseId(lmsCourseId);
-		dto.setStartDate(startDate+"");
-		dto.setEndDate(endDate+"");
+		dto.setStartDate(startDate + "");
+		dto.setEndDate(endDate + "");
 		return dto;
 	}
 
@@ -313,11 +410,13 @@ public class Event extends PO {
 		}
 
 		if (dto.getEndDate() != null) {
-			setEndDate(DateUtils.parse(dto.getEndDate(), DateUtils.SHORTTIMESTAMP));
+			setEndDate(DateUtils.parse(dto.getEndDate(),
+					DateUtils.SHORTTIMESTAMP));
 		}
 
 		if (dto.getStartDate() != null) {
-			setStartDate(DateUtils.parse(dto.getStartDate(), DateUtils.SHORTTIMESTAMP));
+			setStartDate(DateUtils.parse(dto.getStartDate(),
+					DateUtils.SHORTTIMESTAMP));
 		}
 
 		if (dto.getName() != null) {
@@ -382,20 +481,28 @@ public class Event extends PO {
 		this.associatePrice = associatePrice;
 	}
 
+	public Date getDiscountDate() {
+		return discountDate;
+	}
+
+	public void setDiscountDate(Date discountDate) {
+		this.discountDate = discountDate;
+	}
+
+	public Date getPenaltyDate() {
+		return penaltyDate;
+	}
+
+	public void setPenaltyDate(Date penaltyDate) {
+		this.penaltyDate = penaltyDate;
+	}
+
 	public Integer getLmsCourseId() {
 		return lmsCourseId;
 	}
 
 	public void setLmsCourseId(Integer lmsCourseId) {
 		this.lmsCourseId = lmsCourseId;
-	}
-
-	public Integer getOldSystemId() {
-		return oldSystemId;
-	}
-
-	public void setOldSystemId(Integer oldSystemId) {
-		this.oldSystemId = oldSystemId;
 	}
 
 }
