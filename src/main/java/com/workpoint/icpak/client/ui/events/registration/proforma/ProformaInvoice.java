@@ -19,6 +19,7 @@ import com.workpoint.icpak.client.ui.events.registration.proforma.last.ProformaL
 import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.InvoiceLineDto;
+import com.workpoint.icpak.shared.model.InvoiceLineType;
 
 public class ProformaInvoice extends Composite {
 
@@ -31,6 +32,10 @@ public class ProformaInvoice extends Composite {
 	@UiField
 	TableView tblProforma;
 	@UiField
+	TableView tblDiscounts;
+	@UiField
+	TableView tblPenalties;
+	@UiField
 	InlineLabel lblCompany;
 	@UiField
 	InlineLabel lblAddress;
@@ -41,7 +46,6 @@ public class ProformaInvoice extends Composite {
 
 	public ProformaInvoice() {
 		initWidget(uiBinder.createAndBindUi(this));
-
 		createHeader();
 		createRow(new ProformaTableRow());
 		createLastRow(new ProformaLastRow());
@@ -54,6 +58,8 @@ public class ProformaInvoice extends Composite {
 		th.add(new TableHeader("Unit Price"));
 		th.add(new TableHeader("Amount"));
 		tblProforma.setTableHeaders(th);
+		tblDiscounts.setTableHeaders(th);
+		tblPenalties.setTableHeaders(th);
 	}
 
 	public void createRow(ProformaTableRow row) {
@@ -66,6 +72,8 @@ public class ProformaInvoice extends Composite {
 
 	public void clearRows() {
 		tblProforma.clearRows();
+		tblDiscounts.clearRows();
+		tblPenalties.clearRows();
 	}
 
 	public void setInvoice(InvoiceDto invoice) {
@@ -76,20 +84,52 @@ public class ProformaInvoice extends Composite {
 		lblQuoteNo.setText(invoice.getDocumentNo());
 
 		for (InvoiceLineDto line : invoice.getLines()) {
-			tblProforma.addRow(
-					new InlineLabel(line.getDescription()),
-					new InlineLabel(line.getQuantity() + ""),
-					new InlineLabel(CURRENCYFORMAT.format(line.getUnitPrice())
-							+ ""),
-					new InlineLabel(
-							CURRENCYFORMAT.format(line.getTotalAmount()) + ""));
+			if (line.getType() == null) {
+				line.setType(InvoiceLineType.Normal);
+			}
+
+			if (line.getType() == InvoiceLineType.Discount) {
+				tblDiscounts.addRow(
+						new InlineLabel(line.getDescription()),
+						new InlineLabel(line.getQuantity() + ""),
+						new InlineLabel(CURRENCYFORMAT.format(line
+								.getUnitPrice()) + ""), new InlineLabel(
+								CURRENCYFORMAT.format(line.getTotalAmount())
+										+ ""));
+			} else if (line.getType() == InvoiceLineType.Penalty) {
+				tblPenalties.addRow(
+						new InlineLabel(line.getDescription()),
+						new InlineLabel(line.getQuantity() + ""),
+						new InlineLabel(CURRENCYFORMAT.format(line
+								.getUnitPrice()) + ""), new InlineLabel(
+								CURRENCYFORMAT.format(line.getTotalAmount())
+										+ ""));
+			} else {
+				tblProforma.addRow(
+						new InlineLabel(line.getDescription()),
+						new InlineLabel(line.getQuantity() + ""),
+						new InlineLabel(CURRENCYFORMAT.format(line
+								.getUnitPrice()) + ""), new InlineLabel(
+								CURRENCYFORMAT.format(line.getTotalAmount())
+										+ ""));
+			}
 		}
-		tblProforma
+		tblProforma.addRow(
+				new InlineLabel(),
+				new InlineLabel(),
+				new InlineLabel("Total"),
+				new InlineLabel(CURRENCYFORMAT.format(invoice
+						.getInvoiceAmount()) + ""));
+
+		tblDiscounts
 				.addRow(new InlineLabel(),
 						new InlineLabel(),
-						new InlineLabel("Total"),
+						new InlineLabel("Total Discount"),
 						new InlineLabel(CURRENCYFORMAT.format(invoice
-								.getInvoiceAmount()) + ""));
-	}
+								.getTotalDiscount()) + ""));
 
+		tblPenalties.addRow(new InlineLabel(), new InlineLabel(),
+				new InlineLabel("Total Penalties"), new InlineLabel(
+						CURRENCYFORMAT.format(invoice.getTotalPenalty()) + ""));
+	}
 }

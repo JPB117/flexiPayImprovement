@@ -81,6 +81,7 @@ public class InvoiceLine extends PO {
 		dto.setTotalAmount(totalAmount);
 		dto.setUnitPrice(unitPrice);
 		dto.setEventDelegateRefId(eventDelegateRefId);
+		dto.setType(type);
 
 		return dto;
 	}
@@ -90,6 +91,7 @@ public class InvoiceLine extends PO {
 		setQuantity(lineDto.getQuantity());
 		setUnitPrice(lineDto.getUnitPrice());
 		setTotalAmount(lineDto.getTotalAmount());
+		setType(lineDto.getType());
 
 		if (lineDto.getEventDelegateRefId() != null)
 			setEventDelegateRefId(lineDto.getEventDelegateRefId());

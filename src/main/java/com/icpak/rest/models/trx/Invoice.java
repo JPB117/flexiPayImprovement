@@ -33,13 +33,8 @@ public class Invoice extends PO {
 	@Column(length = 5000)
 	private String description;
 
-	private Double totalMemberDiscount;
-	private Double totalNonMemberDiscount;
-	private Double totalAssociateDiscount;
-
-	private Double totalMemberPenalty;
-	private Double totalNonMemberPenalty;
-	private Double totalAssociatePenalty;
+	private Double totalDiscount;
+	private Double totalPenalty;
 
 	@OneToMany(mappedBy = "invoice", cascade = { CascadeType.PERSIST,
 			CascadeType.REMOVE })
@@ -120,16 +115,10 @@ public class Invoice extends PO {
 		dto.setPhoneNumber(phoneNumber);
 		dto.setDocumentNo(documentNo);
 
-		//Discounts..
-		dto.setTotalMemberDiscount(totalMemberDiscount);
-		dto.setTotalNonMemberDiscount(totalNonMemberDiscount);
-		dto.setTotalAssociateDiscount(totalAssociateDiscount);
-
+		// Discounts..
+		dto.setTotalDiscount(totalDiscount);
 		// Penalties..
-		dto.setTotalMemberPenalty(totalMemberPenalty);
-		dto.setTotalNonMemberDiscount(totalNonMemberDiscount);
-		dto.setTotalAssociateDiscount(totalAssociateDiscount);
-
+		dto.setTotalPenalty(totalPenalty);
 		return dto;
 	}
 
@@ -171,13 +160,8 @@ public class Invoice extends PO {
 		setBookingRefId(dto.getBookingRefId());
 		setDescription(dto.getDescription());
 		// Total Discounts
-		setTotalMemberDiscount(dto.getTotalMemberDiscount());
-		setTotalNonMemberDiscount(dto.getTotalNonMemberDiscount());
-		setTotalAssociateDiscount(dto.getTotalAssociateDiscount());
-
-		setTotalMemberPenalty(dto.getTotalMemberPenalty());
-		setTotalAssociatePenalty(dto.getTotalAssociatePenalty());
-		setTotalNonMemberDiscount(dto.getTotalNonMemberDiscount());
+		setTotalDiscount(dto.getTotalDiscount());
+		setTotalPenalty(dto.getTotalPenalty());
 	}
 
 	public String getDocumentNo() {
@@ -212,52 +196,20 @@ public class Invoice extends PO {
 		this.description = description;
 	}
 
-	public Double getTotalMemberDiscount() {
-		return totalMemberDiscount;
+	public Double getTotalDiscount() {
+		return totalDiscount;
 	}
 
-	public void setTotalMemberDiscount(Double totalMemberDiscount) {
-		this.totalMemberDiscount = totalMemberDiscount;
+	public void setTotalDiscount(Double totalDiscount) {
+		this.totalDiscount = totalDiscount;
 	}
 
-	public Double getTotalNonMemberDiscount() {
-		return totalNonMemberDiscount;
+	public Double getTotalPenalty() {
+		return totalPenalty;
 	}
 
-	public void setTotalNonMemberDiscount(Double totalNonMemberDiscount) {
-		this.totalNonMemberDiscount = totalNonMemberDiscount;
-	}
-
-	public Double getTotalAssociateDiscount() {
-		return totalAssociateDiscount;
-	}
-
-	public void setTotalAssociateDiscount(Double totalAssociateDiscount) {
-		this.totalAssociateDiscount = totalAssociateDiscount;
-	}
-
-	public Double getTotalMemberPenalty() {
-		return totalMemberPenalty;
-	}
-
-	public void setTotalMemberPenalty(Double totalMemberPenalty) {
-		this.totalMemberPenalty = totalMemberPenalty;
-	}
-
-	public Double getTotalNonMemberPenalty() {
-		return totalNonMemberPenalty;
-	}
-
-	public void setTotalNonMemberPenalty(Double totalNonMemberPenalty) {
-		this.totalNonMemberPenalty = totalNonMemberPenalty;
-	}
-
-	public Double getTotalAssociatePenalty() {
-		return totalAssociatePenalty;
-	}
-
-	public void setTotalAssociatePenalty(Double totalAssociatePenalty) {
-		this.totalAssociatePenalty = totalAssociatePenalty;
+	public void setTotalPenalty(Double totalPenalty) {
+		this.totalPenalty = totalPenalty;
 	}
 
 }

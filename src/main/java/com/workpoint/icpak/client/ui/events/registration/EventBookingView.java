@@ -15,6 +15,7 @@ import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -132,8 +133,6 @@ public class EventBookingView extends ViewImpl implements
 	IssuesPanel issuesPanelDelegate;
 	@UiField
 	AggregationGrid tblDelegates;
-	@UiField
-	SpanElement spnNames;
 
 	@UiField
 	ActionLink aAddMember;
@@ -143,6 +142,10 @@ public class EventBookingView extends ViewImpl implements
 
 	@UiField
 	ProformaInvoice proformaInv;
+
+	@UiField
+	ActionLink aDownloadProforma;
+
 	@UiField
 	DivElement divContainer;
 	int counter = 0;
@@ -560,9 +563,7 @@ public class EventBookingView extends ViewImpl implements
 
 	@Override
 	public void bindBooking(BookingDto booking) {
-
 		if (booking.getContact() != null) {
-			spnNames.setInnerText(booking.getContact().getContactName());
 			txtAddress.setValue(booking.getContact().getAddress());
 			txtCompanyName.setValue(booking.getContact().getCompany());
 			txtCity.setValue(booking.getContact().getCity());
@@ -686,16 +687,14 @@ public class EventBookingView extends ViewImpl implements
 			return dto;
 		}
 	};
-	
+
 	@Override
 	protected void onAttach() {
 		super.onAttach();
-		hidePreLoader();
 	}
 
-	private static native void hidePreLoader()/*-{
-												alert("Called!");
-												//$wnd.jQuery('#preLoader').addClass("hide");
-												}-*/;
+	public HasClickHandlers getaDownloadProforma() {
+		return aDownloadProforma;
+	}
 
 }

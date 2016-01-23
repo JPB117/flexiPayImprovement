@@ -528,14 +528,14 @@ div.footer {
 			<div class="row-fluid">
 				<div class="col-print-6">
 					@#companyName<br /> @#companyAddress <br /> @#companyLocation <br />
+					<br /> <b>Date:</b>@#date, <br />
 				</div>
-				<div class="col-print-6">
-					<b>Proforma No:</b>@#quoteNo<br /> @#date <br />
+				<div class="col-print-5 text-right">
+					<b>Proforma No:</b>@#quoteNo<br />
 				</div>
 			</div>
 
 			<br />
-
 			<div class="row=fluid">
 				<table class="table table-bordered table-condensed">
 					<thead>
@@ -554,7 +554,7 @@ div.footer {
 							<td class="num">@#unitPrice</td>
 							<td class="num">@#amount</td>
 						</tr>
-						<!--@<Totals-->
+						<!--@<invoiceDetails-->
 						<tr>
 							<td></td>
 							<td></td>
@@ -567,13 +567,13 @@ div.footer {
 
 				<br />
 				<h4>
-					<Strong>Discounts & Penalties Applicable:</Strong>
+					<Strong>Discounts Applicable:</Strong>
 				</h4>
 				<table class="table table-bordered table-condensed">
 					<thead>
 						<tr>
-							<th class="num">Description</th>
-							<th class="num">Quantity</th>
+							<th class="text-left" width="50%">Description</th>
+							<th class="text-center">Quantity</th>
 							<th class="num">Unit Price(Ksh)</th>
 							<th class="num">Amount(Ksh)</th>
 						</tr>
@@ -582,12 +582,12 @@ div.footer {
 					<tbody>
 						<!--@>DiscountDetails-->
 						<tr>
-							<td class="num">@#discDescription</td>
-							<td class="num">@#discQuantity</td>
+							<td class="text-left">@#discDescription</td>
+							<td class="text-center">@#discQuantity</td>
 							<td class="num">@#discUnitPrice</td>
 							<td class="num">@#discAmount</td>
 						</tr>
-						<!--@>DTotals-->
+						<!--@<DiscountDetails-->
 						<tr>
 							<td></td>
 							<td></td>
@@ -595,32 +595,38 @@ div.footer {
 							<td class="num"><b style="border-bottom: 3px double;">KES
 									@#totalDiscAmount</b></td>
 						</tr>
+					</tbody>
+				</table>
 
-						<tr style="background-color: #f9f9f9;">
-							<td class="text-center" colspan="4"><Strong>Penalties</Strong></td>
+				<br />
+				<h4>
+					<Strong>Penalties Applicable:</Strong>
+				</h4>
+				<table class="table table-bordered table-condensed">
+					<thead>
+						<tr>
+							<th class="text-left" width="50%">Description</th>
+							<th class="text-center">Quantity</th>
+							<th class="num">Unit Price(Ksh)</th>
+							<th class="num">Amount(Ksh)</th>
 						</tr>
+					</thead>
+
+					<tbody>
 						<!--@>PenaltyDetails-->
 						<tr>
-							<td class="num">Penalty for Member(Payment after 21st Jan
-								2016)</td>
-							<td class="num">2</td>
-							<td class="num">3000</td>
-							<td class="num">6000</td>
+							<td class="text-left">@#penaltyDescription</td>
+							<td class="text-center">@#penaltyQuantity</td>
+							<td class="num">@#penaltyUnitPrice</td>
+							<td class="num">@#penaltyAmount</td>
 						</tr>
-						<tr>
-							<td class="num">Penalty for Non-Member(Payment after 21st
-								Jan 2016)</td>
-							<td class="num">3</td>
-							<td class="num">1000</td>
-							<td class="num">3000</td>
-						</tr>
+						<!--@<PenaltyDetails-->
 						<tr>
 							<td></td>
 							<td></td>
-							<td class="num"><b>Total Penalty(Payment after 21st Jan
-									2016)</b></td>
+							<td class="num"><b>@#totalPenaltyDesc</b></td>
 							<td class="num"><b style="border-bottom: 3px double;">KES
-									@KES 10000</b></td>
+									@#totalPenaltyAmount</b></td>
 						</tr>
 					</tbody>
 				</table>

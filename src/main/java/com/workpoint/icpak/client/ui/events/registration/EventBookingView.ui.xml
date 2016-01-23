@@ -237,44 +237,17 @@
 										<div class="tab-pane" ui:field="divProforma">
 											<div class="row">
 												<div class="col-xs-12">
-													<div class="panel panel-default hide">
-														<div class="panel-heading">
-															<span ui:field="spnNames">Kimani Muriranja</span>
-														</div>
-
-														<div class="panel-body">
-															Your application has successfully saved and your
-															temporary
-															account. Also note that a Proforma
-															invoice and
-															temporary
-															password
-															has been sent
-															to
-															your email
-															address for
-															your
-															reference.
-															<br />
-
-															You can choose between the following:
-															<ol>
-																<li>
-																	Complete your payment now - Click
-																	<strong> Proceed To Payment</strong>
-																	and complete the registration.
-																	<br />
-																</li>
-
-																<li>
-																	Complete your payment later - Click
-																	<strong> Proceed To My Account(Pay Later).</strong>
-																</li>
-															</ol>
-														</div>
-													</div>
-
 													<div class="row">
+														<br />
+														<div class="col-lg-12">
+															<div class="alert alert-success">
+																Note that we have sent this proforma Invoice to your
+																email.
+																<span class="pull-right">
+																	<d:ActionLink ui:field="aDownloadProforma">Download Proforma</d:ActionLink>
+																</span>
+															</div>
+														</div>
 														<proforma:ProformaInvoice
 															ui:field="proformaInv"></proforma:ProformaInvoice>
 													</div>

@@ -6,7 +6,9 @@ import java.util.List;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.GwtEvent.Type;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -22,6 +24,8 @@ import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
+import com.workpoint.icpak.client.model.UploadContext;
+import com.workpoint.icpak.client.model.UploadContext.UPLOADACTION;
 import com.workpoint.icpak.client.place.NameTokens;
 import com.workpoint.icpak.client.service.AbstractAsyncCallback;
 import com.workpoint.icpak.client.ui.component.ActionLink;
@@ -84,6 +88,8 @@ public class EventBookingPresenter extends
 		ColumnConfig getMemberColumnConfig();
 
 		void bindAccommodations(List<AccommodationDto> result);
+
+		HasClickHandlers getaDownloadProforma();
 	}
 
 	@ProxyCodeSplit
@@ -189,7 +195,6 @@ public class EventBookingPresenter extends
 					.withCallback(new AbstractAsyncCallback<BookingDto>() {
 						@Override
 						public void onSuccess(BookingDto booking) {
-							getView().showmask(false);
 							bindBooking(booking);
 						}
 					}).bookings(eventId).create(dto);
@@ -207,10 +212,23 @@ public class EventBookingPresenter extends
 
 	}
 
-	protected void bindBooking(BookingDto booking) {
+	protected void bindBooking(final BookingDto booking) {
 		bookingId = booking.getRefId();
 		getView().bindBooking(booking);
 		getInvoice(booking.getInvoiceRef());
+
+		// Set Download Proforma Link
+		getView().getaDownloadProforma().addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				UploadContext ctx = new UploadContext("getreport");
+				ctx.setContext("bookingRefId", booking.getRefId());
+				ctx.setAction(UPLOADACTION.GETPROFORMA);
+
+				// ctx.setContext(key, value)
+				Window.open(ctx.toUrl(), "Get Proforma", null);
+			}
+		});
 	}
 
 	@Override
@@ -274,9 +292,25 @@ public class EventBookingPresenter extends
 			eventsResource
 					.withCallback(new AbstractAsyncCallback<BookingDto>() {
 						@Override
-						public void onSuccess(BookingDto booking) {
+						public void onSuccess(final BookingDto booking) {
 							getView().bindBooking(booking);
-							getInvoice(booking.getInvoiceRef(), false);
+							getInvoice(booking.getInvoiceRef(), false, false);
+
+							getView().getaDownloadProforma().addClickHandler(
+									new ClickHandler() {
+										@Override
+										public void onClick(ClickEvent event) {
+											UploadContext ctx = new UploadContext(
+													"getreport");
+											ctx.setContext("bookingRefId",
+													booking.getRefId());
+											ctx.setAction(UPLOADACTION.GETPROFORMA);
+
+											// ctx.setContext(key, value)
+											Window.open(ctx.toUrl(),
+													"Get Proforma", null);
+										}
+									});
 						}
 					}).bookings(eventId).getById(bookingId);
 		}
@@ -284,25 +318,26 @@ public class EventBookingPresenter extends
 	}
 
 	protected void getInvoice(String invoiceRef) {
-		getInvoice(invoiceRef, true);
+		getInvoice(invoiceRef, true, true);
 	}
 
-	protected void getInvoice(String invoiceRef, final boolean moveNext) {
+	protected void getInvoice(String invoiceRef, final boolean moveNext,
+			final boolean sendEmail) {
 		invoiceResource.withCallback(new AbstractAsyncCallback<InvoiceDto>() {
 			@Override
 			public void onSuccess(InvoiceDto invoice) {
 				getView().bindInvoice(invoice);
-				eventsResource.withoutCallback().bookings(eventId)
-						.sendAlert(bookingId);
+				getView().showmask(false);
 
-				if (invoice.getInvoiceAmount() != null) {
-					paymentPresenter.setAmount(invoice.getInvoiceAmount()
-							.toString());
+				if (sendEmail) {
+					eventsResource.withoutCallback().bookings(eventId)
+							.sendAlert(bookingId);
 				}
 
-				if (invoice.getDocumentNo() != null) {
-					paymentPresenter.bindTransaction(invoice);
-				}
+				/*
+				 * Set the Amount to be paid based on Invoice
+				 */
+				bindPaymentValues(invoice);
 
 				if (moveNext) {
 					getView().next();
@@ -314,6 +349,17 @@ public class EventBookingPresenter extends
 				super.onFailure(caught);
 			}
 		}).getInvoice(invoiceRef);
+
+	}
+
+	protected void bindPaymentValues(InvoiceDto invoice) {
+		if (invoice.getInvoiceAmount() != null) {
+			paymentPresenter.setAmount(invoice.getInvoiceAmount().toString());
+		}
+
+		if (invoice.getDocumentNo() != null) {
+			paymentPresenter.bindTransaction(invoice);
+		}
 
 	}
 

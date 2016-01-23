@@ -1,9 +1,8 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.workpoint.icpak.client.ui.component">
-	<g:HTMLPanel styleName="col-sm-12">
-		<br />
-		<div class="panel panel-default">
+	<g:HTMLPanel styleName="col-sm-12 panel">
+		<div>
 			<div class="col-sm-12">
 				<div class="row">
 					<div class="col-sm-6">
@@ -15,7 +14,7 @@
 						<p>Mobile:0727-531006/0733-856262 | Wireless:020 2304226/7</p>
 					</div>
 
-					<div class="col-sm-6">
+					<div class="col-sm-6 text-right">
 						<h2>PROFORMA INVOICE</h2>
 					</div>
 				</div>
@@ -28,12 +27,13 @@
 							<br />
 							<g:InlineLabel ui:field="lblAddress"></g:InlineLabel>
 							<br />
-						</div>
-						<div class="col-sm-6">
-							<b>Quote No:</b>
-							<g:InlineLabel ui:field="lblQuoteNo"></g:InlineLabel>
-							<br />
+							<b>Date: </b>
 							<g:InlineLabel ui:field="lblInvoiceDate"></g:InlineLabel>
+							<br />
+						</div>
+						<div class="col-sm-6 text-right">
+							<b>Proforma No:</b>
+							<g:InlineLabel ui:field="lblQuoteNo"></g:InlineLabel>
 							<br />
 						</div>
 					</div>
@@ -43,6 +43,30 @@
 					<div class="col-sm-12">
 						<br />
 						<d:TableView ui:field="tblProforma" striped="false"
+							isGrid="false" bordered="true" autoNumber="false">
+						</d:TableView>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-sm-12">
+						<br />
+						<h5>
+							<b>Discounts Applicable</b>
+						</h5>
+						<d:TableView ui:field="tblDiscounts" striped="false"
+							isGrid="false" bordered="true" autoNumber="false">
+						</d:TableView>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-sm-12">
+						<br />
+						<h5>
+							<b>Penalties Applicable</b>
+						</h5>
+						<d:TableView ui:field="tblPenalties" striped="false"
 							isGrid="false" bordered="true" autoNumber="false">
 						</d:TableView>
 					</div>

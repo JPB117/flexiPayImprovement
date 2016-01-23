@@ -28,13 +28,8 @@ public class InvoiceDto extends SerializableObj implements HasKey {
 	private String paymentStatus;
 	private String paymentMode;
 	private Double transactionAmount;
-	private Double totalMemberDiscount;
-	private Double totalNonMemberDiscount;
-	private Double totalAssociateDiscount;
-
-	private Double totalMemberPenalty;
-	private Double totalNonMemberPenalty;
-	private Double totalAssociatePenalty;
+	private Double totalDiscount;
+	private Double totalPenalty;
 	private String trxRefId;
 	private String userId;
 
@@ -181,6 +176,22 @@ public class InvoiceDto extends SerializableObj implements HasKey {
 		return transactionDate;
 	}
 
+	public Double getTotalDiscount() {
+		return totalDiscount;
+	}
+
+	public void setTotalDiscount(Double totalDiscount) {
+		this.totalDiscount = totalDiscount;
+	}
+
+	public Double getTotalPenalty() {
+		return totalPenalty;
+	}
+
+	public void setTotalPenalty(Double totalPenalty) {
+		this.totalPenalty = totalPenalty;
+	}
+
 	public void setTransactionDate(Date transactionDate) {
 		this.transactionDate = transactionDate;
 	}
@@ -240,54 +251,6 @@ public class InvoiceDto extends SerializableObj implements HasKey {
 
 	public void setTrxRefId(String trxRefId) {
 		this.trxRefId = trxRefId;
-	}
-
-	public Double getTotalMemberDiscount() {
-		return totalMemberDiscount;
-	}
-
-	public void setTotalMemberDiscount(Double totalMemberDiscount) {
-		this.totalMemberDiscount = totalMemberDiscount;
-	}
-
-	public Double getTotalNonMemberDiscount() {
-		return totalNonMemberDiscount;
-	}
-
-	public void setTotalNonMemberDiscount(Double totalNonMemberDiscount) {
-		this.totalNonMemberDiscount = totalNonMemberDiscount;
-	}
-
-	public Double getTotalAssociateDiscount() {
-		return totalAssociateDiscount;
-	}
-
-	public void setTotalAssociateDiscount(Double totalAssociateDiscount) {
-		this.totalAssociateDiscount = totalAssociateDiscount;
-	}
-
-	public Double getTotalMemberPenalty() {
-		return totalMemberPenalty;
-	}
-
-	public void setTotalMemberPenalty(Double totalMemberPenalty) {
-		this.totalMemberPenalty = totalMemberPenalty;
-	}
-
-	public Double getTotalNonMemberPenalty() {
-		return totalNonMemberPenalty;
-	}
-
-	public void setTotalNonMemberPenalty(Double totalNonMemberPenalty) {
-		this.totalNonMemberPenalty = totalNonMemberPenalty;
-	}
-
-	public Double getTotalAssociatePenalty() {
-		return totalAssociatePenalty;
-	}
-
-	public void setTotalAssociatePenalty(Double totalAssociatePenalty) {
-		this.totalAssociatePenalty = totalAssociatePenalty;
 	}
 
 }
