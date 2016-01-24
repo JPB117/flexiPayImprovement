@@ -495,47 +495,46 @@ public class BookingsDaoHelper {
 				// Calculate the Discount
 				// Early Bird Discount for Member(Payment before 21st Jan 2016)
 				Event eventIndb = booking.getEvent();
-				String discountDescription = "Member Early Bird Discount(Payment before %s) ";
 				if (eventIndb.getDiscountDate() != null) {
+					String discountDescription = "Member Early Bird Discount(Payment before %s) ";
 					discountDescription = String.format(discountDescription,
 							formatter.format(eventIndb.getDiscountDate()));
+					memberDiscountLine.setDescription(discountDescription);
+					memberDiscountLine.setQuantity(qty);
+					memberDiscountLine.setUnitPrice(eventIndb
+							.getDiscountMemberPrice());
+					memberDiscountLine.setTotalAmount(qty
+							* eventIndb.getDiscountMemberPrice());
+					memberDiscountLine.setType(InvoiceLineType.Discount);
+
+					totalDiscountAmount += eventIndb.getDiscountMemberPrice();
+
+					logger.error(discountDescription + "|"
+							+ memberDiscountLine.getQuantity() + " | " + qty
+							* eventIndb.getDiscountMemberPrice() + " | "
+							+ totalDiscountAmount);
 				}
-				memberDiscountLine.setDescription(discountDescription);
-				memberDiscountLine.setQuantity(qty);
-				memberDiscountLine.setUnitPrice(eventIndb
-						.getDiscountMemberPrice());
-				memberDiscountLine.setTotalAmount(qty
-						* eventIndb.getDiscountMemberPrice());
-				memberDiscountLine.setType(InvoiceLineType.Discount);
-
-				totalDiscountAmount += eventIndb.getDiscountMemberPrice();
-
-				logger.error(discountDescription + "|"
-						+ memberDiscountLine.getQuantity() + " | " + qty
-						* eventIndb.getDiscountMemberPrice() + " | "
-						+ totalDiscountAmount);
 
 				// Penalty Calculation
 				// Member Penalty(Payment after 21st Jan 2016)
-				String penaltyDescription = "Member Penalty(Payment after %s) ";
 				if (eventIndb.getPenaltyDate() != null) {
+					String penaltyDescription = "Member Penalty(Payment after %s) ";
 					penaltyDescription = String.format(penaltyDescription,
 							formatter.format(eventIndb.getPenaltyDate()));
+					memberPenaltyLine.setDescription(penaltyDescription);
+					memberPenaltyLine.setQuantity(qty);
+					memberPenaltyLine.setUnitPrice(eventIndb
+							.getPenaltyMemberPrice());
+					memberPenaltyLine.setTotalAmount(qty
+							* eventIndb.getPenaltyMemberPrice());
+					memberPenaltyLine.setType(InvoiceLineType.Penalty);
+					totalPenaltyAmount += eventIndb.getPenaltyMemberPrice();
+
+					logger.error(penaltyDescription + "|"
+							+ memberPenaltyLine.getQuantity() + " | " + qty
+							* eventIndb.getPenaltyMemberPrice() + " | "
+							+ totalPenaltyAmount);
 				}
-				memberPenaltyLine.setDescription(penaltyDescription);
-				memberPenaltyLine.setQuantity(qty);
-				memberPenaltyLine.setUnitPrice(eventIndb
-						.getPenaltyMemberPrice());
-				memberPenaltyLine.setTotalAmount(qty
-						* eventIndb.getPenaltyMemberPrice());
-				memberPenaltyLine.setType(InvoiceLineType.Penalty);
-
-				totalPenaltyAmount += eventIndb.getPenaltyMemberPrice();
-
-				logger.error(penaltyDescription + "|"
-						+ memberPenaltyLine.getQuantity() + " | " + qty
-						* eventIndb.getPenaltyMemberPrice() + " | "
-						+ totalPenaltyAmount);
 
 			} else {
 				String description = "%s - %s fees for %d non-member(s): %s";
@@ -561,42 +560,43 @@ public class BookingsDaoHelper {
 				// Early Bird Discount for Non Member(Payment before 21st Jan
 				// 2016)
 				Event eventIndb = booking.getEvent();
-				String discountDescription = "Non-Member Early Bird Discount(Payment before %s)";
 				if (eventIndb.getDiscountDate() != null) {
+					String discountDescription = "Non-Member Early Bird Discount(Payment before %s)";
 					discountDescription = String.format(discountDescription,
 							formatter.format(eventIndb.getDiscountDate()));
+					nonMemberDiscountLine.setDescription(discountDescription);
+					nonMemberDiscountLine.setQuantity(qty);
+					nonMemberDiscountLine.setUnitPrice(eventIndb
+							.getDiscountNonMemberPrice());
+					nonMemberDiscountLine.setTotalAmount(qty
+							* eventIndb.getDiscountNonMemberPrice());
+					nonMemberDiscountLine.setType(InvoiceLineType.Discount);
+					totalDiscountAmount += eventIndb
+							.getDiscountNonMemberPrice();
+					logger.info(discountDescription + "|" + qty + " | " + qty
+							* eventIndb.getDiscountNonMemberPrice() + " | "
+							+ totalDiscountAmount);
 				}
-				nonMemberDiscountLine.setDescription(discountDescription);
-				nonMemberDiscountLine.setQuantity(qty);
-				nonMemberDiscountLine.setUnitPrice(eventIndb
-						.getDiscountNonMemberPrice());
-				nonMemberDiscountLine.setTotalAmount(qty
-						* eventIndb.getDiscountNonMemberPrice());
-				nonMemberDiscountLine.setType(InvoiceLineType.Discount);
-				totalDiscountAmount += eventIndb.getDiscountNonMemberPrice();
-				logger.info(discountDescription + "|" + qty + " | " + qty
-						* eventIndb.getDiscountNonMemberPrice() + " | "
-						+ totalDiscountAmount);
 
 				// Calculate the Non-Member Penalty
 				// Non Member Penalty(Payment before 21st Jan
 				// 2016)
-				String penaltyDescription = "Non-Member Penalty(Payment after %s)";
-				if (eventIndb.getPenaltyNonMemberPrice() != null) {
+				if (eventIndb.getPenaltyDate() != null) {
+					String penaltyDescription = "Non-Member Penalty(Payment after %s)";
 					penaltyDescription = String.format(penaltyDescription,
 							formatter.format(eventIndb.getPenaltyDate()));
+					nonMemberPenaltyLine.setDescription(penaltyDescription);
+					nonMemberPenaltyLine.setQuantity(qty);
+					nonMemberPenaltyLine.setUnitPrice(eventIndb
+							.getPenaltyNonMemberPrice());
+					nonMemberPenaltyLine.setTotalAmount(qty
+							* eventIndb.getPenaltyNonMemberPrice());
+					nonMemberPenaltyLine.setType(InvoiceLineType.Penalty);
+					totalPenaltyAmount += eventIndb.getPenaltyNonMemberPrice();
+					logger.info(penaltyDescription + "|" + qty + " | " + qty
+							* eventIndb.getPenaltyNonMemberPrice() + " | "
+							+ totalPenaltyAmount);
 				}
-				nonMemberPenaltyLine.setDescription(penaltyDescription);
-				nonMemberPenaltyLine.setQuantity(qty);
-				nonMemberPenaltyLine.setUnitPrice(eventIndb
-						.getPenaltyNonMemberPrice());
-				nonMemberPenaltyLine.setTotalAmount(qty
-						* eventIndb.getPenaltyNonMemberPrice());
-				nonMemberPenaltyLine.setType(InvoiceLineType.Penalty);
-				totalPenaltyAmount += eventIndb.getPenaltyNonMemberPrice();
-				logger.info(penaltyDescription + "|" + qty + " | " + qty
-						* eventIndb.getPenaltyNonMemberPrice() + " | "
-						+ totalPenaltyAmount);
 
 			}
 

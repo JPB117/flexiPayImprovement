@@ -114,7 +114,6 @@ public class Invoice extends PO {
 		}
 		dto.setPhoneNumber(phoneNumber);
 		dto.setDocumentNo(documentNo);
-
 		// Discounts..
 		dto.setTotalDiscount(totalDiscount);
 		// Penalties..

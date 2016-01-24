@@ -258,7 +258,6 @@ public class Event extends PO {
 	}
 
 	public EventDto toDto(boolean includeAccommodation) {
-
 		EventDto dto = new EventDto();
 		dto.setRefId(getRefId());
 		dto.setCpdHours(cpdHours);
@@ -276,6 +275,12 @@ public class Event extends PO {
 		dto.setName(name);
 		dto.setNonMemberPrice(nonMemberPrice);
 		dto.setAssociatePrice(associatePrice);
+		if (penaltyDate != null) {
+			dto.setPenaltyDate(DateUtils.DATEFORMAT_SYS.format(penaltyDate));
+		}
+		if (discountDate != null) {
+			dto.setDiscountDate(DateUtils.DATEFORMAT_SYS.format(discountDate));
+		}
 		dto.setStatus(status);
 		dto.setType(type);
 		dto.setVenue(venue);

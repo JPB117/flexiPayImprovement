@@ -209,8 +209,8 @@ public class PaymentWidget extends Composite {
 	public void bindTransaction(InvoiceDto invoice) {
 		this.paymentRefId = invoice.getDocumentNo();
 		spnAccountNo.setInnerText(invoice.getDocumentNo());// MPESA Payment
-		spnAmount.setInnerText(NumberUtils.CURRENCYFORMAT.format(invoice
-				.getInvoiceAmount()));
+		// spnAmount.setInnerText(NumberUtils.CURRENCYFORMAT.format(invoice
+		// .getInvoiceAmount()));
 	}
 
 	public void setCardResponse(CreditCardResponse response) {

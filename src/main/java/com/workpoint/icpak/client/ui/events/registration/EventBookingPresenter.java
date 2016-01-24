@@ -2,6 +2,7 @@ package com.workpoint.icpak.client.ui.events.registration;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -39,6 +40,7 @@ import com.workpoint.icpak.client.ui.events.ProcessingEvent;
 import com.workpoint.icpak.client.ui.events.ProcessingEvent.ProcessingHandler;
 import com.workpoint.icpak.client.ui.grid.ColumnConfig;
 import com.workpoint.icpak.client.ui.payment.PaymentPresenter;
+import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.shared.api.CountriesResource;
 import com.workpoint.icpak.shared.api.EventsResource;
 import com.workpoint.icpak.shared.api.InvoiceResource;
@@ -109,6 +111,7 @@ public class EventBookingPresenter extends
 
 	private String eventId;
 	private String bookingId;
+	private EventDto event;
 
 	private ResourceDelegate<CountriesResource> countriesResource;
 
@@ -260,12 +263,12 @@ public class EventBookingPresenter extends
 		eventsResource.withCallback(new AbstractAsyncCallback<EventDto>() {
 			@Override
 			public void onSuccess(EventDto event) {
+				EventBookingPresenter.this.event = event;
 				getView().setEvent(event);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-
 				StringBuffer buffer = new StringBuffer();
 				for (StackTraceElement elem : caught.getStackTrace()) {
 					buffer.append(elem.getLineNumber() + ">>"
@@ -354,7 +357,32 @@ public class EventBookingPresenter extends
 
 	protected void bindPaymentValues(InvoiceDto invoice) {
 		if (invoice.getInvoiceAmount() != null) {
-			paymentPresenter.setAmount(invoice.getInvoiceAmount().toString());
+			// Apply Discount && Penalties based on todays Date
+			Date todaysDate = new Date();
+			Date penaltyDate = null;
+			Date discountDate = null;
+			String chargableAmount = invoice.getInvoiceAmount().toString();
+
+			if (event.getPenaltyDate() != null) {
+				penaltyDate = DateUtils.DATEFORMAT_SYS.parse(event
+						.getPenaltyDate());
+				if (todaysDate.getTime() >= penaltyDate.getTime()) {
+					Double penaltyPrice = invoice.getInvoiceAmount()
+							- invoice.getTotalPenalty();
+					chargableAmount = penaltyPrice.toString();
+				}
+			}
+
+			if (event.getDiscountDate() != null) {
+				discountDate = DateUtils.DATEFORMAT_SYS.parse(event
+						.getDiscountDate());
+				if (todaysDate.getTime() <= discountDate.getTime()) {
+					Double discountedPrice = invoice.getInvoiceAmount()
+							- invoice.getTotalDiscount();
+					chargableAmount = discountedPrice.toString();
+				}
+			}
+			paymentPresenter.setAmount(chargableAmount);
 		}
 
 		if (invoice.getDocumentNo() != null) {
