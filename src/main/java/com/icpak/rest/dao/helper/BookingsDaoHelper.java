@@ -340,6 +340,11 @@ public class BookingsDaoHelper {
 			emailValues.put("totalDiscountDesc", discountDescription);
 			emailValues.put("totalDiscAmount", NumberFormat.getNumberInstance()
 					.format(invoice.getTotalDiscount()));
+		} else {
+			String discountDescription = "Total Discount ";
+			emailValues.put("totalDiscountDesc", discountDescription);
+			emailValues.put("totalDiscAmount", NumberFormat.getNumberInstance()
+					.format(0.0));
 		}
 
 		if (booking.getEvent().getPenaltyDate() != null) {
@@ -349,6 +354,11 @@ public class BookingsDaoHelper {
 			emailValues.put("totalPenaltyDesc", penaltyDescription);
 			emailValues.put("totalPenaltyAmount", NumberFormat
 					.getNumberInstance().format(invoice.getTotalPenalty()));
+		} else {
+			String discountDescription = "Total Penalties ";
+			emailValues.put("totalDiscountDesc", discountDescription);
+			emailValues.put("totalDiscAmount", NumberFormat.getNumberInstance()
+					.format(0.0));
 		}
 
 		// PDF Invoice Generation
@@ -701,12 +711,6 @@ public class BookingsDaoHelper {
 		invoice = invoiceHelper.save(invoice);
 
 		// System.err.println("Invoice RefId>>>" + invoice.getRefId());
-
-		// Create a separate Transaction
-		trxHelper.charge(booking.getMemberId(), booking.getBookingDate(),
-				event.getName() + " Event Booking", event.getStartDate(),
-				invoice.getInvoiceAmount(), "Booking #" + booking.getId(),
-				invoice.getRefId());
 		return invoice;
 	}
 

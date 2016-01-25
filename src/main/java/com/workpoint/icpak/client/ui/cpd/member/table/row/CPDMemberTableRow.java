@@ -133,7 +133,6 @@ public class CPDMemberTableRow extends RowWidget {
 
 	private void setActionButtons() {
 		clear();
-
 		boolean isViewVisible = AppContext.isCurrentUserAdmin();
 		boolean isEditVisible = AppContext.isCurrentUserMember()
 				&& !(dto.getOrganizer().equals("ICPAK"))
@@ -142,11 +141,9 @@ public class CPDMemberTableRow extends RowWidget {
 				&& dto.getStatus() == CPDStatus.Unconfirmed
 				&& !(dto.getOrganizer().equals("ICPAK"));
 		boolean isApproveRejectVisible = false;
-		boolean isDownloadVisible = AppContext.isCurrentUserMember()
-				&& (dto.getOrganizer().equals("ICPAK"))
+		boolean isDownloadVisible = (dto.getOrganizer().equals("ICPAK"))
 				&& dto.getStatus() == CPDStatus.Approved;
-		boolean isNoActionVisible = AppContext.isCurrentUserMember()
-				&& (!isEditVisible && !isDownloadVisible && !isDeleteVisible);
+		boolean isNoActionVisible = (!isEditVisible && !isDownloadVisible && !isDeleteVisible);
 		aEdit.setVisible(isEditVisible);
 		aView.setVisible(isViewVisible);
 		aDelete.setVisible(isDeleteVisible);

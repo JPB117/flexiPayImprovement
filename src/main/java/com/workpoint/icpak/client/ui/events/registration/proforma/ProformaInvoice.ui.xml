@@ -20,22 +20,20 @@
 				</div>
 
 				<div class="row">
-					<div class="col-sm-12">
+					<br />
+					<div class="col-sm-6">
+						<g:InlineLabel ui:field="lblCompany"></g:InlineLabel>
 						<br />
-						<div class="col-sm-6">
-							<g:InlineLabel ui:field="lblCompany"></g:InlineLabel>
-							<br />
-							<g:InlineLabel ui:field="lblAddress"></g:InlineLabel>
-							<br />
-							<b>Date: </b>
-							<g:InlineLabel ui:field="lblInvoiceDate"></g:InlineLabel>
-							<br />
-						</div>
-						<div class="col-sm-6 text-right">
-							<b>Proforma No:</b>
-							<g:InlineLabel ui:field="lblQuoteNo"></g:InlineLabel>
-							<br />
-						</div>
+						<g:InlineLabel ui:field="lblAddress"></g:InlineLabel>
+						<br />
+						<b>Date: </b>
+						<g:InlineLabel ui:field="lblInvoiceDate"></g:InlineLabel>
+						<br />
+					</div>
+					<div class="col-sm-6 text-right">
+						<b>Proforma No:</b>
+						<g:InlineLabel ui:field="lblQuoteNo"></g:InlineLabel>
+						<br />
 					</div>
 				</div>
 

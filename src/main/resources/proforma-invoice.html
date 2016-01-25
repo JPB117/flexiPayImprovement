@@ -2,6 +2,10 @@
 <html>
 <head>
 <style type="text/css">
+body {
+	font-family: Arial;
+}
+
 h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 	font-family: inherit;
 	font-weight: 500;
@@ -523,15 +527,15 @@ div.footer {
 				</div>
 			</div>
 			<div class="row-fluid">
-				<h1 class="text-center">Proforma Invoice</h1>
-			</div>
-			<div class="row-fluid">
-				<div class="col-print-6">
-					@#companyName<br /> @#companyAddress <br /> @#companyLocation <br />
-					<br /> <b>Date:</b>@#date, <br />
+				<div class="col-print-4">
+					<br />@#companyName<br /> @#companyAddress <br />
+					@#companyLocation <br /> <br /> <b>Date:</b>@#date, <br />
 				</div>
-				<div class="col-print-5 text-right">
-					<b>Proforma No:</b>@#quoteNo<br />
+				<div class="col-print-4">
+					<h1 class="text-center">Proforma Invoice</h1>
+				</div>
+				<div class="col-print-4 text-right">
+					<br /> <br /> <b>Proforma No:</b>@#quoteNo<br />
 				</div>
 			</div>
 
@@ -540,7 +544,7 @@ div.footer {
 				<table class="table table-bordered table-condensed">
 					<thead>
 						<tr>
-							<th class="num" width="70%">Description</th>
+							<th class="num" width="72%">Description</th>
 							<th class="num">Quantity</th>
 							<th class="num">Unit Price(Ksh)</th>
 							<th class="num">Amount(Ksh)</th>
@@ -572,7 +576,7 @@ div.footer {
 				<table class="table table-bordered table-condensed">
 					<thead>
 						<tr>
-							<th class="text-left" width="70%">Description</th>
+							<th class="text-left" width="72%">Description</th>
 							<th class="text-center">Quantity</th>
 							<th class="num">Unit Price(Ksh)</th>
 							<th class="num">Amount(Ksh)</th>
@@ -605,7 +609,7 @@ div.footer {
 				<table class="table table-bordered table-condensed">
 					<thead>
 						<tr>
-							<th class="text-left" width="70%">Description</th>
+							<th class="text-left" width="72%">Description</th>
 							<th class="text-center">Quantity</th>
 							<th class="num">Unit Price(Ksh)</th>
 							<th class="num">Amount(Ksh)</th>

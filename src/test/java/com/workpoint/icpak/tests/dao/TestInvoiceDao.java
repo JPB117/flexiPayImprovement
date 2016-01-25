@@ -67,10 +67,11 @@ public class TestInvoiceDao extends AbstractDaoTest {
 		System.err.println(invoice.getDescription());
 	}
 
-	@Ignore
+	@Test
 	public void testPayment() {
-		trxHelper.receivePaymentUsingInvoiceNo("INV-0121", "722722",
-				"INV-0121", "MPESA", "KAL7VZQU55", "254729472421", "26000");
+		trxHelper.receivePaymentUsingInvoiceNo("256399265", "722722",
+				"INV0170", "MPESA", "KAL7VZQU55", "254729472421", "18000",
+				"2016-01-31 18:42:08");
 	}
 
 	@Ignore
@@ -105,7 +106,7 @@ public class TestInvoiceDao extends AbstractDaoTest {
 		invoiceHelper.save(invoice);
 	}
 
-	@Test
+	@Ignore
 	public void testInvoiceLine() throws FileNotFoundException, IOException,
 			SAXException, ParserConfigurationException,
 			FactoryConfigurationError, DocumentException {

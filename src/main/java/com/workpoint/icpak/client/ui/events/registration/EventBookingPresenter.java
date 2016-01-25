@@ -368,7 +368,7 @@ public class EventBookingPresenter extends
 						.getPenaltyDate());
 				if (todaysDate.getTime() >= penaltyDate.getTime()) {
 					Double penaltyPrice = invoice.getInvoiceAmount()
-							- invoice.getTotalPenalty();
+							+ invoice.getTotalPenalty();
 					chargableAmount = penaltyPrice.toString();
 				}
 			}

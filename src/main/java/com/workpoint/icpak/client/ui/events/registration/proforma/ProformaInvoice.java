@@ -53,7 +53,7 @@ public class ProformaInvoice extends Composite {
 
 	public void createHeader() {
 		List<TableHeader> th = new ArrayList<TableHeader>();
-		th.add(new TableHeader("Description"));
+		th.add(new TableHeader("Description", 72.0));
 		th.add(new TableHeader("Quantity"));
 		th.add(new TableHeader("Unit Price"));
 		th.add(new TableHeader("Amount"));

@@ -2,12 +2,22 @@ package com.icpak.rest.dao;
 
 import java.util.List;
 
+import javax.persistence.Query;
+
 import com.icpak.rest.models.trx.Transaction;
 
 public class TransactionsDao extends BaseDao {
 
 	public List<Transaction> getTransactions(String userId) {
-		return getResultList(getEntityManager().createQuery("FROM Transaction t"));
+		return getResultList(getEntityManager().createQuery(
+				"FROM Transaction t"));
+	}
+
+	public Double getAllPayments(String invoiceNo) {
+		String sql = "select sum(amount) from transaction where accountNo=:invoiceNo ";
+		Query query = getEntityManager().createNativeQuery(sql).setParameter(
+				"invoiceNo", invoiceNo);
+		return getSingleResultOrNull(query);
 	}
 
 }

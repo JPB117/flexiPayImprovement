@@ -28,12 +28,11 @@ public class TransactionsResourceImpl implements TransactionsResource {
 			@QueryParam("paymentMode") String paymentMode,
 			@QueryParam("trxNumber") String trxNumber,
 			@QueryParam("mpesa_amt") String mpesaAmt,
-			@QueryParam("mpesa_msisdn") String phoneNumber) {
-
-		System.err.println("Mpesa Code>>" + paymentRef + "\n Business No:"
-				+ businessNo + "\nAccount No:" + accountNo);
+			@QueryParam("mpesa_msisdn") String phoneNumber,
+			@QueryParam("tstamp") String trxDate) {
 		trxDaoHelper.receivePaymentUsingInvoiceNo(paymentRef, businessNo,
-				accountNo, paymentMode, trxNumber, phoneNumber, mpesaAmt);
+				accountNo, paymentMode, trxNumber, phoneNumber, mpesaAmt,
+				trxDate);
 		return "SUCCESS";
 	}
 

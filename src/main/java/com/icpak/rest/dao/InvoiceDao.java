@@ -145,7 +145,8 @@ public class InvoiceDao extends BaseDao {
 		StringBuffer sqlBuffer = new StringBuffer(
 				"select i.refId, "
 						+ "i.amount as invoiceAmount,i.date as invoiceDate,"
-						+ "i.documentNo,i.description,i.contactName,t.refId as trxRefId,i.bookingRefId "
+						+ "i.documentNo,i.description,i.contactName,t.refId as trxRefId,"
+						+ "i.bookingRefId,i.totalDiscount,i.totalPenalty "
 						+ "from Invoice i "
 						+ "left join Transaction t on (i.refId=t.invoiceRef) "
 						+ "where i.isActive=1 and i.documentNo=:docNo ");
@@ -155,8 +156,7 @@ public class InvoiceDao extends BaseDao {
 						docNo);
 
 		List<Object[]> rows = getResultList(query);
-		InvoiceDto invoice = new InvoiceDto();
-
+		InvoiceDto dbInvoice = null;
 		for (Object[] row : rows) {
 			int i = 0;
 			Object value = null;
@@ -181,14 +181,19 @@ public class InvoiceDao extends BaseDao {
 
 			String bookingRefId = (value = row[i++]) == null ? null : value
 					.toString();
+			Double totalDiscount = (value = row[i++]) == null ? null
+					: new Double(value.toString());
 
-			InvoiceDto dbInvoice = new InvoiceDto(refId, invoiceAmount,
-					documentNo, description, invoiceDate, contactName,
-					trxRefId, bookingRefId);
+			Double totalPenalty = (value = row[i++]) == null ? null
+					: new Double(value.toString());
 
-			invoice = dbInvoice;
+			dbInvoice = new InvoiceDto(refId, invoiceAmount, documentNo,
+					description, invoiceDate, contactName, trxRefId,
+					bookingRefId);
+			dbInvoice.setTotalDiscount(totalDiscount);
+			dbInvoice.setTotalPenalty(totalPenalty);
 		}
-		return invoice;
+		return dbInvoice;
 	}
 
 	// public List<Invoice> getAllInvoicesForMember(String memberId) {
@@ -299,9 +304,7 @@ public class InvoiceDao extends BaseDao {
 			dto.setUnitPrice(unitPrice);
 			dto.setTotalAmount(totalAmount);
 			dto.setType(type);
-
 			invoiceLines.add(dto);
-
 		}
 
 		return invoiceLines;

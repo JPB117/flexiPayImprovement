@@ -20,7 +20,8 @@ public interface TransactionsResource {
 			@QueryParam("paymentMode") String paymentMode,
 			@QueryParam("trxNumber") String trxNumber,
 			@QueryParam("mpesaAmt") String mpesaAmt,
-			@QueryParam("msisdn") String phoneNumber);
+			@QueryParam("msisdn") String phoneNumber,
+			@QueryParam("tstamp") String trxDate);
 
 	@GET
 	public List<TransactionDto> getAllTrxs(@QueryParam("userId") String userId);
