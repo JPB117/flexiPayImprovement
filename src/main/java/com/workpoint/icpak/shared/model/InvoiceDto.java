@@ -32,6 +32,7 @@ public class InvoiceDto extends SerializableObj implements HasKey {
 	private Double totalPenalty;
 	private String trxRefId;
 	private String userId;
+	private PaymentStatus status;
 
 	public InvoiceDto() {
 	}
@@ -251,6 +252,14 @@ public class InvoiceDto extends SerializableObj implements HasKey {
 
 	public void setTrxRefId(String trxRefId) {
 		this.trxRefId = trxRefId;
+	}
+	
+	public PaymentStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(PaymentStatus status) {
+		this.status = status;
 	}
 
 }

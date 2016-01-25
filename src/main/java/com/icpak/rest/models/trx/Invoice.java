@@ -7,11 +7,13 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 
 import com.icpak.rest.models.base.PO;
 import com.workpoint.icpak.shared.model.InvoiceDto;
+import com.workpoint.icpak.shared.model.PaymentStatus;
 
 @Entity
 public class Invoice extends PO {
@@ -32,6 +34,8 @@ public class Invoice extends PO {
 	private String memberId; // Invoice owner
 	@Column(length = 5000)
 	private String description;
+	@Enumerated(EnumType.STRING)
+	private PaymentStatus status = PaymentStatus.NOTPAID;
 
 	private Double totalDiscount;
 	private Double totalPenalty;
@@ -161,6 +165,7 @@ public class Invoice extends PO {
 		// Total Discounts
 		setTotalDiscount(dto.getTotalDiscount());
 		setTotalPenalty(dto.getTotalPenalty());
+		setStatus(dto.getStatus());
 	}
 
 	public String getDocumentNo() {
@@ -185,6 +190,14 @@ public class Invoice extends PO {
 
 	public void setMemberId(String memberId) {
 		this.memberId = memberId;
+	}
+
+	public PaymentStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(PaymentStatus status) {
+		this.status = status;
 	}
 
 	public String getDescription() {

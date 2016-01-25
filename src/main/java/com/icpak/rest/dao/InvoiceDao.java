@@ -190,6 +190,7 @@ public class InvoiceDao extends BaseDao {
 			dbInvoice = new InvoiceDto(refId, invoiceAmount, documentNo,
 					description, invoiceDate, contactName, trxRefId,
 					bookingRefId);
+			dbInvoice.setRefId(refId);
 			dbInvoice.setTotalDiscount(totalDiscount);
 			dbInvoice.setTotalPenalty(totalPenalty);
 		}
