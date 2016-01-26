@@ -23,6 +23,7 @@ import com.workpoint.icpak.client.ui.membership.form.MemberRegistrationForm;
 import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 import com.workpoint.icpak.shared.model.AttachmentDto;
+import com.workpoint.icpak.shared.model.Branch;
 import com.workpoint.icpak.shared.model.Country;
 
 public class BasicDetails extends Composite {
@@ -40,6 +41,8 @@ public class BasicDetails extends Composite {
 
 	@UiField
 	Element elPhone;
+	@UiField
+	Element elBranch;
 	@UiField
 	Element elEmail;
 	@UiField
@@ -99,6 +102,11 @@ public class BasicDetails extends Composite {
 			elEmail.setInnerText(result.getEmail());
 		} else {
 			allIssues.add("No Email Address registered");
+		}
+
+		if (result.getBranch() != null) {
+			elBranch.setInnerText(Branch.valueOf(result.getBranch())
+					.getDisplayName());
 		}
 
 		if (result.getEmployer() != null) {

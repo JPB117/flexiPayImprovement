@@ -113,6 +113,7 @@ public class ApplicationFormHeaderDto extends SerializableObj {
 	private ApplicationStatus applicationStatus;
 	private String nextRefId;
 	private String previousRefId;
+	private String branch;
 
 	public ApplicationStatus getApplicationStatus() {
 		return applicationStatus;
@@ -862,6 +863,14 @@ public class ApplicationFormHeaderDto extends SerializableObj {
 
 	public void setPreviousRefId(String previousRefId) {
 		this.previousRefId = previousRefId;
+	}
+
+	public String getBranch() {
+		return branch;
+	}
+
+	public void setBranch(String branch) {
+		this.branch = branch;
 	}
 
 }

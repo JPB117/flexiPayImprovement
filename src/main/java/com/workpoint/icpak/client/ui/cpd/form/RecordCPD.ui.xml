@@ -160,6 +160,9 @@
 
 				<div class="form-group">
 					<div class="row">
+						<span ui:field="spnLoading" class="hide">
+							Please wait ....
+						</span>
 						<g:HTMLPanel ui:field="panelUpload">
 							<d:ActionLink ui:field="aStartUpload" styleName="btn btn-default btn-primary">Click
 								Here to Upload Documents</d:ActionLink>

@@ -6,10 +6,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -38,10 +36,10 @@ public class ApplicationFormHeader extends PO {
 	@Column(name = "`Application Date`", columnDefinition = "datetime")
 	private Date applicationDate;
 
-	@Column(name = "`Surname`",length = 255)
+	@Column(name = "`Surname`", length = 255)
 	private String surname;
 
-	@Column(name = "`Other Names`",length = 255)
+	@Column(name = "`Other Names`", length = 255)
 	private String otherNames;
 
 	@Column(name = "`Date Of Birth`", columnDefinition = "datetime")
@@ -65,6 +63,8 @@ public class ApplicationFormHeader extends PO {
 
 	@Column(name = "`ID Number`", length = 20)
 	private String idNumber;
+
+	private String branch;
 
 	@Column(name = "`E-mail`", length = 120)
 	private String email;
@@ -260,6 +260,7 @@ public class ApplicationFormHeader extends PO {
 		setCountry(dto.getCountry());
 		setResidence(dto.getResidence());
 		setIdNumber(dto.getIdNumber());
+		setBranch(dto.getBranch());
 	}
 
 	public void copyInto(ApplicationFormHeaderDto dto) {
@@ -282,6 +283,7 @@ public class ApplicationFormHeader extends PO {
 		dto.setCountry(country);
 		dto.setResidence(residence);
 		dto.setIdNumber(idNumber);
+		dto.setBranch(branch);
 
 		List<AttachmentDto> attachmentDtos = new ArrayList<AttachmentDto>();
 		for (Attachment attachment : attachments) {
@@ -388,5 +390,13 @@ public class ApplicationFormHeader extends PO {
 
 	public void setAttachments(Set<Attachment> attachments) {
 		this.attachments = attachments;
+	}
+
+	public String getBranch() {
+		return branch;
+	}
+
+	public void setBranch(String branch) {
+		this.branch = branch;
 	}
 }

@@ -85,6 +85,9 @@ public class RecordCPD extends Composite {
 	ActionLink aStartUpload;
 
 	@UiField
+	SpanElement spnLoading;
+
+	@UiField
 	HTMLPanel panelUploader;
 
 	@UiField
@@ -184,6 +187,15 @@ public class RecordCPD extends Composite {
 		} else {
 			panelUploader.addStyleName("hide");
 
+		}
+	}
+
+	public void showAwaitingToAttach(boolean show) {
+		if (show) {
+			aStartUpload.setVisible(false);
+			spnLoading.removeClassName("hide");
+		} else {
+			spnLoading.addClassName("hide");
 		}
 	}
 

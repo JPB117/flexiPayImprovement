@@ -171,6 +171,7 @@ public class CPDMemberPresenter extends
 				if (cpdRecord.getCPD().getRefId() == null) {
 					// not saved
 					if (cpdRecord.isValid()) {
+						cpdRecord.showAwaitingToAttach(true);
 						CPDDto cpd = cpdRecord.getCPD();
 						String memberId = currentUser.getUser().getRefId();
 						String memberRegistrationNo = currentUser.getUser()
@@ -183,6 +184,8 @@ public class CPDMemberPresenter extends
 											public void onSuccess(CPDDto result) {
 												cpdRecord.setCPD(result);
 												cpdRecord.showUploadPanel(true);
+												cpdRecord
+														.showAwaitingToAttach(false);
 											}
 										}).cpd(memberId).create(cpd);
 					}

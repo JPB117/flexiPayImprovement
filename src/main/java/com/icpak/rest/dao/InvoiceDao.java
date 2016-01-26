@@ -10,6 +10,7 @@ import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.InvoiceLineDto;
 import com.workpoint.icpak.shared.model.InvoiceLineType;
 import com.workpoint.icpak.shared.model.InvoiceSummary;
+import com.workpoint.icpak.shared.model.PaymentStatus;
 
 public class InvoiceDao extends BaseDao {
 
@@ -84,11 +85,8 @@ public class InvoiceDao extends BaseDao {
 	public List<InvoiceDto> checkInvoicePaymentStatus(String invoiceRefId) {
 		StringBuffer sqlBuffer = new StringBuffer("select i.refId, "
 				+ "i.amount as invoiceAmount,i.date as invoiceDate,"
-				+ "i.documentNo,i.description,i.contactName,"
-				+ "t.date,t.dueDate,t.status,"
-				+ "t.paymentMode,t.amount,t.memberId " + "from Invoice i "
-				+ "left join Transaction t on (i.refId=t.invoiceRef) "
-				+ "where i.isActive=1 ");
+				+ "i.documentNo,i.description,i.contactName,i.status "
+				+ "from Invoice i " + "where i.isActive=1 ");
 
 		Query query = null;
 		sqlBuffer.append("and i.refId=:invoiceRef");
@@ -118,24 +116,18 @@ public class InvoiceDao extends BaseDao {
 			String contactName = (value = row[i++]) == null ? null : value
 					.toString();
 
-			Date transactionDate = (value = row[i++]) == null ? null
-					: (Date) value;
-			Date dueDate = (value = row[i++]) == null ? null : (Date) value;
-			String paymentStatus = (value = row[i++]) == null ? null : value
-					.toString();
-			String paymentMode = (value = row[i++]) == null ? null : value
-					.toString();
-			Double transactionAmount = (value = row[i++]) == null ? null
-					: new Double(value.toString());
-			String userRefId = (value = row[i++]) == null ? null : value
-					.toString();
+			PaymentStatus status = (value = row[i++]) == null ? null
+					: PaymentStatus.valueOf((String) value);
 
-			InvoiceDto statement = new InvoiceDto(refId, invoiceAmount,
-					documentNo, description, invoiceDate, transactionDate,
-					dueDate, paymentStatus, paymentMode, transactionAmount,
-					userRefId, contactName);
+			InvoiceDto statement = new InvoiceDto();
+			statement.setRefId(refId);
+			statement.setInvoiceAmount(invoiceAmount);
+			statement.setDocumentNo(documentNo);
+			statement.setDescription(description);
+			statement.setInvoiceDate(invoiceDate);
+			statement.setContactName(contactName);
+			statement.setStatus(status);
 			statements.add(statement);
-
 		}
 
 		return statements;

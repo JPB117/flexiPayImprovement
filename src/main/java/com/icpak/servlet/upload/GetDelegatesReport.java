@@ -46,13 +46,17 @@ public class GetDelegatesReport {
 	}
 
 	public String getName() {
+		name = name.replaceAll("[/\\:*?<>|\"]", "");
 		return name;
 	}
 
 	public GetDelegatesReport(List<DelegateDto> delegateDtos, String docType,
 			String eventName) {
 		logger.error(" === dto size === " + delegateDtos.size());
+
 		name = eventName + "_Report" + "." + docType;
+		name = name.trim();
+		name = name.replaceAll("[/\\:*?<>|\"]", "");
 
 		fonts = createFonts(wb);
 		styles = createStyles(wb);

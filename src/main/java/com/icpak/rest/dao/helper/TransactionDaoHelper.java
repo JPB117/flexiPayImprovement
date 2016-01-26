@@ -290,10 +290,10 @@ public class TransactionDaoHelper {
 			} else {
 				booking.setPaymentStatus(PaymentStatus.PAID);
 				invoiceDto.setStatus(PaymentStatus.PAID);
-				System.err.println("Invoice RefId>>"+invoiceDto.getRefId());
 				Invoice invoiceSave = invoiceDao.findByRefId(
 						invoiceDto.getRefId(), Invoice.class);
-				invoiceSave.copyFrom(invoiceDto);
+				invoiceSave.setStatus(PaymentStatus.PAID);
+				System.err.println("Invoice RefId>>" + invoiceSave.getRefId());
 				invoiceDao.save(invoiceSave);
 
 				for (Delegate delegate : booking.getDelegates()) {

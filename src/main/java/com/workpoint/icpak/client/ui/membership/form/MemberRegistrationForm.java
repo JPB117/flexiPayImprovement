@@ -27,6 +27,7 @@ import com.workpoint.icpak.client.ui.upload.custom.Uploader;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 import com.workpoint.icpak.shared.model.ApplicationType;
 import com.workpoint.icpak.shared.model.AttachmentDto;
+import com.workpoint.icpak.shared.model.Branch;
 import com.workpoint.icpak.shared.model.Country;
 import com.workpoint.icpak.shared.model.Gender;
 
@@ -68,6 +69,9 @@ public class MemberRegistrationForm extends Composite {
 	@UiField
 	DropDownList<Country> lstCountry;
 
+	@UiField
+	DropDownList<Branch> lstBranch;
+
 	private boolean isEmailValid = true;
 
 	private static MemberRegistrationFormUiBinder uiBinder = GWT
@@ -82,8 +86,8 @@ public class MemberRegistrationForm extends Composite {
 
 	public MemberRegistrationForm() {
 		initWidget(uiBinder.createAndBindUi(this));
-
 		lstGender.setItems(Arrays.asList(Gender.values()));
+		lstBranch.setItems(Arrays.asList(Branch.values()));
 	}
 
 	public boolean isValid() {
@@ -132,10 +136,10 @@ public class MemberRegistrationForm extends Composite {
 				issuesPanel.addError("IdNumber is required");
 			}
 
-			if (lstGender.getValue() == null) {
-				isValid = false;
-				issuesPanel.addError("Gender is required");
-			}
+			// if (lstGender.getValue() == null) {
+			// isValid = false;
+			// issuesPanel.addError("Gender is required");
+			// }
 
 			if (!isEmailValid) {
 				isValid = false;
@@ -181,6 +185,7 @@ public class MemberRegistrationForm extends Composite {
 		dto.setGender(lstGender.getValue());
 		dto.setResidence(txtResidence.getValue());
 		dto.setIdNumber(txtIdNo.getValue());
+		dto.setBranch(lstBranch.getValue().getName());
 		return dto;
 	}
 
@@ -218,6 +223,10 @@ public class MemberRegistrationForm extends Composite {
 		txtPostalCode.setValue(application.getPostCode());
 		txtResidence.setValue(application.getResidence());
 		txtIdNo.setValue(application.getIdNumber());
+
+		if (application.getBranch() != null) {
+			lstBranch.setValue(Branch.valueOf(application.getBranch()));
+		}
 
 		if (application.getAttachments() != null) {
 			for (final AttachmentDto attachment : application.getAttachments()) {

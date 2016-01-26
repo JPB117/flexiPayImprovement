@@ -26,6 +26,7 @@ import com.workpoint.icpak.shared.model.CreditCardDto;
 import com.workpoint.icpak.shared.model.CreditCardResponse;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.Listable;
+import com.workpoint.icpak.shared.model.PaymentStatus;
 
 public class PaymentWidget extends Composite {
 
@@ -227,7 +228,7 @@ public class PaymentWidget extends Composite {
 	}
 
 	public void setInvoiceResult(InvoiceDto invoice) {
-		if (invoice.getPaymentStatus().equals("PAID")) {
+		if (invoice.getStatus() == PaymentStatus.PAID) {
 			panelSuccess.removeStyleName("hide");
 			PanelPayment.addStyleName("hide");
 		} else {
