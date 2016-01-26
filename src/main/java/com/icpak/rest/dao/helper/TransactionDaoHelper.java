@@ -45,12 +45,14 @@ public class TransactionDaoHelper {
 	BookingsDao bookingDao;
 	@Inject
 	ApplicationFormDao applicationDao;
-
 	@Inject
 	SMSIntegration smsIntergration;
 	@Inject
 	MemberDao memberDao;
 	Logger logger = Logger.getLogger(TransactionDaoHelper.class.getName());
+	Locale locale = new Locale("en", "KE");
+	NumberFormat numberFormat = NumberFormat.getCurrencyInstance(locale);
+	private InvoiceDto invoiceDto;
 
 	public String charge(String accountNo, Date chargeDate, String description,
 			Date dueDate, Double amount, String documentNo, String invoiceRef) {
@@ -94,10 +96,6 @@ public class TransactionDaoHelper {
 		}
 		dao.save(trx);
 	}
-
-	Locale locale = new Locale("en", "KE");
-	NumberFormat numberFormat = NumberFormat.getCurrencyInstance(locale);
-	private InvoiceDto invoiceDto;
 
 	public void receivePaymentUsingInvoiceNo(String paymentRef,
 			String businessNo, String accountNo, String paymentMode,

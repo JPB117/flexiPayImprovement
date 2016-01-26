@@ -7,6 +7,7 @@ import java.math.BigInteger;
 import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.persistence.Query;
@@ -40,6 +41,9 @@ public class InvoiceDaoHelper {
 	BookingsDao bookingsDao;
 	@Inject
 	InvoiceDao invoiceDao;
+
+	Locale locale = new Locale("en", "KE");
+	NumberFormat numberFormat = NumberFormat.getCurrencyInstance(locale);
 
 	public InvoiceDto getInvoice(String invoiceRef) {
 		Invoice invoice = dao.findByRefId(invoiceRef, Invoice.class);
@@ -140,12 +144,8 @@ public class InvoiceDaoHelper {
 			line.put("description", dto.getDescription());
 			line.put("quantity",
 					NumberFormat.getNumberInstance().format(dto.getQuantity()));
-			line.put("unitPrice",
-					NumberFormat.getNumberInstance().format(dto.getUnitPrice()));
-			line.put(
-					"amount",
-					NumberFormat.getNumberInstance().format(
-							dto.getTotalAmount()));
+			line.put("unitPrice", numberFormat.format(dto.getUnitPrice()));
+			line.put("amount", numberFormat.format(dto.getTotalAmount()));
 			proformaDocument
 					.addDetail(new DocumentLine("invoiceDetails", line));
 		}

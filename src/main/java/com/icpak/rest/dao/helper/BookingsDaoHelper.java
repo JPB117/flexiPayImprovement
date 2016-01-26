@@ -13,6 +13,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -97,6 +98,8 @@ public class BookingsDaoHelper {
 	AccommodationsDaoHelper accommodationsDaoHelper;
 
 	SimpleDateFormat formatter = new SimpleDateFormat("MMM d Y");
+	Locale locale = new Locale("en", "KE");
+	NumberFormat numberFormat = NumberFormat.getCurrencyInstance(locale);
 
 	private Booking booking;
 
@@ -277,12 +280,10 @@ public class BookingsDaoHelper {
 				line.put("discDescription", dto.getDescription());
 				line.put("discQuantity", NumberFormat.getNumberInstance()
 						.format(dto.getQuantity()));
-				line.put("discUnitPrice", NumberFormat.getNumberInstance()
-						.format(dto.getUnitPrice()));
-				line.put(
-						"discAmount",
-						NumberFormat.getNumberInstance().format(
-								dto.getTotalAmount()));
+				line.put("discUnitPrice",
+						numberFormat.format(dto.getUnitPrice()));
+				line.put("discAmount",
+						numberFormat.format(dto.getTotalAmount()));
 				proformaDocument.addDetail(new DocumentLine("DiscountDetails",
 						line));
 				System.err.println("InvoiceLineDto: " + dto.getRefId() + " | "
@@ -295,10 +296,10 @@ public class BookingsDaoHelper {
 				line.put("penaltyDescription", dto.getDescription());
 				line.put("penaltyQuantity", NumberFormat.getNumberInstance()
 						.format(dto.getQuantity()));
-				line.put("penaltyUnitPrice", NumberFormat.getNumberInstance()
-						.format(dto.getUnitPrice()));
-				line.put("penaltyAmount", NumberFormat.getNumberInstance()
-						.format(dto.getTotalAmount()));
+				line.put("penaltyUnitPrice",
+						numberFormat.format(dto.getUnitPrice()));
+				line.put("penaltyAmount",
+						numberFormat.format(dto.getTotalAmount()));
 				proformaDocument.addDetail(new DocumentLine("PenaltyDetails",
 						line));
 				System.err.println("InvoiceLineDto: " + dto.getRefId() + " | "
@@ -311,14 +312,8 @@ public class BookingsDaoHelper {
 						"quantity",
 						NumberFormat.getNumberInstance().format(
 								dto.getQuantity()));
-				line.put(
-						"unitPrice",
-						NumberFormat.getNumberInstance().format(
-								dto.getUnitPrice()));
-				line.put(
-						"amount",
-						NumberFormat.getNumberInstance().format(
-								dto.getTotalAmount()));
+				line.put("unitPrice", numberFormat.format(dto.getUnitPrice()));
+				line.put("amount", numberFormat.format(dto.getTotalAmount()));
 				logger.info("InvoiceDto: " + dto.getRefId() + " | "
 						+ dto.getDescription() + " | " + dto.getTotalAmount()
 						+ " | " + dto.getType());
@@ -329,22 +324,19 @@ public class BookingsDaoHelper {
 
 		}
 
-		emailValues.put(
-				"totalAmount",
-				NumberFormat.getNumberInstance().format(
-						invoice.getInvoiceAmount()));
+		emailValues.put("totalAmount",
+				numberFormat.format(invoice.getInvoiceAmount()));
 		if (booking.getEvent().getDiscountDate() != null) {
 			String discountDescription = "Total Discount(Payment before %s) ";
 			discountDescription = String.format(discountDescription,
 					formatter.format(booking.getEvent().getDiscountDate()));
 			emailValues.put("totalDiscountDesc", discountDescription);
-			emailValues.put("totalDiscAmount", NumberFormat.getNumberInstance()
-					.format(invoice.getTotalDiscount()));
+			emailValues.put("totalDiscAmount",
+					numberFormat.format(invoice.getTotalDiscount()));
 		} else {
 			String discountDescription = "Total Discount ";
 			emailValues.put("totalDiscountDesc", discountDescription);
-			emailValues.put("totalDiscAmount", NumberFormat.getNumberInstance()
-					.format(0.0));
+			emailValues.put("totalDiscAmount", numberFormat.format(0.0));
 		}
 
 		if (booking.getEvent().getPenaltyDate() != null) {
@@ -352,13 +344,12 @@ public class BookingsDaoHelper {
 			penaltyDescription = String.format(penaltyDescription,
 					formatter.format(booking.getEvent().getPenaltyDate()));
 			emailValues.put("totalPenaltyDesc", penaltyDescription);
-			emailValues.put("totalPenaltyAmount", NumberFormat
-					.getNumberInstance().format(invoice.getTotalPenalty()));
+			emailValues.put("totalPenaltyAmount",
+					numberFormat.format(invoice.getTotalPenalty()));
 		} else {
 			String discountDescription = "Total Penalties ";
-			emailValues.put("totalDiscountDesc", discountDescription);
-			emailValues.put("totalDiscAmount", NumberFormat.getNumberInstance()
-					.format(0.0));
+			emailValues.put("totalPenaltyDesc", discountDescription);
+			emailValues.put("totalPenaltyAmount", numberFormat.format(0.0));
 		}
 
 		// PDF Invoice Generation

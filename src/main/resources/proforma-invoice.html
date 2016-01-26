@@ -544,17 +544,17 @@ div.footer {
 				<table class="table table-bordered table-condensed">
 					<thead>
 						<tr>
-							<th class="num" width="72%">Description</th>
-							<th class="num">Quantity</th>
-							<th class="num">Unit Price(Ksh)</th>
-							<th class="num">Amount(Ksh)</th>
+							<th class="text-left" width="72%">Description</th>
+							<th class="text-center">Quantity</th>
+							<th class="num">Unit Price</th>
+							<th class="num">Amount</th>
 						</tr>
 					</thead>
 					<tbody>
 						<!--@>invoiceDetails-->
 						<tr>
-							<td class="num">@#description</td>
-							<td class="num">@#quantity</td>
+							<td class="text-left">@#description</td>
+							<td class="text-center">@#quantity</td>
 							<td class="num">@#unitPrice</td>
 							<td class="num">@#amount</td>
 						</tr>
@@ -563,23 +563,22 @@ div.footer {
 							<td></td>
 							<td></td>
 							<td class="num"><b>Grand Total</b></td>
-							<td class="num"><b style="border-bottom: 3px double;">KES
-									@#totalAmount</b></td>
+							<td class="num"><b style="border-bottom: 3px double;">@#totalAmount</b></td>
 						</tr>
 					</tbody>
 				</table>
 
 				<br />
 				<h4>
-					<Strong>Discounts Applicable:</Strong>
+					<Strong>Discounts:</Strong>
 				</h4>
 				<table class="table table-bordered table-condensed">
 					<thead>
 						<tr>
 							<th class="text-left" width="72%">Description</th>
 							<th class="text-center">Quantity</th>
-							<th class="num">Unit Price(Ksh)</th>
-							<th class="num">Amount(Ksh)</th>
+							<th class="num">Unit Price</th>
+							<th class="num">Amount</th>
 						</tr>
 					</thead>
 
@@ -593,10 +592,8 @@ div.footer {
 						</tr>
 						<!--@<DiscountDetails-->
 						<tr>
-							<td></td>
-							<td></td>
-							<td class="num"><b>@#totalDiscountDesc</b></td>
-							<td class="num"><b style="border-bottom: 3px double;">KES
+							<td class="num" colspan="3"><b>@#totalDiscountDesc</b></td>
+							<td class="num"><b style="border-bottom: 3px double;">
 									@#totalDiscAmount</b></td>
 						</tr>
 					</tbody>
@@ -604,15 +601,15 @@ div.footer {
 
 				<br />
 				<h4>
-					<Strong>Penalties Applicable:</Strong>
+					<Strong>Penalties:</Strong>
 				</h4>
 				<table class="table table-bordered table-condensed">
 					<thead>
 						<tr>
 							<th class="text-left" width="72%">Description</th>
 							<th class="text-center">Quantity</th>
-							<th class="num">Unit Price(Ksh)</th>
-							<th class="num">Amount(Ksh)</th>
+							<th class="num">Unit Price</th>
+							<th class="num">Amount</th>
 						</tr>
 					</thead>
 
@@ -626,10 +623,8 @@ div.footer {
 						</tr>
 						<!--@<PenaltyDetails-->
 						<tr>
-							<td></td>
-							<td></td>
-							<td class="num"><b>@#totalPenaltyDesc</b></td>
-							<td class="num"><b style="border-bottom: 3px double;">KES
+							<td class="num" colspan="3"><b>@#totalPenaltyDesc</b></td>
+							<td class="num"><b style="border-bottom: 3px double;">
 									@#totalPenaltyAmount</b></td>
 						</tr>
 					</tbody>

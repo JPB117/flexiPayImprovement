@@ -45,8 +45,8 @@ BEGIN
                 else set v_filler = '';
 		end if;
 
-		insert into docnums values (p_casenumber,p_doctype, concat(p_doctype,'-',v_filler,v_nextval));
-		return concat(p_doctype,'-',v_filler,v_nextval);
+		insert into docnums values (p_casenumber,p_doctype, concat(p_doctype,v_filler,v_nextval));
+		return concat(p_doctype,v_filler,v_nextval);
 	else
 		return v_previousallocatedno;
 	end if;
