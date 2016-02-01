@@ -117,6 +117,8 @@ public class ProfilePresenter
 		HasClickHandlers getCertStatusButton();
 
 		void updateStatement();
+
+		void hideGoodStanding();
 	}
 
 	private final CurrentUser currentUser;
@@ -251,15 +253,7 @@ public class ProfilePresenter
 					}
 				});
 
-		// getView().getErpRefreshButton().addClickHandler(new ClickHandler() {
-		// @Override
-		// public void onClick(ClickEvent event) {
-		// loadDataFromErp(true);
-		// }
-		// });
-
 		getView().getCertStatusButton().addClickHandler(new ClickHandler() {
-
 			@Override
 			public void onClick(ClickEvent event) {
 				loadDataFromErp(true);
@@ -502,6 +496,8 @@ public class ProfilePresenter
 		String applicationRefId = getApplicationRefId();
 		loadData(applicationRefId);
 		getView().setApplicationId(applicationRefId);
+
+		getView().hideGoodStanding();
 	}
 
 	/*
@@ -509,9 +505,7 @@ public class ProfilePresenter
 	 */
 	private void loadDataFromErp(boolean forceRefesh) {
 		fireEvent(new ProcessingEvent());
-
 		memberDelegate.withCallback(new AbstractAsyncCallback<Boolean>() {
-
 			@Override
 			public void onSuccess(Boolean hasLoaded) {
 				fireEvent(new ProcessingCompletedEvent());

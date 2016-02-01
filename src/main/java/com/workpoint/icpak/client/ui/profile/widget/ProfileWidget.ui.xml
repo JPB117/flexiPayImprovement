@@ -4,35 +4,34 @@
 	xmlns:d='urn:import:com.workpoint.icpak.client.ui.component' xmlns:g="urn:import:com.google.gwt.user.client.ui"
 	xmlns:up='urn:import:com.workpoint.icpak.client.ui.upload.custom'>
 	<ui:style>
-		.help-icon {
+	.help-icon {
 		padding-left: 10px;
 		font-size: 18px;
 		color: gray;
-		}
-
-		.help-icon:hover {
+	}
+	
+	.help-icon:hover {
 		text-decoration: none;
-		}
-
-		.change-photo {
+	}
+	
+	.change-photo {
 		background-color: #000;
 		padding: 5px;
 		opacity: .8;
-		text-align: center
-		!important;
+		text-align: center !important;
 		position: absolute;
 		width: 160px;
 		top: 141px;
-		}
-
-		.change-photo a {
+	}
+	
+	.change-photo a {
 		color: white;
 		font-weight: bold;
-		}
-
-		.previous-link {
+	}
+	
+	.previous-link {
 		padding-right: 20px;
-		}
+	}
 	</ui:style>
 	<g:HTMLPanel>
 		<g:HTMLPanel ui:field="divProfileContent" styleName="col-xs-12">
@@ -183,23 +182,23 @@
 											</div>
 										</div>
 
-										<div ui:field="divStandingStatus" class="hide">
+										<div>
 											<div class="row">
-												<br />
-												Standing Status:
-												<div class="label label-success" ui:field="divAccountStatus">
-													<i class="fa fa-check hide" ui:field="iconSuccess"></i>
-													<i class="fa fa-times-circle hide" ui:field="iconFail"></i>
-													<span ui:field="spnAccountStatus">
-													</span>
-
-													<a ui:field="spnHelpIcon"
-														class="hide fa fa-question-circle popover-icon {style.help-icon}"
-														data-toggle="popover" data-trigger="hover" title="Reasons for this:"></a>
-													<d:PopOver></d:PopOver>
+												<div ui:field="divStandingStatus">
+													Standing Status:
+													<div>
+														<div class="label label-success" ui:field="divAccountStatus">
+															<i class="fa fa-check hide" ui:field="iconSuccess"></i>
+															<i class="fa fa-times-circle hide" ui:field="iconFail"></i>
+															<span ui:field="spnAccountStatus">
+															</span>
+														</div>
+														<a ui:field="spnHelpIcon"
+															class="hide fa fa-question-circle popover-icon {style.help-icon}"
+															data-toggle="popover" data-trigger="hover" title="Reasons for this:"></a>
+														<d:PopOver></d:PopOver>
+													</div>
 												</div>
-
-												<br />
 												<d:ActionLink ui:field="aCheckStandingStatus"
 													styleName="btn btn-default btn-fill">Check GoodStanding Status
 												</d:ActionLink>
