@@ -119,9 +119,11 @@ public class ApplicationFormDaoHelper {
 		po.setNationality(application.getNationality());
 		po.setMemberNo(application.getMemberNo());
 		po.setPhoneNumber(application.getMobileNo());
+		po.setFullName(application.getSurname() + " "
+				+ application.getOtherNames());
 		BioData bioData = new BioData();
-		bioData.setFirstName(application.getOtherNames());
-		bioData.setLastName(application.getSurname());
+		bioData.setFirstName(application.getSurname());
+		bioData.setLastName(application.getOtherNames());
 		po.setUserData(bioData);
 
 		String password = IDUtils.generateTempPassword();
@@ -270,7 +272,7 @@ public class ApplicationFormDaoHelper {
 			}
 			counter++;
 			rtn.add(dto);
-//			applicationDao.updateApplication();
+			// applicationDao.updateApplication();
 		}
 		return rtn;
 	}

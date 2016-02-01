@@ -331,8 +331,10 @@ public class BookingsDaoHelper {
 			discountDescription = String.format(discountDescription,
 					formatter.format(booking.getEvent().getDiscountDate()));
 			emailValues.put("totalDiscountDesc", discountDescription);
-			emailValues.put("totalDiscAmount",
-					numberFormat.format(invoice.getTotalDiscount()));
+			if (invoice.getTotalDiscount() != null) {
+				emailValues.put("totalDiscAmount",
+						numberFormat.format(invoice.getTotalDiscount()));
+			}
 		} else {
 			String discountDescription = "Total Discount ";
 			emailValues.put("totalDiscountDesc", discountDescription);
@@ -344,8 +346,10 @@ public class BookingsDaoHelper {
 			penaltyDescription = String.format(penaltyDescription,
 					formatter.format(booking.getEvent().getPenaltyDate()));
 			emailValues.put("totalPenaltyDesc", penaltyDescription);
-			emailValues.put("totalPenaltyAmount",
-					numberFormat.format(invoice.getTotalPenalty()));
+			if (invoice.getTotalPenalty() != null) {
+				emailValues.put("totalPenaltyAmount",
+						numberFormat.format(invoice.getTotalPenalty()));
+			}
 		} else {
 			String discountDescription = "Total Penalties ";
 			emailValues.put("totalPenaltyDesc", discountDescription);

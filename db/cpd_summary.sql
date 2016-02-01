@@ -4,6 +4,7 @@ alter table navmember change column Year2013  Year2013 double default 0.0;
 alter table navmember change column Year2014  Year2014 double default 0.0;
 alter table navmember change column Year2015  Year2015 double default 0.0;
 alter table navmember change column Year2016  Year2016 double default 0.0;
+alter table navmember modify column Gender int null;
 /*alter table navmember change column Year2017  Year2017 double default 0.0;*/
 
 drop procedure if exists `proc_updatecpdsummary`;
@@ -16,27 +17,25 @@ BEGIN
 	declare v_email varchar(50);
 	declare v_status varchar(50);
 	declare v_customerType varchar(50);
-	declare v_name varchar(50);
+	declare v_name varchar(50);	
 	declare v_practisingNo varchar(50); 
 	declare v_gender varchar(50);
 	
 
 	set v_year=YEAR(p_created); 
 	
-	select sum(cpdHours) into v_sum from cpd where memberRegistrationNo=p_memberRegistrationNo and YEAR(startdate)=v_year and status='Approved';
+	select coalesce(sum(cpdHours),0) into v_sum from cpd where memberRegistrationNo=p_memberRegistrationNo and YEAR(startdate)=v_year and status='Approved';
 	if(v_sum is null) then
 		set v_sum=0.0;
 	end if;
 	
-	if(select exists(select * from navmember where No_=p_memberRegistrationNo)=false) then
-	
-		select u.Name,u.email,m.customerType,m.practisingNo,u.Gender
+	if(select not exists(select * from navmember where No_=p_memberRegistrationNo)) then
+		select u.fullName,u.email,m.customerType,m.practisingNo,u.Gender
 		into v_name, v_email, v_customerType,v_practisingNo,v_gender
 		from member m 
 		inner join `user` u on (m.userId= u.id) where m.memberNo=p_memberRegistrationNo;
-		
 		insert into navmember(No_,Name,`E-Mail`,`Customer Type`, `Practising No`,Gender) 
-			values(p_memberRegistrationNo, v_email,v_customerType,v_practisingNo, v_gender);
+			values(p_memberRegistrationNo,v_name,v_email,v_customerType,v_practisingNo, v_gender);
 	end if;
 	
 	if(v_year=2011)	then

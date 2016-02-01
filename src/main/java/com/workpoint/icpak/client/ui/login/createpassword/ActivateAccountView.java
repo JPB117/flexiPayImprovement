@@ -118,4 +118,8 @@ public class ActivateAccountView extends ViewImpl implements
 			panelPasswordWidget.removeStyleName("whirl traditional");
 		}
 	}
+
+	public void showContinueButton(boolean show) {
+		panelPasswordWidget.showContinueButton(show);
+	}
 }

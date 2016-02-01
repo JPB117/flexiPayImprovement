@@ -102,7 +102,8 @@ public class CPDDaoHelper {
 		dao.save(cpd);
 
 		CPDDto rtn = cpd.toDTO();
-		rtn.setFullNames(userDao.getFullNames(memberRefId));
+		// System.err.println(">>>>>>" + userDao.getFullNames(memberRefId));
+		// rtn.setFullNames(userDao.getFullNames(memberRefId));
 		return rtn;
 	}
 

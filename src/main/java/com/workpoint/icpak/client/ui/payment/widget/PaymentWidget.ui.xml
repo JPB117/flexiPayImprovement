@@ -10,7 +10,7 @@
 		margin-bottom: 24px;
 	}
 	</ui:style>
-	
+
 	<g:HTMLPanel styleName="col-sm-12">
 		<br />
 		<br />
@@ -19,8 +19,7 @@
 			<br />
 			<div class="alert alert-success" ui:field="panelMessage">
 				<i class="icon icon-ok"></i>
-				Your payment has successfully been received and posted into your
-				account. Click FINISH to complete
+				Thank-you, Your payment has been received.
 			</div>
 		</g:HTMLPanel>
 

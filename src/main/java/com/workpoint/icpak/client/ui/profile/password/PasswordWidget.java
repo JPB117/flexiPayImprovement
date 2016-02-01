@@ -5,10 +5,13 @@ import static com.workpoint.icpak.client.ui.util.StringUtils.isNullOrEmpty;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasKeyDownHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -40,6 +43,9 @@ public class PasswordWidget extends Composite {
 
 	@UiField
 	ActionLink aProceedToLogin;
+
+	@UiField
+	ActionLink aContinue;
 
 	@UiField
 	HTMLPanel panelMessage;
@@ -176,7 +182,7 @@ public class PasswordWidget extends Composite {
 		showSuccess(false);
 		if (reason.equals("forgot")) {
 			this.doValidation = false;
-			spnInfo.setInnerText("Enter the E-mail you used to do registration, and email will be sent with Reset Instructions");
+			spnInfo.setInnerText("Enter the E-mail you used to do registration, and an email will be sent with Reset Instructions");
 			txtEmail.getElement().removeAttribute("disabled");
 			divConfirmPassword.addClassName("hide");
 			divPassword.addClassName("hide");
@@ -185,7 +191,7 @@ public class PasswordWidget extends Composite {
 			aSendActivation.addStyleName("hide");
 		} else if (reason.equals("activate")) {
 			this.doValidation = false;
-			spnInfo.setInnerText("Enter the E-mail you used to do registration, and email will be sent with Activation Instructions.");
+			spnInfo.setInnerText("Enter the E-mail you used to do registration, and an email will be sent with Activation Instructions.");
 			txtEmail.getElement().removeAttribute("disabled");
 			divConfirmPassword.addClassName("hide");
 			divPassword.addClassName("hide");
@@ -254,6 +260,20 @@ public class PasswordWidget extends Composite {
 			aCancel.removeStyleName("hide");
 			divInstructionItems.removeClassName("hide");
 			panelMessage.addStyleName("hide");
+		}
+	}
+
+	public void showContinueButton(boolean show) {
+		aContinue.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				History.back();
+			}
+		});
+		if (show) {
+			aContinue.removeStyleName("hide");
+		} else {
+			aContinue.addStyleName("hide");
 		}
 	}
 }

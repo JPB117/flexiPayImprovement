@@ -77,6 +77,8 @@ public class ActivateAccountPresenter
 
 		void showmask(boolean processing);
 
+		void showContinueButton(boolean show);
+
 	}
 
 	@ProxyCodeSplit
@@ -234,9 +236,13 @@ public class ActivateAccountPresenter
 					getView().showProcessing(false);
 					getView()
 							.showMessage(
-									"Reset Password Instructions have been sent to your email",
+									"Reset Password Instructions have been sent to your email."
+											+ "Also check the spam folder, incase you can't see inbox. "
+											+ "Click on the link in the email to proceed..",
 									"success");
 					// sendResetEmail(result.getRefId());
+
+					getView().showContinueButton(true);
 				}
 
 				public boolean handleCustomError(
@@ -370,9 +376,10 @@ public class ActivateAccountPresenter
 		getView()
 				.showMessage(
 						"Activation Instructions have been sent to your email. "
-								+ "Also check the spam folder in email, incase you can't see inbox. "
+								+ "Also check the spam folder, incase you can't see inbox. "
 								+ "Click on the link in the email to proceed..",
 						"success");
+		getView().showContinueButton(true);
 
 	}
 

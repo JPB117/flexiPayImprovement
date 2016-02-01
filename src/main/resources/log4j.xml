@@ -20,9 +20,14 @@
 	<logger name="com.google.inject">
 		<level value="ALL" />
 	</logger>
-	<logger name="org.hibernate">
-		<level value="FATAL" />
+	<logger name="org.hibernate.type">
+		<level value="DEBUG" />
 	</logger>
+
+	<logger name="org.hibernate.SQL">
+		<level value="DEBUG" />
+	</logger>
+
 	<logger name="org.apache.shiro">
 		<level value="DEBUG" />
 	</logger>

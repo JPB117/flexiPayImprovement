@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.junit.After;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -15,6 +14,7 @@ import com.icpak.rest.dao.CPDDao;
 import com.icpak.rest.dao.helper.CPDDaoHelper;
 import com.icpak.rest.models.cpd.CPD;
 import com.icpak.servlet.upload.GetReport;
+import com.workpoint.icpak.shared.model.CPDCategory;
 import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.shared.model.MemberCPDDto;
 import com.workpoint.icpak.tests.base.AbstractDaoTest;
@@ -41,11 +41,23 @@ public class TestCPDDao extends AbstractDaoTest {
 	}
 
 	@Ignore
-	public void testCreateCPD() {
+	public void testUpdateCPD() {
 		CPD cpd = cpdDao.findByCPDId("NgmZcYUU0mu7JEyr");
 		CPDDto dto = cpd.toDTO();
 		dto.setManagementComment("Please provide the necessary attachments");
 		helper.update("3pzAyw110E2i5VTE", "NgmZcYUU0mu7JEyr", dto);
+	}
+
+	@Test
+	public void testCreateCPD() {
+		CPDDto dto = new CPDDto();
+		dto.setCategory(CPDCategory.CATEGORY_A);
+		dto.setEndDate(new Date(1452373200000L));
+		dto.setStartDate(new Date(1451509200000L));
+		dto.setMemberRegistrationNo("18134");
+		dto.setTitle("FUTURE");
+		dto.setOrganizer("DAKNDFKANDKFA");
+		helper.create("QpkHIcVizijvuVTH", dto);
 	}
 
 	@Ignore
@@ -97,9 +109,7 @@ public class TestCPDDao extends AbstractDaoTest {
 	@Ignore
 	public void testSearchCount() {
 		int count = helper.cpdSearchCount("kimani");
-
 		logger.error("========= CPP search count=== " + count);
-
 	}
 
 	@Ignore
@@ -131,14 +141,14 @@ public class TestCPDDao extends AbstractDaoTest {
 		}
 		logger.error("======= List length=== " + cpdDtos.size());
 	}
-	
-	@Test
-	public void transferCPDBlob(){
+
+	@Ignore
+	public void transferCPDBlob() {
 		cpdDao.dumpBlobToFile();
 	}
-	
-	@After
-	public void commitTrx(){
-		//commit();
+
+	@Ignore
+	public void commitTrx() {
+		// commit();
 	}
 }
