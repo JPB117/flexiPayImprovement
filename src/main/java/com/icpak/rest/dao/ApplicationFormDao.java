@@ -8,6 +8,7 @@ import com.icpak.rest.models.ErrorCodes;
 import com.icpak.rest.models.membership.ApplicationCategory;
 import com.icpak.rest.models.membership.ApplicationFormAccountancy;
 import com.icpak.rest.models.membership.ApplicationFormEducational;
+import com.icpak.rest.models.membership.ApplicationFormEmpSector;
 import com.icpak.rest.models.membership.ApplicationFormHeader;
 import com.icpak.rest.models.membership.ApplicationFormSpecialization;
 import com.icpak.rest.models.membership.ApplicationFormTraining;
@@ -185,7 +186,6 @@ public class ApplicationFormDao extends BaseDao {
 
 	public Collection<ApplicationFormSpecialization> getSpecialization(
 			String applicationId) {
-
 		return getResultList(getEntityManager().createQuery(
 				"from ApplicationFormSpecialization "
 						+ "where applicationRefId=:refId and isactive=1")
@@ -198,6 +198,25 @@ public class ApplicationFormDao extends BaseDao {
 		return getSingleResultOrNull(getEntityManager()
 				.createQuery(
 						"from ApplicationFormSpecialization "
+								+ "where specialization=:specialization "
+								+ "and applicationRefId=:refId and isactive=1")
+				.setParameter("specialization", specialization)
+				.setParameter("refId", applicationRefId));
+	}
+
+	public Collection<ApplicationFormEmpSector> getEmployment(
+			String applicationId) {
+		return getResultList(getEntityManager().createQuery(
+				"from ApplicationFormEmpSector "
+						+ "where applicationRefId=:refId and isactive=1")
+				.setParameter("refId", applicationId));
+	}
+
+	public ApplicationFormEmpSector getEmploymentByName(
+			String applicationRefId, Specializations specialization) {
+		return getSingleResultOrNull(getEntityManager()
+				.createQuery(
+						"from ApplicationFormEmpSector "
 								+ "where specialization=:specialization "
 								+ "and applicationRefId=:refId and isactive=1")
 				.setParameter("specialization", specialization)

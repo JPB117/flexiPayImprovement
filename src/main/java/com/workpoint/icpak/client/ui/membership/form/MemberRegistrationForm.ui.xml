@@ -13,148 +13,287 @@
 		</div>
 
 		<div class="col-sm-12">
-			<div class="form-group">
-				<div class="row">
-					<div class="col-xs-6">
-						<label for="firstname">Surname</label>
-						<d:TextField ui:field="txtSurname" styleName="form-control"
-							placeholder="Enter Surname" value="" required="true">
-						</d:TextField>
-					</div>
-					<div class="col-xs-6">
-						<label for="lastname">Other Name</label>
-						<d:TextField ui:field="txtOtherNames" styleName="form-control"
-							placeholder="Enter Other Name" value="" required="true">
-						</d:TextField>
-					</div>
-				</div>
-			</div>
-
-			<div class="form-group">
-				<div class="row">
-					<div class="col-xs-6">
-						<label for="emailaddress">Email Address</label>
-						<d:TextField ui:field="txtEmailAddress" styleName="form-control"
-							placeholder="Email address" value="" required="true">
-						</d:TextField>
-					</div>
-
-					<div class="col-xs-6">
-						<label for="phone">Phone Number</label>
-						<d:TextField ui:field="txtPhone" styleName="form-control"
-							placeholder="Phone Number" value="" required="true">
-						</d:TextField>
-					</div>
-				</div>
-			</div>
-
-
-			<div class="form-group">
-				<div class="row">
-					<div class="col-xs-6">
-						<label for="emailaddress">Date of Birth:</label>
-						<d:DateField ui:field="dtDOB" placeholder="Your Date of Birth"
-							required="true">
-						</d:DateField>
-					</div>
-
-					<div class="col-xs-6 hide">
-						<label for="phone">Gender:</label>
-						<d:DropDownList ui:field="lstGender" styleName="form-control">
-						</d:DropDownList>
-					</div>
-				</div>
-			</div>
-
-
-			<div class="form-group">
-				<div class="row">
-					<div class="col-xs-6">
-						<label for="emailaddress">Employer Name</label>
-						<d:TextField ui:field="txtEmployer" styleName="form-control"
-							placeholder="Enter Employer's Name" value="" required="true">
-						</d:TextField>
-					</div>
-
-					<div class="col-xs-6">
-						<label for="applicationCategory">Town/City</label>
-
-						<d:TextField ui:field="txtCity" styleName="form-control"
-							placeholder="Enter Town/City" value="" required="true">
-						</d:TextField>
-					</div>
-				</div>
-			</div>
-
-			<div class="form-group">
-				<div class="row">
-					<div class="col-xs-6">
-						<label for="emailaddress">Address</label>
-						<d:TextField ui:field="txtAddress" styleName="form-control"
-							placeholder="Enter Address" value="" required="true">
-						</d:TextField>
-					</div>
-
-					<div class="col-xs-6">
-						<label for="applicationCategory">Postal Code</label>
-
-						<d:TextField ui:field="txtPostalCode" styleName="form-control"
-							placeholder="Enter Postal Code" value="" required="true">
-						</d:TextField>
-					</div>
-				</div>
-			</div>
-
-			<div class="form-group">
-				<div class="row">
-					<div class="col-xs-6">
-						<label for="emailaddress">Country:</label>
-						<d:DropDownList ui:field="lstCountry" styleName="form-control">
-						</d:DropDownList>
-					</div>
-
-					<div class="col-xs-6">
-						<label for="emailaddress">Residence:</label>
-						<d:TextField ui:field="txtResidence" styleName="form-control"
-							placeholder="Your Residence">
-						</d:TextField>
-					</div>
-				</div>
-			</div>
-
-			<div class="form-group">
-				<div class="row">
-					<div class="col-xs-6">
-						<label for="emailaddress">Id Number:</label>
-						<d:TextField ui:field="txtIdNo" styleName="form-control"
-							placeholder="Your Id Number">
-						</d:TextField>
-					</div>
-
-					<div class="col-xs-6 hide" ui:field="divIdCopy">
-						<label for="emailaddress">Id Copy:</label>
-						<g:HTMLPanel ui:field="panelPreviousAttachments"></g:HTMLPanel>
-						<up:Uploader ui:field="uploaderIdCopy" styleName="custom-file-input"></up:Uploader>
-						<div class="text-muted">
-							<span ui:field="spnInfo">
-								(Provide a copy of National Identity card
-								(both sides) for Kenyans or a copy of current entry permit and
-								copies of pages 1-5 of passport for non Kenyans)
-							</span>
+			<fieldset>
+				<legend>Personal Details:</legend>
+				<div class="form-group">
+					<div class="row">
+						<div class="col-xs-6">
+							<label for="firstname">
+								Surname
+								<span style="color:red">*</span>
+							</label>
+							<d:TextField ui:field="txtSurname" styleName="form-control"
+								placeholder="Enter Surname" value="" required="true">
+							</d:TextField>
+						</div>
+						<div class="col-xs-6">
+							<label for="lastname">
+								Other Name
+								<span style="color:red">*</span>
+							</label>
+							<d:TextField ui:field="txtOtherNames" styleName="form-control"
+								placeholder="Enter Other Name" value="" required="true">
+							</d:TextField>
 						</div>
 					</div>
 				</div>
-			</div>
 
-			<div class="form-group">
-				<div class="row">
-					<div class="col-xs-6">
-						<label for="emailaddress">Select Branch:</label>
-						<d:DropDownList ui:field="lstBranch" styleName="form-control">
-						</d:DropDownList>
+				<div class="form-group">
+					<div class="row">
+						<div class="col-xs-6">
+							<label for="emailaddress">
+								Email Address
+								<span style="color:red">*</span>
+							</label>
+							<d:TextField ui:field="txtEmailAddress" styleName="form-control"
+								placeholder="Email address" value="" required="true">
+							</d:TextField>
+						</div>
+
+						<div class="col-xs-6">
+							<label for="phone">
+								Phone Number
+								<span style="color:red">*</span>
+							</label>
+							<d:TextField ui:field="txtPhone" styleName="form-control"
+								placeholder="Phone Number" value="" required="true">
+							</d:TextField>
+						</div>
 					</div>
 				</div>
-			</div>
+
+				<div class="form-group">
+					<div class="row">
+						<div class="col-xs-6">
+							<label for="emailaddress">
+								Date of Birth:
+								<span style="color:red">*</span>
+							</label>
+							<d:DateField ui:field="dtDOB" placeholder="Your Date of Birth"
+								required="true">
+							</d:DateField>
+						</div>
+						<div class="col-xs-6">
+							<label for="phone">
+								Gender:
+								<span style="color:red">*</span>
+							</label>
+							<d:DropDownList ui:field="lstGender" styleName="form-control">
+							</d:DropDownList>
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<div class="row">
+						<div class="col-xs-6">
+							<label for="emailaddress">
+								Employer Name
+								<span style="color:red">*</span>
+							</label>
+							<d:TextField ui:field="txtEmployer" styleName="form-control"
+								placeholder="Enter Employer's Name" value="" required="true">
+							</d:TextField>
+						</div>
+
+						<div class="col-xs-6">
+							<label for="applicationCategory">
+								Town/City
+								<span style="color:red">*</span>
+							</label>
+
+							<d:TextField ui:field="txtCity" styleName="form-control"
+								placeholder="Enter Town/City" value="" required="true">
+							</d:TextField>
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<div class="row">
+						<div class="col-xs-6">
+							<label for="emailaddress">
+								Address:
+								<span style="color:red">*</span>
+							</label>
+							<d:TextField ui:field="txtAddress" styleName="form-control"
+								placeholder="Enter Address" value="" required="true">
+							</d:TextField>
+						</div>
+
+						<div class="col-xs-6">
+							<label for="applicationCategory">
+								Postal Code
+								<span style="color:red">*</span>
+							</label>
+
+							<d:TextField ui:field="txtPostalCode" styleName="form-control"
+								placeholder="Enter Postal Code" value="" required="true">
+							</d:TextField>
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<div class="row">
+						<div class="col-xs-6">
+							<label for="emailaddress">
+								Country:
+								<span style="color:red">*</span>
+							</label>
+							<d:DropDownList ui:field="lstCountry" styleName="form-control">
+							</d:DropDownList>
+						</div>
+
+						<div class="col-xs-6">
+							<label for="emailaddress">
+								Residence:
+								<span style="color:red">*</span>
+							</label>
+							<d:TextField ui:field="txtResidence" styleName="form-control"
+								placeholder="Your Residence">
+							</d:TextField>
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<div class="row">
+						<div class="col-xs-6">
+							<label for="emailaddress">
+								Id Number:
+								<span style="color:red">*</span>
+							</label>
+							<d:TextField ui:field="txtIdNo" styleName="form-control"
+								placeholder="Your Id Number">
+							</d:TextField>
+						</div>
+
+						<div class="col-xs-6 hide" ui:field="divIdCopy">
+							<label for="emailaddress">
+								Id Copy:
+								<span style="color:red">*</span>
+							</label>
+							<g:HTMLPanel ui:field="panelPreviousAttachments"></g:HTMLPanel>
+							<up:Uploader ui:field="uploaderIdCopy" styleName="custom-file-input"></up:Uploader>
+							<div class="text-muted">
+								<span ui:field="spnInfo">
+									(Provide a copy of National Identity card
+									(both sides) for Kenyans or a copy of current entry permit and
+									copies of pages 1-5 of passport for non Kenyans)
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="row">
+						<div class="col-xs-6">
+							<label for="emailaddress">
+								ICPAK Branch:
+								<span style="color:red">*</span>
+							</label>
+							<d:DropDownList ui:field="lstBranch" styleName="form-control">
+							</d:DropDownList>
+						</div>
+					</div>
+				</div>
+
+			</fieldset>
+
+			<fieldset>
+				<legend>Criminal offence in a court of law:</legend>
+				<div class="form-group">
+					<div class="row">
+						<div class="col-xs-12">
+							<label for="emailaddress">Offence:</label>
+							<d:TextField ui:field="txtOffence" styleName="form-control"
+								placeholder="Offence for which convicted">
+							</d:TextField>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="row">
+						<div class="col-xs-12">
+							<label for="emailaddress">Date and Place of Conviction:</label>
+							<d:TextField ui:field="txtDateAndPlace" styleName="form-control"
+								placeholder="Date and Place of Conviction">
+							</d:TextField>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="row">
+						<div class="col-xs-12">
+							<label for="emailaddress">Sentence Imposed:</label>
+							<d:TextField ui:field="txtSentence" styleName="form-control"
+								placeholder="Sentence Imposed">
+							</d:TextField>
+						</div>
+					</div>
+				</div>
+			</fieldset>
+
+			<fieldset>
+				<legend>Details on contact person:</legend>
+				<span class="text-muted">(Contact person may be a spouse, a friend or any
+					other relative who can be contacted on your behalf or who
+					can easily
+					trace you when you are out of reach. You are required to
+					put his/her
+					postal and electronic addresses as well as their
+					telephone
+					contacts.)</span>
+				<br />
+
+				<div class="form-group">
+					<div class="row">
+						<div class="col-xs-6">
+							<label for="emailaddress">
+								Name:
+								<span style="color:red">*</span>
+							</label>
+							<d:TextField ui:field="txtContactName" styleName="form-control"
+								placeholder="Contact Names">
+							</d:TextField>
+						</div>
+
+						<div class="col-xs-6">
+							<label for="emailaddress">
+								Residence:
+								<span style="color:red">*</span>
+							</label>
+							<d:TextField ui:field="txtContactResidence"
+								styleName="form-control" placeholder="Contact Email">
+							</d:TextField>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="row">
+						<div class="col-xs-6">
+							<label for="emailaddress">
+								Telephone:
+								<span style="color:red">*</span>
+							</label>
+							<d:TextField ui:field="txtContactTelephone"
+								styleName="form-control" placeholder="Contact Telephone">
+							</d:TextField>
+						</div>
+
+						<div class="col-xs-6">
+							<label for="emailaddress">
+								E-mail:
+								<span style="color:red">*</span>
+							</label>
+							<d:TextField ui:field="txtContactEmail" styleName="form-control"
+								placeholder="contact Email">
+							</d:TextField>
+						</div>
+					</div>
+				</div>
+			</fieldset>
 
 		</div>
 	</g:HTMLPanel>

@@ -6,6 +6,7 @@ import com.icpak.rest.BookingsResourceImpl;
 import com.icpak.rest.CPDResourceImpl;
 import com.icpak.rest.DelegatesResourceImpl;
 import com.icpak.rest.EducationResourceImpl;
+import com.icpak.rest.EmploymentResourceImpl;
 import com.icpak.rest.EnquiriesResourceImpl;
 import com.icpak.rest.EnrollmentsResourceImpl;
 import com.icpak.rest.SpecializationsResourceImpl;
@@ -25,6 +26,8 @@ public interface ResourceFactory {
 
 	public SpecializationsResourceImpl createSpecializationResource(
 			String applicationId);
+
+	public EmploymentResourceImpl createEmploymentResourse(String applicationId);
 
 	public CPDResourceImpl createCPDResource(String memberId);
 

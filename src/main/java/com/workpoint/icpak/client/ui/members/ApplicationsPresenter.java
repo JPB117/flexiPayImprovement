@@ -175,8 +175,10 @@ public class ApplicationsPresenter
 	}
 
 	private void loadProfileDetails(String applicationRefId,
-			final String previousRefId, final String nextRefId, final int maxSize) {
+			final String previousRefId, final String nextRefId,
+			final int maxSize) {
 		fireEvent(new ProcessingEvent());
+
 		getView().getPanelProfile().setUserImage(applicationRefId);
 
 		applicationDelegate.withCallback(

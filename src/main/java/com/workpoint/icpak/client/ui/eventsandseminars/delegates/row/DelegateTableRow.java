@@ -191,7 +191,7 @@ public class DelegateTableRow extends RowWidget {
 			divMemberNo.getElement().setInnerText(delegate.getMemberNo());
 		}
 		if (delegate.getFullName() != null) {
-			delegate.setFullName(delegate.getFullName());
+			divDelegateNames.getElement().setInnerText(delegate.getFullName());
 		} else {
 			divDelegateNames.getElement().setInnerText(
 					(delegate.getTitle() == null ? "" : delegate.getTitle()

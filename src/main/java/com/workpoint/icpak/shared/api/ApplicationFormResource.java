@@ -48,6 +48,10 @@ public interface ApplicationFormResource extends BaseResource {
 	public SpecializationsResource specialization(
 			@PathParam("applicationId") String applicationId);
 
+	@Path("/{applicationId}/employment")
+	public SpecializationsResource employment(
+			@PathParam("applicationId") String applicationId);
+
 	@GET
 	@Path("/{applicationId}")
 	@Produces(MediaType.APPLICATION_JSON)

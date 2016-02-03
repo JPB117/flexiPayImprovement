@@ -56,6 +56,22 @@ public class MemberRegistrationForm extends Composite {
 	@UiField
 	TextField txtIdNo;
 	@UiField
+	TextField txtContactName;
+	@UiField
+	TextField txtContactResidence;
+	@UiField
+	TextField txtContactTelephone;
+	@UiField
+	TextField txtContactEmail;
+
+	@UiField
+	TextField txtOffence;
+	@UiField
+	TextField txtDateAndPlace;
+	@UiField
+	TextField txtSentence;
+
+	@UiField
 	DateField dtDOB;
 	@UiField
 	Uploader uploaderIdCopy;
@@ -133,13 +149,32 @@ public class MemberRegistrationForm extends Composite {
 
 			if (isNullOrEmpty(txtIdNo.getValue())) {
 				isValid = false;
-				issuesPanel.addError("IdNumber is required");
+				issuesPanel.addError("IdNumber is required.");
 			}
 
-			// if (lstGender.getValue() == null) {
-			// isValid = false;
-			// issuesPanel.addError("Gender is required");
-			// }
+			if (isNullOrEmpty(txtContactName.getValue())) {
+				isValid = false;
+				issuesPanel.addError("Contact Name is required.");
+			}
+
+			if (isNullOrEmpty(txtContactResidence.getValue())) {
+				isValid = false;
+				issuesPanel.addError("Contact Residence is required.");
+			}
+
+			if (isNullOrEmpty(txtContactTelephone.getValue())) {
+				isValid = false;
+				issuesPanel.addError("Contact Telephone is required.");
+			}
+
+			if (isNullOrEmpty(txtContactEmail.getValue())) {
+				isValid = false;
+				issuesPanel.addError("Contact Email is required.");
+			}
+			if (lstGender.getValue() == null) {
+				isValid = false;
+				issuesPanel.addError("Gender is required");
+			}
 
 			if (!isEmailValid) {
 				isValid = false;
@@ -186,6 +221,13 @@ public class MemberRegistrationForm extends Composite {
 		dto.setResidence(txtResidence.getValue());
 		dto.setIdNumber(txtIdNo.getValue());
 		dto.setBranch(lstBranch.getValue().getName());
+		dto.setContactPerson(txtContactName.getValue());
+		dto.setContactAddress(txtContactResidence.getValue());
+		dto.setContactTelephone(txtContactTelephone.getValue());
+		dto.setContactEmail(txtContactEmail.getValue());
+		dto.setOffence(txtOffence.getValue());
+		dto.setConvictionDateAndPlace(txtDateAndPlace.getValue());
+		dto.setSentence(txtSentence.getValue());
 		return dto;
 	}
 
@@ -223,12 +265,20 @@ public class MemberRegistrationForm extends Composite {
 		txtPostalCode.setValue(application.getPostCode());
 		txtResidence.setValue(application.getResidence());
 		txtIdNo.setValue(application.getIdNumber());
-
 		if (application.getBranch() != null) {
 			lstBranch.setValue(Branch.valueOf(application.getBranch()));
 		}
 
+		txtContactName.setValue(application.getContactPerson());
+		txtContactResidence.setValue(application.getContactAddress());
+		txtContactTelephone.setValue(application.getContactTelephone());
+		txtContactEmail.setValue(application.getContactEmail());
+		txtOffence.setValue(application.getOffence());
+		txtDateAndPlace.setValue(application.getConvictionDateAndPlace());
+		txtSentence.setValue(application.getSentence());
+
 		if (application.getAttachments() != null) {
+			panelPreviousAttachments.clear();
 			for (final AttachmentDto attachment : application.getAttachments()) {
 				final UploadContext ctx = new UploadContext("getreport");
 				ctx.setAction(UPLOADACTION.GETATTACHMENT);

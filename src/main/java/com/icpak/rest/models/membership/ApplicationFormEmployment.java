@@ -8,39 +8,39 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 import com.icpak.rest.models.base.PO;
+import com.workpoint.icpak.shared.model.ApplicationFormSpecializationDto;
 
 @Entity
-@Table(name="`Application Form Employment`")
-public class ApplicationFormEmployment extends PO{
+@Table(name = "`Application Form Employment`")
+public class ApplicationFormEmployment extends PO {
 
-	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	@Column(name="`timestamp`",columnDefinition="timestamp NOT NULL default current_timestamp")
+	@Column(name = "`timestamp`", columnDefinition = "timestamp NOT NULL default current_timestamp")
 	private Timestamp timestamp;
-	@Column(nullable=false, name="`Line No_`")
+	@Column(nullable = false, name = "`Line No_`")
 	private int lineNo;
-	
-	@Column(nullable=false, name="`Application No_`", length=20)
+
+	@Column(nullable = false, name = "`Application No_`", length = 20)
 	private String applicationNo;
-	
-	@Column(nullable=false, name="`Organisation`", length=120)
+
+	@Column(nullable = false, name = "`Organisation`", length = 120)
 	private String organization;
 
-	@Column(nullable=false, name="`Job Title`", length=30)
+	@Column(nullable = false, name = "`Job Title`", length = 30)
 	private String jobTitle;
 
-	@Column(nullable=false, name="`From`", columnDefinition="datetime")
+	@Column(nullable = false, name = "`From`", columnDefinition = "datetime")
 	private Date fromDate;
 
-	@Column(nullable=false, name="`To Date`", columnDefinition="datetime")
+	@Column(nullable = false, name = "`To Date`", columnDefinition = "datetime")
 	private Date toDate;
 
-	@Column(nullable=false, name="`Training_Tasks`", length=250)
+	@Column(nullable = false, name = "`Training_Tasks`", length = 250)
 	private String trainingTasks;
-	
+
 	public ApplicationFormEmployment() {
 	}
 

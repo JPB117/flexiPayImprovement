@@ -37,9 +37,7 @@ public class Education extends PO {
 
 	@Transient
 	private String memberId;
-
 	private EduType type = EduType.ACADEMIA;
-
 	@Column(length = 2000)
 	private String institution;
 

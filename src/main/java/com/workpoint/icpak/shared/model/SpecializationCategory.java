@@ -2,10 +2,8 @@ package com.workpoint.icpak.shared.model;
 
 public enum SpecializationCategory {
 
-	PRACTISE("Practise"), 
-	COMMERCEANDINDUSTRY("Commerce and Industry"),
-	PUBLICSECTOR("Public Sector"), 
-	TRAINING("Training");
+	PRACTISE("Practise"), COMMERCEANDINDUSTRY("Commerce and Industry"), PUBLICSECTOR(
+			"Public Sector"), TRAINING("Training"), EMPLOYMENT("Employment");
 
 	private String category;
 

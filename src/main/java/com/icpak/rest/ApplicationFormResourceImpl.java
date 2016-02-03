@@ -147,6 +147,12 @@ public class ApplicationFormResourceImpl implements ApplicationFormResource {
 		return factory.createSpecializationResource(applicationId);
 	}
 
+	@Path("/{applicationId}/employment")
+	public SpecializationsResource employment(
+			@PathParam("applicationId") String applicationId) {
+		return factory.createSpecializationResource(applicationId);
+	}
+
 	// /**
 	// * Member CPD
 	// *

@@ -4,6 +4,7 @@ import gwtupload.client.IUploader;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Logger;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
@@ -31,10 +32,12 @@ import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.BulletListPanel;
 import com.workpoint.icpak.client.ui.component.BulletPanel;
 import com.workpoint.icpak.client.ui.component.ProgressBar;
+import com.workpoint.icpak.client.ui.component.TextField;
 import com.workpoint.icpak.client.ui.component.tabs.TabContent;
 import com.workpoint.icpak.client.ui.component.tabs.TabHeader;
 import com.workpoint.icpak.client.ui.component.tabs.TabPanel;
 import com.workpoint.icpak.client.ui.component.tabs.TabPanel.TabPosition;
+import com.workpoint.icpak.client.ui.profile.ProfilePresenter;
 import com.workpoint.icpak.client.ui.profile.accountancy.AccountancyDetails;
 import com.workpoint.icpak.client.ui.profile.basic.BasicDetails;
 import com.workpoint.icpak.client.ui.profile.education.EducationDetails;
@@ -57,9 +60,11 @@ public class ProfileWidget extends Composite {
 	private static ProfileWidgetUiBinder uiBinder = GWT
 			.create(ProfileWidgetUiBinder.class);
 
+	private static final Logger LOGGER = Logger
+			.getLogger(ProfilePresenter.class.getName());
+
 	@UiField
 	TabPanel divTabs;
-
 	@UiField
 	ActionLink aChangePassword;
 
@@ -70,7 +75,7 @@ public class ProfileWidget extends Composite {
 	ActionLink aSubmit;
 
 	@UiField
-	DivElement divSubmit;
+	DivElement divSubmitApplication;
 
 	@UiField
 	ActionLink aSaveChanges;
@@ -81,7 +86,6 @@ public class ProfileWidget extends Composite {
 	HTMLPanel panelProfile;
 	@UiField
 	HTMLPanel PanelProfileDisplay;
-
 	@UiField
 	HTMLPanel panelApplicationType;
 	@UiField
@@ -138,13 +142,22 @@ public class ProfileWidget extends Composite {
 	BulletListPanel ulIssues;
 	@UiField
 	HTMLPanel panelBreadcrumb;
-
 	@UiField
 	ActionLink aPreviousApplication;
 	@UiField
 	ActionLink aNextApplication;
 	@UiField
 	ActionLink aCheckStandingStatus;
+	@UiField
+	DivElement divGoodStandingActions;
+	@UiField
+	DivElement divGoodStanding;
+	@UiField
+	DivElement divErpSync;
+	@UiField
+	TextField txtErpAppNo;
+	@UiField
+	ActionLink aErpSync;
 
 	private BasicDetails basicDetail;
 	private EducationDetails educationDetail;
@@ -152,6 +165,10 @@ public class ProfileWidget extends Composite {
 	private TrainingDetails trainingDetail;
 	private AccountancyDetails accountancyDetail;
 	private String url;
+
+	private boolean isCurrentUserMember;
+	private boolean isCurrentUserAdmin;
+	private boolean isCurrentUserBasicMember;
 
 	interface ProfileWidgetUiBinder extends UiBinder<Widget, ProfileWidget> {
 	}
@@ -235,7 +252,37 @@ public class ProfileWidget extends Composite {
 				Window.open(ctx.toUrl(), "Certificate Of Good Standing", "");
 			}
 		});
+	}
 
+	public void initDisplay() {
+		ulIssues.clear();
+		isCurrentUserMember = AppContext.isCurrentUserMember();
+		isCurrentUserAdmin = AppContext.isCurrentUserAdmin();
+		isCurrentUserBasicMember = !isCurrentUserAdmin && !isCurrentUserMember;
+		hideAllDisplays();
+		if (isCurrentUserMember) {
+			divGoodStanding.removeClassName("hide");
+			divGoodStandingActions.removeClassName("hide");
+			aCheckStandingStatus.removeStyleName("hide");
+		} else if (isCurrentUserBasicMember) {
+			divGoodStanding.addClassName("hide");
+			divSubmitApplication.removeClassName("hide");
+		} else if (isCurrentUserAdmin) {
+			panelBreadcrumb.removeStyleName("hide");
+			divErpSync.removeClassName("hide");
+		}
+	}
+
+	private void hideAllDisplays() {
+		panelBreadcrumb.addStyleName("hide");
+		divSubmitApplication.addClassName("hide");
+		divGoodStanding.addClassName("hide");
+		divStandingStatus.addClassName("hide");
+		divGoodStandingActions.addClassName("hide");
+		aCheckStandingStatus.addStyleName("hide");
+		aDownloadCert.addStyleName("hide");
+		divErpSync.addClassName("hide");
+		panelIssues.addStyleName("hide");
 	}
 
 	public void setEditMode(boolean editMode) {
@@ -247,21 +294,17 @@ public class ProfileWidget extends Composite {
 
 		if (editMode) {
 			divEditDropDown.setVisible(true);
-			// divSavePanel.setVisible(true);
-			// divStandingStatus.removeClassName("hide");
-			// aDownloadCert.setVisible(true);
-			// spnRefreshSection.removeClassName("hide");
 			elSpace.addClassName("hide");
 			aBackToApplications.addClassName("hide");
 			panelBreadcrumb.addStyleName("hide");
+			divStandingStatus.removeClassName("hide");
+			aDownloadCert.removeStyleName("hide");
 		} else {
-			// divSavePanel.setVisible(false);
-			// divStandingStatus.addClassName("hide");
-			// aDownloadCert.setVisible(false);
-			// spnRefreshSection.addClassName("hide");
 			elSpace.removeClassName("hide");
 			aBackToApplications.removeClassName("hide");
 			panelBreadcrumb.removeStyleName("hide");
+			divStandingStatus.addClassName("hide");
+			aDownloadCert.addStyleName("hide");
 		}
 	}
 
@@ -286,6 +329,12 @@ public class ProfileWidget extends Composite {
 			if (AppContext.getCurrentUser().getUser().getFullName() != null) {
 				spnNames.setInnerText(AppContext.getCurrentUser().getUser()
 						.getFullName());
+			} else {
+				if (result.getSurname() != null
+						&& result.getOtherNames() != null) {
+					spnNames.setInnerText(result.getSurname() + " "
+							+ result.getOtherNames());
+				}
 			}
 			// if (result.getSurname() != null && result.getOtherNames() !=
 			// null) {
@@ -469,18 +518,20 @@ public class ProfileWidget extends Composite {
 	}
 
 	public void showBasicMember(boolean show) {
-		if (show) {
-			// spnMembershipNo.getParentElement().addClassName("hide");
-			spnMembershipStatus.setInnerText("Not Confirmed");
-			// spnRefreshSection.addClassName("hide");
-			// divStandingStatus.addClassName("hide");
-			divSubmit.removeClassName("hide");
-		} else {
-			// spnMembershipNo.getParentElement().removeClassName("hide");
-			// spnRefreshSection.removeClassName("hide");
-			// divStandingStatus.removeClassName("hide");
-			divSubmit.addClassName("hide");
-		}
+		// if (show) {
+		// // spnMembershipNo.getParentElement().addClassName("hide");
+		// spnMembershipStatus.setInnerText("Not Confirmed");
+		// divSubmit.removeClassName("hide");
+		// aCheckStandingStatus.addStyleName("hide");
+		// divStandingStatus.addClassName("hide");
+		// } else {
+		// // spnMembershipNo.getParentElement().removeClassName("hide");
+		// // spnRefreshSection.removeClassName("hide");
+		// // divStandingStatus.removeClassName("hide");
+		// divSubmit.addClassName("hide");
+		// aCheckStandingStatus.removeStyleName("hide");
+		// divStandingStatus.removeClassName("hide");
+		// }
 	}
 
 	public HasClickHandlers getAccountancyAddButton() {
@@ -493,14 +544,20 @@ public class ProfileWidget extends Composite {
 
 	public boolean validateAllIssues() {
 		ulIssues.clear();
-		boolean isBasicDetailOK = basicDetail.getBasicDetailIssues().size() != 0 ? true
+		boolean isBasicDetailOK = basicDetail.getBasicDetailIssues().size() == 0 ? true
 				: false;
 		boolean isEducationDetailOk = educationDetail
-				.getEducationDetailIssues().size() != 0 ? true : false;
+				.getEducationDetailIssues().size() == 0 ? true : false;
 		boolean isTrainingDetailOk = trainingDetail.getTrainingDetailIssues()
-				.size() != 0 ? true : false;
+				.size() == 0 ? true : false;
 		boolean isExaminationDetailOk = accountancyDetail
-				.getExaminationDetailIssues().size() != 0 ? true : false;
+				.getExaminationDetailIssues().size() == 0 ? true : false;
+
+		Window.alert("Is Basic Details Ok:" + isBasicDetailOK
+				+ "Education Detail OK:" + isEducationDetailOk
+				+ "Training Detail OK:" + isTrainingDetailOk
+				+ "Examination Detail OK:" + isExaminationDetailOk);
+
 		if (isBasicDetailOK && isEducationDetailOk && isTrainingDetailOk
 				&& isExaminationDetailOk) {
 			panelIssues.addStyleName("hide");
@@ -526,7 +583,6 @@ public class ProfileWidget extends Composite {
 				listItem.setText(issue);
 				ulIssues.add(listItem);
 			}
-
 			panelIssues.removeStyleName("hide");
 			return false;
 		}
@@ -560,14 +616,23 @@ public class ProfileWidget extends Composite {
 	}
 
 	public void showGoodStandingPanel(boolean show) {
+		// if (show) {
+		// divStandingStatus.removeClassName("hide");
+		// aDownloadCert.removeStyleName("hide");
+		// aCheckStandingStatus.addStyleName("hide");
+		// } else {
+		// divStandingStatus.addClassName("hide");
+		// aDownloadCert.addStyleName("hide");
+		// aCheckStandingStatus.removeStyleName("hide");
+		// }
+	}
+
+	public void showApplicationIssues(boolean show) {
+		ulIssues.clear();
 		if (show) {
-			divStandingStatus.removeClassName("hide");
-			aDownloadCert.removeStyleName("hide");
-			aCheckStandingStatus.addStyleName("hide");
+			panelIssues.removeStyleName("hide");
 		} else {
-			divStandingStatus.addClassName("hide");
-			aDownloadCert.addStyleName("hide");
-			aCheckStandingStatus.removeStyleName("hide");
+			panelIssues.addStyleName("hide");
 		}
 	}
 }

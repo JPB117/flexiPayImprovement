@@ -54,7 +54,8 @@ public class IDAttachmentsExecutor extends FileExecutor {
 					attachment.setId(null);
 					attachment.setName(name);
 					attachment.setSize(size);
-					String fileName = getFilePath() + File.separator + IDUtils.generateId() + "-EDUCATION-" + name;
+					String fileName = getFilePath() + File.separator
+							+ IDUtils.generateId() + "-ID-" + name;
 					attachment.setFileName(fileName);
 					ApplicationFormHeader application = dao
 							.findByApplicationId(applicationRefId);
@@ -74,18 +75,18 @@ public class IDAttachmentsExecutor extends FileExecutor {
 	public void removeItem(HttpServletRequest request, String fieldName) {
 		Hashtable<String, Long> receivedFiles = getSessionFiles(request, false);
 		Long fileId = receivedFiles.get(fieldName);
-		
+
 		Attachment attachment = null;
 		File file = null;
 
 		if (fileId != null)
 			attachment = attachmentsDao.getById(Attachment.class, fileId);
-			file = new File(attachment.getFileName());
-			file.delete();
-			attachmentsDao.delete(attachment);
+		file = new File(attachment.getFileName());
+		file.delete();
+		attachmentsDao.delete(attachment);
 	}
-	
-	private String getFilePath(){
+
+	private String getFilePath() {
 		return settings.getProperty("upload_path");
 	}
 

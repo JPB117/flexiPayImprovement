@@ -252,4 +252,12 @@ public class ProfileView extends ViewImpl implements
 	public void hideGoodStanding() {
 		divProfileContent.showGoodStandingPanel(false);
 	}
+
+	public void showApplicationIssues(boolean show) {
+		divProfileContent.showApplicationIssues(show);
+	}
+
+	public ProfileWidget getProfileWidget() {
+		return divProfileContent;
+	}
 }

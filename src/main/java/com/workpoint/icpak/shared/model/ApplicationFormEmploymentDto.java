@@ -6,7 +6,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class ApplicationFormSpecializationDto extends SerializableObj {
+public class ApplicationFormEmploymentDto extends SerializableObj {
 
 	/**
 	 * 
@@ -16,10 +16,10 @@ public class ApplicationFormSpecializationDto extends SerializableObj {
 	private Specializations specialization;
 	private String code;
 
-	public ApplicationFormSpecializationDto() {
+	public ApplicationFormEmploymentDto() {
 	}
 
-	public ApplicationFormSpecializationDto(Specializations specialization) {
+	public ApplicationFormEmploymentDto(Specializations specialization) {
 		this.specialization = specialization;
 	}
 

@@ -4,31 +4,42 @@ import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Table;
 
 import com.icpak.rest.models.base.PO;
+import com.workpoint.icpak.shared.model.ApplicationFormEmploymentDto;
+import com.workpoint.icpak.shared.model.ApplicationFormSpecializationDto;
+import com.workpoint.icpak.shared.model.Specializations;
 
 @Entity
-@Table(name="`Application Form Emp Sector`")
-public class ApplicationFormEmpSector extends PO{
+@Table(name = "`Application Form Emp Sector`")
+public class ApplicationFormEmpSector extends PO {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@Column(name="`timestamp`",columnDefinition="timestamp NOT NULL default current_timestamp")
+	@Column(name = "`timestamp`", columnDefinition = "timestamp NOT NULL default current_timestamp")
 	private Timestamp timestamp;
-	
-	@Column(nullable=false, name="`Application No_`", length=20)
+
+	@Column(nullable = false, name = "`Application No_`", length = 20)
 	private String applicationNo;
-	
-	@Column(nullable=false, name="`Code`", length=20)
+
+	@Column(nullable = false, name = "`Code`", length = 20)
 	private String code;
-	
-	@Column(nullable=false, name="`Description`", length=50)
+
+	@Column(nullable = false, name = "`Description`", length = 50)
 	private String description;
-	
+
+	@Enumerated(EnumType.STRING)
+	private Specializations specialization;
+
+	@Column(name = "`ApplicationRefId`", length = 20)
+	private String applicationRefId;
+
 	public ApplicationFormEmpSector() {
 	}
 
@@ -62,6 +73,35 @@ public class ApplicationFormEmpSector extends PO{
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public ApplicationFormEmploymentDto toDto() {
+		ApplicationFormEmploymentDto dto = new ApplicationFormEmploymentDto();
+		dto.setRefId(getRefId());
+		dto.setSpecialization(specialization);
+		dto.setCode(code);
+		return dto;
+	}
+
+	public void copyFrom(ApplicationFormEmploymentDto eduEntry) {
+		setSpecialization(eduEntry.getSpecialization());
+		setCode(eduEntry.getCode());
+	}
+
+	public Specializations getSpecialization() {
+		return specialization;
+	}
+
+	public void setSpecialization(Specializations specialization) {
+		this.specialization = specialization;
+	}
+
+	public String getApplicationRefId() {
+		return applicationRefId;
+	}
+
+	public void setApplicationRefId(String applicationRefId) {
+		this.applicationRefId = applicationRefId;
 	}
 
 }

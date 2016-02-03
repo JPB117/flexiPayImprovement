@@ -20,7 +20,6 @@ import com.workpoint.icpak.client.model.UploadContext.UPLOADACTION;
 import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.TableHeader;
 import com.workpoint.icpak.client.ui.component.TableView;
-import com.workpoint.icpak.client.ui.component.tabs.TabHeader;
 import com.workpoint.icpak.client.ui.events.EditModelEvent;
 import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.client.util.AppContext;
@@ -95,6 +94,11 @@ public class EducationDetails extends Composite {
 		tblEducationalDetail.clearRows();
 		tblEducationalDetail.setNoRecords(result.size());
 
+		if (result.size() == 0) {
+			allIssues
+					.add("Please provide details on your educational background under the Educational Info Tab.");
+		}
+
 		for (ApplicationFormEducationalDto edu : result) {
 
 			final ActionLink edit = new ActionLink(edu);
@@ -124,7 +128,9 @@ public class EducationDetails extends Composite {
 
 			HTMLPanel panelAttachment = new HTMLPanel("");
 			panelAttachment.clear();
-			if (edu.getAttachments() != null) {
+
+			if (edu.getAttachments() != null
+					&& edu.getAttachments().size() != 0) {
 				for (final AttachmentDto attachment : edu.getAttachments()) {
 					final UploadContext ctx = new UploadContext("getreport");
 					ctx.setAction(UPLOADACTION.GETATTACHMENT);
@@ -143,7 +149,8 @@ public class EducationDetails extends Composite {
 					panelAttachment.add(new HTML("<br/>"));
 				}
 			} else {
-				allIssues.add("Education attachments are required!");
+				allIssues
+						.add("Please provide all attachments needed in Educational Details Tab.");
 			}
 
 			tblEducationalDetail.addRow(
@@ -157,6 +164,7 @@ public class EducationDetails extends Composite {
 							edu.getCertificateAwarded() + ""), panelAttachment,
 					panel);
 		}
+
 	}
 
 	public HasClickHandlers getSaveButton() {

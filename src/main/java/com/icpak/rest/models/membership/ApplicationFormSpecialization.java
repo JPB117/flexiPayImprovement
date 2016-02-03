@@ -15,71 +15,70 @@ import com.workpoint.icpak.shared.model.SpecializationCategory;
 import com.workpoint.icpak.shared.model.Specializations;
 
 @Entity
-@Table(name="`Application form Specialization`")
-public class ApplicationFormSpecialization extends PO{
+@Table(name = "`Application form Specialization`")
+public class ApplicationFormSpecialization extends PO {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@Column(name="`timestamp`",columnDefinition="timestamp NOT NULL default current_timestamp")
+	@Column(name = "`timestamp`", columnDefinition = "timestamp NOT NULL default current_timestamp")
 	private Timestamp timestamp;
-	
-	@Column(nullable=true, name="`Line No_`")
+
+	@Column(nullable = true, name = "`Line No_`")
 	private int lineNo;
-	
-	@Column(nullable=true, name="`Application No_`", length=20)
+
+	@Column(nullable = true, name = "`Application No_`", length = 20)
 	private String applicationNo;
-	
-	@Column(nullable=true, name="`Code`", length=20)
+
+	@Column(nullable = true, name = "`Code`", length = 20)
 	private String code;
-	
-	@Column(nullable=true, name="`Description`", length=50)
+
+	@Column(nullable = true, name = "`Description`", length = 50)
 	private String description;
-	
-	@Column(nullable=true, name="`Sector`", length=10)
+
+	@Column(nullable = true, name = "`Sector`", length = 10)
 	private String sector;
 
-	@Column(nullable=true, name="`Sector Desc_`", length=50)
+	@Column(nullable = true, name = "`Sector Desc_`", length = 50)
 	private String sectorDesc;
-	
-	@Column(nullable=true, name="`Name of Firm`", length=50)
+
+	@Column(nullable = true, name = "`Name of Firm`", length = 50)
 	private String nameOfFirm;
-	 
-	@Column(nullable=true, name="`From`", columnDefinition="datetime")
+
+	@Column(nullable = true, name = "`From`", columnDefinition = "datetime")
 	private Date from;
 
-	@Column(nullable=true, name="`to`", columnDefinition="datetime")
+	@Column(nullable = true, name = "`to`", columnDefinition = "datetime")
 	private String to;
-	
-	@Column(nullable=true, name="`Position Held`", length=30)
+
+	@Column(nullable = true, name = "`Position Held`", length = 30)
 	private String positionHeld;
 
-	@Column(nullable=true, name="`Main clients Handled`", length=50)
+	@Column(nullable = true, name = "`Main clients Handled`", length = 50)
 	private String mainClientsHandled;
-	
-	@Column(nullable=true, name="`Address of Firm`", length=50)
+
+	@Column(nullable = true, name = "`Address of Firm`", length = 50)
 	private String addressOfFirm;
-	
-	@Column(nullable=true, name="`Profesional Function`", length=100)
+
+	@Column(nullable = true, name = "`Profesional Function`", length = 100)
 	private String professionalFunction;
-	
-	@Column(nullable=true, name="`Customer Name`", length=50)
+
+	@Column(nullable = true, name = "`Customer Name`", length = 50)
 	private String customerName;
-	
-	@Column(nullable=true, name="`Up To Date`", columnDefinition="datetime")
+
+	@Column(nullable = true, name = "`Up To Date`", columnDefinition = "datetime")
 	private Date upToDate;
-	
+
 	@Enumerated(EnumType.STRING)
 	private Specializations specialization;
-	
+
 	private SpecializationCategory category;
-	
-	@Column( name = "`ApplicationRefId`", length = 20)
+
+	@Column(name = "`ApplicationRefId`", length = 20)
 	private String applicationRefId;
 
-	
 	public ApplicationFormSpecialization() {
 	}
 
@@ -215,13 +214,14 @@ public class ApplicationFormSpecialization extends PO{
 		ApplicationFormSpecializationDto dto = new ApplicationFormSpecializationDto();
 		dto.setRefId(getRefId());
 		dto.setSpecialization(specialization);
-		
+		dto.setCode(code);
 		return dto;
 	}
 
 	public void copyFrom(ApplicationFormSpecializationDto eduEntry) {
 		setCategory(eduEntry.getSpecialization().getCategory());
 		setSpecialization(eduEntry.getSpecialization());
+		setCode(eduEntry.getCode());
 	}
 
 	public SpecializationCategory getCategory() {
@@ -247,5 +247,5 @@ public class ApplicationFormSpecialization extends PO{
 	public void setSpecialization(Specializations specialization) {
 		this.specialization = specialization;
 	}
-	
+
 }

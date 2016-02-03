@@ -127,7 +127,77 @@
 									<i ui:field="elCity"></i>
 								</td>
 							</tr>
+							<tr>
+								<td colspan="2" style="margin-left:30px;">
+									<strong style="margin-left:120px;text-decoration:underline;">
+										Contact Information
+									</strong>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<Strong>Name:</Strong>
+								</td>
+								<td>
+									<i ui:field="elContactName"></i>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<Strong>Address:</Strong>
+								</td>
+								<td>
+									<i ui:field="elContactAddress"></i>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<Strong>Telephone:</Strong>
+								</td>
+								<td>
+									<i ui:field="elContactTelephone"></i>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<Strong>Email:</Strong>
+								</td>
+								<td>
+									<i ui:field="elContactEmail"></i>
+								</td>
+							</tr>
 
+							<tr>
+								<td colspan="2" style="margin-left:30px;">
+									<strong style="margin-left:120px;text-decoration:underline;">
+										Criminal offence in a court of law
+									</strong>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<Strong>Offence:</Strong>
+								</td>
+								<td>
+									<i ui:field="elOffence"></i>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<Strong>Date and Place of Conviction:</Strong>
+								</td>
+								<td>
+									<i ui:field="elDateAndPlace"></i>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<Strong>Sentence Imposed:</Strong>
+								</td>
+								<td>
+									<i ui:field="elSentenceImposed"></i>
+								</td>
+							</tr>
 						</tbody>
 					</table>
 				</g:HTMLPanel>

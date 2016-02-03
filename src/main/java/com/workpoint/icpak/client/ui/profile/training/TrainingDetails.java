@@ -81,6 +81,11 @@ public class TrainingDetails extends Composite {
 	public void bindDetails(List<ApplicationFormTrainingDto> result) {
 		tblTrainingDetails.clearRows();
 		tblTrainingDetails.setNoRecords(result.size());
+
+		if (result.size() == 0) {
+			allIssues
+					.add("Please provide details on your Practical Training under the Practical Training Tab.");
+		}
 		for (ApplicationFormTrainingDto training : result) {
 			final ActionLink edit = new ActionLink(training);
 			edit.setStyleName("fa fa-pencil btn btn-primary");
@@ -109,7 +114,8 @@ public class TrainingDetails extends Composite {
 
 			HTMLPanel panelAttachment = new HTMLPanel("");
 			panelAttachment.clear();
-			if (training.getAttachments() != null) {
+			if (training.getAttachments() != null
+					&& training.getAttachments().size() != 0) {
 				for (final AttachmentDto attachment : training.getAttachments()) {
 					final UploadContext ctx = new UploadContext("getreport");
 					ctx.setAction(UPLOADACTION.GETATTACHMENT);
@@ -128,8 +134,9 @@ public class TrainingDetails extends Composite {
 				}
 			} else {
 				allIssues
-						.add("Training attachments are required. Please upload!");
+						.add("Please provide all attachments needed under Practical Training Tab.");
 			}
+
 			tblTrainingDetails.addRow(
 					new InlineLabel(training.getOrganisationName()),
 					new InlineLabel(DateUtils.DATEFORMAT.format(training

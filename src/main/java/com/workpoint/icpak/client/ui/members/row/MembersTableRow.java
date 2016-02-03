@@ -61,7 +61,7 @@ public class MembersTableRow extends RowWidget {
 				: application.getDate() != null ? application.getDate()
 						: application.getCreated();
 
-		divDate.add(new InlineLabel(DateUtils.FULLTIMESTAMP.format(regDate)));
+		divDate.add(new InlineLabel(DateUtils.DATEFORMAT_SYS.format(regDate)));
 		aMemberName.setText(application.fullNames());
 		divEmail.add(new InlineLabel(application.getEmail()));
 		divCompletion.setAttribute("data-label",

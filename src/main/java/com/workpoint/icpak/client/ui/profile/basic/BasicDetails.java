@@ -63,9 +63,25 @@ public class BasicDetails extends Composite {
 	Element elCity;
 	@UiField
 	Element elIdNo;
+
+	@UiField
+	Element elContactName;
+	@UiField
+	Element elContactAddress;
+	@UiField
+	Element elContactTelephone;
+	@UiField
+	Element elContactEmail;
+
+	@UiField
+	Element elOffence;
+	@UiField
+	Element elDateAndPlace;
+	@UiField
+	Element elSentenceImposed;
+
 	@UiField
 	HTMLPanel panelPassportCopy;
-
 	@UiField
 	Anchor aSave;
 	@UiField
@@ -101,14 +117,12 @@ public class BasicDetails extends Composite {
 		if (result.getEmail() != null) {
 			elEmail.setInnerText(result.getEmail());
 		} else {
-			allIssues.add("No Email Address registered");
+			allIssues.add("No Email-Address registered");
 		}
-
 		if (result.getBranch() != null) {
 			elBranch.setInnerText(Branch.valueOf(result.getBranch())
 					.getDisplayName());
 		}
-
 		if (result.getEmployer() != null) {
 			elEmployer.setInnerText(result.getEmployer());
 		}
@@ -133,11 +147,31 @@ public class BasicDetails extends Composite {
 		if (result.getGender() != null) {
 			elSex.setInnerText(result.getGender().name());
 		}
-
 		if (result.getDob() != null) {
 			elDob.setInnerText(DateUtils.DATEFORMAT.format(result.getDob()));
 		}
+		if (result.getContactPerson() != null) {
+			elContactName.setInnerText(result.getContactPerson());
+		}
+		if (result.getContactTelephone() != null) {
+			elContactTelephone.setInnerText(result.getContactTelephone());
+		}
+		if (result.getContactEmail() != null) {
+			elContactEmail.setInnerText(result.getContactEmail());
+		}
+		if (result.getContactAddress() != null) {
+			elContactAddress.setInnerText(result.getContactAddress());
+		}
 
+		if (result.getOffence() != null) {
+			elOffence.setInnerText(result.getOffence());
+		}
+		if (result.getConvictionDateAndPlace() != null) {
+			elDateAndPlace.setInnerText(result.getConvictionDateAndPlace());
+		}
+		if (result.getSentence() != null) {
+			elSentenceImposed.setInnerText(result.getSentence());
+		}
 		panelPassportCopy.clear();
 		if (result.getAttachments() != null
 				&& !result.getAttachments().isEmpty()) {
@@ -158,8 +192,8 @@ public class BasicDetails extends Composite {
 				panelPassportCopy.add(new HTML("<br/>"));
 			}
 		} else {
-
-			allIssues.add("Your ID/Passport Copy is required.");
+			allIssues
+					.add("Please provide your ID/Passport Copy under the Basic Detail Tab.");
 		}
 	}
 

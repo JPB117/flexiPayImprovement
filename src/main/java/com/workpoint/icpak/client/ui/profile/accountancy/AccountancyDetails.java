@@ -80,6 +80,12 @@ public class AccountancyDetails extends Composite {
 	public void bindDetails(List<ApplicationFormAccountancyDto> result) {
 		tblTrainingDetails.clearRows();
 		tblTrainingDetails.setNoRecords(result.size());
+
+		if (result.size() == 0) {
+			allIssues
+					.add("Please provide details on your Accountancy Examination under the Accountancy Examination Tab.");
+		}
+
 		for (ApplicationFormAccountancyDto accountancy : result) {
 			final ActionLink edit = new ActionLink(accountancy);
 			edit.setStyleName("fa fa-pencil btn btn-primary");
@@ -107,7 +113,9 @@ public class AccountancyDetails extends Composite {
 			panel.add(delete);
 
 			HTMLPanel panelAttachment = new HTMLPanel("");
-			if (accountancy.getAttachments() != null) {
+			if (accountancy.getAttachments() != null
+					&& accountancy.getAttachments().size() != 0) {
+
 				for (final AttachmentDto attachment : accountancy
 						.getAttachments()) {
 					final UploadContext ctx = new UploadContext("getreport");
@@ -127,7 +135,7 @@ public class AccountancyDetails extends Composite {
 				}
 			} else {
 				allIssues
-						.add("Accountancy Examination attachments are required!");
+						.add("Please provide all attachments under Accountancy Examination Tab.");
 			}
 
 			tblTrainingDetails.addRow(

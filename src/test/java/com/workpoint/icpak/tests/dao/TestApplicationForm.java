@@ -1,15 +1,28 @@
 package com.workpoint.icpak.tests.dao;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.text.ParseException;
 import java.util.List;
 
 import org.junit.Ignore;
 import org.junit.Test;
 
+import com.amazonaws.util.json.JSONException;
+import com.amazonaws.util.json.JSONObject;
 import com.google.inject.Inject;
+import com.icpak.rest.dao.helper.AccountancyDaoHelper;
 import com.icpak.rest.dao.helper.ApplicationFormDaoHelper;
+import com.icpak.rest.dao.helper.EducationDaoHelper;
+import com.icpak.rest.dao.helper.SpecializationDaoHelper;
+import com.icpak.rest.dao.helper.TrainingDaoHelper;
 import com.icpak.rest.dao.helper.UsersDaoHelper;
+import com.workpoint.icpak.shared.model.ApplicationERPDto;
+import com.workpoint.icpak.shared.model.ApplicationFormAccountancyDto;
+import com.workpoint.icpak.shared.model.ApplicationFormEducationalDto;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
+import com.workpoint.icpak.shared.model.ApplicationFormSpecializationDto;
+import com.workpoint.icpak.shared.model.ApplicationFormTrainingDto;
 import com.workpoint.icpak.shared.model.ApplicationType;
 import com.workpoint.icpak.shared.model.UserDto;
 import com.workpoint.icpak.tests.base.AbstractDaoTest;
@@ -18,6 +31,15 @@ public class TestApplicationForm extends AbstractDaoTest {
 
 	@Inject
 	ApplicationFormDaoHelper helper;
+	@Inject
+	EducationDaoHelper eduHelper;
+	@Inject
+	TrainingDaoHelper trainingHelper;
+	@Inject
+	AccountancyDaoHelper accountancyHelper;
+	@Inject
+	SpecializationDaoHelper specializationHelper;
+
 	@Inject
 	UsersDaoHelper usersDaoHelper;
 
@@ -45,7 +67,7 @@ public class TestApplicationForm extends AbstractDaoTest {
 		}
 	}
 
-	@Test
+	@Ignore
 	public void getApplications() {
 		List<ApplicationFormHeaderDto> members = helper.getAllApplications(0,
 				10, "", "");
@@ -53,6 +75,41 @@ public class TestApplicationForm extends AbstractDaoTest {
 			System.out.println("Previous>>" + dto.getPreviousRefId());
 			System.out.println("Next>>" + dto.getNextRefId());
 		}
+	}
+
+	@Test
+	public void testERPIntergration() {
+		ApplicationFormHeaderDto application = helper.getApplicationById(
+				"j4Eu7OZ7krpuQ9r4").toDto();
+		List<ApplicationFormEducationalDto> educationDetails = eduHelper
+				.getAllEducationEntrys("", "j4Eu7OZ7krpuQ9r4", 0, 100);
+		List<ApplicationFormTrainingDto> trainings = trainingHelper
+				.getAllTrainingEntrys("", "j4Eu7OZ7krpuQ9r4", 0, 100);
+		List<ApplicationFormAccountancyDto> accountancy = accountancyHelper
+				.getAllAccountancyEntrys("", "j4Eu7OZ7krpuQ9r4", 0, 100);
+		List<ApplicationFormSpecializationDto> specializations = specializationHelper
+				.getAllSpecializationEntrys("", "j4Eu7OZ7krpuQ9r4", 0, 100);
+
+		ApplicationERPDto erpDto = new ApplicationERPDto();
+		erpDto.setApplication(application);
+		erpDto.setEducationDetails(educationDetails);
+		erpDto.setTrainings(trainings);
+		erpDto.setAccountancy(accountancy);
+		erpDto.setSpecializations(specializations);
+
+		try {
+			helper.postApplicationToERP("C/18877", erpDto);
+		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 
 	@Ignore

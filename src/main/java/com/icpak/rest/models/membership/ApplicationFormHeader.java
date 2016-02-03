@@ -20,6 +20,7 @@ import com.icpak.rest.models.util.Attachment;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 import com.workpoint.icpak.shared.model.ApplicationType;
 import com.workpoint.icpak.shared.model.AttachmentDto;
+import com.workpoint.icpak.shared.model.Gender;
 import com.workpoint.icpak.shared.model.auth.ApplicationStatus;
 
 @Entity
@@ -60,7 +61,6 @@ public class ApplicationFormHeader extends PO {
 
 	@Column(name = "`Status`")
 	private int status;
-
 	@Column(name = "`ID Number`", length = 20)
 	private String idNumber;
 
@@ -71,29 +71,33 @@ public class ApplicationFormHeader extends PO {
 
 	@Column(name = "`Post Code`", length = 10)
 	private String postCode;
-
 	@Column(name = "`City1`", length = 30)
 	private String city1;
-
 	@OneToMany(mappedBy = "application", fetch = FetchType.LAZY, cascade = { CascadeType.REMOVE })
 	private Set<Attachment> attachments = new HashSet<>();
-
-	private String employer;
-
 	@Column(name = "`Nationality`", columnDefinition = "varchar(20) ")
 	private String nationality;
-
 	@Enumerated(EnumType.STRING)
 	private ApplicationStatus applicationStatus;
-
 	private String memberNo;
 	private String MobileNo;
+
+	private String employer;
 	@Column(name = "`Employer Code`", length = 20)
 	private String employerCode;
-	@Column(name = "`Contact Telephone`", length = 40)
+
+	// Contact Person
+	private String contactPerson;
 	private String contactTelephone;
-	@Column(name = "`Contact Address`", length = 60)
 	private String contactAddress;
+	private String contactEmail;
+
+	private String gender;
+
+	// Offence
+	private String offence;
+	private String dateAndPlace;
+	private String sentenceImposed;
 
 	private String invoiceRef;
 	private String userRefId;
@@ -192,6 +196,46 @@ public class ApplicationFormHeader extends PO {
 		this.status = status;
 	}
 
+	public String getContactPerson() {
+		return contactPerson;
+	}
+
+	public String getOffence() {
+		return offence;
+	}
+
+	public void setOffence(String offence) {
+		this.offence = offence;
+	}
+
+	public String getDateAndPlace() {
+		return dateAndPlace;
+	}
+
+	public void setDateAndPlace(String dateAndPlace) {
+		this.dateAndPlace = dateAndPlace;
+	}
+
+	public String getSentenceImposed() {
+		return sentenceImposed;
+	}
+
+	public void setSentenceImposed(String sentenceImposed) {
+		this.sentenceImposed = sentenceImposed;
+	}
+
+	public void setContactPerson(String contactPerson) {
+		this.contactPerson = contactPerson;
+	}
+
+	public String getContactEmail() {
+		return contactEmail;
+	}
+
+	public void setContactEmail(String contactEmail) {
+		this.contactEmail = contactEmail;
+	}
+
 	public String getIdNumber() {
 		return idNumber;
 	}
@@ -261,6 +305,20 @@ public class ApplicationFormHeader extends PO {
 		setResidence(dto.getResidence());
 		setIdNumber(dto.getIdNumber());
 		setBranch(dto.getBranch());
+		if (dto.getGender() != null) {
+			setGender(dto.getGender().name());
+		}
+
+		// Contact Person
+		setContactPerson(dto.getContactPerson());
+		setContactTelephone(dto.getContactTelephone());
+		setContactAddress(dto.getContactAddress());
+		setContactEmail(dto.getContactEmail());
+
+		// Offence
+		setOffence(dto.getOffence());
+		setDateAndPlace(dto.getConvictionDateAndPlace());
+		setSentenceImposed(dto.getSentence());
 	}
 
 	public void copyInto(ApplicationFormHeaderDto dto) {
@@ -284,6 +342,17 @@ public class ApplicationFormHeader extends PO {
 		dto.setResidence(residence);
 		dto.setIdNumber(idNumber);
 		dto.setBranch(branch);
+		if (gender != null) {
+			dto.setGender(Gender.valueOf(gender));
+		}
+
+		dto.setContactPerson(contactPerson);
+		dto.setContactAddress(contactAddress);
+		dto.setContactTelephone(contactTelephone);
+		dto.setContactEmail(contactEmail);
+		dto.setOffence(offence);
+		dto.setConvictionDateAndPlace(dateAndPlace);
+		dto.setSentence(sentenceImposed);
 
 		List<AttachmentDto> attachmentDtos = new ArrayList<AttachmentDto>();
 		for (Attachment attachment : attachments) {
@@ -398,5 +467,13 @@ public class ApplicationFormHeader extends PO {
 
 	public void setBranch(String branch) {
 		this.branch = branch;
+	}
+
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
 	}
 }

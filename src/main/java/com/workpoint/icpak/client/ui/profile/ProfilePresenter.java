@@ -8,7 +8,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -37,6 +36,7 @@ import com.workpoint.icpak.client.ui.profile.accountancy.form.AccountancyRegistr
 import com.workpoint.icpak.client.ui.profile.education.form.EducationRegistrationForm;
 import com.workpoint.icpak.client.ui.profile.specialization.form.SpecializationRegistrationForm;
 import com.workpoint.icpak.client.ui.profile.training.form.TrainingRegistrationForm;
+import com.workpoint.icpak.client.ui.profile.widget.ProfileWidget;
 import com.workpoint.icpak.client.ui.security.BasicMemberGateKeeper;
 import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.api.ApplicationFormResource;
@@ -44,6 +44,7 @@ import com.workpoint.icpak.shared.api.CountriesResource;
 import com.workpoint.icpak.shared.api.MemberResource;
 import com.workpoint.icpak.shared.model.ApplicationFormAccountancyDto;
 import com.workpoint.icpak.shared.model.ApplicationFormEducationalDto;
+import com.workpoint.icpak.shared.model.ApplicationFormEmploymentDto;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 import com.workpoint.icpak.shared.model.ApplicationFormSpecializationDto;
 import com.workpoint.icpak.shared.model.ApplicationFormTrainingDto;
@@ -119,6 +120,10 @@ public class ProfilePresenter
 		void updateStatement();
 
 		void hideGoodStanding();
+
+		void showApplicationIssues(boolean show);
+
+		ProfileWidget getProfileWidget();
 	}
 
 	private final CurrentUser currentUser;
@@ -293,6 +298,7 @@ public class ProfilePresenter
 
 	protected boolean saveAccountancyInformation() {
 		if (accountancyForm.isValid()) {
+			getView().showApplicationIssues(false);
 			fireEvent(new ProcessingEvent());
 			ApplicationFormAccountancyDto dto = accountancyForm
 					.getAccountancyDto();
@@ -350,8 +356,8 @@ public class ProfilePresenter
 			Window.alert("Current user has no active application");
 			return true;
 		}
-
 		if (trainingForm.isValid()) {
+			getView().showApplicationIssues(false);
 			// Save Training Here
 			fireEvent(new ProcessingEvent());
 			ApplicationFormTrainingDto dto = trainingForm.getTrainingDto();
@@ -409,6 +415,7 @@ public class ProfilePresenter
 
 	protected boolean saveEducationInformation() {
 		if (educationForm.isValid()) {
+			getView().showApplicationIssues(false);
 			fireEvent(new ProcessingEvent());
 			ApplicationFormEducationalDto dto = educationForm.getEducationDto();
 
@@ -451,20 +458,14 @@ public class ProfilePresenter
 
 	protected void saveBasicDetails() {
 		if (memberForm.isValid()) {
+			getView().showApplicationIssues(false);
 			fireEvent(new ProcessingEvent());
-
-			// TODO: Tom, you have two instances of MemberRegistrationForm,
-			// one is ProfileView & the one in Profile Presenter - memberForm;
-			// this is confusing
-			// ApplicationFormHeaderDto applicationForm = getView()
-			// .getBasicDetails();
 			ApplicationFormHeaderDto applicationForm = memberForm
 					.getApplicationForm();
 			applicationDelegate.withCallback(
 					new AbstractAsyncCallback<ApplicationFormHeaderDto>() {
 						@Override
 						public void onSuccess(ApplicationFormHeaderDto result) {
-							// result;
 							getView().setEditMode(true);
 							loadMemberDetails();
 							fireEvent(new ProcessingCompletedEvent());
@@ -487,17 +488,10 @@ public class ProfilePresenter
 	}
 
 	private void loadData() {
-		if (AppContext.isCurrentUserMember()) {
-			getView().showBasicMember(false);
-		} else {
-			getView().showBasicMember(true);
-		}
-
+		getView().getProfileWidget().initDisplay();
 		String applicationRefId = getApplicationRefId();
 		loadData(applicationRefId);
 		getView().setApplicationId(applicationRefId);
-
-		getView().hideGoodStanding();
 	}
 
 	/*
@@ -587,9 +581,6 @@ public class ProfilePresenter
 					public void onSuccess(ApplicationFormHeaderDto result) {
 						memberForm.bind(result);
 						getView().bindBasicDetails(result);
-						// ProfilePresenter.this.applicationStatus = result
-						// .getApplicationStatus();
-						// getView().setApplicationStaus(applicationStatus);
 					}
 				}).getById(applicationRefId);
 	}
@@ -606,7 +597,6 @@ public class ProfilePresenter
 							public void onSuccess(
 									List<ApplicationFormEducationalDto> result) {
 								getView().bindEducationDetails(result);
-								// Window.alert("Binded Education Form data");
 							}
 						}).education(applicationRefId).getAll(0, 100);
 	}
@@ -671,6 +661,14 @@ public class ProfilePresenter
 			} else {
 				saveSpecialization(dto);
 			}
+		} else if ((event.getModel() instanceof ApplicationFormEmploymentDto)) {
+			ApplicationFormEmploymentDto dto = (ApplicationFormEmploymentDto) event
+					.getModel();
+			if (event.isDelete()) {
+				delete(dto);
+			} else {
+				saveSpecialization(dto);
+			}
 		}
 
 		else if ((event.getModel() instanceof ApplicationFormAccountancyDto)) {
@@ -703,6 +701,15 @@ public class ProfilePresenter
 			public void onSuccess(Void result) {
 			}
 		}).specialization(getApplicationRefId())
+				.delete(dto.getSpecialization().name());
+	}
+
+	private void delete(ApplicationFormEmploymentDto dto) {
+		applicationDelegate.withCallback(new AbstractAsyncCallback<Void>() {
+			@Override
+			public void onSuccess(Void result) {
+			}
+		}).employment(getApplicationRefId())
 				.delete(dto.getSpecialization().name());
 	}
 

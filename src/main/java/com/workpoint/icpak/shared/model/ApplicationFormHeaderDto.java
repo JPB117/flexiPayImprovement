@@ -15,7 +15,6 @@ import com.workpoint.icpak.shared.model.auth.ApplicationStatus;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlSeeAlso(ApplicationCategory.class)
 public class ApplicationFormHeaderDto extends SerializableObj {
-
 	/**
 	 * 
 	 */
@@ -78,9 +77,9 @@ public class ApplicationFormHeaderDto extends SerializableObj {
 	private String offence;
 	private String convictionDateAndPlace;
 	private String sentence;
-	private String contactName;
 	private String contactAddress;
 	private String contactTelephone;
+	private String contactPerson;
 	private String contactEmail;
 	private String residence;
 	private String examinationBody;
@@ -98,7 +97,6 @@ public class ApplicationFormHeaderDto extends SerializableObj {
 	private String employerCode;
 	private String employer;
 	private String qualification;
-	private String contactPerson;
 	private String district;
 	private String genBusPostingGroup;
 	private String vatBusPostingGroup;
@@ -536,14 +534,6 @@ public class ApplicationFormHeaderDto extends SerializableObj {
 
 	public void setSentence(String sentence) {
 		this.sentence = sentence;
-	}
-
-	public String getContactName() {
-		return contactName;
-	}
-
-	public void setContactName(String contactName) {
-		this.contactName = contactName;
 	}
 
 	public String getContactAddress() {

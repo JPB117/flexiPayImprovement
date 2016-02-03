@@ -73,7 +73,7 @@ public class CPDDao extends BaseDao {
 						.equals("cpdReturns"))) {
 			sql.append(" order by c.created asc");
 		} else {
-			sql.append(" order by c.created desc");
+			sql.append(" order by c.startDate desc");
 		}
 
 		Query query = getEntityManager().createNativeQuery(sql.toString());

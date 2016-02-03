@@ -1,6 +1,12 @@
 package com.icpak.rest.dao.helper;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -9,7 +15,19 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.utils.URIUtils;
+import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.log4j.Logger;
 
+import com.amazonaws.util.json.JSONException;
+import com.amazonaws.util.json.JSONObject;
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import com.icpak.rest.IDUtils;
@@ -22,7 +40,6 @@ import com.icpak.rest.models.auth.BioData;
 import com.icpak.rest.models.auth.User;
 import com.icpak.rest.models.membership.ApplicationCategory;
 import com.icpak.rest.models.membership.ApplicationFormHeader;
-import com.icpak.rest.models.membership.Member;
 import com.icpak.rest.models.membership.MemberImport;
 import com.icpak.rest.models.util.Attachment;
 import com.icpak.rest.util.ApplicationSettings;
@@ -32,6 +49,7 @@ import com.icpak.rest.utils.DocumentLine;
 import com.icpak.rest.utils.EmailServiceHelper;
 import com.icpak.rest.utils.HTMLToPDFConvertor;
 import com.workpoint.icpak.shared.model.ApplicationCategoryDto;
+import com.workpoint.icpak.shared.model.ApplicationERPDto;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 import com.workpoint.icpak.shared.model.ApplicationSummaryDto;
 import com.workpoint.icpak.shared.model.ApplicationType;
@@ -52,9 +70,10 @@ public class ApplicationFormDaoHelper {
 	InvoiceDaoHelper invoiceHelper;
 	@Inject
 	TransactionDaoHelper trxHelper;
-
 	@Inject
 	ApplicationSettings settings;
+
+	Logger logger = Logger.getLogger(ApplicationFormDaoHelper.class);
 
 	public void createApplication(ApplicationFormHeaderDto application) {
 
@@ -248,9 +267,6 @@ public class ApplicationFormDaoHelper {
 	}
 
 	public void deleteApplication(String applicationId) {
-		// ApplicationFormHeader application =
-		// applicationDao.findByApplicationId(applicationId);
-		// applicationDao.delete(application);
 	}
 
 	public List<ApplicationFormHeaderDto> getAllApplications(Integer offset,
@@ -272,7 +288,6 @@ public class ApplicationFormDaoHelper {
 			}
 			counter++;
 			rtn.add(dto);
-			// applicationDao.updateApplication();
 		}
 		return rtn;
 	}
@@ -302,9 +317,6 @@ public class ApplicationFormDaoHelper {
 			throw new ServiceException(ErrorCodes.NOTFOUND, "'" + applicationId
 					+ "'");
 		}
-
-		// setCategory(application);
-
 		return application;
 	}
 
@@ -355,7 +367,49 @@ public class ApplicationFormDaoHelper {
 		return applicationDao.getApplicationsSummary();
 	}
 
-	public void forwardToLMS(Member member) {
+	public void postApplicationToERP(String erpAppId,
+			ApplicationERPDto application) throws URISyntaxException,
+			ParseException, JSONException {
+		final HttpClient httpClient = new DefaultHttpClient();
+
+		JSONObject payLoad = new JSONObject(application);
+		logger.info("payload to ERP>>>>" + payLoad);
+
+		final List<NameValuePair> qparams = new ArrayList<NameValuePair>();
+		qparams.add(new BasicNameValuePair("app_no", erpAppId));
+
+		final URI uri = URIUtils.createURI("http", "41.139.138.165/", -1,
+				"members/newapp.php", URLEncodedUtils.format(qparams, "UTF-8"),
+				null);
+		final HttpPost request = new HttpPost();
+		request.setURI(uri);
+
+		String res = "";
+		HttpResponse response = null;
+
+		StringBuffer result = null;
+
+		try {
+			request.setHeader("accept", "application/json");
+			@SuppressWarnings("deprecation")
+			StringEntity stringEntity = new StringEntity(payLoad.toString(),
+					"application/json", "UTF-8");
+			request.setEntity(stringEntity);
+
+			response = httpClient.execute(request);
+			BufferedReader rd = new BufferedReader(new InputStreamReader(
+					response.getEntity().getContent()));
+
+			result = new StringBuffer();
+
+			String line = "";
+			while ((line = rd.readLine()) != null) {
+				result.append(line);
+			}
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 	}
 

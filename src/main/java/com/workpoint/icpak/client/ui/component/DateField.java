@@ -56,7 +56,7 @@ public class DateField extends Composite {
 	}
 
 	public void setPlaceholder(String placeHolderValue) {
-		getElement().setAttribute("placeHolder", placeHolderValue);
+		txtDate.getElement().setAttribute("placeHolder", placeHolderValue);
 	}
 
 	public void setClass(String className) {

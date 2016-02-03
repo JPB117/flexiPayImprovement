@@ -14,6 +14,8 @@ import com.google.gwt.user.client.ui.Widget;
 import com.workpoint.icpak.client.ui.component.IssuesPanel;
 import com.workpoint.icpak.client.ui.events.EditModelEvent;
 import com.workpoint.icpak.client.util.AppContext;
+import com.workpoint.icpak.shared.model.ApplicationFormEducationalDto;
+import com.workpoint.icpak.shared.model.ApplicationFormEmploymentDto;
 import com.workpoint.icpak.shared.model.ApplicationFormSpecializationDto;
 import com.workpoint.icpak.shared.model.Specializations;
 
@@ -62,6 +64,27 @@ public class SpecializationRegistrationForm extends Composite {
 	@UiField
 	CheckBox aNGOs;
 
+	@UiField
+	CheckBox aPractice;
+	@UiField
+	CheckBox aPublicSector;
+	@UiField
+	CheckBox aPrivateSector;
+	@UiField
+	CheckBox aBankingFinance;
+	@UiField
+	CheckBox aManufacturing2;
+	@UiField
+	CheckBox aHotel2;
+	@UiField
+	CheckBox aNonprofitSector;
+	@UiField
+	CheckBox aEducationTraining;
+	@UiField
+	CheckBox aCommerceRetail;
+	@UiField
+	CheckBox aOtherService;
+
 	interface EducationRegistrationFormUiBinder extends
 			UiBinder<Widget, SpecializationRegistrationForm> {
 	}
@@ -92,6 +115,16 @@ public class SpecializationRegistrationForm extends Composite {
 		aCooperative.addValueChangeHandler(checkHandler);
 		aEducation.addValueChangeHandler(checkHandler);
 		aNGOs.addValueChangeHandler(checkHandler);
+
+		aPractice.addValueChangeHandler(checkHandler);
+		aPublicSector.addValueChangeHandler(checkHandler);
+		aPrivateSector.addValueChangeHandler(checkHandler);
+		aBankingFinance.addValueChangeHandler(checkHandler);
+		aManufacturing2.addValueChangeHandler(checkHandler);
+		aHotel2.addValueChangeHandler(checkHandler);
+		aNonprofitSector.addValueChangeHandler(checkHandler);
+		aEducationTraining.addValueChangeHandler(checkHandler);
+		aCommerceRetail.addValueChangeHandler(checkHandler);
 
 		setEditMode(false);
 	}
@@ -129,6 +162,96 @@ public class SpecializationRegistrationForm extends Composite {
 			addRemove(Specializations.EDUCATION, value);
 		} else if (source.equals(aNGOs)) {
 			addRemove(Specializations.NGO, value);
+		}
+
+		// /Employment Sector
+		else if (source.equals(aPractice)) {
+			addRemoveEmployment(Specializations.PRACTICE, value);
+		} else if (source.equals(aManufacturing2)) {
+			addRemoveEmployment(Specializations.MANUFACTURING, value);
+		} else if (source.equals(aPublicSector)) {
+			addRemoveEmployment(Specializations.PUBLICSECTOR, value);
+		} else if (source.equals(aPrivateSector)) {
+			addRemoveEmployment(Specializations.PRIVATESECTOR, value);
+		} else if (source.equals(aBankingFinance)) {
+			addRemoveEmployment(Specializations.BANKINGANDFINANCE, value);
+		} else if (source.equals(aHotel2)) {
+			addRemoveEmployment(Specializations.HOTEL, value);
+		} else if (source.equals(aNonprofitSector)) {
+			addRemoveEmployment(Specializations.NONPROFIT, value);
+		} else if (source.equals(aEducationTraining)) {
+			addRemoveEmployment(Specializations.EDUCATIONANDTRAINING, value);
+		} else if (source.equals(aCommerceRetail)) {
+			addRemoveEmployment(Specializations.COMMERCE, value);
+		} else if (source.equals(aOtherService)) {
+			addRemoveEmployment(Specializations.OTHER, value);
+		}
+
+	}
+
+	private void addRemoveEmployment(Specializations specialization,
+			boolean isSave) {
+		switch (specialization) {
+		case PRACTICE:
+			AppContext.fireEvent(new EditModelEvent(
+					new ApplicationFormEmploymentDto(Specializations.PRACTICE),
+					!isSave));
+			break;
+		case PUBLICSECTOR:
+			AppContext.fireEvent(new EditModelEvent(
+					new ApplicationFormEmploymentDto(
+							Specializations.PUBLICSECTOR), !isSave));
+			break;
+		case COMMERCE:
+			AppContext.fireEvent(new EditModelEvent(
+					new ApplicationFormEmploymentDto(Specializations.COMMERCE),
+					!isSave));
+			break;
+		case PRIVATESECTOR:
+			AppContext.fireEvent(new EditModelEvent(
+					new ApplicationFormEmploymentDto(
+							Specializations.PRIVATESECTOR), !isSave));
+			break;
+		case NONPROFIT:
+			AppContext
+					.fireEvent(new EditModelEvent(
+							new ApplicationFormEmploymentDto(
+									Specializations.NONPROFIT), !isSave));
+		case BANKINGANDFINANCE:
+			AppContext.fireEvent(new EditModelEvent(
+					new ApplicationFormEmploymentDto(
+							Specializations.BANKINGANDFINANCE), !isSave));
+			break;
+		case EDUCATIONANDTRAINING:
+			AppContext.fireEvent(new EditModelEvent(
+					new ApplicationFormEmploymentDto(
+							Specializations.EDUCATIONANDTRAINING), !isSave));
+			break;
+		}
+	}
+
+	public void bindEmployment(Specializations specialization, boolean isSave) {
+		switch (specialization) {
+		case PRACTICE:
+			aPractice.setValue(true);
+			break;
+		case PUBLICSECTOR:
+			aPublicSector.setValue(true);
+			break;
+		case COMMERCE:
+			aCommerceRetail.setValue(true);
+			break;
+		case PRIVATESECTOR:
+			aPrivateSector.setValue(true);
+			break;
+		case NONPROFIT:
+			aNonprofitSector.setValue(true);
+		case BANKINGANDFINANCE:
+			aBankingFinance.setValue(true);
+			break;
+		case EDUCATIONANDTRAINING:
+			aEducationTraining.setValue(true);
+			break;
 		}
 	}
 
@@ -222,6 +345,7 @@ public class SpecializationRegistrationForm extends Composite {
 					new ApplicationFormSpecializationDto(Specializations.NGO),
 					!isSave));
 			break;
+
 		}
 	}
 
@@ -276,6 +400,7 @@ public class SpecializationRegistrationForm extends Composite {
 			aNGOs.setValue(true);
 			break;
 		}
+
 	}
 
 	public SpecializationRegistrationForm(String firstName) {
@@ -290,7 +415,7 @@ public class SpecializationRegistrationForm extends Composite {
 
 	public void setEditMode(boolean editMode) {
 		if (editMode) {
-			divHeader.removeClassName("hide");
+			// divHeader.removeClassName("hide");
 			aAudit.setEnabled(true);
 			aTaxation.setEnabled(true);
 			aFinancial.setEnabled(true);
@@ -307,8 +432,18 @@ public class SpecializationRegistrationForm extends Composite {
 			aCooperative.setEnabled(true);
 			aEducation.setEnabled(true);
 			aNGOs.setEnabled(true);
+
+			aPractice.setEnabled(true);
+			aPublicSector.setEnabled(true);
+			aPrivateSector.setEnabled(true);
+			aBankingFinance.setEnabled(true);
+			aManufacturing2.setEnabled(true);
+			aHotel2.setEnabled(true);
+			aNonprofitSector.setEnabled(true);
+			aEducationTraining.setEnabled(true);
+			aCommerceRetail.setEnabled(true);
 		} else {
-			divHeader.addClassName("hide");
+			// divHeader.addClassName("hide");
 			aAudit.setEnabled(false);
 			aTaxation.setEnabled(false);
 			aFinancial.setEnabled(false);
@@ -325,6 +460,16 @@ public class SpecializationRegistrationForm extends Composite {
 			aCooperative.setEnabled(false);
 			aEducation.setEnabled(false);
 			aNGOs.setEnabled(false);
+
+			aPractice.setEnabled(false);
+			aPublicSector.setEnabled(false);
+			aPrivateSector.setEnabled(false);
+			aBankingFinance.setEnabled(false);
+			aManufacturing2.setEnabled(false);
+			aHotel2.setEnabled(false);
+			aNonprofitSector.setEnabled(false);
+			aEducationTraining.setEnabled(false);
+			aCommerceRetail.setEnabled(false);
 		}
 	}
 
