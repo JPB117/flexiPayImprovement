@@ -18,11 +18,13 @@ import com.workpoint.icpak.client.model.UploadContext;
 import com.workpoint.icpak.client.model.UploadContext.UPLOADACTION;
 import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.DateField;
+import com.workpoint.icpak.client.ui.component.DropDownList;
 import com.workpoint.icpak.client.ui.component.IssuesPanel;
 import com.workpoint.icpak.client.ui.component.TextField;
 import com.workpoint.icpak.client.ui.upload.custom.Uploader;
 import com.workpoint.icpak.shared.model.ApplicationFormEducationalDto;
 import com.workpoint.icpak.shared.model.AttachmentDto;
+import com.workpoint.icpak.shared.model.CertificateAwarded;
 
 public class EducationRegistrationForm extends Composite {
 
@@ -43,8 +45,6 @@ public class EducationRegistrationForm extends Composite {
 	TextField txtRegistrationNo;
 	@UiField
 	TextField txtClassOrDivision;
-	@UiField
-	TextField txtAward;
 	@UiField
 	TextField txtEduType;
 	@UiField
@@ -67,6 +67,9 @@ public class EducationRegistrationForm extends Composite {
 
 	private ApplicationFormEducationalDto educationDto;
 
+	@UiField
+	DropDownList<CertificateAwarded> lstCertificateAwarded;
+
 	interface EducationRegistrationFormUiBinder extends
 			UiBinder<Widget, EducationRegistrationForm> {
 	}
@@ -74,6 +77,8 @@ public class EducationRegistrationForm extends Composite {
 	public EducationRegistrationForm() {
 		initWidget(uiBinder.createAndBindUi(this));
 		showUploadPanel(false);
+		lstCertificateAwarded.setItems(Arrays.asList(CertificateAwarded
+				.values()));
 	}
 
 	public EducationRegistrationForm(String firstName) {
@@ -107,9 +112,9 @@ public class EducationRegistrationForm extends Composite {
 			isValid = false;
 			issues.addError("Class/Division is mandatory");
 		}
-		if (isNullOrEmpty(txtAward.getValue())) {
+		if (isNullOrEmpty(lstCertificateAwarded.getValue())) {
 			isValid = false;
-			issues.addError("Award is mandatory");
+			issues.addError("Certficate Awarded is mandatory");
 		}
 
 		return isValid;
@@ -123,7 +128,7 @@ public class EducationRegistrationForm extends Composite {
 		txtSectionsPassed.setValue("");
 		txtRegistrationNo.setValue("");
 		txtClassOrDivision.setValue("");
-		txtAward.setValue("");
+		lstCertificateAwarded.setValue(null);
 		panelPreviousAttachments.clear();
 		showUploadPanel(false);
 		uploader.clear();
@@ -141,7 +146,7 @@ public class EducationRegistrationForm extends Composite {
 		dto.setSections(txtSectionsPassed.getValue());
 		dto.setRegNo(txtRegistrationNo.getValue());
 		dto.setClassDivisionAttained(txtClassOrDivision.getValue());
-		dto.setCertificateAwarded(txtAward.getValue());
+		dto.setCertificateAwarded(lstCertificateAwarded.getValue());
 		return dto;
 	}
 
@@ -155,7 +160,7 @@ public class EducationRegistrationForm extends Composite {
 		txtSectionsPassed.setValue(educationDto.getSections());
 		txtRegistrationNo.setValue(educationDto.getRegNo());
 		txtClassOrDivision.setValue(educationDto.getClassDivisionAttained());
-		txtAward.setValue(educationDto.getCertificateAwarded());
+		lstCertificateAwarded.setValue(educationDto.getCertificateAwarded());
 
 		if (educationDto.getAttachments() != null) {
 			for (final AttachmentDto attachment : educationDto.getAttachments()) {

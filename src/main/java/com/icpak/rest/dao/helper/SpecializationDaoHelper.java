@@ -79,7 +79,7 @@ public class SpecializationDaoHelper {
 		return edu.toDto();
 	}
 
-	public ApplicationFormEmploymentDto createEducationEntry(
+	public ApplicationFormEmploymentDto createEmploymentEntry(
 			String applicationId, ApplicationFormEmploymentDto dto) {
 		ApplicationFormHeader application = dao
 				.findByApplicationId(applicationId);

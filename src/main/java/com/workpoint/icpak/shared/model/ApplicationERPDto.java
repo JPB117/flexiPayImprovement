@@ -9,6 +9,7 @@ public class ApplicationERPDto {
 	List<ApplicationFormTrainingDto> trainings;
 	List<ApplicationFormAccountancyDto> accountancy;
 	List<ApplicationFormSpecializationDto> specializations;
+	List<ApplicationFormEmploymentDto> employment;
 
 	public ApplicationFormHeaderDto getApplication() {
 		return application;
@@ -50,6 +51,14 @@ public class ApplicationERPDto {
 	public void setSpecializations(
 			List<ApplicationFormSpecializationDto> specializations) {
 		this.specializations = specializations;
+	}
+
+	public List<ApplicationFormEmploymentDto> getEmployment() {
+		return employment;
+	}
+
+	public void setEmployment(List<ApplicationFormEmploymentDto> employment) {
+		this.employment = employment;
 	}
 
 }

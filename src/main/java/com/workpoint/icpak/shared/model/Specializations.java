@@ -32,11 +32,11 @@ public enum Specializations {
 
 	private SpecializationCategory category;
 	private String code;
+	private String specializationName;
 
 	private Specializations(SpecializationCategory category, String code) {
 		this.category = category;
 		this.code = code;
-
 	}
 
 	public SpecializationCategory getCategory() {
@@ -45,5 +45,13 @@ public enum Specializations {
 
 	public String getCode() {
 		return code;
+	}
+
+	public String getSpecializationName() {
+		return name();
+	}
+
+	public void setSpecializationName(String specializationName) {
+		this.specializationName = specializationName;
 	}
 }

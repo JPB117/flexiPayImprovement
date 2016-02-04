@@ -20,6 +20,7 @@ import com.icpak.rest.dao.helper.UsersDaoHelper;
 import com.workpoint.icpak.shared.model.ApplicationERPDto;
 import com.workpoint.icpak.shared.model.ApplicationFormAccountancyDto;
 import com.workpoint.icpak.shared.model.ApplicationFormEducationalDto;
+import com.workpoint.icpak.shared.model.ApplicationFormEmploymentDto;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 import com.workpoint.icpak.shared.model.ApplicationFormSpecializationDto;
 import com.workpoint.icpak.shared.model.ApplicationFormTrainingDto;
@@ -39,7 +40,6 @@ public class TestApplicationForm extends AbstractDaoTest {
 	AccountancyDaoHelper accountancyHelper;
 	@Inject
 	SpecializationDaoHelper specializationHelper;
-
 	@Inject
 	UsersDaoHelper usersDaoHelper;
 
@@ -79,6 +79,7 @@ public class TestApplicationForm extends AbstractDaoTest {
 
 	@Test
 	public void testERPIntergration() {
+		String applicationNo = "C/18878";
 		ApplicationFormHeaderDto application = helper.getApplicationById(
 				"j4Eu7OZ7krpuQ9r4").toDto();
 		List<ApplicationFormEducationalDto> educationDetails = eduHelper
@@ -89,6 +90,25 @@ public class TestApplicationForm extends AbstractDaoTest {
 				.getAllAccountancyEntrys("", "j4Eu7OZ7krpuQ9r4", 0, 100);
 		List<ApplicationFormSpecializationDto> specializations = specializationHelper
 				.getAllSpecializationEntrys("", "j4Eu7OZ7krpuQ9r4", 0, 100);
+		List<ApplicationFormEmploymentDto> employment = specializationHelper
+				.getAllEmploymentEntrys("", "j4Eu7OZ7krpuQ9r4", 0, 100);
+
+		application.setApplicationNo(applicationNo);
+		for (ApplicationFormEducationalDto education : educationDetails) {
+			education.setApplicationNo(applicationNo);
+		}
+		for (ApplicationFormTrainingDto training : trainings) {
+			training.setApplicationNo(applicationNo);
+		}
+		for (ApplicationFormAccountancyDto acc : accountancy) {
+			acc.setApplicationNo(applicationNo);
+		}
+		for (ApplicationFormSpecializationDto specialization : specializations) {
+			specialization.setApplicationNo(applicationNo);
+		}
+		for (ApplicationFormEmploymentDto emp : employment) {
+			emp.setApplicationNo(applicationNo);
+		}
 
 		ApplicationERPDto erpDto = new ApplicationERPDto();
 		erpDto.setApplication(application);
@@ -96,6 +116,10 @@ public class TestApplicationForm extends AbstractDaoTest {
 		erpDto.setTrainings(trainings);
 		erpDto.setAccountancy(accountancy);
 		erpDto.setSpecializations(specializations);
+		erpDto.setEmployment(employment);
+
+		JSONObject payLoad = new JSONObject(erpDto);
+		// System.err.println("payload to ERP>>>>" + payLoad);
 
 		try {
 			helper.postApplicationToERP("C/18877", erpDto);
@@ -122,6 +146,5 @@ public class TestApplicationForm extends AbstractDaoTest {
 
 	@Ignore
 	public void getCount() throws IOException {
-
 	}
 }

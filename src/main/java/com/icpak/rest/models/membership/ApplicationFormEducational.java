@@ -20,6 +20,7 @@ import com.icpak.rest.models.base.PO;
 import com.icpak.rest.models.util.Attachment;
 import com.workpoint.icpak.shared.model.ApplicationFormEducationalDto;
 import com.workpoint.icpak.shared.model.AttachmentDto;
+import com.workpoint.icpak.shared.model.CertificateAwarded;
 import com.workpoint.icpak.shared.model.EduType;
 
 @Entity
@@ -55,8 +56,8 @@ public class ApplicationFormEducational extends PO {
 	@Column(name = "`Class_Division Attained`", length = 50)
 	private String classDivisionAttained;
 
-	@Column(name = "`Certificate Awarded`")
-	private String certificateAwarded;
+	@Enumerated(EnumType.ORDINAL)
+	private CertificateAwarded certificateAwarded;
 
 	@Column(name = "`Examining Body`", length = 50)
 	private String examiningBody;
@@ -169,14 +170,6 @@ public class ApplicationFormEducational extends PO {
 		this.qualificationCode = qualificationCode;
 	}
 
-	public String getCertificateAwarded() {
-		return certificateAwarded;
-	}
-
-	public void setCertificateAwarded(String certificateAwarded) {
-		this.certificateAwarded = certificateAwarded;
-	}
-
 	public String getRegNo() {
 		return regNo;
 	}
@@ -202,8 +195,6 @@ public class ApplicationFormEducational extends PO {
 	}
 
 	public void copyFrom(ApplicationFormEducationalDto dto) {
-
-		setCertificateAwarded(dto.getCertificateAwarded());
 		setClassDivisionAttained(dto.getClassDivisionAttained());
 		setDescription(dto.getDescription());
 		setExaminingBody(dto.getExaminingBody());
@@ -216,6 +207,8 @@ public class ApplicationFormEducational extends PO {
 		setToDate(dto.getToDate());
 		setType(dto.getType());
 		setWhereObtained(dto.getWhereObtained());
+		setCertificateAwarded(dto.getCertificateAwarded());
+
 		// setApplicationNo(applicationNo);
 		// setRefId(refId);
 	}
@@ -264,6 +257,14 @@ public class ApplicationFormEducational extends PO {
 
 	public void setType(EduType type) {
 		this.type = type;
+	}
+
+	public CertificateAwarded getCertificateAwarded() {
+		return certificateAwarded;
+	}
+
+	public void setCertificateAwarded(CertificateAwarded certificateAwarded) {
+		this.certificateAwarded = certificateAwarded;
 	}
 
 }

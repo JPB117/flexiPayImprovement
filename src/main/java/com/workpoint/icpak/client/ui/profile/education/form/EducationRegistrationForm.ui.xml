@@ -74,9 +74,7 @@
 					</div>
 					<div class="col-xs-6">
 						<label for="enddate">Degree, Diploma, Certificate awarded</label>
-						<d:TextField type="text" ui:field="txtAward" class="form-control"
-							placeholder="Enter Award" value="" required="true">
-						</d:TextField>
+						<d:DropDownList ui:field="lstCertificateAwarded"></d:DropDownList>
 					</div>
 				</div>
 			</div>

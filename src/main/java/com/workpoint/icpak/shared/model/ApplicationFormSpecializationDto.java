@@ -15,6 +15,7 @@ public class ApplicationFormSpecializationDto extends SerializableObj {
 
 	private Specializations specialization;
 	private String code;
+	private String applicationNo;
 
 	public ApplicationFormSpecializationDto() {
 	}
@@ -37,6 +38,14 @@ public class ApplicationFormSpecializationDto extends SerializableObj {
 
 	public void setCode(String code) {
 		this.code = code;
+	}
+
+	public String getApplicationNo() {
+		return applicationNo;
+	}
+
+	public void setApplicationNo(String applicationNo) {
+		this.applicationNo = applicationNo;
 	}
 
 }

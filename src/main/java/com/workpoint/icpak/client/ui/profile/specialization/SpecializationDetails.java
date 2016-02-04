@@ -13,6 +13,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.TableHeader;
 import com.workpoint.icpak.client.ui.profile.specialization.form.SpecializationRegistrationForm;
+import com.workpoint.icpak.shared.model.ApplicationFormEmploymentDto;
 import com.workpoint.icpak.shared.model.ApplicationFormSpecializationDto;
 
 public class SpecializationDetails extends Composite {
@@ -67,6 +68,14 @@ public class SpecializationDetails extends Composite {
 	public void bindSpecializations(
 			List<ApplicationFormSpecializationDto> result) {
 		formSpecialization.bindDetails(result);
+	}
+
+	public void bindEmployment(List<ApplicationFormEmploymentDto> result) {
+		formSpecialization.bindEmployment(result);
+	}
+
+	public List<String> getSpecializationDetailIssues() {
+		return formSpecialization.getAllIssues();
 	}
 
 }

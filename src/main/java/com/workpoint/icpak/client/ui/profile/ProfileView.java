@@ -16,6 +16,7 @@ import com.workpoint.icpak.client.ui.profile.password.PasswordWidget;
 import com.workpoint.icpak.client.ui.profile.widget.ProfileWidget;
 import com.workpoint.icpak.shared.model.ApplicationFormAccountancyDto;
 import com.workpoint.icpak.shared.model.ApplicationFormEducationalDto;
+import com.workpoint.icpak.shared.model.ApplicationFormEmploymentDto;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 import com.workpoint.icpak.shared.model.ApplicationFormSpecializationDto;
 import com.workpoint.icpak.shared.model.ApplicationFormTrainingDto;
@@ -194,6 +195,11 @@ public class ProfileView extends ViewImpl implements
 	}
 
 	@Override
+	public void bindEmployment(List<ApplicationFormEmploymentDto> result) {
+		divProfileContent.bindEmployment(result);
+	}
+
+	@Override
 	public void bindMemberStanding(MemberStanding standing) {
 		divProfileContent.bindMemberStanding(standing);
 	}
@@ -260,4 +266,5 @@ public class ProfileView extends ViewImpl implements
 	public ProfileWidget getProfileWidget() {
 		return divProfileContent;
 	}
+
 }

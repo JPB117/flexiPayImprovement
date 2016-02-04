@@ -103,15 +103,16 @@ public class TransactionDaoHelper {
 
 		accountNo = accountNo.trim();
 		accountNo = accountNo.replaceAll("[-+.^:,]", "");
-		accountNo = accountNo.replaceAll("[oO]", "");
+		accountNo = accountNo.replaceAll("[oO]", "0");
 		logger.info("Trimmed Account No::::" + accountNo);
 
 		if (accountNo == null || accountNo.isEmpty()) {
 			logger.info("Account No is NULL, send message to tell the customer to input the correct account No"
 					+ accountNo);
+			Double amt = Double.valueOf(amount);
 			String smsMessage = " Thank-you for your payment of "
-					+ numberFormat.format(amount)
-					+ ".Please send details of this payment to memberservices@icpak.com. ";
+					+ numberFormat.format(amt)
+					+ ".Please send details of this payment to memberservices@icpak.com ";
 
 			String finalPhoneNumber = phoneNumber.replace("254", "0");
 			if (phoneNumber != null) {
@@ -124,9 +125,9 @@ public class TransactionDaoHelper {
 		invoiceDto = invoiceDao.getInvoiceByDocumentNo(accountNo);
 		if (invoiceDto == null) {
 			logger.info("No Invoice found for this transaction..");
-
+			Double amt = Double.valueOf(amount);
 			String smsMessage = " Thank-you for your payment of "
-					+ numberFormat.format(amount)
+					+ numberFormat.format(amt)
 					+ ".Please send details of this payment to memberservices@icpak.com. ";
 
 			String finalPhoneNumber = phoneNumber.replace("254", "0");

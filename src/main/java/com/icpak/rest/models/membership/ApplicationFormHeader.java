@@ -21,6 +21,7 @@ import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 import com.workpoint.icpak.shared.model.ApplicationType;
 import com.workpoint.icpak.shared.model.AttachmentDto;
 import com.workpoint.icpak.shared.model.Gender;
+import com.workpoint.icpak.shared.model.PaymentStatus;
 import com.workpoint.icpak.shared.model.auth.ApplicationStatus;
 
 @Entity
@@ -79,6 +80,8 @@ public class ApplicationFormHeader extends PO {
 	private String nationality;
 	@Enumerated(EnumType.STRING)
 	private ApplicationStatus applicationStatus;
+	@Enumerated(EnumType.STRING)
+	private PaymentStatus paymentStatus;
 	private String memberNo;
 	private String MobileNo;
 
@@ -319,6 +322,10 @@ public class ApplicationFormHeader extends PO {
 		setOffence(dto.getOffence());
 		setDateAndPlace(dto.getConvictionDateAndPlace());
 		setSentenceImposed(dto.getSentence());
+
+		// Application Status
+		setApplicationStatus(dto.getApplicationStatus());
+		setPaymentStatus(paymentStatus);
 	}
 
 	public void copyInto(ApplicationFormHeaderDto dto) {
@@ -342,10 +349,10 @@ public class ApplicationFormHeader extends PO {
 		dto.setResidence(residence);
 		dto.setIdNumber(idNumber);
 		dto.setBranch(branch);
+		dto.setApplicationStatus(applicationStatus);
 		if (gender != null) {
 			dto.setGender(Gender.valueOf(gender));
 		}
-
 		dto.setContactPerson(contactPerson);
 		dto.setContactAddress(contactAddress);
 		dto.setContactTelephone(contactTelephone);
@@ -353,6 +360,7 @@ public class ApplicationFormHeader extends PO {
 		dto.setOffence(offence);
 		dto.setConvictionDateAndPlace(dateAndPlace);
 		dto.setSentence(sentenceImposed);
+		dto.setPaymentStatus(paymentStatus);
 
 		List<AttachmentDto> attachmentDtos = new ArrayList<AttachmentDto>();
 		for (Attachment attachment : attachments) {
@@ -361,7 +369,6 @@ public class ApplicationFormHeader extends PO {
 			attachmentDto.setRefId(attachment.getRefId());
 			attachmentDtos.add(attachmentDto);
 		}
-
 		dto.setAttachments(attachmentDtos);
 	}
 
@@ -475,5 +482,13 @@ public class ApplicationFormHeader extends PO {
 
 	public void setGender(String gender) {
 		this.gender = gender;
+	}
+
+	public PaymentStatus getPaymentStatus() {
+		return paymentStatus;
+	}
+
+	public void setPaymentStatus(PaymentStatus paymentStatus) {
+		this.paymentStatus = paymentStatus;
 	}
 }

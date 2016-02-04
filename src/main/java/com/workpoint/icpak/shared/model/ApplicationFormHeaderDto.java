@@ -3,6 +3,8 @@ package com.workpoint.icpak.shared.model;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -109,6 +111,7 @@ public class ApplicationFormHeaderDto extends SerializableObj {
 	private String timezone;
 	private List<AttachmentDto> attachments;
 	private ApplicationStatus applicationStatus;
+	private PaymentStatus paymentStatus;
 	private String nextRefId;
 	private String previousRefId;
 	private String branch;
@@ -118,14 +121,6 @@ public class ApplicationFormHeaderDto extends SerializableObj {
 	}
 
 	public ApplicationFormHeaderDto() {
-	}
-
-	public String getApplicationNo() {
-		return applicationNo;
-	}
-
-	public void setApplicationNo(String applicationNo) {
-		this.applicationNo = applicationNo;
 	}
 
 	public Date getDate() {
@@ -861,6 +856,22 @@ public class ApplicationFormHeaderDto extends SerializableObj {
 
 	public void setBranch(String branch) {
 		this.branch = branch;
+	}
+
+	public String getApplicationNo() {
+		return applicationNo;
+	}
+
+	public void setApplicationNo(String applicationNo) {
+		this.applicationNo = applicationNo;
+	}
+
+	public PaymentStatus getPaymentStatus() {
+		return paymentStatus;
+	}
+
+	public void setPaymentStatus(PaymentStatus paymentStatus) {
+		this.paymentStatus = paymentStatus;
 	}
 
 }

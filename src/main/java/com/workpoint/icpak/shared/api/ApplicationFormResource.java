@@ -49,7 +49,7 @@ public interface ApplicationFormResource extends BaseResource {
 			@PathParam("applicationId") String applicationId);
 
 	@Path("/{applicationId}/employment")
-	public SpecializationsResource employment(
+	public EmploymentResource employment(
 			@PathParam("applicationId") String applicationId);
 
 	@GET

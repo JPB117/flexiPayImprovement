@@ -15,8 +15,17 @@ public class ApplicationFormEmploymentDto extends SerializableObj {
 
 	private Specializations specialization;
 	private String code;
+	private String applicationNo;
 
 	public ApplicationFormEmploymentDto() {
+	}
+
+	public String getApplicationNo() {
+		return applicationNo;
+	}
+
+	public void setApplicationNo(String applicationNo) {
+		this.applicationNo = applicationNo;
 	}
 
 	public ApplicationFormEmploymentDto(Specializations specialization) {

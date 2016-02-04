@@ -23,6 +23,7 @@ import com.wordnik.swagger.annotations.ApiParam;
 import com.workpoint.icpak.shared.api.AccountancyResource;
 import com.workpoint.icpak.shared.api.ApplicationFormResource;
 import com.workpoint.icpak.shared.api.EducationResource;
+import com.workpoint.icpak.shared.api.EmploymentResource;
 import com.workpoint.icpak.shared.api.SpecializationsResource;
 import com.workpoint.icpak.shared.api.TrainingsResource;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
@@ -148,9 +149,9 @@ public class ApplicationFormResourceImpl implements ApplicationFormResource {
 	}
 
 	@Path("/{applicationId}/employment")
-	public SpecializationsResource employment(
+	public EmploymentResource employment(
 			@PathParam("applicationId") String applicationId) {
-		return factory.createSpecializationResource(applicationId);
+		return factory.createEmploymentResourse(applicationId);
 	}
 
 	// /**

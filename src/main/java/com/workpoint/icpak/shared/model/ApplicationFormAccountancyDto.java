@@ -22,7 +22,16 @@ public class ApplicationFormAccountancyDto extends SerializableObj {
 	private String sectionPassed;
 	private Date datePassed;
 	private String applicationRefId;
+	private String applicationNo;
 	private List<AttachmentDto> attachments = new ArrayList<>();
+
+	public String getApplicationNo() {
+		return applicationNo;
+	}
+
+	public void setApplicationNo(String applicationNo) {
+		this.applicationNo = applicationNo;
+	}
 
 	public List<AttachmentDto> getAttachments() {
 		return attachments;

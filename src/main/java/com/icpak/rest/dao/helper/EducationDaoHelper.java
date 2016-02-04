@@ -16,58 +16,66 @@ import com.workpoint.icpak.shared.model.EduType;
 @Transactional
 public class EducationDaoHelper {
 
-	@Inject UsersDao userDao;
-	@Inject ApplicationFormDao dao;
-	
-	public List<ApplicationFormEducationalDto> getAllEducationEntrys(String uriInfo, 
-			String applicationId,Integer offset,	Integer limit) {
+	@Inject
+	UsersDao userDao;
+	@Inject
+	ApplicationFormDao dao;
 
-		Collection<ApplicationFormEducational> list = dao.getEducation(applicationId);
-		
+	public List<ApplicationFormEducationalDto> getAllEducationEntrys(
+			String uriInfo, String applicationId, Integer offset, Integer limit) {
+
+		Collection<ApplicationFormEducational> list = dao
+				.getEducation(applicationId);
 		List<ApplicationFormEducationalDto> dtos = new ArrayList<>();
-		for(ApplicationFormEducational e: list){
+		for (ApplicationFormEducational e : list) {
 			dtos.add(e.toDto());
 		}
 		return dtos;
 	}
 
-	public ApplicationFormEducationalDto getEducationEntryById(String applicationId, String eduEntryId) {
+	public ApplicationFormEducationalDto getEducationEntryById(
+			String applicationId, String eduEntryId) {
 
-		ApplicationFormEducational eduEntry = dao.findByRefId(eduEntryId, ApplicationFormEducational.class);
+		ApplicationFormEducational eduEntry = dao.findByRefId(eduEntryId,
+				ApplicationFormEducational.class);
 		return eduEntry.toDto();
 	}
-	
-	public ApplicationFormEducationalDto createEducationEntry(String applicationId, 
-			ApplicationFormEducationalDto dto) {
-		ApplicationFormHeader application = dao.findByApplicationId(applicationId);
-		
+
+	public ApplicationFormEducationalDto createEducationEntry(
+			String applicationId, ApplicationFormEducationalDto dto) {
+		ApplicationFormHeader application = dao
+				.findByApplicationId(applicationId);
+
 		ApplicationFormEducational edu = new ApplicationFormEducational();
 		edu.setApplicationRefId(application.getRefId());
 		edu.copyFrom(dto);
-		
-		dao.save(edu);		
-		
+
+		dao.save(edu);
+
 		return edu.toDto();
 	}
 
-	public ApplicationFormEducationalDto updateEducationEntry(String applicationId,String eduEntryId,
+	public ApplicationFormEducationalDto updateEducationEntry(
+			String applicationId, String eduEntryId,
 			ApplicationFormEducationalDto eduEntry) {
-		assert eduEntry.getRefId()!=null;
-		
-		ApplicationFormEducational poEducationEntry = dao.findByRefId(eduEntryId, ApplicationFormEducational.class);
+		assert eduEntry.getRefId() != null;
+
+		ApplicationFormEducational poEducationEntry = dao.findByRefId(
+				eduEntryId, ApplicationFormEducational.class);
 		poEducationEntry.copyFrom(eduEntry);
 		dao.save(poEducationEntry);
 		return poEducationEntry.toDto();
 	}
 
 	public void deleteEducationEntry(String applicationId, String eduEntryId) {
-		ApplicationFormEducational eduEntry = dao.findByRefId(eduEntryId, ApplicationFormEducational.class);
+		ApplicationFormEducational eduEntry = dao.findByRefId(eduEntryId,
+				ApplicationFormEducational.class);
 		dao.delete(eduEntry);
 	}
 
-	public List<ApplicationFormEducationalDto> getAllEducationEntrys(String uriInfo,
-			String applicationId, EduType academia, Integer offset,
-			Integer limit) {
+	public List<ApplicationFormEducationalDto> getAllEducationEntrys(
+			String uriInfo, String applicationId, EduType academia,
+			Integer offset, Integer limit) {
 		return new ArrayList<>();
 	}
 

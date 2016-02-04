@@ -175,6 +175,33 @@
 											</div>
 
 											<br />
+
+											<div ui:field="divPaymentSection">
+												<div class="row">
+													<span ui:field="spnPaymentDescription">Application Payment Status:</span>
+													<span ui:field="spnPaymentStatus">
+													</span>
+													<d:ActionLink ui:field="aDownloadProforma" styleName="btn btn-fill btn-gold">Download
+														Proforma Invoice
+													</d:ActionLink>
+													|
+													<d:ActionLink ui:field="aPayLink" styleName="btn btn-fill btn-gold">Proceed
+														to Pay</d:ActionLink>
+												</div>
+											</div>
+
+
+											<div ui:field="divApplicationStatus">
+												<div class="row">
+													<div class="alert alert-success">
+														<span ui:field="spnMessage">
+															Your application status is
+															<Strong ui:field="spnApplicationStatus">SUBMITTED</Strong>
+														</span>
+													</div>
+												</div>
+											</div>
+
 											<div ui:field="divSubmitApplication">
 												<div class="row">
 													<d:ActionLink ui:field="aSubmit" styleName="btn btn-fill btn-gold">Submit
@@ -189,7 +216,6 @@
 													</div>
 												</div>
 											</div>
-
 
 											<div ui:field="divErpSync">
 												<div class="row">

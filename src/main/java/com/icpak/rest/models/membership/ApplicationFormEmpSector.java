@@ -25,9 +25,6 @@ public class ApplicationFormEmpSector extends PO {
 	@Column(name = "`timestamp`", columnDefinition = "timestamp NOT NULL default current_timestamp")
 	private Timestamp timestamp;
 
-	@Column(nullable = false, name = "`Application No_`", length = 20)
-	private String applicationNo;
-
 	@Column(nullable = false, name = "`Code`", length = 20)
 	private String code;
 
@@ -49,14 +46,6 @@ public class ApplicationFormEmpSector extends PO {
 
 	public void setTimestamp(Timestamp timestamp) {
 		this.timestamp = timestamp;
-	}
-
-	public String getApplicationNo() {
-		return applicationNo;
-	}
-
-	public void setApplicationNo(String applicationNo) {
-		this.applicationNo = applicationNo;
 	}
 
 	public String getCode() {

@@ -20,10 +20,10 @@ public class ApplicationFormEducationalDto extends SerializableObj {
 	private String applicationNo;
 	private String applicationRefId;
 	private String whereObtained;
+	private CertificateAwarded certificateAwarded;
 	private Date fromDate;
 	private Date toDate;
 	private String classDivisionAttained;
-	private String certificateAwarded;
 	private String examiningBody;
 	private String qualificationDesc; // Msc, BSC, KCSE
 	private String qualificationCode;
@@ -156,11 +156,11 @@ public class ApplicationFormEducationalDto extends SerializableObj {
 		this.attachments = attachments;
 	}
 
-	public String getCertificateAwarded() {
+	public CertificateAwarded getCertificateAwarded() {
 		return certificateAwarded;
 	}
 
-	public void setCertificateAwarded(String certificateAwarded) {
+	public void setCertificateAwarded(CertificateAwarded certificateAwarded) {
 		this.certificateAwarded = certificateAwarded;
 	}
 }

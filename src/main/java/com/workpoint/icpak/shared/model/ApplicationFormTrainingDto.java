@@ -21,7 +21,7 @@ public class ApplicationFormTrainingDto extends SerializableObj {
 	private TrainingType trainingType;
 	private String clients;
 	private Date datePassed;
-
+	private String applicationNo;
 	private List<AttachmentDto> attachments;
 
 	public ApplicationFormTrainingDto() {
@@ -105,6 +105,14 @@ public class ApplicationFormTrainingDto extends SerializableObj {
 
 	public void setAttachments(List<AttachmentDto> attachments) {
 		this.attachments = attachments;
+	}
+
+	public String getApplicationNo() {
+		return applicationNo;
+	}
+
+	public void setApplicationNo(String applicationNo) {
+		this.applicationNo = applicationNo;
 	}
 
 }

@@ -48,6 +48,7 @@ import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.model.ApplicationFormAccountancyDto;
 import com.workpoint.icpak.shared.model.ApplicationFormEducationalDto;
+import com.workpoint.icpak.shared.model.ApplicationFormEmploymentDto;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 import com.workpoint.icpak.shared.model.ApplicationFormSpecializationDto;
 import com.workpoint.icpak.shared.model.ApplicationFormTrainingDto;
@@ -158,6 +159,22 @@ public class ProfileWidget extends Composite {
 	TextField txtErpAppNo;
 	@UiField
 	ActionLink aErpSync;
+	@UiField
+	DivElement divApplicationStatus;
+
+	@UiField
+	DivElement divPaymentSection;
+	@UiField
+	SpanElement spnPaymentStatus;
+	@UiField
+	ActionLink aDownloadProforma;
+	@UiField
+	Element spnApplicationStatus;
+
+	@UiField
+	SpanElement spnMessage;
+	@UiField
+	ActionLink aPayLink;
 
 	private BasicDetails basicDetail;
 	private EducationDetails educationDetail;
@@ -265,7 +282,6 @@ public class ProfileWidget extends Composite {
 			divGoodStandingActions.removeClassName("hide");
 			aCheckStandingStatus.removeStyleName("hide");
 		} else if (isCurrentUserBasicMember) {
-			divGoodStanding.addClassName("hide");
 			divSubmitApplication.removeClassName("hide");
 		} else if (isCurrentUserAdmin) {
 			panelBreadcrumb.removeStyleName("hide");
@@ -283,6 +299,8 @@ public class ProfileWidget extends Composite {
 		aDownloadCert.addStyleName("hide");
 		divErpSync.addClassName("hide");
 		panelIssues.addStyleName("hide");
+		divApplicationStatus.addClassName("hide");
+		divPaymentSection.addClassName("hide");
 	}
 
 	public void setEditMode(boolean editMode) {
@@ -552,14 +570,16 @@ public class ProfileWidget extends Composite {
 				.size() == 0 ? true : false;
 		boolean isExaminationDetailOk = accountancyDetail
 				.getExaminationDetailIssues().size() == 0 ? true : false;
+		boolean isSpecializationOk = specializationDetail
+				.getSpecializationDetailIssues().size() == 0 ? true : false;
 
-		Window.alert("Is Basic Details Ok:" + isBasicDetailOK
-				+ "Education Detail OK:" + isEducationDetailOk
-				+ "Training Detail OK:" + isTrainingDetailOk
-				+ "Examination Detail OK:" + isExaminationDetailOk);
+		// Window.alert("Is Basic Details Ok:" + isBasicDetailOK
+		// + "Education Detail OK:" + isEducationDetailOk
+		// + "Training Detail OK:" + isTrainingDetailOk
+		// + "Examination Detail OK:" + isExaminationDetailOk);
 
 		if (isBasicDetailOK && isEducationDetailOk && isTrainingDetailOk
-				&& isExaminationDetailOk) {
+				&& isExaminationDetailOk && isSpecializationOk) {
 			panelIssues.addStyleName("hide");
 			return true;
 		} else {
@@ -579,6 +599,13 @@ public class ProfileWidget extends Composite {
 				ulIssues.add(listItem);
 			}
 			for (String issue : accountancyDetail.getExaminationDetailIssues()) {
+				BulletPanel listItem = new BulletPanel();
+				listItem.setText(issue);
+				ulIssues.add(listItem);
+			}
+
+			for (String issue : specializationDetail
+					.getSpecializationDetailIssues()) {
 				BulletPanel listItem = new BulletPanel();
 				listItem.setText(issue);
 				ulIssues.add(listItem);
@@ -634,5 +661,9 @@ public class ProfileWidget extends Composite {
 		} else {
 			panelIssues.addStyleName("hide");
 		}
+	}
+
+	public void bindEmployment(List<ApplicationFormEmploymentDto> result) {
+		specializationDetail.bindEmployment(result);
 	}
 }

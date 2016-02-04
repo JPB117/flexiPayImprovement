@@ -1,5 +1,6 @@
 package com.workpoint.icpak.client.ui.profile.specialization.form;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
@@ -14,7 +15,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.workpoint.icpak.client.ui.component.IssuesPanel;
 import com.workpoint.icpak.client.ui.events.EditModelEvent;
 import com.workpoint.icpak.client.util.AppContext;
-import com.workpoint.icpak.shared.model.ApplicationFormEducationalDto;
 import com.workpoint.icpak.shared.model.ApplicationFormEmploymentDto;
 import com.workpoint.icpak.shared.model.ApplicationFormSpecializationDto;
 import com.workpoint.icpak.shared.model.Specializations;
@@ -84,6 +84,8 @@ public class SpecializationRegistrationForm extends Composite {
 	CheckBox aCommerceRetail;
 	@UiField
 	CheckBox aOtherService;
+
+	List<String> allIssues = new ArrayList<>();
 
 	interface EducationRegistrationFormUiBinder extends
 			UiBinder<Widget, SpecializationRegistrationForm> {
@@ -227,30 +229,20 @@ public class SpecializationRegistrationForm extends Composite {
 					new ApplicationFormEmploymentDto(
 							Specializations.EDUCATIONANDTRAINING), !isSave));
 			break;
-		}
-	}
-
-	public void bindEmployment(Specializations specialization, boolean isSave) {
-		switch (specialization) {
-		case PRACTICE:
-			aPractice.setValue(true);
+		case MANUFACTURING:
+			AppContext.fireEvent(new EditModelEvent(
+					new ApplicationFormEmploymentDto(
+							Specializations.MANUFACTURING), !isSave));
 			break;
-		case PUBLICSECTOR:
-			aPublicSector.setValue(true);
+		case HOTEL:
+			AppContext.fireEvent(new EditModelEvent(
+					new ApplicationFormEmploymentDto(Specializations.HOTEL),
+					!isSave));
 			break;
-		case COMMERCE:
-			aCommerceRetail.setValue(true);
-			break;
-		case PRIVATESECTOR:
-			aPrivateSector.setValue(true);
-			break;
-		case NONPROFIT:
-			aNonprofitSector.setValue(true);
-		case BANKINGANDFINANCE:
-			aBankingFinance.setValue(true);
-			break;
-		case EDUCATIONANDTRAINING:
-			aEducationTraining.setValue(true);
+		case OTHER:
+			AppContext.fireEvent(new EditModelEvent(
+					new ApplicationFormEmploymentDto(Specializations.OTHER),
+					!isSave));
 			break;
 		}
 	}
@@ -403,6 +395,40 @@ public class SpecializationRegistrationForm extends Composite {
 
 	}
 
+	public void bindEmploymentDetail(ApplicationFormEmploymentDto employment) {
+		switch (employment.getSpecialization()) {
+		case PRACTICE:
+			aPractice.setValue(true);
+			break;
+		case PUBLICSECTOR:
+			aPublicSector.setValue(true);
+			break;
+		case COMMERCE:
+			aCommerceRetail.setValue(true);
+			break;
+		case PRIVATESECTOR:
+			aPrivateSector.setValue(true);
+			break;
+		case NONPROFIT:
+			aNonprofitSector.setValue(true);
+		case BANKINGANDFINANCE:
+			aBankingFinance.setValue(true);
+			break;
+		case EDUCATIONANDTRAINING:
+			aEducationTraining.setValue(true);
+			break;
+		case HOTEL:
+			aHotel2.setValue(true);
+			break;
+		case MANUFACTURING:
+			aManufacturing2.setValue(true);
+			break;
+		case OTHER:
+			aOtherService.setValue(true);
+			break;
+		}
+	}
+
 	public SpecializationRegistrationForm(String firstName) {
 		initWidget(uiBinder.createAndBindUi(this));
 	}
@@ -442,6 +468,7 @@ public class SpecializationRegistrationForm extends Composite {
 			aNonprofitSector.setEnabled(true);
 			aEducationTraining.setEnabled(true);
 			aCommerceRetail.setEnabled(true);
+			aOtherService.setEnabled(true);
 		} else {
 			// divHeader.addClassName("hide");
 			aAudit.setEnabled(false);
@@ -470,6 +497,7 @@ public class SpecializationRegistrationForm extends Composite {
 			aNonprofitSector.setEnabled(false);
 			aEducationTraining.setEnabled(false);
 			aCommerceRetail.setEnabled(false);
+			aOtherService.setEnabled(false);
 		}
 	}
 
@@ -481,9 +509,26 @@ public class SpecializationRegistrationForm extends Composite {
 
 	public void bindDetails(List<ApplicationFormSpecializationDto> result) {
 		clear();
+		if (result.size() == 0) {
+			allIssues
+					.add("Please provide at least one area of specialization under the specialization tab");
+		}
 		for (ApplicationFormSpecializationDto dto : result) {
 			bindDetail(dto);
 		}
 	}
 
+	public void bindEmployment(List<ApplicationFormEmploymentDto> result) {
+		if (result.size() == 0) {
+			allIssues
+					.add("Please provide your current employment sector under  the specialization tab");
+		}
+		for (ApplicationFormEmploymentDto dto : result) {
+			bindEmploymentDetail(dto);
+		}
+	}
+
+	public List<String> getAllIssues() {
+		return allIssues;
+	}
 }

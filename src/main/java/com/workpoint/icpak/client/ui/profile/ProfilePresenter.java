@@ -38,7 +38,6 @@ import com.workpoint.icpak.client.ui.profile.specialization.form.SpecializationR
 import com.workpoint.icpak.client.ui.profile.training.form.TrainingRegistrationForm;
 import com.workpoint.icpak.client.ui.profile.widget.ProfileWidget;
 import com.workpoint.icpak.client.ui.security.BasicMemberGateKeeper;
-import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.api.ApplicationFormResource;
 import com.workpoint.icpak.shared.api.CountriesResource;
 import com.workpoint.icpak.shared.api.MemberResource;
@@ -124,6 +123,8 @@ public class ProfilePresenter
 		void showApplicationIssues(boolean show);
 
 		ProfileWidget getProfileWidget();
+
+		void bindEmployment(List<ApplicationFormEmploymentDto> result);
 	}
 
 	private final CurrentUser currentUser;
@@ -167,6 +168,7 @@ public class ProfilePresenter
 	AccountancyRegistrationForm accountancyForm = new AccountancyRegistrationForm();
 
 	protected ApplicationStatus applicationStatus;
+	protected ApplicationFormHeaderDto applicationForm;
 
 	@Override
 	protected void onBind() {
@@ -197,6 +199,7 @@ public class ProfilePresenter
 			@Override
 			public void onClick(ClickEvent event) {
 				getView().validateBasicDetailIssues();
+				saveApplication();
 			}
 		});
 
@@ -265,6 +268,19 @@ public class ProfilePresenter
 			}
 		});
 
+	}
+
+	protected void saveApplication() {
+		fireEvent(new ProcessingEvent());
+		applicationForm.setApplicationStatus(ApplicationStatus.SUBMITTED);
+		applicationDelegate.withCallback(
+				new AbstractAsyncCallback<ApplicationFormHeaderDto>() {
+					@Override
+					public void onSuccess(ApplicationFormHeaderDto result) {
+						fireEvent(new ProcessingCompletedEvent());
+						loadMemberDetails();
+					}
+				}).update(getApplicationRefId(), applicationForm);
 	}
 
 	public void showPopUp(final Widget passedForm) {
@@ -579,6 +595,7 @@ public class ProfilePresenter
 				new AbstractAsyncCallback<ApplicationFormHeaderDto>() {
 					@Override
 					public void onSuccess(ApplicationFormHeaderDto result) {
+						ProfilePresenter.this.applicationForm = result;
 						memberForm.bind(result);
 						getView().bindBasicDetails(result);
 					}
@@ -619,6 +636,18 @@ public class ProfilePresenter
 								fireEvent(new ProcessingCompletedEvent());
 							}
 						}).specialization(applicationId).getAll(0, 50);
+
+		applicationDelegate
+				.withCallback(
+						new AbstractAsyncCallback<List<ApplicationFormEmploymentDto>>() {
+							@Override
+							public void onSuccess(
+									List<ApplicationFormEmploymentDto> result) {
+								getView().bindEmployment(result);
+								specializationForm.bindEmployment(result);
+								fireEvent(new ProcessingCompletedEvent());
+							}
+						}).employment(applicationId).getAll(0, 50);
 	}
 
 	String getApplicationRefId() {
@@ -667,7 +696,7 @@ public class ProfilePresenter
 			if (event.isDelete()) {
 				delete(dto);
 			} else {
-				saveSpecialization(dto);
+				saveEmployment(dto);
 			}
 		}
 
@@ -682,6 +711,26 @@ public class ProfilePresenter
 			}
 		}
 
+	}
+
+	private void saveEmployment(ApplicationFormEmploymentDto dto) {
+		applicationDelegate
+				.withCallback(
+						new AbstractAsyncCallback<ApplicationFormEmploymentDto>() {
+							@Override
+							public void onSuccess(
+									ApplicationFormEmploymentDto result) {
+							}
+						}).employment(getApplicationRefId()).create(dto);
+	}
+
+	private void delete(ApplicationFormEmploymentDto dto) {
+		applicationDelegate.withCallback(new AbstractAsyncCallback<Void>() {
+			@Override
+			public void onSuccess(Void result) {
+			}
+		}).employment(getApplicationRefId())
+				.delete(dto.getSpecialization().name());
 	}
 
 	private void saveSpecialization(ApplicationFormSpecializationDto dto) {
@@ -701,15 +750,6 @@ public class ProfilePresenter
 			public void onSuccess(Void result) {
 			}
 		}).specialization(getApplicationRefId())
-				.delete(dto.getSpecialization().name());
-	}
-
-	private void delete(ApplicationFormEmploymentDto dto) {
-		applicationDelegate.withCallback(new AbstractAsyncCallback<Void>() {
-			@Override
-			public void onSuccess(Void result) {
-			}
-		}).employment(getApplicationRefId())
 				.delete(dto.getSpecialization().name());
 	}
 
