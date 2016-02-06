@@ -63,6 +63,17 @@ public class CPDResourceImpl implements CPDResource {
 	}
 
 	@GET
+	@Path("/cpdFormatted")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public List<CPDDto> getAllWithDates(@QueryParam("offset") Integer offset,
+			@QueryParam("limit") Integer limit,
+			@QueryParam("startDate") String startDate,
+			@QueryParam("endDate") String endDate) {
+		return helper.getAllCPDWithStringDates(memberId, offset, limit,
+				startDate, endDate, null);
+	}
+
+	@GET
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/cpdmemberSummary")
 	@ApiOperation(value = "Get a list of all cpds", response = MemberCPDDto.class, consumes = MediaType.APPLICATION_JSON)
@@ -186,4 +197,5 @@ public class CPDResourceImpl implements CPDResource {
 			@QueryParam("endDate") Long endDate) {
 		return helper.getYearSummaries(memberId, startDate, endDate);
 	}
+
 }

@@ -53,9 +53,10 @@ public class CPDDaoHelper {
 	CoursesDaoHelper coursesDaoHelper;
 	@Inject
 	SMSIntegration smsIntergration;
-
 	@Inject
 	ApplicationSettings settings;
+
+	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
 	static Logger logger = Logger.getLogger(CPDDaoHelper.class);
 
@@ -470,6 +471,23 @@ public class CPDDaoHelper {
 			Long endDate) {
 		return dao.getYearSummaries(memberId, new Date(startDate), new Date(
 				endDate));
+	}
+
+	public List<CPDDto> getAllCPDWithStringDates(String memberId,
+			Integer offset, Integer limit, String startDate, String endDate,
+			Object object) {
+
+		Date date1 = null;
+		Date date2 = null;
+		try {
+			date1 = formatter.parse(startDate);
+			date2 = formatter.parse(endDate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
+		return getAllCPD(memberId, offset, limit, date1.getTime(),
+				date2.getTime(), null);
 	}
 
 }
