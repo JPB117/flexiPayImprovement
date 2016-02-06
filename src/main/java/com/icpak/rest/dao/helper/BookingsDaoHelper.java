@@ -286,9 +286,10 @@ public class BookingsDaoHelper {
 						numberFormat.format(dto.getTotalAmount()));
 				proformaDocument.addDetail(new DocumentLine("DiscountDetails",
 						line));
-				System.err.println("InvoiceLineDto: " + dto.getRefId() + " | "
-						+ dto.getDescription() + " | " + dto.getTotalAmount()
-						+ " | " + dto.getType());
+				// System.err.println("InvoiceLineDto: " + dto.getRefId() +
+				// " | "
+				// + dto.getDescription() + " | " + dto.getTotalAmount()
+				// + " | " + dto.getType());
 
 			} else if (dto.getType() == InvoiceLineType.Penalty) {
 				// Penalty Line
@@ -302,9 +303,10 @@ public class BookingsDaoHelper {
 						numberFormat.format(dto.getTotalAmount()));
 				proformaDocument.addDetail(new DocumentLine("PenaltyDetails",
 						line));
-				System.err.println("InvoiceLineDto: " + dto.getRefId() + " | "
-						+ dto.getDescription() + " | " + dto.getTotalAmount()
-						+ " | " + dto.getType());
+				// System.err.println("InvoiceLineDto: " + dto.getRefId() +
+				// " | "
+				// + dto.getDescription() + " | " + dto.getTotalAmount()
+				// + " | " + dto.getType());
 			} else {
 				Map<String, Object> line = new HashMap<>();
 				line.put("description", dto.getDescription());

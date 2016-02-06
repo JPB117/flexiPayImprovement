@@ -211,6 +211,7 @@ public class AppContext {
 	}
 
 	public static boolean isCurrentUserMember() {
-		return user.getUser().getMemberNo() != null;
+		return (user.getUser().getMemberNo() != null)
+				&& (!user.getUser().getMemberNo().isEmpty());
 	}
 }

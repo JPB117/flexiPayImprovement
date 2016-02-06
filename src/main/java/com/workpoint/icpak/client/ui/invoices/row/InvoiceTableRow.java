@@ -108,7 +108,7 @@ public class InvoiceTableRow extends RowWidget {
 			public void onClick(ClickEvent event) {
 				// Window.alert("Proforma" + delegate.getBookingRefId());
 				UploadContext ctx = new UploadContext("getreport");
-				ctx.setContext("invoiceRefId", invoice.getBookingRefId());
+				ctx.setContext("invoiceRefId", invoice.getRefId());
 				ctx.setAction(UPLOADACTION.GETPROFORMA);
 
 				// ctx.setContext(key, value)

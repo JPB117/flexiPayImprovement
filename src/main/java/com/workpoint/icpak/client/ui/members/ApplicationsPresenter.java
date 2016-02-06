@@ -2,6 +2,8 @@ package com.workpoint.icpak.client.ui.members;
 
 import java.util.List;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasKeyDownHandlers;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
@@ -37,6 +39,7 @@ import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 import com.workpoint.icpak.shared.model.ApplicationFormSpecializationDto;
 import com.workpoint.icpak.shared.model.ApplicationFormTrainingDto;
 import com.workpoint.icpak.shared.model.ApplicationSummaryDto;
+import com.workpoint.icpak.shared.model.auth.ApplicationStatus;
 
 public class ApplicationsPresenter
 		extends
@@ -92,6 +95,8 @@ public class ApplicationsPresenter
 	private ResourceDelegate<ApplicationFormResource> applicationDelegate;
 	private String applicationRefId = "";
 
+	protected ApplicationFormHeaderDto selectedApplication;
+
 	@Inject
 	public ApplicationsPresenter(final EventBus eventBus,
 			final IApplicationsView view, final IApplicationsProxy proxy,
@@ -114,6 +119,50 @@ public class ApplicationsPresenter
 				loadApplications(offset, limit, "");
 			}
 		});
+
+		getView().getPanelProfile().getErpSync()
+				.addClickHandler(new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {
+						String applicationNo = getView().getPanelProfile()
+								.getErpApplicationNumber();
+						if (selectedApplication != null) {
+							selectedApplication.setErpCode(applicationNo);
+							selectedApplication
+									.setApplicationStatus(ApplicationStatus.PROCESSING);
+							updateApplication(selectedApplication);
+						}
+					}
+				});
+
+	}
+
+	protected void updateApplication(
+			ApplicationFormHeaderDto selectedApplication) {
+		fireEvent(new ProcessingEvent());
+		applicationDelegate.withCallback(
+				new AbstractAsyncCallback<ApplicationFormHeaderDto>() {
+					@Override
+					public void onSuccess(ApplicationFormHeaderDto result) {
+						fireEvent(new ProcessingCompletedEvent());
+						reloadMemberDetails();
+					}
+				}).update(applicationRefId, selectedApplication);
+	}
+
+	protected void reloadMemberDetails() {
+		applicationDelegate.withCallback(
+				new AbstractAsyncCallback<ApplicationFormHeaderDto>() {
+					@Override
+					public void onSuccess(ApplicationFormHeaderDto result) {
+						ApplicationsPresenter.this.selectedApplication = result;
+						getView().getPanelProfile().bindBasicDetails(result);
+						getView().getPanelProfile().initDisplay(
+								result.getApplicationStatus(),
+								result.getPaymentStatus());
+						fireEvent(new ProcessingCompletedEvent());
+					}
+				}).getById(applicationRefId);
 	}
 
 	@Override
@@ -164,16 +213,6 @@ public class ApplicationsPresenter
 
 	}
 
-	private void loadSummary() {
-		applicationDelegate.withCallback(
-				new AbstractAsyncCallback<ApplicationSummaryDto>() {
-					@Override
-					public void onSuccess(ApplicationSummaryDto result) {
-						getView().bindSummary(result);
-					}
-				}).getSummary();
-	}
-
 	private void loadProfileDetails(String applicationRefId,
 			final String previousRefId, final String nextRefId,
 			final int maxSize) {
@@ -185,10 +224,13 @@ public class ApplicationsPresenter
 				new AbstractAsyncCallback<ApplicationFormHeaderDto>() {
 					@Override
 					public void onSuccess(ApplicationFormHeaderDto result) {
+						ApplicationsPresenter.this.selectedApplication = result;
 						getView().getPanelProfile().bindBasicDetails(result);
 						getView().showSingleApplication(true, previousRefId,
 								nextRefId, maxSize);
-						getView().getPanelProfile().setEditMode(false);
+						getView().getPanelProfile().initDisplay(
+								result.getApplicationStatus(),
+								result.getPaymentStatus());
 						fireEvent(new ProcessingCompletedEvent());
 					}
 				}).getById(applicationRefId);

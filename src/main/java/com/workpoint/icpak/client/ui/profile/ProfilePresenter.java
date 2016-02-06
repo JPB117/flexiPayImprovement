@@ -198,8 +198,11 @@ public class ProfilePresenter
 		getView().getSubmitButton().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				getView().validateBasicDetailIssues();
-				saveApplication();
+				if (getView().validateBasicDetailIssues()) {
+					applicationForm
+							.setApplicationStatus(ApplicationStatus.SUBMITTED);
+					saveApplication();
+				}
 			}
 		});
 
@@ -272,7 +275,6 @@ public class ProfilePresenter
 
 	protected void saveApplication() {
 		fireEvent(new ProcessingEvent());
-		applicationForm.setApplicationStatus(ApplicationStatus.SUBMITTED);
 		applicationDelegate.withCallback(
 				new AbstractAsyncCallback<ApplicationFormHeaderDto>() {
 					@Override
@@ -504,7 +506,6 @@ public class ProfilePresenter
 	}
 
 	private void loadData() {
-		getView().getProfileWidget().initDisplay();
 		String applicationRefId = getApplicationRefId();
 		loadData(applicationRefId);
 		getView().setApplicationId(applicationRefId);
@@ -598,6 +599,9 @@ public class ProfilePresenter
 						ProfilePresenter.this.applicationForm = result;
 						memberForm.bind(result);
 						getView().bindBasicDetails(result);
+						getView().getProfileWidget().initDisplay(
+								result.getApplicationStatus(),
+								result.getPaymentStatus());
 					}
 				}).getById(applicationRefId);
 	}

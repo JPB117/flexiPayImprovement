@@ -33,6 +33,10 @@
 	.previous-link {
 		padding-right: 20px;
 	}
+	
+	.erp-section div {
+		padding-left: 0px;
+	}
 	</ui:style>
 	<g:HTMLPanel>
 		<g:HTMLPanel ui:field="divProfileContent" styleName="col-xs-12">
@@ -134,7 +138,7 @@
 										</g:HTMLPanel>
 
 										<g:HTMLPanel ui:field="PanelProfileDisplay"
-											styleName="col-md-12">
+											styleName="col-md-12 profile-panel">
 											<div class="row">
 												<br ui:field="elSpace" class="hide" />
 												<h3 class="m0">
@@ -144,16 +148,10 @@
 
 											<div class="row" ui:field="divMembershipNo">
 												<span class="text-muted" ui:field="spnApplicationType">
-													<p class="text-muted">
-														(
-														m/No:
-														<span ui:field="spnMembershipNo"></span>
-														)
-													</p>
 												</span>
 											</div>
 
-											<div class="row">
+											<div class="row" ui:field="divMemberShipStatus">
 												Membership Status:
 												<span ui:field="spnMembershipStatus" class="text-muted">
 												</span>
@@ -174,65 +172,62 @@
 												</div>
 											</div>
 
-											<br />
-
-											<div ui:field="divPaymentSection">
-												<div class="row">
-													<span ui:field="spnPaymentDescription">Application Payment Status:</span>
-													<span ui:field="spnPaymentStatus">
-													</span>
-													<d:ActionLink ui:field="aDownloadProforma" styleName="btn btn-fill btn-gold">Download
-														Proforma Invoice
-													</d:ActionLink>
-													|
-													<d:ActionLink ui:field="aPayLink" styleName="btn btn-fill btn-gold">Proceed
-														to Pay</d:ActionLink>
-												</div>
-											</div>
-
 
 											<div ui:field="divApplicationStatus">
 												<div class="row">
-													<div class="alert alert-success">
-														<span ui:field="spnMessage">
-															Your application status is
-															<Strong ui:field="spnApplicationStatus">SUBMITTED</Strong>
-														</span>
-													</div>
+													<span ui:field="spnMessage">
+														<strong>Application status:</strong>
+														<span ui:field="spnApplicationStatus"></span>
+													</span>
 												</div>
+											</div>
+
+											<div ui:field="divPaymentSection" class="row">
+												<span ui:field="spnPaymentDescription">
+													<strong>Payment Status:</strong>
+												</span>
+												<span ui:field="spnPaymentStatus">
+												</span>
 											</div>
 
 											<div ui:field="divSubmitApplication">
 												<div class="row">
 													<d:ActionLink ui:field="aSubmit" styleName="btn btn-fill btn-gold">Submit
 														Application</d:ActionLink>
-													<div class="text-muted">
-														<span ui:field="spnInfo">
-															(Fill all sections here and
-															click
-															submit
-															to complete your registration)
-														</span>
+													<d:ActionLink ui:field="aPayLink">Proceed
+														to Pay</d:ActionLink>
+													<d:ActionLink ui:field="aDownloadProforma">Download
+														Proforma
+														Invoice
+													</d:ActionLink>
+													<div>
+														<span ui:field="spnStatusDescription"></span>
 													</div>
 												</div>
 											</div>
-
+											<hr />
 											<div ui:field="divErpSync">
-												<div class="row">
-													<div class="form-control">
+												<div class="row {style.erp-section}">
+													<div class="col-lg-2" style="  padding: 0px !important;margin-top: 7px;">
 														<label for="ErpSync">ERP Application No:</label>
-														<d:TextField ui:field="txtErpAppNo"></d:TextField>
-														<d:ActionLink ui:field="aErpSync"
-															styleName="btn btn-fill btn-gold">
-															Send to ERP</d:ActionLink>
 													</div>
-
-													<div class="text-muted">
-														<span>
-															(Create a new application in the ERP then click
-															sync)
-														</span>
+													<div class="col-lg-4">
+														<div class="col-lg-8">
+															<d:TextField ui:field="txtErpAppNo"
+																styleName="form-control"></d:TextField>
+														</div>
+														<div class="col-lg-4">
+															<d:ActionLink ui:field="aErpSync"
+																styleName="btn btn-fill btn-gold">
+																Send to ERP</d:ActionLink>
+														</div>
 													</div>
+												</div>
+												<div class="text-muted row hide">
+													<span>
+														(Create a new application in the ERP then click
+														sync)
+													</span>
 												</div>
 											</div>
 

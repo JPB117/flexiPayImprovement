@@ -14,7 +14,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.ServletConfig;
@@ -35,6 +34,7 @@ import com.google.inject.Singleton;
 import com.google.inject.persist.Transactional;
 import com.icpak.rest.dao.AttachmentsDao;
 import com.icpak.rest.dao.CPDDao;
+import com.icpak.rest.dao.InvoiceDaoHelper;
 import com.icpak.rest.dao.MemberDao;
 import com.icpak.rest.dao.UsersDao;
 import com.icpak.rest.dao.helper.BookingsDaoHelper;
@@ -55,6 +55,7 @@ import com.itextpdf.text.DocumentException;
 import com.workpoint.icpak.server.util.DateUtils;
 import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.shared.model.CPDStatus;
+import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.MemberStanding;
 import com.workpoint.icpak.shared.model.UserDto;
 import com.workpoint.icpak.shared.model.events.BookingDto;
@@ -89,6 +90,8 @@ public class GetReport extends HttpServlet {
 	CPDDao CPDDao;
 	@Inject
 	BookingsDaoHelper bookingsDaoHelper;
+	@Inject
+	InvoiceDaoHelper invoiceDaoHelper;
 	@Inject
 	EventsDaoHelper eventDaoHelper;
 
@@ -179,16 +182,25 @@ public class GetReport extends HttpServlet {
 			IOException, SAXException, ParserConfigurationException,
 			FactoryConfigurationError, DocumentException {
 		String bookingRefId = null;
+		String invoiceRefId = null;
 		if (req.getParameter("bookingRefId") != null) {
 			bookingRefId = req.getParameter("bookingRefId");
+			BookingDto booking = bookingsDaoHelper.getBookingById(null,
+					bookingRefId);
+			byte[] invoicePdf = bookingsDaoHelper
+					.generateInvoicePdf(bookingRefId);
+
+			processAttachmentRequest(resp, invoicePdf, booking.getContact()
+					.getContactName() + ".pdf");
 		}
 
-		BookingDto booking = bookingsDaoHelper.getBookingById(null,
-				bookingRefId);
-		byte[] invoicePdf = bookingsDaoHelper.generateInvoicePdf(bookingRefId);
-
-		processAttachmentRequest(resp, invoicePdf, booking.getContact()
-				.getContactName() + ".pdf");
+		if (req.getParameter("invoiceRefId") != null) {
+			invoiceRefId = req.getParameter("invoiceRefId");
+			InvoiceDto invoice = invoiceDaoHelper.getInvoice(invoiceRefId);
+			byte[] invoicePdf = invoiceDaoHelper.generatePDFDocument(invoice);
+			processAttachmentRequest(resp, invoicePdf, invoice.getContactName()
+					+ ".pdf");
+		}
 
 	}
 

@@ -10,6 +10,7 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
+import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.model.UserDto;
 
 public class HeaderView extends ViewImpl implements HeaderPresenter.IHeaderView {
@@ -64,8 +65,8 @@ public class HeaderView extends ViewImpl implements HeaderPresenter.IHeaderView 
 	public void setLoggedInUser(UserDto currentUser) {
 		spnLoggedInUser.setInnerText("Welcome "
 				+ currentUser.getSurname()
-				+ (currentUser.getMemberNo() == null ? "" : " (m/No: "
-						+ currentUser.getMemberNo() + ")"));
+				+ (AppContext.isCurrentUserMember() ? " (m/No: "
+						+ currentUser.getMemberNo() + ")" : ""));
 	}
 
 	public void showPopUpMessage(String message) {

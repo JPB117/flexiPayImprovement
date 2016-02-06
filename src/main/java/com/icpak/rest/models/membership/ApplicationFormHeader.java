@@ -325,7 +325,7 @@ public class ApplicationFormHeader extends PO {
 
 		// Application Status
 		setApplicationStatus(dto.getApplicationStatus());
-		setPaymentStatus(paymentStatus);
+		setPaymentStatus(dto.getPaymentStatus());
 	}
 
 	public void copyInto(ApplicationFormHeaderDto dto) {

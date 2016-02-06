@@ -50,11 +50,17 @@ import com.icpak.rest.utils.EmailServiceHelper;
 import com.icpak.rest.utils.HTMLToPDFConvertor;
 import com.workpoint.icpak.shared.model.ApplicationCategoryDto;
 import com.workpoint.icpak.shared.model.ApplicationERPDto;
+import com.workpoint.icpak.shared.model.ApplicationFormAccountancyDto;
+import com.workpoint.icpak.shared.model.ApplicationFormEducationalDto;
+import com.workpoint.icpak.shared.model.ApplicationFormEmploymentDto;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
+import com.workpoint.icpak.shared.model.ApplicationFormSpecializationDto;
+import com.workpoint.icpak.shared.model.ApplicationFormTrainingDto;
 import com.workpoint.icpak.shared.model.ApplicationSummaryDto;
 import com.workpoint.icpak.shared.model.ApplicationType;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.InvoiceLineDto;
+import com.workpoint.icpak.shared.model.PaymentStatus;
 import com.workpoint.icpak.shared.model.auth.ApplicationStatus;
 
 @Transactional
@@ -72,6 +78,14 @@ public class ApplicationFormDaoHelper {
 	TransactionDaoHelper trxHelper;
 	@Inject
 	ApplicationSettings settings;
+	@Inject
+	EducationDaoHelper eduHelper;
+	@Inject
+	TrainingDaoHelper trainingHelper;
+	@Inject
+	AccountancyDaoHelper accountancyHelper;
+	@Inject
+	SpecializationDaoHelper specializationHelper;
 
 	Logger logger = Logger.getLogger(ApplicationFormDaoHelper.class);
 
@@ -92,8 +106,8 @@ public class ApplicationFormDaoHelper {
 		po.setUserRefId(user.getRefId());
 
 		// Generate Invoice
-		// InvoiceDto invoice = generateInvoice(po);
-		// po.setInvoiceRef(invoice.getRefId());
+		InvoiceDto invoice = generateInvoice(po);
+		po.setInvoiceRef(invoice.getRefId());
 
 		// Save Data
 		applicationDao.createApplication(po);
@@ -255,15 +269,61 @@ public class ApplicationFormDaoHelper {
 			ApplicationFormHeaderDto dto) {
 		ApplicationFormHeader po = applicationDao.findByApplicationId(
 				applicationId, true);
-
 		// Fields only generated once
 		dto.setUserId(po.getUserRefId());
-		dto.setInvoiceRef(po.getInvoiceRef());
+		// dto.setInvoiceRef(po.getInvoiceRef());
+		if (dto.getErpCode() != null && !dto.getErpCode().isEmpty()) {
+			try {
+				postApplicationToERP(dto.getErpCode(), prepareErpDto(dto));
+			} catch (URISyntaxException | ParseException | JSONException e) {
+				e.printStackTrace();
+			}
+		}
 
 		po.copyFrom(dto);
-		// setCategory(po);
 
 		applicationDao.updateApplication(po);
+	}
+
+	private ApplicationERPDto prepareErpDto(ApplicationFormHeaderDto passedDto) {
+		ApplicationFormHeaderDto application = passedDto;
+		List<ApplicationFormEducationalDto> educationDetails = eduHelper
+				.getAllEducationEntrys("", "j4Eu7OZ7krpuQ9r4", 0, 100);
+		List<ApplicationFormTrainingDto> trainings = trainingHelper
+				.getAllTrainingEntrys("", "j4Eu7OZ7krpuQ9r4", 0, 100);
+		List<ApplicationFormAccountancyDto> accountancy = accountancyHelper
+				.getAllAccountancyEntrys("", "j4Eu7OZ7krpuQ9r4", 0, 100);
+		List<ApplicationFormSpecializationDto> specializations = specializationHelper
+				.getAllSpecializationEntrys("", "j4Eu7OZ7krpuQ9r4", 0, 100);
+		List<ApplicationFormEmploymentDto> employment = specializationHelper
+				.getAllEmploymentEntrys("", "j4Eu7OZ7krpuQ9r4", 0, 100);
+
+		application.setApplicationNo(passedDto.getErpCode());
+		for (ApplicationFormEducationalDto education : educationDetails) {
+			education.setApplicationNo(passedDto.getErpCode());
+		}
+		for (ApplicationFormTrainingDto training : trainings) {
+			training.setApplicationNo(passedDto.getErpCode());
+		}
+		for (ApplicationFormAccountancyDto acc : accountancy) {
+			acc.setApplicationNo(passedDto.getErpCode());
+		}
+		for (ApplicationFormSpecializationDto specialization : specializations) {
+			specialization.setApplicationNo(passedDto.getErpCode());
+		}
+		for (ApplicationFormEmploymentDto emp : employment) {
+			emp.setApplicationNo(passedDto.getErpCode());
+		}
+
+		ApplicationERPDto erpDto = new ApplicationERPDto();
+		erpDto.setApplication(application);
+		erpDto.setEducationDetails(educationDetails);
+		erpDto.setTrainings(trainings);
+		erpDto.setAccountancy(accountancy);
+		erpDto.setSpecializations(specializations);
+		erpDto.setEmployment(employment);
+
+		return erpDto;
 	}
 
 	public void deleteApplication(String applicationId) {
@@ -317,6 +377,19 @@ public class ApplicationFormDaoHelper {
 			throw new ServiceException(ErrorCodes.NOTFOUND, "'" + applicationId
 					+ "'");
 		}
+
+		// Check if there is a corresponding invoice if this is pending;
+		if (application.getInvoiceRef() == null
+				|| application.getInvoiceRef().isEmpty()) {
+			// Generate a New Invoice
+			InvoiceDto invoice = generateInvoice(application);
+			application.setInvoiceRef(invoice.getRefId());
+		}
+
+		if (application.getPaymentStatus() == null) {
+			application.setPaymentStatus(PaymentStatus.NOTPAID);
+		}
+
 		return application;
 	}
 

@@ -32,21 +32,21 @@ public class ApplicationFormDao extends BaseDao {
 					getEntityManager()
 							.createQuery(
 									"select u from ApplicationFormHeader u"
-											+ " where u.isActive=1 and applicationStatus=:status "
+											+ " where u.isActive=1 and applicationStatus<>:status "
 											+ "order by id desc").setParameter(
-									"status", ApplicationStatus.PENDING),
+									"status", ApplicationStatus.APPROVED),
 					offSet, limit);
 		} else {
 			return getResultList(
 					getEntityManager()
 							.createQuery(
 									"select u from ApplicationFormHeader u"
-											+ " where u.isActive=1 and applicationStatus=:status "
+											+ " where u.isActive=1 and applicationStatus<>:status "
 											+ "and (surname like :searchTerm or otherNames like :searchTerm "
 											+ "or email like :searchTerm or "
 											+ "concat(surname,' ',otherNames) like :searchTerm) "
 											+ "order by id desc")
-							.setParameter("status", ApplicationStatus.PENDING)
+							.setParameter("status", ApplicationStatus.APPROVED)
 							.setParameter("searchTerm", "%" + searchTerm + "%"),
 					offSet, limit);
 		}

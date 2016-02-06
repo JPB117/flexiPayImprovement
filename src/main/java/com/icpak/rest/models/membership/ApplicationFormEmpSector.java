@@ -25,9 +25,6 @@ public class ApplicationFormEmpSector extends PO {
 	@Column(name = "`timestamp`", columnDefinition = "timestamp NOT NULL default current_timestamp")
 	private Timestamp timestamp;
 
-	@Column(nullable = false, name = "`Code`", length = 20)
-	private String code;
-
 	@Column(nullable = false, name = "`Description`", length = 50)
 	private String description;
 
@@ -48,14 +45,6 @@ public class ApplicationFormEmpSector extends PO {
 		this.timestamp = timestamp;
 	}
 
-	public String getCode() {
-		return code;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
-
 	public String getDescription() {
 		return description;
 	}
@@ -68,13 +57,11 @@ public class ApplicationFormEmpSector extends PO {
 		ApplicationFormEmploymentDto dto = new ApplicationFormEmploymentDto();
 		dto.setRefId(getRefId());
 		dto.setSpecialization(specialization);
-		dto.setCode(code);
 		return dto;
 	}
 
 	public void copyFrom(ApplicationFormEmploymentDto eduEntry) {
 		setSpecialization(eduEntry.getSpecialization());
-		setCode(eduEntry.getCode());
 	}
 
 	public Specializations getSpecialization() {

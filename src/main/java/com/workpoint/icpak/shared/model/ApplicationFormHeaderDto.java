@@ -115,6 +115,7 @@ public class ApplicationFormHeaderDto extends SerializableObj {
 	private String nextRefId;
 	private String previousRefId;
 	private String branch;
+	private String erpCode;
 
 	public ApplicationStatus getApplicationStatus() {
 		return applicationStatus;
@@ -229,6 +230,14 @@ public class ApplicationFormHeaderDto extends SerializableObj {
 
 	public ApplicationType getApplicationType() {
 		return applicationType;
+	}
+
+	public String getErpCode() {
+		return erpCode;
+	}
+
+	public void setErpCode(String erpCode) {
+		this.erpCode = erpCode;
 	}
 
 	public void setApplicationType(ApplicationType applicationType) {
