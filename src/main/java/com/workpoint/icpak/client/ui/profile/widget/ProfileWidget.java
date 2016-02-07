@@ -311,6 +311,12 @@ public class ProfileWidget extends Composite {
 							.setInnerText("(Please pay your application fee to begin processing for your application.)");
 					spnStatusDescription.addClassName("text-muted");
 				}
+
+				// If Application is processing - User should not be able to
+				// Edit
+				if (applicationStatus == ApplicationStatus.PROCESSING) {
+					setEditMode(false);
+				}
 				// Action Area
 				divSubmitApplication.removeClassName("hide");
 				aSubmit.addStyleName("hide");
@@ -412,21 +418,6 @@ public class ProfileWidget extends Composite {
 		trainingDetail.setEditMode(editMode);
 		specializationDetail.setEditMode(editMode);
 		panelBreadcrumb.getElement().scrollIntoView();
-
-		if (editMode) {
-			divEditDropDown.setVisible(true);
-			elSpace.addClassName("hide");
-			aBackToApplications.addClassName("hide");
-			panelBreadcrumb.addStyleName("hide");
-			divStandingStatus.removeClassName("hide");
-			aDownloadCert.removeStyleName("hide");
-		} else {
-			elSpace.removeClassName("hide");
-			aBackToApplications.removeClassName("hide");
-			panelBreadcrumb.removeStyleName("hide");
-			divStandingStatus.addClassName("hide");
-			aDownloadCert.addStyleName("hide");
-		}
 	}
 
 	public void setChangeProfilePicture(boolean change) {

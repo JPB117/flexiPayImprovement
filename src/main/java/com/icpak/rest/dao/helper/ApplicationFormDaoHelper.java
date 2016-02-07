@@ -90,7 +90,6 @@ public class ApplicationFormDaoHelper {
 	Logger logger = Logger.getLogger(ApplicationFormDaoHelper.class);
 
 	public void createApplication(ApplicationFormHeaderDto application) {
-
 		if (application.getRefId() != null) {
 			updateApplication(application.getRefId(), application);
 			return;
@@ -115,7 +114,7 @@ public class ApplicationFormDaoHelper {
 		// setCategory(po);
 
 		// Send Email
-		// sendEmail(po, invoice, user);
+		 sendEmail(po, invoice, user);
 
 		// Copy into DTO
 		po.copyInto(application);

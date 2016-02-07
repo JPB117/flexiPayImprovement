@@ -121,7 +121,7 @@ public class MemberRegistrationPresenter
 
 	IndirectProvider<ErrorPresenter> errorFactory;
 
-	private String applicationRefId;
+	private String applicationRefId = null;
 
 	private ResourceDelegate<UsersResource> usersDelegate;
 
@@ -168,7 +168,6 @@ public class MemberRegistrationPresenter
 
 		getView().getEmail().addValueChangeHandler(
 				new ValueChangeHandler<String>() {
-
 					@Override
 					public void onValueChange(ValueChangeEvent<String> event) {
 						String email = event.getValue();
@@ -179,7 +178,7 @@ public class MemberRegistrationPresenter
 		getView().getANext().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				if (getView().isValid() || applicationRefId != null) {
+				if (getView().isValid()) {
 					if (getView().getCounter() == 1) {
 						submit(getView().getApplicationForm());
 					} else if (getView().getCounter() == 2) {
@@ -191,6 +190,7 @@ public class MemberRegistrationPresenter
 							Window.alert("Invoice details are null!");
 						}
 					} else if (getView().getCounter() == 3) {
+						// Activating account
 						getView().getANext().setHref(
 								"#activateacc;uid="
 										+ applicationDetails.getUserRefId());
@@ -202,6 +202,8 @@ public class MemberRegistrationPresenter
 
 				} else if (getView().getCounter() == 1) {
 					getView().showError("Kindly select a category");
+				} else {
+					// Window.alert("Either the form is not valid or app refId is null");
 				}
 
 			}
@@ -235,7 +237,6 @@ public class MemberRegistrationPresenter
 
 	protected void submit(ApplicationFormHeaderDto applicationForm) {
 		getView().setLoadingState((ActionLink) getView().getANext(), true);
-
 		getView().showmask(true);
 
 		AbstractAsyncCallback<ApplicationFormHeaderDto> callback = new AbstractAsyncCallback<ApplicationFormHeaderDto>() {
@@ -326,7 +327,6 @@ public class MemberRegistrationPresenter
 				 * records
 				 */
 				getView().setEmailValid(false);
-				 
 
 				/*
 				 * Add an error message

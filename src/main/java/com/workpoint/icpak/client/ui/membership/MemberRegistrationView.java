@@ -8,7 +8,6 @@ import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
@@ -152,6 +151,8 @@ public class MemberRegistrationView extends ViewImpl implements
 			Anchor selected = (Anchor) event.getSource();
 			selectedName = selected.getName();
 			selectCategory(selected);
+
+			// Window.alert(selectedName);
 		}
 	};
 
@@ -166,7 +167,6 @@ public class MemberRegistrationView extends ViewImpl implements
 		liElements.add(liTab4);
 
 		aNonPractising.addClickHandler(selectHandler);
-		// aPractising.addClickHandler(selectHandler);
 		aOverseas.addClickHandler(selectHandler);
 		aAssociate.addClickHandler(selectHandler);
 
@@ -197,17 +197,13 @@ public class MemberRegistrationView extends ViewImpl implements
 		if (selectedName.equals("NonPractising")) {
 			removeActiveSelection();
 			selectCategory(ApplicationType.NON_PRACTISING);
-		} else if (selectedName.equals("Practising")) {
-			removeActiveSelection();
-			selectCategory(ApplicationType.PRACTISING);
 		} else if (selectedName.equals("Overseas")) {
 			removeActiveSelection();
-			selectCategory(ApplicationType.OVERSEAS);
+			selectCategory(ApplicationType.FOREIGN);
 		} else if (selectedName.equals("Associate")) {
 			removeActiveSelection();
 			selectCategory(ApplicationType.ASSOCIATE);
 		}
-
 		memberRegistrationForm.setType(type);
 	}
 
@@ -220,7 +216,7 @@ public class MemberRegistrationView extends ViewImpl implements
 			divNonPracticing.addClassName("active");
 			break;
 
-		case OVERSEAS:
+		case FOREIGN:
 			spnSelected.setInnerText("You have selected: " + "Overseas Member");
 			divOverseas.addClassName("active");
 			break;
@@ -271,7 +267,6 @@ public class MemberRegistrationView extends ViewImpl implements
 	}
 
 	public ApplicationFormHeaderDto getApplicationForm() {
-
 		return memberRegistrationForm.getApplicationForm();
 	}
 
@@ -334,7 +329,12 @@ public class MemberRegistrationView extends ViewImpl implements
 				isValid = false;
 			}
 		}
-
+		// show/hide isValid Panel
+		if (isValid) {
+			issuesPanel.addStyleName("hide");
+		} else {
+			issuesPanel.removeStyleName("hide");
+		}
 		return isValid;
 	}
 

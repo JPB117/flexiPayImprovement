@@ -92,7 +92,6 @@ public class ApplicationFormResourceImpl implements ApplicationFormResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Create a new application", response = ApplicationFormHeader.class, consumes = MediaType.APPLICATION_JSON)
 	public ApplicationFormHeaderDto create(ApplicationFormHeaderDto application) {
-
 		helper.createApplication(application);
 		String uri = getUri() + "/" + application.getRefId();
 		application.setUri(uri);
