@@ -580,10 +580,11 @@ public class ProfileWidget extends Composite {
 		if (standing.getMembershipStatus() != null) {
 			spnMembershipStatus.setInnerText(standing.getMembershipStatus()
 					.getDisplayName());
-			showGoodStandingPanel(true);
 		} else {
 			return;
 		}
+
+		showGoodStandingPanel(true);
 
 		if (standing.getStanding() == 0) {
 			String info = "<ul>";
@@ -601,8 +602,6 @@ public class ProfileWidget extends Composite {
 			iconFail.removeClassName("hide");
 			iconSuccess.addClassName("hide");
 			aDownloadCert.addStyleName("hide");
-			divAccountStatus.removeClassName("hide");
-
 		} else {
 			spnAccountStatus.setInnerText("In good standing");
 			divAccountStatus.addClassName("label label-success");
@@ -616,8 +615,7 @@ public class ProfileWidget extends Composite {
 							"data-content",
 							"Your account is in Good-Standing, You can proceed to download "
 									+ "your good-standing certificate for your own use.");
-			aDownloadCert.setVisible(true);
-			divAccountStatus.removeClassName("hide");
+
 		}
 	}
 
@@ -739,15 +737,15 @@ public class ProfileWidget extends Composite {
 	}
 
 	public void showGoodStandingPanel(boolean show) {
-		// if (show) {
-		// divStandingStatus.removeClassName("hide");
-		// aDownloadCert.removeStyleName("hide");
-		// aCheckStandingStatus.addStyleName("hide");
-		// } else {
-		// divStandingStatus.addClassName("hide");
-		// aDownloadCert.addStyleName("hide");
-		// aCheckStandingStatus.removeStyleName("hide");
-		// }
+		if (show) {
+			divStandingStatus.removeClassName("hide");
+			aDownloadCert.removeStyleName("hide");
+			aCheckStandingStatus.addStyleName("hide");
+		} else {
+			divStandingStatus.addClassName("hide");
+			aDownloadCert.addStyleName("hide");
+			aCheckStandingStatus.removeStyleName("hide");
+		}
 	}
 
 	public void showApplicationIssues(boolean show) {

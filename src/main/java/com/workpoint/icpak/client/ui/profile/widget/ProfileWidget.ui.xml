@@ -205,9 +205,9 @@
 													</div>
 												</div>
 											</div>
-											<hr />
 											<div ui:field="divErpSync">
 												<div class="row {style.erp-section}">
+													<hr />
 													<div class="col-lg-2" style="  padding: 0px !important;margin-top: 7px;">
 														<label for="ErpSync">ERP Application No:</label>
 													</div>
@@ -234,8 +234,8 @@
 
 											<div class="row" ui:field="divGoodStanding">
 												<div ui:field="divStandingStatus" class="hide">
-													Standing Status:
 													<div>
+														Standing Status:
 														<div class="label label-success" ui:field="divAccountStatus">
 															<i class="fa fa-check hide" ui:field="iconSuccess"></i>
 															<i class="fa fa-times-circle hide" ui:field="iconFail"></i>
@@ -252,7 +252,6 @@
 													<d:ActionLink ui:field="aCheckStandingStatus"
 														styleName="btn btn-default btn-fill hide">Check GoodStanding Status
 													</d:ActionLink>
-													<br />
 													<d:ActionLink ui:field="aDownloadCert"
 														styleName="btn btn-success btn-fill hide">Download
 														Certificate</d:ActionLink>
