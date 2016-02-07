@@ -92,7 +92,7 @@ public class MemberRegistrationForm extends Composite {
 
 	private static MemberRegistrationFormUiBinder uiBinder = GWT
 			.create(MemberRegistrationFormUiBinder.class);
-	private int counter;
+	private int counter = 1;
 	private ApplicationType type;
 	private ApplicationFormHeaderDto application;
 

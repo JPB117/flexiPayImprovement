@@ -13,26 +13,24 @@ import com.wordnik.swagger.annotations.ApiModel;
 import com.workpoint.icpak.shared.model.ApplicationCategoryDto;
 import com.workpoint.icpak.shared.model.ApplicationType;
 
-@ApiModel(description="Application Category charges")
-
+@ApiModel(description = "Application Category charges")
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-
 @Entity
-@Table(name="ApplicationCategory")
-public class ApplicationCategory extends PO{
+@Table(name = "ApplicationCategory")
+public class ApplicationCategory extends PO {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
-	@Enumerated(EnumType.ORDINAL)
+
+	@Enumerated(EnumType.STRING)
 	private ApplicationType type;
 	private String description;
 	private double applicationAmount;
 	private Double renewalAmount;
-	
+
 	public ApplicationCategory() {
 	}
 
@@ -75,7 +73,7 @@ public class ApplicationCategory extends PO{
 		category.setDescription(description);
 		category.setRenewalAmount(renewalAmount);
 		category.setType(type);
-		
+
 		return category;
 	}
 

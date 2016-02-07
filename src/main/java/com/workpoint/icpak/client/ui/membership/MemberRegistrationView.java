@@ -220,13 +220,6 @@ public class MemberRegistrationView extends ViewImpl implements
 			divNonPracticing.addClassName("active");
 			break;
 
-		case PRACTISING:
-			// Deactivated
-			spnSelected.setInnerText("You have selected: "
-					+ "Practising Member");
-			// spnSelected.addClassName("active");
-			break;
-
 		case OVERSEAS:
 			spnSelected.setInnerText("You have selected: " + "Overseas Member");
 			divOverseas.addClassName("active");
@@ -356,7 +349,7 @@ public class MemberRegistrationView extends ViewImpl implements
 								.getRenewalAmount()) + "");
 				spnNonPracticingCondition.setInnerText(dto.getDescription());
 				break;
-			case OVERSEAS:
+			case FOREIGN:
 				spnOverseasFee.setInnerText(NumberUtils.CURRENCYFORMAT
 						.format(dto.getApplicationAmount()) + "");
 				spnOverseasSubscription.setInnerText(NumberUtils.CURRENCYFORMAT
@@ -370,6 +363,8 @@ public class MemberRegistrationView extends ViewImpl implements
 						.setInnerText(NumberUtils.CURRENCYFORMAT.format(dto
 								.getRenewalAmount()) + "");
 				spnAssociateCondition.setInnerText(dto.getDescription());
+				break;
+			default:
 				break;
 			}
 		}

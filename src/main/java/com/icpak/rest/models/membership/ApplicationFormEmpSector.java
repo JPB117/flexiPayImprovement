@@ -25,7 +25,7 @@ public class ApplicationFormEmpSector extends PO {
 	@Column(name = "`timestamp`", columnDefinition = "timestamp NOT NULL default current_timestamp")
 	private Timestamp timestamp;
 
-	@Column(nullable = false, name = "`Description`", length = 50)
+	@Column(name = "`Description`", length = 50)
 	private String description;
 
 	@Enumerated(EnumType.STRING)
