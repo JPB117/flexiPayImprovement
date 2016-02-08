@@ -81,6 +81,8 @@ public class AccountancyDetails extends Composite {
 		tblTrainingDetails.clearRows();
 		tblTrainingDetails.setNoRecords(result.size());
 
+		allIssues.clear();
+
 		if (result.size() == 0) {
 			allIssues
 					.add("Please provide details on your Accountancy Examination under the Accountancy Examination Tab.");

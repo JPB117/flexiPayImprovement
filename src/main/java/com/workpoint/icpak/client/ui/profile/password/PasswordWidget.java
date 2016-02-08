@@ -85,6 +85,13 @@ public class PasswordWidget extends Composite {
 	public PasswordWidget() {
 		initWidget(uiBinder.createAndBindUi(this));
 		txtEmail.setValue("");
+
+		aContinue.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				History.back();
+			}
+		});
 	}
 
 	public HasClickHandlers getSaveButton() {
@@ -264,12 +271,6 @@ public class PasswordWidget extends Composite {
 	}
 
 	public void showContinueButton(boolean show) {
-		aContinue.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				History.back();
-			}
-		});
 		if (show) {
 			aContinue.removeStyleName("hide");
 		} else {

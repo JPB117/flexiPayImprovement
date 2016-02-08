@@ -94,7 +94,6 @@ public class ApplicationFormDaoHelper {
 			updateApplication(application.getRefId(), application);
 			return;
 		}
-
 		// Copy into PO
 		ApplicationFormHeader po = new ApplicationFormHeader();
 		po.copyFrom(application);
@@ -114,7 +113,7 @@ public class ApplicationFormDaoHelper {
 		// setCategory(po);
 
 		// Send Email
-		 sendEmail(po, invoice, user);
+		sendEmail(po, invoice, user);
 
 		// Copy into DTO
 		po.copyInto(application);
@@ -333,22 +332,20 @@ public class ApplicationFormDaoHelper {
 
 		List<ApplicationFormHeader> applications = applicationDao
 				.getAllApplications(offset, limit, searchTerm);
-		List<ApplicationFormHeaderDto> rtn = new ArrayList<>();
 
-		int counter = 0;
+		List<ApplicationFormHeaderDto> rtn = new ArrayList<>();
 		for (ApplicationFormHeader application : applications) {
 			ApplicationFormHeaderDto dto = application.toDto();
-			dto.setUri(uri + "/" + application.getRefId());
-			if (counter < applications.size() - 1) {
-				dto.setNextRefId(applications.get(counter + 1).getRefId());
-			}
-			if (counter > 0) {
-				dto.setPreviousRefId(applications.get(counter - 1).getRefId());
-			}
-			counter++;
 			rtn.add(dto);
 		}
 		return rtn;
+	}
+
+	public List<ApplicationFormHeaderDto> getAllApplicationNativeQuery(
+			Integer offset, Integer limit, String searchTerm,
+			String applicationStatus, String paymentStatus) {
+		return applicationDao.getAllApplicationDtos(offset, limit, searchTerm,
+				applicationStatus, paymentStatus);
 	}
 
 	public List<ApplicationFormHeaderDto> importMembers(Integer offset,
@@ -363,10 +360,6 @@ public class ApplicationFormDaoHelper {
 		}
 
 		return rtn;
-	}
-
-	public Integer getApplicationCount(String searchTerm) {
-		return applicationDao.getApplicationCount(searchTerm);
 	}
 
 	public ApplicationFormHeader getApplicationById(String applicationId) {
@@ -485,8 +478,14 @@ public class ApplicationFormDaoHelper {
 
 	}
 
+	public Integer getApplicationCount(String searchTerm, String paymentStatus,
+			String applicationStatus) {
+		return applicationDao.getApplicationCount(searchTerm, paymentStatus,
+				applicationStatus);
+	}
+
 	public Integer getApplicationCount() {
-		return getApplicationCount("");
+		return 1;
 	}
 
 }

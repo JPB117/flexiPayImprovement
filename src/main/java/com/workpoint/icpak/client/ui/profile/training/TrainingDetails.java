@@ -81,6 +81,7 @@ public class TrainingDetails extends Composite {
 	public void bindDetails(List<ApplicationFormTrainingDto> result) {
 		tblTrainingDetails.clearRows();
 		tblTrainingDetails.setNoRecords(result.size());
+		allIssues.clear();
 
 		if (result.size() == 0) {
 			allIssues

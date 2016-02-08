@@ -28,6 +28,7 @@ import com.workpoint.icpak.client.ui.OptionControl;
 import com.workpoint.icpak.client.ui.admin.TabDataExt;
 import com.workpoint.icpak.client.ui.events.EditModelEvent;
 import com.workpoint.icpak.client.ui.events.EditModelEvent.EditModelHandler;
+import com.workpoint.icpak.client.ui.events.AfterSaveEvent;
 import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
 import com.workpoint.icpak.client.ui.events.ProcessingEvent;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
@@ -281,6 +282,8 @@ public class ProfilePresenter
 					public void onSuccess(ApplicationFormHeaderDto result) {
 						fireEvent(new ProcessingCompletedEvent());
 						loadMemberDetails();
+						fireEvent(new AfterSaveEvent(
+								"Your application has been Submitted Successfully"));
 					}
 				}).update(getApplicationRefId(), applicationForm);
 	}

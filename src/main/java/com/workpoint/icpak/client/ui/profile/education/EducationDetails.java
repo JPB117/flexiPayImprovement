@@ -93,6 +93,7 @@ public class EducationDetails extends Composite {
 	public void bindDetails(List<ApplicationFormEducationalDto> result) {
 		tblEducationalDetail.clearRows();
 		tblEducationalDetail.setNoRecords(result.size());
+		allIssues.clear();
 
 		if (result.size() == 0) {
 			allIssues

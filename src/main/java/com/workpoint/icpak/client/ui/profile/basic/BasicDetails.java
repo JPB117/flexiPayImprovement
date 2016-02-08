@@ -109,6 +109,7 @@ public class BasicDetails extends Composite {
 	}
 
 	public void bindDetails(ApplicationFormHeaderDto result) {
+		allIssues.clear();
 		if (result.getTelephone1() != null) {
 			elPhone.setInnerText(result.getTelephone1());
 		} else {

@@ -77,7 +77,7 @@ public class TestApplicationForm extends AbstractDaoTest {
 		}
 	}
 
-	@Test
+	@Ignore
 	public void testERPIntergration() {
 		String applicationNo = "C/18878";
 		ApplicationFormHeaderDto application = helper.getApplicationById(
@@ -133,7 +133,19 @@ public class TestApplicationForm extends AbstractDaoTest {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
 
+	@Test
+	public void testGettingAppDtos() {
+		List<ApplicationFormHeaderDto> applications = helper
+				.getAllApplicationNativeQuery(0, 10, "Kimani", "PENDING",
+						"NOTPAID");
+
+		System.err.println("Applications>>>>" + applications.size());
+		for (ApplicationFormHeaderDto dto : applications) {
+			System.out.println(">>>" + dto.getPaymentStatus());
+			System.out.println(">>>" + dto.getApplicationStatus());
+		}
 	}
 
 	@Ignore

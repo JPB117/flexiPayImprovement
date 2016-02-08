@@ -13,15 +13,14 @@
 	<g:HTMLPanel ui:field="container"
 		styleName="content-wrapper ng-scope ng-fadeInUp">
 		<h3 class="ng-scope">
-			Membership Management
+			New Applications Management
 		</h3>
 		<div class="row main-content" ui:field="divAllApplication">
 			<div class="col-sm-12 hide">
 				<p:MembersHeader ui:field="headerContainer">
 				</p:MembersHeader>
 			</div>
-			<div class="panel panel-default">
-				<div class="panel-heading">All Member Details</div>
+			<div class="panel">
 				<div class="panel-body">
 					<div class="col-sm-12">
 						<table:MembersTable ui:field="tblView">

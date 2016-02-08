@@ -219,7 +219,7 @@
 														<div class="col-lg-4">
 															<d:ActionLink ui:field="aErpSync"
 																styleName="btn btn-fill btn-gold">
-																Send to ERP</d:ActionLink>
+																Sync with ERP</d:ActionLink>
 														</div>
 													</div>
 												</div>

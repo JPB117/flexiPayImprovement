@@ -19,6 +19,8 @@ import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Widget;
 import com.workpoint.icpak.client.ui.frontmember.model.MemberCategory;
 import com.workpoint.icpak.shared.model.Listable;
+import com.workpoint.icpak.shared.model.PaymentStatus;
+import com.workpoint.icpak.shared.model.auth.ApplicationStatus;
 
 public class TableView extends Composite {
 
@@ -51,6 +53,8 @@ public class TableView extends Composite {
 	@UiField
 	ActionLink aFilter;
 	@UiField
+	ActionLink aSearch;
+	@UiField
 	HTMLPanel panelSearch;
 	@UiField
 	HTMLPanel panelDates;
@@ -62,10 +66,22 @@ public class TableView extends Composite {
 	DateField dtEndDate;
 	@UiField
 	HTMLPanel panelTowns;
+
+	@UiField
+	HTMLPanel panelApplicationStatus;
+	@UiField
+	HTMLPanel panelPaymentStatus;
+
 	@UiField
 	DropDownList<Towns> listTowns;
 	@UiField
 	DropDownList<MemberCategory> listMemberCategory;
+
+	@UiField
+	DropDownList<ApplicationStatus> lstApplicationStatus;
+	@UiField
+	DropDownList<PaymentStatus> lstPaymentStatus;
+
 	@UiField
 	DivElement divTownList;
 	@UiField
@@ -84,6 +100,18 @@ public class TableView extends Composite {
 		setDatesVisible(false);
 		setTownListVisible(false);
 		setMemberCategoryVisible(false);
+		setApplicationAndPaymentVisible(false);
+		aSearch.addStyleName("hide");
+	}
+
+	public void setApplicationAndPaymentVisible(boolean show) {
+		if (show) {
+			panelPaymentStatus.setVisible(true);
+			panelApplicationStatus.setVisible(true);
+		} else {
+			panelPaymentStatus.setVisible(false);
+			panelApplicationStatus.setVisible(false);
+		}
 	}
 
 	public void setHeaders(List<String> names) {
@@ -334,7 +362,7 @@ public class TableView extends Composite {
 		panelFooter.add(footer);
 	}
 
-	public void clearFooter(){
+	public void clearFooter() {
 		panelFooter.clear();
 	}
 
@@ -423,6 +451,18 @@ public class TableView extends Composite {
 
 	public HasKeyDownHandlers getSearchKeyDownHandler() {
 		return txtSearch;
+	}
+
+	public DropDownList<ApplicationStatus> getLstApplicationStatus() {
+		return lstApplicationStatus;
+	}
+
+	public DropDownList<PaymentStatus> getLstPaymentStatus() {
+		return lstPaymentStatus;
+	}
+
+	public ActionLink getaSearch() {
+		return aSearch;
 	}
 
 	public class Towns implements Listable {

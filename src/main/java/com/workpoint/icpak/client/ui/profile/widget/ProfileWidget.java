@@ -347,7 +347,7 @@ public class ProfileWidget extends Composite {
 			spnPaymentStatus.setInnerText(PaymentStatus.NOTPAID.name());
 			spnPaymentStatus.addClassName("label label-danger");
 
-			if (applicationForm.getRefId() != null) {
+			if (applicationForm != null) {
 				aPayLink.removeStyleName("hide");
 				aPayLink.addClickHandler(new ClickHandler() {
 					@Override
@@ -356,36 +356,39 @@ public class ProfileWidget extends Composite {
 								+ applicationForm.getRefId());
 					}
 				});
+
+				if (applicationForm.getInvoiceRef() != null) {
+					aDownloadProforma.removeStyleName("hide");
+					aDownloadProforma.addClickHandler(new ClickHandler() {
+						@Override
+						public void onClick(ClickEvent event) {
+							UploadContext ctx = new UploadContext("getreport");
+							ctx.setContext("invoiceRefId",
+									applicationForm.getInvoiceRef());
+							ctx.setAction(UPLOADACTION.GETPROFORMA);
+							// ctx.setContext(key, value)
+							Window.open(ctx.toUrl(), "Get Proforma", null);
+						}
+					});
+				}
 			}
 
-			if (applicationForm.getInvoiceRef() != null) {
-				aDownloadProforma.removeStyleName("hide");
-				aDownloadProforma.addClickHandler(new ClickHandler() {
-					@Override
-					public void onClick(ClickEvent event) {
-						UploadContext ctx = new UploadContext("getreport");
-						ctx.setContext("invoiceRefId",
-								applicationForm.getInvoiceRef());
-						ctx.setAction(UPLOADACTION.GETPROFORMA);
-						// ctx.setContext(key, value)
-						Window.open(ctx.toUrl(), "Get Proforma", null);
-					}
-				});
-			}
 		}
 
-		// Application status
-		spnApplicationStatus.setInnerText(applicationStatus.name()
-				.toUpperCase());
-		// Application Status - Specific to basic Member
-		if (applicationStatus == ApplicationStatus.PENDING) {
-			spnApplicationStatus.addClassName("label label-default");
-		} else if (applicationStatus == ApplicationStatus.SUBMITTED) {
-			spnApplicationStatus.addClassName("label label-warning");
-		} else if (applicationStatus == ApplicationStatus.PROCESSING) {
-			spnApplicationStatus.addClassName("label label-info");
-		} else {
-			spnApplicationStatus.addClassName("label label-success");
+		if (applicationStatus != null) {
+			// Application status
+			spnApplicationStatus.setInnerText(applicationStatus.name()
+					.toUpperCase());
+			// Application Status - Specific to basic Member
+			if (applicationStatus == ApplicationStatus.PENDING) {
+				spnApplicationStatus.addClassName("label label-default");
+			} else if (applicationStatus == ApplicationStatus.SUBMITTED) {
+				spnApplicationStatus.addClassName("label label-warning");
+			} else if (applicationStatus == ApplicationStatus.PROCESSING) {
+				spnApplicationStatus.addClassName("label label-info");
+			} else {
+				spnApplicationStatus.addClassName("label label-success");
+			}
 		}
 
 	}

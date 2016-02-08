@@ -17,6 +17,6 @@ public enum PaymentStatus implements Serializable, Listable {
 
 	@Override
 	public String getName() {
-		return displayName;
+		return name();
 	}
 }

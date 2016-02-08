@@ -26,7 +26,9 @@ public interface ApplicationFormResource extends BaseResource {
 	public List<ApplicationFormHeaderDto> getAll(
 			@QueryParam("offset") Integer offset,
 			@QueryParam("limit") Integer limit,
-			@QueryParam("searchTerm") String searchTerm);
+			@QueryParam("searchTerm") String searchTerm,
+			@QueryParam("paymentStatus") String paymentStatus,
+			@QueryParam("applicationStatus") String applicationStatus);
 
 	@GET
 	@Path("/summary")
@@ -85,7 +87,9 @@ public interface ApplicationFormResource extends BaseResource {
 
 	@GET
 	@Path("/searchCount")
-	public Integer getSearchCount(@QueryParam("searchTerm") String searchTerm);
+	public Integer getSearchCount(@QueryParam("searchTerm") String searchTerm,
+			@QueryParam("paymentStatus") String paymentStatus,
+			@QueryParam("applicationStatus") String appStatus);
 
 	/**
 	 * Member CPD

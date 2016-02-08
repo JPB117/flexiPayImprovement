@@ -11,6 +11,8 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
+import com.workpoint.icpak.client.ui.component.ActionLink;
+import com.workpoint.icpak.client.ui.component.DropDownList;
 import com.workpoint.icpak.client.ui.component.PagingPanel;
 import com.workpoint.icpak.client.ui.members.header.MembersHeader;
 import com.workpoint.icpak.client.ui.members.row.MembersTableRow;
@@ -18,6 +20,8 @@ import com.workpoint.icpak.client.ui.members.table.MembersTable;
 import com.workpoint.icpak.client.ui.profile.widget.ProfileWidget;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 import com.workpoint.icpak.shared.model.ApplicationSummaryDto;
+import com.workpoint.icpak.shared.model.PaymentStatus;
+import com.workpoint.icpak.shared.model.auth.ApplicationStatus;
 
 public class ApplicationsView extends ViewImpl implements
 		ApplicationsPresenter.IApplicationsView {
@@ -111,4 +115,17 @@ public class ApplicationsView extends ViewImpl implements
 			divSingleApplication.addClassName("hide");
 		}
 	}
+
+	public DropDownList<ApplicationStatus> getLstApplicationStatus() {
+		return tblView.getLstApplicationStatus();
+	}
+
+	public DropDownList<PaymentStatus> getLstPaymentStatus() {
+		return tblView.getLstPaymentStatus();
+	}
+
+	public ActionLink getaSearch() {
+		return tblView.getaSearch();
+	}
+
 }

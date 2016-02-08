@@ -219,18 +219,19 @@ public class MemberRegistrationPresenter
 
 	@Override
 	public void onError(final ErrorEvent event) {
-		addToPopupSlot(null);
-		errorFactory.get(new ServiceCallback<ErrorPresenter>() {
-			@Override
-			public void processResult(ErrorPresenter result) {
-				String message = event.getMessage();
-
-				result.setMessage(message, event.getId());
-
-				MemberRegistrationPresenter.this.addToPopupSlot(result);
-
-			}
-		});
+		// addToPopupSlot(null);
+		/*
+		 * errorFactory.get(new ServiceCallback<ErrorPresenter>() {
+		 * 
+		 * @Override public void processResult(ErrorPresenter result) { String
+		 * message = event.getMessage();
+		 * 
+		 * result.setMessage(message, event.getId());
+		 * 
+		 * MemberRegistrationPresenter.this.addToPopupSlot(result);
+		 * 
+		 * } });
+		 */
 	}
 
 	private ApplicationFormHeaderDto applicationDetails;
@@ -377,7 +378,8 @@ public class MemberRegistrationPresenter
 
 	private void loadApplication(String applicationId) {
 
-		// this.re
+		// getView
+		
 		applicationDelegate.withCallback(
 				new AbstractAsyncCallback<ApplicationFormHeaderDto>() {
 					@Override

@@ -49,9 +49,12 @@ public class ApplicationFormResourceImpl implements ApplicationFormResource {
 	public List<ApplicationFormHeaderDto> getAll(
 			@QueryParam("offset") Integer offset,
 			@QueryParam("limit") Integer limit,
-			@QueryParam("searchTerm") String searchTerm) {
-		List<ApplicationFormHeaderDto> dtos = helper.getAllApplications(offset,
-				limit, "", searchTerm);
+			@QueryParam("searchTerm") String searchTerm,
+			@QueryParam("paymentStatus") String paymentStatus,
+			@QueryParam("applicationStatus") String applicationStatus) {
+		List<ApplicationFormHeaderDto> dtos = helper
+				.getAllApplicationNativeQuery(offset, limit, searchTerm,
+						applicationStatus, paymentStatus);
 		return dtos;
 	}
 
@@ -63,8 +66,11 @@ public class ApplicationFormResourceImpl implements ApplicationFormResource {
 
 	@GET
 	@Path("/searchCount")
-	public Integer getSearchCount(@QueryParam("searchTerm") String searchTerm) {
-		return helper.getApplicationCount(searchTerm);
+	public Integer getSearchCount(@QueryParam("searchTerm") String searchTerm,
+			@QueryParam("paymentStatus") String paymentStatus,
+			@QueryParam("applicationStatus") String applicationStatus) {
+		return helper.getApplicationCount(searchTerm, paymentStatus,
+				applicationStatus);
 	}
 
 	@GET
