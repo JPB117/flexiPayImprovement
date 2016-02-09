@@ -3,7 +3,7 @@ package com.workpoint.icpak.shared.model.auth;
 import com.workpoint.icpak.shared.model.Listable;
 
 public enum ApplicationStatus implements Listable {
-	SUBMITTED, PENDING, PROCESSING, APPROVED;
+	SUBMITTED, PENDING, PROCESSING, APPROVED, CANCELLED;
 
 	@Override
 	public String getName() {

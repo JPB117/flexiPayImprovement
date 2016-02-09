@@ -134,7 +134,7 @@ public class EventsView extends ViewImpl implements EventsPresenter.IEventsView 
 	}
 
 	public HasValueChangeHandlers<String> getDelegateSearchValueChangeHandler() {
-		return tblDelegates.getDelegateSearchKeyDownHander();
+		return tblDelegates.getDelegateSearchValueChangeHandler();
 	}
 
 	public String getDelegateSearchValue() {
@@ -144,6 +144,14 @@ public class EventsView extends ViewImpl implements EventsPresenter.IEventsView 
 	@Override
 	public HasValueChangeHandlers<String> getSearchValueChangeHander() {
 		return tblView.getSearchKeyDownHander();
+	}
+
+	public HasKeyDownHandlers getDelegateSearchKeyDownHandler() {
+		return tblDelegates.getSearchKeyDownHandler();
+	}
+
+	public HasKeyDownHandlers getEventsSearchKeyDownHandler() {
+		return tblView.getSearchKeyDownHandler();
 	}
 
 }

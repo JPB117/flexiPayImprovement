@@ -459,7 +459,7 @@ public class BookingsDao extends BaseDao {
 					+ "(d.memberRegistrationNo like :searchTerm or "
 					+ "a.hotel like :searchTerm or "
 					+ "d.email like :searchTerm or "
-					+ "d.otherNames like :searchTerm or "
+					+ "d.fullName like :searchTerm or "
 					+ "d.ern like :searchTerm)");
 		}
 

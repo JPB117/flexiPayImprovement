@@ -1,7 +1,13 @@
 package com.workpoint.icpak.client.ui.eventsandseminars;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.google.gwt.event.dom.client.HasKeyDownHandlers;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -68,6 +74,10 @@ public class EventsPresenter extends
 		String getDelegateSearchValue();
 
 		HasValueChangeHandlers<String> getDelegateSearchValueChangeHandler();
+
+		HasKeyDownHandlers getDelegateSearchKeyDownHandler();
+
+		HasKeyDownHandlers getEventsSearchKeyDownHandler();
 	}
 
 	@ProxyCodeSplit
@@ -87,6 +97,24 @@ public class EventsPresenter extends
 		@Override
 		public void onValueChange(ValueChangeEvent<String> event) {
 			loadDelegatesCount(getView().getDelegateSearchValue().trim());
+		}
+	};
+
+	KeyDownHandler delegateKeyHandler = new KeyDownHandler() {
+		@Override
+		public void onKeyDown(KeyDownEvent event) {
+			if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+				loadDelegatesCount(getView().getDelegateSearchValue().trim());
+			}
+		}
+	};
+
+	KeyDownHandler eventsKeyHandler = new KeyDownHandler() {
+		@Override
+		public void onKeyDown(KeyDownEvent event) {
+			if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+				loadEvents(getView().getSearchValue().trim());
+			}
 		}
 	};
 
@@ -115,11 +143,15 @@ public class EventsPresenter extends
 		addRegisteredHandler(EditModelEvent.TYPE, this);
 		addRegisteredHandler(TableActionEvent.TYPE, this);
 
-		getView().getSearchValueChangeHander().addValueChangeHandler(
-				eventsValueChangeHandler);
-		getView().getDelegateSearchValueChangeHandler().addValueChangeHandler(
-				delegateTableValueChangeHandler);
+		// getView().getSearchValueChangeHander().addValueChangeHandler(
+		// eventsValueChangeHandler);
+		// getView().getDelegateSearchValueChangeHandler().addValueChangeHandler(
+		// delegateTableValueChangeHandler);
 
+		getView().getDelegateSearchKeyDownHandler().addKeyDownHandler(
+				delegateKeyHandler);
+		getView().getDelegateSearchKeyDownHandler().addKeyDownHandler(
+				eventsKeyHandler);
 	}
 
 	@Override
