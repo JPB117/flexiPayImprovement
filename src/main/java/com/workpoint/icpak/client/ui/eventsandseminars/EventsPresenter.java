@@ -1,8 +1,6 @@
 package com.workpoint.icpak.client.ui.eventsandseminars;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.google.gwt.event.dom.client.HasKeyDownHandlers;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -150,7 +148,7 @@ public class EventsPresenter extends
 
 		getView().getDelegateSearchKeyDownHandler().addKeyDownHandler(
 				delegateKeyHandler);
-		getView().getDelegateSearchKeyDownHandler().addKeyDownHandler(
+		getView().getEventsSearchKeyDownHandler().addKeyDownHandler(
 				eventsKeyHandler);
 	}
 
