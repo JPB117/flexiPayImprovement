@@ -6,13 +6,14 @@ import com.google.inject.Inject;
 import com.icpak.rest.util.SMSIntegration;
 import com.workpoint.icpak.tests.base.AbstractDaoTest;
 
-public class TestSMSIntegration extends AbstractDaoTest{
+public class TestSMSIntegration extends AbstractDaoTest {
 
-	@Inject SMSIntegration integration;
-	
+	@Inject
+	SMSIntegration integration;
+
 	@Test
-	public void sendSMS(){
-		//integration.send("0729472421", "Testing sms!!!!");
+	public void sendSMS() {
 		integration.send("0721239821", "Testing sms!!!!");
 	}
+
 }

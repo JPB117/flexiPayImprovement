@@ -31,6 +31,7 @@ import com.workpoint.icpak.client.ui.component.PagingPanel;
 import com.workpoint.icpak.client.ui.cpd.form.RecordCPD;
 import com.workpoint.icpak.client.ui.events.EditModelEvent;
 import com.workpoint.icpak.client.ui.events.EditModelEvent.EditModelHandler;
+import com.workpoint.icpak.client.ui.events.AfterSaveEvent;
 import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
 import com.workpoint.icpak.client.ui.events.ProcessingEvent;
 import com.workpoint.icpak.client.ui.events.TableActionEvent;
@@ -229,6 +230,8 @@ public class CPDMemberPresenter extends
 				@Override
 				public void onSuccess(CPDDto result) {
 					loadData(startDate, endDate);
+					fireEvent(new AfterSaveEvent(
+							"CPD Record successfully saved."));
 				}
 			}).cpd(memberId).update(dto.getRefId(), dto);
 
@@ -237,6 +240,8 @@ public class CPDMemberPresenter extends
 				@Override
 				public void onSuccess(CPDDto result) {
 					loadData(startDate, endDate);
+					fireEvent(new AfterSaveEvent(
+							"CPD Record successfully saved."));
 				}
 			}).cpd(memberId).create(dto);
 		}

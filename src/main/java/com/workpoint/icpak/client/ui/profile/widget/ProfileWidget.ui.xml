@@ -52,6 +52,11 @@
 									</a>
 								</li>
 								<div class="pull-right">
+									<d:ActionLink ui:field="aMgmtActions"
+										styleName="{style.previous-link} btn btn-default btn-fill">
+										Management Actions
+									</d:ActionLink>
+
 									<d:ActionLink ui:field="aPreviousApplication"
 										styleName="{style.previous-link} btn btn-default btn-fill">
 										<i class="fa fa-chevron-left"></i>

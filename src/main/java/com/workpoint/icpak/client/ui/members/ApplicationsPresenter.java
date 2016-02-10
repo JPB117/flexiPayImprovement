@@ -28,15 +28,19 @@ import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.workpoint.icpak.client.place.NameTokens;
 import com.workpoint.icpak.client.security.CurrentUser;
 import com.workpoint.icpak.client.service.AbstractAsyncCallback;
+import com.workpoint.icpak.client.ui.AppManager;
+import com.workpoint.icpak.client.ui.OnOptionSelected;
 import com.workpoint.icpak.client.ui.admin.TabDataExt;
 import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.DropDownList;
 import com.workpoint.icpak.client.ui.component.PagingConfig;
 import com.workpoint.icpak.client.ui.component.PagingLoader;
 import com.workpoint.icpak.client.ui.component.PagingPanel;
+import com.workpoint.icpak.client.ui.events.AfterSaveEvent;
 import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
 import com.workpoint.icpak.client.ui.events.ProcessingEvent;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
+import com.workpoint.icpak.client.ui.members.management.ApplicationsActions;
 import com.workpoint.icpak.client.ui.profile.widget.ProfileWidget;
 import com.workpoint.icpak.client.ui.security.AdminGateKeeper;
 import com.workpoint.icpak.shared.api.ApplicationFormResource;
@@ -213,6 +217,29 @@ public class ApplicationsPresenter
 					}
 				});
 
+		/* Management Actions PopUp */
+		getView().getPanelProfile().getManagementActionsButton()
+				.addClickHandler(new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {
+						final ApplicationsActions applicationsActionsWidget = new ApplicationsActions();
+						applicationsActionsWidget
+								.bindApplicationActions(selectedApplication);
+
+						AppManager.showPopUp("Management Action",
+								applicationsActionsWidget,
+								new OnOptionSelected() {
+									@Override
+									public void onSelect(String name) {
+										if (name.equals("Save")) {
+											updateApplication(applicationsActionsWidget
+													.getApplicationAction());
+										}
+									}
+								}, "Save", "Cancel");
+					}
+				});
+
 		getView().getLstApplicationStatus().addValueChangeHandler(
 				applicationStatusValueChangeHandler);
 
@@ -229,6 +256,8 @@ public class ApplicationsPresenter
 					@Override
 					public void onSuccess(ApplicationFormHeaderDto result) {
 						fireEvent(new ProcessingCompletedEvent());
+						fireEvent(new AfterSaveEvent(
+								"Application changes saved Successfully.!"));
 						reloadMemberDetails();
 					}
 				}).update(applicationRefId, selectedApplication);
@@ -300,8 +329,6 @@ public class ApplicationsPresenter
 			final int maxSize) {
 		fireEvent(new ProcessingEvent());
 
-		getView().getPanelProfile().setUserImage(applicationRefId);
-
 		applicationDelegate.withCallback(
 				new AbstractAsyncCallback<ApplicationFormHeaderDto>() {
 					@Override
@@ -313,6 +340,8 @@ public class ApplicationsPresenter
 						getView().getPanelProfile().initDisplay(
 								result.getApplicationStatus(),
 								result.getPaymentStatus());
+						getView().getPanelProfile().setUserImage(
+								result.getUserRefId());
 						fireEvent(new ProcessingCompletedEvent());
 					}
 				}).getById(applicationRefId);

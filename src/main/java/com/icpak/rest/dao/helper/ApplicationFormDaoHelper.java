@@ -267,34 +267,146 @@ public class ApplicationFormDaoHelper {
 			ApplicationFormHeaderDto dto) {
 		ApplicationFormHeader po = applicationDao.findByApplicationId(
 				applicationId, true);
+		User user = applicationDao.findByRefId(po.getUserRefId(), User.class);
+
+		updateUserFromApplicationFormChanges(po, user);
 		// Fields only generated once
 		dto.setUserId(po.getUserRefId());
-		// dto.setInvoiceRef(po.getInvoiceRef());
-		if (dto.getErpCode() != null && !dto.getErpCode().isEmpty()) {
+
+		boolean isApplicationReadyForErp = false;
+		boolean isApplicationReadyForEmail = false;
+		if (dto.getApplicationStatus() != null) {
+			isApplicationReadyForErp = (po.getApplicationStatus() == ApplicationStatus.SUBMITTED)
+					&& (dto.getApplicationStatus() == ApplicationStatus.PROCESSING);
+			isApplicationReadyForEmail = ((po.getApplicationStatus() != dto
+					.getApplicationStatus()) || (dto.getManagementComment() != null));
+
+			logger.info("Is the Application Ready For Email::"
+					+ isApplicationReadyForEmail);
+			logger.info("Is the Application ready for ERP::"
+					+ isApplicationReadyForErp);
+			// Send Review notification
+			if (isApplicationReadyForEmail && !isApplicationReadyForErp) {
+				sendReviewEmail(dto);
+			}
+		}
+
+		// Post To ERP
+		if (dto.getErpCode() != null && !dto.getErpCode().isEmpty()
+				&& isApplicationReadyForErp) {
 			try {
-				postApplicationToERP(dto.getErpCode(), prepareErpDto(dto));
+				boolean isSuccessful = postApplicationToERP(dto.getErpCode(),
+						prepareErpDto(dto));
+				if (isSuccessful) {
+					sendReviewEmail(dto);
+					logger.warn("This application was synced and email has been sent to applicant..");
+				} else {
+					logger.warn("This application was not synced, there was a problem sending data to ERP...");
+					return;
+				}
 			} catch (URISyntaxException | ParseException | JSONException e) {
 				e.printStackTrace();
 			}
 		}
 
 		po.copyFrom(dto);
-
 		applicationDao.updateApplication(po);
+	}
+
+	public User updateUserFromApplicationFormChanges(
+			ApplicationFormHeader application, User user) {
+		logger.info("Updating User Object" + user.getRefId());
+		User userToBeUpdated = user;
+		userToBeUpdated.getUserData().setFirstName(application.getSurname());
+		userToBeUpdated.getUserData().setLastName(application.getOtherNames());
+		userToBeUpdated.setFullName(application.getSurname() + " "
+				+ application.getOtherNames());
+		userToBeUpdated.setEmail(application.getEmail());
+		userToBeUpdated.setPhoneNumber(application.getTelephone1());
+		userDao.updateUser(userToBeUpdated);
+		return userToBeUpdated;
+	}
+
+	private void sendReviewEmail(ApplicationFormHeaderDto application) {
+		logger.info("------Sending review email for "
+				+ application.getSurname());
+		boolean isSubmitted = application.getApplicationStatus() == ApplicationStatus.SUBMITTED;
+		boolean hasPaid = application.getPaymentStatus() == PaymentStatus.PAID;
+		boolean hasNotPaid = application.getPaymentStatus() == PaymentStatus.NOTPAID;
+		boolean isPending = application.getApplicationStatus() == ApplicationStatus.PENDING;
+		boolean isApproved = application.getApplicationStatus() == ApplicationStatus.APPROVED;
+		boolean isBeingProcessed = application.getApplicationStatus() == ApplicationStatus.PROCESSING;
+		boolean isCancelled = application.getApplicationStatus() == ApplicationStatus.CANCELLED;
+
+		String subject = "Your ICPAK Application for Membership #"
+				+ application.getId() + " ";
+		String action = "";
+
+		if (isPending) {
+			subject = subject + " still Pending - Information Required!";
+			action = " is still pending because of the following reason:<br/>";
+		} else if (isCancelled) {
+			subject = subject + " has Been Cancelled!";
+			action = "  has been cancelled because of the following reason:<br/>";
+		} else if (isBeingProcessed) {
+			subject = subject + " is now Awaiting Approval!";
+			action = " is now being processed and is awaiting approval from the recruitment committee.";
+		} else if (isApproved) {
+			subject = subject + " has been Approved!";
+			action = " has been approved, you can proceed to login into your ICPAK account.";
+		} else if (isSubmitted) {
+			subject = subject + " has been Submitted Successfully!";
+			if (hasNotPaid) {
+				action = " has been Submitted Successfully, please pay for your application by "
+						+ "clicking 'Proceed To Pay Button' on your application";
+			} else if (hasPaid) {
+				action = " has been Submitted Successfully, you will be notified on the status"
+						+ " of this application as it being processed.";
+			}
+		}
+
+		String link = settings.getApplicationPath();
+		String additionLink = "<p><a href=" + link
+				+ ">Go to my Application</a>" + "</p>";
+		String body = "Dear "
+				+ application.getSurname()
+				+ " "
+				+ application.getOtherNames()
+				+ ","
+				+ "<br/> "
+				+ "<p>Your ICPAK Application for Membership "
+				+ action
+				+ (application.getManagementComment() == null ? "" : " <br/>'"
+						+ application.getManagementComment() + "'")
+				+ additionLink + "</p>Thank you,<br/>Member Services";
+
+		try {
+			EmailServiceHelper.sendEmail(body, subject, Arrays.asList(
+					application.getEmail(), "tomkim@wira.io"), Arrays.asList(
+					application.getSurname() + " "
+							+ application.getOtherNames(), "Tom Kimani"));
+
+		} catch (Exception e) {
+			logger.info("Review Email for " + application.getEmail()
+					+ " failed. Cause: " + e.getMessage());
+			e.printStackTrace();
+			// throw new Run
+		}
+
 	}
 
 	private ApplicationERPDto prepareErpDto(ApplicationFormHeaderDto passedDto) {
 		ApplicationFormHeaderDto application = passedDto;
 		List<ApplicationFormEducationalDto> educationDetails = eduHelper
-				.getAllEducationEntrys("", "j4Eu7OZ7krpuQ9r4", 0, 100);
+				.getAllEducationEntrys("", passedDto.getRefId(), 0, 100);
 		List<ApplicationFormTrainingDto> trainings = trainingHelper
-				.getAllTrainingEntrys("", "j4Eu7OZ7krpuQ9r4", 0, 100);
+				.getAllTrainingEntrys("", passedDto.getRefId(), 0, 100);
 		List<ApplicationFormAccountancyDto> accountancy = accountancyHelper
-				.getAllAccountancyEntrys("", "j4Eu7OZ7krpuQ9r4", 0, 100);
+				.getAllAccountancyEntrys("", passedDto.getRefId(), 0, 100);
 		List<ApplicationFormSpecializationDto> specializations = specializationHelper
-				.getAllSpecializationEntrys("", "j4Eu7OZ7krpuQ9r4", 0, 100);
+				.getAllSpecializationEntrys("", passedDto.getRefId(), 0, 100);
 		List<ApplicationFormEmploymentDto> employment = specializationHelper
-				.getAllEmploymentEntrys("", "j4Eu7OZ7krpuQ9r4", 0, 100);
+				.getAllEmploymentEntrys("", passedDto.getRefId(), 0, 100);
 
 		application.setApplicationNo(passedDto.getErpCode());
 		for (ApplicationFormEducationalDto education : educationDetails) {
@@ -432,7 +544,7 @@ public class ApplicationFormDaoHelper {
 		return applicationDao.getApplicationsSummary();
 	}
 
-	public void postApplicationToERP(String erpAppId,
+	public boolean postApplicationToERP(String erpAppId,
 			ApplicationERPDto application) throws URISyntaxException,
 			ParseException, JSONException {
 		final HttpClient httpClient = new DefaultHttpClient();
@@ -472,10 +584,14 @@ public class ApplicationFormDaoHelper {
 				result.append(line);
 			}
 
+			if (result.toString().equals("success")) {
+				return true;
+			}
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
+		return false;
 	}
 
 	public Integer getApplicationCount(String searchTerm, String paymentStatus,

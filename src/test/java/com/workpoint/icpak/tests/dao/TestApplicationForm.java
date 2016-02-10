@@ -11,12 +11,14 @@ import org.junit.Test;
 import com.amazonaws.util.json.JSONException;
 import com.amazonaws.util.json.JSONObject;
 import com.google.inject.Inject;
+import com.icpak.rest.dao.ApplicationFormDao;
 import com.icpak.rest.dao.helper.AccountancyDaoHelper;
 import com.icpak.rest.dao.helper.ApplicationFormDaoHelper;
 import com.icpak.rest.dao.helper.EducationDaoHelper;
 import com.icpak.rest.dao.helper.SpecializationDaoHelper;
 import com.icpak.rest.dao.helper.TrainingDaoHelper;
 import com.icpak.rest.dao.helper.UsersDaoHelper;
+import com.icpak.rest.models.membership.ApplicationFormHeader;
 import com.workpoint.icpak.shared.model.ApplicationERPDto;
 import com.workpoint.icpak.shared.model.ApplicationFormAccountancyDto;
 import com.workpoint.icpak.shared.model.ApplicationFormEducationalDto;
@@ -26,6 +28,7 @@ import com.workpoint.icpak.shared.model.ApplicationFormSpecializationDto;
 import com.workpoint.icpak.shared.model.ApplicationFormTrainingDto;
 import com.workpoint.icpak.shared.model.ApplicationType;
 import com.workpoint.icpak.shared.model.UserDto;
+import com.workpoint.icpak.shared.model.auth.ApplicationStatus;
 import com.workpoint.icpak.tests.base.AbstractDaoTest;
 
 public class TestApplicationForm extends AbstractDaoTest {
@@ -38,6 +41,10 @@ public class TestApplicationForm extends AbstractDaoTest {
 	TrainingDaoHelper trainingHelper;
 	@Inject
 	AccountancyDaoHelper accountancyHelper;
+
+	@Inject
+	ApplicationFormDao applicationDao;
+
 	@Inject
 	SpecializationDaoHelper specializationHelper;
 	@Inject
@@ -77,21 +84,21 @@ public class TestApplicationForm extends AbstractDaoTest {
 		}
 	}
 
-	@Ignore
+	// @Test
 	public void testERPIntergration() {
-		String applicationNo = "C/18878";
+		String applicationNo = "C/18879";
 		ApplicationFormHeaderDto application = helper.getApplicationById(
-				"j4Eu7OZ7krpuQ9r4").toDto();
+				"4MgvVkX0Sgr4uwIZ").toDto();
 		List<ApplicationFormEducationalDto> educationDetails = eduHelper
-				.getAllEducationEntrys("", "j4Eu7OZ7krpuQ9r4", 0, 100);
+				.getAllEducationEntrys("", "4MgvVkX0Sgr4uwIZ", 0, 100);
 		List<ApplicationFormTrainingDto> trainings = trainingHelper
-				.getAllTrainingEntrys("", "j4Eu7OZ7krpuQ9r4", 0, 100);
+				.getAllTrainingEntrys("", "4MgvVkX0Sgr4uwIZ", 0, 100);
 		List<ApplicationFormAccountancyDto> accountancy = accountancyHelper
-				.getAllAccountancyEntrys("", "j4Eu7OZ7krpuQ9r4", 0, 100);
+				.getAllAccountancyEntrys("", "4MgvVkX0Sgr4uwIZ", 0, 100);
 		List<ApplicationFormSpecializationDto> specializations = specializationHelper
-				.getAllSpecializationEntrys("", "j4Eu7OZ7krpuQ9r4", 0, 100);
+				.getAllSpecializationEntrys("", "4MgvVkX0Sgr4uwIZ", 0, 100);
 		List<ApplicationFormEmploymentDto> employment = specializationHelper
-				.getAllEmploymentEntrys("", "j4Eu7OZ7krpuQ9r4", 0, 100);
+				.getAllEmploymentEntrys("", "4MgvVkX0Sgr4uwIZ", 0, 100);
 
 		application.setApplicationNo(applicationNo);
 		for (ApplicationFormEducationalDto education : educationDetails) {
@@ -122,7 +129,7 @@ public class TestApplicationForm extends AbstractDaoTest {
 		// System.err.println("payload to ERP>>>>" + payLoad);
 
 		try {
-			helper.postApplicationToERP("C/18877", erpDto);
+			helper.postApplicationToERP("C/18879", erpDto);
 		} catch (URISyntaxException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -136,9 +143,26 @@ public class TestApplicationForm extends AbstractDaoTest {
 	}
 
 	@Test
+	public void testUpdatingOfCPDDto() {
+		ApplicationFormHeaderDto dto = applicationDao.findByApplicationId(
+				"4MgvVkX0Sgr4uwIZ", true).toDto();
+		dto.setErpCode("C/18879");
+		dto.setApplicationStatus(ApplicationStatus.PROCESSING);
+		// dto.setManagementComment("Please attach your profile photo");
+		System.err.println("Submission Date::" + dto.getDateSubmitted());
+
+		helper.updateApplication("4MgvVkX0Sgr4uwIZ", dto);
+	}
+
+	// @Test
+	public void testBulkSMS() {
+		applicationDao.sendMessageToHonourables();
+	}
+
+	@Ignore
 	public void testGettingAppDtos() {
 		List<ApplicationFormHeaderDto> applications = helper
-				.getAllApplicationNativeQuery(0, 10, "Kimani", "PENDING",
+				.getAllApplicationNativeQuery(0, 10, "Samuel", "PENDING",
 						"NOTPAID");
 
 		System.err.println("Applications>>>>" + applications.size());

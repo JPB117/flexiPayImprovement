@@ -268,15 +268,15 @@ public class GetDelegatesReport {
 		int rownum = 1;
 		paintRows(delegateDtos, rownum, helper, sheet);
 
-		sheet.setColumnWidth(0, 256 * 20);
-		sheet.setColumnWidth(1, 256 * 40);
-		sheet.setColumnWidth(2, 256 * 40);
-		sheet.setColumnWidth(3, 256 * 35);
-		sheet.setColumnWidth(4, 256 * 35);
-		sheet.setColumnWidth(5, 256 * 10);// Funding/ Estimate
-		sheet.setColumnWidth(6, 256 * 10);// Actual
-		sheet.setColumnWidth(7, 256 * 10);// Status
-		sheet.setColumnWidth(8, 256 * 15);// Remarks
+		sheet.setColumnWidth(0, 256 * 10);// ICPAK Member
+		sheet.setColumnWidth(1, 256 * 10);// MemberNo
+		sheet.setColumnWidth(2, 256 * 10);// ERN NO
+		sheet.setColumnWidth(3, 256 * 40);// DelegateNames
+		sheet.setColumnWidth(4, 256 * 20);// Delegate Email
+		sheet.setColumnWidth(5, 256 * 20);// Funding/ Estimate
+		sheet.setColumnWidth(6, 256 * 40);// Actual
+		sheet.setColumnWidth(7, 256 * 20);// Status
+		sheet.setColumnWidth(8, 256 * 20);// Remarks
 		sheet.setColumnWidth(9, 256 * 10);// Monitoring test
 		sheet.setZoom(3, 4);
 	}

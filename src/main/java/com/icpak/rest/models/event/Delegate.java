@@ -38,7 +38,12 @@ public class Delegate extends PO {
 	private String otherNames;
 	private String fullName;
 	private String email;
-
+	private Accommodation accommodation;
+	private String receiptNo;
+	private String lpoNo;
+	private int isCredit;
+	private String clearanceNo;
+	private String sponsorTelephoneNo;
 	@Transient
 	private String bookingId;
 	@ManyToOne
@@ -48,14 +53,9 @@ public class Delegate extends PO {
 	private Double amount;
 	@Enumerated(EnumType.ORDINAL)
 	private AttendanceStatus attendance = AttendanceStatus.NOTATTENDED;
+
 	@ManyToOne
 	@JoinColumn(name = "accommodationId")
-	private Accommodation accommodation;
-	private String receiptNo;
-	private String lpoNo;
-	private int isCredit;
-	private String clearanceNo;
-
 	public String getBookingId() {
 		return bookingId;
 	}
@@ -247,6 +247,14 @@ public class Delegate extends PO {
 
 	public void setFullName(String fullName) {
 		this.fullName = fullName;
+	}
+
+	public String getSponsorTelephoneNo() {
+		return sponsorTelephoneNo;
+	}
+
+	public void setSponsorTelephoneNo(String sponsorTelephoneNo) {
+		this.sponsorTelephoneNo = sponsorTelephoneNo;
 	}
 
 }

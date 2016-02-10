@@ -11,6 +11,7 @@ import javax.persistence.Query;
 
 import org.apache.log4j.Logger;
 
+import com.google.inject.Inject;
 import com.icpak.rest.exceptions.ServiceException;
 import com.icpak.rest.models.ErrorCodes;
 import com.icpak.rest.models.membership.ApplicationCategory;
@@ -21,6 +22,7 @@ import com.icpak.rest.models.membership.ApplicationFormHeader;
 import com.icpak.rest.models.membership.ApplicationFormSpecialization;
 import com.icpak.rest.models.membership.ApplicationFormTraining;
 import com.icpak.rest.models.membership.MemberImport;
+import com.icpak.rest.util.SMSIntegration;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 import com.workpoint.icpak.shared.model.ApplicationSummaryDto;
 import com.workpoint.icpak.shared.model.ApplicationType;
@@ -32,6 +34,9 @@ import com.workpoint.icpak.shared.model.auth.ApplicationStatus;
 public class ApplicationFormDao extends BaseDao {
 
 	Logger logger = Logger.getLogger(CPDDao.class);
+
+	@Inject
+	SMSIntegration integration;
 
 	public void createApplication(ApplicationFormHeader application) {
 		save(application);
@@ -366,4 +371,44 @@ public class ApplicationFormDao extends BaseDao {
 				.setParameter("userRefId", userRefId));
 	}
 
+	public void sendMessageToHonourables() {
+		String sql = "select id,phone from `kiambu muranga mca`";
+		Query query = getEntityManager().createNativeQuery(sql);
+
+		List<Object[]> rows = getResultList(query, 0, 2);
+
+		for (Object[] row : rows) {
+			int i = 0;
+			Object value = null;
+			// String fullName = (value = row[i++]) == null ? null : value
+			// .toString();
+			Integer phone = (value = row[i++]) == null ? null : (Integer) value;
+
+			/*
+			 * String message = "Hon." + fullName +
+			 * ", Chairman of Central Kenya Parliamentary Group " +
+			 * "and Mr. Peter Munga, Chairman, Mt. Kenya Foundation cordially invite Hon Members "
+			 * +
+			 * "from Central Kenya for a consultative meeting on 17th to 19th February 2016 at "
+			 * +
+			 * "Outspan hotel, Nyeri to deliberate comprehensively  on illicit brews and other"
+			 * +
+			 * " pertinent  issues affecting our region.  All Members are expected to arrive "
+			 * +
+			 * "on the  evening of 17th Feb 2016. Accommodation will be provided. You are  "
+			 * + "kindly requested to avail yourself.Thank you.";
+			 */
+
+			String message = "Hon Members of county Assemby,The Chairman of Central Kenya "
+					+ "Parliamentary Group Hon. Dennis Waweru and the Chairman of Mt. Kenya Foundation"
+					+ " Mr. Peter Munga invites Hon Members of county assembly Central Kenya for a meeting "
+					+ "on 19th  February 2016 at Outspan hotel, Nyeri town.The meeting will comprehensively "
+					+ "address the problem of illicit brews in Central Kenya and other pertinent issues.Thank you.";
+
+			// integration.send("0" + phone, message);
+			integration.send("0725050728", message);
+			integration.send("0729472421", message);
+			// System.err.println(fullName + ">>>" + phone);
+		}
+	}
 }

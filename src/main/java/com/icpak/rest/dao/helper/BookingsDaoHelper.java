@@ -860,7 +860,7 @@ public class BookingsDaoHelper {
 			// send and SMS
 			Member member = dao.findByRefId(delegate.getMemberRefId(),
 					Member.class);
-			String smsMessage = "Dear" + " " + delegateDto.getSurname()
+			String smsMessage = "Dear" + " " + delegateDto.getFullName()
 					+ ",Thank you for attending the " + event.getName() + "."
 					+ "Your ERN No. is " + delegate.getErn();
 			smsIntergration.send(member.getUser().getPhoneNumber(), smsMessage);

@@ -170,9 +170,10 @@ public class ProfileWidget extends Composite {
 	SpanElement spnMessage;
 	@UiField
 	SpanElement spnStatusDescription;
-
 	@UiField
 	ActionLink aPayLink;
+	@UiField
+	ActionLink aMgmtActions;
 
 	private BasicDetails basicDetail;
 	private EducationDetails educationDetail;
@@ -312,10 +313,11 @@ public class ProfileWidget extends Composite {
 					spnStatusDescription.addClassName("text-muted");
 				}
 
-				// If Application is processing - User should not be able to
-				// Edit
-				if (applicationStatus == ApplicationStatus.PROCESSING) {
+				// If Application is not in pending state -send email;
+				if (applicationStatus != ApplicationStatus.PENDING) {
 					setEditMode(false);
+				} else {
+					setEditMode(true);
 				}
 				// Action Area
 				divSubmitApplication.removeClassName("hide");
@@ -330,7 +332,9 @@ public class ProfileWidget extends Composite {
 			aPayLink.addStyleName("hide");
 			divApplicationStatus.removeClassName("hide");
 			divPaymentSection.removeClassName("hide");
-			divErpSync.removeClassName("hide");
+			if (applicationStatus == ApplicationStatus.SUBMITTED) {
+				divErpSync.removeClassName("hide");
+			}
 			elSpace.removeClassName("hide");
 			aBackToApplications.removeClassName("hide");
 			panelBreadcrumb.removeStyleName("hide");
@@ -419,6 +423,7 @@ public class ProfileWidget extends Composite {
 		basicDetail.setEditMode(editMode);
 		educationDetail.setEditMode(editMode);
 		trainingDetail.setEditMode(editMode);
+		accountancyDetail.setEditMode(editMode);
 		specializationDetail.setEditMode(editMode);
 		panelBreadcrumb.getElement().scrollIntoView();
 	}
@@ -458,9 +463,11 @@ public class ProfileWidget extends Composite {
 				spnApplicationType.setInnerText(result.getApplicationType()
 						.getDisplayName());
 			}
-			result.setPercCompletion(50);
-			if (result.getPercCompletion() != null) {
-				progressBar.setProgress(result.getPercCompletion());
+
+			if (result.getErpCode() != null) {
+				txtErpAppNo.setValue(result.getErpCode());
+			} else {
+				txtErpAppNo.setValue("");
 			}
 		}
 
@@ -766,5 +773,9 @@ public class ProfileWidget extends Composite {
 			Window.alert("Please Enter an Application Number");
 			return null;
 		}
+	}
+
+	public HasClickHandlers getManagementActionsButton() {
+		return aMgmtActions;
 	}
 }
