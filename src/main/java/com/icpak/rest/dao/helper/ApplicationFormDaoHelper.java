@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -169,6 +170,8 @@ public class ApplicationFormDaoHelper {
 		return u;
 	}
 
+	SimpleDateFormat formatter = new SimpleDateFormat("MMM d Y");
+
 	@SuppressWarnings("unused")
 	private void sendEmail(ApplicationFormHeader application,
 			InvoiceDto invoice, User user) {
@@ -176,8 +179,8 @@ public class ApplicationFormDaoHelper {
 			Map<String, Object> values = new HashMap<String, Object>();
 			values.put("companyName", application.getEmployerCode());
 			values.put("companyAddress", application.getAddress1());
-			values.put("quoteNo", application.getId());
-			values.put("date", application.getDate());
+			values.put("quoteNo", invoice.getRefId());
+			values.put("date", formatter.format(invoice.getDate()));
 			values.put("firstName", application.getOtherNames());
 			// https://www.icpak.com/icpakportal/#eventBooking;eventId=Jx4Ca6HpOutf2ic7;bookingId=ttDzH7OkgAHk5CSk
 			values.put("DocumentURL", settings.getApplicationPath());
@@ -191,13 +194,13 @@ public class ApplicationFormDaoHelper {
 			line.put("description", lineDto.getDescription());
 			line.put("unitPrice", lineDto.getUnitPrice());
 			line.put("amount", lineDto.getTotalAmount());
-			values.put("totalAmount", lineDto.getTotalAmount());
+			values.put("totalAmount", invoice.getInvoiceAmount());
 			doc.addDetail(new DocumentLine("invoiceDetails", line));
 
 			String documentNo = "ProForma Invoice_" + application.getSurname();
 			// PDF Invoice Generation
 			InputStream inv = EmailServiceHelper.class.getClassLoader()
-					.getResourceAsStream("proforma-invoice.html");
+					.getResourceAsStream("registration-invoice.html");
 			String invoiceHTML = IOUtils.toString(inv);
 			byte[] invoicePDF = new HTMLToPDFConvertor().convert(doc,
 					new String(invoiceHTML));
@@ -218,9 +221,10 @@ public class ApplicationFormDaoHelper {
 					Arrays.asList(application.getSurname() + " "
 							+ application.getOtherNames()), attachment);
 
-			trxHelper.charge(user.getMember() == null ? null : user.getMember()
-					.getRefId(), new Date(), subject, null, invoice
-					.getInvoiceAmount(), documentNo, invoice.getRefId());
+			// trxHelper.charge(user.getMember() == null ? null :
+			// user.getMember()
+			// .getRefId(), new Date(), subject, null, invoice
+			// .getInvoiceAmount(), documentNo, invoice.getRefId());
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -280,7 +284,6 @@ public class ApplicationFormDaoHelper {
 					&& (dto.getApplicationStatus() == ApplicationStatus.PROCESSING);
 			isApplicationReadyForEmail = ((po.getApplicationStatus() != dto
 					.getApplicationStatus()) || (dto.getManagementComment() != null));
-
 			logger.info("Is the Application Ready For Email::"
 					+ isApplicationReadyForEmail);
 			logger.info("Is the Application ready for ERP::"
@@ -295,13 +298,18 @@ public class ApplicationFormDaoHelper {
 		if (dto.getErpCode() != null && !dto.getErpCode().isEmpty()
 				&& isApplicationReadyForErp) {
 			try {
-				boolean isSuccessful = postApplicationToERP(dto.getErpCode(),
+				String successMessage = postApplicationToERP(dto.getErpCode(),
 						prepareErpDto(dto));
-				if (isSuccessful) {
+
+				if (successMessage.equals("success")) {
 					sendReviewEmail(dto);
 					logger.warn("This application was synced and email has been sent to applicant..");
+					dto.setErpMessage(successMessage);
 				} else {
-					logger.warn("This application was not synced, there was a problem sending data to ERP...");
+					successMessage = "This application was not synced, there was a problem sending data to ERP...\n"
+							+ "Error Message:" + successMessage;
+					logger.warn(successMessage);
+					dto.setErpMessage(successMessage);
 					return;
 				}
 			} catch (URISyntaxException | ParseException | JSONException e) {
@@ -544,7 +552,7 @@ public class ApplicationFormDaoHelper {
 		return applicationDao.getApplicationsSummary();
 	}
 
-	public boolean postApplicationToERP(String erpAppId,
+	public String postApplicationToERP(String erpAppId,
 			ApplicationERPDto application) throws URISyntaxException,
 			ParseException, JSONException {
 		final HttpClient httpClient = new DefaultHttpClient();
@@ -584,14 +592,10 @@ public class ApplicationFormDaoHelper {
 				result.append(line);
 			}
 
-			if (result.toString().equals("success")) {
-				return true;
-			}
-
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return false;
+		return result.toString();
 	}
 
 	public Integer getApplicationCount(String searchTerm, String paymentStatus,

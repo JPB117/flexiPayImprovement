@@ -184,6 +184,7 @@ public class GetReport extends HttpServlet {
 		String bookingRefId = null;
 		String invoiceRefId = null;
 		if (req.getParameter("bookingRefId") != null) {
+		
 			bookingRefId = req.getParameter("bookingRefId");
 			BookingDto booking = bookingsDaoHelper.getBookingById(null,
 					bookingRefId);
@@ -193,6 +194,7 @@ public class GetReport extends HttpServlet {
 			processAttachmentRequest(resp, invoicePdf, booking.getContact()
 					.getContactName() + ".pdf");
 		}
+		
 
 		if (req.getParameter("invoiceRefId") != null) {
 			invoiceRefId = req.getParameter("invoiceRefId");

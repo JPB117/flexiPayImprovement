@@ -179,6 +179,7 @@ public class ProfilePresenter
 		getView().getProfileEditButton().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
+				memberForm.clearAttachmentWidget();
 				AppManager.showPopUp("Edit Basic Details", memberForm,
 						new OptionControl() {
 							@Override
@@ -207,6 +208,7 @@ public class ProfilePresenter
 			}
 		});
 
+		/* Upload Buttons */
 		educationForm.getStartUploadButton().addClickHandler(
 				new ClickHandler() {
 					@Override
@@ -230,14 +232,14 @@ public class ProfilePresenter
 					}
 				});
 
+		/* Adding Records */
 		getView().getEducationAddButton().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				educationForm.clear();
+				educationForm.clear(true);
 				showPopUp(educationForm);
 			}
 		});
-
 		getView().getAccountancyAddButton().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -245,7 +247,6 @@ public class ProfilePresenter
 				showPopUp(accountancyForm);
 			}
 		});
-
 		getView().getTrainingAddButton().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -253,7 +254,6 @@ public class ProfilePresenter
 				showPopUp(trainingForm);
 			}
 		});
-
 		getView().getSpecializationAddButton().addClickHandler(
 				new ClickHandler() {
 					@Override

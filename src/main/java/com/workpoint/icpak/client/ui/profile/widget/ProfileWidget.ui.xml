@@ -202,7 +202,7 @@
 													<d:ActionLink ui:field="aPayLink">Proceed
 														to Pay</d:ActionLink>
 													<d:ActionLink ui:field="aDownloadProforma">Download
-														Proforma
+														Registration
 														Invoice
 													</d:ActionLink>
 													<div>

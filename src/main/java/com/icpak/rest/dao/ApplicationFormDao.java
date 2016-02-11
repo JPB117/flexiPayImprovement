@@ -372,17 +372,23 @@ public class ApplicationFormDao extends BaseDao {
 	}
 
 	public void sendMessageToHonourables() {
-		String sql = "select id,phone from `kiambu muranga mca`";
+		String sql = "select id,number from `nyeri_mca`";
+
+		/*
+		 * select * from kirinyaga_mca select * from muranga_mca select * from
+		 * nyandarua_mca select * from nyeri_mca
+		 */
 		Query query = getEntityManager().createNativeQuery(sql);
 
-		List<Object[]> rows = getResultList(query, 0, 2);
+		List<Object[]> rows = getResultList(query, 1, 100);
 
 		for (Object[] row : rows) {
 			int i = 0;
 			Object value = null;
 			// String fullName = (value = row[i++]) == null ? null : value
 			// .toString();
-			Integer phone = (value = row[i++]) == null ? null : (Integer) value;
+			String id = (value = row[i++]) == null ? null : value.toString();
+			String phone = (value = row[i++]) == null ? null : value.toString();
 
 			/*
 			 * String message = "Hon." + fullName +
@@ -399,15 +405,19 @@ public class ApplicationFormDao extends BaseDao {
 			 * + "kindly requested to avail yourself.Thank you.";
 			 */
 
-			String message = "Hon Members of county Assemby,The Chairman of Central Kenya "
-					+ "Parliamentary Group Hon. Dennis Waweru and the Chairman of Mt. Kenya Foundation"
-					+ " Mr. Peter Munga invites Hon Members of county assembly Central Kenya for a meeting "
-					+ "on 19th  February 2016 at Outspan hotel, Nyeri town.The meeting will comprehensively "
-					+ "address the problem of illicit brews in Central Kenya and other pertinent issues.Thank you.";
+			String message = "On behalf of the Central Kenya Parliamentary Group I wish to invite Hon. Members of the following County Assemblies to a Consultative Meeting with His Excellency The President tomorrow 12th February 2016 at Sagana State Lodge starting 12.00 noon."
+					+ "1. Kiambu"
+					+ "2. Muranga"
+					+ "3. Kirinyaga"
+					+ "4. Nyeri"
+					+ "5. Nyandarua" + "Hon. Dennis Waweru" + "Chairman";
 
-			// integration.send("0" + phone, message);
-			integration.send("0725050728", message);
-			integration.send("0729472421", message);
+			phone = phone.trim();
+			phone = phone.replaceAll("[-]", "");
+
+			integration.send(phone, message);
+			// integration.send("0725050728", message);
+			// integration.send("0729472421", message);
 			// System.err.println(fullName + ">>>" + phone);
 		}
 	}

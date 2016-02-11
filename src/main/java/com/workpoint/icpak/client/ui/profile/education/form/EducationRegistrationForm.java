@@ -93,12 +93,10 @@ public class EducationRegistrationForm extends Composite {
 			isValid = false;
 			issues.addError("Institution is mandatory");
 		}
-
 		if (isNullOrEmpty(txtExaminingBody.getValue())) {
 			isValid = false;
 			issues.addError("Examining Body is mandatory");
 		}
-
 		if (dtStartDate.getValueDate() == null) {
 			isValid = false;
 			issues.addError("Start date is mandatory");
@@ -107,7 +105,6 @@ public class EducationRegistrationForm extends Composite {
 			isValid = false;
 			issues.addError("Date Completed is mandatory");
 		}
-
 		if (isNullOrEmpty(txtClassOrDivision.getValue())) {
 			isValid = false;
 			issues.addError("Class/Division is mandatory");
@@ -121,6 +118,14 @@ public class EducationRegistrationForm extends Composite {
 	}
 
 	public void clear() {
+		clear(false);
+	}
+
+	public void clear(boolean clearDto) {
+		if (clearDto) {
+			educationDto = new ApplicationFormEducationalDto();
+			uploader = new Uploader();
+		}
 		txtInstitution.setValue("");
 		txtExaminingBody.setValue("");
 		dtStartDate.clear();
@@ -130,8 +135,8 @@ public class EducationRegistrationForm extends Composite {
 		txtClassOrDivision.setValue("");
 		lstCertificateAwarded.setValue(null);
 		panelPreviousAttachments.clear();
-		showUploadPanel(false);
 		uploader.clear();
+		showUploadPanel(false);
 	}
 
 	public ApplicationFormEducationalDto getEducationDto() {
@@ -200,6 +205,7 @@ public class EducationRegistrationForm extends Composite {
 		context.setAccept(Arrays.asList("doc", "pdf", "jpg", "jpeg", "png",
 				"docx"));
 		uploader.setContext(context);
+		Window.alert(context.getContextValuesAsURLParams());
 	}
 
 	public HasClickHandlers getStartUploadButton() {

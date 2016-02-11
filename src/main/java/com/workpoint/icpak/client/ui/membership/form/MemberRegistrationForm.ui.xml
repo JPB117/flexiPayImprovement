@@ -89,7 +89,6 @@
 						<div class="col-xs-6">
 							<label for="emailaddress">
 								Employer Name
-								<span style="color:red">*</span>
 							</label>
 							<d:TextField ui:field="txtEmployer" styleName="form-control"
 								placeholder="Enter Employer's Name" value="" required="true">
@@ -191,7 +190,6 @@
 						<div class="col-xs-6">
 							<label for="emailaddress">
 								ICPAK Branch:
-								<span style="color:red">*</span>
 							</label>
 							<d:DropDownList ui:field="lstBranch" styleName="form-control">
 							</d:DropDownList>

@@ -53,7 +53,6 @@ public class Uploader extends Composite {
 
 	public Uploader(boolean isSingleUploader) {
 		initWidget(binder.createAndBindUi(this));
-
 		if (isSingleUploader) {
 			uploader = new SingleUploader();
 		} else {
@@ -131,10 +130,8 @@ public class Uploader extends Composite {
 		}
 	};
 	OnLoadPreloadedImageHandler showImage = new OnLoadPreloadedImageHandler() {
-
 		@Override
 		public void onLoad(PreloadedImage image) {
-			// image.setWidth("75px");
 			panelImages.add(image);
 		}
 	};
@@ -144,7 +141,6 @@ public class Uploader extends Composite {
 		if (uploader instanceof MultiUploader) {
 			uploaders = ((MultiUploader) uploader).getUploaders();
 		} else {
-			// Single Uploader
 			uploaders.add(uploader);
 		}
 
@@ -167,6 +163,10 @@ public class Uploader extends Composite {
 
 	public void clear() {
 		uploader.clear();
+	}
+
+	public void clearImages() {
+		panelImages.clear();
 	}
 
 	public void addOnCancelUploaderHandler(OnCancelUploaderHandler handler) {

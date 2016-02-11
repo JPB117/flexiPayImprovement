@@ -95,7 +95,7 @@ public class AccountancyRegistrationForm extends Composite {
 
 	public void clear() {
 		issues.clear();
-		txtExaminationBody.setValue("");;
+		txtExaminationBody.setValue("");
 		txtRegistrationNo.setValue("");
 		txtSectionPassed.setValue("");
 		dtDatePassed.setValue(null);

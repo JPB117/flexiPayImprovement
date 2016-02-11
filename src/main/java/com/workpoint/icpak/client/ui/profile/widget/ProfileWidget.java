@@ -188,6 +188,8 @@ public class ProfileWidget extends Composite {
 
 	private ApplicationFormHeaderDto applicationForm;
 
+	private boolean isProfileOK = true;
+
 	interface ProfileWidgetUiBinder extends UiBinder<Widget, ProfileWidget> {
 	}
 
@@ -248,6 +250,7 @@ public class ProfileWidget extends Composite {
 			@Override
 			public void onError(ErrorEvent event) {
 				imgUser.setUrl("img/blueman.png");
+				isProfileOK = false;
 			}
 		});
 
@@ -299,20 +302,28 @@ public class ProfileWidget extends Composite {
 			if (applicationStatus == ApplicationStatus.PENDING) {
 				divSubmitApplication.removeClassName("hide");
 				aSubmit.setStyleName("btn btn-fill btn-gold");
-				aPayLink.setStyleName("btn btn-fill btn-default");
-				aDownloadProforma.setStyleName("btn btn-fill btn-default");
+				if (paymentStatus != PaymentStatus.PAID) {
+					aDownloadProforma.setStyleName("btn btn-fill btn-default");
+					// aPayLink.setStyleName("btn btn-fill btn-default");
+				}
+				spnStatusDescription.removeClassName("hide");
 				spnStatusDescription
-						.setInnerText("(Fill all sections here and click submit to forward your application)");
+						.setInnerText("(Fill all sections here and click submit button to forward your application)");
 			} else {
 				spnApplicationStatus.addClassName("label label-success");
 				spnStatusDescription.removeClassName("hide");
 				// Application Status - If Not Paid- Tell User to Pay
 				if (paymentStatus != PaymentStatus.PAID) {
 					spnStatusDescription
-							.setInnerText("(Please pay your application fee to begin processing for your application.)");
+							.setInnerText("(Please pay your registration fee by clicking on the above button.)");
 					spnStatusDescription.addClassName("text-muted");
+					// aPayLink.setStyleName("btn btn-fill btn-gold");
+					aDownloadProforma.setStyleName("btn btn-fill btn-default");
+				} else {
+					spnStatusDescription
+							.setInnerText("(Your application is being processing, "
+									+ "you will be notified on email when the status changes.)");
 				}
-
 				// If Application is not in pending state -send email;
 				if (applicationStatus != ApplicationStatus.PENDING) {
 					setEditMode(false);
@@ -322,14 +333,14 @@ public class ProfileWidget extends Composite {
 				// Action Area
 				divSubmitApplication.removeClassName("hide");
 				aSubmit.addStyleName("hide");
-				aPayLink.setStyleName("btn btn-fill btn-gold");
-				aDownloadProforma.setStyleName("btn btn-fill btn-default");
+
 			}
 		} else if (isCurrentUserAdmin) {
 			divApplicationStatus.removeClassName("hide");
 			bindApplicationAndPaymentStatus(applicationStatus, paymentStatus);
 			aSubmit.addStyleName("hide");
 			aPayLink.addStyleName("hide");
+			aDownloadProforma.removeStyleName("hide");
 			divApplicationStatus.removeClassName("hide");
 			divPaymentSection.removeClassName("hide");
 			if (applicationStatus == ApplicationStatus.SUBMITTED) {
@@ -352,7 +363,7 @@ public class ProfileWidget extends Composite {
 			spnPaymentStatus.addClassName("label label-danger");
 
 			if (applicationForm != null) {
-				aPayLink.removeStyleName("hide");
+				// aPayLink.removeStyleName("hide");
 				aPayLink.addClickHandler(new ClickHandler() {
 					@Override
 					public void onClick(ClickEvent event) {
@@ -673,11 +684,17 @@ public class ProfileWidget extends Composite {
 		// + "Training Detail OK:" + isTrainingDetailOk
 		// + "Examination Detail OK:" + isExaminationDetailOk);
 
-		if (isBasicDetailOK && isEducationDetailOk && isTrainingDetailOk
-				&& isExaminationDetailOk && isSpecializationOk) {
+		if (isProfileOK && isBasicDetailOK && isEducationDetailOk
+				&& isTrainingDetailOk && isExaminationDetailOk
+				&& isSpecializationOk) {
 			panelIssues.addStyleName("hide");
 			return true;
 		} else {
+			if (!isProfileOK) {
+				BulletPanel listItem = new BulletPanel();
+				listItem.setText("Please add your passport photo");
+				ulIssues.add(listItem);
+			}
 			for (String issue : basicDetail.getBasicDetailIssues()) {
 				BulletPanel listItem = new BulletPanel();
 				listItem.setText(issue);

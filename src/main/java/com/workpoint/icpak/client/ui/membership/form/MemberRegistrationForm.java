@@ -171,6 +171,12 @@ public class MemberRegistrationForm extends Composite {
 				isValid = false;
 				issuesPanel.addError("Contact Email is required.");
 			}
+
+			if (txtPostalCode.getValue().length() > 10) {
+				isValid = false;
+				issuesPanel
+						.addError("Please enter a correct postal Code(Less than 10 digits)");
+			}
 			if (lstGender.getValue() == null) {
 				isValid = false;
 				issuesPanel.addError("Gender is required");
@@ -223,7 +229,9 @@ public class MemberRegistrationForm extends Composite {
 		application.setGender(lstGender.getValue());
 		application.setResidence(txtResidence.getValue());
 		application.setIdNumber(txtIdNo.getValue());
-		application.setBranch(lstBranch.getValue().getName());
+		if (lstBranch.getValue() != null) {
+			application.setBranch(lstBranch.getValue().getName());
+		}
 		application.setContactPerson(txtContactName.getValue());
 		application.setContactAddress(txtContactResidence.getValue());
 		application.setContactTelephone(txtContactTelephone.getValue());
@@ -318,6 +326,12 @@ public class MemberRegistrationForm extends Composite {
 		txtAddress.setValue(null);
 		txtPostalCode.setValue(null);
 		type = null;
+	}
+
+	public void clearAttachmentWidget() {
+		uploaderIdCopy.clearImages();
+		uploaderIdCopy.clear();
+
 	}
 
 	public void setCountries(List<Country> countries) {

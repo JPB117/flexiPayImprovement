@@ -90,14 +90,16 @@
 												<br />
 												<span ui:field="spnIssues" style="font-size: 24px;">
 													Your application
-													details have been saved Successfully. A
+													details have been saved successfully. A
 													temporary account
 													has been created to allow you fill the
-													rest of the
-													application and later Pay for your
-													Membership.
-													Click on
-													'Proceed to set password' for your account.
+													rest of your
+													application and pay for your
+													registration fee.
+													<p>
+														Click on
+														 the button below to set a password for your account.
+													</p>
 												</span>
 												<br />
 												<br />

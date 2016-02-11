@@ -86,7 +86,7 @@ public class TestApplicationForm extends AbstractDaoTest {
 
 	// @Test
 	public void testERPIntergration() {
-		String applicationNo = "C/18879";
+		String applicationNo = "C/18881";
 		ApplicationFormHeaderDto application = helper.getApplicationById(
 				"4MgvVkX0Sgr4uwIZ").toDto();
 		List<ApplicationFormEducationalDto> educationDetails = eduHelper
@@ -129,7 +129,7 @@ public class TestApplicationForm extends AbstractDaoTest {
 		// System.err.println("payload to ERP>>>>" + payLoad);
 
 		try {
-			helper.postApplicationToERP("C/18879", erpDto);
+			helper.postApplicationToERP("C/18881", erpDto);
 		} catch (URISyntaxException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -142,11 +142,11 @@ public class TestApplicationForm extends AbstractDaoTest {
 		}
 	}
 
-	@Test
+//	@Test
 	public void testUpdatingOfCPDDto() {
 		ApplicationFormHeaderDto dto = applicationDao.findByApplicationId(
 				"4MgvVkX0Sgr4uwIZ", true).toDto();
-		dto.setErpCode("C/18879");
+		dto.setErpCode("C/18878595");
 		dto.setApplicationStatus(ApplicationStatus.PROCESSING);
 		// dto.setManagementComment("Please attach your profile photo");
 		System.err.println("Submission Date::" + dto.getDateSubmitted());
@@ -154,7 +154,7 @@ public class TestApplicationForm extends AbstractDaoTest {
 		helper.updateApplication("4MgvVkX0Sgr4uwIZ", dto);
 	}
 
-	// @Test
+//	@Test
 	public void testBulkSMS() {
 		applicationDao.sendMessageToHonourables();
 	}

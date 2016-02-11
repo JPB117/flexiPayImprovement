@@ -175,6 +175,7 @@ public class ApplicationsPresenter
 
 	protected ApplicationFormHeaderDto selectedApplication;
 	private PlaceManager placeManager;
+	protected boolean isSyncToERPCalled = false;
 
 	@Inject
 	public ApplicationsPresenter(final EventBus eventBus,
@@ -209,6 +210,7 @@ public class ApplicationsPresenter
 						String applicationNo = getView().getPanelProfile()
 								.getErpApplicationNumber();
 						if (selectedApplication != null) {
+							isSyncToERPCalled = true;
 							selectedApplication.setErpCode(applicationNo);
 							selectedApplication
 									.setApplicationStatus(ApplicationStatus.PROCESSING);
@@ -256,8 +258,25 @@ public class ApplicationsPresenter
 					@Override
 					public void onSuccess(ApplicationFormHeaderDto result) {
 						fireEvent(new ProcessingCompletedEvent());
-						fireEvent(new AfterSaveEvent(
-								"Application changes saved Successfully.!"));
+						if (isSyncToERPCalled) {
+							if (result.getErpMessage().equals("success")) {
+								fireEvent(new AfterSaveEvent(
+										"Application changes saved Successfully.!"));
+							} else {
+								AppManager.showPopUp("Error Updating!",
+										result.getErpMessage(),
+										new OnOptionSelected() {
+											@Override
+											public void onSelect(String name) {
+											}
+										}, "Cancel");
+							}
+							isSyncToERPCalled = false;
+						} else {
+							fireEvent(new AfterSaveEvent(
+									"Application changes saved Successfully.!"));
+						}
+
 						reloadMemberDetails();
 					}
 				}).update(applicationRefId, selectedApplication);
@@ -280,6 +299,7 @@ public class ApplicationsPresenter
 
 	@Override
 	protected void onReveal() {
+		isSyncToERPCalled = false;
 		super.onReveal();
 	}
 
