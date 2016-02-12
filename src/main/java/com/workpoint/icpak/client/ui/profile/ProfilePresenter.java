@@ -243,14 +243,14 @@ public class ProfilePresenter
 		getView().getAccountancyAddButton().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				accountancyForm.clear();
+				accountancyForm.clear(true);
 				showPopUp(accountancyForm);
 			}
 		});
 		getView().getTrainingAddButton().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				trainingForm.clear();
+				trainingForm.clear(true);
 				showPopUp(trainingForm);
 			}
 		});

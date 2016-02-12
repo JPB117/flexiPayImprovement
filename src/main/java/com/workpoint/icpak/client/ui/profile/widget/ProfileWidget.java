@@ -259,6 +259,8 @@ public class ProfileWidget extends Composite {
 			public void onFinish(IUploader uploaderRef) {
 				imgUser.setUrl(url + "&version=" + Random.nextInt());
 				uploader.clear();
+				uploader.clearImages();
+				isProfileOK=true;
 				setChangeProfilePicture(false);
 			}
 		});
@@ -315,7 +317,7 @@ public class ProfileWidget extends Composite {
 				// Application Status - If Not Paid- Tell User to Pay
 				if (paymentStatus != PaymentStatus.PAID) {
 					spnStatusDescription
-							.setInnerText("(Please pay your registration fee by clicking on the above button.)");
+							.setInnerText("(Please pay your registration fee.)");
 					spnStatusDescription.addClassName("text-muted");
 					// aPayLink.setStyleName("btn btn-fill btn-gold");
 					aDownloadProforma.setStyleName("btn btn-fill btn-default");

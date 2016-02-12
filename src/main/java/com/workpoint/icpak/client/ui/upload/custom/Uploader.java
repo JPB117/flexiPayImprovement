@@ -166,7 +166,7 @@ public class Uploader extends Composite {
 	}
 
 	public void clearImages() {
-		panelImages.clear();
+		uploader.reset();
 	}
 
 	public void addOnCancelUploaderHandler(OnCancelUploaderHandler handler) {

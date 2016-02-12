@@ -22,6 +22,7 @@ import com.workpoint.icpak.client.ui.component.IssuesPanel;
 import com.workpoint.icpak.client.ui.component.TextField;
 import com.workpoint.icpak.client.ui.upload.custom.Uploader;
 import com.workpoint.icpak.shared.model.ApplicationFormAccountancyDto;
+import com.workpoint.icpak.shared.model.ApplicationFormTrainingDto;
 import com.workpoint.icpak.shared.model.AttachmentDto;
 
 public class AccountancyRegistrationForm extends Composite {
@@ -94,6 +95,13 @@ public class AccountancyRegistrationForm extends Composite {
 	}
 
 	public void clear() {
+		clear(false);
+	}
+
+	public void clear(boolean clearDto) {
+		if (clearDto) {
+			accountancyDto = new ApplicationFormAccountancyDto();
+		}
 		issues.clear();
 		txtExaminationBody.setValue("");
 		txtRegistrationNo.setValue("");
@@ -102,6 +110,7 @@ public class AccountancyRegistrationForm extends Composite {
 		panelPreviousAttachments.clear();
 		showUploadPanel(false);
 		uploader.clear();
+		uploader.clearImages();
 	}
 
 	public ApplicationFormAccountancyDto getAccountancyDto() {

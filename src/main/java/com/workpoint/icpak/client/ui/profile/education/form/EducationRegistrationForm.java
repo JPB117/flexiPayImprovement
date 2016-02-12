@@ -113,7 +113,6 @@ public class EducationRegistrationForm extends Composite {
 			isValid = false;
 			issues.addError("Certficate Awarded is mandatory");
 		}
-
 		return isValid;
 	}
 
@@ -124,7 +123,6 @@ public class EducationRegistrationForm extends Composite {
 	public void clear(boolean clearDto) {
 		if (clearDto) {
 			educationDto = new ApplicationFormEducationalDto();
-			uploader = new Uploader();
 		}
 		txtInstitution.setValue("");
 		txtExaminingBody.setValue("");
@@ -135,7 +133,7 @@ public class EducationRegistrationForm extends Composite {
 		txtClassOrDivision.setValue("");
 		lstCertificateAwarded.setValue(null);
 		panelPreviousAttachments.clear();
-		uploader.clear();
+		uploader.clearImages();
 		showUploadPanel(false);
 	}
 
@@ -205,7 +203,6 @@ public class EducationRegistrationForm extends Composite {
 		context.setAccept(Arrays.asList("doc", "pdf", "jpg", "jpeg", "png",
 				"docx"));
 		uploader.setContext(context);
-		Window.alert(context.getContextValuesAsURLParams());
 	}
 
 	public HasClickHandlers getStartUploadButton() {
