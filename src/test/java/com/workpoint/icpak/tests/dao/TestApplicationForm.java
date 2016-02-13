@@ -84,7 +84,7 @@ public class TestApplicationForm extends AbstractDaoTest {
 		}
 	}
 
-	// @Test
+	 @Test
 	public void testERPIntergration() {
 		String applicationNo = "C/18881";
 		ApplicationFormHeaderDto application = helper.getApplicationById(
@@ -126,23 +126,23 @@ public class TestApplicationForm extends AbstractDaoTest {
 		erpDto.setEmployment(employment);
 
 		JSONObject payLoad = new JSONObject(erpDto);
-		// System.err.println("payload to ERP>>>>" + payLoad);
+		System.err.println("payload to ERP>>>>" + payLoad);
 
-		try {
-			helper.postApplicationToERP("C/18881", erpDto);
-		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		// try {
+		// //helper.postApplicationToERP("C/18881", erpDto);
+		// } catch (URISyntaxException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// } catch (ParseException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// } catch (JSONException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
 	}
 
-//	@Test
+	// @Test
 	public void testUpdatingOfCPDDto() {
 		ApplicationFormHeaderDto dto = applicationDao.findByApplicationId(
 				"4MgvVkX0Sgr4uwIZ", true).toDto();
@@ -154,7 +154,7 @@ public class TestApplicationForm extends AbstractDaoTest {
 		helper.updateApplication("4MgvVkX0Sgr4uwIZ", dto);
 	}
 
-//	@Test
+	// @Test
 	public void testBulkSMS() {
 		applicationDao.sendMessageToHonourables();
 	}

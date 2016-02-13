@@ -257,7 +257,6 @@
 													<d:ActionLink ui:field="aCheckStandingStatus"
 														styleName="btn btn-default btn-fill hide">Check GoodStanding Status
 													</d:ActionLink>
-													<br />
 													<d:ActionLink ui:field="aDownloadCert"
 														styleName="btn btn-success btn-fill hide">Download
 														Certificate</d:ActionLink>

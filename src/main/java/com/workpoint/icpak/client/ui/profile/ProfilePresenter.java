@@ -268,7 +268,7 @@ public class ProfilePresenter
 		getView().getCertStatusButton().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				loadDataFromErp(true);
+				loadDataFromErp(false);
 			}
 		});
 
