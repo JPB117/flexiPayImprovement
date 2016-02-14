@@ -122,18 +122,14 @@ public class Role extends PO{
 		if(!(obj instanceof Role)){
 			return false;
 		}
-		
 		Role other = (Role)obj;
-		
 		return other.getRefId().equals(getRefId());
 	}
 	
 	public Role clone(String ... expand){
-		
 		Role role = new Role();
 		role.setRefId(getRefId());
 		role.setName(name);
-		
 		if(expand!=null){
 			for(String token: expand){
 				if(token.equals("users")){

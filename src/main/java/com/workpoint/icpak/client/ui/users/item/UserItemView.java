@@ -99,6 +99,14 @@ public class UserItemView extends ViewImpl implements UserItemPresenter.MyView {
 			}
 		}
 
+		if (AppContext.isCurrentUserUsersEdit()) {
+			aEdit.removeStyleName("hide");
+			aDelete.removeStyleName("hide");
+		} else {
+			aEdit.addStyleName("hide");
+			aDelete.addStyleName("hide");
+		}
+
 		if (user.getMemberRefId() != null) {
 			aStatementDownload.addClickHandler(new ClickHandler() {
 				@Override

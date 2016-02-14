@@ -260,7 +260,7 @@ public class ProfileWidget extends Composite {
 				imgUser.setUrl(url + "&version=" + Random.nextInt());
 				uploader.clear();
 				uploader.clearImages();
-				isProfileOK=true;
+				isProfileOK = true;
 				setChangeProfilePicture(false);
 			}
 		});
@@ -275,15 +275,16 @@ public class ProfileWidget extends Composite {
 				Window.open(ctx.toUrl(), "Certificate Of Good Standing", "");
 			}
 		});
+
+		isCurrentUserMember = AppContext.isCurrentUserMember();
+		isCurrentUserAdmin = AppContext.isCurrentUserApplicationsEdit()
+				|| AppContext.isCurrentUserApplicationsRead();
+		isCurrentUserBasicMember = AppContext.isCurrentBasicMember();
 	}
 
 	public void initDisplay(ApplicationStatus applicationStatus,
 			PaymentStatus paymentStatus) {
 		ulIssues.clear();
-		isCurrentUserMember = AppContext.isCurrentUserMember();
-		isCurrentUserAdmin = AppContext.isCurrentUserAdmin();
-		isCurrentUserBasicMember = !isCurrentUserAdmin && !isCurrentUserMember;
-
 		// Window.alert("Is User Admin>>>" + isCurrentUserAdmin);
 		// Window.alert("Is User Member>>>" + isCurrentUserMember);
 
@@ -338,19 +339,22 @@ public class ProfileWidget extends Composite {
 
 			}
 		} else if (isCurrentUserAdmin) {
-			divApplicationStatus.removeClassName("hide");
 			bindApplicationAndPaymentStatus(applicationStatus, paymentStatus);
 			aSubmit.addStyleName("hide");
 			aPayLink.addStyleName("hide");
 			aDownloadProforma.removeStyleName("hide");
 			divApplicationStatus.removeClassName("hide");
 			divPaymentSection.removeClassName("hide");
-			if (applicationStatus == ApplicationStatus.SUBMITTED) {
+			if (applicationStatus == ApplicationStatus.SUBMITTED
+					&& AppContext.isCurrentUserApplicationsEdit()) {
 				divErpSync.removeClassName("hide");
 			}
 			elSpace.removeClassName("hide");
 			aBackToApplications.removeClassName("hide");
 			panelBreadcrumb.removeStyleName("hide");
+			if (AppContext.isCurrentUserApplicationsEdit()) {
+				aMgmtActions.removeStyleName("hide");
+			}
 		}
 	}
 
@@ -426,6 +430,7 @@ public class ProfileWidget extends Composite {
 		aPayLink.addStyleName("hide");
 		divMemberShipStatus.addClassName("hide");
 		spnStatusDescription.addClassName("hide");
+		aMgmtActions.addStyleName("hide");
 	}
 
 	public void bindPaymentStatus() {
@@ -460,8 +465,12 @@ public class ProfileWidget extends Composite {
 		this.applicationForm = result;
 		basicDetail.bindDetails(result);
 		if (result.getRefId() != null) {
-			String fullName = AppContext.getCurrentUser().getUser()
-					.getFullName();
+			String fullName = "";
+			// Window.alert("User is not admin!"+isCurrentUserAdmin);
+			if (!isCurrentUserAdmin) {
+				fullName = AppContext.getCurrentUser().getUser().getFullName();
+			}
+
 			if (fullName != null && !fullName.isEmpty()) {
 				spnNames.setInnerText(AppContext.getCurrentUser().getUser()
 						.getFullName());

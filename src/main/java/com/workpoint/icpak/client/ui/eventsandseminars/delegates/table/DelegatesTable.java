@@ -17,6 +17,7 @@ import com.workpoint.icpak.client.ui.component.PagingPanel;
 import com.workpoint.icpak.client.ui.component.PagingTable;
 import com.workpoint.icpak.client.ui.component.TableHeader;
 import com.workpoint.icpak.client.ui.eventsandseminars.delegates.row.DelegateTableRow;
+import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.model.EventType;
 
 public class DelegatesTable extends Composite {
@@ -36,7 +37,6 @@ public class DelegatesTable extends Composite {
 		tblView.setAutoNumber(false);
 		createHeader();
 		createRow(new DelegateTableRow());
-
 	}
 
 	public void createHeader() {
@@ -53,7 +53,9 @@ public class DelegatesTable extends Composite {
 		th.add(new TableHeader("Accomodation"));
 		th.add(new TableHeader("Payment Status"));
 		th.add(new TableHeader("Attendance"));
-		th.add(new TableHeader("Actions"));
+		if (AppContext.isCurrentUserEventEdit()) {
+			th.add(new TableHeader("Actions"));
+		}
 		tblView.setTableHeaders(th);
 	}
 

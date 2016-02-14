@@ -3,6 +3,8 @@ package com.icpak.rest.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Query;
+
 import org.apache.log4j.Logger;
 import org.apache.shiro.crypto.hash.Sha256Hash;
 
@@ -137,8 +139,7 @@ public class UsersDao extends BaseDao {
 	}
 
 	public List<User> getAllUsers() {
-		String query = "from User u order by username";
-
+		String query = "from User u order by memberNo asc";
 		return getResultList(getEntityManager().createQuery(query));
 	}
 
@@ -269,4 +270,10 @@ public class UsersDao extends BaseDao {
 				.setParameter("memberNo", memberNo));
 	}
 
+	public void deleteAllRolesForCurrentUser(Long passedId) {
+		Query query = (getEntityManager().createNativeQuery(
+				"delete from user_role where userid=:passedUserId")
+				.setParameter("passedUserId", passedId));
+		query.executeUpdate();
+	}
 }

@@ -231,7 +231,6 @@ public class UsersResourceImpl implements UsersResource {
 	@ApiOperation(value = "Delete an existing user")
 	public void delete(
 			@ApiParam(value = "User Id of the user to fetch", required = true) @PathParam("userId") String userId) {
-
 		helper.delete(userId);
 	}
 

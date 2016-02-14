@@ -209,7 +209,9 @@ public class UserSaveView extends PopupViewImpl implements
 		user.setPhoneNumber(txtPhoneNo.getValue());
 		user.setGroups(lstGroups.getSelectedItems());
 		user.setFullName(txtFullNames.getValue());
-		user.setMemberNo(txtMemberNo.getValue());
+		if (txtMemberNo.getValue() != null) {
+			user.setMemberNo(txtMemberNo.getValue());
+		}
 		return user;
 	}
 
@@ -252,10 +254,10 @@ public class UserSaveView extends PopupViewImpl implements
 			issues.addError("Last Name is mandatory");
 		}
 
-		if (isNullOrEmpty(txtMemberNo.getValue())) {
-			valid = false;
-			issues.addError("Member No is mandatory");
-		}
+		// if (isNullOrEmpty(txtMemberNo.getValue())) {
+		// valid = false;
+		// issues.addError("Member No is mandatory");
+		// }
 		if (isNullOrEmpty(txtEmail.getValue())) {
 			valid = false;
 			issues.addError("Email is mandatory");

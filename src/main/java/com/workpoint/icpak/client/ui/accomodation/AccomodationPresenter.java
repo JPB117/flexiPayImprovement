@@ -35,6 +35,7 @@ import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
 import com.workpoint.icpak.client.ui.events.ProcessingEvent;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
 import com.workpoint.icpak.client.ui.security.AdminGateKeeper;
+import com.workpoint.icpak.client.ui.security.EventsGateKeeper;
 import com.workpoint.icpak.shared.api.EventsResource;
 import com.workpoint.icpak.shared.model.events.AccommodationDto;
 import com.workpoint.icpak.shared.model.events.EventDto;
@@ -60,13 +61,13 @@ public class AccomodationPresenter
 
 	@ProxyCodeSplit
 	@NameToken(NameTokens.accomodation)
-	@UseGatekeeper(AdminGateKeeper.class)
+	@UseGatekeeper(EventsGateKeeper.class)
 	public interface IAccomodationProxy extends
 			TabContentProxyPlace<AccomodationPresenter> {
 	}
 
 	@TabInfo(container = HomePresenter.class)
-	static TabData getTabLabel(AdminGateKeeper adminGatekeeper) {
+	static TabData getTabLabel(EventsGateKeeper adminGatekeeper) {
 		TabDataExt data = new TabDataExt("Accomodation", "fa fa-bed", 3,
 				adminGatekeeper, true);
 		return data;

@@ -39,6 +39,7 @@ import com.workpoint.icpak.client.ui.profile.specialization.form.SpecializationR
 import com.workpoint.icpak.client.ui.profile.training.form.TrainingRegistrationForm;
 import com.workpoint.icpak.client.ui.profile.widget.ProfileWidget;
 import com.workpoint.icpak.client.ui.security.BasicMemberGateKeeper;
+import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.api.ApplicationFormResource;
 import com.workpoint.icpak.shared.api.CountriesResource;
 import com.workpoint.icpak.shared.api.MemberResource;
@@ -505,6 +506,13 @@ public class ProfilePresenter
 	@Override
 	protected void onReveal() {
 		super.onReveal();
+//		Window.alert("IsCurrentUserAdmin::" + AppContext.isCurrentUserAdmin()
+//				+ ">>>>IsCurrentUserBasicMember:::"
+//				+ AppContext.isCurrentBasicMember()
+//				+ ">>>>IsCurrentUserEventsRead:::"
+//				+ AppContext.isCurrentUserEventRead()
+//				+ ">>>IsCurrentUserEdit:::"
+//				+ AppContext.isCurrentUserEventEdit());
 		loadData();
 	}
 
@@ -519,19 +527,17 @@ public class ProfilePresenter
 	 */
 	private void loadDataFromErp(boolean forceRefesh) {
 		fireEvent(new ProcessingEvent());
-		memberDelegate.withCallback(new AbstractAsyncCallback<Boolean>() {
-			@Override
-			public void onSuccess(Boolean hasLoaded) {
-				fireEvent(new ProcessingCompletedEvent());
-				loadData(getApplicationRefId());
-				getView().setLastUpdateToNow();
-				if (!hasLoaded) {
-					Window.alert("There was a problem loading ERP Data");
-				} else {
-					loadGoodStanding();
-				}
-			}
-		}).getDataFromErp(getMemberId(), forceRefesh);
+		loadGoodStanding();
+		/*
+		 * memberDelegate.withCallback(new AbstractAsyncCallback<Boolean>() {
+		 * 
+		 * @Override public void onSuccess(Boolean hasLoaded) { fireEvent(new
+		 * ProcessingCompletedEvent()); loadData(getApplicationRefId());
+		 * getView().setLastUpdateToNow(); if (!hasLoaded) {
+		 * Window.alert("There was a problem loading ERP Data"); } else {
+		 * loadGoodStanding(); } } }).getDataFromErp(getMemberId(),
+		 * forceRefesh);
+		 */
 
 	}
 

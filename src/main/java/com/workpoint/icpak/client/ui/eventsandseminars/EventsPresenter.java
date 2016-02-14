@@ -38,6 +38,7 @@ import com.workpoint.icpak.client.ui.events.TableActionEvent.TableActionHandler;
 import com.workpoint.icpak.client.ui.eventsandseminars.resendProforma.ResendModel;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
 import com.workpoint.icpak.client.ui.security.AdminGateKeeper;
+import com.workpoint.icpak.client.ui.security.EventsGateKeeper;
 import com.workpoint.icpak.shared.api.EventsResource;
 import com.workpoint.icpak.shared.model.EventSummaryDto;
 import com.workpoint.icpak.shared.model.TableActionType;
@@ -80,7 +81,7 @@ public class EventsPresenter extends
 
 	@ProxyCodeSplit
 	@NameToken(NameTokens.events)
-	@UseGatekeeper(AdminGateKeeper.class)
+	@UseGatekeeper(EventsGateKeeper.class)
 	public interface IEventsProxy extends TabContentProxyPlace<EventsPresenter> {
 	}
 
@@ -117,7 +118,7 @@ public class EventsPresenter extends
 	};
 
 	@TabInfo(container = HomePresenter.class)
-	static TabData getTabLabel(AdminGateKeeper gateKeeper) {
+	static TabData getTabLabel(EventsGateKeeper gateKeeper) {
 		String tabName = "Events & Courses";
 		TabDataExt data = new TabDataExt(tabName, "fa fa-tags", 2, gateKeeper,
 				true);

@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 import com.workpoint.icpak.client.ui.component.DropDownList;
 import com.workpoint.icpak.client.ui.component.TextArea;
+import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 import com.workpoint.icpak.shared.model.PaymentStatus;
 import com.workpoint.icpak.shared.model.auth.ApplicationStatus;
@@ -41,6 +42,13 @@ public class ApplicationsActions extends Composite {
 					|| stat != ApplicationStatus.PROCESSING) {
 				allowedActions.add(stat);
 			}
+		}
+
+		if (AppContext.isCurrentUserFinanceEdit()
+				|| AppContext.isCurrentUserFinanceApplications()) {
+			lstPaymentStatus.removeStyleName("hide");
+		} else {
+			lstPaymentStatus.addStyleName("hide");
 		}
 
 		lstApplicationStatus.setItems(allowedActions,

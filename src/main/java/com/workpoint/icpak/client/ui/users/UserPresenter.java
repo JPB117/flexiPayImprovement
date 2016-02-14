@@ -45,6 +45,7 @@ import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
 import com.workpoint.icpak.client.ui.events.ProcessingEvent;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
 import com.workpoint.icpak.client.ui.security.AdminGateKeeper;
+import com.workpoint.icpak.client.ui.security.UsersGateKeeper;
 import com.workpoint.icpak.client.ui.users.groups.GroupPresenter;
 import com.workpoint.icpak.client.ui.users.item.UserItemPresenter;
 import com.workpoint.icpak.client.ui.users.save.UserSavePresenter;
@@ -75,12 +76,12 @@ public class UserPresenter extends
 
 	@ProxyCodeSplit
 	@NameToken(NameTokens.usermgt)
-	@UseGatekeeper(AdminGateKeeper.class)
+	@UseGatekeeper(UsersGateKeeper.class)
 	public interface MyProxy extends TabContentProxyPlace<UserPresenter> {
 	}
 
 	@TabInfo(container = HomePresenter.class)
-	static TabData getTabLabel(AdminGateKeeper adminGatekeeper) {
+	static TabData getTabLabel(UsersGateKeeper adminGatekeeper) {
 		return new TabDataExt("Users and Groups", "fa fa-globe", 3,
 				adminGatekeeper, true);
 	}

@@ -43,6 +43,7 @@ import com.workpoint.icpak.client.ui.home.HomePresenter;
 import com.workpoint.icpak.client.ui.members.management.ApplicationsActions;
 import com.workpoint.icpak.client.ui.profile.widget.ProfileWidget;
 import com.workpoint.icpak.client.ui.security.AdminGateKeeper;
+import com.workpoint.icpak.client.ui.security.ApplicationsGateKeeper;
 import com.workpoint.icpak.shared.api.ApplicationFormResource;
 import com.workpoint.icpak.shared.model.ApplicationFormAccountancyDto;
 import com.workpoint.icpak.shared.model.ApplicationFormEducationalDto;
@@ -86,13 +87,13 @@ public class ApplicationsPresenter
 
 	@ProxyCodeSplit
 	@NameToken(NameTokens.members)
-	@UseGatekeeper(AdminGateKeeper.class)
+	@UseGatekeeper(ApplicationsGateKeeper.class)
 	public interface IApplicationsProxy extends
 			TabContentProxyPlace<ApplicationsPresenter> {
 	}
 
 	@TabInfo(container = HomePresenter.class)
-	static TabData getTabLabel(AdminGateKeeper adminGatekeeper) {
+	static TabData getTabLabel(ApplicationsGateKeeper adminGatekeeper) {
 		TabDataExt data = new TabDataExt("Applications", "icon-users", 4,
 				adminGatekeeper, true);
 		return data;

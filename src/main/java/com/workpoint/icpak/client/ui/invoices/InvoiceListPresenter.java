@@ -33,6 +33,7 @@ import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
 import com.workpoint.icpak.client.ui.events.ProcessingEvent;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
 import com.workpoint.icpak.client.ui.security.AdminGateKeeper;
+import com.workpoint.icpak.client.ui.security.FinanceGateKeeper;
 import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.api.InvoiceResource;
 import com.workpoint.icpak.shared.model.InvoiceDto;
@@ -56,14 +57,14 @@ public class InvoiceListPresenter
 
 	@ProxyCodeSplit
 	@NameToken(NameTokens.invoices)
-	@UseGatekeeper(AdminGateKeeper.class)
+	@UseGatekeeper(FinanceGateKeeper.class)
 	public interface IInvoiceProxy extends
 			TabContentProxyPlace<InvoiceListPresenter> {
 	}
 
 	@TabInfo(container = HomePresenter.class)
-	static TabData getTabLabel(AdminGateKeeper adminGatekeeper) {
-		TabDataExt data = new TabDataExt("Invoicing Summary",
+	static TabData getTabLabel(FinanceGateKeeper adminGatekeeper) {
+		TabDataExt data = new TabDataExt("Financial Summary",
 				"fa fa-briefcase", 7, adminGatekeeper, true);
 		return data;
 	}

@@ -37,7 +37,7 @@
 		<g:HTMLPanel styleName="td center" ui:field="divAttendance">
 			<span class="label label-danger" ui:field="spnAttendance"></span>
 		</g:HTMLPanel>
-		<g:HTMLPanel styleName="td" ui:field="divAction">
+		<g:HTMLPanel styleName="td hide" ui:field="divAction">
 			<div class="dropdown">
 				<a class="btn btn-primary btn-fill dropdown-toggle" id="dropdownMenu1"
 					data-toggle="dropdown" aria-expanded="true">

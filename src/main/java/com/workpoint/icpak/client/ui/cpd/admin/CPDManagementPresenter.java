@@ -53,6 +53,7 @@ import com.workpoint.icpak.client.ui.events.TableActionEvent.TableActionHandler;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
 import com.workpoint.icpak.client.ui.popup.GenericPopupPresenter;
 import com.workpoint.icpak.client.ui.security.AdminGateKeeper;
+import com.workpoint.icpak.client.ui.security.CPDManagementGateKeeper;
 import com.workpoint.icpak.client.ui.security.LoginGateKeeper;
 import com.workpoint.icpak.client.ui.util.DateRange;
 import com.workpoint.icpak.client.ui.util.DateUtils;
@@ -128,13 +129,13 @@ public class CPDManagementPresenter
 
 	@ProxyCodeSplit
 	@NameToken(NameTokens.cpdmgt)
-	@UseGatekeeper(LoginGateKeeper.class)
+	@UseGatekeeper(CPDManagementGateKeeper.class)
 	public interface ICPDManagementProxy extends
 			TabContentProxyPlace<CPDManagementPresenter> {
 	}
 
 	@TabInfo(container = HomePresenter.class)
-	static TabData getTabLabel(AdminGateKeeper adminGatekeeper) {
+	static TabData getTabLabel(CPDManagementGateKeeper adminGatekeeper) {
 		TabDataExt data = new TabDataExt("C.P.D Management",
 				"fa fa-graduation-cap", 5, adminGatekeeper, true);
 		return data;

@@ -19,7 +19,8 @@
 				<div class="row">
 					<div class="col-sm-12">
 						<div class="col-sm-6">
-							<d:ActionLink ui:field="aCreate" styleName="btn btn-primary btn-fill">
+							<d:ActionLink ui:field="aCreate"
+								styleName="btn btn-primary btn-fill hide">
 								<span class="fa fa-plus"></span>
 								Create
 							</d:ActionLink>

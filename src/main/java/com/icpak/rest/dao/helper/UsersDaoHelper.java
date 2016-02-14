@@ -212,6 +212,7 @@ public class UsersDaoHelper {
 		po.setEmail(dto.getEmail());
 		po.setMobileNo(dto.getPhoneNumber());
 		po = po.copyOnUpdate(dto);
+
 		if (po.getUserData() == null) {
 			po.setUserData(dto);
 		} else {
@@ -219,6 +220,9 @@ public class UsersDaoHelper {
 			data.setFirstName(dto.getName());
 			data.setLastName(dto.getSurname());
 		}
+
+		// Delete all Roles for the current User
+		dao.deleteAllRolesForCurrentUser(po.getId());
 
 		for (RoleDto role : dto.getGroups()) {
 			Role r = dao.findByRefId(role.getRefId(), Role.class);
@@ -254,6 +258,7 @@ public class UsersDaoHelper {
 			data.setOverseas(user.getUserData().isOverseas());
 			data.setSalutation(user.getUserData().getSalutation());
 			data.setTitle(user.getUserData().getTitle());
+
 			// data.setResidence(user.getUserData().getResidence());
 		}
 

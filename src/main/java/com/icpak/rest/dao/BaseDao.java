@@ -73,6 +73,10 @@ public class BaseDao {
 
 		return value;
 	}
+	
+	public void executeUpdate(Query query){
+		
+	}
 
 	@SuppressWarnings("unchecked")
 	public <T> List<T> getResultList(Query query, Integer offSet, Integer limit) throws RuntimeException {

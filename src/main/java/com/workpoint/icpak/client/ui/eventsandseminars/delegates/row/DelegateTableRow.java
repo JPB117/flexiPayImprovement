@@ -56,6 +56,9 @@ public class DelegateTableRow extends RowWidget {
 	@UiField
 	HTMLPanel divAccomodation;
 	@UiField
+	HTMLPanel divAction;
+
+	@UiField
 	SpanElement spnPaymentStatus;
 	@UiField
 	SpanElement spnAttendance;
@@ -77,6 +80,13 @@ public class DelegateTableRow extends RowWidget {
 
 	public DelegateTableRow() {
 		initWidget(uiBinder.createAndBindUi(this));
+
+		if (AppContext.isCurrentUserEventEdit()) {
+			divAction.removeStyleName("hide");
+		} else {
+			divAction.addStyleName("hide");
+		}
+
 		aAttended.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {

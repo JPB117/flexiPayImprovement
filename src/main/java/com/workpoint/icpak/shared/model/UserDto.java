@@ -33,7 +33,7 @@ public class UserDto extends SerializableObj implements Listable, Serializable {
 	private String lmsResponse;
 	private String lmsPayload;
 	private Long userLongId;
-	
+
 	public UserDto() {
 	}
 
@@ -84,8 +84,6 @@ public class UserDto extends SerializableObj implements Listable, Serializable {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
-	
 
 	public Long getUserLongId() {
 		return userLongId;
@@ -137,8 +135,72 @@ public class UserDto extends SerializableObj implements Listable, Serializable {
 
 	@JsonIgnore
 	public boolean isAdmin() {
-
 		return hasGroup("admin");
+	}
+
+	@JsonIgnore
+	public boolean isEventEdit() {
+		return hasGroup("event_edit");
+	}
+
+	@JsonIgnore
+	public boolean isEventRead() {
+		return hasGroup("Event_read");
+	}
+
+	@JsonIgnore
+	public boolean isUsersEdit() {
+		return hasGroup("users_edit");
+	}
+
+	@JsonIgnore
+	public boolean isUsersRead() {
+		return hasGroup("users_read");
+	}
+
+	@JsonIgnore
+	public boolean isApplicationsEdit() {
+		return hasGroup("applications_edit");
+	}
+
+	@JsonIgnore
+	public boolean isApplicationsRead() {
+		return hasGroup("applications_read");
+	}
+
+	@JsonIgnore
+	public boolean isCPDEdit() {
+		return hasGroup("cpd_edit");
+	}
+
+	@JsonIgnore
+	public boolean isCPDRead() {
+		return hasGroup("cpd_read");
+	}
+
+	@JsonIgnore
+	public boolean isFinanceEdit() {
+		return hasGroup("finance_edit");
+	}
+
+	@JsonIgnore
+	public boolean isFinanceEditApplications() {
+		return hasGroup("finance_edit_applications");
+	}
+
+	@JsonIgnore
+	public boolean isFinanceEditEvents() {
+		return hasGroup("finance_edit_events");
+	}
+
+	@JsonIgnore
+	public boolean isFinanceRead() {
+		return hasGroup("finance_read");
+	}
+
+	@JsonIgnore
+	public boolean isBasicMember() {
+		return hasGroup("basic_member");
 	}
 
 	@Override

@@ -86,7 +86,6 @@ public class UserSavePresenter extends
 					UserDto userDto = getView().getUser();
 					getView().hide();
 					if (user != null) {
-
 						usersDelegate.withCallback(
 								new AbstractAsyncCallback<UserDto>() {
 									@Override

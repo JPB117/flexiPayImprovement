@@ -214,7 +214,6 @@ public class MultiSelectField<T extends Listable> extends Composite {
 
 	public void select(List<T> items) {
 		clearSelection();
-		// others
 		if (items != null)
 			for (T item : items) {
 				itemBox.setValue(item.getDisplayName());
