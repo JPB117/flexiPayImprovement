@@ -1,6 +1,7 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d='urn:import:com.workpoint.icpak.client.ui.component'>
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d='urn:import:com.workpoint.icpak.client.ui.component'
+	xmlns:up='urn:import:com.workpoint.icpak.client.ui.upload.custom'>
 	<ui:style>
 	.left {
 		padding-left: 34px;
@@ -213,7 +214,8 @@
 				<div role="tabpanel" class="tab-pane" id="offline">
 					<div class="row">
 						<div class="col-lg-8">
-							The following are offline modes of payment to ICPAK;
+							<p>1. Use either of the following offline modes of payment to
+								ICPAK;</p>
 							<p class="{style.left}" style="margin-bottom:10px;">
 								<strong>A: BARCLAYS BANK OF KENYA</strong>
 								<br />
@@ -232,10 +234,43 @@
 								<br />
 								Bank Account No: 010-2093120900
 							</p>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col lg-12">
+
+
+							<div class="hide">
+								<p>2. Attach either of the following document to show proof of
+									payment:</p>
+								<div class="col-lg-8">
+									<div class="">
+										<div class="col-lg-6">
+											<div class="checkbox">
+												<label>
+													<g:CheckBox ui:field="aCheque" name="ICPAK Receipt">ICPAK
+														Receipt</g:CheckBox>
+												</label>
+											</div>
+										</div>
+										<div class="col-lg-6">
+											<div class="checkbox">
+												<label>
+													<g:CheckBox ui:field="aDepositSlip" name="Bank Deposit Slip">
+														Bank
+														Deposit Slip
+													</g:CheckBox>
+												</label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-8">
+									<up:Uploader ui:field="uploaderAttachment"
+										styleName="custom-file-input"></up:Uploader>
+								</div>
+								<div class="col-lg-12" style="margin-left: 0px; margin-top: 30px;">
+									<p> 3. Submit the attachments by clicking on the below button.</p>
+									<d:ActionLink ui:field="aCompleteDone" styleName="btn btn-gold btn-fill">
+										Submit Attachments</d:ActionLink>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>

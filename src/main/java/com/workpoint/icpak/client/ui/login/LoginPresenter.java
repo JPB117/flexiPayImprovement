@@ -232,7 +232,7 @@ public class LoginPresenter extends
 				redirect = NameTokens.members;
 			} else if (AppContext.isCurrentUserCPDEdit()
 					|| AppContext.isCurrentUserCPDRead()) {
-				redirect = NameTokens.invoices;
+				redirect = NameTokens.cpd;
 			} else if (AppContext.isCurrentUserFinanceEdit()
 					|| AppContext.isCurrentUserFinanceRead()) {
 				redirect = NameTokens.invoices;

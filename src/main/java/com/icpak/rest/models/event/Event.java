@@ -46,7 +46,7 @@ public class Event extends PO {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@Column(length = 255, nullable = false)
+	@Column(length = 5000, nullable = false)
 	private String name;
 	@Column(length = 5000)
 	private String description;

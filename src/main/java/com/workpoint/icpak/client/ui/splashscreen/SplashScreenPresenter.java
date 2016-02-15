@@ -120,7 +120,7 @@ public class SplashScreenPresenter
 			fireEvent(new ContextLoadedEvent(currentUser.getUser(), null));
 			redirectToLoggedOnPage();
 		} else {
-			Window.alert("User Not Logged In!! Redirecting to Login Presenter");
+			// Window.alert("User Not Logged In!! Redirecting to Login Presenter");
 			PlaceRequest placeRequest = new Builder().nameToken(
 					NameTokens.login).build();
 			placeManager.revealPlace(placeRequest);
@@ -145,7 +145,7 @@ public class SplashScreenPresenter
 				redirect = NameTokens.members;
 			} else if (AppContext.isCurrentUserCPDEdit()
 					|| AppContext.isCurrentUserCPDRead()) {
-				redirect = NameTokens.invoices;
+				redirect = NameTokens.cpd;
 			} else if (AppContext.isCurrentUserFinanceEdit()
 					|| AppContext.isCurrentUserFinanceRead()) {
 				redirect = NameTokens.invoices;
@@ -153,6 +153,8 @@ public class SplashScreenPresenter
 				redirect = NameTokens.getOnLoginDefaultPage();
 			}
 		}
+//		Window.alert(redirect);
+
 		String token = placeManager.getCurrentPlaceRequest().getParameter(
 				ParameterTokens.REDIRECT, redirect);
 		String type = placeManager.getCurrentPlaceRequest().getParameter(

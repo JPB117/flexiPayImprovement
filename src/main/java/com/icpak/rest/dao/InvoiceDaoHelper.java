@@ -114,18 +114,6 @@ public class InvoiceDaoHelper {
 		return getInvoiceCount(null);
 	}
 
-	// public List<InvoiceDto> getAllInvoicesForMember(String memberId) {
-	//
-	// List<Invoice> invoices = dao.getAllInvoicesForMember(memberId);
-	// List<InvoiceDto> dtos = new ArrayList<>();
-	//
-	// for (Invoice invoice : invoices) {
-	// dtos.add(invoice.toDto());
-	// }
-	//
-	// return dtos;
-	// }4
-
 	public byte[] generatePDFDocument(InvoiceDto invoice)
 			throws FileNotFoundException, IOException, SAXException,
 			ParserConfigurationException, FactoryConfigurationError,

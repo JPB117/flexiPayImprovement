@@ -38,6 +38,8 @@ public class PaymentPresenter extends PresenterWidget<PaymentPresenter.MyView> {
 		void setAmount(String amount);
 
 		void bindTransation(InvoiceDto invoice);
+
+		void setAttachmentUploadContext(String applicationRefId, String type);
 	}
 
 	private ResourceDelegate<CreditCardResource> creditCardResource;
@@ -106,6 +108,10 @@ public class PaymentPresenter extends PresenterWidget<PaymentPresenter.MyView> {
 	public void bindTransaction(InvoiceDto invoice) {
 		this.invoice = invoice;
 		getView().bindTransation(invoice);
+	}
+
+	public void setAttachmentUploadContext(String applicationRefId, String type) {
+		getView().setAttachmentUploadContext(applicationRefId, type);
 	}
 
 }

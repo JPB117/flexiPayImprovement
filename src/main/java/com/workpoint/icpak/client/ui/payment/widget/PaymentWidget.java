@@ -3,6 +3,7 @@ package com.workpoint.icpak.client.ui.payment.widget;
 import static com.workpoint.icpak.client.ui.util.StringUtils.isNullOrEmpty;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -11,15 +12,20 @@ import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.CalendarUtil;
+import com.workpoint.icpak.client.model.UploadContext;
+import com.workpoint.icpak.client.model.UploadContext.UPLOADACTION;
 import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.DropDownList;
 import com.workpoint.icpak.client.ui.component.IssuesPanel;
 import com.workpoint.icpak.client.ui.component.TextField;
 import com.workpoint.icpak.client.ui.cpd.Year;
+import com.workpoint.icpak.client.ui.upload.custom.Uploader;
 import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.client.ui.util.NumberUtils;
 import com.workpoint.icpak.shared.model.CreditCardDto;
@@ -63,6 +69,13 @@ public class PaymentWidget extends Composite {
 	HTMLPanel PanelPayment;
 	@UiField
 	HTMLPanel panelSuccess;
+
+	@UiField
+	CheckBox aDepositSlip;
+	@UiField
+	CheckBox aCheque;
+	@UiField
+	Uploader uploaderAttachment;
 
 	private int totalYears = 10;
 	private int totalMonths = 12;
@@ -210,8 +223,8 @@ public class PaymentWidget extends Composite {
 	public void bindTransaction(InvoiceDto invoice) {
 		this.paymentRefId = invoice.getDocumentNo();
 		spnAccountNo.setInnerText(invoice.getDocumentNo());// MPESA Payment
-		// spnAmount.setInnerText(NumberUtils.CURRENCYFORMAT.format(invoice
-		// .getInvoiceAmount()));
+		spnAmount.setInnerText(NumberUtils.CURRENCYFORMAT.format(invoice
+				.getInvoiceAmount()));
 	}
 
 	public void setCardResponse(CreditCardResponse response) {
@@ -236,5 +249,18 @@ public class PaymentWidget extends Composite {
 					.setInnerText("Transaction not received. Please wait until you receive a message from ICPAK then try again");
 			aCompleteMpesa.setText("Retry");
 		}
+	}
+
+	public void setAttachmentUploadContext(String applicationRefId, String type) {
+		UploadContext context = new UploadContext();
+		if (type.equals("application")) {
+			context.setContext("applicationRefId", applicationRefId);
+		} else if (type.equals("booking")) {
+			context.setContext("bookingRefId", applicationRefId);
+		}
+		context.setAction(UPLOADACTION.UPLOADIDPHOTOCOPY);
+		context.setAccept(Arrays.asList("doc", "pdf", "jpg", "jpeg", "png",
+				"docx"));
+		uploaderAttachment.setContext(context);
 	}
 }

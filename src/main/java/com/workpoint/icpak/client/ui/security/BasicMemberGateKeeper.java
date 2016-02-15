@@ -8,7 +8,8 @@ public class BasicMemberGateKeeper implements Gatekeeper {
 	@Override
 	public boolean canReveal() {
 		return AppContext.isLoggedIn()
-				&& (AppContext.isCurrentBasicMember() || AppContext
-						.isCurrentUserMember());
+				&& (AppContext.isCurrentBasicMember()
+						|| AppContext.isCurrentUserMember() || AppContext
+							.hasNoGroup());
 	}
 }

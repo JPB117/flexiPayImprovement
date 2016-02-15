@@ -1,11 +1,13 @@
 package com.icpak.rest.dao.helper;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -13,7 +15,11 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+
+import javax.xml.parsers.FactoryConfigurationError;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
@@ -26,6 +32,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.log4j.Logger;
+import org.xml.sax.SAXException;
 
 import com.amazonaws.util.json.JSONException;
 import com.amazonaws.util.json.JSONObject;
@@ -49,6 +56,7 @@ import com.icpak.rest.utils.DocumentHTMLMapper;
 import com.icpak.rest.utils.DocumentLine;
 import com.icpak.rest.utils.EmailServiceHelper;
 import com.icpak.rest.utils.HTMLToPDFConvertor;
+import com.itextpdf.text.DocumentException;
 import com.workpoint.icpak.shared.model.ApplicationCategoryDto;
 import com.workpoint.icpak.shared.model.ApplicationERPDto;
 import com.workpoint.icpak.shared.model.ApplicationFormAccountancyDto;
@@ -89,6 +97,8 @@ public class ApplicationFormDaoHelper {
 	SpecializationDaoHelper specializationHelper;
 
 	Logger logger = Logger.getLogger(ApplicationFormDaoHelper.class);
+	Locale locale = new Locale("en", "KE");
+	NumberFormat numberFormat = NumberFormat.getCurrencyInstance(locale);
 
 	public void createApplication(ApplicationFormHeaderDto application) {
 		if (application.getRefId() != null) {
@@ -176,37 +186,13 @@ public class ApplicationFormDaoHelper {
 	private void sendEmail(ApplicationFormHeader application,
 			InvoiceDto invoice, User user) {
 		try {
-			Map<String, Object> values = new HashMap<String, Object>();
-			values.put("companyName", application.getEmployerCode());
-			values.put("companyAddress", application.getAddress1());
-			values.put("quoteNo", invoice.getRefId());
-			values.put("date", formatter.format(invoice.getDate()));
-			values.put("firstName", application.getOtherNames());
-			// https://www.icpak.com/icpakportal/#eventBooking;eventId=Jx4Ca6HpOutf2ic7;bookingId=ttDzH7OkgAHk5CSk
-			values.put("DocumentURL", settings.getApplicationPath());
-			values.put("userRefId", user.getRefId());
-			values.put("email", application.getEmail());
-			Doc doc = new Doc(values);
-
-			Map<String, Object> line = new HashMap<String, Object>();
-			InvoiceLineDto lineDto = invoice.getLines().get(0);
-
-			line.put("description", lineDto.getDescription());
-			line.put("unitPrice", lineDto.getUnitPrice());
-			line.put("amount", lineDto.getTotalAmount());
-			values.put("totalAmount", invoice.getInvoiceAmount());
-			doc.addDetail(new DocumentLine("invoiceDetails", line));
-
+			byte[] invoicePDF = generateInvoicePDF(application, invoice);
 			String documentNo = "ProForma Invoice_" + application.getSurname();
-			// PDF Invoice Generation
-			InputStream inv = EmailServiceHelper.class.getClassLoader()
-					.getResourceAsStream("registration-invoice.html");
-			String invoiceHTML = IOUtils.toString(inv);
-			byte[] invoicePDF = new HTMLToPDFConvertor().convert(doc,
-					new String(invoiceHTML));
 			Attachment attachment = new Attachment();
 			attachment.setAttachment(invoicePDF);
 			attachment.setName(documentNo + ".pdf");
+
+			Doc doc = generateEmailValues(application, invoice);
 
 			String subject = "ICPAK Member Registration";
 			// Email Template parse and map variables
@@ -232,6 +218,49 @@ public class ApplicationFormDaoHelper {
 
 	}
 
+	public byte[] generateInvoicePDF(ApplicationFormHeader application,
+			InvoiceDto invoice) throws FileNotFoundException, IOException,
+			SAXException, ParserConfigurationException,
+			FactoryConfigurationError, DocumentException {
+		Doc doc = generateEmailValues(application, invoice);
+		// PDF Invoice Generation
+		InputStream inv = EmailServiceHelper.class.getClassLoader()
+				.getResourceAsStream("registration-invoice.html");
+		String invoiceHTML = IOUtils.toString(inv);
+		byte[] invoicePDF = new HTMLToPDFConvertor().convert(doc, new String(
+				invoiceHTML));
+		return invoicePDF;
+	}
+
+	private Doc generateEmailValues(ApplicationFormHeader application,
+			InvoiceDto invoice) {
+		Map<String, Object> values = new HashMap<String, Object>();
+		values.put("companyName", application.getEmployer());
+		values.put("companyAddress", application.getAddress1() + " "
+				+ application.getPostCode() + " " + application.getResidence()
+				+ "," + application.getCountry());
+		values.put("quoteNo", invoice.getDocumentNo());
+		values.put("date", formatter.format(invoice.getDate()));
+		values.put("firstName", application.getOtherNames());
+		values.put("DocumentURL", settings.getApplicationPath());
+		// values.put("userRefId", user.getRefId());
+		values.put("email", application.getEmail());
+		Doc doc = new Doc(values);
+
+		Map<String, Object> line = new HashMap<String, Object>();
+		InvoiceLineDto lineDto = invoice.getLines().get(0);
+
+		line.put("description", lineDto.getDescription());
+		line.put("unitPrice", numberFormat.format(lineDto.getUnitPrice()));
+		line.put("amount", numberFormat.format(lineDto.getTotalAmount()));
+		values.put("totalAmount",
+				numberFormat.format(invoice.getInvoiceAmount()));
+		doc.addDetail(new DocumentLine("invoiceDetails", line));
+
+		return doc;
+
+	}
+
 	private InvoiceDto generateInvoice(ApplicationFormHeader application) {
 		ApplicationType type = application.getApplicationType();
 		ApplicationCategory category = applicationDao
@@ -251,16 +280,20 @@ public class ApplicationFormDaoHelper {
 		dto.setDocumentNo(documentNo);
 		dto.setAmount(category.getApplicationAmount());
 		dto.setCompanyName(application.getEmployer());
-		dto.setCompanyAddress(application.getContactAddress());
+		dto.setCompanyAddress(application.getAddress1() + "-"
+				+ application.getPostCode() + " " + application.getResidence()
+				+ "," + application.getCountry());
 		dto.setPhoneNumber(application.getContactTelephone());
 		dto.setContactName(application.getSurname() + " "
 				+ application.getOtherNames());
 		dto.setDate(new Date().getTime());
 
-		dto.addLine(new InvoiceLineDto(dto.getContactName() + ", " + "'"
-				+ category.getType().getDisplayName()
+		InvoiceLineDto invLine = new InvoiceLineDto(dto.getContactName() + ", "
+				+ "'" + category.getType().getDisplayName()
 				+ "' member registration fee", category.getApplicationAmount(),
-				category.getApplicationAmount()));
+				category.getApplicationAmount());
+		invLine.setQuantity(1);
+		dto.addLine(invLine);
 
 		dto = invoiceHelper.save(dto);
 
@@ -357,8 +390,8 @@ public class ApplicationFormDaoHelper {
 			subject = subject + " has Been Cancelled!";
 			action = "  has been cancelled because of the following reason:<br/>";
 		} else if (isBeingProcessed) {
-			subject = subject + " is now Awaiting Approval!";
-			action = " is now being processed and is awaiting approval from the recruitment committee.";
+			subject = subject + " is Being Processed!";
+			action = " is now being processed and is being processed and you will be notified by email.";
 		} else if (isApproved) {
 			subject = subject + " has been Approved!";
 			action = " has been approved, you can proceed to login into your ICPAK account.";
@@ -376,6 +409,11 @@ public class ApplicationFormDaoHelper {
 		String link = settings.getApplicationPath();
 		String additionLink = "<p><a href=" + link
 				+ ">Go to my Application</a>" + "</p>";
+
+		String noReplyMessage = "<p><Strong>Please DO NOT REPLY to this email. "
+				+ "In case of any queries, kindly get in touch with us via "
+				+ "memberservices@icpak.com" + "</Strong></p>";
+
 		String body = "Dear "
 				+ application.getSurname()
 				+ " "
@@ -386,13 +424,15 @@ public class ApplicationFormDaoHelper {
 				+ action
 				+ (application.getManagementComment() == null ? "" : " <br/>'"
 						+ application.getManagementComment() + "'")
-				+ additionLink + "</p>Thank you,<br/>Member Services";
-
+				+ additionLink + "</p>" + noReplyMessage
+				+ "<br/>Thank you,<br/>Member Services";
 		try {
-			EmailServiceHelper.sendEmail(body, subject, Arrays.asList(
-					application.getEmail(), "tomkim@wira.io"), Arrays.asList(
-					application.getSurname() + " "
-							+ application.getOtherNames(), "Tom Kimani"));
+			EmailServiceHelper
+					.sendEmail(body, subject, Arrays.asList(
+							application.getEmail(), "itsupport@icpak.com"),
+							Arrays.asList(application.getSurname() + " "
+									+ application.getOtherNames(),
+									"ICPAK ICT SUPPORT"));
 
 		} catch (Exception e) {
 			logger.info("Review Email for " + application.getEmail()

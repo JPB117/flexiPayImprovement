@@ -307,7 +307,7 @@ public class ProfileWidget extends Composite {
 				aSubmit.setStyleName("btn btn-fill btn-gold");
 				if (paymentStatus != PaymentStatus.PAID) {
 					aDownloadProforma.setStyleName("btn btn-fill btn-default");
-					// aPayLink.setStyleName("btn btn-fill btn-default");
+					aPayLink.setStyleName("btn btn-fill btn-default");
 				}
 				spnStatusDescription.removeClassName("hide");
 				spnStatusDescription
@@ -320,11 +320,11 @@ public class ProfileWidget extends Composite {
 					spnStatusDescription
 							.setInnerText("(Please pay your registration fee.)");
 					spnStatusDescription.addClassName("text-muted");
-					// aPayLink.setStyleName("btn btn-fill btn-gold");
+					aPayLink.setStyleName("btn btn-fill btn-gold");
 					aDownloadProforma.setStyleName("btn btn-fill btn-default");
 				} else {
 					spnStatusDescription
-							.setInnerText("(Your application is being processing, "
+							.setInnerText("(Your application is being processed, "
 									+ "you will be notified on email when the status changes.)");
 				}
 				// If Application is not in pending state -send email;
@@ -384,11 +384,12 @@ public class ProfileWidget extends Composite {
 						@Override
 						public void onClick(ClickEvent event) {
 							UploadContext ctx = new UploadContext("getreport");
-							ctx.setContext("invoiceRefId",
-									applicationForm.getInvoiceRef());
+							ctx.setContext("applicationRefId",
+									applicationForm.getRefId());
 							ctx.setAction(UPLOADACTION.GETPROFORMA);
 							// ctx.setContext(key, value)
-							Window.open(ctx.toUrl(), "Get Proforma", null);
+							Window.open(ctx.toUrl(),
+									"Get Registration Proforma", null);
 						}
 					});
 				}

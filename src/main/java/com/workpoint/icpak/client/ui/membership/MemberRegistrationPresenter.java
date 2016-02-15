@@ -6,7 +6,6 @@ import java.util.List;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.GwtEvent.Type;
@@ -32,7 +31,6 @@ import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.workpoint.icpak.client.place.NameTokens;
 import com.workpoint.icpak.client.service.AbstractAsyncCallback;
-import com.workpoint.icpak.client.service.ServiceCallback;
 import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.TextField;
 import com.workpoint.icpak.client.ui.error.ErrorPresenter;
@@ -191,9 +189,7 @@ public class MemberRegistrationPresenter
 						}
 					} else if (getView().getCounter() == 3) {
 						// Activating account
-						getView().getANext().setHref(
-								"#activateacc;uid="
-										+ applicationDetails.getUserRefId());
+						getView().getANext().setHref("#profile");
 					}
 
 					else {
@@ -287,6 +283,15 @@ public class MemberRegistrationPresenter
 			public void onSuccess(InvoiceDto invoice) {
 				MemberRegistrationPresenter.this.invoice = invoice;
 				getView().bindInvoice(invoice);
+
+				if (invoice.getDocumentNo() != null) {
+					paymentPresenter.bindTransaction(invoice);
+				}
+
+				if (applicationDetails.getRefId() != null) {
+					// paymentPresenter.setAttachmentUploadContext(
+					// applicationDetails.getRefId(), "application");
+				}
 			}
 		}).getInvoice(invoiceRef);
 
@@ -341,9 +346,7 @@ public class MemberRegistrationPresenter
 	@Override
 	public void prepareFromRequest(PlaceRequest request) {
 		super.prepareFromRequest(request);
-
 		applicationRefId = request.getParameter("applicationId", null);
-
 		// Countries
 		countriesResource.withCallback(
 				new AbstractAsyncCallback<List<Country>>() {
@@ -361,9 +364,11 @@ public class MemberRegistrationPresenter
 				}).getAll();
 
 		if (applicationRefId != null) {
-			getView().next();
-			getView().next();
-			getView().setCounter(2);
+			// getView().next();
+			// getView().next();
+			// getView().next();
+			// getView().next();
+			getView().setCounter(3);
 			loadApplication(applicationRefId);
 		}
 
@@ -377,13 +382,11 @@ public class MemberRegistrationPresenter
 	}
 
 	private void loadApplication(String applicationId) {
-
-		// getView
-		
 		applicationDelegate.withCallback(
 				new AbstractAsyncCallback<ApplicationFormHeaderDto>() {
 					@Override
 					public void onSuccess(ApplicationFormHeaderDto dto) {
+						applicationDetails = dto;
 						getView().bindForm(dto);
 						getInvoice(dto.getInvoiceRef());
 					}

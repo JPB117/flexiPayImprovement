@@ -248,6 +248,13 @@ public class TransactionDaoHelper {
 			String trxDate, String amount, Transaction trx)
 			throws UnsupportedEncodingException, MessagingException {
 
+		// Get the balance for this Booking/Application - What is remaining from
+		// this
+		// invoice?
+		Double paidAmt = Double.parseDouble(amount);
+		Double previousPayments = dao.getAllPayments(trx.getAccountNo()) == null ? 0.0
+				: dao.getAllPayments(trx.getAccountNo());
+
 		if (paymentType != null && paymentType instanceof Booking) {
 			Booking booking = (Booking) paymentType;
 			String smsMessage = "";
@@ -260,11 +267,6 @@ public class TransactionDaoHelper {
 				e.printStackTrace();
 			}
 
-			// Get the balance for this Booking - What is remaining from this
-			// invoice?
-			Double paidAmt = Double.parseDouble(amount);
-			Double previousPayments = dao.getAllPayments(trx.getAccountNo()) == null ? 0.0
-					: dao.getAllPayments(trx.getAccountNo());
 			Double balance = chargeAbleAmt - previousPayments;
 
 			logger.info("Chargable Amount>>>>" + balance);
@@ -294,7 +296,8 @@ public class TransactionDaoHelper {
 				Invoice invoiceSave = invoiceDao.findByRefId(
 						invoiceDto.getRefId(), Invoice.class);
 				invoiceSave.setStatus(PaymentStatus.PAID);
-				System.err.println("Invoice RefId>>" + invoiceSave.getRefId());
+				// System.err.println("Invoice RefId>>" +
+				// invoiceSave.getRefId());
 				invoiceDao.save(invoiceSave);
 
 				for (Delegate delegate : booking.getDelegates()) {
@@ -351,31 +354,83 @@ public class TransactionDaoHelper {
 				&& paymentType instanceof ApplicationFormHeader) {
 			ApplicationFormHeader application = (ApplicationFormHeader) paymentType;
 
-			String smsMessage = "Dear" + " " + application.getSurname() + ","
-					+ " Thank-you for payment for your member registration. "
-					+ "Your account payment status is now PAID.";
-			String finalPhoneNumber = phoneNumber.replace("254", "0");
-
-			if (phoneNumber != null) {
-				smsIntergration.send(finalPhoneNumber, smsMessage);
-				logger.error("sending sms to :" + finalPhoneNumber);
+			if (invoiceDto.getInvoiceAmount() == null) {
+				logger.info("Invoice amount is null");
+				return;
 			}
 
-			if (application.getTelephone1() != null) {
-				smsIntergration.send(application.getTelephone1(), smsMessage);
-				logger.error("sending sms to :" + finalPhoneNumber);
-			}
+			Double balance = invoiceDto.getInvoiceAmount() - previousPayments;
 
-			if (application.getEmail() != null) {
-				String subject = "PAYMENT CONFIRMATION FOR "
-						+ application.getSurname().toUpperCase()
-						+ " MEMBER SUBSCRIPTION ";
-				EmailServiceHelper.sendEmail(
-						smsMessage,
-						"RE: ICPAK '" + subject,
-						Arrays.asList(application.getEmail()),
-						Arrays.asList(application.getSurname() + " "
-								+ application.getOtherNames()));
+			String smsMessage = "";
+
+			if (balance > 0) {
+				logger.info("This invoice still has some balance:::"
+						+ trx.getAccountNo());
+				smsMessage = " Thank-you for your payment of "
+						+ numberFormat.format(paidAmt)
+						+ " for your membership registration fee."
+						+ ". To fully pay for your application, kindly pay balance of "
+						+ numberFormat.format(balance) + ".";
+
+				String finalPhoneNumber = phoneNumber.replace("254", "0");
+				if (phoneNumber != null) {
+					smsIntergration.send(finalPhoneNumber, smsMessage);
+					logger.error("sending sms to :" + finalPhoneNumber);
+				}
+
+				if (application.getEmail() != null) {
+					String subject = "PAYMENT CONFIRMATION FOR "
+							+ application.getSurname().toUpperCase()
+							+ " MEMBER SUBSCRIPTION ";
+					EmailServiceHelper.sendEmail(
+							smsMessage,
+							"RE: ICPAK '" + subject,
+							Arrays.asList(application.getEmail()),
+							Arrays.asList(application.getSurname() + " "
+									+ application.getOtherNames()));
+				}
+
+			} else {
+				application.setPaymentStatus(PaymentStatus.PAID);
+				invoiceDto.setStatus(PaymentStatus.PAID);
+				Invoice invoiceSave = invoiceDao.findByRefId(
+						invoiceDto.getRefId(), Invoice.class);
+				invoiceSave.setStatus(PaymentStatus.PAID);
+				// System.err.println("Invoice RefId>>" +
+				// invoiceSave.getRefId());
+				invoiceDao.save(invoiceSave);
+				applicationDao.save(application);
+
+				smsMessage = "Dear"
+						+ " "
+						+ application.getSurname()
+						+ ","
+						+ " Thank-you for payment for your member registration. "
+						+ "Your payment status is now PAID.";
+				String finalPhoneNumber = phoneNumber.replace("254", "0");
+
+				if (phoneNumber != null) {
+					smsIntergration.send(finalPhoneNumber, smsMessage);
+					logger.error("sending sms to :" + finalPhoneNumber);
+				}
+
+				if (application.getTelephone1() != null) {
+					smsIntergration.send(application.getTelephone1(),
+							smsMessage);
+					logger.error("sending sms to :" + finalPhoneNumber);
+				}
+
+				if (application.getEmail() != null) {
+					String subject = "PAYMENT CONFIRMATION FOR "
+							+ application.getSurname().toUpperCase()
+							+ " MEMBER SUBSCRIPTION ";
+					EmailServiceHelper.sendEmail(
+							smsMessage,
+							"RE: ICPAK '" + subject,
+							Arrays.asList(application.getEmail()),
+							Arrays.asList(application.getSurname() + " "
+									+ application.getOtherNames()));
+				}
 			}
 
 		} else {

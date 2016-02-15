@@ -17,6 +17,13 @@
 
 			<div class="row">
 				<div class="col-sm-12">
+					<Strong>Provide copies of all educational certificates which must
+						be certified as true copies of the originals by an advocate of the
+						High Court of Kenya OR present the originals and copies to ICPAK
+						for certification.
+					</Strong>
+				</div>
+				<div class="col-sm-12">
 					<d:TableView ui:field="tblEducationalDetail"
 						autoNumber="false">
 					</d:TableView>

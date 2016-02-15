@@ -55,7 +55,7 @@ public class IDAttachmentsExecutor extends FileExecutor {
 					attachment.setName(name);
 					attachment.setSize(size);
 					String fileName = getFilePath() + File.separator
-							+ IDUtils.generateId() + "-ID-" + name;
+							+ IDUtils.generateId() + "-ApplicationForm-" + name;
 					attachment.setFileName(fileName);
 					ApplicationFormHeader application = dao
 							.findByApplicationId(applicationRefId);

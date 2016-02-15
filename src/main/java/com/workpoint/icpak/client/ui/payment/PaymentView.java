@@ -70,4 +70,9 @@ public class PaymentView extends ViewImpl implements PaymentPresenter.MyView {
 		panelPayment.bindTransaction(invoice);
 	}
 
+	@Override
+	public void setAttachmentUploadContext(String applicationRefId, String type) {
+		panelPayment.setAttachmentUploadContext(applicationRefId, type);
+	}
+
 }

@@ -99,6 +99,8 @@ public class MemberRegistrationView extends ViewImpl implements
 	LIElement liTab3;
 	@UiField
 	LIElement liTab4;
+	@UiField
+	LIElement liTabPayment;
 
 	@UiField
 	SpanElement spnNonPracticingFee;
@@ -165,6 +167,7 @@ public class MemberRegistrationView extends ViewImpl implements
 		liElements.add(liTab2);
 		// liElements.add(liTab3);
 		liElements.add(liTab4);
+		liElements.add(liTabPayment);
 
 		aNonPractising.addClickHandler(selectHandler);
 		aOverseas.addClickHandler(selectHandler);
@@ -177,8 +180,11 @@ public class MemberRegistrationView extends ViewImpl implements
 		// .add(new PageElement(divProforma, "Proceed to Pay", liTab3));
 		pageElements.add(new PageElement(divPasswordConfiguration, null, null,
 				liTab4));
+		pageElements.add(new PageElement(divPayment, "Back To My Profile",
+				liTabPayment));
 
 		setActive(liElements.get(counter), pageElements.get(counter));
+
 		aBack.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -264,6 +270,13 @@ public class MemberRegistrationView extends ViewImpl implements
 		setButtons(page);
 		liElement.addClassName("active");
 		page.getElement().addClassName("active");
+
+		/*
+		 * Payment Li is initially hidden
+		 */
+		if (counter == 3) {
+			liElement.removeClassName("hide");
+		}
 	}
 
 	public ApplicationFormHeaderDto getApplicationForm() {
@@ -283,6 +296,7 @@ public class MemberRegistrationView extends ViewImpl implements
 		divPackage.removeClassName("active");
 		divPayment.removeClassName("active");
 		divCategories.removeClassName("active");
+		divPasswordConfiguration.removeClassName("active");
 		divProforma.removeClassName("active");
 	}
 
@@ -422,8 +436,10 @@ public class MemberRegistrationView extends ViewImpl implements
 
 	@Override
 	public void bindInvoice(InvoiceDto invoice) {
-		proformaInv.clearRows();
-		proformaInv.setInvoice(invoice);
+		// proformaInv.clearRows();
+		// proformaInv.setInvoice(invoice);
+		
+		
 	}
 
 	public Anchor getActivateAccLink() {

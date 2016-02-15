@@ -211,7 +211,8 @@ public class AppContext {
 	}
 
 	public static boolean isCurrentBasicMember() {
-		return (user == null ? false : user.getUser().isBasicMember());
+		return (user == null ? false
+				: (user.getUser().isBasicMember() || hasNoGroup()));
 	}
 
 	public static boolean isCurrentUserEventEdit() {
@@ -267,6 +268,11 @@ public class AppContext {
 
 	public static boolean isCurrentUserFinanceRead() {
 		return (user == null ? false : user.getUser().isFinanceRead());
+	}
+
+	public static boolean hasNoGroup() {
+		return (user == null ? false
+				: (user.getUser().getGroups().isEmpty() ? true : false));
 	}
 
 	/* Super Administrator */

@@ -37,6 +37,7 @@ import com.icpak.rest.dao.CPDDao;
 import com.icpak.rest.dao.InvoiceDaoHelper;
 import com.icpak.rest.dao.MemberDao;
 import com.icpak.rest.dao.UsersDao;
+import com.icpak.rest.dao.helper.ApplicationFormDaoHelper;
 import com.icpak.rest.dao.helper.BookingsDaoHelper;
 import com.icpak.rest.dao.helper.CPDDaoHelper;
 import com.icpak.rest.dao.helper.EventsDaoHelper;
@@ -44,6 +45,7 @@ import com.icpak.rest.dao.helper.StatementDaoHelper;
 import com.icpak.rest.dao.helper.UsersDaoHelper;
 import com.icpak.rest.models.auth.User;
 import com.icpak.rest.models.cpd.CPD;
+import com.icpak.rest.models.membership.ApplicationFormHeader;
 import com.icpak.rest.models.membership.GoodStandingCertificate;
 import com.icpak.rest.models.membership.Member;
 import com.icpak.rest.models.util.Attachment;
@@ -53,6 +55,7 @@ import com.icpak.rest.utils.DocumentLine;
 import com.icpak.rest.utils.HTMLToPDFConvertor;
 import com.itextpdf.text.DocumentException;
 import com.workpoint.icpak.server.util.DateUtils;
+import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.shared.model.CPDStatus;
 import com.workpoint.icpak.shared.model.InvoiceDto;
@@ -90,6 +93,9 @@ public class GetReport extends HttpServlet {
 	CPDDao CPDDao;
 	@Inject
 	BookingsDaoHelper bookingsDaoHelper;
+	@Inject
+	ApplicationFormDaoHelper applicationDaoHelper;
+
 	@Inject
 	InvoiceDaoHelper invoiceDaoHelper;
 	@Inject
@@ -182,9 +188,10 @@ public class GetReport extends HttpServlet {
 			IOException, SAXException, ParserConfigurationException,
 			FactoryConfigurationError, DocumentException {
 		String bookingRefId = null;
+		String applicationRefId = null;
 		String invoiceRefId = null;
 		if (req.getParameter("bookingRefId") != null) {
-		
+
 			bookingRefId = req.getParameter("bookingRefId");
 			BookingDto booking = bookingsDaoHelper.getBookingById(null,
 					bookingRefId);
@@ -194,7 +201,17 @@ public class GetReport extends HttpServlet {
 			processAttachmentRequest(resp, invoicePdf, booking.getContact()
 					.getContactName() + ".pdf");
 		}
-		
+
+		if (req.getParameter("applicationRefId") != null) {
+			applicationRefId = req.getParameter("applicationRefId");
+			ApplicationFormHeader application = applicationDaoHelper
+					.getApplicationById(applicationRefId);
+			
+			InvoiceDto invoice = invoiceDaoHelper.getInvoice(application.getInvoiceRef());
+			byte[] invoicePdf = applicationDaoHelper.generateInvoicePDF(application,invoice);
+
+			processAttachmentRequest(resp, invoicePdf, application.getSurname()+" "+application.getOtherNames() + ".pdf");
+		}
 
 		if (req.getParameter("invoiceRefId") != null) {
 			invoiceRefId = req.getParameter("invoiceRefId");

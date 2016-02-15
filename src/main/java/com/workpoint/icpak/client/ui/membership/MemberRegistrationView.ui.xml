@@ -43,28 +43,34 @@
 								</div>
 
 								<ul class="nav nav-pills">
-									<li class="active" style="width: 33.33%;" ui:field="liTab1">
+									<li class="active" style="width: 25%;" ui:field="liTab1">
 										<a>
 											<span class="fa fa-check-circle hide"></span>
 											1 - Personal Information
 										</a>
 									</li>
-									<li style="width: 33.33%;" ui:field="liTab2">
+									<li style="width: 25%;" ui:field="liTab2">
 										<a>
 											<span class="fa fa-check-circle hide"></span>
 											2 - Membership Category
 										</a>
 									</li>
-									<li style="width:33.33%;" ui:field="liTab3" class="hide">
+									<li style="width:25%;" ui:field="liTab3" class="hide">
 										<a>
 											<span class="fa fa-check-circle hide"></span>
 											4 - Attatchments
 										</a>
 									</li>
-									<li style="width:33.33%;" ui:field="liTab4">
+									<li style="width:25%;" ui:field="liTab4">
 										<a>
 											<span class="fa fa-check-circle hide"></span>
 											3 - Set Password
+										</a>
+									</li>
+									<li style="width:25%;" ui:field="liTabPayment">
+										<a>
+											<span class="fa fa-check-circle hide"></span>
+											4 - Make-Payment
 										</a>
 									</li>
 								</ul>
@@ -98,7 +104,8 @@
 													registration fee.
 													<p>
 														Click on
-														 the button below to set a password for your account.
+														the button below to set a password for your
+														account.
 													</p>
 												</span>
 												<br />
