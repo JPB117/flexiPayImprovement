@@ -54,6 +54,7 @@ public class MembersTable extends Composite {
 	public void createHeader() {
 		List<TableHeader> th = new ArrayList<TableHeader>();
 		th.add(new TableHeader("Registration Date"));
+		th.add(new TableHeader("Submitted Date"));
 		th.add(new TableHeader("Applicant Name"));
 		th.add(new TableHeader("Email"));
 		th.add(new TableHeader("Payment Status"));

@@ -73,20 +73,18 @@ public class BaseDao {
 
 		return value;
 	}
-	
-	public void executeUpdate(Query query){
-		
-	}
 
 	@SuppressWarnings("unchecked")
-	public <T> List<T> getResultList(Query query, Integer offSet, Integer limit) throws RuntimeException {
+	public <T> List<T> getResultList(Query query, Integer offSet, Integer limit)
+			throws RuntimeException {
 		List<T> values = null;
 
 		try {
 			if (limit == null || offSet == null) {
 				values = query.getResultList();
 			} else {
-				values = query.setFirstResult(offSet).setMaxResults(limit).getResultList();
+				values = query.setFirstResult(offSet).setMaxResults(limit)
+						.getResultList();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -98,9 +96,9 @@ public class BaseDao {
 	@SuppressWarnings("unchecked")
 	public <T> List<T> getResultList(Query query) throws RuntimeException {
 		List<T> values = null;
-		try{
+		try {
 			values = query.getResultList();
-		}catch (Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return values;
@@ -110,28 +108,36 @@ public class BaseDao {
 		return getEntityManager().find(clazz, id);
 	}
 
-	public <T> T findByRef(Class<?> clazz, String refId, boolean throwExceptionIfNull) throws RuntimeException {
-		T po = getSingleResultOrNull(getEntityManager()
-				.createQuery("from " + clazz.getName() + " u where u.refId=:refId").setParameter("refId", refId));
+	public <T> T findByRef(Class<?> clazz, String refId,
+			boolean throwExceptionIfNull) throws RuntimeException {
+		T po = getSingleResultOrNull(getEntityManager().createQuery(
+				"from " + clazz.getName() + " u where u.refId=:refId")
+				.setParameter("refId", refId));
 
 		if (po == null && throwExceptionIfNull) {
-			throw new ServiceException(ErrorCodes.NOTFOUND, clazz.getName(), "'" + refId + "'");
+			throw new ServiceException(ErrorCodes.NOTFOUND, clazz.getName(),
+					"'" + refId + "'");
 		}
 
 		return po;
 	}
 
-	public <T> T findByRefId(String refId, Class<?> clazz) throws RuntimeException {
+	public <T> T findByRefId(String refId, Class<?> clazz)
+			throws RuntimeException {
 		return findByRefId(refId, clazz, true);
 	}
 
-	public <T> T findByRefId(String refId, Class<?> clazz, boolean throwExceptionIfNull) throws RuntimeException {
-		return findByRefId(refId, clazz, new HashMap<String, Object>(), throwExceptionIfNull);
+	public <T> T findByRefId(String refId, Class<?> clazz,
+			boolean throwExceptionIfNull) throws RuntimeException {
+		return findByRefId(refId, clazz, new HashMap<String, Object>(),
+				throwExceptionIfNull);
 	}
 
-	public <T> T findByRefId(String refId, Class<?> clazz, Map<String, Object> params, boolean throwExceptionIfNull) {
+	public <T> T findByRefId(String refId, Class<?> clazz,
+			Map<String, Object> params, boolean throwExceptionIfNull) {
 
-		StringBuffer buff = new StringBuffer("from " + clazz.getName() + " c where c.refId=:refId");
+		StringBuffer buff = new StringBuffer("from " + clazz.getName()
+				+ " c where c.refId=:refId");
 
 		// Variables
 		if (params != null) {
@@ -139,7 +145,8 @@ public class BaseDao {
 				buff.append(" and " + key + "=:" + key);
 			}
 		}
-		Query query = getEntityManager().createQuery(buff.toString()).setParameter("refId", refId);
+		Query query = getEntityManager().createQuery(buff.toString())
+				.setParameter("refId", refId);
 		// Params
 		if (params != null) {
 			for (String key : params.keySet()) {
@@ -149,7 +156,8 @@ public class BaseDao {
 
 		T rtn = getSingleResultOrNull(query);
 		if (rtn == null && throwExceptionIfNull) {
-			throw new ServiceException(ErrorCodes.NOTFOUND, clazz.getName(), "'" + refId + "'");
+			throw new ServiceException(ErrorCodes.NOTFOUND, clazz.getName(),
+					"'" + refId + "'");
 		}
 
 		return rtn;

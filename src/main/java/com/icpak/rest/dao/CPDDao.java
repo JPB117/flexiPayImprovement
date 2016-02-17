@@ -20,6 +20,7 @@ import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import com.icpak.rest.exceptions.ServiceException;
 import com.icpak.rest.models.ErrorCodes;
+import com.icpak.rest.models.auth.User;
 import com.icpak.rest.models.cpd.CPD;
 import com.icpak.rest.models.membership.Member;
 import com.icpak.rest.models.util.Attachment;
@@ -473,7 +474,7 @@ public class CPDDao extends BaseDao {
 			sql.append(" memberRefId=:memberRefId");
 		}
 
-		sql.append(" order by created desc");
+		sql.append(" order by startDate desc");
 		logger.debug("jpql= " + sql);
 		Query query = getEntityManager().createQuery(sql.toString());
 		for (String key : params.keySet()) {
@@ -766,5 +767,37 @@ public class CPDDao extends BaseDao {
 
 	private String getFilePath() {
 		return settings.getProperty("upload_path");
+	}
+
+	public void updateSummary(User user) {
+		if (user.getMemberNo() != null && !user.getMemberNo().isEmpty()
+				&& !user.getFullName().isEmpty()) {
+			logger.info("Updating cpd for " + user.getFullName() + " m/No:"
+					+ user.getMemberNo());
+			Query query = getEntityManager().createNativeQuery(
+					"CALL proc_updatecpdsummary(:memberNo,'2011-01-01')")
+					.setParameter("memberNo", user.getMemberNo());
+			query.executeUpdate();
+
+			Query query2 = getEntityManager().createNativeQuery(
+					"CALL proc_updatecpdsummary(:memberNo,'2012-01-01')")
+					.setParameter("memberNo", user.getMemberNo());
+			query2.executeUpdate();
+
+			Query query3 = getEntityManager().createNativeQuery(
+					"CALL proc_updatecpdsummary(:memberNo,'2013-01-01')")
+					.setParameter("memberNo", user.getMemberNo());
+			query3.executeUpdate();
+
+			Query query4 = getEntityManager().createNativeQuery(
+					"CALL proc_updatecpdsummary(:memberNo,'2014-01-01')")
+					.setParameter("memberNo", user.getMemberNo());
+			query4.executeUpdate();
+
+			Query query5 = getEntityManager().createNativeQuery(
+					"CALL proc_updatecpdsummary(:memberNo,'2015-01-01')")
+					.setParameter("memberNo", user.getMemberNo());
+			query5.executeUpdate();
+		}
 	}
 }

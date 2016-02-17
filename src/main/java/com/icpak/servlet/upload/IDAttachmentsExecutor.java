@@ -3,6 +3,7 @@ package com.icpak.servlet.upload;
 import gwtupload.server.exceptions.UploadActionException;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.io.IOUtils;
 
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
@@ -55,13 +57,15 @@ public class IDAttachmentsExecutor extends FileExecutor {
 					attachment.setName(name);
 					attachment.setSize(size);
 					String fileName = getFilePath() + File.separator
-							+ IDUtils.generateId() + "-ApplicationForm-" + name;
+							+ IDUtils.generateId() + "-ID-" + name;
 					attachment.setFileName(fileName);
 					ApplicationFormHeader application = dao
 							.findByApplicationId(applicationRefId);
 					assert application != null;
 					attachment.setApplication(application);
 					attachmentsDao.save(attachment);
+					IOUtils.write(item.get(), new FileOutputStream(new File(
+							fileName)));
 					registerFile(request, fieldName, attachment.getId());
 				} catch (Exception e) {
 					e.printStackTrace();

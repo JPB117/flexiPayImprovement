@@ -5,13 +5,17 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Query;
+
 import org.apache.log4j.Logger;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.inject.Inject;
 import com.icpak.rest.dao.CPDDao;
+import com.icpak.rest.dao.UsersDao;
 import com.icpak.rest.dao.helper.CPDDaoHelper;
+import com.icpak.rest.models.auth.User;
 import com.icpak.rest.models.cpd.CPD;
 import com.icpak.servlet.upload.GetReport;
 import com.workpoint.icpak.shared.model.CPDCategory;
@@ -26,6 +30,9 @@ public class TestCPDDao extends AbstractDaoTest {
 	CPDDaoHelper helper;
 	@Inject
 	CPDDao cpdDao;
+	@Inject
+	UsersDao usersDao;
+
 	@Inject
 	GetReport reporter;
 
@@ -48,7 +55,7 @@ public class TestCPDDao extends AbstractDaoTest {
 		helper.update("3pzAyw110E2i5VTE", "NgmZcYUU0mu7JEyr", dto);
 	}
 
-	@Test
+	// @Test
 	public void testCreateCPD() {
 		CPDDto dto = new CPDDto();
 		dto.setCategory(CPDCategory.CATEGORY_A);
@@ -58,6 +65,14 @@ public class TestCPDDao extends AbstractDaoTest {
 		dto.setTitle("FUTURE");
 		dto.setOrganizer("DAKNDFKANDKFA");
 		helper.create("QpkHIcVizijvuVTH", dto);
+	}
+
+	@Test
+	public void updateAllSummaries() {
+		List<User> users = usersDao.getAllUsers(0, 10, null, "");
+		for (User user : users) {
+			cpdDao.updateSummary(user);
+		}
 	}
 
 	@Ignore

@@ -30,6 +30,8 @@ public class MembersTableRow extends RowWidget {
 	@UiField
 	HTMLPanel divDate;
 	@UiField
+	HTMLPanel divSubmissionDate;
+	@UiField
 	HTMLPanel divMemberName;
 	@UiField
 	Element spnApplicationStatus;
@@ -58,15 +60,17 @@ public class MembersTableRow extends RowWidget {
 				.getApplicationDate()
 				: application.getDate() != null ? application.getDate()
 						: application.getCreated();
+		String submissionDate = application.getDateSubmitted() != null ? DateUtils.READABLETIMESTAMP
+				.format(application.getDateSubmitted()) : "N/A";
 
 		divDate.add(new InlineLabel(DateUtils.READABLETIMESTAMP.format(regDate)));
+		divSubmissionDate.add(new InlineLabel(submissionDate));
 		aMemberName.setText(application.fullNames());
 		divEmail.add(new InlineLabel(application.getEmail()));
 
 		if (application.getApplicationStatus() != null
 				&& !application.getApplicationStatus().getDisplayName()
 						.isEmpty()) {
-			
 			spnApplicationStatus.setInnerText(application
 					.getApplicationStatus() + "");
 			if (application.getApplicationStatus() == ApplicationStatus.APPROVED) {

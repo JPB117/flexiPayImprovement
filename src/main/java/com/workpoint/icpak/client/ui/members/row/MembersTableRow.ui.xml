@@ -5,6 +5,8 @@
 	<g:HTMLPanel styleName="tr" ui:field="row">
 		<g:HTMLPanel styleName="td" ui:field="divDate">
 		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td" ui:field="divSubmissionDate">
+		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divMemberName">
 			<d:ActionLink ui:field="aMemberName"></d:ActionLink>
 		</g:HTMLPanel>

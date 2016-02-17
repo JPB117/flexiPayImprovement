@@ -84,7 +84,7 @@ public class ApplicationFormDao extends BaseDao {
 
 		Map<String, Object> params = appendParameters(sql, applicationStatus,
 				paymentStatus, searchTerm);
-		sql.append(" order by a.created desc");
+		sql.append(" order by a.submissionDate desc");
 		Query query = getEntityManager().createNativeQuery(sql.toString());
 		for (String key : params.keySet()) {
 			query.setParameter(key, params.get(key));

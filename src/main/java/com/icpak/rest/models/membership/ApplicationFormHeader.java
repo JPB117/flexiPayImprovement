@@ -326,14 +326,19 @@ public class ApplicationFormHeader extends PO {
 		setSentenceImposed(dto.getSentence());
 
 		// Application Status
-		setApplicationStatus(dto.getApplicationStatus());
-		setPaymentStatus(dto.getPaymentStatus());
-		setErpCode(dto.getErpCode());
+		// System.err
+		// .println(applicationStatus + " " + dto.getApplicationStatus());
 
 		if ((applicationStatus == ApplicationStatus.PENDING)
 				&& (dto.getApplicationStatus() == ApplicationStatus.SUBMITTED)) {
+			// System.err.println("Submission date changed!");
 			setSubmissionDate(new Date());
 		}
+		setApplicationStatus(dto.getApplicationStatus());
+
+		setPaymentStatus(dto.getPaymentStatus());
+		setErpCode(dto.getErpCode());
+
 	}
 
 	public void copyInto(ApplicationFormHeaderDto dto) {

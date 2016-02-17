@@ -712,7 +712,6 @@ public class GetReport extends HttpServlet {
 
 	// generate member cpd statement pdf
 	SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-
 	public byte[] processMemberCPDStatementRequest(String memberNo,
 			String memberRefId, Date startDate, Date endDate,
 			HttpServletResponse resp) throws FileNotFoundException,
@@ -738,7 +737,7 @@ public class GetReport extends HttpServlet {
 		// endDate, 0, 1000);
 		List<CPD> cpds = CPDDao.getAllCPDS(member.getRefId(),
 				startDate == null ? null : startDate, endDate == null ? null
-						: endDate, 0, 1000);
+						: endDate, 0, 10000);
 		List<CPD> sortedCpd = new ArrayList<>();
 		for (CPD cpd : cpds) {
 			if (cpd.getStatus() != null) {

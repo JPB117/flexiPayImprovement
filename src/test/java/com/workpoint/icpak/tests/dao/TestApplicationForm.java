@@ -84,7 +84,7 @@ public class TestApplicationForm extends AbstractDaoTest {
 		}
 	}
 
-	 @Test
+	@Test
 	public void testERPIntergration() {
 		String applicationNo = "C/18881";
 		ApplicationFormHeaderDto application = helper.getApplicationById(
@@ -142,12 +142,12 @@ public class TestApplicationForm extends AbstractDaoTest {
 		// }
 	}
 
-	// @Test
+	@Test
 	public void testUpdatingOfCPDDto() {
 		ApplicationFormHeaderDto dto = applicationDao.findByApplicationId(
-				"4MgvVkX0Sgr4uwIZ", true).toDto();
-		dto.setErpCode("C/18878595");
-		dto.setApplicationStatus(ApplicationStatus.PROCESSING);
+				"AQSSHoAkdY6VMNLv", true).toDto();
+		// dto.setErpCode("C/18878595");
+		dto.setApplicationStatus(ApplicationStatus.SUBMITTED);
 		// dto.setManagementComment("Please attach your profile photo");
 		System.err.println("Submission Date::" + dto.getDateSubmitted());
 
