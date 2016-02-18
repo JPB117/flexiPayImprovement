@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
@@ -57,6 +58,7 @@ import com.icpak.rest.utils.DocumentLine;
 import com.icpak.rest.utils.EmailServiceHelper;
 import com.icpak.rest.utils.HTMLToPDFConvertor;
 import com.itextpdf.text.DocumentException;
+import com.workpoint.icpak.server.util.DateUtils;
 import com.workpoint.icpak.shared.model.ApplicationCategoryDto;
 import com.workpoint.icpak.shared.model.ApplicationERPDto;
 import com.workpoint.icpak.shared.model.ApplicationFormAccountancyDto;
@@ -305,7 +307,6 @@ public class ApplicationFormDaoHelper {
 		ApplicationFormHeader po = applicationDao.findByApplicationId(
 				applicationId, true);
 		User user = applicationDao.findByRefId(po.getUserRefId(), User.class);
-
 		updateUserFromApplicationFormChanges(po, user);
 		// Fields only generated once
 		dto.setUserId(po.getUserRefId());
@@ -321,10 +322,12 @@ public class ApplicationFormDaoHelper {
 					+ isApplicationReadyForEmail);
 			logger.info("Is the Application ready for ERP::"
 					+ isApplicationReadyForErp);
+
 			// Send Review notification
 			if (isApplicationReadyForEmail && !isApplicationReadyForErp) {
 				sendReviewEmail(dto);
 			}
+
 		}
 
 		// Post To ERP
@@ -333,7 +336,6 @@ public class ApplicationFormDaoHelper {
 			try {
 				String successMessage = postApplicationToERP(dto.getErpCode(),
 						prepareErpDto(dto));
-
 				if (successMessage.equals("success")) {
 					sendReviewEmail(dto);
 					logger.warn("This application was synced and email has been sent to applicant..");
@@ -368,6 +370,9 @@ public class ApplicationFormDaoHelper {
 		return userToBeUpdated;
 	}
 
+	SimpleDateFormat formatter2 = new SimpleDateFormat("dd/MM/yyyy");
+	private Properties props = new Properties();
+
 	private void sendReviewEmail(ApplicationFormHeaderDto application) {
 		logger.info("------Sending review email for "
 				+ application.getSurname());
@@ -390,8 +395,27 @@ public class ApplicationFormDaoHelper {
 			subject = subject + " has Been Cancelled!";
 			action = "  has been cancelled because of the following reason:<br/>";
 		} else if (isBeingProcessed) {
-			subject = subject + " is Being Processed!";
-			action = " is now being processed and is being processed and you will be notified by email.";
+			try {
+				props.load(ApplicationFormDaoHelper.class.getClassLoader()
+						.getResourceAsStream("bootstrap.properties"));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			Object nextRQAString = props.get("next_rqa_meeting");
+			try {
+				Date nextRQA = formatter2.parse(nextRQAString.toString());
+				subject = subject + " is Being Processed!";
+				action = " is now being processed and is being processed. Please note that the next RQA meeting is on "
+						+ DateUtils.format(nextRQA, formatter);
+
+				System.err.println(action);
+
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
 		} else if (isApproved) {
 			subject = subject + " has been Approved!";
 			action = " has been approved, you can proceed to login into your ICPAK account.";

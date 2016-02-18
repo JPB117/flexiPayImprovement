@@ -79,7 +79,8 @@ public class ApplicationFormDao extends BaseDao {
 					+ " and payment status >>>" + paymentStatus);
 		}
 		StringBuffer sql = new StringBuffer(
-				"select a.refId,a.created,a.Surname,a.`Other Names`,a.`E-mail`,a.applicationStatus,a.paymentStatus "
+				"select a.refId,a.created,a.Surname,a.`Other Names`,a.`E-mail`,"
+						+ "a.applicationStatus,a.paymentStatus,a.submissionDate "
 						+ "from `Application Form Header` a ");
 
 		Map<String, Object> params = appendParameters(sql, applicationStatus,
@@ -120,6 +121,9 @@ public class ApplicationFormDao extends BaseDao {
 			if (paymentStatusDb != null) {
 				app.setPaymentStatus(PaymentStatus.valueOf(paymentStatusDb));
 			}
+			Date submissionDate = (value = row[i++]) == null ? null
+					: (Date) value;
+			app.setDateSubmitted(submissionDate);
 			applications.add(app);
 		}
 		return applications;

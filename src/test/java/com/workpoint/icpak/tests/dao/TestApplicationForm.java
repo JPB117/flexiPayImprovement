@@ -146,8 +146,8 @@ public class TestApplicationForm extends AbstractDaoTest {
 	public void testUpdatingOfCPDDto() {
 		ApplicationFormHeaderDto dto = applicationDao.findByApplicationId(
 				"AQSSHoAkdY6VMNLv", true).toDto();
-		// dto.setErpCode("C/18878595");
-		dto.setApplicationStatus(ApplicationStatus.SUBMITTED);
+		 dto.setErpCode("C/18878595");
+		dto.setApplicationStatus(ApplicationStatus.PROCESSING);
 		// dto.setManagementComment("Please attach your profile photo");
 		System.err.println("Submission Date::" + dto.getDateSubmitted());
 

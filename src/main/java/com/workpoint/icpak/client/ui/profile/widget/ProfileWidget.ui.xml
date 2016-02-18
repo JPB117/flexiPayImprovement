@@ -46,7 +46,8 @@
 						<g:HTMLPanel ui:field="panelBreadcrumb">
 							<ol class="breadcrumb">
 								<li>
-									<a href="#members" ui:field="aBackToApplications" class="btn btn-fill btn-primary">
+									<a ui:field="aBackToApplications" class="btn btn-fill btn-primary"
+										onClick="window.history.back()">
 										<i class="fa fa-angle-double-left"></i>
 										Applications
 									</a>
