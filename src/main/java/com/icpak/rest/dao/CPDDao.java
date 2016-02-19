@@ -61,7 +61,7 @@ public class CPDDao extends BaseDao {
 		StringBuffer sql = new StringBuffer(
 				"select c.id,c.created,c.refId as cpdRefId,"
 						+ "c.title,c.status,c.memberRegistrationNo,c.memberRefId, "
-						+ "u.fullName,c.startDate,c.endDate,c.cpdHours "
+						+ "u.fullName,c.startDate,c.endDate,c.cpdHours,c.organizer "
 						+ "from cpd c "
 						+ "inner join member m on (c.memberRefId=m.refId) "
 						+ "inner join user u on (u.id=m.userId) ");
@@ -107,6 +107,8 @@ public class CPDDao extends BaseDao {
 			Date dbEndDate = (value = row[i++]) == null ? null : (Date) value;
 			Double cpdHours = (value = row[i++]) == null ? null
 					: (Double) value;
+			String organizer = (value = row[i++]) == null ? null : value
+					.toString();
 			CPDDto cpd = new CPDDto();
 			cpd.setId(id);
 			cpd.setRefId(refId);
@@ -119,6 +121,7 @@ public class CPDDao extends BaseDao {
 			cpd.setStartDate(dbStartDate);
 			cpd.setEndDate(dbEndDate);
 			cpd.setCpdHours(cpdHours);
+			cpd.setOrganizer(organizer);
 			cpds.add(cpd);
 		}
 		return cpds;

@@ -127,6 +127,7 @@ public class ApplicationFormDao extends BaseDao {
 			applications.add(app);
 		}
 		return applications;
+
 	}
 
 	private Map<String, Object> appendParameters(StringBuffer sql,
@@ -138,6 +139,8 @@ public class ApplicationFormDao extends BaseDao {
 			if (isFirstParam) {
 				isFirstParam = false;
 				sql.append(" where");
+			} else {
+				sql.append(" and");
 			}
 			params.put("applicationStatus", applicationStatus);
 			sql.append(" applicationStatus=:applicationStatus");
@@ -166,13 +169,21 @@ public class ApplicationFormDao extends BaseDao {
 					+ "concat(surName,' ',`other Names`) like :searchTerm)");
 			params.put("searchTerm", "%" + searchTerm + "%");
 		}
+
+		if (isFirstParam) {
+			isFirstParam = false;
+			sql.append(" where");
+		} else {
+			sql.append(" and");
+		}
+		sql.append(" a.applicationStatus <> :status");
+		params.put("status", ApplicationStatus.APPROVED.getName());
 		return params;
 	}
 
 	public List<MemberImport> importMembers(Integer offSet, Integer limit) {
-		return getResultList(
-				getEntityManager().createQuery("select u from MemberImport u"),
-				offSet, limit);
+		return getResultList(getEntityManager()
+				.createQuery("from MemberImport"), offSet, limit);
 	}
 
 	public void updateApplication(ApplicationFormHeader application) {

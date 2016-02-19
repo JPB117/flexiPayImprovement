@@ -54,6 +54,7 @@ import com.workpoint.icpak.shared.model.ApplicationFormSpecializationDto;
 import com.workpoint.icpak.shared.model.ApplicationFormTrainingDto;
 import com.workpoint.icpak.shared.model.Country;
 import com.workpoint.icpak.shared.model.MemberStanding;
+import com.workpoint.icpak.shared.model.MembershipStatus;
 import com.workpoint.icpak.shared.model.PaymentStatus;
 import com.workpoint.icpak.shared.model.auth.ApplicationStatus;
 
@@ -80,12 +81,21 @@ public class ProfileWidget extends Composite {
 
 	@UiField
 	HTMLPanel divProfileContent;
+
+	@UiField
+	HTMLPanel panelProfileError;
+	@UiField
+	HTMLPanel profileViewMode;
+
 	@UiField
 	HTMLPanel panelProfile;
 	@UiField
 	HTMLPanel PanelProfileDisplay;
 	@UiField
 	HTMLPanel panelApplicationType;
+	@UiField
+	DivElement panelTabs;
+
 	@UiField
 	HTMLPanel divEditDropDown;
 	@UiField
@@ -202,10 +212,6 @@ public class ProfileWidget extends Composite {
 		accountancyDetail = new AccountancyDetails();
 		setEditMode(true);
 		setChangeProfilePicture(false);
-		// aCheckStandingStatus.setVisible(true);
-		// aDownloadCert.setVisible(false);
-		// divAccountStatus.setClassName("hide");
-		// spnHelpIcon.setClassName("hide");
 
 		divTabs.setHeaders(Arrays.asList(new TabHeader("Basic Information",
 				true, "basic_details"), new TabHeader("Education Background",
@@ -292,7 +298,8 @@ public class ProfileWidget extends Composite {
 		if (isCurrentUserMember) {
 			divGoodStanding.removeClassName("hide");
 			divGoodStandingActions.removeClassName("hide");
-			aCheckStandingStatus.removeStyleName("hide");
+			divMemberShipStatus.removeClassName("hide");
+			divStandingStatus.removeClassName("hide");
 			divMemberShipStatus.removeClassName("hide");
 
 		} else if (isCurrentUserBasicMember) {
@@ -432,6 +439,7 @@ public class ProfileWidget extends Composite {
 		divMemberShipStatus.addClassName("hide");
 		spnStatusDescription.addClassName("hide");
 		aMgmtActions.addStyleName("hide");
+		divMemberShipStatus.addClassName("hide");
 	}
 
 	public void bindPaymentStatus() {
@@ -503,9 +511,14 @@ public class ProfileWidget extends Composite {
 		ctx.setAction(UPLOADACTION.UPLOADUSERIMAGE);
 		uploader.setContext(ctx);
 
-		spnMembershipStatus.addClassName("hide");
-		if (user.getUser().getStatus() != null) {
-			// spnMembershipStatus.setInnerText(user.getUser().get.name());
+		if (user.getUser().getMembershipStatus() != null) {
+			spnMembershipStatus.setInnerText(user.getUser()
+					.getMembershipStatus().name());
+			if (user.getUser().getMembershipStatus() == MembershipStatus.ACTIVE) {
+				spnMembershipStatus.setClassName("label label-success");
+			} else {
+				spnMembershipStatus.setClassName("label label-danger");
+			}
 		}
 		setUserImage(user.getUser().getRefId());
 	}
@@ -516,15 +529,16 @@ public class ProfileWidget extends Composite {
 	}
 
 	public void setApplicationId(String applicationRefId) {
-		// if (applicationRefId == null) {
-		// aPayNow.removeStyleName("btn-success");
-		// aPayNow.addStyleName("btn-warning");
-		// aPayNow.setText("No Application Found");
-		// } else {
-		// aPayNow.removeStyleName("btn-warning");
-		// aPayNow.setText("Pay Now");
-		// aPayNow.setHref("#signup;applicationId=" + applicationRefId);
-		// }
+		hideAllDisplays();
+		if (applicationRefId == null) {
+			profileViewMode.addStyleName("hide");
+			panelProfileError.removeStyleName("hide");
+			panelTabs.addClassName("hide");
+		} else {
+			profileViewMode.removeStyleName("hide");
+			panelProfileError.addStyleName("hide");
+			panelTabs.removeClassName("hide");
+		}
 	}
 
 	public void clear() {
@@ -601,15 +615,7 @@ public class ProfileWidget extends Composite {
 	}
 
 	public void bindMemberStanding(MemberStanding standing) {
-		if (standing.getMembershipStatus() != null) {
-			spnMembershipStatus.setInnerText(standing.getMembershipStatus()
-					.getDisplayName());
-		} else {
-			return;
-		}
-
 		showGoodStandingPanel(true);
-
 		if (standing.getStanding() == 0) {
 			String info = "<ul>";
 			for (String reason : standing.getReasons()) {
@@ -770,11 +776,9 @@ public class ProfileWidget extends Composite {
 		if (show) {
 			divStandingStatus.removeClassName("hide");
 			aDownloadCert.removeStyleName("hide");
-			aCheckStandingStatus.addStyleName("hide");
 		} else {
 			divStandingStatus.addClassName("hide");
 			aDownloadCert.addStyleName("hide");
-			aCheckStandingStatus.removeStyleName("hide");
 		}
 	}
 

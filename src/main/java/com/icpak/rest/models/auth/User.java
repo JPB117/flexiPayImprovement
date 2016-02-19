@@ -114,7 +114,6 @@ public class User extends PO {
 	private String lmsResponse;
 	@Column(columnDefinition = "TEXT")
 	private String lmsPayLoad;
-
 	@Enumerated(EnumType.STRING)
 	private AccountStatus status = AccountStatus.NEWACC;
 
@@ -202,9 +201,6 @@ public class User extends PO {
 		bio.setFirstName(dto.getName());
 		bio.setLastName(dto.getSurname());
 		setMemberNo(dto.getMemberNo());
-		setLmsResponse(dto.getLmsResponse());
-		setLmsStatus(dto.getLmsStatus());
-		setLmsPayLoad(dto.getLmsPayload());
 		setFullName(dto.getFullName());
 		setUserData(bio);
 	}
@@ -216,9 +212,6 @@ public class User extends PO {
 		bio.setFirstName(dto.getName());
 		bio.setLastName(dto.getSurname());
 		setMemberNo(dto.getMemberNo());
-		setLmsResponse(dto.getLmsResponse());
-		setLmsStatus(dto.getLmsStatus());
-		setLmsPayLoad(dto.getLmsPayload());
 		setFullName(dto.getFullName());
 		setUserData(bio);
 		return this;
@@ -303,15 +296,14 @@ public class User extends PO {
 		dto.setEmail(email);
 		if (member != null && member.getRefId() != null) {
 			dto.setMemberRefId(member.getRefId());
+			dto.setMembershipStatus(member.getMemberShipStatus());
+			dto.setHasDisciplinaryCase(member.getMemberDisplinaryCase());
 		}
 		dto.setName(userData.getFirstName());
 		dto.setSurname(userData.getLastName());
 		dto.setPhoneNumber(phoneNumber);
 		dto.setRefId(refId);
 		dto.setStatus(status);
-		dto.setLmsResponse(lmsResponse);
-		dto.setLmsStatus(lmsStatus);
-		dto.setLmsPayload(lmsPayLoad);
 		dto.setFullName(fullName);
 		dto.setUserLongId(getId());
 

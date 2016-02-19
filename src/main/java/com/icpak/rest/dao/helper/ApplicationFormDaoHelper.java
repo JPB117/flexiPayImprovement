@@ -71,6 +71,7 @@ import com.workpoint.icpak.shared.model.ApplicationSummaryDto;
 import com.workpoint.icpak.shared.model.ApplicationType;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.InvoiceLineDto;
+import com.workpoint.icpak.shared.model.MembershipStatus;
 import com.workpoint.icpak.shared.model.PaymentStatus;
 import com.workpoint.icpak.shared.model.auth.ApplicationStatus;
 
@@ -97,6 +98,8 @@ public class ApplicationFormDaoHelper {
 	AccountancyDaoHelper accountancyHelper;
 	@Inject
 	SpecializationDaoHelper specializationHelper;
+
+	SimpleDateFormat formatter = new SimpleDateFormat("MMM d Y");
 
 	Logger logger = Logger.getLogger(ApplicationFormDaoHelper.class);
 	Locale locale = new Locale("en", "KE");
@@ -133,7 +136,6 @@ public class ApplicationFormDaoHelper {
 	}
 
 	public void createApplicationFromImport(ApplicationFormHeaderDto application) {
-
 		if (application.getRefId() != null) {
 			updateApplication(application.getRefId(), application);
 			return;
@@ -143,8 +145,11 @@ public class ApplicationFormDaoHelper {
 		po.copyFrom(application);
 		po.setApplicationStatus(ApplicationStatus.APPROVED);
 
-		// Create Temp User
-		User user = createTempUser(po);
+		// Update existing User
+		// User user = createTempUser(po);
+
+		User user = userDao.findUserByMemberNo(application.getMemberNo());
+		// user.getMember().set
 		po.setUserRefId(user.getRefId());
 
 		// Save Data
@@ -181,8 +186,6 @@ public class ApplicationFormDaoHelper {
 
 		return u;
 	}
-
-	SimpleDateFormat formatter = new SimpleDateFormat("MMM d Y");
 
 	@SuppressWarnings("unused")
 	private void sendEmail(ApplicationFormHeader application,
@@ -245,7 +248,7 @@ public class ApplicationFormDaoHelper {
 		values.put("date", formatter.format(invoice.getDate()));
 		values.put("firstName", application.getOtherNames());
 		values.put("DocumentURL", settings.getApplicationPath());
-		// values.put("userRefId", user.getRefId());
+		values.put("userRefId", application.getRefId());
 		values.put("email", application.getEmail());
 		Doc doc = new Doc(values);
 
@@ -539,8 +542,41 @@ public class ApplicationFormDaoHelper {
 		List<ApplicationFormHeaderDto> rtn = new ArrayList<>();
 
 		for (MemberImport member : applications) {
-			ApplicationFormHeaderDto dto = member.toDTO();
-			rtn.add(dto);
+			System.err.println("Member: " + member.getName());
+			// Copy into PO
+			ApplicationFormHeader po = new ApplicationFormHeader();
+			po.copyFrom(member.toDTO());
+			po.setInvoiceRef("jnjndjjkkkkkkkk");
+			po.setApplicationStatus(ApplicationStatus.APPROVED);
+
+			User user = userDao.findUserByMemberNo(member.getMemberNo());
+			if (user != null) {
+				// Update User Information - If Stale
+				user.getMember()
+						.setRegistrationDate(member.getDateRegistered());
+				user.getMember().setPractisingNo(member.getPractisingNo());
+				user.getMember().setCustomerType(member.getCustomerType());
+				user.getMember().setCustomerPostingGroup(
+						member.getCustomerPostingGroup());
+				if (member.getStatus() == 1) {
+					user.getMember().setMemberShipStatus(
+							MembershipStatus.ACTIVE);
+				} else {
+					user.getMember().setMemberShipStatus(
+							MembershipStatus.INACTIVE);
+				}
+				// Update Member Information
+				po.setUserRefId(user.getRefId());
+
+				System.err.println("Date of Birth::" + member.getDateOfBirth());
+				System.err.println("Email::" + member.getEmail());
+				System.err.println("Id No::" + po.getIdNumber());
+				// Create this as an Application
+				// applicationDao.save(po);
+				logger.info("Successfully saved application for member:::"
+						+ member.getMemberNo() + " and refId ::"
+						+ po.getRefId() + "User RefId::" + user.getRefId());
+			}
 		}
 
 		return rtn;

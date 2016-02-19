@@ -106,8 +106,15 @@
 						</div>
 
 						<div class="panel-body">
-							<g:HTMLPanel ui:field="profileViewMode" styleName="row profile-page">
+							<g:HTMLPanel ui:field="panelProfileError" styleName="alert alert-danger hide">
+								There was a problem loading your profile. We are working to
+								correct this and your profile will be available soon. All other
+								section are
+								all OK. Please contact memberservices@icpak.com if
+								this error persists.
+							</g:HTMLPanel>
 
+							<g:HTMLPanel ui:field="profileViewMode" styleName="row profile-page">
 								<div class="row">
 									<div class="col-lg-10">
 										<g:HTMLPanel ui:field="panelIssues" styleName="alert alert-danger hide">
@@ -116,8 +123,6 @@
 										</g:HTMLPanel>
 									</div>
 								</div>
-
-
 								<div class="row">
 									<div class="col-lg-2 profile-picture">
 										<g:HTMLPanel ui:field="profileViewEditMode">
@@ -159,7 +164,7 @@
 
 											<div class="row" ui:field="divMemberShipStatus">
 												Membership Status:
-												<span ui:field="spnMembershipStatus" class="text-muted">
+												<span ui:field="spnMembershipStatus">
 												</span>
 
 												<span ui:field="spnRefreshSection" class="hide">
@@ -240,8 +245,8 @@
 
 											<div class="row" ui:field="divGoodStanding">
 												<div ui:field="divStandingStatus" class="hide">
-													Standing Status:
 													<div>
+														Standing Status:
 														<div class="label label-success" ui:field="divAccountStatus">
 															<i class="fa fa-check hide" ui:field="iconSuccess"></i>
 															<i class="fa fa-times-circle hide" ui:field="iconFail"></i>
@@ -271,7 +276,7 @@
 							<br />
 
 							<!-- Tabs -->
-							<div class="row">
+							<div class="row" ui:field="panelTabs">
 								<div class="col-xs-12">
 									<t:TabPanel ui:field="divTabs">
 									</t:TabPanel>

@@ -4,8 +4,10 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlTransient;
 
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 import com.workpoint.icpak.shared.model.ApplicationType;
@@ -13,20 +15,23 @@ import com.workpoint.icpak.shared.model.Gender;
 import com.workpoint.icpak.shared.model.Title;
 
 @Entity
-@Table(name = "`allicpakmembers_5`")
+@Table(name = "`all_members`")
 public class MemberImport {
+	@XmlTransient
 	@Id
-	private Short id;
+	@GeneratedValue
+	private Long id;
 	@Column(name = "`No_`")
 	private String memberNo;
 	private String Name;
 	@Column(name = "`E-mail`")
 	private String email;
-	private Short status;
+	private int Status;
 	@Column(name = "`Customer Type`")
 	private String customerType;
 	@Column(name = "`Customer Posting Group`")
 	private String customerPostingGroup;
+	@Column(name = "`Practising No`")
 	private String practisingNo;
 	@Column(name = "`Gender`")
 	private Short gender;
@@ -38,11 +43,16 @@ public class MemberImport {
 	private String phoneNo_;
 	private String PostCode;
 	private String County;
+	@Column(name = "`Date Of Birth`")
 	private Date DateOfBirth;
+	@Column(name = "`ID No`")
 	private String IDNo;
 	private String Position;
 	@Column(name = "`Practicing Cert Date`")
 	private Date PracticingCertDate;
+	@Column(name = "`Date Registered`")
+	private Date dateRegistered;
+
 	@Column(name = "`Alternate Phone No_`")
 	private String AlternatePhoneNo_;
 	@Column(name = "`Mobile No_`")
@@ -54,13 +64,6 @@ public class MemberImport {
 	 * Date Registered Customer Type Status District Position Practicing Cert
 	 * Date Alternate Phone No_ 1 Mobile No_
 	 */
-	public Short getID() {
-		return id;
-	}
-
-	public void setID(Short iD) {
-		id = iD;
-	}
 
 	public String getNO() {
 		return memberNo;
@@ -83,26 +86,18 @@ public class MemberImport {
 	}
 
 	public void setEmail(String email) {
-		email = email;
-	}
-
-	public Short getStatus() {
-		return status;
-	}
-
-	public void setStatus(Short status) {
-		this.status = status;
+		this.email = email;
 	}
 
 	public String getCustomerType() {
 		return customerType;
 	}
 
-	public Short getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Short id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -258,28 +253,9 @@ public class MemberImport {
 
 	public ApplicationFormHeaderDto toDTO() {
 		ApplicationFormHeaderDto dto = new ApplicationFormHeaderDto();
-		String[] allNames = Name.split(" ");
-		System.err.println("Length>>" + allNames.length);
-		if (allNames.length >= 1) {
-			if (allNames[0].equals("CPA")) {
-				dto.setTitle(Title.CPA);
-			} else if (allNames[0].equals("FCPA")) {
-				dto.setTitle(Title.FCPA);
-			}
-		}
-		if (allNames.length >= 2) {
-			dto.setSurname(allNames[1]);
-		}
-		if (allNames.length >= 3) {
-			dto.setOtherNames(allNames[2]);
-		}
 		dto.setMemberNo(memberNo);
-		dto.setUserId(memberNo);
-		if (email == null || email.isEmpty()) {
-			dto.setEmail(memberNo);
-		} else {
-			dto.setEmail(email);
-		}
+		dto.setEmail(email);
+
 		if (Address != null) {
 			dto.setAddress1(Address);
 		}
@@ -330,14 +306,30 @@ public class MemberImport {
 			dto.setApplicationType(ApplicationType.NON_PRACTISING);
 		}
 		// Gender
-		if (gender.equals(1)) {
+		if (gender == 0) {
 			dto.setGender(Gender.MALE);
-		} else {
+		} else if (gender == 1) {
 			dto.setGender(Gender.FEMALE);
 		}
 
 		return dto;
 
+	}
+
+	public Date getDateRegistered() {
+		return dateRegistered;
+	}
+
+	public void setDateRegistered(Date dateRegistered) {
+		this.dateRegistered = dateRegistered;
+	}
+
+	public int getStatus() {
+		return Status;
+	}
+
+	public void setStatus(int status) {
+		Status = status;
 	}
 
 }

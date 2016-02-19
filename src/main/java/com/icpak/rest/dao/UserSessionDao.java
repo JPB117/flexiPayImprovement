@@ -47,7 +47,6 @@ public class UserSessionDao extends BaseDao {
 	}
 
 	public UserDto getUserFromCookie(String loggedInCookie) {
-
 		UserSession userSession = getSessionFromCookie(loggedInCookie);
 		if (userSession == null) {
 			return null;

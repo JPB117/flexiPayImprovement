@@ -335,7 +335,6 @@ public class ApplicationFormHeader extends PO {
 			setSubmissionDate(new Date());
 		}
 		setApplicationStatus(dto.getApplicationStatus());
-
 		setPaymentStatus(dto.getPaymentStatus());
 		setErpCode(dto.getErpCode());
 

@@ -124,7 +124,6 @@ public class UsersDao extends BaseDao {
 				}
 				user.setFullName(fullName);
 				user.setEmail(email);
-				user.setLmsStatus(lmsStatus);
 				userDtos.add(user);
 			}
 
@@ -229,7 +228,6 @@ public class UsersDao extends BaseDao {
 	}
 
 	public String getApplicationRefId(String userRef) {
-
 		String sql = "select refid from `Application Form Header` where userRefId=:userRef";
 		return getSingleResultOrNull(getEntityManager().createNativeQuery(sql)
 				.setParameter("userRef", userRef));
