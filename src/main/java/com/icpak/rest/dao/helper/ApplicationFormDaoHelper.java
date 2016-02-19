@@ -550,7 +550,7 @@ public class ApplicationFormDaoHelper {
 			po.setApplicationStatus(ApplicationStatus.APPROVED);
 
 			User user = userDao.findUserByMemberNo(member.getMemberNo());
-			if (user != null) {
+			if (user != null && user.getMember() != null) {
 				// Update User Information - If Stale
 				user.getMember()
 						.setRegistrationDate(member.getDateRegistered());
