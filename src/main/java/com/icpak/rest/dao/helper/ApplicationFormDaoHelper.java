@@ -572,7 +572,7 @@ public class ApplicationFormDaoHelper {
 				System.err.println("Email::" + member.getEmail());
 				System.err.println("Id No::" + po.getIdNumber());
 				// Create this as an Application
-				// applicationDao.save(po);
+				applicationDao.save(po);
 				logger.info("Successfully saved application for member:::"
 						+ member.getMemberNo() + " and refId ::"
 						+ po.getRefId() + "User RefId::" + user.getRefId());
