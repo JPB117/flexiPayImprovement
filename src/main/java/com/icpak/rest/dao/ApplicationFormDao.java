@@ -194,7 +194,7 @@ public class ApplicationFormDao extends BaseDao {
 			String applicationStatus) {
 		Number number = null;
 		StringBuffer sql = new StringBuffer(
-				"select count(*) from `Application Form Header`");
+				"select count(*) from `Application Form Header` a");
 		Map<String, Object> params = appendParameters(sql, applicationStatus,
 				paymentStatus, searchTerm);
 
