@@ -107,11 +107,8 @@
 
 						<div class="panel-body">
 							<g:HTMLPanel ui:field="panelProfileError" styleName="alert alert-danger hide">
-								There was a problem loading your profile. We are working to
-								correct this and your profile will be available soon. All other
-								section are
-								all OK. Please contact memberservices@icpak.com if
-								this error persists.
+								There was a problem loading your profile. Please contact
+								itsupport@icpak.com to fix this.
 							</g:HTMLPanel>
 
 							<g:HTMLPanel ui:field="profileViewMode" styleName="row profile-page">

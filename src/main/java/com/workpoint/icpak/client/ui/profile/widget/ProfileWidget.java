@@ -296,11 +296,10 @@ public class ProfileWidget extends Composite {
 
 		hideAllDisplays();
 		if (isCurrentUserMember) {
-			divGoodStanding.removeClassName("hide");
-			divGoodStandingActions.removeClassName("hide");
-			divMemberShipStatus.removeClassName("hide");
-			divStandingStatus.removeClassName("hide");
-			divMemberShipStatus.removeClassName("hide");
+			// divGoodStanding.removeClassName("hide");
+			// divGoodStandingActions.removeClassName("hide");
+			// divMemberShipStatus.removeClassName("hide");
+			// divStandingStatus.removeClassName("hide");
 
 		} else if (isCurrentUserBasicMember) {
 			divPaymentSection.removeClassName("hide");
@@ -511,15 +510,14 @@ public class ProfileWidget extends Composite {
 		ctx.setAction(UPLOADACTION.UPLOADUSERIMAGE);
 		uploader.setContext(ctx);
 
-		if (user.getUser().getMembershipStatus() != null) {
-			spnMembershipStatus.setInnerText(user.getUser()
-					.getMembershipStatus().name());
-			if (user.getUser().getMembershipStatus() == MembershipStatus.ACTIVE) {
-				spnMembershipStatus.setClassName("label label-success");
-			} else {
-				spnMembershipStatus.setClassName("label label-danger");
-			}
-		}
+		/*
+		 * if (user.getUser().getMembershipStatus() != null) {
+		 * spnMembershipStatus.setInnerText(user.getUser()
+		 * .getMembershipStatus().name()); if
+		 * (user.getUser().getMembershipStatus() == MembershipStatus.ACTIVE) {
+		 * spnMembershipStatus.setClassName("label label-success"); } else {
+		 * spnMembershipStatus.setClassName("label label-danger"); } }
+		 */
 		setUserImage(user.getUser().getRefId());
 	}
 
