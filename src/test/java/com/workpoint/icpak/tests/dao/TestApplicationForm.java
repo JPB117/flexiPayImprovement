@@ -1,14 +1,11 @@
 package com.workpoint.icpak.tests.dao;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
 import java.util.List;
 
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.amazonaws.util.json.JSONException;
 import com.amazonaws.util.json.JSONObject;
 import com.google.inject.Inject;
 import com.icpak.rest.dao.ApplicationFormDao;
@@ -65,16 +62,12 @@ public class TestApplicationForm extends AbstractDaoTest {
 		System.err.println("Invoice >> " + header.getInvoiceRef());
 	}
 
-	@Ignore
+	@Test
 	public void Import() {
 		List<ApplicationFormHeaderDto> members = helper.importMembers(0, 30000);
-		for (ApplicationFormHeaderDto dto : members) {
-			// System.err.println("Member No>>>" + dto.getMemberNo());
-			helper.createApplicationFromImport(dto);
-		}
 	}
 
-	@Ignore
+	// @Test
 	public void getApplications() {
 		List<ApplicationFormHeaderDto> members = helper.getAllApplications(0,
 				10, "", "");
@@ -84,7 +77,7 @@ public class TestApplicationForm extends AbstractDaoTest {
 		}
 	}
 
-	@Test
+	// @Test
 	public void testERPIntergration() {
 		String applicationNo = "C/18881";
 		ApplicationFormHeaderDto application = helper.getApplicationById(
@@ -142,11 +135,11 @@ public class TestApplicationForm extends AbstractDaoTest {
 		// }
 	}
 
-	@Test
+	// @Test
 	public void testUpdatingOfCPDDto() {
 		ApplicationFormHeaderDto dto = applicationDao.findByApplicationId(
 				"AQSSHoAkdY6VMNLv", true).toDto();
-		 dto.setErpCode("C/18878595");
+		dto.setErpCode("C/18878595");
 		dto.setApplicationStatus(ApplicationStatus.PROCESSING);
 		// dto.setManagementComment("Please attach your profile photo");
 		System.err.println("Submission Date::" + dto.getDateSubmitted());
@@ -159,17 +152,24 @@ public class TestApplicationForm extends AbstractDaoTest {
 		applicationDao.sendMessageToHonourables();
 	}
 
-	@Ignore
+	// @Test
 	public void testGettingAppDtos() {
 		List<ApplicationFormHeaderDto> applications = helper
-				.getAllApplicationNativeQuery(0, 10, "Samuel", "PENDING",
-						"NOTPAID");
+				.getAllApplicationNativeQuery(0, 10, "", "", "");
 
 		System.err.println("Applications>>>>" + applications.size());
 		for (ApplicationFormHeaderDto dto : applications) {
 			System.out.println(">>>" + dto.getPaymentStatus());
 			System.out.println(">>>" + dto.getApplicationStatus());
 		}
+	}
+
+	// @Test
+	public void testGetSingleApp() {
+		ApplicationFormHeader app = helper
+				.getApplicationById("dAbfgoN4TvBo4hB9");
+		System.err.println("Found:::" + app.getSurname());
+
 	}
 
 	@Ignore

@@ -125,9 +125,11 @@ public class ApplicationsPresenter
 		public void onClick(ClickEvent event) {
 			Map<String, String> params = new HashMap<String, String>();
 			searchTerm = getView().getSearchText();
-			params.put("appStatus", applicationStatus);
+			params.put("appStatus", getView().getLstApplicationStatus()
+					.getValue().name());
 			params.put("searchTerm", searchTerm);
-			params.put("paymentStatus", paymentStatus);
+			params.put("paymentStatus", getView().getLstPaymentStatus()
+					.getValue().name());
 			PlaceRequest placeRequest = new PlaceRequest.Builder()
 					.nameToken(NameTokens.members).with(params).build();
 			placeManager.revealPlace(placeRequest);
@@ -194,6 +196,7 @@ public class ApplicationsPresenter
 		super.onBind();
 
 		getView().getTxtSearch().addKeyDownHandler(keyHandler);
+
 		getView().getaSearch().addClickHandler(searchClickHandler);
 
 		getView().getPagingPanel().setLoader(new PagingLoader() {

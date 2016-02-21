@@ -42,6 +42,7 @@ public class Member extends PO {
 	private String customerType;
 	private Date practisingCertDate;
 	private String setPracisingNo;
+	private String customerPostingGroup;
 
 	@Column(nullable = false, columnDefinition = "int(1) not null default 0")
 	private int memberDisplinaryCase = 0;
@@ -192,6 +193,14 @@ public class Member extends PO {
 
 	public void setSetPracisingNo(String setPracisingNo) {
 		this.setPracisingNo = setPracisingNo;
+	}
+
+	public String getCustomerPostingGroup() {
+		return customerPostingGroup;
+	}
+
+	public void setCustomerPostingGroup(String customerPostingGroup) {
+		this.customerPostingGroup = customerPostingGroup;
 	}
 
 }

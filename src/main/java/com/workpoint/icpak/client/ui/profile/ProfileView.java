@@ -36,7 +36,6 @@ public class ProfileView extends ViewImpl implements
 
 	@UiField
 	ProfileWidget divProfileContent;
-
 	@UiField
 	HTMLPanel divPasswordContent;
 	private CurrentUser currentUser;

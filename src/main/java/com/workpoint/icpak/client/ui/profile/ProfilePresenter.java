@@ -506,13 +506,13 @@ public class ProfilePresenter
 	@Override
 	protected void onReveal() {
 		super.onReveal();
-//		Window.alert("IsCurrentUserAdmin::" + AppContext.isCurrentUserAdmin()
-//				+ ">>>>IsCurrentUserBasicMember:::"
-//				+ AppContext.isCurrentBasicMember()
-//				+ ">>>>IsCurrentUserEventsRead:::"
-//				+ AppContext.isCurrentUserEventRead()
-//				+ ">>>IsCurrentUserEdit:::"
-//				+ AppContext.isCurrentUserEventEdit());
+		// Window.alert("IsCurrentUserAdmin::" + AppContext.isCurrentUserAdmin()
+		// + ">>>>IsCurrentUserBasicMember:::"
+		// + AppContext.isCurrentBasicMember()
+		// + ">>>>IsCurrentUserEventsRead:::"
+		// + AppContext.isCurrentUserEventRead()
+		// + ">>>IsCurrentUserEdit:::"
+		// + AppContext.isCurrentUserEventEdit());
 		loadData();
 	}
 
@@ -574,6 +574,7 @@ public class ProfilePresenter
 			loadTrainings();
 			loadSpecializations();
 			loadAccountancyExamination();
+			loadGoodStanding();
 		} else {
 			// Window.alert("User refId not sent in this request!");
 		}

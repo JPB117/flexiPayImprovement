@@ -122,6 +122,7 @@ public class CPDMemberTableRow extends RowWidget {
 		final String url = "getreport?action=downloadcpdcert&cpdRefId="
 				+ dto.getRefId();
 		final String wintitle = "CPD Certificate for event " + dto.getTitle();
+
 		aDownloadCert.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -142,8 +143,9 @@ public class CPDMemberTableRow extends RowWidget {
 				&& !(dto.getOrganizer().equals("ICPAK"));
 		boolean isApproveRejectVisible = false;
 		boolean isDownloadVisible = (dto.getOrganizer().equals("ICPAK"))
-				&& dto.getStatus() == CPDStatus.Approved;
+				&& (dto.getStatus() == CPDStatus.Approved);
 		boolean isNoActionVisible = (!isEditVisible && !isDownloadVisible && !isDeleteVisible);
+
 		aEdit.setVisible(isEditVisible);
 		aView.setVisible(isViewVisible);
 		aDelete.setVisible(isDeleteVisible);

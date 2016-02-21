@@ -29,23 +29,21 @@ body {
 }
 
 .event-details {
-	position: absolute;
-	left: 408px;
-	top: 433px;
-	width: 422px;
-	height: 117px;
-	text-align: center;
-	top: 433px;
-	width: 422px;
-	height: 117px;
+    position: absolute;
+    font-size: 18px;
+    left: 294px;
+    top: 433px;
+    width: 612px;
+    text-align: center;
+    height: 117px;
 }
 
 .approver {
 	position: absolute;
 	left: 220px;
-	top: 519px;
+	top: 530px;
 	width: 260px;
-	font-size: 14px;
+	font-size: 15px;
 }
 
 @page {
@@ -58,14 +56,16 @@ body {
 </head>
 
 <body>
-	<p class="gold event-details">For attending the @@eventName held
-		between @@eventDates at @@eventVenue</p>
+	<p class="gold event-details">
+		For attending the <Strong>@@eventName</Strong> held between
+		@@eventDates at @@eventVenue
+	</p>
 
-	<h2 class="names">CPA @@memberName</h2>
+	<h2 class="names">@@memberName</h2>
 
 	<div class="approver">
 		<div class="gold">
-			<span>CPA Michael Njoroge</span><br /> <span>Manager,
+			<span>CPA Michael Makhoha</span><br /> <span>Manager,
 				Training and Development</span><br /> <span>Date Issued:
 				@@dateIssued</span><br /> <span>Earned CPD Hours: @@cpdHours</span><br />
 		</div>

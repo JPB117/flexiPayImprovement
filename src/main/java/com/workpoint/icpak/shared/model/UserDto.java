@@ -23,15 +23,12 @@ public class UserDto extends SerializableObj implements Listable, Serializable {
 	private String surname;
 	private String password;
 	private String fullName;
+	private MembershipStatus membershipStatus;
+	private int hasDisciplinaryCase;
 	private ArrayList<RoleDto> groups = new ArrayList<RoleDto>();
-	private int participated;
-	private int inbox;
 	private AccountStatus status = AccountStatus.NEWACC;
 	private String phoneNumber;
 	private Date lastDateUpdateFromErp;
-	private String lmsStatus;
-	private String lmsResponse;
-	private String lmsPayload;
 	private Long userLongId;
 
 	public UserDto() {
@@ -153,6 +150,14 @@ public class UserDto extends SerializableObj implements Listable, Serializable {
 		return hasGroup("users_edit");
 	}
 
+	public int getHasDisciplinaryCase() {
+		return hasDisciplinaryCase;
+	}
+
+	public void setHasDisciplinaryCase(int hasDisciplinaryCase) {
+		this.hasDisciplinaryCase = hasDisciplinaryCase;
+	}
+
 	@JsonIgnore
 	public boolean isUsersRead() {
 		return hasGroup("users_read");
@@ -218,28 +223,6 @@ public class UserDto extends SerializableObj implements Listable, Serializable {
 		return name.equals(other.name);
 	}
 
-	public int getInbox() {
-		return inbox;
-	}
-
-	public void setInbox(int inbox) {
-		this.inbox = inbox;
-	}
-
-	public int getParticipated() {
-		return participated;
-	}
-
-	public void setParticipated(int participated) {
-		this.participated = participated;
-	}
-
-	@JsonIgnore
-	public int getTotal() {
-
-		return participated + inbox;
-	}
-
 	@JsonIgnore
 	public String getDisplayName() {
 		return getFullName();
@@ -289,27 +272,11 @@ public class UserDto extends SerializableObj implements Listable, Serializable {
 		return lastDateUpdateFromErp;
 	}
 
-	public String getLmsStatus() {
-		return lmsStatus;
+	public MembershipStatus getMembershipStatus() {
+		return membershipStatus;
 	}
 
-	public void setLmsStatus(String lmsStatus) {
-		this.lmsStatus = lmsStatus;
-	}
-
-	public String getLmsResponse() {
-		return lmsResponse;
-	}
-
-	public void setLmsResponse(String lmsResponse) {
-		this.lmsResponse = lmsResponse;
-	}
-
-	public String getLmsPayload() {
-		return lmsPayload;
-	}
-
-	public void setLmsPayload(String lmsPayload) {
-		this.lmsPayload = lmsPayload;
+	public void setMembershipStatus(MembershipStatus membershipStatus) {
+		this.membershipStatus = membershipStatus;
 	}
 }
