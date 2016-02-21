@@ -55,7 +55,7 @@ public class TestCPDDao extends AbstractDaoTest {
 		helper.update("3pzAyw110E2i5VTE", "NgmZcYUU0mu7JEyr", dto);
 	}
 
-	// @Test
+	@Ignore
 	public void testCreateCPD() {
 		CPDDto dto = new CPDDto();
 		dto.setCategory(CPDCategory.CATEGORY_A);
@@ -69,9 +69,14 @@ public class TestCPDDao extends AbstractDaoTest {
 
 	@Test
 	public void updateAllSummaries() {
-		List<User> users = usersDao.getAllUsers(0, 10, null, "");
+		List<User> users = usersDao.getAllUsers(0, 0, null, "");
+		int i = users.size();
 		for (User user : users) {
+			
 			cpdDao.updateSummary(user);
+			
+			logger.warn(" COUNT === "+i);
+			i--;
 		}
 	}
 
@@ -84,9 +89,8 @@ public class TestCPDDao extends AbstractDaoTest {
 	@Ignore
 	public void getCPD() throws ParseException {
 		String memberId = "pabGC3dh0OOzLzSC";
-		List<CPDDto> list = helper.getAllCPD("ALL", 0, 1000,
-				formatter.parse("01/01/2000").getTime(), new Date().getTime(),
-				"Another");
+		List<CPDDto> list = helper.getAllCPD("ALL", 0, 1000, formatter.parse("01/01/2000").getTime(),
+				new Date().getTime(), "Another");
 		for (CPDDto dto : list) {
 			System.err.println(dto.getTitle());
 		}
@@ -96,11 +100,8 @@ public class TestCPDDao extends AbstractDaoTest {
 	@Ignore
 	public void testCount() throws ParseException {
 		System.err.println("Total Archive>>>>"
-				+ helper.getCPDSummary("ALL", 1420059600000L, 1451494912593L)
-						.getTotalArchive()
-				+ "Total Returns"
-				+ helper.getCPDSummary("ALL", 1420059600000L, 1451494912593L)
-						.getTotalReturns());
+				+ helper.getCPDSummary("ALL", 1420059600000L, 1451494912593L).getTotalArchive() + "Total Returns"
+				+ helper.getCPDSummary("ALL", 1420059600000L, 1451494912593L).getTotalReturns());
 	}
 
 	@Ignore
@@ -145,8 +146,7 @@ public class TestCPDDao extends AbstractDaoTest {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		Date another = formatter.parse("2015-1-1");
 
-		List<CPDDto> cpdDtos = helper.getAllCPD("returnArchive", 0, 100,
-				another.getTime(), today.getTime(), "");
+		List<CPDDto> cpdDtos = helper.getAllCPD("returnArchive", 0, 100, another.getTime(), today.getTime(), "");
 
 		// Integer count = helper.getCount("ALLRETURNS", another.getTime(),
 		// today.getTime());

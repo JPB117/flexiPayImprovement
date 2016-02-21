@@ -98,4 +98,10 @@ public class RolesDao extends BaseDao {
 		return role;
 	}
 
+	public Role getByName(String name) {
+		Role role = getSingleResultOrNull(getEntityManager().createQuery(
+				"from Role u where u.name=:name").setParameter("name",
+						name));		
+		return role;
+	}
 }
