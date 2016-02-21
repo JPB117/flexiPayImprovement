@@ -13,6 +13,8 @@ public class RoleDto extends SerializableObj implements Listable{
 	private Long id;
 	private String name;
 	private String fullName;
+	private Long UserTypeID;
+	private Long RoleId;
 	
 	public RoleDto(){
 	}
@@ -72,4 +74,21 @@ public class RoleDto extends SerializableObj implements Listable{
 		
 		return fullName;
 	}
+
+	public Long getUserTypeID() {
+		return UserTypeID;
+	}
+
+	public void setUserTypeID(Long userTypeID) {
+		UserTypeID = userTypeID;
+	}
+
+	public Long getRoleId() {
+		return RoleId;
+	}
+
+	public void setRoleId(Long roleId) {
+		RoleId = roleId;
+	}
+	
 }
