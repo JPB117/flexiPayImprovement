@@ -641,7 +641,7 @@ public class UsersDaoHelper {
 			userDto.setMemberRefId(dao.getMemberRefId(userDto.getUserLongId()));
 
 			if (userDto.getMemberNo() != null) {
-				userDto.setGender(dao.getGender(userDto.getMemberNo()));
+				userDto.setGender(dao.getGender(userDto.getApplicationRefId()));
 			}
 
 		}

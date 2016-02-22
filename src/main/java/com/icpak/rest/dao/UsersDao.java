@@ -257,10 +257,10 @@ public class UsersDao extends BaseDao {
 		query.executeUpdate();
 	}
 
-	public String getGender(String memberNo) {
+	public String getGender(String applicationRefId) {
 		return getSingleResultOrNull(getEntityManager()
-				.createNativeQuery("select a.gender from `Application Form Header` a where a.memberNo=:memberNo")
-				.setParameter("memberNo", memberNo));
+				.createNativeQuery("select a.gender from `Application Form Header` a where a.refId=:refId")
+				.setParameter("refId", applicationRefId));
 	}
 
 	public void createDefaultRoles() {
