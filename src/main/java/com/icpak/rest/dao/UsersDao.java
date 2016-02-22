@@ -257,6 +257,12 @@ public class UsersDao extends BaseDao {
 		query.executeUpdate();
 	}
 
+	public String getGender(String memberNo) {
+		return getSingleResultOrNull(getEntityManager()
+				.createNativeQuery("select a.gender from `Application Form Header` a where a.memberNo=:memberNo")
+				.setParameter("memberNo", memberNo));
+	}
+
 	public void createDefaultRoles() {
 		logger.info(" CREATING DEFAULT ROLES ======= ");
 		List<Role> roles = new ArrayList<>();
