@@ -70,7 +70,7 @@ public class MemberImport {
 	}
 
 	public void setNO(String nO) {
-		memberNo = nO;
+		this.memberNo = nO;
 	}
 
 	public String getName() {
@@ -78,7 +78,7 @@ public class MemberImport {
 	}
 
 	public void setName(String name) {
-		Name = name;
+		this.Name = name;
 	}
 
 	public String getEmail() {
@@ -329,7 +329,7 @@ public class MemberImport {
 	}
 
 	public void setStatus(int status) {
-		Status = status;
+		this.Status = status;
 	}
-
+	
 }

@@ -91,8 +91,11 @@ public class UsersDao extends BaseDao {
 					limit);
 		}
 
-		return getResultList(getEntityManager().createQuery("select u from User u" + " inner join u.roles roles "
-				+ " where roles=:role " + " and u.isActive=1" + " order by username").setParameter("role", role),
+		return getResultList(getEntityManager().createQuery("select u from User u" 
+	            + " inner join u.roles roles "
+				+ " where roles=:role " 
+	            + " and u.isActive=1" + 
+				" order by username").setParameter("role", role),
 				offSet, limit);
 	}
 
