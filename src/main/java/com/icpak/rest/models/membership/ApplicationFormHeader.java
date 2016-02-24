@@ -311,7 +311,7 @@ public class ApplicationFormHeader extends PO {
 		setIdNumber(dto.getIdNumber());
 		setBranch(dto.getBranch());
 		if (dto.getGender() != null) {
-			setGender(dto.getGender().name());
+			setGender(dto.getGender().toString());
 		}
 
 		// Contact Person

@@ -497,11 +497,11 @@ public class ApplicationFormDaoHelper {
 
 		return importMembers(applications);
 	}
-	
+
 	public List<ApplicationFormHeaderDto> importMissingMembers() {
 		List<MemberImport> applications = applicationDao.importMissingMembers();
 
-		return importMembers(applications);
+		return importMissingMembers(applications);
 	}
 
 	public ApplicationFormHeader getApplicationById(String applicationId) {
@@ -622,7 +622,7 @@ public class ApplicationFormDaoHelper {
 
 	public List<ApplicationFormHeaderDto> importMembers(List<MemberImport> memberImports) {
 		List<ApplicationFormHeaderDto> rtn = new ArrayList<>();
-		
+
 		for (MemberImport memberIpmort : memberImports) {
 			System.err.println("Member: " + memberIpmort.getName());
 			// Copy into PO
@@ -651,21 +651,21 @@ public class ApplicationFormDaoHelper {
 				System.err.println("Id No::" + po.getIdNumber());
 				// Create this as an Application
 				applicationDao.save(po);
-				logger.info("Successfully saved application for member:::" + memberIpmort.getMemberNo() + " and refId ::"
-						+ po.getRefId() + "User RefId::" + user.getRefId());
-			}else{
+				logger.info("Successfully saved application for member:::" + memberIpmort.getMemberNo()
+						+ " and refId ::" + po.getRefId() + "User RefId::" + user.getRefId());
+			} else {
 				logger.warn(" MEMBER NO = = = == " + memberIpmort.getMemberNo());
-				
+
 				BioData bioData = new BioData();
-				
+
 				if (memberIpmort.getGender() == 0) {
 					bioData.setGender(Gender.MALE);
 				} else if (memberIpmort.getGender() == 1) {
 					bioData.setGender(Gender.FEMALE);
 				}
-				
+
 				bioData.setDob(memberIpmort.getDateOfBirth());
-				
+
 				user = new User();
 				user.setEmail(memberIpmort.getEmail());
 				user.setFullName(memberIpmort.getName());
@@ -676,13 +676,13 @@ public class ApplicationFormDaoHelper {
 				user.setPassword("pass1");
 				user.setUsername(memberIpmort.getEmail());
 				user.setUserData(bioData);
-				
+
 				userDao.createUser(user);
-				
+
 				User userInDb = userDao.findUserByMemberNo(memberIpmort.getMemberNo());
-				
+
 				po.setUserRefId(user.getRefId());
-				
+
 				Member member = new Member();
 				member.setMemberNo(memberIpmort.getNO());
 				member.setRegistrationDate(memberIpmort.getDateRegistered());
@@ -696,15 +696,84 @@ public class ApplicationFormDaoHelper {
 				} else {
 					member.setMemberShipStatus(MembershipStatus.INACTIVE);
 				}
+
 				userInDb.setMember(member);
 				userDao.save(member);
 				userDao.save(po);
 				userDao.save(userInDb);
-				
+
 				logger.warn(" MEMBER ID = = = == " + memberIpmort.getId());
 			}
 		}
-		
+
+		return rtn;
+	}
+
+	public List<ApplicationFormHeaderDto> importMissingMembers(List<MemberImport> memberImports) {
+		List<ApplicationFormHeaderDto> rtn = new ArrayList<>();
+
+		for (MemberImport memberIpmort : memberImports) {
+			System.err.println("Member: " + memberIpmort.getName());
+			// Copy into PO
+			ApplicationFormHeader po = new ApplicationFormHeader();
+			po.copyFrom(memberIpmort.toDTO());
+			po.setInvoiceRef("jnjndjjkkkkkkkk");
+			po.setApplicationStatus(ApplicationStatus.APPROVED);
+
+			logger.warn(" MEMBER NO = = = == " + memberIpmort.getMemberNo());
+
+			BioData bioData = new BioData();
+
+			if (memberIpmort.getGender() == 0) {
+				bioData.setGender(Gender.MALE);
+			} else if (memberIpmort.getGender() == 1) {
+				bioData.setGender(Gender.FEMALE);
+			}
+
+			bioData.setDob(memberIpmort.getDateOfBirth());
+
+			User user = new User();
+			user.setEmail(memberIpmort.getEmail());
+			user.setFullName(memberIpmort.getName());
+			user.setMemberNo(memberIpmort.getNO());
+			user.setAddress(memberIpmort.getAddress());
+			user.setCity(memberIpmort.getCity());
+			user.setMobileNo(memberIpmort.getPhoneNo_());
+			user.setPassword("pass1");
+			user.setUsername(memberIpmort.getEmail());
+			user.setUserData(bioData);
+
+			userDao.createUser(user);
+
+			User userInDb = userDao.findUserByMemberNo(memberIpmort.getMemberNo());
+
+			po.setUserRefId(user.getRefId());
+
+			Member member = new Member();
+			member.setMemberNo(memberIpmort.getNO());
+			member.setRegistrationDate(memberIpmort.getDateRegistered());
+			member.setPractisingNo(memberIpmort.getPractisingNo());
+			member.setCustomerType(memberIpmort.getCustomerType());
+			member.setCustomerPostingGroup(memberIpmort.getCustomerPostingGroup());
+			member.setUserRefId(user.getRefId());
+			member.setUser(userInDb);
+			if (memberIpmort.getStatus() == 1) {
+				member.setMemberShipStatus(MembershipStatus.ACTIVE);
+			} else {
+				member.setMemberShipStatus(MembershipStatus.INACTIVE);
+			}
+
+			userInDb.setMember(member);
+			userDao.save(member);
+			
+			logger.warn(" PO >>>>>>>>>>>>><<<<<<<<<<<<<<<<<< "+new JSONObject(po));
+			
+			userDao.save(po);
+			userDao.save(userInDb);
+
+			logger.warn(" MEMBER ID = = = == " + memberIpmort.getId());
+		}
+
 		return rtn;
 	}
 
