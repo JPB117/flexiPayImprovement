@@ -62,36 +62,39 @@ public class TestApplicationForm extends AbstractDaoTest {
 		System.err.println("Invoice >> " + header.getInvoiceRef());
 	}
 
-	@Test
+	@Ignore
 	public void Import() {
 		List<ApplicationFormHeaderDto> members = helper.importMembers(0, 30000);
 	}
+	
+	@Test
+	public void ImportMissingMembers() {
+		List<ApplicationFormHeaderDto> members = helper.importMissingMembers();
+	}
 
-	// @Test
+	@Ignore
 	public void getApplications() {
-		List<ApplicationFormHeaderDto> members = helper.getAllApplications(0,
-				10, "", "");
+		List<ApplicationFormHeaderDto> members = helper.getAllApplications(0, 10, "", "");
 		for (ApplicationFormHeaderDto dto : members) {
 			System.out.println("Previous>>" + dto.getPreviousRefId());
 			System.out.println("Next>>" + dto.getNextRefId());
 		}
 	}
 
-	// @Test
+	@Ignore
 	public void testERPIntergration() {
 		String applicationNo = "C/18881";
-		ApplicationFormHeaderDto application = helper.getApplicationById(
-				"4MgvVkX0Sgr4uwIZ").toDto();
-		List<ApplicationFormEducationalDto> educationDetails = eduHelper
-				.getAllEducationEntrys("", "4MgvVkX0Sgr4uwIZ", 0, 100);
-		List<ApplicationFormTrainingDto> trainings = trainingHelper
-				.getAllTrainingEntrys("", "4MgvVkX0Sgr4uwIZ", 0, 100);
-		List<ApplicationFormAccountancyDto> accountancy = accountancyHelper
-				.getAllAccountancyEntrys("", "4MgvVkX0Sgr4uwIZ", 0, 100);
-		List<ApplicationFormSpecializationDto> specializations = specializationHelper
-				.getAllSpecializationEntrys("", "4MgvVkX0Sgr4uwIZ", 0, 100);
-		List<ApplicationFormEmploymentDto> employment = specializationHelper
-				.getAllEmploymentEntrys("", "4MgvVkX0Sgr4uwIZ", 0, 100);
+		ApplicationFormHeaderDto application = helper.getApplicationById("4MgvVkX0Sgr4uwIZ").toDto();
+		List<ApplicationFormEducationalDto> educationDetails = eduHelper.getAllEducationEntrys("", "4MgvVkX0Sgr4uwIZ",
+				0, 100);
+		List<ApplicationFormTrainingDto> trainings = trainingHelper.getAllTrainingEntrys("", "4MgvVkX0Sgr4uwIZ", 0,
+				100);
+		List<ApplicationFormAccountancyDto> accountancy = accountancyHelper.getAllAccountancyEntrys("",
+				"4MgvVkX0Sgr4uwIZ", 0, 100);
+		List<ApplicationFormSpecializationDto> specializations = specializationHelper.getAllSpecializationEntrys("",
+				"4MgvVkX0Sgr4uwIZ", 0, 100);
+		List<ApplicationFormEmploymentDto> employment = specializationHelper.getAllEmploymentEntrys("",
+				"4MgvVkX0Sgr4uwIZ", 0, 100);
 
 		application.setApplicationNo(applicationNo);
 		for (ApplicationFormEducationalDto education : educationDetails) {
@@ -135,10 +138,9 @@ public class TestApplicationForm extends AbstractDaoTest {
 		// }
 	}
 
-	// @Test
+	@Ignore
 	public void testUpdatingOfCPDDto() {
-		ApplicationFormHeaderDto dto = applicationDao.findByApplicationId(
-				"AQSSHoAkdY6VMNLv", true).toDto();
+		ApplicationFormHeaderDto dto = applicationDao.findByApplicationId("AQSSHoAkdY6VMNLv", true).toDto();
 		dto.setErpCode("C/18878595");
 		dto.setApplicationStatus(ApplicationStatus.PROCESSING);
 		// dto.setManagementComment("Please attach your profile photo");
@@ -147,15 +149,14 @@ public class TestApplicationForm extends AbstractDaoTest {
 		helper.updateApplication("4MgvVkX0Sgr4uwIZ", dto);
 	}
 
-	// @Test
+	@Ignore
 	public void testBulkSMS() {
 		applicationDao.sendMessageToHonourables();
 	}
 
-	// @Test
+	@Ignore
 	public void testGettingAppDtos() {
-		List<ApplicationFormHeaderDto> applications = helper
-				.getAllApplicationNativeQuery(0, 10, "", "", "");
+		List<ApplicationFormHeaderDto> applications = helper.getAllApplicationNativeQuery(0, 10, "", "", "");
 
 		System.err.println("Applications>>>>" + applications.size());
 		for (ApplicationFormHeaderDto dto : applications) {
@@ -164,10 +165,9 @@ public class TestApplicationForm extends AbstractDaoTest {
 		}
 	}
 
-	// @Test
+	@Ignore
 	public void testGetSingleApp() {
-		ApplicationFormHeader app = helper
-				.getApplicationById("dAbfgoN4TvBo4hB9");
+		ApplicationFormHeader app = helper.getApplicationById("dAbfgoN4TvBo4hB9");
 		System.err.println("Found:::" + app.getSurname());
 
 	}
