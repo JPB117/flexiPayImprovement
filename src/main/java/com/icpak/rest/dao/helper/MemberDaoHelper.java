@@ -9,7 +9,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -377,6 +379,68 @@ public class MemberDaoHelper {
 	
 	public Member findByMemberNo(String memberNo){
 		return memberDao.findByMemberNo(memberNo);
+	}
+	
+	
+	public void findDuplicateMemberNo() {
+		List<Member> members = memberDao.getAllMembers(0, 0);
+		
+		logger.warn(" TOTAL MEMBERS ======= " + members.size());
+
+		HashMap<String, List<Member>> duplicates = new HashMap<>();
+
+		for (Member m : members) {
+
+			if (m.getMemberNo() != null) {
+				String key = m.getMemberNo();
+				List<Member> dpMembers = new ArrayList<>();
+
+				for (int i = 0; i < members.size(); i++) {
+					if (m.getMemberNo().equals(members.get(i).getMemberNo())) {
+						dpMembers.add(members.get(i));
+					}
+				}
+
+				if (!dpMembers.isEmpty()) {
+					duplicates.put(key, dpMembers);
+				}
+			}
+
+		}
+
+		HashMap<String, List<Member>> duplicates2 = new HashMap<>();
+
+		for (Map.Entry<String, List<Member>> entry : duplicates.entrySet()) {
+			String key = entry.getKey();
+			List<Member> membersList = entry.getValue();
+
+			if (membersList.size() > 1) {
+				duplicates2.put(key, membersList);
+			}
+
+		}
+
+		logger.warn(" DUPLICATE HASHMAP SIZE LIST SIZE ======= " + duplicates2.size());
+
+		for (Map.Entry<String, List<Member>> entry : duplicates2.entrySet()) {
+			String key = entry.getKey();
+			List<Member> memberList = entry.getValue();
+			
+			logger.warn(" MEMBER NO  ======= "+key  +" SIZE === " + memberList.size()); 
+			int a = 0;
+			for(int i = 0 ; i < memberList.size() ; i++){
+				
+				logger.warn(" INDEX  ======= "+a +" REFID === " + memberList.get(a).getUser().getRefId());
+				
+				if(a > 0){
+					memberDao.delete(memberList.get(a).getUser());
+				}
+				
+				a++;
+			}
+		}
+
+
 	}
 
 }
