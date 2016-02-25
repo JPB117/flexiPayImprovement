@@ -710,9 +710,6 @@ public class UsersDaoHelper {
 		}
 		logger.info("LogInHandlerexecut(): loggedInCookie=" + loggedInCookie);
 		
-		logger.warn(" IMPORT MISSING MEMBERS ======== >>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ");
-		applicationFormDaoHelper.importMissingMembers();
-
 		assert action.getActionType() == null;
 		return new LogInResult(action.getActionType(), currentUserDto,
 				loggedInCookie);
