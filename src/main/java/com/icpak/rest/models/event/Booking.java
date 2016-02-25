@@ -72,7 +72,6 @@ public class Booking extends PO {
 	private Collection<Delegate> delegates = new HashSet<>();
 	@ManyToOne
 	private Event event;
-
 	private Date registrationDate = new Date();
 	private String memberId; // For Courses, may not have delegates
 
@@ -253,6 +252,7 @@ public class Booking extends PO {
 		dto.setPaymentStatus(paymentStatus);
 		dto.setRefId(getRefId());
 		dto.setStatus(status);
+		// dto.setInvoiceRef(invoiceRe);
 
 		return dto;
 	}

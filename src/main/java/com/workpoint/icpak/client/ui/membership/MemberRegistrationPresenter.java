@@ -305,7 +305,6 @@ public class MemberRegistrationPresenter
 		}
 
 		usersDelegate.withCallback(new AbstractAsyncCallback<UserDto>() {
-
 			@Override
 			public void onSuccess(UserDto result) {
 				getView().setEmailValid(false);
@@ -333,10 +332,6 @@ public class MemberRegistrationPresenter
 				 * records
 				 */
 				getView().setEmailValid(false);
-
-				/*
-				 * Add an error message
-				 */
 				getView().getRegistrationForm().addError(message);
 				return false;
 			}

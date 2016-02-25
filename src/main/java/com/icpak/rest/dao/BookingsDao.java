@@ -41,6 +41,21 @@ public class BookingsDao extends BaseDao {
 		return booking;
 	}
 
+	public Booking getBySponsorEmail(String email, Long eventId) {
+		Booking booking = getSingleResultOrNull(getEntityManager()
+				.createQuery(
+						"from Booking u where u.contact.email=:email and event.id=:eventId")
+				.setParameter("email", email).setParameter("eventId", eventId));
+		if (booking == null) {
+			logger.debug("Booking for sponsor email:" + email
+					+ " not found for event:" + eventId);
+		} else {
+			logger.debug("Duplicate Booking found for email:" + email
+					+ " and eventRefId:" + eventId);
+		}
+		return booking;
+	}
+
 	public void createBooking(Booking booking) {
 		save(booking);
 	}
@@ -84,10 +99,7 @@ public class BookingsDao extends BaseDao {
 			String eventRefId = (value = row[i++]) == null ? null : value
 					.toString();
 			importDistinctSponsor(seminarId, eventRefId);
-
-			// System.err.println("Importing Seminar Id>>" + seminarId);
 		}
-
 	}
 
 	public void importDistinctSponsor(Integer seminarId, String eventRefId) {
@@ -563,7 +575,6 @@ public class BookingsDao extends BaseDao {
 			delegateList.add(delegateDto);
 
 		}
-
 		return delegateList;
 	}
 }

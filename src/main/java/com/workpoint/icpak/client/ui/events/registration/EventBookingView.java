@@ -149,6 +149,7 @@ public class EventBookingView extends ViewImpl implements
 	@UiField
 	DivElement divContainer;
 	int counter = 0;
+	boolean isValid = true;
 
 	private List<LIElement> liElements = new ArrayList<LIElement>();
 	private List<PageElement> pageElements = new ArrayList<PageElement>();
@@ -367,7 +368,6 @@ public class EventBookingView extends ViewImpl implements
 	}
 
 	public boolean isValid() {
-		boolean isValid = true;
 		issuesPanel.clear();
 		issuesPanelDelegate.clear();
 
@@ -406,12 +406,12 @@ public class EventBookingView extends ViewImpl implements
 
 			if (isNullOrEmpty(txtContactPerson.getValue())) {
 				isValid = false;
-				issuesPanel.addError("Contact is required");
+				issuesPanel.addError("Contact Person details is required");
 			}
 
 			if (isNullOrEmpty(txtContactEmail.getValue())) {
 				isValid = false;
-				issuesPanel.addError("e-Mail is required");
+				issuesPanel.addError("E-Mail is required");
 			}
 		} else if (counter == 1) {
 			if (getDelegates().size() == 0) {
@@ -512,7 +512,6 @@ public class EventBookingView extends ViewImpl implements
 	}
 
 	private ContactDto getContact() {
-
 		ContactDto contact = new ContactDto();
 		contact.setAddress(txtAddress.getValue());
 		contact.setCompany(txtCompanyName.getValue());
@@ -695,6 +694,23 @@ public class EventBookingView extends ViewImpl implements
 
 	public HasClickHandlers getaDownloadProforma() {
 		return aDownloadProforma;
+	}
+
+	@Override
+	public TextField getEmailTextBox() {
+		return txtContactEmail;
+	}
+
+	@Override
+	public void setEmailValid(boolean isValid, String message) {
+		this.isValid = isValid;
+		issuesPanel.clear();
+		if (isValid) {
+			issuesPanel.addStyleName("hide");
+		} else {
+			issuesPanel.addError(message);
+			issuesPanel.removeStyleName("hide");
+		}
 	}
 
 }
