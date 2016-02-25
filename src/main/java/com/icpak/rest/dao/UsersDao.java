@@ -91,8 +91,11 @@ public class UsersDao extends BaseDao {
 					limit);
 		}
 
-		return getResultList(getEntityManager().createQuery("select u from User u" + " inner join u.roles roles "
-				+ " where roles=:role " + " and u.isActive=1" + " order by username").setParameter("role", role),
+		return getResultList(getEntityManager().createQuery("select u from User u" 
+	            + " inner join u.roles roles "
+				+ " where roles=:role " 
+	            + " and u.isActive=1" + 
+				" order by username").setParameter("role", role),
 				offSet, limit);
 	}
 
@@ -255,6 +258,12 @@ public class UsersDao extends BaseDao {
 		Query query = (getEntityManager().createNativeQuery("delete from user_role where userid=:passedUserId")
 				.setParameter("passedUserId", passedId));
 		query.executeUpdate();
+	}
+
+	public String getGender(String applicationRefId) {
+		return getSingleResultOrNull(getEntityManager()
+				.createNativeQuery("select a.gender from `Application Form Header` a where a.refId=:refId")
+				.setParameter("refId", applicationRefId));
 	}
 
 	public void createDefaultRoles() {

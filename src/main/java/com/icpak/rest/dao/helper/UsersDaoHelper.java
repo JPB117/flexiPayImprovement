@@ -691,6 +691,10 @@ public class UsersDaoHelper {
 			userDto.setApplicationRefId(getApplicationRefId(userDto.getRefId()));
 			userDto.setMemberRefId(dao.getMemberRefId(userDto.getUserLongId()));
 
+			if (userDto.getMemberNo() != null) {
+				userDto.setGender(dao.getGender(userDto.getApplicationRefId()));
+			}
+
 		}
 
 		CurrentUserDto currentUserDto = new CurrentUserDto(isLoggedIn, userDto);

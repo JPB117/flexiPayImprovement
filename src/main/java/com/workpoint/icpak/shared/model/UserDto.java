@@ -30,6 +30,7 @@ public class UserDto extends SerializableObj implements Listable, Serializable {
 	private String phoneNumber;
 	private Date lastDateUpdateFromErp;
 	private Long userLongId;
+	private String gender;
 
 	public UserDto() {
 	}
@@ -279,4 +280,13 @@ public class UserDto extends SerializableObj implements Listable, Serializable {
 	public void setMembershipStatus(MembershipStatus membershipStatus) {
 		this.membershipStatus = membershipStatus;
 	}
+
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+	
 }

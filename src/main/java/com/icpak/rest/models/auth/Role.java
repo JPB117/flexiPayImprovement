@@ -62,6 +62,7 @@ public class Role extends PO {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	@SuppressWarnings("deprecation")
 	@Basic(optional = false)
 	@Column(length = 100, unique = true, nullable = false)
 	@Index(name = "idx_role_name")

@@ -78,7 +78,7 @@ public class RoleDto extends SerializableObj implements Listable {
 	}
 
 	public void setUserTypeID(Long userTypeID) {
-		userTypeID = userTypeID;
+		this.userTypeID = userTypeID;
 	}
 
 	public Long getRoleId() {
@@ -86,7 +86,7 @@ public class RoleDto extends SerializableObj implements Listable {
 	}
 
 	public void setRoleId(Long roleId) {
-		roleId = roleId;
+		this.roleId = roleId;
 	}
-
+	
 }
