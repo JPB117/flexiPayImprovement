@@ -42,10 +42,12 @@ import com.google.inject.persist.Transactional;
 import com.icpak.rest.IDUtils;
 import com.icpak.rest.dao.ApplicationFormDao;
 import com.icpak.rest.dao.InvoiceDaoHelper;
+import com.icpak.rest.dao.RolesDao;
 import com.icpak.rest.dao.UsersDao;
 import com.icpak.rest.exceptions.ServiceException;
 import com.icpak.rest.models.ErrorCodes;
 import com.icpak.rest.models.auth.BioData;
+import com.icpak.rest.models.auth.Role;
 import com.icpak.rest.models.auth.User;
 import com.icpak.rest.models.membership.ApplicationCategory;
 import com.icpak.rest.models.membership.ApplicationFormHeader;
@@ -80,6 +82,9 @@ public class ApplicationFormDaoHelper {
 
 	@Inject
 	ApplicationFormDao applicationDao;
+
+	@Inject
+	RolesDao roleDao;
 	@Inject
 	UsersDao userDao;
 	@Inject
@@ -174,6 +179,8 @@ public class ApplicationFormDaoHelper {
 		bioData.setFirstName(application.getSurname());
 		bioData.setLastName(application.getOtherNames());
 		po.setUserData(bioData);
+		Role role = roleDao.getByName("basic_member");
+		po.addRole(role);
 
 		String password = IDUtils.generateTempPassword();
 		po.setPassword(password);
