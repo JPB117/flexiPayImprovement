@@ -69,7 +69,7 @@ public class TestApplicationForm extends AbstractDaoTest {
 	
 	@Test
 	public void ImportMissingMembers() {
-		List<ApplicationFormHeaderDto> members = helper.importMissingMembers();
+		//List<ApplicationFormHeaderDto> members = helper.importMissingMembers();
 	}
 
 	@Ignore

@@ -165,7 +165,7 @@ public class EventsPresenter extends
 		getView().getDelegatesPagingPanel().setLoader(new PagingLoader() {
 			@Override
 			public void onLoad(int offset, int limit) {
-				loadEvents(offset, limit, delegateSearchTerm);
+				loadDelegates(offset, limit, delegateSearchTerm);
 			}
 		});
 	}

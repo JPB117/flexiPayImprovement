@@ -42,6 +42,7 @@ import com.icpak.rest.models.event.Delegate;
 import com.icpak.rest.models.event.Event;
 import com.icpak.rest.models.membership.Contact;
 import com.icpak.rest.models.membership.Member;
+import com.icpak.rest.models.trx.Invoice;
 import com.icpak.rest.models.util.Attachment;
 import com.icpak.rest.util.ApplicationSettings;
 import com.icpak.rest.util.SMSIntegration;
@@ -117,10 +118,8 @@ public class BookingsDaoHelper {
 		for (Booking booking : list) {
 			BookingDto dto = booking.toDto();
 			dto.setUri(uriInfo + "/" + dto.getRefId());
-			// dto.getEvent().setUri(uriInfo.getBaseUri()+"events/"+clone.getEvent().getRefId());
 			clones.add(dto);
 		}
-
 		return clones;
 	}
 
@@ -716,44 +715,23 @@ public class BookingsDaoHelper {
 		logger.error("==== Booking ref Id === " + bookingId);
 		dto.setRefId(bookingId);
 		return createBooking(eventId, dto);
+	}
 
-		// Event eventInDb = eventDao.getByEventId(eventId);
-		// Booking poBooking = dao.getByBookingId(bookingId);
-		// poBooking.copyFrom(dto);
-		// poBooking.setEvent(eventInDb);
-		// if (dto.getContact() != null) {
-		// Contact poContact = poBooking.getContact();
-		// if (poContact == null) {
-		// poContact = new Contact();
-		// }
-		//
-		// ContactDto contactDto = dto.getContact();
-		// poContact.copyFrom(contactDto);
-		// }
-		//
-		// List<DelegateDto> dtos = dto.getDelegates();
-		// Collection<Delegate> delegates = new ArrayList<>();
-		// for (DelegateDto delegateDto : dtos) {
-		// Delegate delegate = initDelegate(delegateDto, eventInDb);
-		// dao.save(delegate);
-		// delegates.add(delegate);
-		// }
-		// poBooking.setDelegates(delegates);
-		//
-		// dao.save(poBooking);
-		// sendProInvoice(poBooking);
-		// sendDelegateSMS(poBooking);
-		//
-		// dao.deleteAllBookingInvoice(bookingId);
-		// BookingDto bookingDto = poBooking.toDto();
-		// dto.setInvoiceRef(dao.getInvoiceRef(bookingId));
-		// return bookingDto;
+	public BookingDto checkEmailExists(String email, String eventRefId) {
+		Event event = dao.findByRefId(eventRefId, Event.class);
+		Booking booking = dao.getBySponsorEmail(email, event.getId());
+		if (booking != null) {
+			String invoiceRefId = dao.getInvoiceRef(booking.getRefId());
+			BookingDto bookingDto = booking.toDto();
+			bookingDto.setInvoiceRef(invoiceRefId);
+			return bookingDto;
+		} else {
+			return null;
+		}
 	}
 
 	public void sendDelegateSMS(String bookingRefId) {
-
 		Booking bookingInDb = dao.findByRefId(bookingRefId, Booking.class);
-
 		Event event = bookingInDb.getEvent();
 		Collection<Delegate> delegates = bookingInDb.getDelegates();
 		List<Delegate> delegateList = new ArrayList<>();

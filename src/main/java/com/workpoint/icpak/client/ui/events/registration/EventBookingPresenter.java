@@ -8,7 +8,10 @@ import java.util.List;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.GwtEvent.Type;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.inject.Inject;
@@ -31,6 +34,7 @@ import com.workpoint.icpak.client.place.NameTokens;
 import com.workpoint.icpak.client.service.AbstractAsyncCallback;
 import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.AutoCompleteField;
+import com.workpoint.icpak.client.ui.component.TextField;
 import com.workpoint.icpak.client.ui.component.autocomplete.ServerOracle;
 import com.workpoint.icpak.client.ui.events.PaymentCompletedEvent;
 import com.workpoint.icpak.client.ui.events.PaymentCompletedEvent.PaymentCompletedHandler;
@@ -49,8 +53,10 @@ import com.workpoint.icpak.shared.api.MemberResource;
 import com.workpoint.icpak.shared.model.Country;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.MemberDto;
+import com.workpoint.icpak.shared.model.UserDto;
 import com.workpoint.icpak.shared.model.events.AccommodationDto;
 import com.workpoint.icpak.shared.model.events.BookingDto;
+import com.workpoint.icpak.shared.model.events.DelegateDto;
 import com.workpoint.icpak.shared.model.events.EventDto;
 
 public class EventBookingPresenter extends
@@ -92,6 +98,11 @@ public class EventBookingPresenter extends
 		void bindAccommodations(List<AccommodationDto> result);
 
 		HasClickHandlers getaDownloadProforma();
+
+		TextField getEmailTextBox();
+
+		void setEmailValid(boolean b, String string);
+
 	}
 
 	@ProxyCodeSplit
@@ -121,18 +132,22 @@ public class EventBookingPresenter extends
 
 	private ResourceDelegate<MemberResource> membersDelegate;
 
+	private ResourceDelegate<EventsResource> eventsDelegate;
+
 	@Inject
 	public EventBookingPresenter(final EventBus eventBus, final MyView view,
 			final MyProxy proxy,
 			ResourceDelegate<CountriesResource> countriesResource,
 			ResourceDelegate<EventsResource> eventsResource,
 			ResourceDelegate<InvoiceResource> invoiceResource,
-			ResourceDelegate<MemberResource> membersDelegate) {
+			ResourceDelegate<MemberResource> membersDelegate,
+			ResourceDelegate<EventsResource> eventsDelegate) {
 		super(eventBus, view, proxy);
 		this.countriesResource = countriesResource;
 		this.eventsResource = eventsResource;
 		this.invoiceResource = invoiceResource;
 		this.membersDelegate = membersDelegate;
+		this.eventsDelegate = eventsDelegate;
 	}
 
 	@Override
@@ -188,11 +203,42 @@ public class EventBookingPresenter extends
 			}
 		});
 
+		getView().getEmailTextBox().addValueChangeHandler(
+				new ValueChangeHandler<String>() {
+					@Override
+					public void onValueChange(ValueChangeEvent<String> event) {
+						String email = event.getValue();
+						checkExists(email);
+					}
+				});
+	}
+
+	protected void checkExists(String email) {
+		getView().showmask(true);
+		eventsDelegate.withCallback(new AbstractAsyncCallback<BookingDto>() {
+			@Override
+			public void onSuccess(BookingDto booking) {
+				getView().showmask(false);
+				if (booking == null) {
+					getView().setEmailValid(true, "");
+				} else {
+					bookingId = booking.getRefId();
+					getView()
+							.setEmailValid(
+									false,
+									"You have already booked for this event."
+											+ " We have resend the booking email to "
+											+ booking.getContact().getEmail()
+											+ " with instructions on how to ammend your booking.");
+					getInvoice(booking.getInvoiceRef(), false, true);
+				}
+			}
+		}).delegates(eventId).checkExist(email.trim());
+
 	}
 
 	protected void submit(BookingDto dto) {
 		getView().showmask(true);
-
 		if (bookingId == null) {
 			eventsResource
 					.withCallback(new AbstractAsyncCallback<BookingDto>() {

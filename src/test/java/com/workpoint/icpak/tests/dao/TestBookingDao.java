@@ -48,13 +48,18 @@ public class TestBookingDao extends AbstractDaoTest {
 
 	@Ignore
 	public void getBooking() {
-
 		BookingDto dto = bookingsHelper.getBookingById("Jx4Ca6HpOutf2ic7",
 				"Ac920rNN12ILqKFN");
 		for (DelegateDto delegate : dto.getDelegates()) {
 			delegate.getAccommodation();
 		}
+	}
 
+	@Test
+	public void testDelegateCheck() {
+		BookingDto booking = bookingsHelper.checkEmailExists(
+				"tomkim@wira.io", "UJDQSrOzKaplbgfY");
+		System.err.println(booking);
 	}
 
 	@Ignore
@@ -73,7 +78,7 @@ public class TestBookingDao extends AbstractDaoTest {
 		}
 	}
 
-	@Test
+	// @Test
 	public void createBooking() {
 		BookingDto dto = new BookingDto();
 		dto.setStatus("");

@@ -18,6 +18,7 @@ import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 import com.workpoint.icpak.shared.api.DelegatesResource;
+import com.workpoint.icpak.shared.model.events.BookingDto;
 import com.workpoint.icpak.shared.model.events.DelegateDto;
 
 @Api(value = "", description = "Handles CRUD for delegates in an event")
@@ -27,8 +28,9 @@ public class DelegatesResourceImpl implements DelegatesResource {
 	BookingsDaoHelper helper;
 
 	private final String eventId;
-	@Context HttpContext httpContext;
-	
+	@Context
+	HttpContext httpContext;
+
 	@Inject
 	public DelegatesResourceImpl(@Assisted String eventId) {
 		this.eventId = eventId;
@@ -39,21 +41,30 @@ public class DelegatesResourceImpl implements DelegatesResource {
 	@ApiOperation(value = "Retrieve all active bookings")
 	public List<DelegateDto> getAll(
 			@ApiParam(value = "Starting point to fetch") @QueryParam("offset") Integer offset,
-			@ApiParam(value = "No of Items to fetch") @QueryParam("limit") Integer limit , @QueryParam("searchTerm") String searchTerm) {
+			@ApiParam(value = "No of Items to fetch") @QueryParam("limit") Integer limit,
+			@QueryParam("searchTerm") String searchTerm) {
 		String uri = "";
-		List<DelegateDto> dtos = helper.getAllDelegates("", eventId, offset, limit, searchTerm);
+		List<DelegateDto> dtos = helper.getAllDelegates("", eventId, offset,
+				limit, searchTerm);
 		return dtos;
 	}
-	
+
 	@GET
 	@Path("/count")
 	public Integer getCount() {
 		return getSearchCount("");
 	}
-	
+
 	@GET
 	@Path("/searchCount")
-	public Integer getSearchCount(@QueryParam("searchTerm") String searchTerm){
-		return helper.getDelegatesCount(eventId , searchTerm);
+	public Integer getSearchCount(@QueryParam("searchTerm") String searchTerm) {
+		return helper.getDelegatesCount(eventId, searchTerm);
+	}
+
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/{email}")
+	public BookingDto checkExist(@QueryParam("email") String email) {
+		return helper.checkEmailExists(email, eventId);
 	}
 }
