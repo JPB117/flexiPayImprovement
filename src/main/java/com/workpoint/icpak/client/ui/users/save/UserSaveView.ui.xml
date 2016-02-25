@@ -74,12 +74,21 @@
 
 						<div class="form-group">
 							<div class="row">
-								<div class="col-lg-6">
+								<div class="col-lg-6 hide">
+									<label for="Email">
+										<b>User Type:</b>
+									</label>
+									<d:DropDownList ui:field="lstUserType"
+										styleName="form-control">
+									</d:DropDownList>
+								</div>
+
+								<div class="col-lg-6 hide">
 									<label for="Email">
 										<b>Member No:</b>
 									</label>
 									<d:TextField ui:field="txtMemberNo" type="email"
-										class="form-control" placeholder="Email" />
+										class="form-control" placeholder="Member No" />
 								</div>
 							</div>
 						</div>

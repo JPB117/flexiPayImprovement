@@ -78,16 +78,11 @@ public class User extends PO {
 	@Basic(optional = false)
 	@Column(length = 100, unique = true)
 	private String username;
-
 	@ApiModelProperty(value = "user email")
-	// @Basic(optional=false)
-	// @Index(name="idx_users_email")
 	private String email;
-
 	@Basic(optional = true)
 	@Column(length = 255)
 	private String password;
-
 	@JsonIgnore
 	@XmlTransient
 	@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH,
@@ -95,6 +90,7 @@ public class User extends PO {
 	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = @JoinColumn(name = "roleid"))
 	@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 	private Set<Role> roles = new HashSet<Role>();
+	
 	@Embedded
 	private BioData userData;
 	@OneToOne(fetch = FetchType.LAZY, mappedBy = "user", cascade = {
@@ -195,14 +191,14 @@ public class User extends PO {
 	}
 
 	public void copyFrom(UserDto dto) {
-		setEmail(dto.getEmail());
-		setPhoneNumber(dto.getPhoneNumber());
 		BioData bio = new BioData();
 		bio.setFirstName(dto.getName());
 		bio.setLastName(dto.getSurname());
 		setMemberNo(dto.getMemberNo());
 		setFullName(dto.getFullName());
 		setUserData(bio);
+		setEmail(dto.getEmail());
+		setPhoneNumber(dto.getPhoneNumber());
 	}
 
 	public User copyOnUpdate(UserDto dto) {

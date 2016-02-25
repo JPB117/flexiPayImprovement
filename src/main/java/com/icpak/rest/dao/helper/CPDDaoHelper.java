@@ -195,9 +195,9 @@ public class CPDDaoHelper {
 				+ "</p>Thank you<br/>Member Services";
 
 		try {
-			EmailServiceHelper.sendEmail(body, subject, Arrays.asList(
-					user.getEmail(), "molly.mwangi@icpak.com"), Arrays.asList(
-					user.getUserData().getFullNames(), "Molly Mwangi"));
+			EmailServiceHelper.sendEmail(body, subject,
+					Arrays.asList(user.getEmail(), "molly.mwangi@icpak.com"),
+					Arrays.asList(user.getFullName(), "Molly Mwangi"));
 
 		} catch (Exception e) {
 			logger.info("Review Email for " + user.getEmail()

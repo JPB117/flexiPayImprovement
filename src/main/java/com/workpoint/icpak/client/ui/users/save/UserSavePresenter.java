@@ -14,8 +14,11 @@ import com.gwtplatform.mvp.client.PopupView;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.workpoint.icpak.client.service.AbstractAsyncCallback;
 import com.workpoint.icpak.client.ui.AppManager;
+import com.workpoint.icpak.client.ui.events.AfterSaveEvent;
 import com.workpoint.icpak.client.ui.events.LoadGroupsEvent;
 import com.workpoint.icpak.client.ui.events.LoadUsersEvent;
+import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
+import com.workpoint.icpak.client.ui.events.ProcessingEvent;
 import com.workpoint.icpak.shared.api.RoleResource;
 import com.workpoint.icpak.shared.api.UsersResource;
 import com.workpoint.icpak.shared.model.RoleDto;
@@ -85,12 +88,16 @@ public class UserSavePresenter extends
 				if (getView().isValid()) {
 					UserDto userDto = getView().getUser();
 					getView().hide();
+					fireEvent(new ProcessingEvent());
 					if (user != null) {
 						usersDelegate.withCallback(
 								new AbstractAsyncCallback<UserDto>() {
 									@Override
 									public void onSuccess(UserDto dto) {
 										bindUser(dto);
+										fireEvent(new ProcessingCompletedEvent());
+										fireEvent(new AfterSaveEvent(
+												"User details saved successfully!"));
 									}
 								}).update(user.getRefId(), userDto);
 					} else {
@@ -99,6 +106,9 @@ public class UserSavePresenter extends
 									@Override
 									public void onSuccess(UserDto dto) {
 										bindUser(dto);
+										fireEvent(new ProcessingCompletedEvent());
+										fireEvent(new AfterSaveEvent(
+												"User details saved successfully!"));
 									}
 
 								}).create(userDto, getView().isSendEmail());
@@ -108,14 +118,11 @@ public class UserSavePresenter extends
 		});
 
 		getView().getSaveGroup().addClickHandler(new ClickHandler() {
-
 			@Override
 			public void onClick(ClickEvent event) {
 				if (getView().isValid()) {
 					RoleDto userGroup = getView().getGroup();
-
 					if (group != null) {
-
 						rolesDelegate.withCallback(
 								new AbstractAsyncCallback<RoleDto>() {
 									public void onSuccess(RoleDto result) {

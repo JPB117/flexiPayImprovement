@@ -25,12 +25,14 @@ import com.gwtplatform.mvp.client.PopupViewImpl;
 import com.workpoint.icpak.client.model.UploadContext;
 import com.workpoint.icpak.client.model.UploadContext.UPLOADACTION;
 import com.workpoint.icpak.client.ui.component.ActionLink;
+import com.workpoint.icpak.client.ui.component.DropDownList;
 import com.workpoint.icpak.client.ui.component.IssuesPanel;
 import com.workpoint.icpak.client.ui.component.TextArea;
 import com.workpoint.icpak.client.ui.component.TextField;
 import com.workpoint.icpak.client.ui.component.autocomplete.MultiSelectField;
 import com.workpoint.icpak.client.ui.upload.custom.Uploader;
 import com.workpoint.icpak.client.ui.users.save.UserSavePresenter.TYPE;
+import com.workpoint.icpak.shared.model.Listable;
 import com.workpoint.icpak.shared.model.RoleDto;
 import com.workpoint.icpak.shared.model.UserDto;
 
@@ -98,8 +100,9 @@ public class UserSaveView extends PopupViewImpl implements
 	@UiField
 	MultiSelectField<RoleDto> lstGroups;
 
+	@UiField
+	DropDownList<UserCategory> lstUserType;
 	UserDto user;
-
 	TYPE type;
 
 	public interface Binder extends UiBinder<Widget, UserSaveView> {
@@ -324,5 +327,19 @@ public class UserSaveView extends PopupViewImpl implements
 	@Override
 	public boolean isSendEmail() {
 		return chkSendEmail.getValue();
+	}
+
+	public enum UserCategory implements Listable {
+		MEMBER, STAFF;
+		@Override
+		public String getName() {
+			return name();
+		}
+
+		@Override
+		public String getDisplayName() {
+			return name();
+		}
+
 	}
 }

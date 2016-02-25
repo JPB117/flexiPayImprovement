@@ -2,6 +2,8 @@ package com.workpoint.icpak.client.ui.eventsandseminars;
 
 import java.util.List;
 
+import javax.mail.search.SearchTerm;
+
 import com.google.gwt.event.dom.client.HasKeyDownHandlers;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
@@ -28,6 +30,7 @@ import com.workpoint.icpak.client.ui.AppManager;
 import com.workpoint.icpak.client.ui.OptionControl;
 import com.workpoint.icpak.client.ui.admin.TabDataExt;
 import com.workpoint.icpak.client.ui.component.PagingConfig;
+import com.workpoint.icpak.client.ui.component.PagingLoader;
 import com.workpoint.icpak.client.ui.component.PagingPanel;
 import com.workpoint.icpak.client.ui.events.EditModelEvent;
 import com.workpoint.icpak.client.ui.events.EditModelEvent.EditModelHandler;
@@ -62,7 +65,7 @@ public class EventsPresenter extends
 
 		PagingPanel getEventsPagingPanel();
 
-		PagingPanel getBookingsPagingPanel();
+		PagingPanel getDelegatesPagingPanel();
 
 		void bindEventSummary(EventSummaryDto result);
 
@@ -85,6 +88,9 @@ public class EventsPresenter extends
 	public interface IEventsProxy extends TabContentProxyPlace<EventsPresenter> {
 	}
 
+	private String delegateSearchTerm = "";
+	protected String eventSearchTerm = "";
+
 	ValueChangeHandler<String> eventsValueChangeHandler = new ValueChangeHandler<String>() {
 		@Override
 		public void onValueChange(ValueChangeEvent<String> event) {
@@ -103,6 +109,7 @@ public class EventsPresenter extends
 		@Override
 		public void onKeyDown(KeyDownEvent event) {
 			if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+				delegateSearchTerm = getView().getDelegateSearchValue().trim();
 				loadDelegatesCount(getView().getDelegateSearchValue().trim());
 			}
 		}
@@ -112,6 +119,7 @@ public class EventsPresenter extends
 		@Override
 		public void onKeyDown(KeyDownEvent event) {
 			if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+				eventSearchTerm = getView().getSearchValue().trim();
 				loadEvents(getView().getSearchValue().trim());
 			}
 		}
@@ -142,15 +150,24 @@ public class EventsPresenter extends
 		addRegisteredHandler(EditModelEvent.TYPE, this);
 		addRegisteredHandler(TableActionEvent.TYPE, this);
 
-		// getView().getSearchValueChangeHander().addValueChangeHandler(
-		// eventsValueChangeHandler);
-		// getView().getDelegateSearchValueChangeHandler().addValueChangeHandler(
-		// delegateTableValueChangeHandler);
-
 		getView().getDelegateSearchKeyDownHandler().addKeyDownHandler(
 				delegateKeyHandler);
 		getView().getEventsSearchKeyDownHandler().addKeyDownHandler(
 				eventsKeyHandler);
+
+		getView().getEventsPagingPanel().setLoader(new PagingLoader() {
+			@Override
+			public void onLoad(int offset, int limit) {
+				loadEvents(offset, limit, eventSearchTerm);
+			}
+		});
+
+		getView().getDelegatesPagingPanel().setLoader(new PagingLoader() {
+			@Override
+			public void onLoad(int offset, int limit) {
+				loadEvents(offset, limit, delegateSearchTerm);
+			}
+		});
 	}
 
 	@Override
@@ -181,7 +198,7 @@ public class EventsPresenter extends
 				@Override
 				public void onSuccess(Integer aCount) {
 					fireEvent(new ProcessingCompletedEvent());
-					PagingPanel panel = getView().getBookingsPagingPanel();
+					PagingPanel panel = getView().getDelegatesPagingPanel();
 					panel.setTotal(aCount);
 					PagingConfig config = panel.getConfig();
 					config.setPAGE_LIMIT(100);
@@ -230,7 +247,7 @@ public class EventsPresenter extends
 			public void onSuccess(Integer count) {
 				fireEvent(new ProcessingCompletedEvent());
 
-				PagingPanel panel = getView().getBookingsPagingPanel();
+				PagingPanel panel = getView().getDelegatesPagingPanel();
 				panel.setTotal(count);
 				PagingConfig config = panel.getConfig();
 				config.setPAGE_LIMIT(50);
@@ -259,6 +276,7 @@ public class EventsPresenter extends
 
 	protected void loadEvents(int offset, int limit, String searchTerm) {
 		fireEvent(new ProcessingEvent());
+
 		eventsDelegate.withCallback(
 				new AbstractAsyncCallback<List<EventDto>>() {
 					@Override

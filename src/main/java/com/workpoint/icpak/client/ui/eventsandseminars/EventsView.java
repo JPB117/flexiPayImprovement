@@ -118,7 +118,7 @@ public class EventsView extends ViewImpl implements EventsPresenter.IEventsView 
 	}
 
 	@Override
-	public PagingPanel getBookingsPagingPanel() {
+	public PagingPanel getDelegatesPagingPanel() {
 		return tblDelegates.getPagingPanel();
 	}
 
