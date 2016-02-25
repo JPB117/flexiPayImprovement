@@ -37,6 +37,8 @@ public class UsersDao extends BaseDao {
 
 	public User findUserByMemberNo(String memberNo) {
 		assert memberNo != null;
+		
+		logger.warn(" MEMBER nO IN CHECK ============================= "+memberNo);
 		String query = "from User u where u.memberNo = :memberNo";
 		return getSingleResultOrNull(getEntityManager().createQuery(query).setParameter("memberNo", memberNo));
 	}
@@ -298,5 +300,11 @@ public class UsersDao extends BaseDao {
 				rolesDao.createRole(r);
 			}
 		}
+	}
+	
+	public List<User> findUsersByMemberNo(String memberNo) {
+		assert memberNo != null;
+		String query = "from User u where u.memberNo = :memberNo";
+		return getResultList((getEntityManager().createQuery(query).setParameter("memberNo", memberNo)));
 	}
 }

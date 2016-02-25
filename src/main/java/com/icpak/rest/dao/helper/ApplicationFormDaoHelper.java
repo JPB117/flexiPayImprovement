@@ -100,6 +100,8 @@ public class ApplicationFormDaoHelper {
 	AccountancyDaoHelper accountancyHelper;
 	@Inject
 	SpecializationDaoHelper specializationHelper;
+	@Inject
+	MemberDaoHelper memberDaoHelper;
 
 	SimpleDateFormat formatter = new SimpleDateFormat("MMM d Y");
 
@@ -713,7 +715,7 @@ public class ApplicationFormDaoHelper {
 		List<ApplicationFormHeaderDto> rtn = new ArrayList<>();
 
 		for (MemberImport memberIpmort : memberImports) {
-			System.err.println("Member: " + memberIpmort.getName());
+			logger.info("Member NAME : " + memberIpmort.getName());
 			// Copy into PO
 			ApplicationFormHeader po = new ApplicationFormHeader();
 			po.copyFrom(memberIpmort.toDTO());
@@ -735,7 +737,7 @@ public class ApplicationFormDaoHelper {
 			User user = new User();
 			user.setEmail(memberIpmort.getEmail());
 			user.setFullName(memberIpmort.getName());
-			user.setMemberNo(memberIpmort.getNO());
+			user.setMemberNo(memberIpmort.getMemberNo());
 			user.setAddress(memberIpmort.getAddress());
 			user.setCity(memberIpmort.getCity());
 			user.setMobileNo(memberIpmort.getPhoneNo_());
@@ -745,7 +747,9 @@ public class ApplicationFormDaoHelper {
 
 			userDao.createUser(user);
 
-			User userInDb = userDao.findUserByMemberNo(memberIpmort.getMemberNo());
+			List<User> usersInDb = userDao.findUsersByMemberNo(memberIpmort.getMemberNo());
+
+			User userInDb = usersInDb.get(0);
 
 			po.setUserRefId(user.getRefId());
 
@@ -763,16 +767,18 @@ public class ApplicationFormDaoHelper {
 				member.setMemberShipStatus(MembershipStatus.INACTIVE);
 			}
 
+			logger.warn(" PO >>>>>>>>>>>>><<<<<<<<<<<<<<<<<< " + new JSONObject(member));
+
 			userInDb.setMember(member);
 			userDao.save(member);
-			
-			logger.warn(" PO >>>>>>>>>>>>><<<<<<<<<<<<<<<<<< "+new JSONObject(po));
-			
+
 			userDao.save(po);
 			userDao.save(userInDb);
 
 			logger.warn(" MEMBER ID = = = == " + memberIpmort.getId());
 		}
+
+		memberDaoHelper.findDuplicateMemberNo();
 
 		return rtn;
 	}

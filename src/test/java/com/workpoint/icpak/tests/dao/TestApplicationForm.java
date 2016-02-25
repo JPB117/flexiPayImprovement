@@ -3,19 +3,23 @@ package com.workpoint.icpak.tests.dao;
 import java.io.IOException;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import com.amazonaws.util.json.JSONObject;
 import com.google.inject.Inject;
 import com.icpak.rest.dao.ApplicationFormDao;
+import com.icpak.rest.dao.UsersDao;
 import com.icpak.rest.dao.helper.AccountancyDaoHelper;
 import com.icpak.rest.dao.helper.ApplicationFormDaoHelper;
 import com.icpak.rest.dao.helper.EducationDaoHelper;
 import com.icpak.rest.dao.helper.SpecializationDaoHelper;
 import com.icpak.rest.dao.helper.TrainingDaoHelper;
 import com.icpak.rest.dao.helper.UsersDaoHelper;
+import com.icpak.rest.models.auth.User;
 import com.icpak.rest.models.membership.ApplicationFormHeader;
+import com.icpak.rest.models.membership.MemberImport;
 import com.workpoint.icpak.shared.model.ApplicationERPDto;
 import com.workpoint.icpak.shared.model.ApplicationFormAccountancyDto;
 import com.workpoint.icpak.shared.model.ApplicationFormEducationalDto;
@@ -29,6 +33,8 @@ import com.workpoint.icpak.shared.model.auth.ApplicationStatus;
 import com.workpoint.icpak.tests.base.AbstractDaoTest;
 
 public class TestApplicationForm extends AbstractDaoTest {
+	
+	Logger logger = Logger.getLogger(TestApplicationForm.class);
 
 	@Inject
 	ApplicationFormDaoHelper helper;
@@ -46,6 +52,8 @@ public class TestApplicationForm extends AbstractDaoTest {
 	SpecializationDaoHelper specializationHelper;
 	@Inject
 	UsersDaoHelper usersDaoHelper;
+	@Inject
+	UsersDao usersDao;
 
 	@Ignore
 	public void create() {
@@ -181,6 +189,15 @@ public class TestApplicationForm extends AbstractDaoTest {
 	}
 
 	@Ignore
-	public void getCount() throws IOException {
+	public void checkStubornMemberNo(){
+		List<MemberImport> memberImports = applicationDao.importMissingMembers();
+		
+		for(MemberImport m : memberImports){
+			List<User> users = usersDao.findUsersByMemberNo(m.getMemberNo());
+			
+			if(!users.isEmpty() && users.size() > 1){
+				logger.warn(" DIRTY MEMBER NO "+m.getMemberNo());
+			}
+		}
 	}
 }
