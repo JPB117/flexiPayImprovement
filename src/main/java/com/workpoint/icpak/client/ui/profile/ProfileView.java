@@ -5,6 +5,7 @@ import java.util.List;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.HasKeyDownHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -264,6 +265,21 @@ public class ProfileView extends ViewImpl implements
 
 	public ProfileWidget getProfileWidget() {
 		return divProfileContent;
+	}
+
+	@Override
+	public String getPassword() {
+		return panelPasswordWidget.getPassword();
+	}
+
+	@Override
+	public HasKeyDownHandlers getPasswordTextField() {
+		return panelPasswordWidget.getPasswordTextField();
+	}
+
+	@Override
+	public HasClickHandlers getSubmitPassword() {
+		return panelPasswordWidget.getSaveButton();
 	}
 
 }

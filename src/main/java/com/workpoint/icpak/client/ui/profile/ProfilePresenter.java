@@ -7,6 +7,10 @@ import java.util.List;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.HasKeyDownHandlers;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -26,9 +30,9 @@ import com.workpoint.icpak.client.service.AbstractAsyncCallback;
 import com.workpoint.icpak.client.ui.AppManager;
 import com.workpoint.icpak.client.ui.OptionControl;
 import com.workpoint.icpak.client.ui.admin.TabDataExt;
+import com.workpoint.icpak.client.ui.events.AfterSaveEvent;
 import com.workpoint.icpak.client.ui.events.EditModelEvent;
 import com.workpoint.icpak.client.ui.events.EditModelEvent.EditModelHandler;
-import com.workpoint.icpak.client.ui.events.AfterSaveEvent;
 import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
 import com.workpoint.icpak.client.ui.events.ProcessingEvent;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
@@ -39,10 +43,10 @@ import com.workpoint.icpak.client.ui.profile.specialization.form.SpecializationR
 import com.workpoint.icpak.client.ui.profile.training.form.TrainingRegistrationForm;
 import com.workpoint.icpak.client.ui.profile.widget.ProfileWidget;
 import com.workpoint.icpak.client.ui.security.BasicMemberGateKeeper;
-import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.api.ApplicationFormResource;
 import com.workpoint.icpak.shared.api.CountriesResource;
 import com.workpoint.icpak.shared.api.MemberResource;
+import com.workpoint.icpak.shared.api.UsersResource;
 import com.workpoint.icpak.shared.model.ApplicationFormAccountancyDto;
 import com.workpoint.icpak.shared.model.ApplicationFormEducationalDto;
 import com.workpoint.icpak.shared.model.ApplicationFormEmploymentDto;
@@ -51,6 +55,7 @@ import com.workpoint.icpak.shared.model.ApplicationFormSpecializationDto;
 import com.workpoint.icpak.shared.model.ApplicationFormTrainingDto;
 import com.workpoint.icpak.shared.model.Country;
 import com.workpoint.icpak.shared.model.MemberStanding;
+import com.workpoint.icpak.shared.model.UserDto;
 import com.workpoint.icpak.shared.model.auth.ApplicationStatus;
 
 public class ProfilePresenter
@@ -127,6 +132,12 @@ public class ProfilePresenter
 		ProfileWidget getProfileWidget();
 
 		void bindEmployment(List<ApplicationFormEmploymentDto> result);
+
+		String getPassword();
+
+		HasKeyDownHandlers getPasswordTextField();
+
+		HasClickHandlers getSubmitPassword();
 	}
 
 	private final CurrentUser currentUser;
@@ -148,6 +159,17 @@ public class ProfilePresenter
 	private ResourceDelegate<ApplicationFormResource> applicationDelegate;
 	private ResourceDelegate<CountriesResource> countriesResource;
 	private ResourceDelegate<MemberResource> memberDelegate;
+	private ResourceDelegate<UsersResource> usersDelegate;
+	private UserDto user;
+
+	private KeyDownHandler changePasswordKeyHandler = new KeyDownHandler() {
+		@Override
+		public void onKeyDown(KeyDownEvent event) {
+			if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+				doChangePassword();
+			}
+		}
+	};
 
 	@Inject
 	public ProfilePresenter(final EventBus eventBus, final IProfileView view,
@@ -155,11 +177,13 @@ public class ProfilePresenter
 			ResourceDelegate<CountriesResource> countriesResource,
 			ResourceDelegate<ApplicationFormResource> applicationDelegate,
 			ResourceDelegate<MemberResource> memberDelegate,
+			ResourceDelegate<UsersResource> usersDelegate,
 			final CurrentUser currentUser) {
 		super(eventBus, view, proxy, HomePresenter.SLOT_SetTabContent);
 		this.countriesResource = countriesResource;
 		this.applicationDelegate = applicationDelegate;
 		this.memberDelegate = memberDelegate;
+		this.usersDelegate = usersDelegate;
 		this.currentUser = currentUser;
 	}
 
@@ -206,6 +230,13 @@ public class ProfilePresenter
 							.setApplicationStatus(ApplicationStatus.SUBMITTED);
 					saveApplication();
 				}
+			}
+		});
+
+		getView().getSubmitPassword().addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				doChangePassword();
 			}
 		});
 
@@ -272,6 +303,9 @@ public class ProfilePresenter
 				loadDataFromErp(false);
 			}
 		});
+
+		getView().getPasswordTextField().addKeyDownHandler(
+				changePasswordKeyHandler);
 
 	}
 
@@ -414,6 +448,17 @@ public class ProfilePresenter
 			return true;
 		} else {
 			return false;
+		}
+	}
+
+	protected void doChangePassword() {
+		user = currentUser.getUser();
+		if (getView().isValid()) {
+			if (user != null) {
+				usersDelegate.withoutCallback().changePassword(user.getRefId(),
+						getView().getPassword());
+				fireEvent(new AfterSaveEvent("Password successfully changed!"));
+			}
 		}
 	}
 

@@ -31,7 +31,6 @@ import com.amazonaws.util.json.JSONException;
 import com.amazonaws.util.json.JSONObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.JsonObject;
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import com.icpak.rest.BaseResource;
@@ -95,7 +94,7 @@ public class UsersDaoHelper {
 
 	@Inject
 	MemberDaoHelper memberDaoHelper;
-	
+
 	@Inject
 	ApplicationFormDaoHelper applicationFormDaoHelper;
 
@@ -709,9 +708,8 @@ public class UsersDaoHelper {
 					+ currentUserDto);
 		}
 		logger.info("LogInHandlerexecut(): loggedInCookie=" + loggedInCookie);
-		
 		logger.warn(" IMPORT MISSING MEMBERS ======== >>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ");
-		applicationFormDaoHelper.importMissingMembers();
+		// applicationFormDaoHelper.importMissingMembers();
 
 		assert action.getActionType() == null;
 		return new LogInResult(action.getActionType(), currentUserDto,

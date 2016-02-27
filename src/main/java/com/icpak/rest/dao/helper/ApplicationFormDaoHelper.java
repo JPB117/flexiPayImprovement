@@ -51,6 +51,7 @@ import com.icpak.rest.models.auth.Role;
 import com.icpak.rest.models.auth.User;
 import com.icpak.rest.models.membership.ApplicationCategory;
 import com.icpak.rest.models.membership.ApplicationFormHeader;
+import com.icpak.rest.models.membership.Member;
 import com.icpak.rest.models.membership.MemberImport;
 import com.icpak.rest.models.util.Attachment;
 import com.icpak.rest.util.ApplicationSettings;
@@ -71,6 +72,7 @@ import com.workpoint.icpak.shared.model.ApplicationFormSpecializationDto;
 import com.workpoint.icpak.shared.model.ApplicationFormTrainingDto;
 import com.workpoint.icpak.shared.model.ApplicationSummaryDto;
 import com.workpoint.icpak.shared.model.ApplicationType;
+import com.workpoint.icpak.shared.model.Gender;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.InvoiceLineDto;
 import com.workpoint.icpak.shared.model.MembershipStatus;
@@ -716,7 +718,9 @@ public class ApplicationFormDaoHelper {
 	public Integer getApplicationCount() {
 		return 1;
 	}
-	public List<ApplicationFormHeaderDto> importMembers(List<MemberImport> memberImports) {
+
+	public List<ApplicationFormHeaderDto> importMembers(
+			List<MemberImport> memberImports) {
 		List<ApplicationFormHeaderDto> rtn = new ArrayList<>();
 
 		for (MemberImport memberIpmort : memberImports) {
@@ -730,25 +734,33 @@ public class ApplicationFormDaoHelper {
 			User user = userDao.findUserByMemberNo(memberIpmort.getMemberNo());
 			if (user != null && user.getMember() != null) {
 				// Update User Information - If Stale
-				user.getMember().setRegistrationDate(memberIpmort.getDateRegistered());
-				user.getMember().setPractisingNo(memberIpmort.getPractisingNo());
-				user.getMember().setCustomerType(memberIpmort.getCustomerType());
-				user.getMember().setCustomerPostingGroup(memberIpmort.getCustomerPostingGroup());
+				user.getMember().setRegistrationDate(
+						memberIpmort.getDateRegistered());
+				user.getMember()
+						.setPractisingNo(memberIpmort.getPractisingNo());
+				user.getMember()
+						.setCustomerType(memberIpmort.getCustomerType());
+				user.getMember().setCustomerPostingGroup(
+						memberIpmort.getCustomerPostingGroup());
 				if (memberIpmort.getStatus() == 1) {
-					user.getMember().setMemberShipStatus(MembershipStatus.ACTIVE);
+					user.getMember().setMemberShipStatus(
+							MembershipStatus.ACTIVE);
 				} else {
-					user.getMember().setMemberShipStatus(MembershipStatus.INACTIVE);
+					user.getMember().setMemberShipStatus(
+							MembershipStatus.INACTIVE);
 				}
 				// Update Member Information
 				po.setUserRefId(user.getRefId());
 
-				System.err.println("Date of Birth::" + memberIpmort.getDateOfBirth());
+				System.err.println("Date of Birth::"
+						+ memberIpmort.getDateOfBirth());
 				System.err.println("Email::" + memberIpmort.getEmail());
 				System.err.println("Id No::" + po.getIdNumber());
 				// Create this as an Application
 				applicationDao.save(po);
-				logger.info("Successfully saved application for member:::" + memberIpmort.getMemberNo()
-						+ " and refId ::" + po.getRefId() + "User RefId::" + user.getRefId());
+				logger.info("Successfully saved application for member:::"
+						+ memberIpmort.getMemberNo() + " and refId ::"
+						+ po.getRefId() + "User RefId::" + user.getRefId());
 			} else {
 				logger.warn(" MEMBER NO = = = == " + memberIpmort.getMemberNo());
 
@@ -775,7 +787,8 @@ public class ApplicationFormDaoHelper {
 
 				userDao.createUser(user);
 
-				User userInDb = userDao.findUserByMemberNo(memberIpmort.getMemberNo());
+				User userInDb = userDao.findUserByMemberNo(memberIpmort
+						.getMemberNo());
 
 				po.setUserRefId(user.getRefId());
 
@@ -784,7 +797,8 @@ public class ApplicationFormDaoHelper {
 				member.setRegistrationDate(memberIpmort.getDateRegistered());
 				member.setPractisingNo(memberIpmort.getPractisingNo());
 				member.setCustomerType(memberIpmort.getCustomerType());
-				member.setCustomerPostingGroup(memberIpmort.getCustomerPostingGroup());
+				member.setCustomerPostingGroup(memberIpmort
+						.getCustomerPostingGroup());
 				member.setUserRefId(user.getRefId());
 				member.setUser(userInDb);
 				if (memberIpmort.getStatus() == 1) {
@@ -805,7 +819,8 @@ public class ApplicationFormDaoHelper {
 		return rtn;
 	}
 
-	public List<ApplicationFormHeaderDto> importMissingMembers(List<MemberImport> memberImports) {
+	public List<ApplicationFormHeaderDto> importMissingMembers(
+			List<MemberImport> memberImports) {
 		List<ApplicationFormHeaderDto> rtn = new ArrayList<>();
 
 		for (MemberImport memberIpmort : memberImports) {
@@ -841,7 +856,8 @@ public class ApplicationFormDaoHelper {
 
 			userDao.createUser(user);
 
-			List<User> usersInDb = userDao.findUsersByMemberNo(memberIpmort.getMemberNo());
+			List<User> usersInDb = userDao.findUsersByMemberNo(memberIpmort
+					.getMemberNo());
 
 			User userInDb = usersInDb.get(0);
 
@@ -852,7 +868,8 @@ public class ApplicationFormDaoHelper {
 			member.setRegistrationDate(memberIpmort.getDateRegistered());
 			member.setPractisingNo(memberIpmort.getPractisingNo());
 			member.setCustomerType(memberIpmort.getCustomerType());
-			member.setCustomerPostingGroup(memberIpmort.getCustomerPostingGroup());
+			member.setCustomerPostingGroup(memberIpmort
+					.getCustomerPostingGroup());
 			member.setUserRefId(user.getRefId());
 			member.setUser(userInDb);
 			if (memberIpmort.getStatus() == 1) {
@@ -861,7 +878,8 @@ public class ApplicationFormDaoHelper {
 				member.setMemberShipStatus(MembershipStatus.INACTIVE);
 			}
 
-			logger.warn(" PO >>>>>>>>>>>>><<<<<<<<<<<<<<<<<< " + new JSONObject(member));
+			logger.warn(" PO >>>>>>>>>>>>><<<<<<<<<<<<<<<<<< "
+					+ new JSONObject(member));
 
 			userInDb.setMember(member);
 			userDao.save(member);
