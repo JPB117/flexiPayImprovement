@@ -44,6 +44,7 @@ public class Delegate extends PO {
 	private int isCredit;
 	private String clearanceNo;
 	private String sponsorTelephoneNo;
+	private String memberQrCode;
 	@Transient
 	private String bookingId;
 	@ManyToOne
@@ -157,10 +158,12 @@ public class Delegate extends PO {
 		if (delegateDto.getAttendance() != null) {
 			setAttendance(delegateDto.getAttendance());
 		}
+		setMemberQrCode(delegateDto.getMemberQrCode());
 		setIsCredit(delegateDto.getIsCredit());
 		setLpoNo(delegateDto.getLpoNo());
 		setReceiptNo(delegateDto.getLpoNo());
 		setClearanceNo(delegateDto.getClearanceNo());
+
 	}
 
 	public DelegateDto toDto() {
@@ -255,6 +258,14 @@ public class Delegate extends PO {
 
 	public void setSponsorTelephoneNo(String sponsorTelephoneNo) {
 		this.sponsorTelephoneNo = sponsorTelephoneNo;
+	}
+
+	public String getMemberQrCode() {
+		return memberQrCode;
+	}
+
+	public void setMemberQrCode(String memberQrCode) {
+		this.memberQrCode = memberQrCode;
 	}
 
 }

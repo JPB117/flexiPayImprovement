@@ -13,7 +13,6 @@ import com.icpak.rest.dao.BookingsDao;
 import com.icpak.rest.dao.EventsDao;
 import com.icpak.rest.dao.helper.BookingsDaoHelper;
 import com.icpak.rest.dao.helper.CPDDaoHelper;
-import com.icpak.rest.models.event.Booking;
 import com.icpak.rest.models.event.Delegate;
 import com.workpoint.icpak.shared.model.PaymentStatus;
 import com.workpoint.icpak.shared.model.events.AttendanceStatus;
@@ -55,10 +54,10 @@ public class TestBookingDao extends AbstractDaoTest {
 		}
 	}
 
-	@Test
+	// @Test
 	public void testDelegateCheck() {
-		BookingDto booking = bookingsHelper.checkEmailExists(
-				"tomkim@wira.io", "UJDQSrOzKaplbgfY");
+		BookingDto booking = bookingsHelper.checkEmailExists("tomkim@wira.io",
+				"UJDQSrOzKaplbgfY");
 		System.err.println(booking);
 	}
 
@@ -147,6 +146,16 @@ public class TestBookingDao extends AbstractDaoTest {
 
 		System.err.println(delegates.size());
 
+	}
+
+	@Test
+	public void testSearchByQrCode() {
+		List<DelegateDto> delegates = bookingsHelper.getDelegateByQrCode("",
+				"UJDQSrOzKaplbgfY", 0, 10, "eqreqreididmqkerm");
+		for (DelegateDto d : delegates) {
+			logger.error(" Delegate Ref Id = " + d.getRefId());
+		}
+		System.err.println("found this size::::" + delegates.size());
 	}
 
 	@Ignore

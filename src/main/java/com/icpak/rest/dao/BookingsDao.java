@@ -396,7 +396,6 @@ public class BookingsDao extends BaseDao {
 	}
 
 	public String getErn(String refId) {
-
 		return getSingleResultOrNull(getEntityManager().createNativeQuery(
 				"select ern from delegate where refId=:refId").setParameter(
 				"refId", refId));
@@ -452,7 +451,18 @@ public class BookingsDao extends BaseDao {
 
 	public List<DelegateDto> getAllDelegates(String passedRefId,
 			Integer offset, Integer limit, String searchTerm) {
-		logger.error("==>>>>>>>>>>>>>>><<<<<<<<<<<>> eventRefId " + passedRefId);
+		return getAllDelegates(passedRefId, offset, limit, searchTerm, false);
+	}
+
+	/*
+	 * Add param isByQrCode - If you want to only get results by ONLY QR CODE
+	 */
+
+	public List<DelegateDto> getAllDelegates(String passedRefId,
+			Integer offset, Integer limit, String searchTerm, boolean isByQrCode) {
+		logger.error("==getting delegate for this event===>" + passedRefId);
+		logger.error("==Is search limitted to only QR Code==>" + isByQrCode);
+		logger.error("==Search Term ==>>>>" + searchTerm);
 
 		List<DelegateDto> delegateList = new ArrayList<>();
 		String sql = "select b.refId as bookingRefId,b.bookingDate,"
@@ -467,26 +477,36 @@ public class BookingsDao extends BaseDao {
 				+ "where e.refId=:eventRefId";
 
 		if (searchTerm != null && !searchTerm.isEmpty()) {
-			sql = sql.concat(" and "
-					+ "(d.memberRegistrationNo like :searchTerm or "
-					+ "a.hotel like :searchTerm or "
-					+ "d.email like :searchTerm or "
-					+ "d.fullName like :searchTerm or "
-					+ "d.ern like :searchTerm)");
+			if (isByQrCode) {
+				sql = sql.concat(" and (d.memberQrCode=:searchTerm)");
+			} else {
+				sql = sql.concat(" and "
+						+ "(d.memberRegistrationNo like :searchTerm or "
+						+ "a.hotel like :searchTerm or "
+						+ "d.email like :searchTerm or "
+						+ "d.fullName like :searchTerm or "
+						+ "d.ern like :searchTerm)");
+			}
 		}
 
 		sql = sql.concat(" order by d.created DESC");
 
 		Query query = getEntityManager().createNativeQuery(sql).setParameter(
 				"eventRefId", passedRefId);
-
 		if (searchTerm != null && !searchTerm.isEmpty()) {
-			query.setParameter("searchTerm", "%" + searchTerm + "%");
+			if (isByQrCode) {
+				query.setParameter("searchTerm", searchTerm);
+			} else {
+				query.setParameter("searchTerm", "%" + searchTerm + "%");
+			}
+
 		}
 
 		// System.err.println(sql);
 
 		List<Object[]> rows = getResultList(query, offset, limit);
+
+		System.err.println(rows.size());
 		for (Object o[] : rows) {
 			int i = 0;
 			Object value = null;

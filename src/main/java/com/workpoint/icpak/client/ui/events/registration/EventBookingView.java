@@ -179,11 +179,8 @@ public class EventBookingView extends ViewImpl implements
 		ColumnConfig config = new ColumnConfig("title", "Title",
 				DataType.SELECTBASIC, "", "form-control");
 		config.setDropDownItems(Arrays.asList(Title.values()));
-
 		configs.add(config);
-
 		configs.add(fullNameConfig);
-
 		configs.add(accommodationConfig);
 
 		tblDelegates.setColumnConfigs(configs);
@@ -248,6 +245,7 @@ public class EventBookingView extends ViewImpl implements
 					if (dto != null) {
 						delegate.setMemberNo(dto.getMemberNo());
 						delegate.setMemberRefId(dto.getRefId());
+						delegate.setMemberQrCode(dto.getMemberQrCode());
 					}
 
 					delegate.setFullName(dto.getFullName());
@@ -486,7 +484,6 @@ public class EventBookingView extends ViewImpl implements
 		dto.setContact(getContact());
 		// dto.setCurrency(currency);
 		dto.setDelegates(getDelegates());
-
 		return dto;
 	}
 
@@ -645,6 +642,7 @@ public class EventBookingView extends ViewImpl implements
 				member.setRefId(dto.getMemberRefId());
 				member.setMemberNo(dto.getMemberNo());
 				member.setFullName(dto.getFullName());
+				member.setMemberQrCode(dto.getMemberQrCode());
 			}
 
 			DataModel model = new DataModel();
@@ -674,6 +672,9 @@ public class EventBookingView extends ViewImpl implements
 					.toString());
 			dto.setMemberNo(memberDto == null ? null : memberDto.getMemberNo());
 			dto.setMemberRefId(memberDto == null ? null : memberDto.getRefId());
+			dto.setMemberQrCode(memberDto == null ? null : memberDto
+					.getMemberQrCode());
+
 			dto.setTitle(model.get("title") == null ? null : model.get("title")
 					.toString());
 			dto.setFullName(model.get("fullName") == null ? null : model.get(

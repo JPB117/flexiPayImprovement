@@ -100,10 +100,17 @@
 							</div>
 						</div>
 
-						<!-- div class="form-group"> <div class="row"> <div class="col-lg-6"> 
-							<label for="Username"> <b>Phone Number:</b> </label> <d:TextField ui:field="txtPhoneNo" 
-							type="text" class="form-control" placeholder="" disabled="false" /> </div> 
-							</div> </div -->
+						<div class="form-group hide" ui:field="divQrCode">
+							<div class="row">
+								<div class="col-lg-6">
+									<label for="Username">
+										<b>Member QRCode:</b>
+									</label>
+									<d:TextField ui:field="txtMemberQrCode" type="text"
+										class="form-control" placeholder="" />
+								</div>
+							</div>
+						</div>
 
 						<div class="form-group hide" ui:field="divReset">
 							<div class="row">

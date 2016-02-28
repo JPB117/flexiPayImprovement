@@ -50,8 +50,6 @@ public class UserSaveView extends PopupViewImpl implements
 	@UiField
 	Anchor aClose;
 
-	// @UiField
-	// TextField txtUserName;
 	@UiField
 	TextField txtFirstname;
 	@UiField
@@ -64,6 +62,10 @@ public class UserSaveView extends PopupViewImpl implements
 	TextField txtFullNames;
 	@UiField
 	TextField txtMemberNo;
+	@UiField
+	TextField txtMemberQrCode;
+	@UiField
+	DivElement divQrCode;
 
 	@UiField
 	TextField txtGroupname;
@@ -168,9 +170,11 @@ public class UserSaveView extends PopupViewImpl implements
 						if (event.getValue() == UserCategory.MEMBER) {
 							divMemberNo.removeClassName("hide");
 							divGroups.addClassName("hide");
+							divQrCode.removeClassName("hide");
 						} else if (event.getValue() == UserCategory.STAFF) {
 							divMemberNo.addClassName("hide");
 							divGroups.removeClassName("hide");
+							divQrCode.addClassName("hide");
 						}
 					}
 				});
@@ -255,6 +259,9 @@ public class UserSaveView extends PopupViewImpl implements
 			user.setGroups(lstGroups.getSelectedItems());
 		}
 
+		if (txtMemberQrCode != null) {
+			user.setMemberQrCode(txtMemberQrCode.getValue());
+		}
 		return user;
 	}
 
@@ -267,6 +274,7 @@ public class UserSaveView extends PopupViewImpl implements
 		txtMemberNo.setValue(user.getMemberNo());
 		txtPhoneNo.setValue(user.getPhoneNumber());
 		lstGroups.select(user.getGroups());
+		txtMemberQrCode.setValue(user.getMemberQrCode());
 
 		aResetPassword.addClickHandler(new ClickHandler() {
 			@Override
@@ -285,10 +293,12 @@ public class UserSaveView extends PopupViewImpl implements
 			lstUserType.setValue(UserCategory.MEMBER);
 			divMemberNo.removeClassName("hide");
 			divGroups.addClassName("hide");
+			divQrCode.removeClassName("hide");
 		} else {
 			lstUserType.setValue(UserCategory.STAFF);
 			divMemberNo.addClassName("hide");
 			divGroups.removeClassName("hide");
+			divQrCode.addClassName("hide");
 		}
 
 	}

@@ -72,6 +72,7 @@ import com.workpoint.icpak.shared.model.ApplicationFormSpecializationDto;
 import com.workpoint.icpak.shared.model.ApplicationFormTrainingDto;
 import com.workpoint.icpak.shared.model.ApplicationSummaryDto;
 import com.workpoint.icpak.shared.model.ApplicationType;
+import com.workpoint.icpak.shared.model.Branch;
 import com.workpoint.icpak.shared.model.Gender;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.InvoiceLineDto;
@@ -341,9 +342,7 @@ public class ApplicationFormDaoHelper {
 			if (isApplicationReadyForEmail && !isApplicationReadyForErp) {
 				sendReviewEmail(dto);
 			}
-
 		}
-
 		// Post To ERP
 		if (dto.getErpCode() != null && !dto.getErpCode().isEmpty()
 				&& isApplicationReadyForErp) {
@@ -895,4 +894,16 @@ public class ApplicationFormDaoHelper {
 		return rtn;
 	}
 
+	public String subribeToBranch(String applicationRefId, String branchName) {
+		Branch subcribedBranch = Branch.valueOf(branchName);
+		ApplicationFormHeader application = applicationDao
+				.findByApplicationId(applicationRefId);
+		if (application != null && subcribedBranch != null) {
+			application.setBranch(subcribedBranch.name());
+			applicationDao.save(application);
+			return "SUCCESS";
+		} else {
+			return "FAILED";
+		}
+	}
 }

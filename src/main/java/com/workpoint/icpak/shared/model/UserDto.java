@@ -23,6 +23,7 @@ public class UserDto extends SerializableObj implements Listable, Serializable {
 	private String surname;
 	private String password;
 	private String fullName;
+	private String memberQrCode;
 	private MembershipStatus membershipStatus;
 	private int hasDisciplinaryCase;
 	private ArrayList<RoleDto> groups = new ArrayList<RoleDto>();
@@ -287,6 +288,14 @@ public class UserDto extends SerializableObj implements Listable, Serializable {
 
 	public void setGender(String gender) {
 		this.gender = gender;
+	}
+
+	public String getMemberQrCode() {
+		return memberQrCode;
+	}
+
+	public void setMemberQrCode(String memberQrCode) {
+		this.memberQrCode = memberQrCode;
 	}
 	
 }

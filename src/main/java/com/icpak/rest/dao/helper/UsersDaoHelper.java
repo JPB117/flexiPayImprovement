@@ -118,7 +118,6 @@ public class UsersDaoHelper {
 		}
 		dao.createUser(user);
 		// createDefaultMemberForUser(user);
-
 		if (sendActivationEmail) {
 			sendActivationEmail(user);
 		}
@@ -217,7 +216,6 @@ public class UsersDaoHelper {
 		po.setEmail(dto.getEmail());
 		po.setMobileNo(dto.getPhoneNumber());
 		po = po.copyOnUpdate(dto);
-
 		if (po.getUserData() == null) {
 			po.setUserData(dto);
 		} else {
@@ -225,23 +223,22 @@ public class UsersDaoHelper {
 			data.setFirstName(dto.getName());
 			data.setLastName(dto.getSurname());
 		}
-
+		if (po.getMember() != null) {
+			po.getMember().setMemberNo(dto.getMemberNo());
+			po.getMember().setMemberQrCode(dto.getMemberQrCode());
+		}
 		// Delete all Roles for the current User
 		dao.deleteAllRolesForCurrentUser(po.getId());
-
 		for (RoleDto role : dto.getGroups()) {
 			Role r = dao.findByRefId(role.getRefId(), Role.class);
 			po.addRole(r);
 		}
-
 		dao.updateUser(po);
-
 		return po.toDto();
 	}
 
 	public void update(String userId, User user) {
 		User po = dao.findByUserId(userId);
-
 		po.setEmail(user.getEmail());
 		// po.setUsername(user.getUsername());
 		po.setAddress(user.getAddress());
@@ -249,7 +246,6 @@ public class UsersDaoHelper {
 		po.setNationality(user.getNationality());
 		po.setPhoneNumber(user.getPhoneNumber());
 		po.setResidence(user.getResidence());
-
 		if (po.getUserData() == null) {
 			po.setUserData(user.getUserData());
 		} else {
@@ -263,12 +259,9 @@ public class UsersDaoHelper {
 			data.setOverseas(user.getUserData().isOverseas());
 			data.setSalutation(user.getUserData().getSalutation());
 			data.setTitle(user.getUserData().getTitle());
-
 			// data.setResidence(user.getUserData().getResidence());
 		}
-
 		dao.updateUser(po);
-
 		if (!dao.hasMember(po)) {
 			createDefaultMemberForUser(po);
 		}
@@ -297,10 +290,8 @@ public class UsersDaoHelper {
 
 	public List<UserDto> getAllUsers(Integer offset, Integer limit,
 			String uriInfo, String searchTerm) {
-
 		List<User> users = dao.getAllUsers(offset, limit, null, searchTerm);
 		List<UserDto> dtos = new ArrayList<>();
-
 		for (User user : users) {
 			dtos.add(user.toDto());
 		}
@@ -700,7 +691,6 @@ public class UsersDaoHelper {
 		}
 
 		CurrentUserDto currentUserDto = new CurrentUserDto(isLoggedIn, userDto);
-
 		logger.info("LogInHandlerexecut(): actiontype="
 				+ action.getActionType());
 		if (currentUserDto != null) {

@@ -28,7 +28,6 @@ import com.workpoint.icpak.shared.model.MembershipStatus;
 @Entity
 @Table
 public class Member extends PO {
-
 	/**
 	 * 
 	 */
@@ -43,6 +42,7 @@ public class Member extends PO {
 	private Date practisingCertDate;
 	private String setPracisingNo;
 	private String customerPostingGroup;
+	private String memberQrCode;
 
 	@Column(nullable = false, columnDefinition = "int(1) not null default 0")
 	private int memberDisplinaryCase = 0;
@@ -201,6 +201,14 @@ public class Member extends PO {
 
 	public void setCustomerPostingGroup(String customerPostingGroup) {
 		this.customerPostingGroup = customerPostingGroup;
+	}
+
+	public String getMemberQrCode() {
+		return memberQrCode;
+	}
+
+	public void setMemberQrCode(String memberQrCode) {
+		this.memberQrCode = memberQrCode;
 	}
 
 }
