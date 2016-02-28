@@ -22,7 +22,7 @@ public interface DelegatesResource extends BaseResource {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	@Path("/{email}")
+	@Path("/checkExist")
 	public BookingDto checkExist(@QueryParam("email") String email);
 
 	@GET

@@ -75,7 +75,7 @@ public class DelegatesResourceImpl implements DelegatesResource {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	@Path("/{email}")
+	@Path("/checkExist")
 	public BookingDto checkExist(@QueryParam("email") String email) {
 		return helper.checkEmailExists(email, eventId);
 	}
