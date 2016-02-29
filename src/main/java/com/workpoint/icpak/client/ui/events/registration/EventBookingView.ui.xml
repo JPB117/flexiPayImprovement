@@ -209,7 +209,8 @@
 												<div class="col-sm-12">
 													<div class="dropdown">
 														<a class="btn btn-primary btn-fill dropdown-toggle" id="dropdownMenu1"
-															data-toggle="dropdown" aria-expanded="true">
+															data-toggle="dropdown" aria-expanded="true"
+															style="margin-bottom: 12px;">
 															Add Delegate
 															<span class="caret"></span>
 														</a>

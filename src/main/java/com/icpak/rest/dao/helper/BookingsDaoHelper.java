@@ -781,11 +781,13 @@ public class BookingsDaoHelper {
 
 	private Delegate initDelegate(DelegateDto delegateDto, Event event) {
 		Delegate delegate = new Delegate();
-		if (delegateDto.getRefId() != null) {
-			delegate = eventDao.findByRefId(delegateDto.getRefId(),
-					Delegate.class);
-		}
+		// if (delegateDto.getRefId() != null) {
+		// delegate = eventDao.findByRefId(delegateDto.getRefId(),
+		// Delegate.class);
+		// }
 		delegate.copyFrom(delegateDto);
+
+		// Accomodation
 		if (delegateDto.getAccommodation() != null) {
 			Accommodation accommodation = dao.findByRefId(delegateDto
 					.getAccommodation().getRefId(), Accommodation.class);
