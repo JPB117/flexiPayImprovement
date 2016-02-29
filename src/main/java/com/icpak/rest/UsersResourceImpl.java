@@ -208,7 +208,6 @@ public class UsersResourceImpl implements UsersResource {
 	public UserDto update(
 			@ApiParam(value = "User Id of the user to fetch", required = true) @PathParam("userId") String userId,
 			UserDto user) {
-
 		return helper.update(userId, user);
 	}
 

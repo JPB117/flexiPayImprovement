@@ -33,7 +33,7 @@ public class MemberDao extends BaseDao {
 				getEntityManager()
 						.createNativeQuery(
 								"select u.refId as userRefId, u.email, u.firstName, u.lastName,u.fullName,u.title,"
-										+ " m.memberNo, m.refId memberRefId from Member m inner join user u on (m.userId=u.id) "
+										+ " m.memberNo, m.refId memberRefId,m.memberQrCode from Member m inner join user u on (m.userId=u.id) "
 										+ " where (u.memberNo like :searchTerm or u.Name like :searchTerm or "
 										+ "u.fullName like :searchTerm)")
 						.setParameter("searchTerm", "%" + searchTerm + "%"),
@@ -52,6 +52,7 @@ public class MemberDao extends BaseDao {
 			String title = (value = row[i++]) == null ? null : value.toString();
 			String memberId = (value = row[i++]) == null ? null : value.toString();
 			String memberRefId = (value = row[i++]) == null ? null : value.toString();
+			String memberQrCode =(value = row[i++]) == null ? null : value.toString();
 
 			MemberDto dto = new MemberDto();
 			dto.setUserId(userRefId);
@@ -62,6 +63,7 @@ public class MemberDao extends BaseDao {
 			dto.setFirstName(firstName);
 			dto.setLastName(lastName);
 			dto.setTitle(title);
+			dto.setMemberQrCode(memberQrCode);
 			memberList.add(dto);
 		}
 

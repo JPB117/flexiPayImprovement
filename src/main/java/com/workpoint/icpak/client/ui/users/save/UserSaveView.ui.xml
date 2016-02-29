@@ -74,7 +74,7 @@
 
 						<div class="form-group">
 							<div class="row">
-								<div class="col-lg-6 hide">
+								<div class="col-lg-6">
 									<label for="Email">
 										<b>User Type:</b>
 									</label>
@@ -83,20 +83,34 @@
 									</d:DropDownList>
 								</div>
 
-								<div class="col-lg-6 hide">
+								<div class="col-lg-6 hide" ui:field="divMemberNo">
 									<label for="Email">
 										<b>Member No:</b>
 									</label>
 									<d:TextField ui:field="txtMemberNo" type="email"
 										class="form-control" placeholder="Member No" />
 								</div>
+
+								<div class="col-lg-6 hide" ui:field="divGroups">
+									<label class="control-label">
+										<b>Group:</b>
+									</label>
+									<a:MultiSelectField ui:field="lstGroups" />
+								</div>
 							</div>
 						</div>
 
-						<!-- div class="form-group"> <div class="row"> <div class="col-lg-6"> 
-							<label for="Username"> <b>Phone Number:</b> </label> <d:TextField ui:field="txtPhoneNo" 
-							type="text" class="form-control" placeholder="" disabled="false" /> </div> 
-							</div> </div -->
+						<div class="form-group hide" ui:field="divQrCode">
+							<div class="row">
+								<div class="col-lg-6">
+									<label for="Username">
+										<b>Member QRCode:</b>
+									</label>
+									<d:TextField ui:field="txtMemberQrCode" type="text"
+										class="form-control" placeholder="" />
+								</div>
+							</div>
+						</div>
 
 						<div class="form-group hide" ui:field="divReset">
 							<div class="row">
@@ -125,20 +139,13 @@
 
 						<div class="form-group">
 							<div class="row">
-								<div class="col-lg-6">
+								<div class="col-lg-6 hide">
 									<label class="control-label">
 										<b>User Image</b>
 									</label>
 									<g:HTMLPanel ui:field="uploadPanel">
 										<up:Uploader ui:field="uploader"></up:Uploader>
 									</g:HTMLPanel>
-								</div>
-
-								<div class="col-lg-6">
-									<label class="control-label">
-										<b>Group:</b>
-									</label>
-									<a:MultiSelectField ui:field="lstGroups" />
 								</div>
 							</div>
 						</div>

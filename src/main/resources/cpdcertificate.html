@@ -32,7 +32,7 @@ body {
     position: absolute;
     font-size: 18px;
     left: 294px;
-    top: 433px;
+    top: 443px;
     width: 612px;
     text-align: center;
     height: 117px;
@@ -41,7 +41,7 @@ body {
 .approver {
 	position: absolute;
 	left: 220px;
-	top: 530px;
+	top: 605px;
 	width: 260px;
 	font-size: 15px;
 }
@@ -64,14 +64,15 @@ body {
 	<h2 class="names">@@memberName</h2>
 
 	<div class="approver">
-		<div class="gold">
+			<img
+			src="http://localhost:8080/icpakportal/images/certificate_signature.png"
+			style="width: 200px;" />
+			<br /> 
+			<div class="gold" style="margin-top:15px">
 			<span>CPA Michael Makhoha</span><br /> <span>Manager,
 				Training and Development</span><br /> <span>Date Issued:
 				@@dateIssued</span><br /> <span>Earned CPD Hours: @@cpdHours</span><br />
 		</div>
-		<br /> <img
-			src="http://localhost:8080/icpakportal/images/certificate_signature.png"
-			style="width: 200px;" />
 	</div>
 </body>
 </html>

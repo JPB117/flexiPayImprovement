@@ -87,7 +87,6 @@ public class MemberResourceImpl implements MemberResource {
 			@ApiParam(value = "Search term to use", required = true) @PathParam("searchTerm") String searchTerm,
 			@QueryParam("offset") Integer offset,
 			@QueryParam("limit") Integer limit) {
-
 		return membersHelper.getAllMembers(offset, limit, "", searchTerm);
 	}
 

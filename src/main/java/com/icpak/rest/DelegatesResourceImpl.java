@@ -50,6 +50,18 @@ public class DelegatesResourceImpl implements DelegatesResource {
 	}
 
 	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "Retrieve booking by qr code")
+	@Path("/qrCodeSearch")
+	public List<DelegateDto> getByQrCode(
+			@QueryParam("searchTerm") String searchTerm) {
+		String uri = "";
+		List<DelegateDto> dtos = helper.getDelegateByQrCode("", eventId, 0, 10,
+				searchTerm);
+		return dtos;
+	}
+
+	@GET
 	@Path("/count")
 	public Integer getCount() {
 		return getSearchCount("");
@@ -63,7 +75,7 @@ public class DelegatesResourceImpl implements DelegatesResource {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	@Path("/{email}")
+	@Path("/checkExist")
 	public BookingDto checkExist(@QueryParam("email") String email) {
 		return helper.checkEmailExists(email, eventId);
 	}

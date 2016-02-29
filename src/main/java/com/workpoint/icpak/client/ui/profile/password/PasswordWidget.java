@@ -129,7 +129,7 @@ public class PasswordWidget extends Composite {
 		}
 
 		if (!txtPassword.getValue().equals(txtConfirmPassword.getValue())) {
-			issues.addError("Password and 'Confirm Password' fields do not match");
+			issues.addError("Password and Confirm Password fields do not match");
 			isValid = false;
 		}
 
@@ -143,7 +143,6 @@ public class PasswordWidget extends Composite {
 	}
 
 	public String getPassword() {
-
 		return txtPassword.getValue();
 	}
 

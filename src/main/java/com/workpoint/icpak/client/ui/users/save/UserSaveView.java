@@ -1,5 +1,6 @@
 package com.workpoint.icpak.client.ui.users.save;
 
+import java.util.Arrays;
 import java.util.List;
 
 import com.google.gwt.dom.client.DivElement;
@@ -49,8 +50,6 @@ public class UserSaveView extends PopupViewImpl implements
 	@UiField
 	Anchor aClose;
 
-	// @UiField
-	// TextField txtUserName;
 	@UiField
 	TextField txtFirstname;
 	@UiField
@@ -63,6 +62,10 @@ public class UserSaveView extends PopupViewImpl implements
 	TextField txtFullNames;
 	@UiField
 	TextField txtMemberNo;
+	@UiField
+	TextField txtMemberQrCode;
+	@UiField
+	DivElement divQrCode;
 
 	@UiField
 	TextField txtGroupname;
@@ -84,17 +87,18 @@ public class UserSaveView extends PopupViewImpl implements
 	Anchor aSaveGroup;
 	@UiField
 	Anchor aSaveUser;
-
 	@UiField
 	HasClickHandlers aCancelUser;
 	@UiField
 	HasClickHandlers aCancelGroup;
-
 	@UiField
 	SpanElement header;
-
 	@UiField
 	DivElement divUserSave;
+	@UiField
+	DivElement divMemberNo;
+	@UiField
+	DivElement divGroups;
 	@UiField
 	Uploader uploader;
 	@UiField
@@ -104,6 +108,7 @@ public class UserSaveView extends PopupViewImpl implements
 	DropDownList<UserCategory> lstUserType;
 	UserDto user;
 	TYPE type;
+	private List<RoleDto> groups;
 
 	public interface Binder extends UiBinder<Widget, UserSaveView> {
 	}
@@ -155,6 +160,24 @@ public class UserSaveView extends PopupViewImpl implements
 			}
 		});
 
+		lstUserType.setItems(Arrays.asList(UserCategory.values()));
+
+		lstUserType
+				.addValueChangeHandler(new ValueChangeHandler<UserSaveView.UserCategory>() {
+					@Override
+					public void onValueChange(
+							ValueChangeEvent<UserCategory> event) {
+						if (event.getValue() == UserCategory.MEMBER) {
+							divMemberNo.removeClassName("hide");
+							divGroups.addClassName("hide");
+							divQrCode.removeClassName("hide");
+						} else if (event.getValue() == UserCategory.STAFF) {
+							divMemberNo.addClassName("hide");
+							divGroups.removeClassName("hide");
+							divQrCode.addClassName("hide");
+						}
+					}
+				});
 	}
 
 	protected void setContext(String value) {
@@ -207,13 +230,37 @@ public class UserSaveView extends PopupViewImpl implements
 	public UserDto getUser() {
 		UserDto user = new UserDto();
 		user.setEmail(txtEmail.getValue());
-		user.setName(txtFirstname.getValue());
-		user.setSurname(txtLastname.getValue());
+		if (txtFirstname.getValue() != null) {
+			user.setName(txtFirstname.getValue());
+		}
+
+		if (txtLastname != null) {
+			user.setSurname(txtLastname.getValue());
+		}
 		user.setPhoneNumber(txtPhoneNo.getValue());
-		user.setGroups(lstGroups.getSelectedItems());
+
 		user.setFullName(txtFullNames.getValue());
 		if (txtMemberNo.getValue() != null) {
 			user.setMemberNo(txtMemberNo.getValue());
+		}
+
+		if (lstUserType.getValue() == UserCategory.STAFF) {
+			user.setMemberNo(null);
+		}
+
+		if (lstUserType.getValue() == UserCategory.MEMBER) {
+			lstGroups.clearSelection();
+			RoleDto memberRole = getGroupByName("MEMBER");
+			if (memberRole != null) {
+				lstGroups.select(Arrays.asList(memberRole));
+				user.setGroups(lstGroups.getSelectedItems());
+			}
+		} else {
+			user.setGroups(lstGroups.getSelectedItems());
+		}
+
+		if (txtMemberQrCode != null) {
+			user.setMemberQrCode(txtMemberQrCode.getValue());
 		}
 		return user;
 	}
@@ -227,6 +274,7 @@ public class UserSaveView extends PopupViewImpl implements
 		txtMemberNo.setValue(user.getMemberNo());
 		txtPhoneNo.setValue(user.getPhoneNumber());
 		lstGroups.select(user.getGroups());
+		txtMemberQrCode.setValue(user.getMemberQrCode());
 
 		aResetPassword.addClickHandler(new ClickHandler() {
 			@Override
@@ -235,10 +283,22 @@ public class UserSaveView extends PopupViewImpl implements
 						"Reset User Password", null);
 			}
 		});
-
 		setContext(user.getRefId());
+
 		if (user.getRefId() != null) {
 			divReset.removeClassName("hide");
+		}
+
+		if (user.getMemberNo() != null) {
+			lstUserType.setValue(UserCategory.MEMBER);
+			divMemberNo.removeClassName("hide");
+			divGroups.addClassName("hide");
+			divQrCode.removeClassName("hide");
+		} else {
+			lstUserType.setValue(UserCategory.STAFF);
+			divMemberNo.addClassName("hide");
+			divGroups.removeClassName("hide");
+			divQrCode.addClassName("hide");
 		}
 
 	}
@@ -247,20 +307,21 @@ public class UserSaveView extends PopupViewImpl implements
 		issues.clear();
 		boolean valid = true;
 
-		if (isNullOrEmpty(txtFirstname.getValue())) {
-			valid = false;
-			issues.addError("First Name is mandatory");
-		}
-
-		if (isNullOrEmpty(txtLastname.getValue())) {
-			valid = false;
-			issues.addError("Last Name is mandatory");
-		}
+		// if (isNullOrEmpty(txtFirstname.getValue())) {
+		// valid = false;
+		// issues.addError("First Name is mandatory");
+		// }
+		//
+		// if (isNullOrEmpty(txtLastname.getValue())) {
+		// valid = false;
+		// issues.addError("Last Name is mandatory");
+		// }
 
 		// if (isNullOrEmpty(txtMemberNo.getValue())) {
 		// valid = false;
 		// issues.addError("Member No is mandatory");
 		// }
+
 		if (isNullOrEmpty(txtEmail.getValue())) {
 			valid = false;
 			issues.addError("Email is mandatory");
@@ -312,6 +373,7 @@ public class UserSaveView extends PopupViewImpl implements
 
 	@Override
 	public void setGroups(List<RoleDto> groups) {
+		this.groups = groups;
 		lstGroups.addItems(groups);
 	}
 
@@ -330,7 +392,13 @@ public class UserSaveView extends PopupViewImpl implements
 	}
 
 	public enum UserCategory implements Listable {
-		MEMBER, STAFF;
+		MEMBER("MEMBER"), STAFF("STAFF/NEW APPLICANT");
+		private String displayName;
+
+		private UserCategory(String displayName) {
+			this.displayName = displayName;
+		}
+
 		@Override
 		public String getName() {
 			return name();
@@ -338,8 +406,16 @@ public class UserSaveView extends PopupViewImpl implements
 
 		@Override
 		public String getDisplayName() {
-			return name();
+			return displayName;
 		}
+	}
 
+	public RoleDto getGroupByName(String groupName) {
+		for (RoleDto group : groups) {
+			if (groupName.equals(group.getName())) {
+				return group;
+			}
+		}
+		return null;
 	}
 }

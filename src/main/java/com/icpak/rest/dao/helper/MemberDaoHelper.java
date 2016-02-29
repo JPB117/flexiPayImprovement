@@ -79,29 +79,23 @@ public class MemberDaoHelper {
 
 	public List<MemberDto> getAllMembers(Integer offset, Integer limit,
 			String uriInfo, String searchTerm) {
-
 		if (searchTerm != null) {
 			return memberDao.getAllMembers(offset, limit, searchTerm);
 		}
-
 		List<Member> members = memberDao.getAllMembers(offset, limit);
-
 		List<MemberDto> rtn = new ArrayList<>();
 		for (Member member : members) {
 			MemberDto dto = member.toDto();
-
 			if (member.getUserRefId() != null) {
 				User user = userDao.findByUserId(member.getUserRefId(), false);
 				setMemberValues(dto, user);
 			}
 			rtn.add(dto);
 		}
-
 		return rtn;
 	}
 
 	public Integer getCount() {
-
 		return memberDao.getMemberCount();
 	}
 
@@ -109,7 +103,6 @@ public class MemberDaoHelper {
 		if (user == null) {
 			return;
 		}
-
 		dto.setEmail(user.getEmail());
 		dto.setFirstName(user.getUserData().getFirstName());
 		dto.setLastName(user.getUserData().getLastName());
@@ -283,11 +276,11 @@ public class MemberDaoHelper {
 			memberUser.setMobileNo(jObject.getString("Mobile No_"));
 			memberUser.setPostalCode(jObject.getString("Post Code"));
 			memberUser.setPhoneNumber(jObject.getString("Phone No_"));
-			
-			if(jObject.getString("Name") != null){
+
+			if (jObject.getString("Name") != null) {
 				memberUser.setFullName(jObject.getString("Name"));
 			}
-			
+
 			/*
 			 * update this member user in db
 			 */
@@ -376,15 +369,14 @@ public class MemberDaoHelper {
 
 		return null;
 	}
-	
-	public Member findByMemberNo(String memberNo){
+
+	public Member findByMemberNo(String memberNo) {
 		return memberDao.findByMemberNo(memberNo);
 	}
-	
-	
+
 	public void findDuplicateMemberNo() {
 		List<Member> members = memberDao.getAllMembers(0, 0);
-		
+
 		logger.warn(" TOTAL MEMBERS ======= " + members.size());
 
 		HashMap<String, List<Member>> duplicates = new HashMap<>();
@@ -420,26 +412,28 @@ public class MemberDaoHelper {
 
 		}
 
-		logger.warn(" DUPLICATE HASHMAP SIZE LIST SIZE ======= " + duplicates2.size());
+		logger.warn(" DUPLICATE HASHMAP SIZE LIST SIZE ======= "
+				+ duplicates2.size());
 
 		for (Map.Entry<String, List<Member>> entry : duplicates2.entrySet()) {
 			String key = entry.getKey();
 			List<Member> memberList = entry.getValue();
-			
-			logger.warn(" MEMBER NO  ======= "+key  +" SIZE === " + memberList.size()); 
+
+			logger.warn(" MEMBER NO  ======= " + key + " SIZE === "
+					+ memberList.size());
 			int a = 0;
-			for(int i = 0 ; i < memberList.size() ; i++){
-				
-				logger.warn(" INDEX  ======= "+a +" REFID === " + memberList.get(a).getUser().getRefId());
-				
-				if(a > 0){
+			for (int i = 0; i < memberList.size(); i++) {
+
+				logger.warn(" INDEX  ======= " + a + " REFID === "
+						+ memberList.get(a).getUser().getRefId());
+
+				if (a > 0) {
 					memberDao.delete(memberList.get(a).getUser());
 				}
-				
+
 				a++;
 			}
 		}
-
 
 	}
 

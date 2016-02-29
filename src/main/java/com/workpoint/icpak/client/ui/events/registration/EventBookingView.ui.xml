@@ -192,7 +192,7 @@
 											</div>
 										</div>
 
-										<div class="tab-pane" ui:field="divCategories">
+										<div class="tab-pane" ui:field="divCategories" style="min-height: 350px;">
 											<g:HTMLPanel styleName="row">
 												<div class="col-sm-12">
 													<h4 class="info-text">

@@ -90,7 +90,7 @@ public class User extends PO {
 	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = @JoinColumn(name = "roleid"))
 	@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 	private Set<Role> roles = new HashSet<Role>();
-	
+
 	@Embedded
 	private BioData userData;
 	@OneToOne(fetch = FetchType.LAZY, mappedBy = "user", cascade = {
@@ -294,6 +294,7 @@ public class User extends PO {
 			dto.setMemberRefId(member.getRefId());
 			dto.setMembershipStatus(member.getMemberShipStatus());
 			dto.setHasDisciplinaryCase(member.getMemberDisplinaryCase());
+			dto.setMemberQrCode(member.getMemberQrCode());
 		}
 		dto.setName(userData.getFirstName());
 		dto.setSurname(userData.getLastName());

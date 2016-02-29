@@ -13,6 +13,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import com.gargoylesoftware.htmlunit.WebConsole.Logger;
 import com.google.inject.Inject;
 import com.icpak.rest.dao.helper.ApplicationFormDaoHelper;
 import com.icpak.rest.factory.ResourceFactory;
@@ -101,8 +102,16 @@ public class ApplicationFormResourceImpl implements ApplicationFormResource {
 		helper.createApplication(application);
 		String uri = getUri() + "/" + application.getRefId();
 		application.setUri(uri);
-
 		return application;
+	}
+
+	@POST
+	@Path("/subscribe/{applicationRefId}/{branchName}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public String subscribeToBranch(
+			@PathParam("applicationRefId") String applicationRefId,
+			@PathParam("branchName") String branchName) {
+		return helper.subribeToBranch(applicationRefId, branchName);
 	}
 
 	@PUT
@@ -125,7 +134,6 @@ public class ApplicationFormResourceImpl implements ApplicationFormResource {
 	@ApiOperation(value = "Delete an existing application")
 	public void delete(
 			@ApiParam(value = "ApplicationFormHeader Id of the application to delete", required = true) @PathParam("applicationId") String applicationId) {
-
 		helper.deleteApplication(applicationId);
 	}
 
@@ -158,65 +166,6 @@ public class ApplicationFormResourceImpl implements ApplicationFormResource {
 			@PathParam("applicationId") String applicationId) {
 		return factory.createEmploymentResourse(applicationId);
 	}
-
-	// /**
-	// * Member CPD
-	// *
-	// * @param resource
-	// * @return
-	// */
-	// @Path("/{applicationId}/cpd")
-	// public CPDResource bookings(@InjectParam CPDResource resource){
-	// return resource;
-	// }
-
-	// /**
-	// * Member Education
-	// *
-	// * @param resource
-	// * @return
-	// */
-	// @Path("/{applicationId}/education")
-	// public EducationResourceImpl education(@InjectParam EducationResourceImpl
-	// resource){
-	// return resource;
-	// }
-	//
-	// /**
-	// * Member Training And Experience
-	// *
-	// * @param resource
-	// * @return
-	// */
-	// @Path("/{applicationId}/training")
-	// public TrainingAndExperienceResource bookings(@InjectParam
-	// TrainingAndExperienceResource resource){
-	// return resource;
-	// }
-	//
-	// /**
-	// * Member Training And Experience
-	// *
-	// * @param resource
-	// * @return
-	// */
-	// @Path("/{applicationId}/specialization")
-	// public SpecializationResource bookings(@InjectParam
-	// SpecializationResource resource){
-	// return resource;
-	// }
-	//
-	// /**
-	// * Member Criminal Offenses
-	// *
-	// * @param resource
-	// * @return
-	// */
-	// @Path("/{applicationId}/offenses")
-	// public CriminalOffensesResource bookings(@InjectParam
-	// CriminalOffensesResource resource){
-	// return resource;
-	// }
 
 	@Override
 	@GET

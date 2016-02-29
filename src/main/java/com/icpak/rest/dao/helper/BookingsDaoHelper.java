@@ -42,7 +42,6 @@ import com.icpak.rest.models.event.Delegate;
 import com.icpak.rest.models.event.Event;
 import com.icpak.rest.models.membership.Contact;
 import com.icpak.rest.models.membership.Member;
-import com.icpak.rest.models.trx.Invoice;
 import com.icpak.rest.models.util.Attachment;
 import com.icpak.rest.util.ApplicationSettings;
 import com.icpak.rest.util.SMSIntegration;
@@ -127,6 +126,13 @@ public class BookingsDaoHelper {
 			Integer offset, Integer limit, String searchTerm) {
 		List<DelegateDto> delegateDtos = dao.getAllDelegates(eventId, offset,
 				limit, searchTerm);
+		return delegateDtos;
+	}
+
+	public List<DelegateDto> getDelegateByQrCode(String uriInfo,
+			String eventId, Integer offset, Integer limit, String searchTerm) {
+		List<DelegateDto> delegateDtos = dao.getAllDelegates(eventId, offset,
+				limit, searchTerm, true);
 		return delegateDtos;
 	}
 
@@ -766,19 +772,18 @@ public class BookingsDaoHelper {
 	}
 
 	private Delegate initDelegate(DelegateDto delegateDto, Event event) {
-		Delegate d = new Delegate();
+		Delegate delegate = new Delegate();
 		if (delegateDto.getRefId() != null) {
-			d = eventDao.findByRefId(delegateDto.getRefId(), Delegate.class);
+			delegate = eventDao.findByRefId(delegateDto.getRefId(),
+					Delegate.class);
 		}
-
-		d.copyFrom(delegateDto);
-
+		delegate.copyFrom(delegateDto);
 		if (delegateDto.getAccommodation() != null) {
 			Accommodation accommodation = dao.findByRefId(delegateDto
 					.getAccommodation().getRefId(), Accommodation.class);
 			if (accommodation != null) {
 				accommodation.setSpaces(accommodation.getSpaces() - 1);
-				d.setAccommodation(accommodation);
+				delegate.setAccommodation(accommodation);
 				dao.save(accommodation);
 			}
 		}
@@ -790,12 +795,11 @@ public class BookingsDaoHelper {
 		}
 
 		// Add Accommodation Charge
-		if (d.getAccommodation() != null) {
-			price += d.getAccommodation().getFee();
+		if (delegate.getAccommodation() != null) {
+			price += delegate.getAccommodation().getFee();
 		}
-		d.setAmount(price); // Charge for delegate
-
-		return d;
+		delegate.setAmount(price); // Charge for delegate
+		return delegate;
 	}
 
 	public void deleteBooking(String eventId, String bookingId) {

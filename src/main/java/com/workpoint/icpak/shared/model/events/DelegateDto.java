@@ -42,6 +42,7 @@ public class DelegateDto extends SerializableObj {
 	private int isCredit;
 	private String contact;
 	private Date bookingDate;
+	private String memberQrCode;
 
 	public String getReceiptNo() {
 		return receiptNo;
@@ -298,6 +299,14 @@ public class DelegateDto extends SerializableObj {
 
 	public void setFullName(String fullName) {
 		this.fullName = fullName;
+	}
+
+	public String getMemberQrCode() {
+		return memberQrCode;
+	}
+
+	public void setMemberQrCode(String memberQrCode) {
+		this.memberQrCode = memberQrCode;
 	}
 
 }

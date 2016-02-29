@@ -220,6 +220,7 @@ public class EventBookingPresenter extends
 			public void onSuccess(BookingDto booking) {
 				getView().showmask(false);
 				if (booking == null) {
+					bookingId = null;
 					getView().setEmailValid(true, "");
 				} else {
 					bookingId = booking.getRefId();
