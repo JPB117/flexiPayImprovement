@@ -799,6 +799,7 @@ public class ApplicationFormDaoHelper {
 			member.setCustomerPostingGroup(memberIpmort.getCustomerPostingGroup());
 			member.setUserRefId(user.getRefId());
 			member.setUser(userInDb);
+			
 			if (memberIpmort.getStatus() == 1) {
 				member.setMemberShipStatus(MembershipStatus.ACTIVE);
 			} else {
