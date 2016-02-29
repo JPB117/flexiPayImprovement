@@ -11,7 +11,6 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.GwtEvent.Type;
-import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.inject.Inject;
@@ -53,10 +52,8 @@ import com.workpoint.icpak.shared.api.MemberResource;
 import com.workpoint.icpak.shared.model.Country;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.MemberDto;
-import com.workpoint.icpak.shared.model.UserDto;
 import com.workpoint.icpak.shared.model.events.AccommodationDto;
 import com.workpoint.icpak.shared.model.events.BookingDto;
-import com.workpoint.icpak.shared.model.events.DelegateDto;
 import com.workpoint.icpak.shared.model.events.EventDto;
 
 public class EventBookingPresenter extends
@@ -161,7 +158,6 @@ public class EventBookingPresenter extends
 		addRegisteredHandler(ProcessingEvent.TYPE, this);
 		addRegisteredHandler(ProcessingCompletedEvent.TYPE, this);
 		addRegisteredHandler(PaymentCompletedEvent.TYPE, this);
-
 		getView().getMemberColumnConfig().setLoader(
 				new AutoCompleteField.Loader() {
 					@Override
@@ -179,7 +175,6 @@ public class EventBookingPresenter extends
 								}).search(query, 0, 30);
 					}
 				});
-
 		getView().getANext().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -202,7 +197,6 @@ public class EventBookingPresenter extends
 
 			}
 		});
-
 		getView().getEmailTextBox().addValueChangeHandler(
 				new ValueChangeHandler<String>() {
 					@Override
@@ -337,15 +331,13 @@ public class EventBookingPresenter extends
 
 		if (bookingId != null) {
 			getView().next();
-			getView().next();
-			getView().setActivePage(2);
+			getView().setActivePage(1);
 			eventsResource
 					.withCallback(new AbstractAsyncCallback<BookingDto>() {
 						@Override
 						public void onSuccess(final BookingDto booking) {
 							getView().bindBooking(booking);
 							getInvoice(booking.getInvoiceRef(), false, false);
-
 							getView().getaDownloadProforma().addClickHandler(
 									new ClickHandler() {
 										@Override
@@ -355,7 +347,6 @@ public class EventBookingPresenter extends
 											ctx.setContext("bookingRefId",
 													booking.getRefId());
 											ctx.setAction(UPLOADACTION.GETPROFORMA);
-
 											// ctx.setContext(key, value)
 											Window.open(ctx.toUrl(),
 													"Get Proforma", null);
@@ -364,7 +355,6 @@ public class EventBookingPresenter extends
 						}
 					}).bookings(eventId).getById(bookingId);
 		}
-
 	}
 
 	protected void getInvoice(String invoiceRef) {

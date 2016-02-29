@@ -31,6 +31,11 @@
 							<div class="wizard-container" ui:field="divContainer">
 								<div class="card wizard-card ct-wizard-gold">
 									<div class="wizard-header">
+										<d:ActionLink ui:field="aBackToDelegates"
+											styleName="pull-left hide">
+											<i class="fa fa-angle-double-left"></i>
+											Back to Delegates
+										</d:ActionLink>
 										<h3>
 											Event Registration Centre
 											<br />

@@ -7,6 +7,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rest.delegates.client.ResourceDelegate;
@@ -216,8 +217,8 @@ public class AppContext {
 	}
 
 	public static boolean isCurrentUserEventEdit() {
-		return (user == null ? false : (user.getUser().isEventEdit())
-				|| isCurrentUserAdmin());
+		return (user == null || user.getUser() == null ? false : (user
+				.getUser().isEventEdit()) || isCurrentUserAdmin());
 	}
 
 	public static boolean isCurrentUserEventRead() {

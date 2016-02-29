@@ -60,6 +60,12 @@
 					<li>
 						<d:ActionLink ui:field="aNotAttended">Mark as Not-Attended</d:ActionLink>
 					</li>
+					<li>
+						<d:ActionLink ui:field="aEditBooking">Edit Booking</d:ActionLink>
+					</li>
+					<li>
+						<d:ActionLink ui:field="aCancelBooking">Cancel Booking</d:ActionLink>
+					</li>
 				</ul>
 			</div>
 		</g:HTMLPanel>

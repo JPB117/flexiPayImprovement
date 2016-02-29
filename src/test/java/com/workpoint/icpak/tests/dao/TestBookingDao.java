@@ -77,6 +77,50 @@ public class TestBookingDao extends AbstractDaoTest {
 		}
 	}
 
+	@Test
+	public void testUpdateBooking() {
+		BookingDto dto = new BookingDto();
+		dto.setRefId("TdtJ9I4RtlGqoAKT");
+		dto.setPaymentStatus(PaymentStatus.NOTPAID);
+		dto.setBookingDate(new Date().getTime());
+		ContactDto contact = new ContactDto();
+		contact.setAddress("P.o Box 3434");
+		contact.setCity("Nrb");
+		contact.setCompany("Nairobi City County Assembly");
+		contact.setContactName("The County Assembly Clerk");
+		contact.setCountry("KENYA");
+		contact.setEmail("tomkim@wira.io");
+		contact.setPostCode("00200");
+		contact.setTelephoneNumbers("02302023");
+		dto.setContact(contact);
+
+		List<DelegateDto> delegates = new ArrayList<>();
+		DelegateDto delegate = new DelegateDto();
+		delegate.setEmail("tomkim@wira.io");
+		delegate.setFullName("CPA TOM KIMANI MURIRANJA");
+		delegates.add(delegate);
+
+		DelegateDto delegate2 = new DelegateDto();
+		delegate2.setMemberNo("7087");
+		delegate2.setEmail("dmilgo@wira.io");
+		delegate2.setFullName("CPA DENNIS MILGO");
+		delegates.add(delegate2);
+
+		DelegateDto delegate3 = new DelegateDto();
+		delegate3.setMemberNo("7087");
+		delegate3.setEmail("tkm2020@wira.io");
+		delegate3.setFullName("CPA IMELDA MUENI");
+		delegates.add(delegate3);
+		dto.setDelegates(delegates);
+
+		BookingDto booking = bookingsHelper.createBooking("UJDQSrOzKaplbgfY",
+				dto);
+
+		System.err.println("Ammended delegate size>>>>"
+				+ booking.getDelegates().size());
+
+	}
+
 	// @Test
 	public void createBooking() {
 		BookingDto dto = new BookingDto();
@@ -133,22 +177,21 @@ public class TestBookingDao extends AbstractDaoTest {
 		bookingDao.deleteAllBookingInvoice(bookingRefid);
 	}
 
-	@Ignore
+	@Test
 	public void testSearch() {
 		List<DelegateDto> delegates = bookingsHelper.getAllDelegates("",
-				"Jx4Ca6HpOutf2ic7", null, 1000, "ki");
-		System.err.println(bookingsHelper.getDelegatesCount("Jx4Ca6HpOutf2ic7",
-				"ki"));
-
+				"UJDQSrOzKaplbgfY", null, 1000, "");
+		System.err.println(bookingsHelper.getDelegatesCount("UJDQSrOzKaplbgfY",
+				""));
 		for (DelegateDto d : delegates) {
-			logger.error(" Delegate Ref Id = " + d.getRefId());
+			logger.error(" Event RefId= " + d.getEventRefId());
 		}
 
 		System.err.println(delegates.size());
 
 	}
 
-	@Test
+	// @Test
 	public void testSearchByQrCode() {
 		List<DelegateDto> delegates = bookingsHelper.getDelegateByQrCode("",
 				"UJDQSrOzKaplbgfY", 0, 10, "eqreqreididmqkerm");
@@ -177,7 +220,6 @@ public class TestBookingDao extends AbstractDaoTest {
 
 	@Ignore
 	public void testUpdate() {
-
 		Delegate delInDb = eventDao.findByRefId("ZOrfIhI5IBnVvuNn",
 				Delegate.class);
 		DelegateDto delegate = delInDb.toDto();

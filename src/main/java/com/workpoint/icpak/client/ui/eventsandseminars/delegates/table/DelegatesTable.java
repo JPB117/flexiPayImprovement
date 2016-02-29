@@ -19,6 +19,7 @@ import com.workpoint.icpak.client.ui.component.TableHeader;
 import com.workpoint.icpak.client.ui.eventsandseminars.delegates.row.DelegateTableRow;
 import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.model.EventType;
+import com.workpoint.icpak.shared.model.events.EventDto;
 
 public class DelegatesTable extends Composite {
 
@@ -36,7 +37,6 @@ public class DelegatesTable extends Composite {
 		initWidget(uiBinder.createAndBindUi(this));
 		tblView.setAutoNumber(false);
 		createHeader();
-		createRow(new DelegateTableRow());
 	}
 
 	public void createHeader() {

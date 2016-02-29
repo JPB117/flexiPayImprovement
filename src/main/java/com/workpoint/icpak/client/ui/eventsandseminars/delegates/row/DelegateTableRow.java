@@ -27,6 +27,7 @@ import com.workpoint.icpak.shared.model.PaymentStatus;
 import com.workpoint.icpak.shared.model.TableActionType;
 import com.workpoint.icpak.shared.model.events.AttendanceStatus;
 import com.workpoint.icpak.shared.model.events.DelegateDto;
+import com.workpoint.icpak.shared.model.events.EventDto;
 
 public class DelegateTableRow extends RowWidget {
 
@@ -57,7 +58,6 @@ public class DelegateTableRow extends RowWidget {
 	HTMLPanel divAccomodation;
 	@UiField
 	HTMLPanel divAction;
-
 	@UiField
 	SpanElement spnPaymentStatus;
 	@UiField
@@ -76,11 +76,15 @@ public class DelegateTableRow extends RowWidget {
 	ActionLink aProforma;
 	@UiField
 	ActionLink aResendProforma;
+	@UiField
+	ActionLink aEditBooking;
+	@UiField
+	ActionLink aCancelBooking;
+
 	private DelegateDto delegate;
+	private EventDto event;
 
-	public DelegateTableRow() {
-		initWidget(uiBinder.createAndBindUi(this));
-
+	public void initDisplay() {
 		if (AppContext.isCurrentUserEventEdit()) {
 			divAction.removeStyleName("hide");
 		} else {
@@ -91,7 +95,6 @@ public class DelegateTableRow extends RowWidget {
 			@Override
 			public void onClick(ClickEvent event) {
 				onAttendanceChanged(AttendanceStatus.ATTENDED);
-
 			}
 		});
 		aNotAttended.addClickHandler(new ClickHandler() {
@@ -138,15 +141,18 @@ public class DelegateTableRow extends RowWidget {
 		aProforma.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				// Window.alert("Proforma" + delegate.getBookingRefId());
 				UploadContext ctx = new UploadContext("getreport");
 				ctx.setContext("bookingRefId", delegate.getBookingRefId());
 				ctx.setAction(UPLOADACTION.GETPROFORMA);
-
-				// ctx.setContext(key, value)
 				Window.open(ctx.toUrl(), "Get Proforma", null);
 			}
 		});
+
+		if (delegate != null) {
+			String editUrl = "#eventBooking;eventId=" + event.getRefId() + ";bookingId="
+					+ delegate.getBookingRefId();
+			aEditBooking.setHref(editUrl);
+		}
 
 	}
 
@@ -167,7 +173,7 @@ public class DelegateTableRow extends RowWidget {
 	}
 
 	protected void onAttendanceChanged(final AttendanceStatus attendanceStatus) {
-		AppManager.showPopUp("Confirm", "Confirm " + delegate.getSurname()
+		AppManager.showPopUp("Confirm", "Confirm " + delegate.getFullName()
 				+ " " + attendanceStatus.getDisplayName() + " this event?",
 				new OnOptionSelected() {
 					@Override
@@ -182,9 +188,14 @@ public class DelegateTableRow extends RowWidget {
 
 	}
 
-	public DelegateTableRow(DelegateDto delegate, EventType eventType) {
-		this();
+	public DelegateTableRow(DelegateDto delegate, EventDto event) {
+		initWidget(uiBinder.createAndBindUi(this));
 		this.delegate = delegate;
+		this.event = event;
+
+		// Ensure that you instanciate all variables before calling the next
+		// method!
+		initDisplay();
 		divBookingDate.getElement().setInnerText(
 				DateUtils.CREATEDFORMAT.format(delegate.getCreatedDate()));
 		if (delegate.getCompanyName() != null) {
@@ -227,7 +238,7 @@ public class DelegateTableRow extends RowWidget {
 
 		setPaymentStatus(delegate.getPaymentStatus());
 		setAttendance(delegate.getAttendance());
-		setActionButtons(eventType);
+		setActionButtons(event.getType());
 	}
 
 	private void setActionButtons(EventType eventType) {

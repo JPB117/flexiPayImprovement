@@ -20,6 +20,7 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -40,6 +41,7 @@ import com.workpoint.icpak.client.ui.grid.DataMapper;
 import com.workpoint.icpak.client.ui.grid.DataModel;
 import com.workpoint.icpak.client.ui.membership.PageElement;
 import com.workpoint.icpak.client.ui.util.DateUtils;
+import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.model.Country;
 import com.workpoint.icpak.shared.model.DataType;
 import com.workpoint.icpak.shared.model.InvoiceDto;
@@ -133,21 +135,19 @@ public class EventBookingView extends ViewImpl implements
 	IssuesPanel issuesPanelDelegate;
 	@UiField
 	AggregationGrid tblDelegates;
-
 	@UiField
 	ActionLink aAddMember;
-
 	@UiField
 	ActionLink aAddNonMember;
-
 	@UiField
 	ProformaInvoice proformaInv;
-
 	@UiField
 	ActionLink aDownloadProforma;
-
 	@UiField
 	DivElement divContainer;
+	@UiField
+	ActionLink aBackToDelegates;
+
 	int counter = 0;
 	boolean isValid = true;
 
@@ -297,9 +297,21 @@ public class EventBookingView extends ViewImpl implements
 			public void onClick(ClickEvent event) {
 				counter = counter - 1;
 				setActivePage(counter);
-
 			}
 		});
+		initAdminAspects();
+	}
+
+	private void initAdminAspects() {
+		if (AppContext.isCurrentUserEventEdit()) {
+			aBackToDelegates.removeStyleName("hide");
+			aBackToDelegates.addClickHandler(new ClickHandler() {
+				@Override
+				public void onClick(ClickEvent event) {
+					History.back();
+				}
+			});
+		}
 	}
 
 	public void setActivePage(int index) {

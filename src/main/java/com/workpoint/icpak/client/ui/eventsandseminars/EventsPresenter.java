@@ -32,6 +32,7 @@ import com.workpoint.icpak.client.ui.admin.TabDataExt;
 import com.workpoint.icpak.client.ui.component.PagingConfig;
 import com.workpoint.icpak.client.ui.component.PagingLoader;
 import com.workpoint.icpak.client.ui.component.PagingPanel;
+import com.workpoint.icpak.client.ui.events.AfterSaveEvent;
 import com.workpoint.icpak.client.ui.events.EditModelEvent;
 import com.workpoint.icpak.client.ui.events.EditModelEvent.EditModelHandler;
 import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
@@ -297,13 +298,15 @@ public class EventsPresenter extends
 	private void save(DelegateDto model) {
 		assert model.getBookingId() != null && model.getEventRefId() != null;
 		fireEvent(new ProcessingEvent());
-		eventsDelegate.withCallback(new AbstractAsyncCallback<DelegateDto>() {
-			@Override
-			public void onSuccess(DelegateDto result) {
-				fireEvent(new ProcessingCompletedEvent());
-				Window.alert("Successfully updated " + result.getSurname());
-			}
-		}).bookings(eventId)
+		eventsDelegate
+				.withCallback(new AbstractAsyncCallback<DelegateDto>() {
+					@Override
+					public void onSuccess(DelegateDto result) {
+						fireEvent(new ProcessingCompletedEvent());
+						fireEvent(new AfterSaveEvent(result.getFullName()
+								+ " has been marked as attended."));
+					}
+				}).bookings(eventId)
 				.updateDelegate(model.getBookingId(), model.getRefId(), model);
 	}
 

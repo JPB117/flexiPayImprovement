@@ -299,7 +299,7 @@ public class BookingsDao extends BaseDao {
 	}
 
 	public void deleteAllBookingInvoice(String bookingRefId) {
-		logger.error("Deleteing invoice line ====== ><><<>>>>>>>>===");
+		logger.error("Deleting invoice line ====== ><><<>>>>>>>>===");
 		Query deleteQuery = getEntityManager().createNativeQuery(
 				"delete from InvoiceLine " + "where invoiceId in ( "
 						+ "select d.id from Invoice d "
@@ -307,7 +307,7 @@ public class BookingsDao extends BaseDao {
 		deleteQuery.setParameter("bookingRefId", bookingRefId);
 		deleteQuery.executeUpdate();
 
-		logger.error("Deleteing invoice ====== ><><<>>>>>>>>===");
+		logger.error("Deleting invoice ====== ><><<>>>>>>>>===");
 		deleteQuery = getEntityManager().createNativeQuery(
 				"delete from Invoice " + "where bookingRefId = :bookingRefId");
 		deleteQuery.setParameter("bookingRefId", bookingRefId);
@@ -501,12 +501,7 @@ public class BookingsDao extends BaseDao {
 			}
 
 		}
-
-		// System.err.println(sql);
-
 		List<Object[]> rows = getResultList(query, offset, limit);
-
-		System.err.println(rows.size());
 		for (Object o[] : rows) {
 			int i = 0;
 			Object value = null;
@@ -597,10 +592,20 @@ public class BookingsDao extends BaseDao {
 			delegateDto.setLpoNo(lpoNo);
 			delegateDto.setIsCredit(isCredit);
 			delegateDto.setClearanceNo(clearanceNo);
-
 			delegateList.add(delegateDto);
-
 		}
 		return delegateList;
+	}
+
+	public void deleteExistingDelegates(String bookingId) {
+		logger.error("Deleting existing delegates for booking id ======><><<>>>>>>>>==="
+				+ bookingId);
+		Query deleteQuery = getEntityManager().createNativeQuery(
+				"delete from delegate " + "where booking_id = ( "
+						+ "select id from booking "
+						+ "where refId = :bookingRefId)");
+		deleteQuery.setParameter("bookingRefId", bookingId);
+		deleteQuery.executeUpdate();
+		logger.error("Deleting Success ====== ><><<>>>>>>>>===");
 	}
 }

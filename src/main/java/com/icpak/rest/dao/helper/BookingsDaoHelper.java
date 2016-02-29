@@ -154,14 +154,18 @@ public class BookingsDaoHelper {
 		Booking booking = null;
 		if (dto.getRefId() != null) {
 			booking = dao.getByBookingId(dto.getRefId());
+			logger.info("Booking already exist so its a matter of ammending...");
 		} else {
 			booking = new Booking();
+			logger.info("Creating a new booking");
 		}
 		booking.setEvent(event);
 
+		// Contact
 		if (dto.getContact() != null) {
 			Contact poContact = booking.getContact();
 			if (poContact == null) {
+				logger.info("Creating a new contact,since the booking had no contacts");
 				poContact = new Contact();
 			}
 			ContactDto contactDto = dto.getContact();
@@ -170,9 +174,12 @@ public class BookingsDaoHelper {
 		}
 		booking.copyFrom(dto);
 
+		// Delegates
+
+		// Delete all existing delegates for this booking from the db
+		deleteExistingDelegates(booking.getRefId());
 		List<DelegateDto> dtos = dto.getDelegates();
 		Collection<Delegate> delegates = new ArrayList<>();
-
 		double total = 0.0;
 		if (dtos != null)
 			for (DelegateDto delegateDto : dtos) {
@@ -200,6 +207,12 @@ public class BookingsDaoHelper {
 			dto.getDelegates().get(i).setErn(delegate.getErn());
 		}
 		return dto;
+	}
+
+	private void deleteExistingDelegates(String bookingId) {
+		if (bookingId == null)
+			return;
+		dao.deleteExistingDelegates(bookingId);
 	}
 
 	private void deleteExistingInvoices(String bookingId) {
@@ -381,20 +394,15 @@ public class BookingsDaoHelper {
 		String companyAddress = bookingInDb.getContact().getAddress() + " "
 				+ bookingInDb.getContact().getPostCode();
 		emailValues.put("companyAddress", companyAddress);
-
 		emailValues.put("companyLocation", bookingInDb.getContact().getCity());
-
 		emailValues.put("contactPhone", bookingInDb.getContact()
 				.getPhysicalAddress());
-
 		emailValues.put("quoteNo", invoice.getDocumentNo());
 		emailValues.put("date", formatter.format(invoice.getDate()));
 		emailValues.put("firstName", invoice.getContactName());
 		emailValues.put("eventName", bookingInDb.getEvent().getName());
-
 		emailValues.put("eventStartDate",
 				formatter.format(bookingInDb.getEvent().getStartDate()));
-
 		emailValues.put("DocumentURL", settings.getApplicationPath());
 		emailValues.put("email", bookingInDb.getContact().getEmail());
 		emailValues.put("eventId", bookingInDb.getEvent().getRefId());

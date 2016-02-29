@@ -16,6 +16,7 @@ import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
 import com.workpoint.icpak.client.model.UploadContext;
 import com.workpoint.icpak.client.model.UploadContext.UPLOADACTION;
+import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.PagingPanel;
 import com.workpoint.icpak.client.ui.eventsandseminars.delegates.row.DelegateTableRow;
 import com.workpoint.icpak.client.ui.eventsandseminars.delegates.table.DelegatesTable;
@@ -48,6 +49,8 @@ public class EventsView extends ViewImpl implements EventsPresenter.IEventsView 
 	EventsTable tblView;
 	@UiField
 	DelegatesTable tblDelegates;
+	@UiField
+	ActionLink aCreateBooking;
 
 	private EventDto event;
 
@@ -71,7 +74,6 @@ public class EventsView extends ViewImpl implements EventsPresenter.IEventsView 
 				Window.open(ctx.toUrl(), "", null);
 			}
 		});
-
 	}
 
 	@Override
@@ -102,13 +104,16 @@ public class EventsView extends ViewImpl implements EventsPresenter.IEventsView 
 	public void bindEvent(EventDto event) {
 		this.event = event;
 		spnEventTitle.setInnerText(event.getName());
+		if (AppContext.isCurrentUserEventEdit()) {
+			aCreateBooking.setHref("#eventBooking;eventId=" + event.getRefId());
+		}
 	}
 
 	@Override
 	public void bindDelegates(List<DelegateDto> delegates) {
 		tblDelegates.clearRows();
 		for (DelegateDto dto : delegates) {
-			tblDelegates.createRow(new DelegateTableRow(dto, event.getType()));
+			tblDelegates.createRow(new DelegateTableRow(dto, event));
 		}
 	}
 
