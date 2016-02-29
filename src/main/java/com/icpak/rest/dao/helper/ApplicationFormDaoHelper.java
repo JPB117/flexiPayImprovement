@@ -749,71 +749,76 @@ public class ApplicationFormDaoHelper {
 		List<ApplicationFormHeaderDto> rtn = new ArrayList<>();
 
 		for (MemberImport memberIpmort : memberImports) {
-			logger.info("Member NAME : " + memberIpmort.getName());
-			// Copy into PO
-			ApplicationFormHeader po = new ApplicationFormHeader();
-			po.copyFrom(memberIpmort.toDTO());
-			po.setInvoiceRef("jnjndjjkkkkkkkk");
-			po.setApplicationStatus(ApplicationStatus.APPROVED);
 
-			logger.warn(" MEMBER NO = = = == " + memberIpmort.getMemberNo());
+			Member memberAvailable = memberDaoHelper.findByMemberNo(memberIpmort.getMemberNo());
 
-			BioData bioData = new BioData();
+			if (memberAvailable == null) {
+				logger.info("Member NAME : " + memberIpmort.getName());
+				// Copy into PO
+				ApplicationFormHeader po = new ApplicationFormHeader();
+				po.copyFrom(memberIpmort.toDTO());
+				po.setInvoiceRef("jnjndjjkkkkkkkk");
+				po.setApplicationStatus(ApplicationStatus.APPROVED);
 
-			if (memberIpmort.getGender() == 0) {
-				bioData.setGender(Gender.MALE);
-			} else if (memberIpmort.getGender() == 1) {
-				bioData.setGender(Gender.FEMALE);
+				logger.error(" MEMBER NO = = = == " + memberIpmort.getMemberNo());
+
+				BioData bioData = new BioData();
+
+				if (memberIpmort.getGender() == 0) {
+					bioData.setGender(Gender.MALE);
+				} else if (memberIpmort.getGender() == 1) {
+					bioData.setGender(Gender.FEMALE);
+				}
+
+				bioData.setDob(memberIpmort.getDateOfBirth());
+
+				User user = new User();
+				user.setEmail(memberIpmort.getEmail());
+				user.setFullName(memberIpmort.getName());
+				user.setMemberNo(memberIpmort.getMemberNo());
+				user.setAddress(memberIpmort.getAddress());
+				user.setCity(memberIpmort.getCity());
+				user.setMobileNo(memberIpmort.getPhoneNo_());
+				user.setPassword("pass1");
+				user.setUsername(memberIpmort.getEmail());
+				user.setUserData(bioData);
+
+				userDao.createUser(user);
+
+				List<User> usersInDb = userDao.findUsersByMemberNo(memberIpmort.getMemberNo());
+
+				User userInDb = null;
+
+				if (!usersInDb.isEmpty() && usersInDb != null) {
+					userInDb = usersInDb.get(0);
+				}
+
+				po.setUserRefId(user.getRefId());
+
+				Member member = new Member();
+				member.setMemberNo(memberIpmort.getMemberNo());
+				member.setRegistrationDate(memberIpmort.getDateRegistered());
+				member.setPractisingNo(memberIpmort.getPractisingNo());
+				member.setCustomerType(memberIpmort.getCustomerType());
+				member.setCustomerPostingGroup(memberIpmort.getCustomerPostingGroup());
+				member.setUserRefId(user.getRefId());
+				member.setUser(userInDb);
+
+				if (memberIpmort.getStatus() == 1) {
+					member.setMemberShipStatus(MembershipStatus.ACTIVE);
+				} else {
+					member.setMemberShipStatus(MembershipStatus.INACTIVE);
+				}
+
+				if (userInDb != null) {
+					userInDb.setMember(member);
+					userDao.save(member);
+					userDao.save(po);
+					userDao.save(userInDb);
+				}
+
+				logger.error(" MEMBER ID = = = == " + memberIpmort.getId());
 			}
-
-			bioData.setDob(memberIpmort.getDateOfBirth());
-
-			User user = new User();
-			user.setEmail(memberIpmort.getEmail());
-			user.setFullName(memberIpmort.getName());
-			user.setMemberNo(memberIpmort.getMemberNo());
-			user.setAddress(memberIpmort.getAddress());
-			user.setCity(memberIpmort.getCity());
-			user.setMobileNo(memberIpmort.getPhoneNo_());
-			user.setPassword("pass1");
-			user.setUsername(memberIpmort.getEmail());
-			user.setUserData(bioData);
-
-			userDao.createUser(user);
-
-			List<User> usersInDb = userDao.findUsersByMemberNo(memberIpmort.getMemberNo());
-
-			User userInDb = null;
-
-			if (!usersInDb.isEmpty() && usersInDb != null) {
-				userInDb = usersInDb.get(0);
-			}
-
-			po.setUserRefId(user.getRefId());
-
-			Member member = new Member();
-			member.setMemberNo(memberIpmort.getMemberNo());
-			member.setRegistrationDate(memberIpmort.getDateRegistered());
-			member.setPractisingNo(memberIpmort.getPractisingNo());
-			member.setCustomerType(memberIpmort.getCustomerType());
-			member.setCustomerPostingGroup(memberIpmort.getCustomerPostingGroup());
-			member.setUserRefId(user.getRefId());
-			member.setUser(userInDb);
-			
-			if (memberIpmort.getStatus() == 1) {
-				member.setMemberShipStatus(MembershipStatus.ACTIVE);
-			} else {
-				member.setMemberShipStatus(MembershipStatus.INACTIVE);
-			}
-
-			if (userInDb != null) {
-				userInDb.setMember(member);
-				userDao.save(member);
-				userDao.save(po);
-				userDao.save(userInDb);
-			}
-
-			logger.warn(" MEMBER ID = = = == " + memberIpmort.getId());
 		}
 
 		memberDaoHelper.findDuplicateMemberNo();

@@ -377,7 +377,7 @@ public class MemberDaoHelper {
 	public void findDuplicateMemberNo() {
 		List<Member> members = memberDao.getAllMembers(0, 0);
 
-		logger.warn(" TOTAL MEMBERS ======= " + members.size());
+		logger.error(" TOTAL MEMBERS ======= " + members.size());
 
 		HashMap<String, List<Member>> duplicates = new HashMap<>();
 
@@ -412,19 +412,19 @@ public class MemberDaoHelper {
 
 		}
 
-		logger.warn(" DUPLICATE HASHMAP SIZE LIST SIZE ======= "
+		logger.error(" DUPLICATE HASHMAP SIZE LIST SIZE ======= "
 				+ duplicates2.size());
 
 		for (Map.Entry<String, List<Member>> entry : duplicates2.entrySet()) {
 			String key = entry.getKey();
 			List<Member> memberList = entry.getValue();
 
-			logger.warn(" MEMBER NO  ======= " + key + " SIZE === "
+			logger.info(" MEMBER NO  ======= " + key + " SIZE === "
 					+ memberList.size());
 			int a = 0;
 			for (int i = 0; i < memberList.size(); i++) {
 
-				logger.warn(" INDEX  ======= " + a + " REFID === "
+				logger.info(" INDEX  ======= " + a + " REFID === "
 						+ memberList.get(a).getUser().getRefId());
 
 				if (a > 0) {
