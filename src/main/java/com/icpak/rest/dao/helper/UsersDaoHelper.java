@@ -78,8 +78,6 @@ public class UsersDaoHelper {
 	@Inject
 	UsersDao dao;
 	@Inject
-	ApplicationFormDao applicationDao;
-	@Inject
 	RolesDao roleDao;
 	@Inject
 	TransactionsDao trxDao;
@@ -129,10 +127,10 @@ public class UsersDaoHelper {
 		User user = dao.findByUserId(userId);
 		user.setEmail(emailAddress);
 		dao.updateUser(user);
-		ApplicationFormHeader application = applicationDao
+		ApplicationFormHeader application = applicationFormDao
 				.getApplicationByUserRef(user.getRefId());
 		application.setEmail(emailAddress);
-		applicationDao.updateApplication(application);
+		applicationFormDao.updateApplication(application);
 
 		sendActivationEmail(user);
 	}
@@ -581,7 +579,7 @@ public class UsersDaoHelper {
 		logger.error(" ===>>><<<< === MEMBER NO ===>><<<>>== "
 				+ memberInDb.getMemberNo());
 
-		ApplicationFormHeader userFormHeaderInDb = applicationDao
+		ApplicationFormHeader userFormHeaderInDb = applicationFormDao
 				.getApplicationByUserRef(userInDb.getRefId());
 
 		if (userFormHeaderInDb != null) {
@@ -698,6 +696,7 @@ public class UsersDaoHelper {
 					+ currentUserDto);
 		}
 		logger.info("LogInHandlerexecut(): loggedInCookie=" + loggedInCookie);
+//		applicationFormDaoHelper.importMissingMembers(applicationFormDao.importMissingMembers());
 		assert action.getActionType() == null;
 		return new LogInResult(action.getActionType(), currentUserDto,
 				loggedInCookie);

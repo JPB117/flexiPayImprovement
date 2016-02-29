@@ -1,6 +1,5 @@
 package com.workpoint.icpak.tests.dao;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -77,7 +76,7 @@ public class TestApplicationForm extends AbstractDaoTest {
 	
 	@Test
 	public void ImportMissingMembers() {
-		//List<ApplicationFormHeaderDto> members = helper.importMissingMembers();
+		List<ApplicationFormHeaderDto> members = helper.importMissingMembers(applicationDao.importMissingMembers());
 	}
 
 	@Ignore

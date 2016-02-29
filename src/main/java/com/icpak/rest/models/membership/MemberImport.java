@@ -15,7 +15,7 @@ import com.workpoint.icpak.shared.model.Gender;
 import com.workpoint.icpak.shared.model.Title;
 
 @Entity
-@Table(name = "`all_members`")
+@Table(name = "`new_members`")
 public class MemberImport {
 	@XmlTransient
 	@Id
