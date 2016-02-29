@@ -38,6 +38,7 @@ public class Delegate extends PO {
 	private String otherNames;
 	private String fullName;
 	private String email;
+	private String phoneNumber;
 	private Accommodation accommodation;
 	private String receiptNo;
 	private String lpoNo;
@@ -266,6 +267,14 @@ public class Delegate extends PO {
 
 	public void setMemberQrCode(String memberQrCode) {
 		this.memberQrCode = memberQrCode;
+	}
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
 	}
 
 }

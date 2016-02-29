@@ -16,6 +16,8 @@ public class DelegateDto extends SerializableObj {
 	private String companyName;
 	private String contactName;
 	private String contactEmail;
+	private String contactPhoneNumber;
+	private String delegatePhoneNumber;
 	private String memberNo;
 	private String memberRefId;
 	private String title;
@@ -307,6 +309,22 @@ public class DelegateDto extends SerializableObj {
 
 	public void setMemberQrCode(String memberQrCode) {
 		this.memberQrCode = memberQrCode;
+	}
+
+	public String getContactPhoneNumber() {
+		return contactPhoneNumber;
+	}
+
+	public void setContactPhoneNumber(String contactPhoneNumber) {
+		this.contactPhoneNumber = contactPhoneNumber;
+	}
+
+	public String getDelegatePhoneNumber() {
+		return delegatePhoneNumber;
+	}
+
+	public void setDelegatePhoneNumber(String delegatePhoneNumber) {
+		this.delegatePhoneNumber = delegatePhoneNumber;
 	}
 
 }

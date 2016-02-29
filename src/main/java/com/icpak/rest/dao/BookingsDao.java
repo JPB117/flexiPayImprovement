@@ -466,9 +466,9 @@ public class BookingsDao extends BaseDao {
 
 		List<DelegateDto> delegateList = new ArrayList<>();
 		String sql = "select b.refId as bookingRefId,b.bookingDate,"
-				+ "b.company,b.Contact, b.`E-Mail`,"
+				+ "b.company,b.Contact, b.`E-Mail`,b.`Phone No_`,"
 				+ "d.refId,d.memberRefId,d.memberRegistrationNo,d.ern,"
-				+ "d.title,d.otherNames,d.fullName,a.hotel,b.paymentStatus,"
+				+ "d.title,d.otherNames,d.fullName,d.phoneNumber,a.hotel,b.paymentStatus,"
 				+ "d.attendance,d.surname,d.email,e.refid,d.booking_id,"
 				+ "d.receiptNo,d.lpoNo,d.isCredit,d.clearanceNo "
 				+ "from delegate d inner join booking b on (d.booking_id=b.id) "
@@ -520,6 +520,8 @@ public class BookingsDao extends BaseDao {
 					.toString();
 			String contactEmail = (value = o[i++]) == null ? null : value
 					.toString();
+			String contactPhone = (value = o[i++]) == null ? null : value
+					.toString();
 			String refId = (value = o[i++]) == null ? null : value.toString();
 			String memberRefId = (value = o[i++]) == null ? null : value
 					.toString();
@@ -530,6 +532,8 @@ public class BookingsDao extends BaseDao {
 			String otherNames = (value = o[i++]) == null ? null : value
 					.toString();
 			String fullName = (value = o[i++]) == null ? null : value
+					.toString();
+			String phoneNumber = (value = o[i++]) == null ? null : value
 					.toString();
 			String hotel = (value = o[i++]) == null ? null : value.toString();
 			Integer paymentStatus = (value = o[i++]) == null ? null
@@ -555,8 +559,10 @@ public class BookingsDao extends BaseDao {
 			delegateDto.setCompanyName(companyName);
 			delegateDto.setContactName(contactName);
 			delegateDto.setContactEmail(contactEmail);
+			delegateDto.setContactPhoneNumber(contactPhone);
 			delegateDto.setBookingRefId(bookingRefId);
 			delegateDto.setFullName(fullName);
+			delegateDto.setDelegatePhoneNumber(phoneNumber);
 			delegateDto.setRefId(refId);
 			delegateDto.setMemberRefId(memberRefId);
 			delegateDto.setMemberNo(memberNo);

@@ -55,7 +55,6 @@ import com.icpak.rest.utils.DocumentLine;
 import com.icpak.rest.utils.HTMLToPDFConvertor;
 import com.itextpdf.text.DocumentException;
 import com.workpoint.icpak.server.util.DateUtils;
-import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.shared.model.CPDStatus;
 import com.workpoint.icpak.shared.model.InvoiceDto;
@@ -206,11 +205,14 @@ public class GetReport extends HttpServlet {
 			applicationRefId = req.getParameter("applicationRefId");
 			ApplicationFormHeader application = applicationDaoHelper
 					.getApplicationById(applicationRefId);
-			
-			InvoiceDto invoice = invoiceDaoHelper.getInvoice(application.getInvoiceRef());
-			byte[] invoicePdf = applicationDaoHelper.generateInvoicePDF(application,invoice);
 
-			processAttachmentRequest(resp, invoicePdf, application.getSurname()+" "+application.getOtherNames() + ".pdf");
+			InvoiceDto invoice = invoiceDaoHelper.getInvoice(application
+					.getInvoiceRef());
+			byte[] invoicePdf = applicationDaoHelper.generateInvoicePDF(
+					application, invoice);
+
+			processAttachmentRequest(resp, invoicePdf, application.getSurname()
+					+ " " + application.getOtherNames() + ".pdf");
 		}
 
 		if (req.getParameter("invoiceRefId") != null) {
@@ -266,13 +268,10 @@ public class GetReport extends HttpServlet {
 		if (req.getParameter("memberRefId") != null) {
 			memberRefId = req.getParameter("memberRefId");
 		}
-
 		Date finalStartDate = startDate == null ? null : new Date(startDate);
 		Date finalEndDate = endDate == null ? null : new Date(endDate);
-
 		byte[] data = processStatementsRequest(memberRefId, finalStartDate,
 				finalEndDate);
-
 		processAttachmentRequest(resp, data, "statement.pdf");
 	}
 
@@ -323,7 +322,6 @@ public class GetReport extends HttpServlet {
 
 		Member member = null;
 		NumberFormat df = NumberFormat.getCurrencyInstance();
-
 		try {
 			member = userDao.findByRefId(memberRefId, Member.class);
 		} catch (Exception e) {
@@ -358,7 +356,8 @@ public class GetReport extends HttpServlet {
 
 		values.put("endingDate",
 				formatter.format(lastStatement.getPostingDate()));
-		values.put("memberAddress", user.getAddress());
+		values.put("memberAddress",
+				user.getAddress() + " " + user.getPostalCode());
 		values.put("memberLocation", user.getCity());
 		values.put("memberNo", user.getMemberNo());
 		values.put("memberNames", user.getFullName());
@@ -712,6 +711,7 @@ public class GetReport extends HttpServlet {
 
 	// generate member cpd statement pdf
 	SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+
 	public byte[] processMemberCPDStatementRequest(String memberNo,
 			String memberRefId, Date startDate, Date endDate,
 			HttpServletResponse resp) throws FileNotFoundException,

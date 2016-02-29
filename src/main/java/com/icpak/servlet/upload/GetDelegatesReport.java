@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +21,6 @@ import org.apache.poi.ss.usermodel.PrintSetup;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.util.CellRangeAddress;
 
 import com.workpoint.icpak.shared.model.events.DelegateDto;
 
@@ -30,9 +28,10 @@ public class GetDelegatesReport {
 	Logger logger = Logger.getLogger(GetDelegatesReport.class);
 
 	private static final String[] titles = { "ICPAK MEMBER", "MEMBER NO",
-			"ERN NO", "DELEGATE NAMES", "EMAIL", "BOOKING DATE", "SPONSOR",
-			"CONTACT PERSON", "CONTACT EMAIL", "SPONSOR TEL", "ACCOMODATION",
-			"PAID", "RECEIPT", "LPO NO", "CREDIT", "CLEARANCE NO", "ATTEND" };
+			"ERN NO", "DELEGATE NAMES", "DELEGATE PHONENUMBER", "EMAIL",
+			"BOOKING DATE", "SPONSOR", "CONTACT PERSON", "CONTACT EMAIL",
+			"SPONSOR TEL", "ACCOMODATION", "PAID", "RECEIPT", "LPO NO",
+			"CREDIT", "CLEARANCE NO", "ATTEND" };
 
 	static Map<String, CellStyle> styles = null;
 	static Map<String, Font> fonts = null;
@@ -314,10 +313,8 @@ public class GetDelegatesReport {
 			String styleName = null;
 
 			if (j == 0) {
-				// cell.setCellValue(formater.format(detail.getCreatedDate()));
 				cell.setCellValue((detail.getMemberNo() != null ? "1" : "0"));
 			}
-
 			if (j == 1) {
 				cell.setCellValue(detail.getMemberNo());
 			}
@@ -334,67 +331,66 @@ public class GetDelegatesReport {
 							+ detail.getOtherNames());
 				}
 			}
-
 			if (j == 4) {
-				cell.setCellValue(detail.getEmail());
+				cell.setCellValue(detail.getDelegatePhoneNumber());
 			}
 
+			if (j == 5) {
+				cell.setCellValue(detail.getEmail());
+			}
 			// "BOOKING DATE", "SPONSOR",
 			// "CONTACT PERSON","CONTACT EMAIL","SPONSOR TEL"
 			// "ACCOMODATION"
-
-			if (j == 5) {
+			if (j == 6) {
 				cell.setCellValue(formater.format(detail.getCreatedDate()));
 			}
 
-			if (j == 6) {
+			if (j == 7) {
 				cell.setCellValue(detail.getCompanyName());
 			}
 
-			if (j == 7) {
+			if (j == 8) {
 				cell.setCellValue(detail.getContactName());
 			}
 
-			if (j == 8) {
+			if (j == 9) {
 				cell.setCellValue(detail.getContactEmail());
 			}
 
-			if (j == 9) {
-				cell.setCellValue("");
+			if (j == 10) {
+				cell.setCellValue(detail.getContactPhoneNumber());
 			}
 
-			if (j == 10) {
+			if (j == 11) {
 				cell.setCellValue((detail.getAccommodation() == null ? "None"
 						: detail.getAccommodation().getHotel()));
 			}
 
 			// ,"PAID","RECEIPT" ,"LPO NO", "CREDIT","CLEARANCE NO","ATTEND"}
-			if (j == 11) {
+			if (j == 12) {
 				cell.setCellValue(detail.getPaymentStatus().getDisplayName());
 			}
 
-			if (j == 12) {
+			if (j == 13) {
 				cell.setCellValue(detail.getReceiptNo());
 			}
 
-			if (j == 13) {
+			if (j == 14) {
 				cell.setCellValue(detail.getLpoNo());
 			}
 
-			if (j == 14) {
+			if (j == 15) {
 				cell.setCellValue(detail.getIsCredit());
 			}
 
-			if (j == 15) {
+			if (j == 16) {
 				cell.setCellValue(detail.getClearanceNo());
 			}
 
-			if (j == 16) {
+			if (j == 17) {
 				cell.setCellValue(detail.getAttendance().getDisplayName());
 			}
-
 			styleName = "cell_normal_centered";
-
 			cell.setCellStyle(styles.get(styleName));
 		}
 
@@ -402,7 +398,6 @@ public class GetDelegatesReport {
 
 	public void generateDelegateReport(List<DelegateDto> delegateDtos,
 			String docType) throws Exception {
-
 		byte[] bites = new GetDelegatesReport(delegateDtos, docType, "My Event")
 				.getBytes();
 
