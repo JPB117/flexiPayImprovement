@@ -10,7 +10,7 @@ public class DateUtils {
 	static String yearpattern = "yyyy";
 	static String createdpattern = "dd/MM/yyyy HH:mm";
 	static String fullPattern = "EEE,MMM d,yyyy";
-	static String halfPattern = "EEEE, MMM d";
+	static String halfPattern = "EEEE, d MMMM yyyy";
 	static String monthDayPattern = "MMM d";
 	static String monthPattern = "MMM (MM)";
 	static String monthOnlyPattern = "MM";

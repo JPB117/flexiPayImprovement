@@ -471,8 +471,9 @@ public class GetReport extends HttpServlet {
 		String refNo = cert.getId() + "";// memberDao.getGoodStandingCertDocNumber(cert.getId());
 
 		values.put("refNo", cert.getId());
-		values.put("letterDate", DateUtils.DATEFORMAT.format(new Date()));
-		values.put("memberName", user.toDto().getFullName());
+		values.put("letterDate", DateUtils.HALFDATEFORMAT.format(new Date()));
+		values.put("memberName", user.toDto().getFullName().toUpperCase());
+		values.put("smallName", user.toDto().getFullName());
 		values.put("memberNo", member.getMemberNo());
 		values.put("cpdHours", cpdHelper.getCPDHours(memberId));
 		values.put("firstName", user.getUserData().getFirstName());
@@ -480,7 +481,7 @@ public class GetReport extends HttpServlet {
 
 		HTMLToPDFConvertor convertor = new HTMLToPDFConvertor();
 		InputStream is = GetReport.class.getClassLoader().getResourceAsStream(
-				"goodstanding_certificate.html");
+				"good_standing.html");
 		String html = IOUtils.toString(is);
 		byte[] data = convertor.convert(doc, html);
 

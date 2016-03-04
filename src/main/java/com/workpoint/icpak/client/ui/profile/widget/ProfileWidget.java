@@ -295,10 +295,10 @@ public class ProfileWidget extends Composite {
 
 		hideAllDisplays();
 		if (isCurrentUserMember) {
-			// divGoodStanding.removeClassName("hide");
-			// divGoodStandingActions.removeClassName("hide");
-			// divMemberShipStatus.removeClassName("hide");
-			// divStandingStatus.removeClassName("hide");
+			divGoodStanding.removeClassName("hide");
+			divGoodStandingActions.removeClassName("hide");
+			divMemberShipStatus.removeClassName("hide");
+			divStandingStatus.removeClassName("hide");
 
 		} else if (isCurrentUserBasicMember) {
 			divPaymentSection.removeClassName("hide");
