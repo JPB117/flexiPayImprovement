@@ -41,18 +41,14 @@ public class ServerOracle<T extends Listable> extends SimpleOracle<T> {
 		suggestions.clear();
 		if (values == null)
 			return;
-
 		for (T value : values) {
 			DataSuggestion<T> suggestion = new DataSuggestion<T>(value);
 			suggestions.add(suggestion);
 		}
-
 		if (request != null) {
 			Response resp = new Response();
 			resp.setSuggestions(suggestions); // every server result fits the
-												// query
 			callback.onSuggestionsReady(request, resp);
-
 			// Reset
 			request = null;
 			resp = null;
