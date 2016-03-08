@@ -10,7 +10,7 @@
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divCategory">
 		</g:HTMLPanel>
-		<g:HTMLPanel styleName="td" ui:field="divStatus">
+		<g:HTMLPanel styleName="td hide" ui:field="divStatus">
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="div2016">
 		</g:HTMLPanel>
