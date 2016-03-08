@@ -42,7 +42,7 @@ public class CPDSummaryTable extends Composite {
 		th.add(new TableHeader("Reg No:"));
 		th.add(new TableHeader("Member Name:"));
 		th.add(new TableHeader("Category:"));
-		th.add(new TableHeader("Status:"));
+//		th.add(new TableHeader("Status:"));
 		th.add(new TableHeader("2016:"));
 		th.add(new TableHeader("2015:"));
 		th.add(new TableHeader("2014:"));
