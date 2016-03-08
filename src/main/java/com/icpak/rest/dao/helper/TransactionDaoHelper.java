@@ -145,9 +145,9 @@ public class TransactionDaoHelper {
 		try {
 			parsedDate = DateUtils.FULLTIMESTAMP.parse(trxDate);
 		} catch (ParseException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+
 		Transaction trx = new Transaction();
 		trx.setAccountNo(accountNo);
 		trx.setDate(parsedDate);
@@ -157,13 +157,15 @@ public class TransactionDaoHelper {
 		trx.setBusinessNo(businessNo);
 		trx.setAmount(Double.parseDouble(amount));
 		trx.setStatus(PaymentStatus.PAID);
+
+		// Save this transaction
 		saveTransactionFirst(trx);
 
 		// Convert DTO to Invoice Object
 		Invoice inv = new Invoice();
 		inv.copyFrom(invoiceDto);
 
-		// Find if this payment was for a booking or not
+		// Payment was for Booking
 		Booking booking = new Booking();
 		booking = dao.findByRefId(inv.getBookingRefId(), Booking.class, false);
 		if (booking != null) {
@@ -175,13 +177,11 @@ public class TransactionDaoHelper {
 				e.printStackTrace();
 			}
 		} else {
-			// Get the Application if this payment was for Member
-			// Registration
+			// Payment was for New Member Registration
 			logger.info("Looking for application using Invoice Ref::"
 					+ invoiceDto.getInvoiceRefId());
 			ApplicationFormHeader application = applicationDao
 					.getApplicationByInvoiceRef(invoiceDto.getInvoiceRefId());
-			// assert (application != null);
 			try {
 				sendPaymentConfirmationSMSAndEmail(phoneNumber, trxNumber,
 						inv.getContactName(), application, trxDate, amount, trx);
@@ -243,6 +243,9 @@ public class TransactionDaoHelper {
 		return trxs;
 	}
 
+	/*
+	 * Calculate if there is any balance and send an sms with this balance
+	 */
 	private void sendPaymentConfirmationSMSAndEmail(String phoneNumber,
 			String transactionNumber, String senderName, Object paymentType,
 			String trxDate, String amount, Transaction trx)
@@ -266,9 +269,7 @@ public class TransactionDaoHelper {
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
-
 			Double balance = chargeAbleAmt - previousPayments;
-
 			logger.info("Chargable Amount>>>>" + balance);
 			logger.info("Invoice Amount>>>>" + invoiceDto.getInvoiceAmount());
 			logger.info("Balance Calculated>>>>" + balance);

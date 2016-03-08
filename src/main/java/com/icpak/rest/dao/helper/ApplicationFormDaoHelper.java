@@ -751,7 +751,6 @@ public class ApplicationFormDaoHelper {
 		for (MemberImport memberIpmort : memberImports) {
 
 			Member memberAvailable = memberDaoHelper.findByMemberNo(memberIpmort.getMemberNo());
-
 			if (memberAvailable == null) {
 				logger.info("Member NAME : " + memberIpmort.getName());
 				// Copy into PO

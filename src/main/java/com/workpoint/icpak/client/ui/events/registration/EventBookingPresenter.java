@@ -158,6 +158,7 @@ public class EventBookingPresenter extends
 		addRegisteredHandler(ProcessingEvent.TYPE, this);
 		addRegisteredHandler(ProcessingCompletedEvent.TYPE, this);
 		addRegisteredHandler(PaymentCompletedEvent.TYPE, this);
+
 		getView().getMemberColumnConfig().setLoader(
 				new AutoCompleteField.Loader() {
 					@Override

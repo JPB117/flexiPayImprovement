@@ -36,10 +36,11 @@ public class CreditCardPaymentImpl implements CreditCardResource {
 	public CreditCardResponse postPayment(CreditCardDto dto) {
 		CreditCardResponse response = creditCardService
 				.authorizeCardTransaction(dto);
+		// If Payment is successful..
 		if (response.getStatusCode().equals("0000")) {
-			// trxDaoHelper.receivePaymentUsingInvoiceNo(dto.getPaymentRefId(),
-			// "N/A", "N/A", "Credit/Debit Card",
-			// response.getTransactionIndex(), null, dto.getAmount());
+			trxDaoHelper.receivePaymentUsingInvoiceNo(dto.getPaymentRefId(),
+					"N/A", "N/A", "Credit/Debit Card",
+					response.getTransactionIndex(), null, dto.getAmount());
 		}
 		return response;
 	}

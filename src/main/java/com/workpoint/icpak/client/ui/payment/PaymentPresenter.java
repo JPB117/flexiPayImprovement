@@ -62,18 +62,16 @@ public class PaymentPresenter extends PresenterWidget<PaymentPresenter.MyView> {
 			@Override
 			public void onClick(ClickEvent event) {
 				if (getView().isPaymentValid()) {
-					getView().showmask(true);
-
+					fireEvent(new ProcessingEvent());
 					creditCardResource.withCallback(
 							new AbstractAsyncCallback<CreditCardResponse>() {
 								@Override
 								public void onSuccess(
 										CreditCardResponse response) {
-									getView().showmask(false);
 									getView().setCardResponse(response);
+									fireEvent(new ProcessingCompletedEvent());
 								}
 							}).postPayment(getView().getCreditCardDetails());
-
 				}
 			}
 		});

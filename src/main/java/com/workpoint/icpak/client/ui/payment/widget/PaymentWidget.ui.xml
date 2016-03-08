@@ -10,6 +10,12 @@
 	.bottom {
 		margin-bottom: 24px;
 	}
+	
+	.help-text {
+		font-style: italic;
+		color: #C3C1C1;
+		font-size: 14px;
+	}
 	</ui:style>
 
 	<g:HTMLPanel styleName="col-sm-12">
@@ -31,10 +37,10 @@
 					<a href="#mobile" aria-controls="home" role="tab" data-toggle="tab">Pay
 						with Mobile Money</a>
 				</li>
-				<li role="presentation" class="hide">
+				<li role="presentation">
 					<!-- <span class="fa fa-credit-card"></span> -->
 					<a href="#cards" aria-controls="home" role="tab" data-toggle="tab">Pay
-						with Credit/Debit Card</a>
+						with Credit/Debit/PrePaid Card</a>
 				</li>
 
 				<li role="presentation">
@@ -119,93 +125,98 @@
 						</div>
 					</div>
 				</div>
-				<div role="tabpanel" class="tab-panel hide" id="cards">
-					<div class="col-sm-12">
-						<d:IssuesPanel ui:field="issuesPanel" styleName="hide alert alert-danger"></d:IssuesPanel>
-					</div>
 
-					<div class="col-sm-12">
-						<h5>
-							<g:InlineLabel>Supported Cards:</g:InlineLabel>
-							<g:Image url="img/Visa_Logo.png"></g:Image>
-							<g:Image url="img/Mastercard_Logo.png"></g:Image>
-						</h5>
-						<br />
-						<div class="form-group">
-							<div class="row">
-								<div class="col-sm-3">
-									<label for="amount">
-										Amount to pay
-									</label>
-									<d:TextField styleName="form-control" ui:field="txtAmount"
-										disabled="true" placeholder="Amount to Pay">
-									</d:TextField>
-								</div>
-							</div>
+				<div role="tabpanel" class="tab-pane" id="cards">
+					<div class="">
+						<div class="col-sm-12">
+							<d:IssuesPanel ui:field="issuesPanel" styleName="hide alert alert-danger"></d:IssuesPanel>
 						</div>
-
-
-						<div class="form-group">
-							<div class="row">
-								<div class="col-sm-7">
-									<d:TextField class="form-control" ui:field="txtCardHolderName"
-										placeholder="Name on the Card">
-									</d:TextField>
-								</div>
-							</div>
-						</div>
-						<div class="form-group">
-							<div class="row">
-								<div class="col-sm-4">
-									<d:TextField class="form-control" placeholder="Debit/Credit Card Number"
-										ui:field="txtCardNumber">
-									</d:TextField>
-								</div>
-								<div class="col-sm-3">
-									<d:TextField styleName="form-control" ui:field="txtCvv"
-										placeholder="Security Code"></d:TextField>
-								</div>
-							</div>
-						</div>
-
-						<div class="form-group">
-							<div class="row">
-								<div class="col-sm-7">
-									<d:TextField class="form-control" ui:field="txtAddress1"
-										placeholder="Address">
-									</d:TextField>
-								</div>
-							</div>
-						</div>
-
-
-						<div class="form-group">
-							<div class="row">
+						<div class="col-sm-12">
+							<h5>
+								<g:InlineLabel>Supported Cards:</g:InlineLabel>
+								<g:Image url="img/Visa_Logo.png"></g:Image>
+								<g:Image url="img/Mastercard_Logo.png"></g:Image>
+							</h5>
+							<br />
+							<div class="form-group">
 								<div class="row">
-									<div class="col-sm-7">
-										<div class="col-sm-6">
-											<d:DropDownList styleName="form-control col-sm-2"
-												ui:field="lstMonths">
-											</d:DropDownList>
-											<span class="help-inline">(Expiry)</span>
-										</div>
-
-										<div class="col-sm-6">
-											<d:DropDownList styleName="form-control"
-												ui:field="lstYears">
-											</d:DropDownList>
+									<div class="col-lg-7">
+										<div class="alert alert-success">
+											Amount to pay:
+											<span ui:field="elCardAmount" style="font-weight:bold"></span>
+											<d:TextField ui:field="txtAmount" disabled="true"
+												styleName="hide"></d:TextField>
+											.Enter your Card Details Below and Click 'Complete'
 										</div>
 									</div>
 								</div>
 							</div>
-						</div>
+							<div class="form-group hide">
+								<div class="row">
+									<div class="col-sm-7">
+										<d:TextField class="form-control" ui:field="txtCardHolderName"
+											placeholder="Name on the Card">
+										</d:TextField>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="row">
+									<div class="col-sm-4">
+										<d:TextField class="form-control" placeholder="Debit/Credit Card Number"
+											ui:field="txtCardNumber">
+										</d:TextField>
+									</div>
+									<div class="col-sm-3">
+										<d:TextField styleName="form-control" ui:field="txtCvv"
+											placeholder="Security Code"></d:TextField>
+									</div>
+									<div class="col-sm-3" style="padding-left:0px">
+										<span class="help-block {style.help-text}">(The
+											last three digits at the back of your
+											card)</span>
+									</div>
+								</div>
+							</div>
 
-						<div class="form-group">
-							<div class="row">
-								<div class="col-sm-9">
-									<d:ActionLink ui:field="aPay" styleName="btn btn-gold btn-fill">
-										Submit
-										Details</d:ActionLink>
+							<div class="form-group hide">
+								<div class="row">
+									<div class="col-sm-7">
+										<d:TextField class="form-control" ui:field="txtAddress1"
+											placeholder="Address">
+										</d:TextField>
+									</div>
+								</div>
+							</div>
+
+
+							<div class="form-group">
+								<div class="row">
+									<div class="col-sm-3">
+										<d:DropDownList styleName="form-control col-sm-2"
+											ui:field="lstMonths">
+										</d:DropDownList>
+									</div>
+
+									<div class="col-sm-4">
+										<d:DropDownList styleName="form-control"
+											ui:field="lstYears">
+										</d:DropDownList>
+									</div>
+									<div class="col-sm-3" style="padding-left:0px">
+										<span class="help-inline {style.help-text}">
+											(Expiry Date on the card)</span>
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<div class="row">
+									<div class="col-sm-9">
+										<d:ActionLink ui:field="aPay" styleName="btn btn-gold btn-fill">
+											Complete
+											Payment</d:ActionLink>
+									</div>
 								</div>
 							</div>
 						</div>

@@ -12,7 +12,6 @@ import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -50,9 +49,11 @@ public class PaymentWidget extends Composite {
 	@UiField
 	TextField txtCvv;
 	@UiField
+	TextField txtAmount;
+	@UiField
 	ActionLink aPay;
 	@UiField
-	TextField txtAmount;
+	SpanElement elCardAmount;
 	@UiField
 	IssuesPanel issuesPanel;
 	@UiField
@@ -87,6 +88,7 @@ public class PaymentWidget extends Composite {
 	public PaymentWidget() {
 		initWidget(uiBinder.createAndBindUi(this));
 		setDate();
+		setAmount("10");
 	}
 
 	public class Month implements Listable {
@@ -125,7 +127,7 @@ public class PaymentWidget extends Composite {
 			allYears.add(year);
 		}
 
-		lstYears.setItems(allYears);
+		lstYears.setItems(allYears, "Year");
 
 		Date startMonth = new Date();
 		CalendarUtil.addMonthsToDate(startMonth, -(startMonth.getMonth() + 1));
@@ -135,14 +137,14 @@ public class PaymentWidget extends Composite {
 			CalendarUtil.addMonthsToDate(startMonth, 1);
 			allMonths.add(new Month(startMonth));
 		}
-		lstMonths.setItems(allMonths);
+		lstMonths.setItems(allMonths, "Month");
 	}
 
 	public CreditCardDto getCardDetails() {
 		String expiry = lstMonths.getValue().getName()
 				+ lstYears.getValue().getName();
 		creditCard = new CreditCardDto();
-		creditCard.setCard_holder_name(txtCardHolderName.getValue());
+		creditCard.setCard_holder_name("This can be anything");
 		creditCard.setCard_number(txtCardNumber.getValue());
 		creditCard.setAmount(trxAmount);
 		creditCard.setExpiry(expiry);
@@ -151,9 +153,8 @@ public class PaymentWidget extends Composite {
 		creditCard.setCurrency("KES");
 		creditCard.setState("Nairobi");
 		creditCard.setZip(trxAmount);
-		creditCard.setAddress1(txtAddress1.getValue());
+		creditCard.setAddress1("This Can be anything!");
 		creditCard.setPaymentRefId(paymentRefId);
-
 		return creditCard;
 	}
 
@@ -161,23 +162,25 @@ public class PaymentWidget extends Composite {
 		this.trxAmount = amount1;
 		txtAmount.setText(NumberUtils.CURRENCYFORMAT.format(Double
 				.parseDouble(amount1)));
+		elCardAmount.setInnerText(NumberUtils.CURRENCYFORMAT.format(Double
+				.parseDouble(amount1)));
 		spnAmount.setInnerText(NumberUtils.CURRENCYFORMAT.format(Double
 				.parseDouble(amount1)));
+
 	}
 
 	public boolean isValid() {
 		boolean isValid = true;
 		issuesPanel.clear();
-
 		// Window.alert("Counter:"+counter);
 		if (isNullOrEmpty(txtAmount.getValue())) {
 			isValid = false;
 			issuesPanel.addError("Amount is required!");
 		}
-		if (isNullOrEmpty(txtCardHolderName.getValue())) {
-			isValid = false;
-			issuesPanel.addError("Card Holder name is required");
-		}
+		// if (isNullOrEmpty(txtCardHolderName.getValue())) {
+		// isValid = false;
+		// issuesPanel.addError("Card Holder name is required");
+		// }
 
 		if (isNullOrEmpty(txtCardNumber.getValue())) {
 			isValid = false;
@@ -199,10 +202,11 @@ public class PaymentWidget extends Composite {
 			issuesPanel.addError("Provide year");
 		}
 
-		if (txtAddress1.getValue() == null) {
-			isValid = false;
-			issuesPanel.addError("Address is Mandatory");
-		}
+		// if (txtAddress1.getValue() == null) {
+		// isValid = false;
+		// issuesPanel.addError("Address is Mandatory");
+		// }
+
 		if (isValid) {
 			issuesPanel.addStyleName("hide");
 		} else {
@@ -224,6 +228,8 @@ public class PaymentWidget extends Composite {
 		this.paymentRefId = invoice.getDocumentNo();
 		spnAccountNo.setInnerText(invoice.getDocumentNo());// MPESA Payment
 		spnAmount.setInnerText(NumberUtils.CURRENCYFORMAT.format(invoice
+				.getInvoiceAmount()));
+		elCardAmount.setInnerText(NumberUtils.CURRENCYFORMAT.format(invoice
 				.getInvoiceAmount()));
 	}
 

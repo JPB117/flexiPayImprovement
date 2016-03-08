@@ -59,25 +59,18 @@ public class EventBookingView extends ViewImpl implements
 		EventBookingPresenter.MyView {
 
 	private final Widget widget;
-
 	@UiField
 	HTMLPanel divMainContainer;
-
 	@UiField
 	HTMLPanel divHeaderContainer;
-
 	@UiField
 	HTMLPanel divFooter;
-
 	@UiField
 	HTMLPanel panelPayment;
-
 	@UiField
 	Element divHeaderTopics;
-
 	@UiField
 	HTMLPanel divContent;
-
 	@UiField
 	Anchor aNext;
 	@UiField
@@ -86,15 +79,12 @@ public class EventBookingView extends ViewImpl implements
 	Anchor aAccount;
 	@UiField
 	DivElement divPackage;
-
 	@UiField
 	DivElement divCategories;
-
 	@UiField
 	DivElement divPayment;
 	@UiField
 	DivElement divProforma;
-
 	@UiField
 	LIElement liTab1;
 	@UiField
@@ -103,7 +93,6 @@ public class EventBookingView extends ViewImpl implements
 	LIElement liTab3;
 	@UiField
 	LIElement liTab4;
-
 	@UiField
 	SpanElement spnEventName;
 	@UiField
@@ -112,7 +101,6 @@ public class EventBookingView extends ViewImpl implements
 	SpanElement spnDays2Go;
 	@UiField
 	SpanElement spnDuration;
-
 	@UiField
 	TextField txtCompanyName;
 	@UiField
@@ -148,7 +136,7 @@ public class EventBookingView extends ViewImpl implements
 	@UiField
 	ActionLink aBackToDelegates;
 
-	int counter = 0;
+	int counter = 3;
 	boolean isValid = true;
 
 	private List<LIElement> liElements = new ArrayList<LIElement>();

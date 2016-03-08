@@ -34,6 +34,7 @@ public class Member extends PO {
 	private static final long serialVersionUID = 1L;
 	private String userRefId;
 	private String memberNo;
+	@Column(nullable = false)
 	private Date registrationDate;
 	private Date lastUpdate;
 	private String date;

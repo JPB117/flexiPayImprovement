@@ -44,7 +44,6 @@ public class InvoiceListPresenter
 		Presenter<InvoiceListPresenter.IInvoiceView, InvoiceListPresenter.IInvoiceProxy> {
 
 	public interface IInvoiceView extends View {
-
 		void bindInvoices(List<InvoiceDto> invoices);
 
 		void setCount(Integer aCount);
@@ -54,6 +53,8 @@ public class InvoiceListPresenter
 		void bindSummary(InvoiceSummary result);
 
 	}
+
+	private int pageLimit = 20;
 
 	@ProxyCodeSplit
 	@NameToken(NameTokens.invoices)
@@ -86,10 +87,9 @@ public class InvoiceListPresenter
 		super.onBind();
 
 		getView().getPagingPanel().setLoader(new PagingLoader() {
-
 			@Override
 			public void onLoad(int offset, int limit) {
-				loadInvoices(offset, limit);
+				loadInvoices(offset, pageLimit);
 			}
 		});
 	}
@@ -103,9 +103,6 @@ public class InvoiceListPresenter
 	}
 
 	private void loadData() {
-		String memberId = (AppContext.isCurrentUserAdmin() ? "ALL" : AppContext
-				.getContextUser().getMemberRefId());
-
 		fireEvent(new ProcessingEvent());
 		invoiceDelegate.withCallback(
 				new AbstractAsyncCallback<InvoiceSummary>() {
@@ -113,22 +110,21 @@ public class InvoiceListPresenter
 					public void onSuccess(InvoiceSummary result) {
 						getView().bindSummary(result);
 					}
-				}).getSummary(memberId);
+				}).getSummary("ALL");
 
 		invoiceDelegate.withCallback(new AbstractAsyncCallback<Integer>() {
 			@Override
 			public void onSuccess(Integer aCount) {
 				getView().setCount(aCount);
 				PagingConfig config = getView().getPagingPanel().getConfig();
-				loadInvoices(config.getOffset(), config.getLimit());
+				loadInvoices(config.getOffset(), pageLimit);
 			}
-		}).getCount(memberId);
+		}).getCount("ALL");
 
 	}
 
 	protected void loadInvoices(int offset, int limit) {
-		String memberId = (AppContext.isCurrentUserAdmin() ? "ALL" : AppContext
-				.getContextUser().getMemberRefId());
+		fireEvent(new ProcessingEvent());
 		invoiceDelegate.withCallback(
 				new AbstractAsyncCallback<List<InvoiceDto>>() {
 					@Override
@@ -136,7 +132,7 @@ public class InvoiceListPresenter
 						getView().bindInvoices(result);
 						fireEvent(new ProcessingCompletedEvent());
 					}
-				}).getInvoices(memberId, offset, limit);
+				}).getInvoices("ALL", offset, pageLimit);
 	}
 
 }
