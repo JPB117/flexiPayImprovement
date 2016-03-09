@@ -31,6 +31,7 @@ import com.itextpdf.text.DocumentException;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.InvoiceLineDto;
 import com.workpoint.icpak.shared.model.InvoiceSummary;
+import com.workpoint.icpak.shared.model.TransactionDto;
 
 @Transactional
 public class InvoiceDaoHelper {
@@ -104,9 +105,10 @@ public class InvoiceDaoHelper {
 		return invoice.toDto();
 	}
 
-	public List<InvoiceDto> getAllInvoices(String memberId, Integer offset,
+	public List<TransactionDto> getAllInvoices(String memberId, Integer offset,
 			Integer limit) {
-		List<InvoiceDto> invoices = dao.getAllInvoices(memberId, offset, limit);
+		List<TransactionDto> invoices = dao.getAllTransactions(memberId,
+				offset, limit);
 		return invoices;
 	}
 

@@ -10,76 +10,72 @@ import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.InvoiceLineDto;
 import com.workpoint.icpak.shared.model.InvoiceLineType;
 import com.workpoint.icpak.shared.model.InvoiceSummary;
+import com.workpoint.icpak.shared.model.PaymentMode;
 import com.workpoint.icpak.shared.model.PaymentStatus;
+import com.workpoint.icpak.shared.model.PaymentType;
+import com.workpoint.icpak.shared.model.TransactionDto;
 
 public class InvoiceDao extends BaseDao {
 
-	public List<InvoiceDto> getAllInvoices(String memberId, Integer offset,
-			Integer limit) {
-		StringBuffer sqlBuffer = new StringBuffer("select i.refId, "
-				+ "i.amount as invoiceAmount,i.date as invoiceDate,"
-				+ "i.documentNo,i.description,i.contactName,i.bookingRefId,"
-				+ "t.date,t.dueDate,t.status,"
-				+ "t.paymentMode,t.amount,t.memberId " + "from Invoice i "
-				+ "left join Transaction t on (i.refId=t.invoiceRef) "
-				+ "where i.isActive=1 ");
-
+	public List<TransactionDto> getAllTransactions(String memberId,
+			Integer offset, Integer limit) {
+		StringBuffer sqlBuffer = new StringBuffer(
+				"select created,paymentMode,paymentType,description,trxNumber,accountNo,invoiceAmount,chargableAmount,"
+						+ "totalPreviousPayments,amount,balance,invoiceRef from transaction");
 		Query query = null;
 		if (memberId == null || memberId.equals("ALL")) {
-			sqlBuffer.append(" order by i.id desc");
+			sqlBuffer.append(" order by created desc");
 			query = getEntityManager().createNativeQuery(sqlBuffer.toString());
-		} else {
-			sqlBuffer.append("and t.memberId=:memberId");
-			sqlBuffer.append(" order by i.id desc");
-			query = getEntityManager().createNativeQuery(sqlBuffer.toString())
-					.setParameter("memberId", memberId);
 		}
 
 		List<Object[]> rows = getResultList(query, offset, limit);
-		List<InvoiceDto> statements = new ArrayList<>();
+		List<TransactionDto> transactions = new ArrayList<>();
 
 		for (Object[] row : rows) {
 			int i = 0;
 			Object value = null;
 
-			String refId = (value = row[i++]) == null ? null : value.toString();
-			Double invoiceAmount = (value = row[i++]) == null ? null
-					: new Double(value.toString());
-
-			Date invoiceDate = (value = row[i++]) == null ? null : (Date) value;
-
-			String documentNo = (value = row[i++]) == null ? null : value
-					.toString();
-
+			Date createdDate = (value = row[i++]) == null ? null : (Date) value;
+			PaymentMode paymentMode = (value = row[i++]) == null ? null
+					: PaymentMode.valueOf(value.toString());
+			PaymentType paymentType = (value = row[i++]) == null ? null
+					: PaymentType.valueOf(value.toString());
 			String description = (value = row[i++]) == null ? null : value
 					.toString();
-
-			String contactName = (value = row[i++]) == null ? null : value
+			String trxNumber = (value = row[i++]) == null ? null : value
 					.toString();
-			String bookingRefId = (value = row[i++]) == null ? null : value
+			String accountNo = (value = row[i++]) == null ? null : value
 					.toString();
-			Date transactionDate = (value = row[i++]) == null ? null
-					: (Date) value;
-			Date dueDate = (value = row[i++]) == null ? null : (Date) value;
-			String paymentStatus = (value = row[i++]) == null ? null : value
-					.toString();
-			String paymentMode = (value = row[i++]) == null ? null : value
-					.toString();
-			Double transactionAmount = (value = row[i++]) == null ? null
+			Double invoiceAmount = (value = row[i++]) == null ? null
 					: new Double(value.toString());
-			String userRefId = (value = row[i++]) == null ? null : value
+			Double chargableAmount = (value = row[i++]) == null ? null
+					: new Double(value.toString());
+			Double totalPreviousPayments = (value = row[i++]) == null ? null
+					: new Double(value.toString());
+			Double amountPaid = (value = row[i++]) == null ? null : new Double(
+					value.toString());
+			Double balance = (value = row[i++]) == null ? null : new Double(
+					value.toString());
+			String invoiceRef = (value = row[i++]) == null ? null : value
 					.toString();
 
-			InvoiceDto statement = new InvoiceDto(refId, invoiceAmount,
-					documentNo, description, invoiceDate, transactionDate,
-					dueDate, paymentStatus, paymentMode, transactionAmount,
-					userRefId, contactName);
-			statement.setBookingRefId(bookingRefId);
-			statements.add(statement);
-
+			TransactionDto trx = new TransactionDto();
+			trx.setCreatedDate(createdDate);
+			trx.setPaymentMode(paymentMode);
+			trx.setPaymentType(paymentType);
+			trx.setDescription(description);
+			trx.setTrxNumber(trxNumber);
+			trx.setAccountNo(accountNo);
+			trx.setInvoiceAmt(invoiceAmount);
+			trx.setChargableAmnt(chargableAmount);
+			trx.setTotalPreviousPayments(totalPreviousPayments);
+			trx.setAmountPaid(amountPaid);
+			trx.setTotalBalance(balance);
+			trx.setInvoiceRef(invoiceRef);
+			transactions.add(trx);
 		}
 
-		return statements;
+		return transactions;
 	}
 
 	public List<InvoiceDto> checkInvoicePaymentStatus(String invoiceRefId) {

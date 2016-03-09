@@ -37,7 +37,7 @@
 					<a href="#mobile" aria-controls="home" role="tab" data-toggle="tab">Pay
 						with Mobile Money</a>
 				</li>
-				<li role="presentation">
+				<li role="presentation" ui:field="liCards" class="hide">
 					<!-- <span class="fa fa-credit-card"></span> -->
 					<a href="#cards" aria-controls="home" role="tab" data-toggle="tab">Pay
 						with Credit/Debit/PrePaid Card</a>
@@ -192,13 +192,13 @@
 
 							<div class="form-group">
 								<div class="row">
-									<div class="col-sm-3">
+									<div class="col-sm-4">
 										<d:DropDownList styleName="form-control col-sm-2"
 											ui:field="lstMonths">
 										</d:DropDownList>
 									</div>
 
-									<div class="col-sm-4">
+									<div class="col-sm-3">
 										<d:DropDownList styleName="form-control"
 											ui:field="lstYears">
 										</d:DropDownList>

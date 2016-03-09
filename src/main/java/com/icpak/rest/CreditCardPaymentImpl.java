@@ -1,5 +1,7 @@
 package com.icpak.rest;
 
+import java.util.Date;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -11,6 +13,7 @@ import com.google.inject.Inject;
 import com.icpak.rest.dao.helper.TransactionDaoHelper;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.workpoint.icpak.server.payment.CreditCardServiceImpl;
+import com.workpoint.icpak.server.util.DateUtils;
 import com.workpoint.icpak.shared.api.CreditCardResource;
 import com.workpoint.icpak.shared.model.CreditCardDto;
 import com.workpoint.icpak.shared.model.CreditCardResponse;
@@ -38,9 +41,14 @@ public class CreditCardPaymentImpl implements CreditCardResource {
 				.authorizeCardTransaction(dto);
 		// If Payment is successful..
 		if (response.getStatusCode().equals("0000")) {
-			// trxDaoHelper.receivePaymentUsingInvoiceNo(dto.getPaymentRefId(),
-			// "N/A", "N/A", "Credit/Debit Card",
-			// response.getTransactionIndex(), null, dto.getAmount());
+			// Complete the transaction
+			creditCardService.completeCardTransaction(
+					response.getTransactionReference(),
+					response.getTransactionIndex());
+			trxDaoHelper.receivePaymentUsingInvoiceNo(dto.getPaymentRefId(),
+					"N/A", dto.getPaymentRefId(), "CARDS",
+					response.getTransactionIndex(), "N/A", dto.getAmount(),
+					DateUtils.FULLTIMESTAMP.format(new Date()), "N/A");
 		}
 		return response;
 	}

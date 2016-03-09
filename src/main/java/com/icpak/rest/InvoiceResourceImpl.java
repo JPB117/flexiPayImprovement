@@ -14,6 +14,7 @@ import com.icpak.rest.dao.InvoiceDaoHelper;
 import com.workpoint.icpak.shared.api.InvoiceResource;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.InvoiceSummary;
+import com.workpoint.icpak.shared.model.TransactionDto;
 
 @Path("invoices")
 @Produces(MediaType.APPLICATION_JSON)
@@ -43,7 +44,8 @@ public class InvoiceResourceImpl implements InvoiceResource {
 	@GET
 	@Path("/{memberId}/list")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<InvoiceDto> getInvoices(@PathParam("memberId") String memberId,
+	public List<TransactionDto> getInvoices(
+			@PathParam("memberId") String memberId,
 			@QueryParam("offset") Integer offset,
 			@QueryParam("limit") Integer limit) {
 		return helper.getAllInvoices(memberId, offset, limit);

@@ -1,8 +1,5 @@
 package com.workpoint.icpak.client.ui.invoices.row;
 
-import static com.workpoint.icpak.client.ui.util.DateUtils.DATEFORMAT;
-import static com.workpoint.icpak.client.ui.util.NumberUtils.NUMBERFORMAT;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -17,7 +14,11 @@ import com.workpoint.icpak.client.model.UploadContext;
 import com.workpoint.icpak.client.model.UploadContext.UPLOADACTION;
 import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.RowWidget;
-import com.workpoint.icpak.shared.model.InvoiceDto;
+import com.workpoint.icpak.client.ui.util.NumberUtils;
+import com.workpoint.icpak.server.util.DateUtils;
+import com.workpoint.icpak.shared.model.PaymentMode;
+import com.workpoint.icpak.shared.model.PaymentType;
+import com.workpoint.icpak.shared.model.TransactionDto;
 
 public class InvoiceTableRow extends RowWidget {
 
@@ -33,19 +34,17 @@ public class InvoiceTableRow extends RowWidget {
 	@UiField
 	HTMLPanel divDate;
 	@UiField
-	HTMLPanel divDocNum;
+	HTMLPanel divPaymentMode;
 	@UiField
 	HTMLPanel divDescription;
 	@UiField
-	HTMLPanel divDueDate;
-	@UiField
 	HTMLPanel divAmount;
 	@UiField
+	HTMLPanel divChargeAbleAmount;
+	@UiField
+	HTMLPanel divTotalPaid;
+	@UiField
 	HTMLPanel divBalance;
-	@UiField
-	HTMLPanel divContact;
-	@UiField
-	HTMLPanel divPaymentMode;
 	@UiField
 	SpanElement spnStatus;
 	@UiField
@@ -55,65 +54,65 @@ public class InvoiceTableRow extends RowWidget {
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 
-	public InvoiceTableRow(final InvoiceDto invoice) {
+	public InvoiceTableRow(final TransactionDto trx) {
 		this();
-		if (invoice.getContactName() != null) {
-			divContact.add(new InlineLabel(invoice.getContactName()));
+
+		if (trx.getCreatedDate() != null) {
+			divDate.add(new InlineLabel(DateUtils.FULLTIMESTAMP.format(trx
+					.getCreatedDate())));
 		}
-		if (invoice.getInvoiceDate() != null) {
-			divDate.add(new InlineLabel(DATEFORMAT.format(invoice
-					.getInvoiceDate())));
+
+		if (trx.getPaymentMode() != null) {
+			divPaymentMode.add(new InlineLabel(trx.getPaymentMode() + ""));
 		}
-		if (invoice.getDueDate() != null) {
-			divDueDate.add(new InlineLabel(DATEFORMAT.format(invoice
-					.getDueDate())));
-		}
-		// divDocNum.add(new InlineLabel(invoice.getDocumentNo()));
-		aProforma.setText(invoice.getDocumentNo());
 
-		divDescription.add(new InlineLabel(invoice.getDescription()));
-
-		Double amount = (invoice.getInvoiceAmount() == null ? 0 : invoice
-				.getInvoiceAmount());
-		divAmount.add(new InlineLabel(NUMBERFORMAT.format(amount) + ""));
-
-		divPaymentMode.add(new InlineLabel(
-				invoice.getPaymentMode() == null ? "N/A" : invoice
-						.getPaymentMode()));
-
-		Double balance = amount;
-
-		if (invoice.getPaymentStatus() != null
-				&& !invoice.getPaymentStatus().equals("NOTPAID")) {
-			spnStatus.addClassName("label label-success");
-			spnStatus.setInnerText(invoice.getPaymentStatus());
-
-			if (invoice.getPaymentStatus().equals("PAID")) {
-				balance = (invoice.getInvoiceAmount() == null ? 0 : invoice
-						.getInvoiceAmount())
-						- (invoice.getTransactionAmount() == null ? 0 : invoice
-								.getTransactionAmount());
+		if (trx.getDescription() != null) {
+			String desc = "";
+			if (trx.getPaymentMode() == PaymentMode.MPESA) {
+				desc = trx.getDescription() + "(" + trx.getTrxNumber() + ")";
+			} else {
+				desc = trx.getDescription();
 			}
-		} else {
-			spnStatus.addClassName("label label-danger");
-			spnStatus.setInnerText("NOT PAID");
+			divDescription.add(new InlineLabel(desc));
 		}
 
-		// Window.alert("Invoice RefId:" + invoice.getBookingRefId());
+		if (trx.getAccountNo() != null && trx.getPaymentType() != null) {
+			aProforma.setText(trx.getAccountNo());
 
-		divBalance.add(new InlineLabel(NUMBERFORMAT.format(balance) + ""));
+			aProforma.addClickHandler(new ClickHandler() {
+				@Override
+				public void onClick(ClickEvent event) {
+					UploadContext ctx = new UploadContext("getreport");
+					if (trx.getPaymentType() == PaymentType.BOOKING) {
+						ctx.setContext("bookingRefId", trx.getInvoiceRef());
+					} else if ((trx.getPaymentType() == PaymentType.REGISTRATION)) {
+						ctx.setContext("applicationRefId", trx.getInvoiceRef());
+					}
+					ctx.setAction(UPLOADACTION.GETPROFORMA);
+					Window.open(ctx.toUrl(), "Get Proforma", null);
+				}
+			});
+		}
 
-		aProforma.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				// Window.alert("Proforma" + delegate.getBookingRefId());
-				UploadContext ctx = new UploadContext("getreport");
-				ctx.setContext("invoiceRefId", invoice.getRefId());
-				ctx.setAction(UPLOADACTION.GETPROFORMA);
+		if (trx.getAmountPaid() != null) {
+			divAmount.add(new InlineLabel(NumberUtils.CURRENCYFORMAT.format(trx
+					.getAmountPaid())));
+		}
 
-				// ctx.setContext(key, value)
-				Window.open(ctx.toUrl(), "Get Proforma", null);
-			}
-		});
+		if (trx.getChargableAmnt() != null) {
+			divChargeAbleAmount.add(new InlineLabel(NumberUtils.CURRENCYFORMAT
+					.format(trx.getChargableAmnt())));
+		}
+
+		if (trx.getTotalPreviousPayments() != null) {
+			divTotalPaid.add(new InlineLabel(NumberUtils.CURRENCYFORMAT
+					.format(trx.getTotalPreviousPayments())));
+		}
+
+		if (trx.getTotalBalance() != null) {
+			divBalance.add(new InlineLabel(NumberUtils.CURRENCYFORMAT
+					.format(trx.getTotalBalance())));
+		}
+
 	}
 }

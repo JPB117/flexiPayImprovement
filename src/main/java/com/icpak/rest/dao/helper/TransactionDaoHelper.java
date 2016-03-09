@@ -32,8 +32,9 @@ import com.workpoint.icpak.server.util.DateUtils;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.PaymentMode;
 import com.workpoint.icpak.shared.model.PaymentStatus;
+import com.workpoint.icpak.shared.model.PaymentType;
 import com.workpoint.icpak.shared.model.events.EventDto;
-import com.workpoint.icpak.shared.trx.TransactionDto;
+import com.workpoint.icpak.shared.trx.OldTransactionDto;
 
 @Transactional
 public class TransactionDaoHelper {
@@ -99,7 +100,8 @@ public class TransactionDaoHelper {
 
 	public void receivePaymentUsingInvoiceNo(String paymentRef,
 			String businessNo, String accountNo, String paymentMode,
-			String trxNumber, String phoneNumber, String amount, String trxDate) {
+			String trxNumber, String phoneNumber, String amount,
+			String trxDate, String payerNames) {
 
 		accountNo = accountNo.trim();
 		accountNo = accountNo.replaceAll("[-+.^:,]", "");
@@ -139,7 +141,7 @@ public class TransactionDaoHelper {
 		}
 
 		// Store this transaction
-		logger.info("Storing this transaction >>>" + accountNo);
+		logger.info("Saving transaction >>>" + accountNo);
 
 		Date parsedDate = null;
 		try {
@@ -151,15 +153,18 @@ public class TransactionDaoHelper {
 		Transaction trx = new Transaction();
 		trx.setAccountNo(accountNo);
 		trx.setDate(parsedDate);
-		trx.setPaymentMode((paymentMode == null || paymentMode.equals("") ? PaymentMode.MPESA
-				: PaymentMode.MPESA));
+		if (paymentMode != null) {
+			if (paymentMode.equals("MPESA")) {
+				trx.setPaymentMode(PaymentMode.MPESA);
+			} else if (paymentMode.equals("CARDS")) {
+				trx.setPaymentMode(PaymentMode.CARDS);
+			}
+		}
 		trx.setTrxNumber(trxNumber);
+		trx.setPayerNames(payerNames);
 		trx.setBusinessNo(businessNo);
 		trx.setAmount(Double.parseDouble(amount));
 		trx.setStatus(PaymentStatus.PAID);
-
-		// Save this transaction
-		saveTransactionFirst(trx);
 
 		// Convert DTO to Invoice Object
 		Invoice inv = new Invoice();
@@ -170,6 +175,11 @@ public class TransactionDaoHelper {
 		booking = dao.findByRefId(inv.getBookingRefId(), Booking.class, false);
 		if (booking != null) {
 			logger.info("Payment was for booking refId::" + booking.getRefId());
+			trx.setDescription("Payment for " + booking.getEvent().getName());
+			trx.setInvoiceRef(booking.getRefId());
+			trx.setPaymentType(PaymentType.BOOKING);
+			// Save this transaction
+			saveTransactionFirst(trx);
 			try {
 				sendPaymentConfirmationSMSAndEmail(phoneNumber, trxNumber,
 						inv.getContactName(), booking, trxDate, amount, trx);
@@ -182,6 +192,12 @@ public class TransactionDaoHelper {
 					+ invoiceDto.getInvoiceRefId());
 			ApplicationFormHeader application = applicationDao
 					.getApplicationByInvoiceRef(invoiceDto.getInvoiceRefId());
+			trx.setDescription("Registration Payment for "
+					+ application.getSurname());
+			trx.setInvoiceRef(application.getRefId());
+			trx.setPaymentType(PaymentType.REGISTRATION);
+			// Save this transaction
+			saveTransactionFirst(trx);
 			try {
 				sendPaymentConfirmationSMSAndEmail(phoneNumber, trxNumber,
 						inv.getContactName(), application, trxDate, amount, trx);
@@ -234,9 +250,9 @@ public class TransactionDaoHelper {
 		return chargableAmount;
 	}
 
-	public List<TransactionDto> getTransactions(String userId) {
+	public List<OldTransactionDto> getTransactions(String userId) {
 		List<Transaction> transactions = dao.getTransactions(userId);
-		List<TransactionDto> trxs = new ArrayList<>();
+		List<OldTransactionDto> trxs = new ArrayList<>();
 		for (Transaction t : transactions) {
 			trxs.add(t.toDto());
 		}
@@ -270,10 +286,18 @@ public class TransactionDaoHelper {
 				e.printStackTrace();
 			}
 			Double balance = chargeAbleAmt - previousPayments;
-			logger.info("Chargable Amount>>>>" + balance);
+			// Chargable Amount -> Payments after Discounts and necessary
+			// penalties has been applied
+			logger.info("Chargable Amount>>>>" + chargeAbleAmt);
 			logger.info("Invoice Amount>>>>" + invoiceDto.getInvoiceAmount());
-			logger.info("Balance Calculated>>>>" + balance);
 			logger.info("Previous Payments>>>>" + previousPayments);
+			logger.info("Balance Calculated>>>>" + balance);
+			trx.setChargableAmount(chargeAbleAmt);
+			trx.setTotalPreviousPayments(previousPayments);
+			trx.setBalance(balance);
+			trx.setInvoiceAmount(invoiceDto.getInvoiceAmount());
+
+			// Store this value against the transaction
 
 			if (balance > 0) {
 				logger.info("This invoice still has some balance:::"
@@ -286,9 +310,28 @@ public class TransactionDaoHelper {
 						+ numberFormat.format(balance) + ".";
 
 				String finalPhoneNumber = phoneNumber.replace("254", "0");
-				if (phoneNumber != null) {
+				if (phoneNumber != null && !phoneNumber.equals("N/A")) {
 					smsIntergration.send(finalPhoneNumber, smsMessage);
 					logger.error("sending sms to :" + finalPhoneNumber);
+				} else {
+					// Get the sponsor phone-number;
+					String phoneNo = booking.getContact().getTelephoneNumbers();
+					String firstNo = booking.getContact().getTelephoneNumbers()
+							.substring(0, 1);
+					if (firstNo.equals("0")) {
+						finalPhoneNumber = phoneNo.replace("254", "0");
+					}
+					smsIntergration.send(finalPhoneNumber, smsMessage);
+
+					// Get Sponsor Email
+					if (booking.getContact().getEmail() != null) {
+						String subject = "PAYMENT CONFIRMATION FOR "
+								+ booking.getEvent().getName().toUpperCase();
+						EmailServiceHelper.sendEmail(smsMessage, "RE: ICPAK '"
+								+ subject, Arrays.asList(booking.getContact()
+								.getEmail()), Arrays.asList(booking
+								.getContact().getContactName()));
+					}
 				}
 
 			} else {
@@ -361,8 +404,12 @@ public class TransactionDaoHelper {
 			}
 
 			Double balance = invoiceDto.getInvoiceAmount() - previousPayments;
-
 			String smsMessage = "";
+
+			trx.setChargableAmount(invoiceDto.getInvoiceAmount());
+			trx.setTotalPreviousPayments(previousPayments);
+			trx.setBalance(balance);
+			trx.setInvoiceAmount(invoiceDto.getInvoiceAmount());
 
 			if (balance > 0) {
 				logger.info("This invoice still has some balance:::"

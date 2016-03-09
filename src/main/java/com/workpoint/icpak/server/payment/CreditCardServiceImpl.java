@@ -254,7 +254,7 @@ public class CreditCardServiceImpl implements CreditCardService {
 	public JSONObject completeCardTransaction(String transaction_reference,
 			String transaction_index) {
 		JSONObject jsonExceptionReturns = new JSONObject();
-		// log.info("Now in complete card transaction ");
+		log.info("-----Now in complete card transaction-------- ");
 		String res = null;
 		String url = Utilities.LIPISHA_COMPLETE_CARD_TRANSACTION_FUNCTION_URL;
 		HttpClient client = new DefaultHttpClient();
@@ -262,22 +262,23 @@ public class CreditCardServiceImpl implements CreditCardService {
 		HttpResponse response = null;
 		List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
 		urlParameters.add(new BasicNameValuePair("api_key",
-				"c727ee27a6dfca41c7c9dee5d21ba73a"));
+				"6f55b237d1e078f5ed60eb85f365908b"));
 		urlParameters
 				.add(new BasicNameValuePair(
 						"api_signature",
-						"Q86FIhxIj+t7LPiC7m2QAoAieoJWLjwj/OocUnf+B7Fy8nAfDlbsc8X8JzI6Wj0Dy15V/tYr6Y8EidUPy9vJbg78pKeqEWZT5qXZboo9HX+nOpCARjYFC+J0pLi4Q06gZdW0xq+DyRFPKoXV6iA9mSWcy9ehgNvff4bQ08Ql944="));
+						"Pq+zdEV0UuAVZ1pFYYU4HeH15eFbM7hLsS2VEg8Bjyz/31NoYEmKDR4zFtN3LaSx1Sl4bgaliv1e42p6J/FtmwjkgRng07u/CpTd1whxwPfmeoswkkPsV1luSINCUkmW8dfPnp2gtBcIrA25Y85TsAR5jQx3HpjIBb7R82d1FcM="));
 		urlParameters.add(new BasicNameValuePair("api_version",
 				Utilities.LIPISHA_API_VERSION));
 		urlParameters.add(new BasicNameValuePair("api_type",
 				Utilities.LIPISHA_API_TYPE));
+		urlParameters.add(new BasicNameValuePair("account_number", "03369"));
 		urlParameters.add(new BasicNameValuePair("transaction_index",
 				transaction_index));
 		urlParameters.add(new BasicNameValuePair("transaction_reference",
 				transaction_reference));
 
-		// log.info("transaction_reference=============== " +
-		// removeLeadingTrailing(getIndex()));
+		// log.info("transaction_reference=============== "
+		// + removeLeadingTrailing(getIndex()));
 		// Url Encoding the POST parameters
 		try {
 			post.setEntity(new UrlEncodedFormEntity(urlParameters));

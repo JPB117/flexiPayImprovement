@@ -38,7 +38,7 @@ import com.workpoint.icpak.shared.model.UserDto;
 import com.workpoint.icpak.shared.model.auth.AccountStatus;
 import com.workpoint.icpak.shared.model.auth.LogInAction;
 import com.workpoint.icpak.shared.model.auth.LogInResult;
-import com.workpoint.icpak.shared.trx.TransactionDto;
+import com.workpoint.icpak.shared.trx.OldTransactionDto;
 
 /**
  * StormPath REST API Design Ideas ->
@@ -237,10 +237,10 @@ public class UsersResourceImpl implements UsersResource {
 	@Path("/{userId}/transactions")
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Get a transactions by userId", response = Transaction.class, consumes = MediaType.APPLICATION_JSON)
-	public List<TransactionDto> getTransactions(
+	public List<OldTransactionDto> getTransactions(
 			@ApiParam(value = "User Id of the user to fetch", required = true) @PathParam("userId") String userId) {
 
-		List<TransactionDto> trxs = helper.getTransactions(userId);
+		List<OldTransactionDto> trxs = helper.getTransactions(userId);
 
 		return trxs;
 	}

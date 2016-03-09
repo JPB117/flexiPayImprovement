@@ -6,7 +6,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 
-import com.workpoint.icpak.shared.trx.TransactionDto;
+import com.workpoint.icpak.shared.trx.OldTransactionDto;
 
 @Path("transactions")
 public interface TransactionsResource {
@@ -21,8 +21,9 @@ public interface TransactionsResource {
 			@QueryParam("trxNumber") String trxNumber,
 			@QueryParam("mpesaAmt") String mpesaAmt,
 			@QueryParam("msisdn") String phoneNumber,
-			@QueryParam("tstamp") String trxDate);
+			@QueryParam("tstamp") String trxDate,
+			@QueryParam("mpesa_sender") String payerNames);
 
 	@GET
-	public List<TransactionDto> getAllTrxs(@QueryParam("userId") String userId);
+	public List<OldTransactionDto> getAllTrxs(@QueryParam("userId") String userId);
 }

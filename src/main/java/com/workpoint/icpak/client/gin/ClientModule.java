@@ -140,7 +140,7 @@ public class ClientModule extends AbstractPresenterModule {
 
 		bindPresenter(InvoiceListPresenter.class,
 				InvoiceListPresenter.IInvoiceView.class, InvoiceListView.class,
-				InvoiceListPresenter.IInvoiceProxy.class);
+				InvoiceListPresenter.InvoiceListProxy.class);
 
 		bindPresenter(StatementsPresenter.class,
 				StatementsPresenter.IStatementsView.class,

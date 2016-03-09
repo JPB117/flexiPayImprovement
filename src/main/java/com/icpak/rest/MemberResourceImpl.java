@@ -113,8 +113,7 @@ public class MemberResourceImpl implements MemberResource {
 	@ApiOperation(value = "Search for member invoices")
 	public List<InvoiceDto> getAllInvoicesForMember(
 			@ApiParam(value = "Member Id", required = true) @PathParam("memberId") String memberId) {
-
-		return helper.getAllInvoices(memberId, 0, 50);
+		return null;
 	}
 
 	@Path("/{memberId}/statements")

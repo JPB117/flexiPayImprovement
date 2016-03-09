@@ -69,7 +69,7 @@ import com.workpoint.icpak.shared.model.auth.ActionType;
 import com.workpoint.icpak.shared.model.auth.CurrentUserDto;
 import com.workpoint.icpak.shared.model.auth.LogInAction;
 import com.workpoint.icpak.shared.model.auth.LogInResult;
-import com.workpoint.icpak.shared.trx.TransactionDto;
+import com.workpoint.icpak.shared.trx.OldTransactionDto;
 
 @Transactional
 public class UsersDaoHelper {
@@ -642,12 +642,12 @@ public class UsersDaoHelper {
 		dao.save(user);
 	}
 
-	public List<TransactionDto> getTransactions(String userId) {
+	public List<OldTransactionDto> getTransactions(String userId) {
 
 		List<Transaction> trxs = trxDao.getTransactions(userId);
-		List<TransactionDto> trxDtos = new ArrayList<>();
+		List<OldTransactionDto> trxDtos = new ArrayList<>();
 		for (Transaction trx : trxs) {
-			TransactionDto dto = trx.toDto();
+			OldTransactionDto dto = trx.toDto();
 			trxDtos.add(dto);
 		}
 

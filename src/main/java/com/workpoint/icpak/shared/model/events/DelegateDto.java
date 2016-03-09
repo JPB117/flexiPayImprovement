@@ -4,7 +4,7 @@ import java.util.Date;
 
 import com.workpoint.icpak.shared.model.PaymentStatus;
 import com.workpoint.icpak.shared.model.SerializableObj;
-import com.workpoint.icpak.shared.trx.TransactionDto;
+import com.workpoint.icpak.shared.trx.OldTransactionDto;
 
 public class DelegateDto extends SerializableObj {
 
@@ -28,7 +28,7 @@ public class DelegateDto extends SerializableObj {
 	private AccommodationDto accommodation;
 	private Double amount;
 	private AttendanceStatus attendance;
-	private TransactionDto transaction;
+	private OldTransactionDto transaction;
 	private DelegateType delegateType;
 	private String bookingId;
 	private String bookingRefId;
@@ -263,11 +263,11 @@ public class DelegateDto extends SerializableObj {
 		this.clearanceNo = clearanceNo;
 	}
 
-	public TransactionDto getTransaction() {
+	public OldTransactionDto getTransaction() {
 		return transaction;
 	}
 
-	public void setTransaction(TransactionDto transaction) {
+	public void setTransaction(OldTransactionDto transaction) {
 		this.transaction = transaction;
 	}
 

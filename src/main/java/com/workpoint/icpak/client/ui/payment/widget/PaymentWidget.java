@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -70,7 +71,8 @@ public class PaymentWidget extends Composite {
 	HTMLPanel PanelPayment;
 	@UiField
 	HTMLPanel panelSuccess;
-
+	@UiField
+	LIElement liCards;
 	@UiField
 	CheckBox aDepositSlip;
 	@UiField
@@ -88,7 +90,14 @@ public class PaymentWidget extends Composite {
 	public PaymentWidget() {
 		initWidget(uiBinder.createAndBindUi(this));
 		setDate();
+		liCards.removeClassName("hide");
 		setAmount("10");
+		
+		InvoiceDto invoice = new InvoiceDto();
+		invoice.setDocumentNo("INV0212");
+		invoice.setAmount(10.0);
+		bindTransaction(invoice);
+
 	}
 
 	public class Month implements Listable {

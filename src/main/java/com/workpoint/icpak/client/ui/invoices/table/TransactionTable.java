@@ -36,14 +36,14 @@ public class TransactionTable extends Composite {
 
 	public void createHeader() {
 		List<TableHeader> th = new ArrayList<TableHeader>();
-		th.add(new TableHeader("Invoice Date"));
-		th.add(new TableHeader("Contact Person"));
-		th.add(new TableHeader("Invoice Number"));
+		th.add(new TableHeader("Transaction Date"));
+		th.add(new TableHeader("Type"));
 		th.add(new TableHeader("Description"));
 		th.add(new TableHeader("Amount"));
-		th.add(new TableHeader("Payment Mode"));
-		th.add(new TableHeader("Payment Status"));
-
+		th.add(new TableHeader("ChargeAble Amount"));
+		th.add(new TableHeader("Total Paid"));
+		th.add(new TableHeader("Balance"));
+		// th.add(new TableHeader("Payment Status"));
 		tblView.setTableHeaders(th);
 	}
 

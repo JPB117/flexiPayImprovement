@@ -178,6 +178,14 @@ public class CreditCardDto {
 		this.paymentRefId = paymentRefId;
 	}
 
+	public String getAccountNo() {
+		return accountNo;
+	}
+
+	public void setAccountNo(String accountNo) {
+		this.accountNo = accountNo;
+	}
+
 	public void setAccount_number(String string) {
 		// TODO Auto-generated method stub
 

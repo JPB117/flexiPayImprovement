@@ -11,7 +11,7 @@ import javax.ws.rs.core.MediaType;
 import com.google.inject.Inject;
 import com.icpak.rest.dao.helper.TransactionDaoHelper;
 import com.workpoint.icpak.shared.api.TransactionsResource;
-import com.workpoint.icpak.shared.trx.TransactionDto;
+import com.workpoint.icpak.shared.trx.OldTransactionDto;
 
 @Path("transactions")
 public class TransactionsResourceImpl implements TransactionsResource {
@@ -29,16 +29,17 @@ public class TransactionsResourceImpl implements TransactionsResource {
 			@QueryParam("trxNumber") String trxNumber,
 			@QueryParam("mpesa_amt") String mpesaAmt,
 			@QueryParam("mpesa_msisdn") String phoneNumber,
-			@QueryParam("tstamp") String trxDate) {
+			@QueryParam("tstamp") String trxDate,
+			@QueryParam("mpesa_sender") String payerNames) {
 		trxDaoHelper.receivePaymentUsingInvoiceNo(paymentRef, businessNo,
-				accountNo, paymentMode, trxNumber, phoneNumber, mpesaAmt,
-				trxDate);
+				accountNo, "MPESA", trxNumber, phoneNumber, mpesaAmt, trxDate,
+				payerNames);
 		return "SUCCESS";
 	}
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<TransactionDto> getAllTrxs(@QueryParam("userId") String userId) {
+	public List<OldTransactionDto> getAllTrxs(@QueryParam("userId") String userId) {
 		return trxDaoHelper.getTransactions(userId);
 	}
 }
