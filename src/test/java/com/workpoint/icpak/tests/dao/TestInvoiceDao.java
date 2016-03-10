@@ -68,7 +68,7 @@ public class TestInvoiceDao extends AbstractDaoTest {
 		System.err.println(invoice.getDescription());
 	}
 
-	@Test
+	// @Test
 	public void getAllInvoices() {
 		List<TransactionDto> allTrxs = invoiceDao.getAllTransactions("ALL", 0,
 				10);
@@ -82,10 +82,11 @@ public class TestInvoiceDao extends AbstractDaoTest {
 		System.err.println(">>>>" + invoice.get(0).getStatus());
 	}
 
-	// @Test
+	@Test
 	public void testPayment() {
-		trxHelper.receivePaymentUsingInvoiceNo("256399265", "N/A", "INV0212",
-				"CARDS", "{5BD97F01-0B49-4356-962D-ABA28DC10C4D}",
+		trxHelper.receivePaymentUsingInvoiceNo(
+				"DFAFDAFDADFA", "N/A", "INV0212",
+				"MPESA", "DFAFDAFDADFA",
 				"254729472421", "1000", "2016-01-31 18:42:08", "N/A");
 	}
 

@@ -28,7 +28,7 @@ import com.icpak.rest.models.trx.Invoice;
 import com.icpak.rest.models.trx.Transaction;
 import com.icpak.rest.util.SMSIntegration;
 import com.icpak.rest.utils.EmailServiceHelper;
-import com.workpoint.icpak.server.util.DateUtils;
+import com.workpoint.icpak.server.util.ServerDateUtils;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.PaymentMode;
 import com.workpoint.icpak.shared.model.PaymentStatus;
@@ -145,7 +145,7 @@ public class TransactionDaoHelper {
 
 		Date parsedDate = null;
 		try {
-			parsedDate = DateUtils.FULLTIMESTAMP.parse(trxDate);
+			parsedDate = ServerDateUtils.FULLTIMESTAMP.parse(trxDate);
 		} catch (ParseException e1) {
 			e1.printStackTrace();
 		}
@@ -219,7 +219,7 @@ public class TransactionDaoHelper {
 	private Double applyDiscountsAndPenalties(EventDto event, String trxDate)
 			throws ParseException {
 		// Parse the mpesa trx Date 2016-01-21 18:42:08
-		Date parsedDate = DateUtils.FULLTIMESTAMP.parse(trxDate);
+		Date parsedDate = ServerDateUtils.FULLTIMESTAMP.parse(trxDate);
 
 		// Apply Discount && Penalties based on todays Date
 		Date penaltyDate = null;
@@ -227,7 +227,7 @@ public class TransactionDaoHelper {
 		Double chargableAmount = invoiceDto.getInvoiceAmount();
 
 		if (event.getPenaltyDate() != null) {
-			penaltyDate = DateUtils.DATEFORMAT_SYS
+			penaltyDate = ServerDateUtils.DATEFORMAT_SYS
 					.parse(event.getPenaltyDate());
 			if (parsedDate.getTime() >= penaltyDate.getTime()) {
 				chargableAmount = invoiceDto.getInvoiceAmount()
@@ -238,7 +238,7 @@ public class TransactionDaoHelper {
 		}
 
 		if (event.getDiscountDate() != null) {
-			discountDate = DateUtils.DATEFORMAT_SYS.parse(event
+			discountDate = ServerDateUtils.DATEFORMAT_SYS.parse(event
 					.getDiscountDate());
 			if (parsedDate.getTime() <= discountDate.getTime()) {
 				chargableAmount = invoiceDto.getInvoiceAmount()

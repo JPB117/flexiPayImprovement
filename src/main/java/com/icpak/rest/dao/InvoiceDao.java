@@ -200,10 +200,7 @@ public class InvoiceDao extends BaseDao {
 
 	public Integer getInvoiceCount(String memberId) {
 		StringBuffer sqlBuffer = new StringBuffer(
-				"select count(*) from Invoice i  "
-						+ "left join Transaction t on (i.refId=t.invoiceRef) "
-						+ "where i.isActive=1 ");
-
+				"select count(*) from transaction");
 		Query query = null;
 		if (memberId == null || memberId.equals("ALL")) {
 			query = getEntityManager().createNativeQuery(sqlBuffer.toString());
@@ -212,11 +209,8 @@ public class InvoiceDao extends BaseDao {
 			query = getEntityManager().createNativeQuery(sqlBuffer.toString())
 					.setParameter("memberId", memberId);
 		}
-		sqlBuffer.append(" order by i.id desc ");
 		Number number = getSingleResultOrNull(query);
-
 		return number.intValue();
-
 	}
 
 	public InvoiceSummary getSummary(String memberId) {

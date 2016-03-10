@@ -39,6 +39,7 @@ public class TransactionTable extends Composite {
 		th.add(new TableHeader("Transaction Date"));
 		th.add(new TableHeader("Type"));
 		th.add(new TableHeader("Description"));
+		th.add(new TableHeader("Invoice"));
 		th.add(new TableHeader("Amount"));
 		th.add(new TableHeader("ChargeAble Amount"));
 		th.add(new TableHeader("Total Paid"));

@@ -1,5 +1,7 @@
 package com.workpoint.icpak.client.ui.invoices;
 
+import java.util.List;
+
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rest.delegates.client.ResourceDelegate;
@@ -19,18 +21,20 @@ import com.workpoint.icpak.client.ui.admin.TabDataExt;
 import com.workpoint.icpak.client.ui.component.PagingConfig;
 import com.workpoint.icpak.client.ui.component.PagingLoader;
 import com.workpoint.icpak.client.ui.component.PagingPanel;
+import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
 import com.workpoint.icpak.client.ui.events.ProcessingEvent;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
 import com.workpoint.icpak.client.ui.security.FinanceGateKeeper;
 import com.workpoint.icpak.shared.api.InvoiceResource;
 import com.workpoint.icpak.shared.model.InvoiceSummary;
+import com.workpoint.icpak.shared.model.TransactionDto;
 
 public class InvoiceListPresenter
 		extends
 		Presenter<InvoiceListPresenter.IInvoiceView, InvoiceListPresenter.InvoiceListProxy> {
 
 	public interface IInvoiceView extends View {
-		// void bindInvoices(List<TransactionDto> trxs);
+		 void bindInvoices(List<TransactionDto> trxs);
 
 		void setCount(Integer aCount);
 
@@ -58,15 +62,15 @@ public class InvoiceListPresenter
 	@Inject
 	CurrentUser user;
 
-	// private final ResourceDelegate<InvoiceResource> invoiceDelegate;
+	private final ResourceDelegate<InvoiceResource> invoiceDelegate;
 
 	@Inject
 	public InvoiceListPresenter(final EventBus eventBus,
-			final IInvoiceView view, final InvoiceListProxy proxy) {
-		// ,final ResourceDelegate<InvoiceResource> invoiceDelegate
+			final IInvoiceView view, final InvoiceListProxy proxy,
+			final ResourceDelegate<InvoiceResource> invoiceDelegate) {
 
 		super(eventBus, view, proxy, HomePresenter.SLOT_SetTabContent);
-		// this.invoiceDelegate = invoiceDelegate;
+		this.invoiceDelegate = invoiceDelegate;
 	}
 
 	@Override
@@ -91,14 +95,14 @@ public class InvoiceListPresenter
 
 	private void loadData() {
 		fireEvent(new ProcessingEvent());
-		/*invoiceDelegate.withCallback(
+
+		invoiceDelegate.withCallback(
 				new AbstractAsyncCallback<InvoiceSummary>() {
 					@Override
 					public void onSuccess(InvoiceSummary result) {
 						getView().bindSummary(result);
 					}
 				}).getSummary("ALL");
-
 		invoiceDelegate.withCallback(new AbstractAsyncCallback<Integer>() {
 			@Override
 			public void onSuccess(Integer aCount) {
@@ -107,20 +111,20 @@ public class InvoiceListPresenter
 				loadInvoices(config.getOffset(), pageLimit);
 			}
 		}).getCount("ALL");
-	*/
+
 	}
 
 	protected void loadInvoices(int offset, int limit) {
 		fireEvent(new ProcessingEvent());
-		/*
-		 * invoiceDelegate.withCallback( new
-		 * AbstractAsyncCallback<List<TransactionDto>>() {
-		 * 
-		 * @Override public void onSuccess(List<TransactionDto> result) { //
-		 * getView().bindInvoices(result); fireEvent(new
-		 * ProcessingCompletedEvent()); } }).getInvoices("ALL", offset,
-		 * pageLimit);
-		 */
+
+		invoiceDelegate.withCallback(
+				new AbstractAsyncCallback<List<TransactionDto>>() {
+					public void onSuccess(List<TransactionDto> result) { //
+						getView().bindInvoices(result);
+						fireEvent(new ProcessingCompletedEvent());
+					}
+				}).getInvoices("ALL", offset, pageLimit);
+
 	}
 
 }

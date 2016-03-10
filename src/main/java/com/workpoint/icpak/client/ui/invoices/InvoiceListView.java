@@ -1,5 +1,7 @@
 package com.workpoint.icpak.client.ui.invoices;
 
+import java.util.List;
+
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Widget;
@@ -7,8 +9,10 @@ import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
 import com.workpoint.icpak.client.ui.component.PagingPanel;
 import com.workpoint.icpak.client.ui.invoices.header.TransactionsHeader;
+import com.workpoint.icpak.client.ui.invoices.row.InvoiceTableRow;
 import com.workpoint.icpak.client.ui.invoices.table.TransactionTable;
 import com.workpoint.icpak.shared.model.InvoiceSummary;
+import com.workpoint.icpak.shared.model.TransactionDto;
 
 public class InvoiceListView extends ViewImpl implements
 		InvoiceListPresenter.IInvoiceView {
@@ -35,14 +39,14 @@ public class InvoiceListView extends ViewImpl implements
 		return widget;
 	}
 
-	// @Override
-	// public void bindInvoices(List<TransactionDto> trxs) {
-	// tblView.clearRows();
-	// tblView.setNoRecords(trxs.size());
-	// for (TransactionDto transaction : trxs) {
-	// tblView.createRow(new InvoiceTableRow(transaction));
-	// }
-	// }
+	@Override
+	public void bindInvoices(List<TransactionDto> trxs) {
+		tblView.clearRows();
+		tblView.setNoRecords(trxs.size());
+		for (TransactionDto transaction : trxs) {
+			tblView.createRow(new InvoiceTableRow(transaction));
+		}
+	}
 
 	@Override
 	public void setCount(Integer aCount) {

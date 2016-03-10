@@ -25,7 +25,7 @@ import com.icpak.rest.models.membership.Member;
 import com.icpak.rest.util.ApplicationSettings;
 import com.icpak.rest.util.SMSIntegration;
 import com.icpak.rest.utils.EmailServiceHelper;
-import com.workpoint.icpak.server.util.DateUtils;
+import com.workpoint.icpak.server.util.ServerDateUtils;
 import com.workpoint.icpak.shared.model.CPDCategory;
 import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.shared.model.CPDFooterDto;
@@ -331,7 +331,7 @@ public class CPDDaoHelper {
 			Calendar regDate = Calendar.getInstance();
 			regDate.setTime(registrationDate);
 
-			Double noOfYears = DateUtils.getYearsBetween(registrationDate,
+			Double noOfYears = ServerDateUtils.getYearsBetween(registrationDate,
 					new Date());
 			if (noOfYears <= 0.0) {
 				// do nothing - all is well<=2

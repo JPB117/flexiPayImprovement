@@ -7,6 +7,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Widget;
@@ -14,8 +15,8 @@ import com.workpoint.icpak.client.model.UploadContext;
 import com.workpoint.icpak.client.model.UploadContext.UPLOADACTION;
 import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.RowWidget;
+import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.client.ui.util.NumberUtils;
-import com.workpoint.icpak.server.util.DateUtils;
 import com.workpoint.icpak.shared.model.PaymentMode;
 import com.workpoint.icpak.shared.model.PaymentType;
 import com.workpoint.icpak.shared.model.TransactionDto;
@@ -56,16 +57,20 @@ public class InvoiceTableRow extends RowWidget {
 
 	public InvoiceTableRow(final TransactionDto trx) {
 		this();
-
 		if (trx.getCreatedDate() != null) {
-			divDate.add(new InlineLabel(DateUtils.FULLTIMESTAMP.format(trx
+			divDate.add(new InlineLabel(DateUtils.READABLETIMESTAMP.format(trx
 					.getCreatedDate())));
 		}
-
 		if (trx.getPaymentMode() != null) {
-			divPaymentMode.add(new InlineLabel(trx.getPaymentMode() + ""));
-		}
 
+			if (trx.getPaymentMode() == PaymentMode.MPESA) {
+				divPaymentMode.add(new HTML(
+						"<img src='img/Mpesa_Logo.png'></g:Image>"));
+			} else if (trx.getPaymentMode() == PaymentMode.CARDS) {
+				divPaymentMode.add(new HTML(
+						"<img src='img/Visa_Logo.png'></g:Image>"));
+			}
+		}
 		if (trx.getDescription() != null) {
 			String desc = "";
 			if (trx.getPaymentMode() == PaymentMode.MPESA) {
@@ -75,7 +80,6 @@ public class InvoiceTableRow extends RowWidget {
 			}
 			divDescription.add(new InlineLabel(desc));
 		}
-
 		if (trx.getAccountNo() != null && trx.getPaymentType() != null) {
 			aProforma.setText(trx.getAccountNo());
 

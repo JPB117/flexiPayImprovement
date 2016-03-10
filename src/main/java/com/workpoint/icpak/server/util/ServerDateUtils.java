@@ -3,7 +3,7 @@ package com.workpoint.icpak.server.util;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class DateUtils {
+public class ServerDateUtils {
 
 	static String datepattern = "dd/MM/yyyy";
 	static String datepattern_sys = "yyyy-MM-dd";

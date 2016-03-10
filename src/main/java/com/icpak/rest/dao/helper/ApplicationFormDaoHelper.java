@@ -61,7 +61,7 @@ import com.icpak.rest.utils.DocumentLine;
 import com.icpak.rest.utils.EmailServiceHelper;
 import com.icpak.rest.utils.HTMLToPDFConvertor;
 import com.itextpdf.text.DocumentException;
-import com.workpoint.icpak.server.util.DateUtils;
+import com.workpoint.icpak.server.util.ServerDateUtils;
 import com.workpoint.icpak.shared.model.ApplicationCategoryDto;
 import com.workpoint.icpak.shared.model.ApplicationERPDto;
 import com.workpoint.icpak.shared.model.ApplicationFormAccountancyDto;
@@ -391,7 +391,7 @@ public class ApplicationFormDaoHelper {
 				Date nextRQA = formatter2.parse(nextRQAString.toString());
 				subject = subject + " is Being Processed!";
 				action = " is now being processed and is being processed. Please note that the next RQA meeting is on "
-						+ DateUtils.format(nextRQA, formatter);
+						+ ServerDateUtils.format(nextRQA, formatter);
 
 				System.err.println(action);
 

@@ -136,7 +136,7 @@ public class EventBookingView extends ViewImpl implements
 	@UiField
 	ActionLink aBackToDelegates;
 
-	int counter = 3;
+	int counter = 0;
 	boolean isValid = true;
 
 	private List<LIElement> liElements = new ArrayList<LIElement>();

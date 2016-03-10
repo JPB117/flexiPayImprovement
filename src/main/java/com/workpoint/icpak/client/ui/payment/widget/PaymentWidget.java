@@ -91,13 +91,12 @@ public class PaymentWidget extends Composite {
 		initWidget(uiBinder.createAndBindUi(this));
 		setDate();
 		liCards.removeClassName("hide");
-		setAmount("10");
-		
-		InvoiceDto invoice = new InvoiceDto();
-		invoice.setDocumentNo("INV0212");
-		invoice.setAmount(10.0);
-		bindTransaction(invoice);
 
+		// InvoiceDto invoice = new InvoiceDto();
+		// invoice.setDocumentNo("INV0212");
+		// invoice.setAmount(10.0);
+		// setAmount("10");
+		// bindTransaction(invoice);
 	}
 
 	public class Month implements Listable {

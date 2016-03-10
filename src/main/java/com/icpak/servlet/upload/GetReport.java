@@ -54,7 +54,7 @@ import com.icpak.rest.utils.Doc;
 import com.icpak.rest.utils.DocumentLine;
 import com.icpak.rest.utils.HTMLToPDFConvertor;
 import com.itextpdf.text.DocumentException;
-import com.workpoint.icpak.server.util.DateUtils;
+import com.workpoint.icpak.server.util.ServerDateUtils;
 import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.shared.model.CPDStatus;
 import com.workpoint.icpak.shared.model.InvoiceDto;
@@ -471,7 +471,7 @@ public class GetReport extends HttpServlet {
 		String refNo = cert.getId() + "";// memberDao.getGoodStandingCertDocNumber(cert.getId());
 
 		values.put("refNo", cert.getId());
-		values.put("letterDate", DateUtils.HALFDATEFORMAT.format(new Date()));
+		values.put("letterDate", ServerDateUtils.HALFDATEFORMAT.format(new Date()));
 		values.put("memberName", user.toDto().getFullName().toUpperCase());
 		values.put("smallName", user.toDto().getFullName());
 		values.put("memberNo", member.getMemberNo());

@@ -20,7 +20,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 import com.icpak.rest.models.base.PO;
 import com.wordnik.swagger.annotations.ApiModel;
-import com.workpoint.icpak.server.util.DateUtils;
+import com.workpoint.icpak.server.util.ServerDateUtils;
 import com.workpoint.icpak.shared.model.EventStatus;
 import com.workpoint.icpak.shared.model.EventType;
 import com.workpoint.icpak.shared.model.events.AccommodationDto;
@@ -265,21 +265,21 @@ public class Event extends PO {
 		dto.setCategoryName(categoryName);
 
 		if (endDate != null)
-			dto.setEndDate(DateUtils.format(endDate, DateUtils.FULLTIMESTAMP));
+			dto.setEndDate(ServerDateUtils.format(endDate, ServerDateUtils.FULLTIMESTAMP));
 
 		if (startDate != null) {
-			dto.setStartDate(DateUtils.format(startDate,
-					DateUtils.FULLTIMESTAMP));
+			dto.setStartDate(ServerDateUtils.format(startDate,
+					ServerDateUtils.FULLTIMESTAMP));
 		}
 		dto.setMemberPrice(memberPrice);
 		dto.setName(name);
 		dto.setNonMemberPrice(nonMemberPrice);
 		dto.setAssociatePrice(associatePrice);
 		if (penaltyDate != null) {
-			dto.setPenaltyDate(DateUtils.DATEFORMAT_SYS.format(penaltyDate));
+			dto.setPenaltyDate(ServerDateUtils.DATEFORMAT_SYS.format(penaltyDate));
 		}
 		if (discountDate != null) {
-			dto.setDiscountDate(DateUtils.DATEFORMAT_SYS.format(discountDate));
+			dto.setDiscountDate(ServerDateUtils.DATEFORMAT_SYS.format(discountDate));
 		}
 		dto.setStatus(status);
 		dto.setType(type);
@@ -303,12 +303,12 @@ public class Event extends PO {
 		setCpdHours(dto.getCpdHours());
 		setDescription(dto.getDescription());
 		if (dto.getEndDate() != null) {
-			setEndDate(DateUtils.parse(dto.getEndDate(),
-					DateUtils.SHORTTIMESTAMP));
+			setEndDate(ServerDateUtils.parse(dto.getEndDate(),
+					ServerDateUtils.SHORTTIMESTAMP));
 		}
 		if (dto.getStartDate() != null) {
-			setStartDate(DateUtils.parse(dto.getStartDate(),
-					DateUtils.SHORTTIMESTAMP));
+			setStartDate(ServerDateUtils.parse(dto.getStartDate(),
+					ServerDateUtils.SHORTTIMESTAMP));
 		}
 
 		// Member Price
@@ -340,14 +340,14 @@ public class Event extends PO {
 
 		// Discount Date
 		if (dto.getDiscountDate() != null) {
-			setDiscountDate(DateUtils.parse(dto.getDiscountDate(),
-					DateUtils.SHORTTIMESTAMP));
+			setDiscountDate(ServerDateUtils.parse(dto.getDiscountDate(),
+					ServerDateUtils.SHORTTIMESTAMP));
 		}
 
 		// Penalty Date
 		if (dto.getPenaltyDate() != null) {
-			setPenaltyDate(DateUtils.parse(dto.getPenaltyDate(),
-					DateUtils.SHORTTIMESTAMP));
+			setPenaltyDate(ServerDateUtils.parse(dto.getPenaltyDate(),
+					ServerDateUtils.SHORTTIMESTAMP));
 		}
 
 		setName(dto.getName());
@@ -415,13 +415,13 @@ public class Event extends PO {
 		}
 
 		if (dto.getEndDate() != null) {
-			setEndDate(DateUtils.parse(dto.getEndDate(),
-					DateUtils.SHORTTIMESTAMP));
+			setEndDate(ServerDateUtils.parse(dto.getEndDate(),
+					ServerDateUtils.SHORTTIMESTAMP));
 		}
 
 		if (dto.getStartDate() != null) {
-			setStartDate(DateUtils.parse(dto.getStartDate(),
-					DateUtils.SHORTTIMESTAMP));
+			setStartDate(ServerDateUtils.parse(dto.getStartDate(),
+					ServerDateUtils.SHORTTIMESTAMP));
 		}
 
 		if (dto.getName() != null) {

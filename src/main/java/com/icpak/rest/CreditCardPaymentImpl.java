@@ -13,7 +13,7 @@ import com.google.inject.Inject;
 import com.icpak.rest.dao.helper.TransactionDaoHelper;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.workpoint.icpak.server.payment.CreditCardServiceImpl;
-import com.workpoint.icpak.server.util.DateUtils;
+import com.workpoint.icpak.server.util.ServerDateUtils;
 import com.workpoint.icpak.shared.api.CreditCardResource;
 import com.workpoint.icpak.shared.model.CreditCardDto;
 import com.workpoint.icpak.shared.model.CreditCardResponse;
@@ -48,7 +48,7 @@ public class CreditCardPaymentImpl implements CreditCardResource {
 			trxDaoHelper.receivePaymentUsingInvoiceNo(dto.getPaymentRefId(),
 					"N/A", dto.getPaymentRefId(), "CARDS",
 					response.getTransactionIndex(), "N/A", dto.getAmount(),
-					DateUtils.FULLTIMESTAMP.format(new Date()), "N/A");
+					ServerDateUtils.FULLTIMESTAMP.format(new Date()), "N/A");
 		}
 		return response;
 	}

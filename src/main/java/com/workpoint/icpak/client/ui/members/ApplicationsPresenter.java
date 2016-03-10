@@ -196,16 +196,13 @@ public class ApplicationsPresenter
 		super.onBind();
 
 		getView().getTxtSearch().addKeyDownHandler(keyHandler);
-
 		getView().getaSearch().addClickHandler(searchClickHandler);
-
 		getView().getPagingPanel().setLoader(new PagingLoader() {
 			@Override
 			public void onLoad(int offset, int limit) {
 				loadApplications(offset, limit);
 			}
 		});
-
 		/* Sync to ERP */
 		getView().getPanelProfile().getErpSync()
 				.addClickHandler(new ClickHandler() {
@@ -231,7 +228,6 @@ public class ApplicationsPresenter
 						final ApplicationsActions applicationsActionsWidget = new ApplicationsActions();
 						applicationsActionsWidget
 								.bindApplicationActions(selectedApplication);
-
 						AppManager.showPopUp("Management Action",
 								applicationsActionsWidget,
 								new OnOptionSelected() {
@@ -352,7 +348,6 @@ public class ApplicationsPresenter
 			final String previousRefId, final String nextRefId,
 			final int maxSize) {
 		fireEvent(new ProcessingEvent());
-
 		applicationDelegate.withCallback(
 				new AbstractAsyncCallback<ApplicationFormHeaderDto>() {
 					@Override
@@ -417,6 +412,7 @@ public class ApplicationsPresenter
 	}
 
 	protected void loadApplications(int offset, int limit) {
+		fireEvent(new ProcessingEvent());
 		applicationDelegate.withCallback(
 				new AbstractAsyncCallback<List<ApplicationFormHeaderDto>>() {
 					@Override
