@@ -20,6 +20,8 @@ import com.icpak.rest.dao.BookingsDao;
 import com.icpak.rest.dao.InvoiceDao;
 import com.icpak.rest.dao.MemberDao;
 import com.icpak.rest.dao.TransactionsDao;
+import com.icpak.rest.dao.UsersDao;
+import com.icpak.rest.models.auth.User;
 import com.icpak.rest.models.event.Booking;
 import com.icpak.rest.models.event.Delegate;
 import com.icpak.rest.models.membership.ApplicationFormHeader;
@@ -50,6 +52,9 @@ public class TransactionDaoHelper {
 	SMSIntegration smsIntergration;
 	@Inject
 	MemberDao memberDao;
+
+	@Inject
+	UsersDao usersDao;
 	Logger logger = Logger.getLogger(TransactionDaoHelper.class.getName());
 	Locale locale = new Locale("en", "KE");
 	NumberFormat numberFormat = NumberFormat.getCurrencyInstance(locale);
@@ -158,7 +163,28 @@ public class TransactionDaoHelper {
 		String firstAccountChars = accountNo.substring(0, 2);
 		if (!firstAccountChars.toUpperCase().equals("INV")) {
 			// Check if this is a valid membership no
-			
+			User user = usersDao.findUserByMemberNo(accountNo);
+			if (user != null) {
+				logger.info("Subscription renewal for " + accountNo);
+				trx.setDescription("Subscription payments for "
+						+ user.getFullName());
+				trx.setInvoiceRef(user.getRefId());
+				trx.setPaymentType(PaymentType.SUBSCRIPTION);
+				saveTransactionFirst(trx);
+
+				Double amt = Double.valueOf(amount);
+				String smsMessage = "Dear" + user.getFullName()
+						+ ", Thank-you for your " + trx.getPaymentMode()
+						+ " payment of " + numberFormat.format(amt)
+						+ " for your member subscription. ";
+
+				String finalPhoneNumber = phoneNumber.replace("254", "0");
+				if (phoneNumber != null) {
+					smsIntergration.send(finalPhoneNumber, smsMessage);
+					logger.error("sending sms to :" + finalPhoneNumber);
+				}
+				return;
+			}
 		}
 
 		invoiceDto = invoiceDao.getInvoiceByDocumentNo(accountNo);
