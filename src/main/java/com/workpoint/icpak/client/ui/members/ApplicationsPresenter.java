@@ -276,9 +276,22 @@ public class ApplicationsPresenter
 							fireEvent(new AfterSaveEvent(
 									"Application changes saved Successfully.!"));
 						}
-
 						reloadMemberDetails();
 					}
+
+					@Override
+					public void onFailure(Throwable caught) {
+						super.onFailure(caught);
+						fireEvent(new ProcessingCompletedEvent());
+						AppManager.showPopUp("Error Updating!",
+								caught.getStackTrace() + "",
+								new OnOptionSelected() {
+									@Override
+									public void onSelect(String name) {
+									}
+								}, "Cancel");
+					}
+
 				}).update(applicationRefId, selectedApplication);
 	}
 

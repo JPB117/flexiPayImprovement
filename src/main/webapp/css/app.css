@@ -1419,11 +1419,6 @@ now {
 	border-color: #dde6e9
 }
 
-.nav-pills+.tab-content {
-	border: 0;
-	padding: 0
-}
-
 .p0 .tab-content {
 	padding: 0 !important
 }
@@ -82181,7 +82176,7 @@ now {
 
 .nav-pills+.tab-content {
 	border: 0;
-	padding: 0
+	/*padding: 0*/
 }
 
 .p0 .tab-content {

@@ -76,7 +76,6 @@ public class SMSIntegration {
 			JSONArray resp = gateway.sendMessage(to, message, from, 1);
 
 			JSONObject object = resp.getJSONObject(0);
-
 			String status = object.getString("status");
 			String number = object.getString("number");
 			String messageId = object.getString("messageId");

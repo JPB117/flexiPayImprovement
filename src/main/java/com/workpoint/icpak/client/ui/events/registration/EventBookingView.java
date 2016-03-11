@@ -86,6 +86,8 @@ public class EventBookingView extends ViewImpl implements
 	@UiField
 	DivElement divProforma;
 	@UiField
+	DivElement divHeader;
+	@UiField
 	LIElement liTab1;
 	@UiField
 	LIElement liTab2;
@@ -135,6 +137,8 @@ public class EventBookingView extends ViewImpl implements
 	DivElement divContainer;
 	@UiField
 	ActionLink aBackToDelegates;
+	@UiField
+	SpanElement spnSpinner;
 
 	int counter = 0;
 	boolean isValid = true;
@@ -156,6 +160,9 @@ public class EventBookingView extends ViewImpl implements
 	ColumnConfig fullNameConfig = new ColumnConfig("fullName", "FullNames:",
 			DataType.STRING, "Delegate FullNames", "form-control", false);
 
+	ColumnConfig titleConfig = new ColumnConfig("title", "Title",
+			DataType.SELECTBASIC, "", "form-control");
+
 	@Inject
 	public EventBookingView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
@@ -164,10 +171,8 @@ public class EventBookingView extends ViewImpl implements
 		List<ColumnConfig> configs = new ArrayList<ColumnConfig>();
 		configs.add(memberColumn);
 
-		ColumnConfig config = new ColumnConfig("title", "Title",
-				DataType.SELECTBASIC, "", "form-control");
-		config.setDropDownItems(Arrays.asList(Title.values()));
-		configs.add(config);
+		titleConfig.setDropDownItems(Arrays.asList(Title.values()));
+		configs.add(titleConfig);
 		configs.add(fullNameConfig);
 		configs.add(accommodationConfig);
 
@@ -251,6 +256,8 @@ public class EventBookingView extends ViewImpl implements
 			public void onClick(ClickEvent event) {
 				memberColumn.setEnabled(true);
 				fullNameConfig.setEnabled(false);
+				titleConfig.setEnabled(false);
+				accommodationConfig.setEnabled(true);
 				tblDelegates.addRowData(new DataModel());
 			}
 		});
@@ -259,6 +266,9 @@ public class EventBookingView extends ViewImpl implements
 			@Override
 			public void onClick(ClickEvent event) {
 				memberColumn.setEnabled(false);
+				fullNameConfig.setEnabled(true);
+				titleConfig.setEnabled(true);
+				accommodationConfig.setEnabled(true);
 				tblDelegates.addRowData(new DataModel());
 			}
 		});
@@ -496,9 +506,10 @@ public class EventBookingView extends ViewImpl implements
 	public void setMiddleHeight() {
 		int totalHeight = Window.getClientHeight();
 		int topHeight = divHeaderContainer.getOffsetHeight();
-		// int footerHeight = divFooter.getOffsetHeight();
-		// int topicsHeight = divHeaderContainer.getOffsetHeight();
-		int middleHeight = totalHeight - topHeight;
+		int topicsHeight = divHeader.getOffsetHeight();
+		int headerTopics = divHeaderTopics.getOffsetHeight();
+		int middleHeight = totalHeight - topHeight - topicsHeight
+				- headerTopics - 53;
 
 		// Window.alert("\nTotalHeight:" + totalHeight + "MiddleHeight>>"
 		// + middleHeight + "TopHeight" + topHeight);
@@ -714,4 +725,13 @@ public class EventBookingView extends ViewImpl implements
 		}
 	}
 
+	public void showEmailValidating(boolean show) {
+		if (show) {
+			spnSpinner.removeClassName("hide");
+			aNext.addStyleName("hide");
+		} else {
+			spnSpinner.addClassName("hide");
+			aNext.removeStyleName("hide");
+		}
+	}
 }

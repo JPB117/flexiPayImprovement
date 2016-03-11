@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -100,6 +102,8 @@ public class EventBookingPresenter extends
 
 		void setEmailValid(boolean b, String string);
 
+		void showEmailValidating(boolean show);
+
 	}
 
 	@ProxyCodeSplit
@@ -114,6 +118,7 @@ public class EventBookingPresenter extends
 	@Inject
 	PaymentPresenter paymentPresenter;
 
+	private static final Logger LOGGER = Logger.getLogger("ICPAK Logger..");
 	@ContentSlot
 	public static final Type<RevealContentHandler<?>> PAYMENTS_SLOT = new Type<RevealContentHandler<?>>();
 
@@ -128,8 +133,10 @@ public class EventBookingPresenter extends
 	private ResourceDelegate<InvoiceResource> invoiceResource;
 
 	private ResourceDelegate<MemberResource> membersDelegate;
-
 	private ResourceDelegate<EventsResource> eventsDelegate;
+
+	private int requestCounter = 0;
+	private int responseCounter = 0;
 
 	@Inject
 	public EventBookingPresenter(final EventBus eventBus, final MyView view,
@@ -164,18 +171,32 @@ public class EventBookingPresenter extends
 					@Override
 					public void onLoad(final ServerOracle source,
 							final String query) {
+						getView().getMemberColumnConfig().showSpinner(true);
 						query.replaceAll("/", "%");
+						requestCounter = requestCounter + 1;
 						membersDelegate.withCallback(
 								new AbstractAsyncCallback<List<MemberDto>>() {
 									@Override
 									public void onSuccess(
 											List<MemberDto> members) {
-										source.setValues(members);
+										responseCounter = responseCounter + 1;
+										// LOGGER.log(Level.SEVERE, "Request::"
+										// + requestCounter
+										// + ">>Response::"
+										// + responseCounter);
+										if (requestCounter == responseCounter) {
+											source.setValues(members);
+											getView().getMemberColumnConfig()
+													.showSpinner(false);
+											// responseCounter = 0;
+											// requestCounter = 0;
+										}
 									}
 
 								}).search(query, 0, 30);
 					}
 				});
+
 		getView().getANext().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -209,11 +230,11 @@ public class EventBookingPresenter extends
 	}
 
 	protected void checkExists(String email) {
-		getView().showmask(true);
+		getView().showEmailValidating(true);
 		eventsDelegate.withCallback(new AbstractAsyncCallback<BookingDto>() {
 			@Override
 			public void onSuccess(BookingDto booking) {
-				getView().showmask(false);
+				getView().showEmailValidating(false);
 				if (booking == null) {
 					bookingId = null;
 					getView().setEmailValid(true, "");
@@ -228,6 +249,16 @@ public class EventBookingPresenter extends
 											+ " with instructions on how to ammend your booking.");
 					getInvoice(booking.getInvoiceRef(), false, true);
 				}
+			}
+
+			@Override
+			public void onFailure(Throwable caught) {
+				super.onFailure(caught);
+				getView().showEmailValidating(false);
+				getView()
+						.setEmailValid(
+								false,
+								"More than one booking found in the system.Please contact itsupport@icpak.com to correct.");
 			}
 		}).delegates(eventId).checkExist(email.trim());
 

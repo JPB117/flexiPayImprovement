@@ -21,8 +21,7 @@
 			</nav>
 		</g:HTMLPanel>
 
-		<g:HTMLPanel styleName="image-container set-full-height"
-			ui:field="divContent">
+		<g:HTMLPanel styleName="image-container set-full-height">
 			<div class="container">
 				<div class="row">
 					<div class="col-sm-11 col-md-offset-1">
@@ -30,7 +29,7 @@
 							<!-- Wizard container -->
 							<div class="wizard-container" ui:field="divContainer">
 								<div class="card wizard-card ct-wizard-gold">
-									<div class="wizard-header">
+									<div class="wizard-header" ui:field="divHeader">
 										<d:ActionLink ui:field="aBackToDelegates"
 											styleName="pull-left hide">
 											<i class="fa fa-angle-double-left"></i>
@@ -70,7 +69,7 @@
 									</ul>
 
 									<!-- Tab Content 1 -->
-									<g:HTMLPanel styleName="tab-content">
+									<g:HTMLPanel styleName="tab-content" ui:field="divContent">
 										<div class="tab-pane active" ui:field="divPackage">
 											<div class="row">
 
@@ -181,7 +180,15 @@
 																<p class="text-warning">if self-sponsored, please enter your name</p>
 															</div>
 															<div class="col-xs-6">
-																<label for="contactPerson">Contact Email:</label>
+																<label for="contactPerson">
+																	Contact Email:
+																	<span ui:field="spnSpinner" class="hide">
+																		<span class="fa fa-spinner fa-pulse"
+																			style="margin-top:5px;"></span>
+																		<span class="text-danger">Please wait while we validate this
+																			email</span>
+																	</span>
+																</label>
 																<d:TextField ui:field="txtContactEmail"
 																	type="email" styleName="form-control" placeholder="Email address"
 																	value="" required="true">

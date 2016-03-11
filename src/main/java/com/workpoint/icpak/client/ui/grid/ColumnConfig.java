@@ -37,7 +37,8 @@ public class ColumnConfig {
 	private Loader loader;
 	private List<Listable> dropDownItems = new ArrayList<Listable>();
 	private List<ValueChangeHandler> valueChangeHandlers = new ArrayList<ValueChangeHandler>();
-	private boolean isEnabled;
+	private boolean isEnabled = true;
+	private AutoCompleteField auto;
 
 	public boolean isEnabled() {
 		return isEnabled;
@@ -104,13 +105,13 @@ public class ColumnConfig {
 		} else if (type == DataType.SELECTBASIC) {
 			DropDownList dropDown = new DropDownList();
 			dropDown.setItems(dropDownItems);
+			dropDown.setEnabled(isEnabled);
 			widget = dropDown;
 		} else if (type == DataType.SELECTAUTOCOMPLETE) {
-			AutoCompleteField auto = new AutoCompleteField(loader);
+			auto = new AutoCompleteField(loader);
 			auto.setEnabled(isEnabled);
 			// ((Widget) widget).getElement().getFirstChildElement()
 			// .addClassName(styleName);
-
 			// auto.setValues(dropDownItems);
 			widget = auto;
 		} else if (type == DataType.STRINGLONG) {
@@ -123,6 +124,7 @@ public class ColumnConfig {
 		} else {
 			TextField field = new TextField();
 			field.setPlaceholder(placeHolder == null ? "" : placeHolder);
+			field.setEnabled(isEnabled);
 			widget = field;
 		}
 		if (styleName != null) {
@@ -132,7 +134,6 @@ public class ColumnConfig {
 		for (ValueChangeHandler handler : valueChangeHandlers) {
 			widget.addValueChangeHandler(handler);
 		}
-
 		widget.setValue(value);
 		return (Widget) widget;
 	}
@@ -257,6 +258,10 @@ public class ColumnConfig {
 
 	public void setLoader(Loader loader) {
 		this.loader = loader;
+	}
+
+	public void showSpinner(boolean show) {
+		auto.showSpinner(show);
 	}
 
 }

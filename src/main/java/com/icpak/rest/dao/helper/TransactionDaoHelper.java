@@ -103,46 +103,13 @@ public class TransactionDaoHelper {
 			String trxNumber, String phoneNumber, String amount,
 			String trxDate, String payerNames) {
 
+		// Account No Details
 		accountNo = accountNo.trim();
 		accountNo = accountNo.replaceAll("[-+.^:,]", "");
 		accountNo = accountNo.replaceAll("[oO]", "0");
 		logger.info("Trimmed Account No::::" + accountNo);
 
-		if (accountNo == null || accountNo.isEmpty()) {
-			logger.info("Account No is NULL, send message to tell the customer to input the correct account No"
-					+ accountNo);
-			Double amt = Double.valueOf(amount);
-			String smsMessage = " Thank-you for your payment of "
-					+ numberFormat.format(amt)
-					+ ".Please send details of this payment to memberservices@icpak.com ";
-
-			String finalPhoneNumber = phoneNumber.replace("254", "0");
-			if (phoneNumber != null) {
-				smsIntergration.send(finalPhoneNumber, smsMessage);
-				logger.error("sending sms to :" + finalPhoneNumber);
-			}
-			return;
-		}
-
-		invoiceDto = invoiceDao.getInvoiceByDocumentNo(accountNo);
-		if (invoiceDto == null) {
-			logger.info("No Invoice found for this transaction..");
-			Double amt = Double.valueOf(amount);
-			String smsMessage = " Thank-you for your payment of "
-					+ numberFormat.format(amt)
-					+ ".Please send details of this payment to memberservices@icpak.com. ";
-
-			String finalPhoneNumber = phoneNumber.replace("254", "0");
-			if (phoneNumber != null) {
-				smsIntergration.send(finalPhoneNumber, smsMessage);
-				logger.error("sending sms to :" + finalPhoneNumber);
-			}
-			return;
-		}
-
-		// Store this transaction
-		logger.info("Saving transaction >>>" + accountNo);
-
+		// Always store the transaction
 		Date parsedDate = null;
 		try {
 			parsedDate = ServerDateUtils.FULLTIMESTAMP.parse(trxDate);
@@ -160,24 +127,72 @@ public class TransactionDaoHelper {
 				trx.setPaymentMode(PaymentMode.CARDS);
 			}
 		}
-		trx.setTrxNumber(trxNumber);
+		trx.setTrxNumber(paymentRef);
 		trx.setPayerNames(payerNames);
 		trx.setBusinessNo(businessNo);
 		trx.setAmount(Double.parseDouble(amount));
 		trx.setStatus(PaymentStatus.PAID);
 
+		// Check if the account number is null or empty
+		if (accountNo == null || accountNo.isEmpty()) {
+			logger.info("Account No is NULL, send message to tell the customer to input the correct account No"
+					+ accountNo);
+			trx.setDescription("Unknown payment with no account number");
+			saveTransactionFirst(trx);
+
+			Double amt = Double.valueOf(amount);
+			String smsMessage = " Thank-you for your payment of "
+					+ numberFormat.format(amt)
+					+ ".Please send details of this payment to memberservices@icpak.com ";
+
+			String finalPhoneNumber = phoneNumber.replace("254", "0");
+			if (phoneNumber != null) {
+				smsIntergration.send(finalPhoneNumber, smsMessage);
+				logger.error("sending sms to :" + finalPhoneNumber);
+			}
+			return;
+		}
+
+		// If accountno doesn't start with inv, then we check if its
+		// subscription renewal
+		String firstAccountChars = accountNo.substring(0, 2);
+		if (!firstAccountChars.toUpperCase().equals("INV")) {
+			// Check if this is a valid membership no
+			
+		}
+
+		invoiceDto = invoiceDao.getInvoiceByDocumentNo(accountNo);
+		if (invoiceDto == null) {
+			logger.info("No Invoice found for this transaction..");
+			trx.setDescription("Unknown payment with invalid account no");
+			saveTransactionFirst(trx);
+
+			Double amt = Double.valueOf(amount);
+			String smsMessage = " Thank-you for your payment of "
+					+ numberFormat.format(amt)
+					+ ".Please send details of this payment to memberservices@icpak.com. ";
+
+			String finalPhoneNumber = phoneNumber.replace("254", "0");
+			if (phoneNumber != null) {
+				smsIntergration.send(finalPhoneNumber, smsMessage);
+				logger.error("sending sms to :" + finalPhoneNumber);
+			}
+			return;
+		}
+
 		// Convert DTO to Invoice Object
 		Invoice inv = new Invoice();
 		inv.copyFrom(invoiceDto);
-
 		// Payment was for Booking
 		Booking booking = new Booking();
 		booking = dao.findByRefId(inv.getBookingRefId(), Booking.class, false);
 		if (booking != null) {
 			logger.info("Payment was for booking refId::" + booking.getRefId());
-			trx.setDescription("Payment for " + booking.getEvent().getName());
+			trx.setDescription("Payment for " + booking.getEvent().getName()
+					+ "-" + payerNames);
 			trx.setInvoiceRef(booking.getRefId());
 			trx.setPaymentType(PaymentType.BOOKING);
+
 			// Save this transaction
 			saveTransactionFirst(trx);
 			try {
@@ -227,8 +242,8 @@ public class TransactionDaoHelper {
 		Double chargableAmount = invoiceDto.getInvoiceAmount();
 
 		if (event.getPenaltyDate() != null) {
-			penaltyDate = ServerDateUtils.DATEFORMAT_SYS
-					.parse(event.getPenaltyDate());
+			penaltyDate = ServerDateUtils.DATEFORMAT_SYS.parse(event
+					.getPenaltyDate());
 			if (parsedDate.getTime() >= penaltyDate.getTime()) {
 				chargableAmount = invoiceDto.getInvoiceAmount()
 						+ invoiceDto.getTotalPenalty();

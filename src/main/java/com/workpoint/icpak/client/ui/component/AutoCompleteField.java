@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
@@ -39,6 +40,8 @@ public class AutoCompleteField<T extends Listable> extends Composite implements
 
 	@UiField
 	HTMLPanel container;
+	@UiField
+	SpanElement spnSpinner;
 
 	Map<String, T> valuesMap = new HashMap<String, T>();
 	final TextBox itemBox = new TextBox();
@@ -72,12 +75,12 @@ public class AutoCompleteField<T extends Listable> extends Composite implements
 
 		box = new SuggestBox(oracle, itemBox);
 		box.getElement().setId(id);
-		box.setAnimationEnabled(true);
+		// box.setAnimationEnabled(true);
 		// liPanel.add(box);
+
 		box.addSelectionHandler(new SelectionHandler<SuggestOracle.Suggestion>() {
 			public void onSelection(SelectionEvent selectionEvent) {
 				String value = box.getValue();
-
 				if (value != null) {
 					T val = valuesMap.get(value);
 					setValue(val, true);
@@ -197,5 +200,13 @@ public class AutoCompleteField<T extends Listable> extends Composite implements
 
 	public static interface Loader<T> {
 		public void onLoad(ServerOracle source, String query);
+	}
+
+	public void showSpinner(boolean show) {
+		if (show) {
+			spnSpinner.removeClassName("hide");
+		} else {
+			spnSpinner.addClassName("hide");
+		}
 	}
 }
