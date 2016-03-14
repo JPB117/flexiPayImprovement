@@ -81,7 +81,7 @@ public class MemberResourceImpl implements MemberResource {
 	}
 
 	@GET
-	@Path("/search/{searchTerm}")
+	@Path("/search")
 	@ApiOperation(value = "Search for members based on a search term (MemberId/ Names)")
 	public List<MemberDto> search(
 			@ApiParam(value = "Search term to use", required = true) @QueryParam("searchTerm") String searchTerm,
