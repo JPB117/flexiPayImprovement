@@ -84,7 +84,7 @@ public class MemberResourceImpl implements MemberResource {
 	@Path("/search/{searchTerm}")
 	@ApiOperation(value = "Search for members based on a search term (MemberId/ Names)")
 	public List<MemberDto> search(
-			@ApiParam(value = "Search term to use", required = true) @PathParam("searchTerm") String searchTerm,
+			@ApiParam(value = "Search term to use", required = true) @QueryParam("searchTerm") String searchTerm,
 			@QueryParam("offset") Integer offset,
 			@QueryParam("limit") Integer limit) {
 		return membersHelper.getAllMembers(offset, limit, "", searchTerm);

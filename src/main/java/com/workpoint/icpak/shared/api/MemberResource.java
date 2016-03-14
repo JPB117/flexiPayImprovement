@@ -49,7 +49,7 @@ public interface MemberResource extends BaseResource {
 
 	@GET
 	@Path("/search/{searchTerm}")
-	public List<MemberDto> search(@PathParam("searchTerm") String searchTerm,
+	public List<MemberDto> search(@QueryParam("searchTerm") String searchTerm,
 			@QueryParam("offset") Integer offset,
 			@QueryParam("limit") Integer limit);
 
