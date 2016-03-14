@@ -34,7 +34,7 @@ public class InvoiceListPresenter
 		Presenter<InvoiceListPresenter.IInvoiceView, InvoiceListPresenter.InvoiceListProxy> {
 
 	public interface IInvoiceView extends View {
-		 void bindInvoices(List<TransactionDto> trxs);
+		void bindInvoices(List<TransactionDto> trxs);
 
 		void setCount(Integer aCount);
 
@@ -116,7 +116,6 @@ public class InvoiceListPresenter
 
 	protected void loadInvoices(int offset, int limit) {
 		fireEvent(new ProcessingEvent());
-
 		invoiceDelegate.withCallback(
 				new AbstractAsyncCallback<List<TransactionDto>>() {
 					public void onSuccess(List<TransactionDto> result) { //

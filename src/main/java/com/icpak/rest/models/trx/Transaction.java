@@ -15,6 +15,7 @@ import com.wordnik.swagger.annotations.ApiModel;
 import com.workpoint.icpak.shared.model.PaymentMode;
 import com.workpoint.icpak.shared.model.PaymentStatus;
 import com.workpoint.icpak.shared.model.PaymentType;
+import com.workpoint.icpak.shared.model.TransactionDto;
 import com.workpoint.icpak.shared.trx.OldTransactionDto;
 
 /**
@@ -101,6 +102,18 @@ public class Transaction extends PO {
 
 	public void setAmount(Double amount) {
 		this.amount = amount;
+	}
+
+	public TransactionDto toDto1() {
+		TransactionDto dto = new TransactionDto();
+		dto.setAmountPaid(amount);
+		dto.setCreatedDate(date);
+		dto.setDescription(description);
+		dto.setAccountNo(accountNo);
+		dto.setPaymentMode(paymentMode);
+		dto.setTrxNumber(trxNumber);
+		dto.setRefId(getRefId());
+		return dto;
 	}
 
 	public OldTransactionDto toDto() {

@@ -54,6 +54,7 @@ import com.workpoint.icpak.shared.model.ApplicationFormSpecializationDto;
 import com.workpoint.icpak.shared.model.ApplicationFormTrainingDto;
 import com.workpoint.icpak.shared.model.Country;
 import com.workpoint.icpak.shared.model.MemberStanding;
+import com.workpoint.icpak.shared.model.MembershipStatus;
 import com.workpoint.icpak.shared.model.PaymentStatus;
 import com.workpoint.icpak.shared.model.auth.ApplicationStatus;
 
@@ -77,15 +78,12 @@ public class ProfileWidget extends Composite {
 	DivElement divSubmitApplication;
 	@UiField
 	ActionLink aSaveChanges;
-
 	@UiField
 	HTMLPanel divProfileContent;
-
 	@UiField
 	HTMLPanel panelProfileError;
 	@UiField
 	HTMLPanel profileViewMode;
-
 	@UiField
 	HTMLPanel panelProfile;
 	@UiField
@@ -94,7 +92,6 @@ public class ProfileWidget extends Composite {
 	HTMLPanel panelApplicationType;
 	@UiField
 	DivElement panelTabs;
-
 	@UiField
 	HTMLPanel divEditDropDown;
 	@UiField
@@ -127,6 +124,8 @@ public class ProfileWidget extends Composite {
 	SpanElement spnAccountStatus;
 	@UiField
 	DivElement divAccountStatus;
+	@UiField
+	DivElement divPaySubscription;
 	@UiField
 	DivElement divMembershipNo;
 	@UiField
@@ -181,6 +180,8 @@ public class ProfileWidget extends Composite {
 	SpanElement spnStatusDescription;
 	@UiField
 	ActionLink aPayLink;
+	@UiField
+	ActionLink aRenewSubscription;
 	@UiField
 	ActionLink aMgmtActions;
 
@@ -299,6 +300,7 @@ public class ProfileWidget extends Composite {
 			divGoodStandingActions.removeClassName("hide");
 			divMemberShipStatus.removeClassName("hide");
 			divStandingStatus.removeClassName("hide");
+			divPaySubscription.removeClassName("hide");
 
 		} else if (isCurrentUserBasicMember) {
 			divPaymentSection.removeClassName("hide");
@@ -438,6 +440,7 @@ public class ProfileWidget extends Composite {
 		spnStatusDescription.addClassName("hide");
 		aMgmtActions.addStyleName("hide");
 		divMemberShipStatus.addClassName("hide");
+		divPaySubscription.addClassName("hide");
 	}
 
 	public void bindPaymentStatus() {
@@ -509,14 +512,15 @@ public class ProfileWidget extends Composite {
 		ctx.setAction(UPLOADACTION.UPLOADUSERIMAGE);
 		uploader.setContext(ctx);
 
-		/*
-		 * if (user.getUser().getMembershipStatus() != null) {
-		 * spnMembershipStatus.setInnerText(user.getUser()
-		 * .getMembershipStatus().name()); if
-		 * (user.getUser().getMembershipStatus() == MembershipStatus.ACTIVE) {
-		 * spnMembershipStatus.setClassName("label label-success"); } else {
-		 * spnMembershipStatus.setClassName("label label-danger"); } }
-		 */
+		if (user.getUser().getMembershipStatus() != null) {
+			spnMembershipStatus.setInnerText(user.getUser()
+					.getMembershipStatus().name());
+			if (user.getUser().getMembershipStatus() == MembershipStatus.ACTIVE) {
+				spnMembershipStatus.setClassName("label label-success");
+			} else {
+				spnMembershipStatus.setClassName("label label-danger");
+			}
+		}
 		setUserImage(user.getUser().getRefId());
 	}
 
@@ -807,5 +811,9 @@ public class ProfileWidget extends Composite {
 
 	public HasClickHandlers getManagementActionsButton() {
 		return aMgmtActions;
+	}
+
+	public HasClickHandlers getPaySubscriptionButton() {
+		return aRenewSubscription;
 	}
 }

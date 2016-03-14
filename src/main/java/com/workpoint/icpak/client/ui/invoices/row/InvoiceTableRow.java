@@ -106,16 +106,22 @@ public class InvoiceTableRow extends RowWidget {
 		if (trx.getChargableAmnt() != null) {
 			divChargeAbleAmount.add(new InlineLabel(NumberUtils.CURRENCYFORMAT
 					.format(trx.getChargableAmnt())));
+		} else {
+			divChargeAbleAmount.add(new InlineLabel("N/A"));
 		}
 
 		if (trx.getTotalPreviousPayments() != null) {
 			divTotalPaid.add(new InlineLabel(NumberUtils.CURRENCYFORMAT
 					.format(trx.getTotalPreviousPayments())));
+		} else {
+			divTotalPaid.add(new InlineLabel("N/A"));
 		}
 
 		if (trx.getTotalBalance() != null) {
 			divBalance.add(new InlineLabel(NumberUtils.CURRENCYFORMAT
 					.format(trx.getTotalBalance())));
+		} else {
+			divBalance.add(new InlineLabel("N/A"));
 		}
 
 	}

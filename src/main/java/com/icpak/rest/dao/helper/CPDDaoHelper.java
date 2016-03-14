@@ -303,7 +303,7 @@ public class CPDDaoHelper {
 
 		if (balance > 100) {
 			isGenerate = false;
-			messages.add("Member account balance must be less than Ksh100.");
+			messages.add("Member account balance must be less than Ksh100");
 		}
 
 		/**
@@ -322,7 +322,7 @@ public class CPDDaoHelper {
 		 * 
 		 */
 		Date registrationDate = member.getRegistrationDate();
-		double cpdHours = dao.getCPDHours(memberRefId);
+		Double cpdHours = dao.getCPDHours(memberRefId);
 		if (registrationDate == null) {
 			isGenerate = false;
 			messages.add("Your registration date cannot be found in the portal, kindly request "
@@ -331,8 +331,8 @@ public class CPDDaoHelper {
 			Calendar regDate = Calendar.getInstance();
 			regDate.setTime(registrationDate);
 
-			Double noOfYears = ServerDateUtils.getYearsBetween(registrationDate,
-					new Date());
+			Double noOfYears = ServerDateUtils.getYearsBetween(
+					registrationDate, new Date());
 			if (noOfYears <= 0.0) {
 				// do nothing - all is well<=2
 			} else if (noOfYears <= 2) {
@@ -340,24 +340,24 @@ public class CPDDaoHelper {
 				if (cpdHours < 40) {
 					isGenerate = false;
 					messages.add("You have been a member for more than "
-							+ noOfYears + ". You have done " + cpdHours
-							+ "/40 expected hours.");
+							+ noOfYears.intValue() + " but you have done "
+							+ cpdHours.intValue() + "/40 expected hours.");
 				}
 			} else if (noOfYears <= 3) {
 				// >1 && <=2
 				if (cpdHours < 80) {
 					isGenerate = false;
 					messages.add("You have been a member for more than "
-							+ noOfYears + ". You have done " + cpdHours
-							+ "/80 expected hours.");
+							+ noOfYears.intValue() + "but you have done "
+							+ cpdHours.intValue() + "/80 expected hours.");
 				}
 			} else {
 				// >1 && <=2
 				if (cpdHours < 120) {
 					isGenerate = false;
 					messages.add("You have been a member for more than "
-							+ noOfYears.intValue() + "years but have done "
-							+ cpdHours
+							+ noOfYears.intValue()
+							+ " years but you have done " + cpdHours.intValue()
 							+ " cpd hours out of 120 expected hours.");
 				}
 			}

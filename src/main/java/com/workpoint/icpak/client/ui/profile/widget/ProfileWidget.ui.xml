@@ -213,6 +213,13 @@
 													</div>
 												</div>
 											</div>
+											<div ui:field="divPaySubscription">
+												<div class="row">
+													<d:ActionLink ui:field="aRenewSubscription"
+														styleName="btn btn-fill btn-gold">Pay Subscription
+													</d:ActionLink>
+												</div>
+											</div>
 											<hr />
 											<div ui:field="divErpSync">
 												<div class="row {style.erp-section}">

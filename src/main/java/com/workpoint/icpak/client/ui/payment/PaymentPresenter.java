@@ -17,6 +17,7 @@ import com.workpoint.icpak.shared.api.InvoiceResource;
 import com.workpoint.icpak.shared.model.CreditCardDto;
 import com.workpoint.icpak.shared.model.CreditCardResponse;
 import com.workpoint.icpak.shared.model.InvoiceDto;
+import com.workpoint.icpak.shared.model.TransactionDto;
 
 public class PaymentPresenter extends PresenterWidget<PaymentPresenter.MyView> {
 
@@ -40,6 +41,16 @@ public class PaymentPresenter extends PresenterWidget<PaymentPresenter.MyView> {
 		void bindTransation(InvoiceDto invoice);
 
 		void setAttachmentUploadContext(String applicationRefId, String type);
+
+		HasClickHandlers getStartUploadButton();
+
+		boolean isOfflineValid();
+
+		void showUploaderWidget(boolean b);
+
+		TransactionDto getOfflineTransactionoBject();
+
+		void bindOfflineTransaction(TransactionDto result);
 	}
 
 	private ResourceDelegate<CreditCardResource> creditCardResource;
@@ -95,6 +106,35 @@ public class PaymentPresenter extends PresenterWidget<PaymentPresenter.MyView> {
 								super.onFailure(caught);
 							}
 						}).checkPaymentStatus(invoice.getRefId());
+			}
+		});
+
+		getView().getStartUploadButton().addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				if (getView().isOfflineValid()) {
+					// Submit the transaction
+					fireEvent(new ProcessingEvent());
+					TransactionDto trx = getView()
+							.getOfflineTransactionoBject();
+					invoiceResource.withCallback(
+							new AbstractAsyncCallback<TransactionDto>() {
+								@Override
+								public void onSuccess(TransactionDto result) {
+									getView().showUploaderWidget(true);
+									getView().bindOfflineTransaction(result);
+									fireEvent(new ProcessingCompletedEvent());
+								}
+
+								@Override
+								public void onFailure(Throwable caught) {
+									fireEvent(new ProcessingCompletedEvent());
+									Window.alert("Something went wrong..Please report this to Administrator..");
+									super.onFailure(caught);
+								}
+							}).create(trx);
+
+				}
 			}
 		});
 	}

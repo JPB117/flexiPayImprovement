@@ -37,7 +37,7 @@
 					<a href="#mobile" aria-controls="home" role="tab" data-toggle="tab">Pay
 						with Mobile Money</a>
 				</li>
-				<li role="presentation" ui:field="liCards" class="hide">
+				<li role="presentation" ui:field="liCards">
 					<!-- <span class="fa fa-credit-card"></span> -->
 					<a href="#cards" aria-controls="home" role="tab" data-toggle="tab">Pay
 						with Credit/Debit/PrePaid Card</a>
@@ -111,6 +111,10 @@
 									10.Click on
 									<strong>Complete Payment</strong>
 									Button Below to finish your payment
+								</li>
+								<li>
+									<div class="alert alert-info">Please note that ICPAK confirmation message
+										might delay,but will eventually be processed.</div>
 								</li>
 							</ul>
 						</div>
@@ -224,7 +228,7 @@
 				</div>
 				<div role="tabpanel" class="tab-pane" id="offline">
 					<div class="row">
-						<div class="col-lg-8">
+						<div class="col-lg-12">
 							<p>1. Use either of the following offline modes of payment to
 								ICPAK;</p>
 							<p class="{style.left}" style="margin-bottom:10px;">
@@ -247,39 +251,76 @@
 							</p>
 
 
-							<div class="hide">
-								<p>2. Attach either of the following document to show proof of
-									payment:</p>
-								<div class="col-lg-8">
-									<div class="">
-										<div class="col-lg-6">
-											<div class="checkbox">
-												<label>
-													<g:CheckBox ui:field="aCheque" name="ICPAK Receipt">ICPAK
-														Receipt</g:CheckBox>
-												</label>
-											</div>
-										</div>
-										<div class="col-lg-6">
-											<div class="checkbox">
-												<label>
-													<g:CheckBox ui:field="aDepositSlip" name="Bank Deposit Slip">
-														Bank
-														Deposit Slip
-													</g:CheckBox>
-												</label>
+							<div>
+								<p>2. Enter the payment details below:</p>
+								<div class="col-lg-12">
+									<d:IssuesPanel ui:field="offlineIssues"
+										styleName="alert alert-danger hide"></d:IssuesPanel>
+								</div>
+								<div class="col-lg-6">
+									<div class="form-group">
+										<div class="row">
+											<div class="col-lg-12">
+												<div class="radio">
+													<label>
+														<g:RadioButton ui:field="aDirectBanking"
+															name="PaymentType">
+															Direct Banking(Cash/Cheque)</g:RadioButton>
+													</label>
+												</div>
+
+												<div class="radio">
+													<label>
+														<g:RadioButton ui:field="aBankTransfer"
+															name="PaymentType">
+															Bank
+															Transfer(EFT/RTGS/GPAY/Telegraphic Transfer)
+														</g:RadioButton>
+													</label>
+												</div>
 											</div>
 										</div>
 									</div>
+									<div class="form-group">
+										<div class="row">
+											<div class="col-lg-6">
+												<label>Transaction Date:</label>
+												<d:DateField ui:field="dtTrxDate"></d:DateField>
+											</div>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<div class="row">
+											<div class="col-lg-6">
+												<label>Reference Number:</label>
+												<d:TextField ui:field="txtRefNo" styleName="form-control"></d:TextField>
+											</div>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<div class="row">
+											<div class="col-lg-6">
+												<label>Amount:</label>
+												<d:TextField ui:field="txtOfflineAmount"
+													styleName="form-control"></d:TextField>
+											</div>
+										</div>
+									</div>
+
 								</div>
 								<div class="col-lg-8">
 									<up:Uploader ui:field="uploaderAttachment"
-										styleName="custom-file-input"></up:Uploader>
+										styleName="custom-file-input hide"></up:Uploader>
 								</div>
 								<div class="col-lg-12" style="margin-left: 0px; margin-top: 30px;">
-									<p> 3. Submit the attachments by clicking on the below button.</p>
-									<d:ActionLink ui:field="aCompleteDone" styleName="btn btn-gold btn-fill">
-										Submit Attachments</d:ActionLink>
+									<d:ActionLink ui:field="aStartUpload" styleName="btn btn-gold btn-fill">
+										Click Here to attach payment Advise</d:ActionLink>
+									<span ui:field="spnWait" class="hide">Please wait...</span>
+									<d:ActionLink ui:field="aCompleteDone"
+										styleName="btn btn-gold btn-fill hide">
+										Complete Payment</d:ActionLink>
 								</div>
 							</div>
 						</div>

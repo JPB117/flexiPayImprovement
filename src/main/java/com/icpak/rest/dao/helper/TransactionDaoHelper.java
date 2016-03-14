@@ -35,6 +35,7 @@ import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.PaymentMode;
 import com.workpoint.icpak.shared.model.PaymentStatus;
 import com.workpoint.icpak.shared.model.PaymentType;
+import com.workpoint.icpak.shared.model.TransactionDto;
 import com.workpoint.icpak.shared.model.events.EventDto;
 import com.workpoint.icpak.shared.trx.OldTransactionDto;
 
@@ -103,6 +104,25 @@ public class TransactionDaoHelper {
 		dao.save(trx);
 	}
 
+	public TransactionDto saveTransaction(TransactionDto trxDto) {
+		Transaction trx = new Transaction();
+		trx.setAccountNo(trxDto.getAccountNo());
+		trx.setDate(trxDto.getCreatedDate());
+		trx.setPaymentMode(trxDto.getPaymentMode());
+		trx.setTrxNumber(trxDto.getTrxNumber());
+		trx.setDescription(trxDto.getDescription());
+		trx.setInvoiceRef(trxDto.getInvoiceRef());
+		trx.setInvoiceAmount(trxDto.getInvoiceAmt());
+		trx.setChargableAmount(trxDto.getChargableAmnt());
+		// trx
+		if (trx.getAmount() != null) {
+			trx.setAmount(trxDto.getAmountPaid());
+		}
+		trx.setStatus(PaymentStatus.PAID);
+		Transaction savedTrx = (Transaction) dao.save(trx);
+		return savedTrx.toDto1();
+	}
+
 	public void receivePaymentUsingInvoiceNo(String paymentRef,
 			String businessNo, String accountNo, String paymentMode,
 			String trxNumber, String phoneNumber, String amount,
@@ -143,6 +163,7 @@ public class TransactionDaoHelper {
 			logger.info("Account No is NULL, send message to tell the customer to input the correct account No"
 					+ accountNo);
 			trx.setDescription("Unknown payment with no account number");
+			trx.setPaymentType(PaymentType.UNKNOWN);
 			saveTransactionFirst(trx);
 
 			Double amt = Double.valueOf(amount);
@@ -173,10 +194,11 @@ public class TransactionDaoHelper {
 				saveTransactionFirst(trx);
 
 				Double amt = Double.valueOf(amount);
-				String smsMessage = "Dear" + user.getFullName()
+				String smsMessage = "Dear " + user.getFullName()
 						+ ", Thank-you for your " + trx.getPaymentMode()
 						+ " payment of " + numberFormat.format(amt)
-						+ " for your member subscription. ";
+						+ " for your member subscription. "
+						+ "Your account will be updated in the next 72 hours. ";
 
 				String finalPhoneNumber = phoneNumber.replace("254", "0");
 				if (phoneNumber != null) {
@@ -191,6 +213,7 @@ public class TransactionDaoHelper {
 		if (invoiceDto == null) {
 			logger.info("No Invoice found for this transaction..");
 			trx.setDescription("Unknown payment with invalid account no");
+			trx.setPaymentType(PaymentType.UNKNOWN);
 			saveTransactionFirst(trx);
 
 			Double amt = Double.valueOf(amount);
@@ -343,11 +366,15 @@ public class TransactionDaoHelper {
 			if (balance > 0) {
 				logger.info("This invoice still has some balance:::"
 						+ trx.getAccountNo());
-				smsMessage = " Thank-you for your payment of "
+				smsMessage = " Thank-you for your "
+						+ trx.getPaymentType()
+						+ " payment of "
 						+ numberFormat.format(paidAmt)
 						+ " for "
 						+ booking.getEvent().getName()
-						+ ". To fully pay for this booking, kindly pay balance of "
+						+ ",Invoice No:"
+						+ invoiceDto.getDocumentNo()
+						+ ".To fully pay for this booking, kindly pay balance of "
 						+ numberFormat.format(balance) + ".";
 
 				String finalPhoneNumber = phoneNumber.replace("254", "0");
@@ -386,10 +413,14 @@ public class TransactionDaoHelper {
 				invoiceDao.save(invoiceSave);
 
 				for (Delegate delegate : booking.getDelegates()) {
-					smsMessage = "Dear " + delegate.getFullName() + ","
-							+ " Thank-you for booking the "
+					smsMessage = "Dear "
+							+ delegate.getFullName()
+							+ ","
+							+ " Thank-you for your "
+							+ trx.getPaymentType()
+							+ " payment for "
 							+ booking.getEvent().getName()
-							+ ".Your booking status is PAID. Your ERN No. is "
+							+ ".Your booking status is now PAID. Your ERN No. is "
 							+ delegate.getErn();
 
 					if (delegate.getMemberRefId() != null) {
@@ -414,9 +445,9 @@ public class TransactionDaoHelper {
 
 				logger.info("This invoice is fully paid:::"
 						+ trx.getAccountNo());
-				smsMessage = " Thank-you for your payment of "
-						+ numberFormat.format(paidAmt) + " for "
-						+ booking.getEvent().getName()
+				smsMessage = " Thank-you for your " + trx.getPaymentType()
+						+ " payment of " + numberFormat.format(paidAmt)
+						+ " for " + booking.getEvent().getName()
 						+ ". The booking status is PAID.";
 
 				String finalPhoneNumber = phoneNumber.replace("254", "0");
@@ -500,12 +531,6 @@ public class TransactionDaoHelper {
 
 				if (phoneNumber != null) {
 					smsIntergration.send(finalPhoneNumber, smsMessage);
-					logger.error("sending sms to :" + finalPhoneNumber);
-				}
-
-				if (application.getTelephone1() != null) {
-					smsIntergration.send(application.getTelephone1(),
-							smsMessage);
 					logger.error("sending sms to :" + finalPhoneNumber);
 				}
 

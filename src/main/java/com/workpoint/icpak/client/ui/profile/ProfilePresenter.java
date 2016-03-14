@@ -11,6 +11,7 @@ import com.google.gwt.event.dom.client.HasKeyDownHandlers;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -19,15 +20,18 @@ import com.gwtplatform.dispatch.rest.delegates.client.ResourceDelegate;
 import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.TabData;
 import com.gwtplatform.mvp.client.View;
+import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.annotations.TabInfo;
 import com.gwtplatform.mvp.client.annotations.UseGatekeeper;
+import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.gwtplatform.mvp.client.proxy.TabContentProxyPlace;
 import com.workpoint.icpak.client.place.NameTokens;
 import com.workpoint.icpak.client.security.CurrentUser;
 import com.workpoint.icpak.client.service.AbstractAsyncCallback;
 import com.workpoint.icpak.client.ui.AppManager;
+import com.workpoint.icpak.client.ui.OnOptionSelected;
 import com.workpoint.icpak.client.ui.OptionControl;
 import com.workpoint.icpak.client.ui.admin.TabDataExt;
 import com.workpoint.icpak.client.ui.events.AfterSaveEvent;
@@ -37,12 +41,15 @@ import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
 import com.workpoint.icpak.client.ui.events.ProcessingEvent;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
 import com.workpoint.icpak.client.ui.membership.form.MemberRegistrationForm;
+import com.workpoint.icpak.client.ui.payment.PaymentPresenter;
 import com.workpoint.icpak.client.ui.profile.accountancy.form.AccountancyRegistrationForm;
 import com.workpoint.icpak.client.ui.profile.education.form.EducationRegistrationForm;
+import com.workpoint.icpak.client.ui.profile.paysubscription.PaymentSubscription;
 import com.workpoint.icpak.client.ui.profile.specialization.form.SpecializationRegistrationForm;
 import com.workpoint.icpak.client.ui.profile.training.form.TrainingRegistrationForm;
 import com.workpoint.icpak.client.ui.profile.widget.ProfileWidget;
 import com.workpoint.icpak.client.ui.security.BasicMemberGateKeeper;
+import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.api.ApplicationFormResource;
 import com.workpoint.icpak.shared.api.CountriesResource;
 import com.workpoint.icpak.shared.api.MemberResource;
@@ -54,6 +61,7 @@ import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 import com.workpoint.icpak.shared.model.ApplicationFormSpecializationDto;
 import com.workpoint.icpak.shared.model.ApplicationFormTrainingDto;
 import com.workpoint.icpak.shared.model.Country;
+import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.MemberStanding;
 import com.workpoint.icpak.shared.model.UserDto;
 import com.workpoint.icpak.shared.model.auth.ApplicationStatus;
@@ -138,9 +146,19 @@ public class ProfilePresenter
 		HasKeyDownHandlers getPasswordTextField();
 
 		HasClickHandlers getSubmitPassword();
+
+		HasClickHandlers getPaySubscriptionButton();
+
+		void showPayForSubsPresenter(boolean show);
 	}
 
 	private final CurrentUser currentUser;
+
+	@Inject
+	PaymentPresenter paymentPresenter;
+
+	@ContentSlot
+	public static final Type<RevealContentHandler<?>> PAYMENTS_SLOT = new Type<RevealContentHandler<?>>();
 
 	@ProxyCodeSplit
 	@NameToken(NameTokens.profile)
@@ -195,6 +213,7 @@ public class ProfilePresenter
 
 	protected ApplicationStatus applicationStatus;
 	protected ApplicationFormHeaderDto applicationForm;
+	protected Double memberBalance;
 
 	@Override
 	protected void onBind() {
@@ -306,6 +325,39 @@ public class ProfilePresenter
 
 		getView().getPasswordTextField().addKeyDownHandler(
 				changePasswordKeyHandler);
+
+		getView().getPaySubscriptionButton().addClickHandler(
+				new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {
+						final PaymentSubscription subsPayment = new PaymentSubscription();
+						if (memberBalance != null) {
+							subsPayment.setCurrentBalance(memberBalance);
+						}
+						AppManager.showPopUp("Pay your Subscription",
+								subsPayment, new OnOptionSelected() {
+									@Override
+									public void onSelect(String name) {
+										// Proceed to pay-->
+										String amountToPay = subsPayment
+												.getAmountToPay();
+										if (amountToPay != null
+												&& !amountToPay.equals("")) {
+											InvoiceDto invoice = new InvoiceDto();
+											invoice.setAmount(Double
+													.valueOf(amountToPay));
+											invoice.setDocumentNo(AppContext
+													.getCurrentUser().getUser()
+													.getMemberNo());
+											paymentPresenter
+													.bindTransaction(invoice);
+											getView().showPayForSubsPresenter(
+													true);
+										}
+									}
+								}, "Proceed to Pay");
+					}
+				});
 
 	}
 
@@ -559,6 +611,7 @@ public class ProfilePresenter
 		// + ">>>IsCurrentUserEdit:::"
 		// + AppContext.isCurrentUserEventEdit());
 		loadData();
+		setInSlot(PAYMENTS_SLOT, paymentPresenter);
 	}
 
 	private void loadData() {
@@ -591,6 +644,7 @@ public class ProfilePresenter
 				new AbstractAsyncCallback<MemberStanding>() {
 					@Override
 					public void onSuccess(MemberStanding standing) {
+						memberBalance = standing.getMemberBalance();
 						getView().bindMemberStanding(standing);
 					}
 				}).getMemberStanding(getMemberId());

@@ -696,7 +696,7 @@ public class UsersDaoHelper {
 					+ currentUserDto);
 		}
 		logger.info("LogInHandlerexecut(): loggedInCookie=" + loggedInCookie);
-//		applicationFormDaoHelper.importMissingMembers(applicationFormDao.importMissingMembers());
+		// applicationFormDaoHelper.importMissingMembers(applicationFormDao.importMissingMembers());
 		assert action.getActionType() == null;
 		return new LogInResult(action.getActionType(), currentUserDto,
 				loggedInCookie);

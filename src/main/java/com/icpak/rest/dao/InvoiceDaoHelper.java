@@ -68,7 +68,11 @@ public class InvoiceDaoHelper {
 
 	public InvoiceDto checkInvoicePaymentStatus(String invoiceRef) {
 		List<InvoiceDto> dtos = dao.checkInvoicePaymentStatus(invoiceRef);
-		return dtos.get(0);
+		if (dtos.size() == 0) {
+			return null;
+		} else {
+			return dtos.get(0);
+		}
 	}
 
 	public InvoiceDto save(InvoiceDto dto) {

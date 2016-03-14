@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public enum PaymentType implements Serializable, Listable {
 	BOOKING("Booking Payments"), REGISTRATION("Registration Payments"), SUBSCRIPTION(
-			"Subscription Renewal Payments");
+			"Subscription Renewal Payments"), UNKNOWN("UnKnown Payments");
 	private String displayName;
 
 	PaymentType(String displayName) {

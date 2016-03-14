@@ -20,6 +20,27 @@
 			<g:HTMLPanel ui:field="divPasswordContent">
 				<password:PasswordWidget ui:field="panelPasswordWidget"></password:PasswordWidget>
 			</g:HTMLPanel>
+
+			<g:HTMLPanel ui:field="panelSubsPaymentsContainer"
+				styleName="hide panel widget">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="col-lg-12">
+							<h4>
+								<d:ActionLink ui:field="aBackToProfile">
+									<i class="fa fa-angle-double-left"></i>
+									Back to My Profile
+								</d:ActionLink>
+								/
+								Pay for member subscription
+							</h4>
+							<hr />
+						</div>
+						<g:HTMLPanel ui:field="panelSubsPayments">
+						</g:HTMLPanel>
+					</div>
+				</div>
+			</g:HTMLPanel>
 		</div>
 	</g:HTMLPanel>
 </ui:UiBinder>

@@ -11,6 +11,7 @@ import com.workpoint.icpak.client.ui.payment.widget.PaymentWidget;
 import com.workpoint.icpak.shared.model.CreditCardDto;
 import com.workpoint.icpak.shared.model.CreditCardResponse;
 import com.workpoint.icpak.shared.model.InvoiceDto;
+import com.workpoint.icpak.shared.model.TransactionDto;
 
 public class PaymentView extends ViewImpl implements PaymentPresenter.MyView {
 
@@ -72,7 +73,32 @@ public class PaymentView extends ViewImpl implements PaymentPresenter.MyView {
 
 	@Override
 	public void setAttachmentUploadContext(String applicationRefId, String type) {
-		panelPayment.setAttachmentUploadContext(applicationRefId, type);
+		// panelPayment.setAttachmentUploadContext(applicationRefId, type);
+	}
+
+	@Override
+	public HasClickHandlers getStartUploadButton() {
+		return panelPayment.getStartUploadButton();
+	}
+
+	@Override
+	public boolean isOfflineValid() {
+		return panelPayment.isOfflineValid();
+	}
+
+	@Override
+	public void showUploaderWidget(boolean show) {
+		panelPayment.showUploadPanel(show);
+	}
+
+	@Override
+	public TransactionDto getOfflineTransactionoBject() {
+		return panelPayment.getTransactionObject();
+	}
+
+	@Override
+	public void bindOfflineTransaction(TransactionDto result) {
+		panelPayment.bindOfflineTransaction(result);
 	}
 
 }

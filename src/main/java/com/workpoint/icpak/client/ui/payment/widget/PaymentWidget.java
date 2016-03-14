@@ -10,17 +10,20 @@ import java.util.List;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.CalendarUtil;
 import com.workpoint.icpak.client.model.UploadContext;
 import com.workpoint.icpak.client.model.UploadContext.UPLOADACTION;
 import com.workpoint.icpak.client.ui.component.ActionLink;
+import com.workpoint.icpak.client.ui.component.DateField;
 import com.workpoint.icpak.client.ui.component.DropDownList;
 import com.workpoint.icpak.client.ui.component.IssuesPanel;
 import com.workpoint.icpak.client.ui.component.TextField;
@@ -33,6 +36,8 @@ import com.workpoint.icpak.shared.model.CreditCardResponse;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.Listable;
 import com.workpoint.icpak.shared.model.PaymentStatus;
+import com.workpoint.icpak.shared.model.PaymentType;
+import com.workpoint.icpak.shared.model.TransactionDto;
 
 public class PaymentWidget extends Composite {
 
@@ -74,11 +79,25 @@ public class PaymentWidget extends Composite {
 	@UiField
 	LIElement liCards;
 	@UiField
-	CheckBox aDepositSlip;
+	RadioButton aBankTransfer;
 	@UiField
-	CheckBox aCheque;
+	ActionLink aStartUpload;
+	@UiField
+	SpanElement spnWait;
+	@UiField
+	ActionLink aCompleteDone;
 	@UiField
 	Uploader uploaderAttachment;
+	@UiField
+	IssuesPanel offlineIssues;
+	@UiField
+	TextField txtRefNo;
+	@UiField
+	DateField dtTrxDate;
+	@UiField
+	TextField txtOfflineAmount;
+	@UiField
+	RadioButton aDirectBanking;
 
 	private int totalYears = 10;
 	private int totalMonths = 12;
@@ -90,13 +109,27 @@ public class PaymentWidget extends Composite {
 	public PaymentWidget() {
 		initWidget(uiBinder.createAndBindUi(this));
 		setDate();
-		liCards.removeClassName("hide");
 
 		// InvoiceDto invoice = new InvoiceDto();
 		// invoice.setDocumentNo("INV0212");
 		// invoice.setAmount(10.0);
 		// setAmount("10");
 		// bindTransaction(invoice);
+
+		// aStartUpload.addClickHandler(new ClickHandler() {
+		// @Override
+		// public void onClick(ClickEvent event) {
+		// showUploadPanel(true);
+		// }
+		// });
+
+		aCompleteDone.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				panelSuccess.removeStyleName("hide");
+				PanelPayment.addStyleName("hide");
+			}
+		});
 	}
 
 	public class Month implements Listable {
@@ -125,6 +158,10 @@ public class PaymentWidget extends Composite {
 	private CreditCardDto creditCard = new CreditCardDto();
 
 	private String paymentRefId;
+
+	private InvoiceDto invoice;
+
+	private TransactionDto trx;
 
 	private void setDate() {
 		Date startDate = new Date();
@@ -221,7 +258,38 @@ public class PaymentWidget extends Composite {
 			issuesPanel.removeStyleName("hide");
 		}
 		return isValid;
+	}
 
+	public boolean isOfflineValid() {
+		boolean isValid = true;
+		offlineIssues.clear();
+		if (isNullOrEmpty(dtTrxDate.getValueDate())) {
+			isValid = false;
+			issuesPanel.addError("Transaction Date is required");
+		}
+
+		if (isNullOrEmpty(txtRefNo.getValue())) {
+			isValid = false;
+			issuesPanel.addError("Transaction Reference is required");
+		}
+
+		if (isNullOrEmpty(txtRefNo.getValue())) {
+			isValid = false;
+			issuesPanel.addError("Transaction Amount is required");
+		}
+
+		if (!aDirectBanking.getValue() && !aBankTransfer.getValue()) {
+			isValid = false;
+			issuesPanel.addError("Please select your payment type");
+		}
+
+		if (!isValid) {
+			offlineIssues.getElement().scrollIntoView();
+			offlineIssues.removeStyleName("hide");
+		} else {
+			offlineIssues.addStyleName("hide");
+		}
+		return isValid;
 	}
 
 	public HasClickHandlers getCardPayButton() {
@@ -233,6 +301,7 @@ public class PaymentWidget extends Composite {
 	}
 
 	public void bindTransaction(InvoiceDto invoice) {
+		this.invoice = invoice;
 		this.paymentRefId = invoice.getDocumentNo();
 		spnAccountNo.setInnerText(invoice.getDocumentNo());// MPESA Payment
 		spnAmount.setInnerText(NumberUtils.CURRENCYFORMAT.format(invoice
@@ -260,21 +329,64 @@ public class PaymentWidget extends Composite {
 			PanelPayment.addStyleName("hide");
 		} else {
 			spnMessage
-					.setInnerText("Transaction not received. Please wait until you receive a message from ICPAK then try again");
+					.setInnerText("Transaction not received. Please wait until you receive a message from ICPAK then try again.");
 			aCompleteMpesa.setText("Retry");
 		}
 	}
 
-	public void setAttachmentUploadContext(String applicationRefId, String type) {
+	public void setAttachmentUploadContext() {
 		UploadContext context = new UploadContext();
-		if (type.equals("application")) {
-			context.setContext("applicationRefId", applicationRefId);
-		} else if (type.equals("booking")) {
-			context.setContext("bookingRefId", applicationRefId);
-		}
-		context.setAction(UPLOADACTION.UPLOADIDPHOTOCOPY);
+		context.setContext("cpdRefId", getTransactionObject().getRefId());
+		context.setAction(UPLOADACTION.GENERICATTATCHMENTS);
 		context.setAccept(Arrays.asList("doc", "pdf", "jpg", "jpeg", "png",
 				"docx"));
 		uploaderAttachment.setContext(context);
+	}
+
+	public void showAwaitingToAttach(boolean show) {
+		if (show) {
+			aStartUpload.setVisible(false);
+			spnWait.removeClassName("hide");
+		} else {
+			spnWait.addClassName("hide");
+		}
+	}
+
+	public void showUploadPanel(boolean showForm) {
+		aStartUpload.setVisible(!showForm);
+		aCompleteDone.removeStyleName("hide");
+		if (showForm) {
+			uploaderAttachment.removeStyleName("hide");
+			setAttachmentUploadContext();
+		} else {
+			uploaderAttachment.addStyleName("hide");
+		}
+	}
+
+	public HasClickHandlers getStartUploadButton() {
+		return aStartUpload;
+	}
+
+	public HasClickHandlers getCompleteSubmitButton() {
+		return aCompleteDone;
+	}
+
+	public TransactionDto getTransactionObject() {
+		if (trx == null) {
+			trx = new TransactionDto();
+		}
+		String firstAccountChars = invoice.getDocumentNo().substring(0, 2);
+		if (!firstAccountChars.toUpperCase().equals("INV")) {
+			trx.setPaymentType(PaymentType.SUBSCRIPTION);
+		}
+		trx.setChargableAmnt(invoice.getInvoiceAmount());
+		trx.setAmountPaid(Double.valueOf(txtOfflineAmount.getValue()));
+		trx.setTrxNumber(txtRefNo.getValue());
+		trx.setCreatedDate(dtTrxDate.getValueDate());
+		return trx;
+	}
+
+	public void bindOfflineTransaction(TransactionDto trx) {
+		this.trx = trx;
 	}
 }
