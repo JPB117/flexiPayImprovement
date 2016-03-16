@@ -197,6 +197,12 @@ public class ApplicationsPresenter
 
 		getView().getTxtSearch().addKeyDownHandler(keyHandler);
 		getView().getaSearch().addClickHandler(searchClickHandler);
+		getView().getLstApplicationStatus().addValueChangeHandler(
+				applicationStatusValueChangeHandler);
+
+		getView().getLstPaymentStatus().addValueChangeHandler(
+				paymentStatusValueChangeHandler);
+		
 		getView().getPagingPanel().setLoader(new PagingLoader() {
 			@Override
 			public void onLoad(int offset, int limit) {
@@ -241,12 +247,6 @@ public class ApplicationsPresenter
 								}, "Save", "Cancel");
 					}
 				});
-
-		getView().getLstApplicationStatus().addValueChangeHandler(
-				applicationStatusValueChangeHandler);
-
-		getView().getLstPaymentStatus().addValueChangeHandler(
-				paymentStatusValueChangeHandler);
 
 	}
 

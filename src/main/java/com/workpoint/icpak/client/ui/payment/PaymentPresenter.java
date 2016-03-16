@@ -121,8 +121,8 @@ public class PaymentPresenter extends PresenterWidget<PaymentPresenter.MyView> {
 							new AbstractAsyncCallback<TransactionDto>() {
 								@Override
 								public void onSuccess(TransactionDto result) {
-									getView().showUploaderWidget(true);
 									getView().bindOfflineTransaction(result);
+									getView().showUploaderWidget(true);
 									fireEvent(new ProcessingCompletedEvent());
 								}
 
@@ -146,6 +146,10 @@ public class PaymentPresenter extends PresenterWidget<PaymentPresenter.MyView> {
 	public void bindTransaction(InvoiceDto invoice) {
 		this.invoice = invoice;
 		getView().bindTransation(invoice);
+	}
+
+	public void bindOfflineTransaction(TransactionDto trx) {
+		getView().bindOfflineTransaction(trx);
 	}
 
 	public void setAttachmentUploadContext(String applicationRefId, String type) {

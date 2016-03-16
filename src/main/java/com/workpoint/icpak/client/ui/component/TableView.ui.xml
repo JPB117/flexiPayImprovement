@@ -24,8 +24,23 @@
 				</div>
 			</g:HTMLPanel>
 
+			<g:HTMLPanel ui:field="panelPaymentMode">
+				<div class="col-md-3" ui:field="divPaymentMode">
+					<d:DropDownList ui:field="lstPaymentMode" styleName="form-control"></d:DropDownList>
+				</div>
+			</g:HTMLPanel>
+
+			<g:HTMLPanel ui:field="panelPaymentType">
+				<div class="col-md-3" ui:field="divPaymentType">
+					<d:DropDownList ui:field="lstPaymentType" styleName="form-control"></d:DropDownList>
+				</div>
+			</g:HTMLPanel>
+
 			<d:ActionLink ui:field="aSearch" styleName="btn btn-fill btn-default"
 				text="Search">
+			</d:ActionLink>
+
+			<d:ActionLink ui:field="aAdvancedSearch" title="Advanced Search">
 			</d:ActionLink>
 
 			<g:HTMLPanel ui:field="panelTowns">
@@ -61,7 +76,7 @@
 			</g:HTMLPanel>
 			<g:HTMLPanel styleName="pull-right action-buttons"
 				ui:field="panelActionButtons">
-				<d:ActionLink ui:field="aDownloadPdf">
+				<d:ActionLink ui:field="aDownloadPdf" styleName="hide">
 					<i class="fa fa-file-pdf-o"></i>
 					Download as Pdf
 				</d:ActionLink>

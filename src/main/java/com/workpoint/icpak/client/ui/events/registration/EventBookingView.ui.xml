@@ -183,8 +183,7 @@
 																<label for="contactPerson">
 																	Contact Email:
 																	<span ui:field="spnSpinner" class="hide">
-																		<span class="fa fa-spinner fa-pulse"
-																			style="margin-top:5px;"></span>
+																		<span class="fa fa-spinner fa-pulse" style="margin-top:5px;"></span>
 																		<span class="text-danger">Please wait while we validate this
 																			email</span>
 																	</span>
@@ -216,8 +215,7 @@
 												<div class="col-sm-12">
 													<div class="dropdown">
 														<a class="btn btn-primary btn-fill dropdown-toggle" id="dropdownMenu1"
-															data-toggle="dropdown" aria-expanded="true"
-															style="margin-bottom: 12px;">
+															data-toggle="dropdown" aria-expanded="true">
 															Add Delegate
 															<span class="caret"></span>
 														</a>
@@ -232,13 +230,13 @@
 													</div>
 												</div>
 
-												<div class="col-sm-12">
+												<div class="col-sm-12" style="margin-top:12px;">
 													<d:IssuesPanel ui:field="issuesPanelDelegate"
 														styleName="hide alert alert-danger"></d:IssuesPanel>
 												</div>
 												<br />
 
-												<div class="col-sm-12">
+												<div class="col-sm-12" style="margin-top:12px;">
 													<grid:AggregationGrid ui:field="tblDelegates"></grid:AggregationGrid>
 												</div>
 

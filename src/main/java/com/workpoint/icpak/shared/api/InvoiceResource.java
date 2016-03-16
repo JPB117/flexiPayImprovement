@@ -23,10 +23,27 @@ public interface InvoiceResource extends BaseResource {
 
 	@GET
 	@Path("/{memberId}/list")
-	public List<TransactionDto> getInvoices(
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<TransactionDto> getAllTransactions(
 			@PathParam("memberId") String memberId,
 			@QueryParam("offset") Integer offset,
-			@QueryParam("limit") Integer limit);
+			@QueryParam("limit") Integer limit,
+			@QueryParam("searchTerm") String searchTerm,
+			@QueryParam("paymentType") String paymentType,
+			@QueryParam("paymentMode") String paymentMode,
+			@QueryParam("fromDate") String fromDate,
+			@QueryParam("endDate") String endDate);
+
+	@GET
+	@Path("/{memberId}/count")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Integer getAllTransactionCount(
+			@PathParam("memberId") String memberId,
+			@QueryParam("searchTerm") String searchTerm,
+			@QueryParam("paymentType") String paymentType,
+			@QueryParam("paymentMode") String paymentMode,
+			@QueryParam("fromDate") String fromDate,
+			@QueryParam("endDate") String endDate);
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -50,4 +67,5 @@ public interface InvoiceResource extends BaseResource {
 	@GET
 	public InvoiceDto checkPaymentStatus(
 			@PathParam("invoiceref") String invoiceRef);
+
 }

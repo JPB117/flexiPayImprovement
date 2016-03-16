@@ -5,7 +5,7 @@
 	<g:HTMLPanel styleName="tr" ui:field="row">
 		<g:HTMLPanel styleName="td" ui:field="divDate">
 		</g:HTMLPanel>
-		<g:HTMLPanel styleName="td" ui:field="divPaymentMode">
+		<g:HTMLPanel styleName="td text-center" ui:field="divPaymentMode">
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divDescription">
 		</g:HTMLPanel>

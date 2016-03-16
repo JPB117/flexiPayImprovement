@@ -37,6 +37,9 @@
 	<!-- Specify the app entry point class. NOT REQUIRED com.gwtplatform.mvp.MvpWithEntryPoint -->
 	<!-- entry-point class='com.workpoint.icpak.client.GWTHT'/ -->
 
+	<property-provider name="user.agent"
+		generator="com.google.gwt.useragent.rebind.UserAgentPropertyGenerator" />
+
 	<!-- Specify the paths for translatable code -->
 	<source path='client' />
 	<source path='shared' />

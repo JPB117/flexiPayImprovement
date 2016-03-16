@@ -11,8 +11,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 import com.icpak.rest.dao.InvoiceDaoHelper;
 import com.icpak.rest.dao.helper.TransactionDaoHelper;
@@ -35,7 +33,7 @@ public class InvoiceResourceImpl implements InvoiceResource {
 	@GET
 	@Path("/count/{memberId}")
 	public Integer getCount(@PathParam("memberId") String memberId) {
-		return helper.getInvoiceCount(memberId);
+		return helper.getInvoiceCount();
 	}
 
 	@GET
@@ -61,11 +59,31 @@ public class InvoiceResourceImpl implements InvoiceResource {
 	@GET
 	@Path("/{memberId}/list")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<TransactionDto> getInvoices(
+	public List<TransactionDto> getAllTransactions(
 			@PathParam("memberId") String memberId,
 			@QueryParam("offset") Integer offset,
-			@QueryParam("limit") Integer limit) {
-		return helper.getAllInvoices(memberId, offset, limit);
+			@QueryParam("limit") Integer limit,
+			@QueryParam("searchTerm") String searchTerm,
+			@QueryParam("paymentType") String paymentType,
+			@QueryParam("paymentMode") String paymentMode,
+			@QueryParam("fromDate") String fromDate,
+			@QueryParam("endDate") String endDate) {
+		return helper.getAllTransactions(memberId, searchTerm, fromDate,
+				endDate, paymentType, paymentMode, offset, limit);
+	}
+
+	@GET
+	@Path("/{memberId}/count")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Integer getAllTransactionCount(
+			@PathParam("memberId") String memberId,
+			@QueryParam("searchTerm") String searchTerm,
+			@QueryParam("paymentType") String paymentType,
+			@QueryParam("paymentMode") String paymentMode,
+			@QueryParam("fromDate") String fromDate,
+			@QueryParam("endDate") String endDate) {
+		return helper.getTransactionCount(memberId, searchTerm, fromDate,
+				endDate, paymentType, paymentMode);
 	}
 
 	@Path("/{invoiceref}")

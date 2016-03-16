@@ -114,10 +114,7 @@ public class TransactionDaoHelper {
 		trx.setInvoiceRef(trxDto.getInvoiceRef());
 		trx.setInvoiceAmount(trxDto.getInvoiceAmt());
 		trx.setChargableAmount(trxDto.getChargableAmnt());
-		// trx
-		if (trx.getAmount() != null) {
-			trx.setAmount(trxDto.getAmountPaid());
-		}
+		trx.setAmount(trxDto.getAmountPaid());
 		trx.setStatus(PaymentStatus.PAID);
 		Transaction savedTrx = (Transaction) dao.save(trx);
 		return savedTrx.toDto1();

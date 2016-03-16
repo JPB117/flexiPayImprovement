@@ -2,16 +2,21 @@ package com.workpoint.icpak.client.ui.invoices;
 
 import java.util.List;
 
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.HasKeyDownHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
+import com.workpoint.icpak.client.ui.component.DropDownList;
 import com.workpoint.icpak.client.ui.component.PagingPanel;
 import com.workpoint.icpak.client.ui.invoices.header.TransactionsHeader;
 import com.workpoint.icpak.client.ui.invoices.row.InvoiceTableRow;
 import com.workpoint.icpak.client.ui.invoices.table.TransactionTable;
 import com.workpoint.icpak.shared.model.InvoiceSummary;
+import com.workpoint.icpak.shared.model.PaymentMode;
+import com.workpoint.icpak.shared.model.PaymentType;
 import com.workpoint.icpak.shared.model.TransactionDto;
 
 public class InvoiceListView extends ViewImpl implements
@@ -66,6 +71,36 @@ public class InvoiceListView extends ViewImpl implements
 			headerContainer.setValues(result.getPaid() + result.getUnpaid(),
 					result.getPaid(), result.getUnpaid());
 		}
+	}
+
+	@Override
+	public String getSearchText() {
+		return tblView.getSearchText();
+	}
+
+	@Override
+	public HasClickHandlers getAdvancedFilterButton() {
+		return tblView.getAdvancedFilterButton();
+	}
+
+	@Override
+	public HasClickHandlers getSearchButton() {
+		return tblView.getSearchButton();
+	}
+
+	@Override
+	public HasKeyDownHandlers getTxtSearch() {
+		return tblView.getTxtSearch();
+	}
+
+	@Override
+	public DropDownList<PaymentMode> getLstPaymentMode() {
+		return tblView.getLstPaymentMode();
+	}
+
+	@Override
+	public DropDownList<PaymentType> getLstPaymentType() {
+		return tblView.getLstPaymentType();
 	}
 
 }

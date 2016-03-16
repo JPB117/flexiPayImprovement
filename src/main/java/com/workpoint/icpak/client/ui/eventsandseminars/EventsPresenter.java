@@ -263,21 +263,16 @@ public class EventsPresenter extends
 		eventsDelegate.withCallback(new AbstractAsyncCallback<Integer>() {
 			@Override
 			public void onSuccess(Integer aCount) {
-				fireEvent(new ProcessingCompletedEvent());
-
 				PagingPanel panel = getView().getEventsPagingPanel();
 				panel.setTotal(aCount);
 				PagingConfig config = panel.getConfig();
-
 				loadEvents(config.getOffset(), config.getLimit(), searchTerm);
-				fireEvent(new ProcessingCompletedEvent());
 			}
 		}).getSearchCount(searchTerm);
 	}
 
 	protected void loadEvents(int offset, int limit, String searchTerm) {
 		fireEvent(new ProcessingEvent());
-
 		eventsDelegate.withCallback(
 				new AbstractAsyncCallback<List<EventDto>>() {
 					@Override

@@ -421,8 +421,10 @@ public class ApplicationFormDaoHelper {
 				if (nextRQAString != null) {
 					nextRQA = formatter2.parse(nextRQAString.toString());
 					subject = subject + " is Being Processed!";
-					action = " is now being processed. Please note that the next RQA meeting is on "
-							+ ServerDateUtils.format(nextRQA, formatter);
+					action = " is now being processed. Please note that the next Registration and Quality Assuarance"
+							+ " meeting is on "
+							+ ServerDateUtils.format(nextRQA, formatter)
+							+ " and you will be notified when the status changes.";
 				}
 				logger.info(action);
 

@@ -482,10 +482,12 @@ public class BookingsDao extends BaseDao {
 			} else {
 				sql = sql.concat(" and "
 						+ "(d.memberRegistrationNo like :searchTerm or "
-						+ "a.hotel like :searchTerm or "
 						+ "d.email like :searchTerm or "
 						+ "d.fullName like :searchTerm or "
-						+ "d.ern like :searchTerm)");
+						+ "d.ern like :searchTerm or "
+						+ "b.`E-mail` like :searchTerm or "
+						+ "b.company like :searchTerm or"
+						+ "b.Contact like :searchTerm)");
 			}
 		}
 

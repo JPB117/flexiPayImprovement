@@ -1,6 +1,7 @@
 package com.workpoint.icpak.shared.model;
 
 import java.util.Date;
+import java.util.List;
 
 public class TransactionDto extends SerializableObj {
 
@@ -8,6 +9,7 @@ public class TransactionDto extends SerializableObj {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private Long id;
 	private Date createdDate;
 	private PaymentMode paymentMode;
 	private PaymentType paymentType;
@@ -20,6 +22,7 @@ public class TransactionDto extends SerializableObj {
 	private Double amountPaid;
 	private Double totalBalance;
 	private String invoiceRef;
+	private List<AttachmentDto> allAttachment;
 
 	public TransactionDto() {
 	}
@@ -118,6 +121,22 @@ public class TransactionDto extends SerializableObj {
 
 	public void setInvoiceRef(String invoiceRef) {
 		this.invoiceRef = invoiceRef;
+	}
+
+	public List<AttachmentDto> getAllAttachment() {
+		return allAttachment;
+	}
+
+	public void setAllAttachment(List<AttachmentDto> allAttachment) {
+		this.allAttachment = allAttachment;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 }

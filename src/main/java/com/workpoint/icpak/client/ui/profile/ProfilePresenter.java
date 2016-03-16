@@ -15,7 +15,10 @@ import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.web.bindery.event.shared.EventBus;
+import com.gwtplatform.common.client.IndirectProvider;
+import com.gwtplatform.common.client.StandardProvider;
 import com.gwtplatform.dispatch.rest.delegates.client.ResourceDelegate;
 import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.TabData;
@@ -30,6 +33,7 @@ import com.gwtplatform.mvp.client.proxy.TabContentProxyPlace;
 import com.workpoint.icpak.client.place.NameTokens;
 import com.workpoint.icpak.client.security.CurrentUser;
 import com.workpoint.icpak.client.service.AbstractAsyncCallback;
+import com.workpoint.icpak.client.service.ServiceCallback;
 import com.workpoint.icpak.client.ui.AppManager;
 import com.workpoint.icpak.client.ui.OnOptionSelected;
 import com.workpoint.icpak.client.ui.OptionControl;
@@ -63,6 +67,8 @@ import com.workpoint.icpak.shared.model.ApplicationFormTrainingDto;
 import com.workpoint.icpak.shared.model.Country;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.MemberStanding;
+import com.workpoint.icpak.shared.model.PaymentType;
+import com.workpoint.icpak.shared.model.TransactionDto;
 import com.workpoint.icpak.shared.model.UserDto;
 import com.workpoint.icpak.shared.model.auth.ApplicationStatus;
 
@@ -154,8 +160,7 @@ public class ProfilePresenter
 
 	private final CurrentUser currentUser;
 
-	@Inject
-	PaymentPresenter paymentPresenter;
+	private IndirectProvider<PaymentPresenter> paymentFactory;
 
 	@ContentSlot
 	public static final Type<RevealContentHandler<?>> PAYMENTS_SLOT = new Type<RevealContentHandler<?>>();
@@ -196,8 +201,11 @@ public class ProfilePresenter
 			ResourceDelegate<ApplicationFormResource> applicationDelegate,
 			ResourceDelegate<MemberResource> memberDelegate,
 			ResourceDelegate<UsersResource> usersDelegate,
-			final CurrentUser currentUser) {
+			final CurrentUser currentUser,
+			Provider<PaymentPresenter> paymentProvider) {
 		super(eventBus, view, proxy, HomePresenter.SLOT_SetTabContent);
+		this.paymentFactory = new StandardProvider<PaymentPresenter>(
+				paymentProvider);
 		this.countriesResource = countriesResource;
 		this.applicationDelegate = applicationDelegate;
 		this.memberDelegate = memberDelegate;
@@ -343,14 +351,26 @@ public class ProfilePresenter
 												.getAmountToPay();
 										if (amountToPay != null
 												&& !amountToPay.equals("")) {
-											InvoiceDto invoice = new InvoiceDto();
+											final InvoiceDto invoice = new InvoiceDto();
 											invoice.setAmount(Double
 													.valueOf(amountToPay));
 											invoice.setDocumentNo(AppContext
 													.getCurrentUser().getUser()
 													.getMemberNo());
-											paymentPresenter
-													.bindTransaction(invoice);
+
+											paymentFactory
+													.get(new ServiceCallback<PaymentPresenter>() {
+														@Override
+														public void processResult(
+																PaymentPresenter result) {
+															result.bindTransaction(invoice);
+															result.bindOfflineTransaction(initTransaction());
+															setInSlot(
+																	PAYMENTS_SLOT,
+																	result);
+														}
+
+													});
 											getView().showPayForSubsPresenter(
 													true);
 										}
@@ -358,7 +378,14 @@ public class ProfilePresenter
 								}, "Proceed to Pay");
 					}
 				});
+	}
 
+	private TransactionDto initTransaction() {
+		TransactionDto trx = new TransactionDto();
+		trx.setDescription("Subscription payments for "
+				+ AppContext.getCurrentUser().getUser().getFullName());
+		trx.setPaymentType(PaymentType.SUBSCRIPTION);
+		return trx;
 	}
 
 	protected void saveApplication() {
@@ -611,7 +638,8 @@ public class ProfilePresenter
 		// + ">>>IsCurrentUserEdit:::"
 		// + AppContext.isCurrentUserEventEdit());
 		loadData();
-		setInSlot(PAYMENTS_SLOT, paymentPresenter);
+		getView().showPayForSubsPresenter(false);
+		setInSlot(PAYMENTS_SLOT, null);
 	}
 
 	private void loadData() {

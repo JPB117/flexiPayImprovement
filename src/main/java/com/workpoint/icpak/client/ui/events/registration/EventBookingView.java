@@ -142,6 +142,7 @@ public class EventBookingView extends ViewImpl implements
 
 	int counter = 0;
 	boolean isValid = true;
+	boolean isDelegateValid = true;
 
 	private List<LIElement> liElements = new ArrayList<LIElement>();
 	private List<PageElement> pageElements = new ArrayList<PageElement>();
@@ -379,8 +380,6 @@ public class EventBookingView extends ViewImpl implements
 		issuesPanel.clear();
 		issuesPanelDelegate.clear();
 
-		// Window.alert("Counter:"+counter);
-
 		if (counter == 0) {
 			if (isNullOrEmpty(txtCompanyName.getValue())) {
 				isValid = false;
@@ -421,29 +420,30 @@ public class EventBookingView extends ViewImpl implements
 				isValid = false;
 				issuesPanel.addError("E-Mail is required");
 			}
-		} else if (counter == 1) {
-			if (getDelegates().size() == 0) {
-				issuesPanel
-						.addError("You must enter at least 1 delegate for this event");
-				isValid = false;
-			}
-
-			// for(DelegateDto dto: getDelegates()){
-			// if(dto.getMember()==null){
-			// isValid = false;
-			// issuesPanel.addError("Member cannot be null!!");
-			// }
-			// }
-		}
+		} 
 
 		// show/hide isValid Panel
-		if (isValid) {
+		if (isValid && counter == 0) {
 			issuesPanel.addStyleName("hide");
 		} else {
 			issuesPanel.removeStyleName("hide");
 		}
 		return isValid;
+	}
 
+	public boolean isDelegateValid() {
+		if (getDelegates().size() == 0) {
+			issuesPanelDelegate
+					.addError("You must enter at least 1 delegate for this event");
+			isValid = false;
+		}
+		
+		if (isDelegateValid && counter == 1) {
+			issuesPanelDelegate.addStyleName("hide");
+		} else {
+			issuesPanelDelegate.removeStyleName("hide");
+		}
+		return isDelegateValid;
 	}
 
 	@Override

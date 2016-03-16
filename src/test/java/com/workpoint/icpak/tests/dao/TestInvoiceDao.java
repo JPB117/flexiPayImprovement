@@ -68,11 +68,16 @@ public class TestInvoiceDao extends AbstractDaoTest {
 		System.err.println(invoice.getDescription());
 	}
 
-	// @Test
+	@Test
 	public void getAllInvoices() {
-		List<TransactionDto> allTrxs = invoiceDao.getAllTransactions("ALL", 0,
-				10);
-		System.err.println("All Trx Count>>" + allTrxs.size());
+		List<TransactionDto> allTrxs = invoiceDao.getAllTransactions("ALL", "",
+				"2016-03-01 00:00:00", "2016-03-30 00:00:00", "BOOKING",
+				"MPESA", 0, 10000);
+		System.err.println("List Size>>" + allTrxs.size());
+		System.err.println("Database Count>>"
+				+ invoiceDao.getTransactionsCount("ALL", "",
+						"2016-03-01 00:00:00", "2016-03-30 00:00:00",
+						"BOOKING", "MPESA"));
 	}
 
 	// @Test
@@ -82,7 +87,7 @@ public class TestInvoiceDao extends AbstractDaoTest {
 		System.err.println(">>>>" + invoice.get(0).getStatus());
 	}
 
-	@Test
+	// @Test
 	public void testPayment() {
 		trxHelper.receivePaymentUsingInvoiceNo("DFAFDAFDADFA", "722722",
 				"fdafda", "MPESA", "DFAFDAFDADFA", "254729472421", "1000",

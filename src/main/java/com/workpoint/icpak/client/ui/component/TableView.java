@@ -8,6 +8,7 @@ import java.util.List;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasKeyDownHandlers;
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -19,7 +20,9 @@ import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Widget;
 import com.workpoint.icpak.client.ui.frontmember.model.MemberCategory;
 import com.workpoint.icpak.shared.model.Listable;
+import com.workpoint.icpak.shared.model.PaymentMode;
 import com.workpoint.icpak.shared.model.PaymentStatus;
+import com.workpoint.icpak.shared.model.PaymentType;
 import com.workpoint.icpak.shared.model.auth.ApplicationStatus;
 
 public class TableView extends Composite {
@@ -55,6 +58,9 @@ public class TableView extends Composite {
 	@UiField
 	ActionLink aSearch;
 	@UiField
+	ActionLink aAdvancedSearch;
+
+	@UiField
 	HTMLPanel panelSearch;
 	@UiField
 	HTMLPanel panelDates;
@@ -73,6 +79,11 @@ public class TableView extends Composite {
 	HTMLPanel panelPaymentStatus;
 
 	@UiField
+	HTMLPanel panelPaymentMode;
+	@UiField
+	HTMLPanel panelPaymentType;
+
+	@UiField
 	DropDownList<Towns> listTowns;
 	@UiField
 	DropDownList<MemberCategory> listMemberCategory;
@@ -81,6 +92,10 @@ public class TableView extends Composite {
 	DropDownList<ApplicationStatus> lstApplicationStatus;
 	@UiField
 	DropDownList<PaymentStatus> lstPaymentStatus;
+	@UiField
+	DropDownList<PaymentMode> lstPaymentMode;
+	@UiField
+	DropDownList<PaymentType> lstPaymentType;
 
 	@UiField
 	DivElement divTownList;
@@ -101,6 +116,7 @@ public class TableView extends Composite {
 		setTownListVisible(false);
 		setMemberCategoryVisible(false);
 		setApplicationAndPaymentVisible(false);
+		showFinanceFilters(false);
 		aSearch.addStyleName("hide");
 	}
 
@@ -111,6 +127,18 @@ public class TableView extends Composite {
 		} else {
 			panelPaymentStatus.setVisible(false);
 			panelApplicationStatus.setVisible(false);
+		}
+	}
+
+	public void showFinanceFilters(boolean show) {
+		if (show) {
+			panelPaymentMode.setVisible(true);
+			panelPaymentType.setVisible(true);
+			aAdvancedSearch.setVisible(true);
+		} else {
+			panelPaymentType.setVisible(false);
+			panelPaymentMode.setVisible(false);
+			aAdvancedSearch.setVisible(false);
 		}
 	}
 
@@ -481,6 +509,18 @@ public class TableView extends Composite {
 		public String getDisplayName() {
 			return townName;
 		}
-
 	}
+
+	public HasClickHandlers getAdvancedFilter() {
+		return aAdvancedSearch;
+	}
+
+	public DropDownList<PaymentMode> getLstPaymentMode() {
+		return lstPaymentMode;
+	}
+
+	public DropDownList<PaymentType> getLstPaymentType() {
+		return lstPaymentType;
+	}
+
 }

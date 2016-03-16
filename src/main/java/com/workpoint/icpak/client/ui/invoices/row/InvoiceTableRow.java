@@ -17,6 +17,7 @@ import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.RowWidget;
 import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.client.ui.util.NumberUtils;
+import com.workpoint.icpak.shared.model.AttachmentDto;
 import com.workpoint.icpak.shared.model.PaymentMode;
 import com.workpoint.icpak.shared.model.PaymentType;
 import com.workpoint.icpak.shared.model.TransactionDto;
@@ -62,23 +63,54 @@ public class InvoiceTableRow extends RowWidget {
 					.getCreatedDate())));
 		}
 		if (trx.getPaymentMode() != null) {
-
 			if (trx.getPaymentMode() == PaymentMode.MPESA) {
 				divPaymentMode.add(new HTML(
-						"<img src='img/Mpesa_Logo.png'></g:Image>"));
+						"<img src='img/Mpesa_Logo.png'></img>"));
 			} else if (trx.getPaymentMode() == PaymentMode.CARDS) {
 				divPaymentMode.add(new HTML(
-						"<img src='img/Visa_Logo.png'></g:Image>"));
+						"<img src='img/Visa_Logo.png'></img>"));
+			} else if (trx.getPaymentMode() == PaymentMode.BANKTRANSFER) {
+				divPaymentMode.add(new HTML(
+						"<span class='fa fa-university fa-2x'></span>"));
+			} else if (trx.getPaymentMode() == PaymentMode.DIRECTBANKING) {
+				divPaymentMode.add(new HTML(
+						"<span class='fa fa-money fa-2x'></span>"));
+			}
+		}
+		HTMLPanel panelAttachments = new HTMLPanel("");
+		if (trx.getAllAttachment() != null) {
+			for (final AttachmentDto attachment : trx.getAllAttachment()) {
+				final UploadContext ctx = new UploadContext("getreport");
+				ctx.setAction(UPLOADACTION.GETATTACHMENT);
+				ctx.setContext("refId", attachment.getRefId());
+
+				ActionLink link = new ActionLink(attachment.getAttachmentName());
+				link.addClickHandler(new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {
+						Window.open(ctx.toUrl(),
+								attachment.getAttachmentName(), "");
+					}
+				});
+				panelAttachments.add(link);
+
+				if (trx.getAllAttachment().size() > 1) {
+					panelAttachments.add(new InlineLabel(" | "));
+				}
 			}
 		}
 		if (trx.getDescription() != null) {
 			String desc = "";
-			if (trx.getPaymentMode() == PaymentMode.MPESA) {
+			if (trx.getPaymentMode() != PaymentMode.CARDS) {
 				desc = trx.getDescription() + "(" + trx.getTrxNumber() + ")";
+				desc = desc + "<br>";
 			} else {
 				desc = trx.getDescription();
 			}
-			divDescription.add(new InlineLabel(desc));
+			HTMLPanel combinedPanel = new HTMLPanel("");
+			combinedPanel.add(new HTML(desc));
+			combinedPanel.add(panelAttachments);
+			divDescription.add(combinedPanel);
 		}
 		if (trx.getAccountNo() != null && trx.getPaymentType() != null) {
 			aProforma.setText(trx.getAccountNo());

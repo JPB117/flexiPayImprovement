@@ -4,14 +4,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
@@ -54,6 +51,7 @@ import com.workpoint.icpak.shared.api.MemberResource;
 import com.workpoint.icpak.shared.model.Country;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.MemberDto;
+import com.workpoint.icpak.shared.model.TransactionDto;
 import com.workpoint.icpak.shared.model.events.AccommodationDto;
 import com.workpoint.icpak.shared.model.events.BookingDto;
 import com.workpoint.icpak.shared.model.events.EventDto;
@@ -103,6 +101,8 @@ public class EventBookingPresenter extends
 		void setEmailValid(boolean b, String string);
 
 		void showEmailValidating(boolean show);
+
+		boolean isDelegateValid();
 
 	}
 
@@ -200,33 +200,21 @@ public class EventBookingPresenter extends
 		getView().getANext().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				if (getView().isValid()) {
+				Window.alert(getView().isValid()+"");
+				if (getView().getCounter() == 0 && bookingId == null) {
+					checkExists(getView().getBooking().getContact().getEmail());
+				} else if (getView().isValid()) {
 					if (getView().getCounter() == 1) {
-						// User has selected a category and clicked submit
 						BookingDto dto = getView().getBooking();
 						dto.setEventRefId(eventId);
 						submit(dto);
 					} else if (getView().getCounter() == 3) {
 						getView().getANext().addStyleName("hide");
 						getView().getANext().setHref("#booking");
-					} else {
-						getView().next();
 					}
-
-				} else if (getView().getCounter() == 1) {
-					getView().addError("Kindly specify at least one delegate");
 				}
-
 			}
 		});
-		getView().getEmailTextBox().addValueChangeHandler(
-				new ValueChangeHandler<String>() {
-					@Override
-					public void onValueChange(ValueChangeEvent<String> event) {
-						String email = event.getValue();
-						checkExists(email);
-					}
-				});
 	}
 
 	protected void checkExists(String email) {
@@ -238,8 +226,10 @@ public class EventBookingPresenter extends
 				if (booking == null) {
 					bookingId = null;
 					getView().setEmailValid(true, "");
+					if (getView().isValid()) {
+						getView().next();
+					}
 				} else {
-					bookingId = booking.getRefId();
 					getView()
 							.setEmailValid(
 									false,
@@ -247,7 +237,8 @@ public class EventBookingPresenter extends
 											+ " We have resend the booking email to "
 											+ booking.getContact().getEmail()
 											+ " with instructions on how to ammend your booking.");
-					getInvoice(booking.getInvoiceRef(), false, true);
+					eventsResource.withoutCallback().bookings(eventId)
+							.sendAlert(bookingId);
 				}
 			}
 
@@ -255,10 +246,6 @@ public class EventBookingPresenter extends
 			public void onFailure(Throwable caught) {
 				super.onFailure(caught);
 				getView().showEmailValidating(false);
-				getView()
-						.setEmailValid(
-								false,
-								"More than one booking found in the system.Please contact itsupport@icpak.com to correct.");
 			}
 		}).delegates(eventId).checkExist(email.trim());
 
@@ -456,6 +443,9 @@ public class EventBookingPresenter extends
 
 		if (invoice.getDocumentNo() != null) {
 			paymentPresenter.bindTransaction(invoice);
+			TransactionDto trx = new TransactionDto();
+			trx.setDescription("Payment for " + event.getName());
+			paymentPresenter.bindOfflineTransaction(trx);
 		}
 
 	}

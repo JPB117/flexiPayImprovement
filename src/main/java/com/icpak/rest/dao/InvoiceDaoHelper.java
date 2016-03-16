@@ -109,15 +109,21 @@ public class InvoiceDaoHelper {
 		return invoice.toDto();
 	}
 
-	public List<TransactionDto> getAllInvoices(String memberId, Integer offset,
+	public List<TransactionDto> getAllTransactions(String memberId,
+			String searchTerm, String fromDate, String endDate,
+			String paymentType, String paymentMode, Integer offset,
 			Integer limit) {
 		List<TransactionDto> invoices = dao.getAllTransactions(memberId,
+				searchTerm, fromDate, endDate, paymentType, paymentMode,
 				offset, limit);
+		for (TransactionDto trx : invoices) {
+			trx.setAllAttachment(dao.getAllAttachment(trx.getId()));
+		}
 		return invoices;
 	}
 
 	public int getInvoiceCount() {
-		return getInvoiceCount(null);
+		return 0;
 	}
 
 	public byte[] generatePDFDocument(InvoiceDto invoice)
@@ -155,8 +161,11 @@ public class InvoiceDaoHelper {
 		return invoicePDF;
 	}
 
-	public Integer getInvoiceCount(String memberId) {
-		return dao.getInvoiceCount(memberId);
+	public Integer getTransactionCount(String memberId, String searchTerm,
+			String fromDate, String endDate, String paymentType,
+			String paymentMode) {
+		return dao.getTransactionsCount(memberId, searchTerm, fromDate,
+				endDate, paymentType, paymentMode);
 	}
 
 	public InvoiceSummary getSummary(String memberId) {

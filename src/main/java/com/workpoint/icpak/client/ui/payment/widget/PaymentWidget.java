@@ -35,6 +35,7 @@ import com.workpoint.icpak.shared.model.CreditCardDto;
 import com.workpoint.icpak.shared.model.CreditCardResponse;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.Listable;
+import com.workpoint.icpak.shared.model.PaymentMode;
 import com.workpoint.icpak.shared.model.PaymentStatus;
 import com.workpoint.icpak.shared.model.PaymentType;
 import com.workpoint.icpak.shared.model.TransactionDto;
@@ -265,22 +266,22 @@ public class PaymentWidget extends Composite {
 		offlineIssues.clear();
 		if (isNullOrEmpty(dtTrxDate.getValueDate())) {
 			isValid = false;
-			issuesPanel.addError("Transaction Date is required");
+			offlineIssues.addError("Transaction Date is required");
 		}
 
 		if (isNullOrEmpty(txtRefNo.getValue())) {
 			isValid = false;
-			issuesPanel.addError("Transaction Reference is required");
+			offlineIssues.addError("Transaction Reference is required");
 		}
 
 		if (isNullOrEmpty(txtRefNo.getValue())) {
 			isValid = false;
-			issuesPanel.addError("Transaction Amount is required");
+			offlineIssues.addError("Transaction Amount is required");
 		}
 
 		if (!aDirectBanking.getValue() && !aBankTransfer.getValue()) {
 			isValid = false;
-			issuesPanel.addError("Please select your payment type");
+			offlineIssues.addError("Please select your payment type");
 		}
 
 		if (!isValid) {
@@ -307,6 +308,8 @@ public class PaymentWidget extends Composite {
 		spnAmount.setInnerText(NumberUtils.CURRENCYFORMAT.format(invoice
 				.getInvoiceAmount()));
 		elCardAmount.setInnerText(NumberUtils.CURRENCYFORMAT.format(invoice
+				.getInvoiceAmount()));
+		txtOfflineAmount.setValue(NumberUtils.NUMBERFORMAT.format(invoice
 				.getInvoiceAmount()));
 	}
 
@@ -336,7 +339,8 @@ public class PaymentWidget extends Composite {
 
 	public void setAttachmentUploadContext() {
 		UploadContext context = new UploadContext();
-		context.setContext("cpdRefId", getTransactionObject().getRefId());
+		context.setContext("transactionRefId", getTransactionObject()
+				.getRefId());
 		context.setAction(UPLOADACTION.GENERICATTATCHMENTS);
 		context.setAccept(Arrays.asList("doc", "pdf", "jpg", "jpeg", "png",
 				"docx"));
@@ -382,7 +386,13 @@ public class PaymentWidget extends Composite {
 		trx.setChargableAmnt(invoice.getInvoiceAmount());
 		trx.setAmountPaid(Double.valueOf(txtOfflineAmount.getValue()));
 		trx.setTrxNumber(txtRefNo.getValue());
+		trx.setAccountNo(invoice.getDocumentNo());
 		trx.setCreatedDate(dtTrxDate.getValueDate());
+		if (aDirectBanking.getValue()) {
+			trx.setPaymentMode(PaymentMode.DIRECTBANKING);
+		} else if (aBankTransfer.getValue()) {
+			trx.setPaymentMode(PaymentMode.BANKTRANSFER);
+		}
 		return trx;
 	}
 

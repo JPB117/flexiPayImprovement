@@ -17,6 +17,6 @@ public enum PaymentMode implements Serializable, Listable {
 
 	@Override
 	public String getName() {
-		return displayName;
+		return name();
 	}
 }

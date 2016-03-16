@@ -1,0 +1,26 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d='urn:import:com.workpoint.icpak.client.ui.component'>
+	<ui:style>
+	
+	</ui:style>
+	<g:HTMLPanel>
+		<div class="form-group">
+			<div class="row">
+				<div class="col-xs-6">
+					<label for="from">From:</label>
+					<div id="dtFromDate" class="date">
+						<d:DateField ui:field="dtStartDate"></d:DateField>
+					</div>
+				</div>
+
+				<div class="col-xs-6">
+					<label for="endDate">End Date:</label>
+					<div id="datetimepicker1" class="date">
+						<d:DateField ui:field="dtEndDate"></d:DateField>
+					</div>
+				</div>
+			</div>
+		</div>
+	</g:HTMLPanel>
+</ui:UiBinder> 
