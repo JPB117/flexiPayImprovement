@@ -147,7 +147,7 @@ public class InvoiceDao extends BaseDao {
 			}
 			Date fromDateConverted = null;
 			try {
-				fromDateConverted = ServerDateUtils.FULLTIMESTAMP
+				fromDateConverted = ServerDateUtils.FULLHOURMINUTESTAMP
 						.parse(fromDate);
 			} catch (ParseException e) {
 				e.printStackTrace();
@@ -165,7 +165,8 @@ public class InvoiceDao extends BaseDao {
 			}
 			Date endDateConverted = null;
 			try {
-				endDateConverted = ServerDateUtils.FULLTIMESTAMP.parse(endDate);
+				endDateConverted = ServerDateUtils.FULLHOURMINUTESTAMP
+						.parse(endDate);
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}

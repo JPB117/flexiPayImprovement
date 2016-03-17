@@ -8,6 +8,9 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 import com.workpoint.icpak.client.ui.component.DateField;
+import com.workpoint.icpak.client.ui.component.DateTimeField;
+import com.workpoint.icpak.client.ui.util.DateRange;
+import com.workpoint.icpak.client.ui.util.DateUtils;
 
 public class AdvancedFilter extends Composite {
 
@@ -15,15 +18,27 @@ public class AdvancedFilter extends Composite {
 			.create(AdvancedFilterUiBinder.class);
 
 	@UiField
-	DateField dtStartDate;
+	DateTimeField dtStartTime;
+	@UiField
+	DateTimeField dtEndTime;
+
 	@UiField
 	DateField dtEndDate;
+	@UiField
+	DateField dtStartDate;
 
 	interface AdvancedFilterUiBinder extends UiBinder<Widget, AdvancedFilter> {
 	}
 
 	public AdvancedFilter() {
 		initWidget(uiBinder.createAndBindUi(this));
+
+		// dtStartDate.setValue(DateUtils.getDateByRange(DateRange.THISMONTH,
+		// false));
+		// dtEndDate.setValue(DateUtils.getDateByRange(DateRange.NOW, true));
+
+		dtStartTime.setValue(DateUtils.TIMEFORMAT12HR.parse("6:00 AM"));
+		dtEndTime.setValue(DateUtils.TIMEFORMAT12HR.parse("11:59 PM"));
 	}
 
 	public Date getStartDate() {
@@ -32,6 +47,14 @@ public class AdvancedFilter extends Composite {
 
 	public Date getEndDate() {
 		return dtEndDate.getValueDate();
+	}
+
+	public String getStartTime() {
+		return dtStartTime.getSelectedTime();
+	}
+
+	public String getEndTime() {
+		return dtEndTime.getSelectedTime();
 	}
 
 }

@@ -13,6 +13,7 @@ import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rest.delegates.client.ResourceDelegate;
@@ -42,6 +43,7 @@ import com.workpoint.icpak.client.ui.home.HomePresenter;
 import com.workpoint.icpak.client.ui.invoices.advanced.AdvancedFilter;
 import com.workpoint.icpak.client.ui.security.FinanceGateKeeper;
 import com.workpoint.icpak.client.ui.util.DateUtils;
+import com.workpoint.icpak.client.ui.util.StringUtils;
 import com.workpoint.icpak.shared.api.InvoiceResource;
 import com.workpoint.icpak.shared.model.InvoiceSummary;
 import com.workpoint.icpak.shared.model.PaymentMode;
@@ -72,6 +74,8 @@ public class InvoiceListPresenter
 		DropDownList<PaymentMode> getLstPaymentMode();
 
 		DropDownList<PaymentType> getLstPaymentType();
+
+		void setTransactionDateString(String dateString);
 	}
 
 	private int pageLimit = 20;
@@ -98,6 +102,8 @@ public class InvoiceListPresenter
 	private String fromDate = "";
 
 	private String endDate = "";
+	private String startTime = "00:00";
+	private String endTime = "00:00";
 
 	private String paymentType = "";
 
@@ -163,15 +169,34 @@ public class InvoiceListPresenter
 						@Override
 						public void onSelect(String name) {
 							Map<String, String> params = new HashMap<String, String>();
-							if (advancedFilter.getStartDate() == null) {
-								fromDate = DateUtils.FULLTIMESTAMP
+							if (advancedFilter.getStartDate() != null) {
+								fromDate = DateUtils.SHORTTIMESTAMP
 										.format(advancedFilter.getStartDate());
 							}
 
-							if (advancedFilter.getEndDate() == null) {
-								endDate = DateUtils.FULLTIMESTAMP
-										.format(advancedFilter.getStartDate());
+							if (advancedFilter.getEndDate() != null) {
+								endDate = DateUtils.SHORTTIMESTAMP
+										.format(advancedFilter.getEndDate());
 							}
+
+							if (!StringUtils.isNullOrEmpty(advancedFilter
+									.getStartTime())) {
+								startTime = DateUtils.TIMEFORMAT24HR
+										.format(DateUtils.TIMEFORMAT12HR
+												.parse(advancedFilter
+														.getStartTime()));
+							}
+							fromDate = fromDate + " " + startTime;
+
+							if (!StringUtils.isNullOrEmpty(advancedFilter
+									.getEndTime())) {
+								endTime = DateUtils.TIMEFORMAT24HR
+										.format(DateUtils.TIMEFORMAT12HR
+												.parse(advancedFilter
+														.getEndTime()));
+							}
+							endDate = endDate + " " + endTime;
+
 							params.put("paymentType", paymentType);
 							params.put("searchTerm", searchTerm);
 							params.put("paymentMode", paymentMode);
@@ -216,7 +241,7 @@ public class InvoiceListPresenter
 				paymentType = "";
 			}
 			Map<String, String> params = new HashMap<String, String>();
-			params.put("PaymentType", paymentType);
+			params.put("paymentType", paymentType);
 			params.put("searchTerm", searchTerm);
 			params.put("paymentMode", paymentMode);
 			params.put("fromDate", fromDate);
@@ -259,6 +284,18 @@ public class InvoiceListPresenter
 		paymentType = request.getParameter("paymentType", "");
 		paymentMode = request.getParameter("paymentMode", "");
 		searchTerm = request.getParameter("searchTerm", "");
+
+		if (!fromDate.equals("") && !endDate.equals("")) {
+			getView().setTransactionDateString(
+					DateUtils.MONTHTIME.format(DateUtils.FULLHOURMINUTESTAMP
+							.parse(fromDate))
+							+ " to "
+							+ DateUtils.MONTHTIME
+									.format(DateUtils.FULLHOURMINUTESTAMP
+											.parse(endDate)));
+		} else {
+			getView().setTransactionDateString("All dates");
+		}
 
 		loadData();
 	}

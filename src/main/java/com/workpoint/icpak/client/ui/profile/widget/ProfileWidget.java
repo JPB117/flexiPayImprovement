@@ -345,7 +345,8 @@ public class ProfileWidget extends Composite {
 				aSubmit.addStyleName("hide");
 
 			}
-		} else if (isCurrentUserAdmin) {
+		} else if (isCurrentUserAdmin
+				|| AppContext.isCurrentUserApplicationsEdit()) {
 			bindApplicationAndPaymentStatus(applicationStatus, paymentStatus);
 			aSubmit.addStyleName("hide");
 			aPayLink.addStyleName("hide");

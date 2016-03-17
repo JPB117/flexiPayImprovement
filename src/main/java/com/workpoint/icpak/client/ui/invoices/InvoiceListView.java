@@ -2,6 +2,7 @@ package com.workpoint.icpak.client.ui.invoices;
 
 import java.util.List;
 
+import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasKeyDownHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -28,6 +29,8 @@ public class InvoiceListView extends ViewImpl implements
 	TransactionTable tblView;
 	@UiField
 	TransactionsHeader headerContainer;
+	@UiField
+	SpanElement spnDates;
 
 	public interface Binder extends UiBinder<Widget, InvoiceListView> {
 	}
@@ -101,6 +104,10 @@ public class InvoiceListView extends ViewImpl implements
 	@Override
 	public DropDownList<PaymentType> getLstPaymentType() {
 		return tblView.getLstPaymentType();
+	}
+
+	public void setTransactionDateString(String dateString) {
+		spnDates.setInnerText(dateString);
 	}
 
 }

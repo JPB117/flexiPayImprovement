@@ -70,11 +70,13 @@ public class InvoiceTableRow extends RowWidget {
 				divPaymentMode.add(new HTML(
 						"<img src='img/Visa_Logo.png'></img>"));
 			} else if (trx.getPaymentMode() == PaymentMode.BANKTRANSFER) {
-				divPaymentMode.add(new HTML(
-						"<span class='fa fa-university fa-2x'></span>"));
+				divPaymentMode
+						.add(new HTML(
+								"<span class='label label-fill label-info'>BANK TRANSFER</span>"));
 			} else if (trx.getPaymentMode() == PaymentMode.DIRECTBANKING) {
-				divPaymentMode.add(new HTML(
-						"<span class='fa fa-money fa-2x'></span>"));
+				divPaymentMode
+						.add(new HTML(
+								"<span class='label label-fill label-default'>DIRECT BANKING</span>"));
 			}
 		}
 		HTMLPanel panelAttachments = new HTMLPanel("");
@@ -112,22 +114,29 @@ public class InvoiceTableRow extends RowWidget {
 			combinedPanel.add(panelAttachments);
 			divDescription.add(combinedPanel);
 		}
-		if (trx.getAccountNo() != null && trx.getPaymentType() != null) {
+		if (trx.getAccountNo() != null) {
 			aProforma.setText(trx.getAccountNo());
 
-			aProforma.addClickHandler(new ClickHandler() {
-				@Override
-				public void onClick(ClickEvent event) {
-					UploadContext ctx = new UploadContext("getreport");
-					if (trx.getPaymentType() == PaymentType.BOOKING) {
-						ctx.setContext("bookingRefId", trx.getInvoiceRef());
-					} else if ((trx.getPaymentType() == PaymentType.REGISTRATION)) {
-						ctx.setContext("applicationRefId", trx.getInvoiceRef());
-					}
-					ctx.setAction(UPLOADACTION.GETPROFORMA);
-					Window.open(ctx.toUrl(), "Get Proforma", null);
+			if (trx.getPaymentType() != null) {
+				if (trx.getPaymentType() == PaymentType.BOOKING
+						|| trx.getPaymentType() == PaymentType.REGISTRATION) {
+					aProforma.addClickHandler(new ClickHandler() {
+						@Override
+						public void onClick(ClickEvent event) {
+							UploadContext ctx = new UploadContext("getreport");
+							if (trx.getPaymentType() == PaymentType.BOOKING) {
+								ctx.setContext("bookingRefId",
+										trx.getInvoiceRef());
+							} else if ((trx.getPaymentType() == PaymentType.REGISTRATION)) {
+								ctx.setContext("applicationRefId",
+										trx.getInvoiceRef());
+							}
+							ctx.setAction(UPLOADACTION.GETPROFORMA);
+							Window.open(ctx.toUrl(), "Get Proforma", null);
+						}
+					});
 				}
-			});
+			}
 		}
 
 		if (trx.getAmountPaid() != null) {

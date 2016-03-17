@@ -15,7 +15,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.CalendarUtil;
 import com.workpoint.icpak.client.ui.util.DateUtils;
 
-public class DateField extends Composite {
+public class DateTimeField extends Composite {
 
 	@UiField
 	TextField txtDate;
@@ -23,13 +23,13 @@ public class DateField extends Composite {
 	@UiField
 	HTMLPanel panelContainer;
 
-	private static DateFieldUiBinder uiBinder = GWT
-			.create(DateFieldUiBinder.class);
+	private static DateTimeFieldUiBinder uiBinder = GWT
+			.create(DateTimeFieldUiBinder.class);
 
-	interface DateFieldUiBinder extends UiBinder<Widget, DateField> {
+	interface DateTimeFieldUiBinder extends UiBinder<Widget, DateTimeField> {
 	}
 
-	public DateField() {
+	public DateTimeField() {
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 
@@ -40,6 +40,10 @@ public class DateField extends Composite {
 			return null;
 		}
 		return DATEFORMAT_SYS.parse(dateStr);
+	}
+
+	public String getSelectedTime() {
+		return txtDate.getValue();
 	}
 
 	public void setValue(Date date) {
@@ -112,19 +116,17 @@ public class DateField extends Composite {
 	}
 
 	public static native void initCollapsable(String maxDate)/*-{
-																var ToEndDate = new Date();
-																$wnd.jQuery(".datepicker").datetimepicker({
-																icons: {
-																time: "fa fa-clock-o",
-																date: "fa fa-calendar",
-																up: "fa fa-arrow-up",
-																down: "fa fa-arrow-down",
-																previous: 'fa fa-chevron-left',
-																next: 'fa fa-chevron-right',
-																},
-																format: 'YYYY-MM-DD',
-																maxDate:maxDate,
-																useCurrent:false
+																$wnd.jQuery(".datepicker1").datetimepicker({
+																	format: 'LT',
+																	icons: {
+																			time: "fa fa-clock-o",
+																			date: "fa fa-calendar",
+																			up: "fa fa-arrow-up",
+																			down: "fa fa-arrow-down",
+																			previous: 'fa fa-chevron-left',
+																			next: 'fa fa-chevron-right',
+																			}
 																});
 																}-*/;
+
 }

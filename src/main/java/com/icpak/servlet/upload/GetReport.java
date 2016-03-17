@@ -357,7 +357,8 @@ public class GetReport extends HttpServlet {
 		values.put("endingDate",
 				formatter.format(lastStatement.getPostingDate()));
 		values.put("memberAddress",
-				user.getAddress() + " " + user.getPostalCode());
+				(user.getAddress() == null ? "" : user.getAddress()) + " "
+						+ user.getPostalCode());
 		values.put("memberLocation", user.getCity());
 		values.put("memberNo", user.getMemberNo());
 		values.put("memberNames", user.getFullName());
@@ -471,7 +472,8 @@ public class GetReport extends HttpServlet {
 		String refNo = cert.getId() + "";// memberDao.getGoodStandingCertDocNumber(cert.getId());
 
 		values.put("refNo", cert.getId());
-		values.put("letterDate", ServerDateUtils.HALFDATEFORMAT.format(new Date()));
+		values.put("letterDate",
+				ServerDateUtils.HALFDATEFORMAT.format(new Date()));
 		values.put("memberName", user.toDto().getFullName().toUpperCase());
 		values.put("smallName", user.toDto().getFullName());
 		values.put("memberNo", member.getMemberNo());

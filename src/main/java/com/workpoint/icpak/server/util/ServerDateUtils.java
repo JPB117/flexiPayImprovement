@@ -18,6 +18,7 @@ public class ServerDateUtils {
 	static String Time = "hh:mm a";
 	static String MonthTime = "MMM d, hh:mm a";
 	static String shortTimeStamp = "yyyy-MM-dd";
+	static String fullHourMinuteStamp = "yyyy-MM-dd hh:mm";
 	static String fullTimeStamp = "yyyy-MM-dd hh:mm:ss";
 
 	public static final SimpleDateFormat CREATEDFORMAT = getFormat(createdpattern);
@@ -34,6 +35,7 @@ public class ServerDateUtils {
 	public static final SimpleDateFormat MONTHTIME = getFormat(MonthTime);
 	public static final SimpleDateFormat MONTHFORMAT = getFormat(monthPattern);
 	public static final SimpleDateFormat MONTHONLYFORMAT = getFormat(monthOnlyPattern);
+	public static final SimpleDateFormat FULLHOURMINUTESTAMP = getFormat(fullHourMinuteStamp);
 	public static final SimpleDateFormat FULLTIMESTAMP = getFormat(fullTimeStamp);
 
 	static long minInMillis = 60 * 1000;
@@ -102,7 +104,7 @@ public class ServerDateUtils {
 		if (date == null || date.isEmpty()) {
 			return null;
 		}
-		
+
 		try {
 			return formatter.parse(date);
 		} catch (Exception e) {
