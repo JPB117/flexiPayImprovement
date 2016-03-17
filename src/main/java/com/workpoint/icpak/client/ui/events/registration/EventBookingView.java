@@ -139,6 +139,8 @@ public class EventBookingView extends ViewImpl implements
 	ActionLink aBackToDelegates;
 	@UiField
 	SpanElement spnSpinner;
+	@UiField
+	Anchor aBrowseOthers;
 
 	int counter = 0;
 	boolean isValid = true;
@@ -420,7 +422,7 @@ public class EventBookingView extends ViewImpl implements
 				isValid = false;
 				issuesPanel.addError("E-Mail is required");
 			}
-		} 
+		}
 
 		// show/hide isValid Panel
 		if (isValid && counter == 0) {
@@ -435,14 +437,16 @@ public class EventBookingView extends ViewImpl implements
 		if (getDelegates().size() == 0) {
 			issuesPanelDelegate
 					.addError("You must enter at least 1 delegate for this event");
-			isValid = false;
+			isDelegateValid = false;
+		} else {
+			isDelegateValid = true;
 		}
-		
-		if (isDelegateValid && counter == 1) {
+		if (isDelegateValid) {
 			issuesPanelDelegate.addStyleName("hide");
 		} else {
 			issuesPanelDelegate.removeStyleName("hide");
 		}
+
 		return isDelegateValid;
 	}
 
@@ -733,5 +737,14 @@ public class EventBookingView extends ViewImpl implements
 			spnSpinner.addClassName("hide");
 			aNext.removeStyleName("hide");
 		}
+	}
+
+	public Anchor browseOthersEventsButton() {
+		return aBrowseOthers;
+	}
+
+	@Override
+	public void scrollToPaymentsTop() {
+		panelPayment.getElement().scrollIntoView();
 	}
 }

@@ -31,6 +31,7 @@ import com.itextpdf.text.DocumentException;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.InvoiceLineDto;
 import com.workpoint.icpak.shared.model.InvoiceSummary;
+import com.workpoint.icpak.shared.model.PaymentMode;
 import com.workpoint.icpak.shared.model.TransactionDto;
 
 @Transactional
@@ -117,7 +118,12 @@ public class InvoiceDaoHelper {
 				searchTerm, fromDate, endDate, paymentType, paymentMode,
 				offset, limit);
 		for (TransactionDto trx : invoices) {
-			trx.setAllAttachment(dao.getAllAttachment(trx.getId()));
+			if (trx.getPaymentMode() != null) {
+				if (trx.getPaymentMode() == PaymentMode.BANKTRANSFER
+						|| trx.getPaymentMode() == PaymentMode.DIRECTBANKING) {
+					trx.setAllAttachment(dao.getAllAttachment(trx.getId()));
+				}
+			}
 		}
 		return invoices;
 	}

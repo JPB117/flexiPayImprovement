@@ -26,7 +26,8 @@
 			<br />
 			<div class="alert alert-success" ui:field="panelMessage">
 				<i class="icon icon-ok"></i>
-				Thank-you, Your payment has been received.
+				Thank-you for your payment. We will be processed within the next 72
+				hours.
 			</div>
 		</g:HTMLPanel>
 
@@ -144,7 +145,7 @@
 							<br />
 							<div class="form-group">
 								<div class="row">
-									<div class="col-lg-7">
+									<div class="col-lg-9">
 										<div class="alert alert-success">
 											Amount to pay:
 											<span ui:field="elCardAmount" style="font-weight:bold"></span>

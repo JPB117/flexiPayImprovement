@@ -104,6 +104,10 @@ public class EventBookingPresenter extends
 
 		boolean isDelegateValid();
 
+		Anchor browseOthersEventsButton();
+
+		void scrollToPaymentsTop();
+
 	}
 
 	@ProxyCodeSplit
@@ -200,18 +204,47 @@ public class EventBookingPresenter extends
 		getView().getANext().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				Window.alert(getView().isValid()+"");
-				if (getView().getCounter() == 0 && bookingId == null) {
-					checkExists(getView().getBooking().getContact().getEmail());
-				} else if (getView().isValid()) {
-					if (getView().getCounter() == 1) {
-						BookingDto dto = getView().getBooking();
-						dto.setEventRefId(eventId);
-						submit(dto);
-					} else if (getView().getCounter() == 3) {
-						getView().getANext().addStyleName("hide");
-						getView().getANext().setHref("#booking");
+				// Window.alert(getView().isValid() + "");
+
+				// Are you editing this booking?
+				if (bookingId != null) {
+					if (getView().getCounter() == 0) {
+						if (getView().isValid()) {
+							getView().next();
+						}
+					} else if (getView().getCounter() == 1) {
+						if (getView().isDelegateValid()) {
+							BookingDto dto = getView().getBooking();
+							dto.setEventRefId(eventId);
+							submit(dto);
+						}
 					}
+				} else {
+					// We are creating a new booking
+					if (getView().getCounter() == 0) {
+						checkExists(getView().getBooking().getContact()
+								.getEmail());
+					} else if (getView().getCounter() == 1) {
+						if (getView().isDelegateValid()) {
+							BookingDto dto = getView().getBooking();
+							dto.setEventRefId(eventId);
+							submit(dto);
+						}
+					}
+				}
+
+				// If counter is 2 - Take me to my Payments
+				if (getView().getCounter() == 2) {
+					getView().next();
+				}
+
+				// If counter is 3 - Take me to my bookings
+				if (getView().getCounter() == 3) {
+					getView().getANext().addStyleName("hide");
+					// getView().getANext().setHref("#booking");
+					getView().browseOthersEventsButton()
+							.removeStyleName("hide");
+					getView().scrollToPaymentsTop();
 				}
 			}
 		});
@@ -224,7 +257,6 @@ public class EventBookingPresenter extends
 			public void onSuccess(BookingDto booking) {
 				getView().showEmailValidating(false);
 				if (booking == null) {
-					bookingId = null;
 					getView().setEmailValid(true, "");
 					if (getView().isValid()) {
 						getView().next();
@@ -238,7 +270,7 @@ public class EventBookingPresenter extends
 											+ booking.getContact().getEmail()
 											+ " with instructions on how to ammend your booking.");
 					eventsResource.withoutCallback().bookings(eventId)
-							.sendAlert(bookingId);
+							.sendAlert(booking.getRefId());
 				}
 			}
 
@@ -276,7 +308,7 @@ public class EventBookingPresenter extends
 	}
 
 	protected void bindBooking(final BookingDto booking) {
-		bookingId = booking.getRefId();
+		// bookingId = booking.getRefId();
 		getView().bindBooking(booking);
 		getInvoice(booking.getInvoiceRef());
 
@@ -350,7 +382,6 @@ public class EventBookingPresenter extends
 
 		if (bookingId != null) {
 			getView().next();
-			getView().setActivePage(1);
 			eventsResource
 					.withCallback(new AbstractAsyncCallback<BookingDto>() {
 						@Override

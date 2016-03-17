@@ -131,7 +131,7 @@ public class InvoiceListPresenter
 				params.put("fromDate", fromDate);
 				params.put("endDate", endDate);
 				PlaceRequest placeRequest = new PlaceRequest.Builder()
-						.nameToken(NameTokens.members).with(params).build();
+						.nameToken(NameTokens.invoices).with(params).build();
 				placeManager.revealPlace(placeRequest);
 			}
 		}
@@ -150,7 +150,7 @@ public class InvoiceListPresenter
 			params.put("endDate", endDate);
 
 			PlaceRequest placeRequest = new PlaceRequest.Builder()
-					.nameToken(NameTokens.members).with(params).build();
+					.nameToken(NameTokens.invoices).with(params).build();
 			placeManager.revealPlace(placeRequest);
 		}
 	};
@@ -178,8 +178,8 @@ public class InvoiceListPresenter
 							params.put("fromDate", fromDate);
 							params.put("endDate", endDate);
 							PlaceRequest placeRequest = new PlaceRequest.Builder()
-									.nameToken(NameTokens.members).with(params)
-									.build();
+									.nameToken(NameTokens.invoices)
+									.with(params).build();
 							placeManager.revealPlace(placeRequest);
 						}
 					}, "Apply");
@@ -190,7 +190,7 @@ public class InvoiceListPresenter
 		@Override
 		public void onValueChange(ValueChangeEvent<PaymentMode> event) {
 			if (event.getValue() != null) {
-				paymentMode = event.getValue().getDisplayName();
+				paymentMode = event.getValue().getName();
 			} else {
 				paymentMode = "";
 			}

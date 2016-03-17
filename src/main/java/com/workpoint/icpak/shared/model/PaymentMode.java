@@ -3,7 +3,7 @@ package com.workpoint.icpak.shared.model;
 import java.io.Serializable;
 
 public enum PaymentMode implements Serializable, Listable {
-	MPESA("M-Pesa"), CARDS("Cards"), CHEQUE("Cheque"), DIRECTBANKING(
+	MPESA("M-Pesa"), CARDS("Cards"), DIRECTBANKING(
 			"Direct Banking"), BANKTRANSFER("Bank Transfer");
 	private String displayName;
 

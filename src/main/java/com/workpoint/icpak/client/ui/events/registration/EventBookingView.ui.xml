@@ -281,9 +281,13 @@
 												</d:ActionLink>
 
 												<g:Anchor
-													styleName='btn btn-next btn-fill btn-gold btn-wd
-										btn-sm hide'
+													styleName='btn btn-next btn-fill btn-gold btn-wd btn-sm hide'
 													ui:field="aNext">Proceed
+												</g:Anchor>
+
+												<g:Anchor
+													styleName='btn btn-next btn-fill btn-gold btn-wd btn-sm hide'
+													ui:field="aBrowseOthers" href="https://icpak.com/events">Browse other events
 												</g:Anchor>
 											</div>
 											<div class="pull-left">
