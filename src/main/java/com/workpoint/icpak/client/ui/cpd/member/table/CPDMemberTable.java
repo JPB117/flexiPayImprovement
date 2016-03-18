@@ -34,6 +34,7 @@ public class CPDMemberTable extends Composite {
 		initWidget(uiBinder.createAndBindUi(this));
 		tblView.setSearchSectionVisible(true);
 		tblView.setDatesVisible(true);
+		tblView.getDownloadPdf().removeStyleName("hide");
 		createHeader();
 	}
 
