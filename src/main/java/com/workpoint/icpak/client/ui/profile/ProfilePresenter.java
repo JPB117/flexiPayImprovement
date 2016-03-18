@@ -668,12 +668,14 @@ public class ProfilePresenter
 	}
 
 	private void loadGoodStanding() {
+		fireEvent(new ProcessingEvent());
 		memberDelegate.withCallback(
 				new AbstractAsyncCallback<MemberStanding>() {
 					@Override
 					public void onSuccess(MemberStanding standing) {
 						memberBalance = standing.getMemberBalance();
 						getView().bindMemberStanding(standing);
+						fireEvent(new ProcessingCompletedEvent());
 					}
 				}).getMemberStanding(getMemberId());
 	}

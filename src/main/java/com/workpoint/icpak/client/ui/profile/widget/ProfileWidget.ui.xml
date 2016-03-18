@@ -173,6 +173,15 @@
 													)
 												</span>
 											</div>
+											
+											<div ui:field="divPaySubscription">
+												<div class="row">
+													Current Balance:
+													<Strong ui:field="elCurrentBalance"></Strong> 
+													| <d:ActionLink ui:field="aRenewSubscription">Pay Subscription
+													</d:ActionLink>
+												</div>
+											</div>
 
 											<div class="row hide">
 												<div class="col-md-4 p0">
@@ -211,13 +220,6 @@
 													<div>
 														<span ui:field="spnStatusDescription"></span>
 													</div>
-												</div>
-											</div>
-											<div ui:field="divPaySubscription">
-												<div class="row">
-													<d:ActionLink ui:field="aRenewSubscription"
-														styleName="btn btn-fill btn-gold">Pay Subscription
-													</d:ActionLink>
 												</div>
 											</div>
 											<hr />

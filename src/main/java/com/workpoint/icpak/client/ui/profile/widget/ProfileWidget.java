@@ -45,6 +45,7 @@ import com.workpoint.icpak.client.ui.profile.education.EducationDetails;
 import com.workpoint.icpak.client.ui.profile.specialization.SpecializationDetails;
 import com.workpoint.icpak.client.ui.profile.training.TrainingDetails;
 import com.workpoint.icpak.client.ui.upload.custom.Uploader;
+import com.workpoint.icpak.client.ui.util.NumberUtils;
 import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.model.ApplicationFormAccountancyDto;
 import com.workpoint.icpak.shared.model.ApplicationFormEducationalDto;
@@ -184,6 +185,8 @@ public class ProfileWidget extends Composite {
 	ActionLink aRenewSubscription;
 	@UiField
 	ActionLink aMgmtActions;
+	@UiField
+	Element elCurrentBalance;
 
 	private BasicDetails basicDetail;
 	private EducationDetails educationDetail;
@@ -522,6 +525,7 @@ public class ProfileWidget extends Composite {
 				spnMembershipStatus.setClassName("label label-danger");
 			}
 		}
+
 		setUserImage(user.getUser().getRefId());
 	}
 
@@ -617,6 +621,11 @@ public class ProfileWidget extends Composite {
 	}
 
 	public void bindMemberStanding(MemberStanding standing) {
+		if (standing.getMemberBalance() != null) {
+			elCurrentBalance.setInnerText(NumberUtils.CURRENCYFORMAT
+					.format(standing.getMemberBalance()));
+		}
+
 		showGoodStandingPanel(true);
 		if (standing.getStanding() == 0) {
 			String info = "<ul>";
