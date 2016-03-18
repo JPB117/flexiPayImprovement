@@ -46,7 +46,7 @@ public class DateField extends Composite {
 		if (date == null) {
 			txtDate.setValue("");
 		} else {
-			txtDate.setValue(DateUtils.TIMEFORMAT12HR.format(date));
+			txtDate.setValue(DateUtils.DATEFORMAT_SYS.format(date));
 		}
 	}
 
