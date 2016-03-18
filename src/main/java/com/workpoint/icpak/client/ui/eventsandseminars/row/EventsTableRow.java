@@ -95,7 +95,10 @@ public class EventsTableRow extends RowWidget {
 
 		divDate.add(new InlineLabel(dates));
 		setEventType(event.getType());
-		divEventType.add(new InlineLabel(event.getType().getDisplayName()));
+		String eventType = event.getType().getDisplayName()
+				+ "("
+				+ (event.getCourseId() == null ? "" : event.getCourseId() + ")");
+		divEventType.add(new InlineLabel(eventType));
 		divDelegates.add(new InlineLabel(event.getDelegateCount() + ""));
 		divEventLocation.add(new InlineLabel(event.getVenue()));
 		if (event.getPaidCount() != null) {

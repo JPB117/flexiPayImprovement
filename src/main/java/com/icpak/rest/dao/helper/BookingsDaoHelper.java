@@ -925,19 +925,19 @@ public class BookingsDaoHelper {
 						+ ","
 						+ " Thank-you for your "
 						+ " payment for "
-						+ booking.getEvent().getName()
+						+ event.getName()
 						+ ".Your booking status is now PAID. "
 						+ "You have been enrolled to CPD Online to perform this course.";
-				
-			}else{
-			smsMessage = "Dear "
-					+ delegate.getFullName()
-					+ ","
-					+ " Thank-you for your "
-					+ " payment for "
-					+ booking.getEvent().getName()
-					+ ".Your booking status is now PAID. The was a problem enrolling you to CPD Online."
-					+ " Please contact administrator.";
+
+			} else {
+				smsMessage = "Dear "
+						+ delegate.getFullName()
+						+ ","
+						+ " Thank-you for your "
+						+ " payment for "
+						+ event.getName()
+						+ ".Your booking status is now PAID. The was a problem enrolling you to CPD Online."
+						+ " Please contact administrator.";
 			}
 
 			if (delegate.getMemberRefId() != null) {
@@ -948,8 +948,8 @@ public class BookingsDaoHelper {
 
 				if (member.getUser().getPhoneNumber() != null) {
 					try {
-						smsIntergration.send(member.getUser()
-								.getPhoneNumber(), smsMessage);
+						smsIntergration.send(member.getUser().getPhoneNumber(),
+								smsMessage);
 					} catch (RuntimeException e) {
 						logger.error("Invalid Phone Number");
 						e.printStackTrace();
@@ -959,7 +959,8 @@ public class BookingsDaoHelper {
 				logger.info("Non-member cannot be send sms..");
 			}
 
-			Delegate d = new Delegate();
+			/* Update Delegate Record */
+			Delegate d = dao.findByRefId(delegate.getRefId(), Delegate.class);
 			d.copyFrom(delegate);
 			dao.save(d);
 		}
