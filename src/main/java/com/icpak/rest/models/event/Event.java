@@ -263,23 +263,28 @@ public class Event extends PO {
 		dto.setCpdHours(cpdHours);
 		dto.setDescription(description);
 		dto.setCategoryName(categoryName);
+		dto.setCourseId(lmsCourseId);
 
 		if (endDate != null)
-			dto.setEndDate(ServerDateUtils.format(endDate, ServerDateUtils.FULLTIMESTAMP));
+			dto.setEndDate(ServerDateUtils.format(endDate,
+					ServerDateUtils.FULLTIMESTAMP));
 
 		if (startDate != null) {
 			dto.setStartDate(ServerDateUtils.format(startDate,
 					ServerDateUtils.FULLTIMESTAMP));
 		}
+
 		dto.setMemberPrice(memberPrice);
 		dto.setName(name);
 		dto.setNonMemberPrice(nonMemberPrice);
 		dto.setAssociatePrice(associatePrice);
 		if (penaltyDate != null) {
-			dto.setPenaltyDate(ServerDateUtils.DATEFORMAT_SYS.format(penaltyDate));
+			dto.setPenaltyDate(ServerDateUtils.DATEFORMAT_SYS
+					.format(penaltyDate));
 		}
 		if (discountDate != null) {
-			dto.setDiscountDate(ServerDateUtils.DATEFORMAT_SYS.format(discountDate));
+			dto.setDiscountDate(ServerDateUtils.DATEFORMAT_SYS
+					.format(discountDate));
 		}
 		dto.setStatus(status);
 		dto.setType(type);
