@@ -38,7 +38,7 @@ public class InvoiceDao extends BaseDao {
 		if (memberId == null || memberId.equals("ALL")) {
 			Map<String, Object> params = appendParameters(sqlBuffer,
 					searchTerm, fromDate, endDate, paymentType2, paymentMode2);
-			sqlBuffer.append(" order by created asc");
+			sqlBuffer.append(" order by date asc");
 			query = getEntityManager().createNativeQuery(sqlBuffer.toString());
 			for (String key : params.keySet()) {
 				query.setParameter(key, params.get(key));

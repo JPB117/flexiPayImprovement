@@ -46,6 +46,7 @@ public class Delegate extends PO {
 	private String clearanceNo;
 	private String sponsorTelephoneNo;
 	private String memberQrCode;
+	private String lmsResponse;
 	@Transient
 	private String bookingId;
 	@ManyToOne
@@ -164,7 +165,7 @@ public class Delegate extends PO {
 		setLpoNo(delegateDto.getLpoNo());
 		setReceiptNo(delegateDto.getLpoNo());
 		setClearanceNo(delegateDto.getClearanceNo());
-
+		setLmsResponse(delegateDto.getLmsResponse());
 	}
 
 	public DelegateDto toDto() {
@@ -275,6 +276,14 @@ public class Delegate extends PO {
 
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
+	}
+
+	public String getLmsResponse() {
+		return lmsResponse;
+	}
+
+	public void setLmsResponse(String lmsResponse) {
+		this.lmsResponse = lmsResponse;
 	}
 
 }

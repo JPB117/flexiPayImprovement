@@ -903,7 +903,9 @@ public class BookingsDaoHelper {
 
 	public void enrolDelegateToLMS(List<DelegateDto> delegates, Event event)
 			throws JSONException, IOException {
+		System.err.println("Enrol delegates called!!!");
 		logger.info("Delgates size::" + delegates.size());
+		String smsMessage = "";
 		for (DelegateDto delegate : delegates) {
 			CourseRegDetailsPojo details = new CourseRegDetailsPojo();
 			details.setCourseId(event.getLmsCourseId() + "");
@@ -918,10 +920,48 @@ public class BookingsDaoHelper {
 			delegate.setLmsResponse(response.getMessage());
 			if (response.getStatus().equals("Success")) {
 				delegate.setAttendance(AttendanceStatus.ENROLLED);
+				smsMessage = "Dear "
+						+ delegate.getFullName()
+						+ ","
+						+ " Thank-you for your "
+						+ " payment for "
+						+ booking.getEvent().getName()
+						+ ".Your booking status is now PAID. "
+						+ "You have been enrolled to CPD Online to perform this course.";
+				
+			}else{
+			smsMessage = "Dear "
+					+ delegate.getFullName()
+					+ ","
+					+ " Thank-you for your "
+					+ " payment for "
+					+ booking.getEvent().getName()
+					+ ".Your booking status is now PAID. The was a problem enrolling you to CPD Online."
+					+ " Please contact administrator.";
 			}
-			String refId = delegate.getRefId();
-			logger.info("Delegate RefId::" + refId);
-			logger.info("Event RefId::" + event.getRefId());
+
+			if (delegate.getMemberRefId() != null) {
+				Member member = memberDao.findByRefId(
+						delegate.getMemberRefId(), Member.class);
+				logger.info("Sending SMS to "
+						+ member.getUser().getPhoneNumber());
+
+				if (member.getUser().getPhoneNumber() != null) {
+					try {
+						smsIntergration.send(member.getUser()
+								.getPhoneNumber(), smsMessage);
+					} catch (RuntimeException e) {
+						logger.error("Invalid Phone Number");
+						e.printStackTrace();
+					}
+				}
+			} else {
+				logger.info("Non-member cannot be send sms..");
+			}
+
+			Delegate d = new Delegate();
+			d.copyFrom(delegate);
+			dao.save(d);
 		}
 
 	}

@@ -1,5 +1,6 @@
 package com.icpak.rest.dao.helper;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -13,6 +14,7 @@ import javax.mail.MessagingException;
 
 import org.apache.log4j.Logger;
 
+import com.amazonaws.util.json.JSONException;
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import com.icpak.rest.dao.ApplicationFormDao;
@@ -31,11 +33,14 @@ import com.icpak.rest.models.trx.Transaction;
 import com.icpak.rest.util.SMSIntegration;
 import com.icpak.rest.utils.EmailServiceHelper;
 import com.workpoint.icpak.server.util.ServerDateUtils;
+import com.workpoint.icpak.shared.model.EventType;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.PaymentMode;
 import com.workpoint.icpak.shared.model.PaymentStatus;
 import com.workpoint.icpak.shared.model.PaymentType;
 import com.workpoint.icpak.shared.model.TransactionDto;
+import com.workpoint.icpak.shared.model.events.AttendanceStatus;
+import com.workpoint.icpak.shared.model.events.DelegateDto;
 import com.workpoint.icpak.shared.model.events.EventDto;
 import com.workpoint.icpak.shared.trx.OldTransactionDto;
 
@@ -47,6 +52,8 @@ public class TransactionDaoHelper {
 	InvoiceDao invoiceDao;
 	@Inject
 	BookingsDao bookingDao;
+	@Inject
+	BookingsDaoHelper bookingDaoHelper;
 	@Inject
 	ApplicationFormDao applicationDao;
 	@Inject
@@ -399,7 +406,9 @@ public class TransactionDaoHelper {
 					}
 				}
 
-			} else {
+			}
+			// Booking has been fully paid for>>>
+			else {
 				booking.setPaymentStatus(PaymentStatus.PAID);
 				invoiceDto.setStatus(PaymentStatus.PAID);
 				Invoice invoiceSave = invoiceDao.findByRefId(
@@ -408,6 +417,52 @@ public class TransactionDaoHelper {
 				// System.err.println("Invoice RefId>>" +
 				// invoiceSave.getRefId());
 				invoiceDao.save(invoiceSave);
+
+				// Is this Payment for a Course
+				if (booking.getEvent().getType() != null
+						&& booking.getEvent().getType() == EventType.COURSE) {
+
+					logger.info("Payment for a course"
+							+ booking.getEvent().getName());
+
+					/* Payers message */
+					smsMessage = " Thank-you for your " + trx.getPaymentType()
+							+ " payment of " + numberFormat.format(paidAmt)
+							+ " for " + booking.getEvent().getName()
+							+ ". The booking status is PAID. ";
+
+					String finalPhoneNumber = phoneNumber.replace("254", "0");
+					if (phoneNumber != null) {
+						smsIntergration.send(finalPhoneNumber, smsMessage);
+						logger.error("sending sms to :" + finalPhoneNumber);
+					}
+
+					if (booking.getContact().getEmail() != null) {
+						String subject = "PAYMENT CONFIRMATION FOR "
+								+ booking.getEvent().getName().toUpperCase();
+						EmailServiceHelper.sendEmail(smsMessage, "RE: ICPAK '"
+								+ subject, Arrays.asList(booking.getContact()
+								.getEmail()), Arrays.asList(booking
+								.getContact().getContactName()));
+					}
+
+					/* Delegates Message */
+					List<DelegateDto> allDelegates = new ArrayList<>();
+					for (Delegate delegate : booking.getDelegates()) {
+						allDelegates.add(delegate.toDto());
+					}
+					try {
+						bookingDaoHelper.enrolDelegateToLMS(allDelegates,
+								booking.getEvent());
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					return;
+				}
 
 				for (Delegate delegate : booking.getDelegates()) {
 					smsMessage = "Dear "
