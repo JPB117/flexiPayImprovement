@@ -276,7 +276,7 @@ public class InvoiceListPresenter
 				ctx.setContext("searchTerm", searchTerm);
 				ctx.setContext("fromDate", fromDate);
 				ctx.setContext("endDate", endDate);
-				ctx.setAction(UPLOADACTION.GETTRANSACTIONREPORT);
+				ctx.setAction(UPLOADACTION.GETTRANSACTIONSREPORT);
 				Window.open(ctx.toUrl(), "Download Transaction Report", null);
 			}
 		});
