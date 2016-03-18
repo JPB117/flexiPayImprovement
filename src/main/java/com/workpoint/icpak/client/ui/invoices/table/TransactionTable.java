@@ -110,4 +110,8 @@ public class TransactionTable extends Composite {
 		return tblView.getLstPaymentType();
 	}
 
+	public HasClickHandlers getDownloadXlsButton() {
+		return tblView.getDownloadXls();
+	}
+
 }

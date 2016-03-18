@@ -59,6 +59,7 @@ import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.shared.model.CPDStatus;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.MemberStanding;
+import com.workpoint.icpak.shared.model.TransactionDto;
 import com.workpoint.icpak.shared.model.UserDto;
 import com.workpoint.icpak.shared.model.events.BookingDto;
 import com.workpoint.icpak.shared.model.events.DelegateDto;
@@ -176,10 +177,13 @@ public class GetReport extends HttpServlet {
 			generateDelegateReport(req, resp);
 		}
 
+		if (action.equals("GETTRANSACTIONSREPORT")) {
+			generateTransactionReport(req, resp);
+		}
+
 		if (action.equals("GETPROFORMA")) {
 			processProformaInvoice(req, resp);
 		}
-
 	}
 
 	private void processProformaInvoice(HttpServletRequest req,
@@ -247,6 +251,49 @@ public class GetReport extends HttpServlet {
 
 		processAttachmentRequest(resp, report.getBytes(), report.getName());
 
+	}
+
+	private void generateTransactionReport(HttpServletRequest req,
+			HttpServletResponse resp) throws IOException {
+		String paymentType = null;
+		String paymentMode = null;
+		String searchTerm = null;
+		String fromDate = null;
+		String endDate = null;
+
+		if (req.getParameter("paymentType") != null) {
+			paymentType = req.getParameter("paymentType");
+		}
+
+		if (req.getParameter("paymentMode") != null) {
+			paymentMode = req.getParameter("paymentMode");
+		}
+
+		if (req.getParameter("searchTerm") != null) {
+			searchTerm = req.getParameter("searchTerm");
+		}
+
+		if (req.getParameter("fromDate") != null) {
+			fromDate = req.getParameter("fromDate");
+		}
+
+		if (req.getParameter("endDate") != null) {
+			endDate = req.getParameter("endDate");
+		}
+
+		List<TransactionDto> trxDtos = invoiceDaoHelper.getAllTransactions(
+				"ALL", searchTerm, fromDate, endDate, paymentType, paymentMode,
+				0, 100000);
+
+		String reportName = "Transaction_report_";
+
+		if (trxDtos.size() > 0) {
+			reportName = reportName + "_" + trxDtos.get(0).getId() + "_"
+					+ trxDtos.get(trxDtos.size() - 1).getId();
+		}
+		GetTransactionsReport report = new GetTransactionsReport(trxDtos,
+				"xls", reportName);
+		processAttachmentRequest(resp, report.getBytes(), report.getName());
 	}
 
 	private void procesStatementsRequest(HttpServletRequest req,

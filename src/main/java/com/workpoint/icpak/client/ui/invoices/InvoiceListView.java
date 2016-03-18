@@ -39,7 +39,6 @@ public class InvoiceListView extends ViewImpl implements
 	public InvoiceListView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
 		tblView.setAutoNumber(true);
-
 	}
 
 	@Override
@@ -108,6 +107,11 @@ public class InvoiceListView extends ViewImpl implements
 
 	public void setTransactionDateString(String dateString) {
 		spnDates.setInnerText(dateString);
+	}
+
+	@Override
+	public HasClickHandlers getDownloadXlsButton() {
+		return tblView.getDownloadXlsButton();
 	}
 
 }

@@ -32,7 +32,7 @@ public class InvoiceDao extends BaseDao {
 			String paymentType2, String paymentMode2, Integer offset,
 			Integer limit) {
 		StringBuffer sqlBuffer = new StringBuffer(
-				"select id,created,paymentMode,paymentType,description,trxNumber,accountNo,invoiceAmount,chargableAmount,"
+				"select id,date,paymentMode,paymentType,description,trxNumber,accountNo,invoiceAmount,chargableAmount,"
 						+ "totalPreviousPayments,amount,balance,invoiceRef from transaction");
 		Query query = null;
 		if (memberId == null || memberId.equals("ALL")) {

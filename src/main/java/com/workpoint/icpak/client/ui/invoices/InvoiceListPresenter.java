@@ -27,6 +27,8 @@ import com.gwtplatform.mvp.client.annotations.UseGatekeeper;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.TabContentProxyPlace;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
+import com.workpoint.icpak.client.model.UploadContext;
+import com.workpoint.icpak.client.model.UploadContext.UPLOADACTION;
 import com.workpoint.icpak.client.place.NameTokens;
 import com.workpoint.icpak.client.security.CurrentUser;
 import com.workpoint.icpak.client.service.AbstractAsyncCallback;
@@ -76,6 +78,8 @@ public class InvoiceListPresenter
 		DropDownList<PaymentType> getLstPaymentType();
 
 		void setTransactionDateString(String dateString);
+
+		HasClickHandlers getDownloadXlsButton();
 	}
 
 	private int pageLimit = 20;
@@ -262,6 +266,21 @@ public class InvoiceListPresenter
 				loadInvoices(offset, pageLimit);
 			}
 		});
+
+		getView().getDownloadXlsButton().addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				UploadContext ctx = new UploadContext("getreport");
+				ctx.setContext("paymentType", paymentType);
+				ctx.setContext("paymentMode", paymentMode);
+				ctx.setContext("searchTerm", searchTerm);
+				ctx.setContext("fromDate", fromDate);
+				ctx.setContext("endDate", endDate);
+				ctx.setAction(UPLOADACTION.GETTRANSACTIONREPORT);
+				Window.open(ctx.toUrl(), "Download Transaction Report", null);
+			}
+		});
+
 		getView().getTxtSearch().addKeyDownHandler(keyHandler);
 		getView().getSearchButton().addClickHandler(searchClickHandler);
 		getView().getAdvancedFilterButton().addClickHandler(
