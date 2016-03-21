@@ -149,9 +149,16 @@ public class DelegateTableRow extends RowWidget {
 		});
 
 		if (delegate != null) {
-			String editUrl = "#eventBooking;eventId=" + event.getRefId() + ";bookingId="
-					+ delegate.getBookingRefId();
-			aEditBooking.setHref(editUrl);
+			final String editUrl = "#eventBooking;eventId=" + event.getRefId()
+					+ ";bookingId=" + delegate.getBookingRefId();
+			// aEditBooking.setHref(editUrl);
+
+			aEditBooking.addClickHandler(new ClickHandler() {
+				@Override
+				public void onClick(ClickEvent event) {
+					Window.Location.replace(editUrl);
+				}
+			});
 		}
 
 	}

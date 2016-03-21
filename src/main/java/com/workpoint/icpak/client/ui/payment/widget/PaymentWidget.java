@@ -384,7 +384,8 @@ public class PaymentWidget extends Composite {
 			trx.setPaymentType(PaymentType.SUBSCRIPTION);
 		}
 		trx.setChargableAmnt(invoice.getInvoiceAmount());
-		trx.setAmountPaid(Double.valueOf(txtOfflineAmount.getValue()));
+		String amnt = txtOfflineAmount.getValue().replaceAll(",", "");
+		trx.setAmountPaid(Double.valueOf(amnt));
 		trx.setTrxNumber(txtRefNo.getValue());
 		trx.setAccountNo(invoice.getDocumentNo());
 		trx.setCreatedDate(dtTrxDate.getValueDate());

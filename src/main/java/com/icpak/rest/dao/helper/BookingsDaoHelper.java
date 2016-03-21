@@ -178,6 +178,7 @@ public class BookingsDaoHelper {
 
 		// Delete all existing delegates for this booking from the db
 		deleteExistingDelegates(booking.getRefId());
+		
 		List<DelegateDto> dtos = dto.getDelegates();
 		Collection<Delegate> delegates = new ArrayList<>();
 		double total = 0.0;
@@ -491,7 +492,9 @@ public class BookingsDaoHelper {
 		Event event = booking.getEvent();
 		for (Delegate delegate : delegates) {
 			delegate.setErn(dao.getErn(delegate.getRefId()));
-
+			
+			
+			//Member
 			if (delegate.getMemberRegistrationNo() != null) {
 				String description = "%s - %s fees for %d member(s): %s";
 				memberInvoiceLine

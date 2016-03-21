@@ -84,7 +84,6 @@ public class Uploader extends Composite {
 
 	public void setContext(UploadContext context) {
 		this.context = context;
-
 		StringBuffer servletPath = new StringBuffer();
 		String url = context.getUrl() == null ? "upload" : context.getUrl();
 		servletPath.append(url + "?" + context.getContextValuesAsURLParams());
@@ -94,7 +93,6 @@ public class Uploader extends Composite {
 	}
 
 	OnStartUploaderHandler uploadStarted = new OnStartUploaderHandler() {
-
 		@Override
 		public void onStart(IUploader uploader) {
 			AppContext.fireEvent(new UploadStartedEvent());

@@ -74,7 +74,8 @@ public class GenericAttachmentsExecutor extends FileExecutor {
 					}
 					IOUtils.write(item.get(), new FileOutputStream(new File(
 							fileName)));
-					attachmentsDao.save(attachment);
+					Attachment saved = (Attachment) attachmentsDao
+							.save(attachment);
 					registerFile(request, fieldName, attachment.getId());
 				} catch (Exception e) {
 					e.printStackTrace();
