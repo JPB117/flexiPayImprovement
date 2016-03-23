@@ -40,8 +40,6 @@ public class Delegate extends PO {
 	private String fullName;
 	private String email;
 	private String phoneNumber;
-	@Column(columnDefinition = "TEXT")
-	private Accommodation accommodation;
 	private String receiptNo;
 	private String lpoNo;
 	private int isCredit;
@@ -61,6 +59,8 @@ public class Delegate extends PO {
 
 	@ManyToOne
 	@JoinColumn(name = "accommodationId")
+	private Accommodation accommodationId;
+
 	public String getBookingId() {
 		return bookingId;
 	}
@@ -196,11 +196,11 @@ public class Delegate extends PO {
 	}
 
 	public Accommodation getAccommodation() {
-		return accommodation;
+		return accommodationId;
 	}
 
 	public void setAccommodation(Accommodation accommodation) {
-		this.accommodation = accommodation;
+		this.accommodationId = accommodation;
 	}
 
 	public Double getAmount() {

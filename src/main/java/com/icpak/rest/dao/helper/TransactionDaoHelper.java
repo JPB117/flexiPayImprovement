@@ -463,7 +463,9 @@ public class TransactionDaoHelper {
 					}
 					return;
 				}
-
+				
+				//This is a normal event booking
+				//Send message to all Delegates
 				for (Delegate delegate : booking.getDelegates()) {
 					smsMessage = "Dear "
 							+ delegate.getFullName()

@@ -160,7 +160,7 @@ public class EventBookingView extends ViewImpl implements
 	ColumnConfig accommodationConfig = new ColumnConfig("accommodation",
 			"Accommodation", DataType.SELECTBASIC);
 
-	ColumnConfig fullNameConfig = new ColumnConfig("fullName", "FullNames:",
+	ColumnConfig fullNameConfig = new ColumnConfig("fullName", "FullNames",
 			DataType.STRING, "Delegate FullNames", "form-control", false);
 
 	ColumnConfig titleConfig = new ColumnConfig("title", "Title",
@@ -181,6 +181,8 @@ public class EventBookingView extends ViewImpl implements
 
 		tblDelegates.setColumnConfigs(configs);
 
+		accommodationConfig.setHeaderStyleName("accomodation-header");
+		
 		accommodationConfig
 				.addValueChangeHandler(new ValueChangeHandler<Listable>() {
 					@Override

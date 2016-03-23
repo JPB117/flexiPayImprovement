@@ -16,6 +16,7 @@ import com.workpoint.icpak.client.ui.events.EditModelEvent;
 import com.workpoint.icpak.client.ui.events.TableActionEvent;
 import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.client.util.AppContext;
+import com.workpoint.icpak.shared.model.CPDCategory;
 import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.shared.model.CPDStatus;
 import com.workpoint.icpak.shared.model.TableActionType;
@@ -143,9 +144,10 @@ public class CPDMemberTableRow extends RowWidget {
 				&& !(dto.getOrganizer().equals("ICPAK"));
 		boolean isApproveRejectVisible = false;
 		boolean isDownloadVisible = (dto.getOrganizer().equals("ICPAK"))
-				&& (dto.getStatus() == CPDStatus.Approved);
+				&& (dto.getStatus() == CPDStatus.Approved)
+				&& (dto.getCategory() == CPDCategory.CATEGORY_A);
+		
 		boolean isNoActionVisible = (!isEditVisible && !isDownloadVisible && !isDeleteVisible);
-
 		aEdit.setVisible(isEditVisible);
 		aView.setVisible(isViewVisible);
 		aDelete.setVisible(isDeleteVisible);

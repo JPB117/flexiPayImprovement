@@ -36,10 +36,12 @@ import com.icpak.rest.dao.MemberDao;
 import com.icpak.rest.dao.UsersDao;
 import com.icpak.rest.exceptions.ServiceException;
 import com.icpak.rest.models.ErrorCodes;
+import com.icpak.rest.models.auth.User;
 import com.icpak.rest.models.event.Accommodation;
 import com.icpak.rest.models.event.Booking;
 import com.icpak.rest.models.event.Delegate;
 import com.icpak.rest.models.event.Event;
+import com.icpak.rest.models.membership.ApplicationFormHeader;
 import com.icpak.rest.models.membership.Contact;
 import com.icpak.rest.models.membership.Member;
 import com.icpak.rest.models.util.Attachment;
@@ -161,7 +163,7 @@ public class BookingsDaoHelper {
 		}
 		booking.setEvent(event);
 
-		// Contact
+		// Contact information
 		if (dto.getContact() != null) {
 			Contact poContact = booking.getContact();
 			if (poContact == null) {
@@ -178,7 +180,7 @@ public class BookingsDaoHelper {
 
 		// Delete all existing delegates for this booking from the db
 		deleteExistingDelegates(booking.getRefId());
-		
+
 		List<DelegateDto> dtos = dto.getDelegates();
 		Collection<Delegate> delegates = new ArrayList<>();
 		double total = 0.0;
@@ -492,9 +494,8 @@ public class BookingsDaoHelper {
 		Event event = booking.getEvent();
 		for (Delegate delegate : delegates) {
 			delegate.setErn(dao.getErn(delegate.getRefId()));
-			
-			
-			//Member
+
+			// Member
 			if (delegate.getMemberRegistrationNo() != null) {
 				String description = "%s - %s fees for %d member(s): %s";
 				memberInvoiceLine
@@ -913,6 +914,16 @@ public class BookingsDaoHelper {
 			CourseRegDetailsPojo details = new CourseRegDetailsPojo();
 			details.setCourseId(event.getLmsCourseId() + "");
 			details.setMembershipID(delegate.getMemberNo());
+			details.setFullName(delegate.getFullName());
+
+			User user = dao.findByRefId(delegate.getRefId(), User.class);
+			if (user != null) {
+				details.setPhoneNumber(user.getPhoneNumber());
+				details.setEmail(user.getEmail());
+				details.setMemberRefId(user.getMember().getRefId());
+				details.setGender("");
+			}
+
 			JSONObject json = new JSONObject(details);
 			logger.info("JSON::" + json);
 			LMSResponse response = LMSIntegrationUtil.getInstance()

@@ -31,6 +31,7 @@ public class ColumnConfig {
 	private String displayName;
 	private String placeHolder;
 	private String styleName;
+	private String headerStyleName;
 	private boolean isAggregationColumn;
 	private boolean isMandatory;
 	private DataType type;
@@ -262,6 +263,14 @@ public class ColumnConfig {
 
 	public void showSpinner(boolean show) {
 		auto.showSpinner(show);
+	}
+
+	public String getHeaderStyleName() {
+		return headerStyleName;
+	}
+
+	public void setHeaderStyleName(String headerStyleName) {
+		this.headerStyleName = headerStyleName;
 	}
 
 }

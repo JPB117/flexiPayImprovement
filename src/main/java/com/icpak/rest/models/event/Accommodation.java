@@ -57,7 +57,7 @@ public class Accommodation extends PO {
 	@JoinColumn(name = "eventId")
 	private Event event;
 
-	@OneToMany(mappedBy = "accommodation")
+	@OneToMany(mappedBy = "accommodationId")
 	private Set<Delegate> delegates = new HashSet<>();
 
 	public Accommodation() {

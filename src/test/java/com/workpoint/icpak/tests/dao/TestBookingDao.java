@@ -15,6 +15,7 @@ import com.icpak.rest.dao.helper.BookingsDaoHelper;
 import com.icpak.rest.dao.helper.CPDDaoHelper;
 import com.icpak.rest.models.event.Delegate;
 import com.workpoint.icpak.shared.model.PaymentStatus;
+import com.workpoint.icpak.shared.model.events.AccommodationDto;
 import com.workpoint.icpak.shared.model.events.AttendanceStatus;
 import com.workpoint.icpak.shared.model.events.BookingDto;
 import com.workpoint.icpak.shared.model.events.ContactDto;
@@ -77,7 +78,7 @@ public class TestBookingDao extends AbstractDaoTest {
 		}
 	}
 
-	@Test
+	// @Test
 	public void testUpdateBooking() {
 		BookingDto dto = new BookingDto();
 		dto.setRefId("TdtJ9I4RtlGqoAKT");
@@ -121,7 +122,7 @@ public class TestBookingDao extends AbstractDaoTest {
 
 	}
 
-	// @Test
+	@Test
 	public void createBooking() {
 		BookingDto dto = new BookingDto();
 		dto.setStatus("");
@@ -144,6 +145,9 @@ public class TestBookingDao extends AbstractDaoTest {
 		delegate.setFullName("CPA TOM KIMANI MURIRANJA");
 		delegates.add(delegate);
 		dto.setDelegates(delegates);
+		AccommodationDto a = new AccommodationDto();
+		a.setRefId("b5b0I7wIh09oM7ab");
+		delegate.setAccommodation(a);
 
 		DelegateDto delegate2 = new DelegateDto();
 		delegate2.setMemberNo("7087");
@@ -159,11 +163,11 @@ public class TestBookingDao extends AbstractDaoTest {
 		delegates.add(delegate3);
 		dto.setDelegates(delegates);
 
-		// BookingDto booking = bookingsHelper.createBooking("KUKnPWbARWhVz1wH",
-		// dto);
-		// System.err.println(booking.getRefId());
+		BookingDto booking = bookingsHelper.createBooking("1JKH5e8rLJjnjjwv",
+				dto);
+		System.err.println(booking.getRefId());
 
-		bookingsHelper.sendProInvoice("7v8EPZNUL6gd5MIZ");
+		bookingsHelper.sendProInvoice(booking.getRefId());
 	}
 
 	@Ignore

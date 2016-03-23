@@ -230,9 +230,8 @@ public class DelegateTableRow extends RowWidget {
 									.getOtherNames() + " "));
 		}
 
-		if (delegate.getAccommodation() != null) {
-			divAccomodation.add(new InlineLabel(delegate.getAccommodation()
-					.getHotel() + ""));
+		if (delegate.getHotel() != null) {
+			divAccomodation.add(new InlineLabel(delegate.getHotel() + ""));
 		} else {
 			divAccomodation.getElement().setInnerText("None");
 		}

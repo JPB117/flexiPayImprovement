@@ -568,7 +568,6 @@ public class BookingsDao extends BaseDao {
 			delegateDto.setHotel(hotel);
 			delegateDto.setErn(ern);
 			delegateDto.setBookingId(bookingId.toString());
-
 			if (paymentStatus == 1) {
 				delegateDto.setPaymentStatus(PaymentStatus.PAID);
 			} else {
