@@ -1,5 +1,6 @@
 package com.icpak.rest.models.event;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -39,6 +40,7 @@ public class Delegate extends PO {
 	private String fullName;
 	private String email;
 	private String phoneNumber;
+	@Column(columnDefinition = "TEXT")
 	private Accommodation accommodation;
 	private String receiptNo;
 	private String lpoNo;
