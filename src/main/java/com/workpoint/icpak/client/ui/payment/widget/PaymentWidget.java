@@ -70,8 +70,6 @@ public class PaymentWidget extends Composite {
 	@UiField
 	SpanElement spnMessage;
 	@UiField
-	TextField txtAddress1;
-	@UiField
 	ActionLink aCompleteMpesa;
 	@UiField
 	HTMLPanel PanelPayment;

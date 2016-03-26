@@ -182,7 +182,7 @@ public class EventBookingView extends ViewImpl implements
 		tblDelegates.setColumnConfigs(configs);
 
 		accommodationConfig.setHeaderStyleName("accomodation-header");
-		
+
 		accommodationConfig
 				.addValueChangeHandler(new ValueChangeHandler<Listable>() {
 					@Override

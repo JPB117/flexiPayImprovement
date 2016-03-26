@@ -137,92 +137,134 @@
 							<d:IssuesPanel ui:field="issuesPanel" styleName="hide alert alert-danger"></d:IssuesPanel>
 						</div>
 						<div class="col-sm-12">
-							<h5>
-								<g:InlineLabel>Supported Cards:</g:InlineLabel>
-								<g:Image url="img/Visa_Logo.png"></g:Image>
-								<g:Image url="img/Mastercard_Logo.png"></g:Image>
-							</h5>
-							<br />
-							<div class="form-group">
-								<div class="row">
-									<div class="col-lg-9">
-										<div class="alert alert-success">
-											Amount to pay:
-											<span ui:field="elCardAmount" style="font-weight:bold"></span>
-											<d:TextField ui:field="txtAmount" disabled="true"
-												styleName="hide"></d:TextField>
-											.Enter your Card Details Below and Click 'Complete'
+							<div class="col-lg-6 credit-card-form">
+								<div class="form-group">
+									<div class="row">
+										<div class="col-lg-12">
+											<br />
+											<br />
+											<div class="alert alert-success">
+												Amount to Pay:
+												<span ui:field="elCardAmount" style="font-weight:bold"></span>
+												<d:TextField ui:field="txtAmount" disabled="true"
+													styleName="hide"></d:TextField>
+												.We do not store your card details.
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="row">
+										<div class="col-sm-2">
+											<label for="emailaddress">Country:</label>
+										</div>
+										<div class="col-sm-10">
+											<d:DropDownList ui:field="lstCountry"
+												styleName="form-control">
+											</d:DropDownList>
+										</div>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<div class="row">
+										<div class="col-sm-2 text-right">Phone Number:</div>
+										<div class="col-sm-10">
+											<div class="col-lg-2">
+												<d:TextField class="form-control" ui:field="txtCountryCode"
+													value="+254" disabled="true">
+												</d:TextField>
+											</div>
+
+											<div class="col-lg-10">
+												<d:TextField class="form-control" ui:field="txtPhoneNo">
+												</d:TextField>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<div class="row">
+										<div class="col-sm-2 text-right">Names:</div>
+										<div class="col-sm-10">
+											<d:TextField class="form-control" ui:field="txtCardHolderName"
+												placeholder="eg:your email address">
+											</d:TextField>
+										</div>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<div class="row">
+										<div class="col-sm-2 text-right">Email:</div>
+										<div class="col-sm-10">
+											<d:TextField class="form-control" ui:field="txtCardHolderEmail"
+												placeholder="your email address">
+											</d:TextField>
+										</div>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<div class="row">
+										<div class="col-sm-2 text-right">Card Number:</div>
+										<div class="col-sm-10">
+											<div class="col-sm-9">
+												<d:TextField class="form-control" placeholder="Debit/Credit Card Number"
+													ui:field="txtCardNumber">
+												</d:TextField>
+											</div>
+											<div class="col-sm-3">
+												<d:TextField styleName="form-control" ui:field="txtCvv"
+													placeholder="Security Code"></d:TextField>
+											</div>
+											<div class="col-sm-3 hide" style="padding-left:0px">
+												<span class="help-block {style.help-text}">(The
+													last three digits at the back of your
+													card)</span>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<div class="row">
+										<div class="col-sm-2 text-right">Expiry Date:</div>
+										<div class="col-sm-10">
+											<div class="col-sm-6">
+												<d:DropDownList styleName="form-control col-sm-2"
+													ui:field="lstMonths">
+												</d:DropDownList>
+											</div>
+
+											<div class="col-sm-6">
+												<d:DropDownList styleName="form-control"
+													ui:field="lstYears">
+												</d:DropDownList>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<div class="row">
+										<div class="col-sm-9">
+											<d:ActionLink ui:field="aPay" styleName="btn btn-gold btn-fill">
+												Complete
+											</d:ActionLink>
 										</div>
 									</div>
 								</div>
 							</div>
-							<div class="form-group hide">
-								<div class="row">
-									<div class="col-sm-7">
-										<d:TextField class="form-control" ui:field="txtCardHolderName"
-											placeholder="Name on the Card">
-										</d:TextField>
-									</div>
-								</div>
-							</div>
-							<div class="form-group">
-								<div class="row">
-									<div class="col-sm-4">
-										<d:TextField class="form-control" placeholder="Debit/Credit Card Number"
-											ui:field="txtCardNumber">
-										</d:TextField>
-									</div>
-									<div class="col-sm-3">
-										<d:TextField styleName="form-control" ui:field="txtCvv"
-											placeholder="Security Code"></d:TextField>
-									</div>
-									<div class="col-sm-3" style="padding-left:0px">
-										<span class="help-block {style.help-text}">(The
-											last three digits at the back of your
-											card)</span>
-									</div>
-								</div>
-							</div>
-
-							<div class="form-group hide">
-								<div class="row">
-									<div class="col-sm-7">
-										<d:TextField class="form-control" ui:field="txtAddress1"
-											placeholder="Address">
-										</d:TextField>
-									</div>
-								</div>
-							</div>
-
-
-							<div class="form-group">
-								<div class="row">
-									<div class="col-sm-4">
-										<d:DropDownList styleName="form-control col-sm-2"
-											ui:field="lstMonths">
-										</d:DropDownList>
-									</div>
-
-									<div class="col-sm-3">
-										<d:DropDownList styleName="form-control"
-											ui:field="lstYears">
-										</d:DropDownList>
-									</div>
-									<div class="col-sm-3" style="padding-left:0px">
-										<span class="help-inline {style.help-text}">
-											(Expiry Date on the card)</span>
-									</div>
-								</div>
-							</div>
-
-							<div class="form-group">
-								<div class="row">
-									<div class="col-sm-9">
-										<d:ActionLink ui:field="aPay" styleName="btn btn-gold btn-fill">
-											Complete
-											Payment</d:ActionLink>
-									</div>
-								</div>
+							<div class="col-lg-6">
+								<br />
+								<br />
+								<h5>
+									<g:InlineLabel>Supported Cards:</g:InlineLabel>
+									<g:Image url="img/Visa_Logo.png"></g:Image>
+									<g:Image url="img/Mastercard_Logo.png"></g:Image>
+								</h5>
 							</div>
 						</div>
 					</div>

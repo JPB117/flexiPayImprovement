@@ -635,7 +635,7 @@ public class BookingsDaoHelper {
 								.getRefId(), line);
 					}
 
-					String description = "%s - Accommodation at %s %d Nights HB "
+					String description = "%s - Accommodation at %s HB "
 							+ "for %d members: %s";
 					line.setMemberNames(line.getMemberNames().concat(
 							", " + delegate.toString()));
@@ -643,9 +643,8 @@ public class BookingsDaoHelper {
 
 					line.setEventDelegateRefId(delegate.getRefId());
 					description = String.format(description, event.getName(),
-							delegate.getAccommodation().getHotel(), delegate
-									.getAccommodation().getNights(), qty, line
-									.getMemberNames());
+							delegate.getAccommodation().getHotel(), qty,
+							line.getMemberNames());
 					line.setDescription(description);
 					line.setQuantity(qty);
 					line.setUnitPrice(delegate.getAccommodation().getFee());
@@ -663,7 +662,7 @@ public class BookingsDaoHelper {
 								.getRefId(), line);
 					}
 
-					String description = "%s - Accommodation at %s %d Nights HB "
+					String description = "%s - Accommodation at %s HB "
 							+ "for %d members: %s";
 					line.setMemberNames(line.getMemberNames().concat(
 							", " + delegate.toString()));
@@ -671,9 +670,8 @@ public class BookingsDaoHelper {
 
 					line.setEventDelegateRefId(delegate.getRefId());
 					description = String.format(description, event.getName(),
-							delegate.getAccommodation().getHotel(), delegate
-									.getAccommodation().getNights(), qty, line
-									.getMemberNames());
+							delegate.getAccommodation().getHotel(), qty,
+							line.getMemberNames());
 					line.setDescription(description);
 					line.setQuantity(qty);
 					line.setUnitPrice(delegate.getAccommodation().getFee());
@@ -724,7 +722,6 @@ public class BookingsDaoHelper {
 
 		invoice = invoiceHelper.save(invoice);
 
-		// System.err.println("Invoice RefId>>>" + invoice.getRefId());
 		return invoice;
 	}
 
@@ -806,11 +803,6 @@ public class BookingsDaoHelper {
 		Double price = event.getNonMemberPrice();
 		if (delegateDto.getMemberNo() != null) {
 			price = event.getMemberPrice();
-		}
-
-		// Add Accommodation Charge
-		if (delegate.getAccommodation() != null) {
-			price += delegate.getAccommodation().getFee();
 		}
 		delegate.setAmount(price); // Charge for delegate
 		return delegate;
@@ -942,7 +934,6 @@ public class BookingsDaoHelper {
 						+ event.getName()
 						+ ".Your booking status is now PAID. "
 						+ "You have been enrolled to CPD Online to perform this course.";
-
 			} else {
 				smsMessage = "Dear "
 						+ delegate.getFullName()
