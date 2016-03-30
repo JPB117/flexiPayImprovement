@@ -47,23 +47,23 @@ public class ServerOracle<T extends Listable> extends SimpleOracle<T> {
 			DataSuggestion<T> suggestion = new DataSuggestion<T>(value);
 			suggestions.add(suggestion);
 		}
-		LOGGER.log(Level.SEVERE,
-				"Set Values Called with::" + suggestions.size() + "Request::"
-						+ request);
-		
+
+		// LOGGER.log(Level.SEVERE,
+		// "Set Values Called with::" + suggestions.size() + "Request::"
+		// + request);
+
 		Response resp = new Response();
 		resp.setSuggestions(suggestions); // every server result fits the
 		callback.onSuggestionsReady(request, resp);
-		
+
 		if (request != null) {
-			// Reset
 			request = null;
 			resp = null;
 			for (StoreChangedHandler<T> handler : handlers) {
 				handler.onStoreChanged(values);
 			}
-		}else{
-			
+		} else {
+
 		}
 	}
 

@@ -122,7 +122,7 @@ public class TestBookingDao extends AbstractDaoTest {
 
 	}
 
-	@Test
+	// @Test
 	public void createBooking() {
 		BookingDto dto = new BookingDto();
 		dto.setStatus("");
@@ -181,7 +181,7 @@ public class TestBookingDao extends AbstractDaoTest {
 		bookingDao.deleteAllBookingInvoice(bookingRefid);
 	}
 
-	@Test
+	// @Test
 	public void testSearch() {
 		List<DelegateDto> delegates = bookingsHelper.getAllDelegates("",
 				"UJDQSrOzKaplbgfY", null, 1000, "");
@@ -213,7 +213,7 @@ public class TestBookingDao extends AbstractDaoTest {
 
 	@Ignore
 	public void testEnrolCourse() {
-		// bookingsHelper.enrolDelegateToLMS(delegates, bookingId);
+//		bookingsHelper.enrolDelegateToLMS(delegates, bookingId);
 	}
 
 	@Ignore

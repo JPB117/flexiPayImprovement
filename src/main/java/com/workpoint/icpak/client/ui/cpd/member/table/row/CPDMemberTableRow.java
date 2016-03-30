@@ -146,7 +146,6 @@ public class CPDMemberTableRow extends RowWidget {
 		boolean isDownloadVisible = (dto.getOrganizer().equals("ICPAK"))
 				&& (dto.getStatus() == CPDStatus.Approved)
 				&& (dto.getCategory() == CPDCategory.CATEGORY_A);
-		
 		boolean isNoActionVisible = (!isEditVisible && !isDownloadVisible && !isDeleteVisible);
 		aEdit.setVisible(isEditVisible);
 		aView.setVisible(isViewVisible);

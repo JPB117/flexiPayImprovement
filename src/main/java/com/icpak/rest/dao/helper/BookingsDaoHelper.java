@@ -17,6 +17,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import javax.mail.MessagingException;
 import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -635,7 +636,7 @@ public class BookingsDaoHelper {
 								.getRefId(), line);
 					}
 
-					String description = "%s - Accommodation at %s HB "
+					String description = "%s - Accommodation at %s "
 							+ "for %d members: %s";
 					line.setMemberNames(line.getMemberNames().concat(
 							", " + delegate.toString()));
@@ -662,7 +663,7 @@ public class BookingsDaoHelper {
 								.getRefId(), line);
 					}
 
-					String description = "%s - Accommodation at %s HB "
+					String description = "%s - Accommodation at %s "
 							+ "for %d members: %s";
 					line.setMemberNames(line.getMemberNames().concat(
 							", " + delegate.toString()));
@@ -899,22 +900,30 @@ public class BookingsDaoHelper {
 
 	public void enrolDelegateToLMS(List<DelegateDto> delegates, Event event)
 			throws JSONException, IOException {
-		System.err.println("Enrol delegates called!!!");
+		System.err.println("Enrol delegate to LMS called...");
 		logger.info("Delgates size::" + delegates.size());
 		String smsMessage = "";
 		for (DelegateDto delegate : delegates) {
+			if (delegate.getMemberNo() == null
+					|| delegate.getMemberNo().isEmpty()) {
+				logger.info("Cannot enrol non-members to LMS");
+				return;
+			}
+
 			CourseRegDetailsPojo details = new CourseRegDetailsPojo();
+			User user = userDao.findUserByMemberNo(delegate.getMemberNo());
+			if (user == null) {
+				logger.info("Cannot find user with this member No....");
+				return;
+			}
+
+			details.setPhoneNumber(user.getPhoneNumber());
+			details.setEmail(user.getEmail());
+			details.setMemberRefId(user.getMember().getRefId());
+			details.setGender("");
 			details.setCourseId(event.getLmsCourseId() + "");
 			details.setMembershipID(delegate.getMemberNo());
 			details.setFullName(delegate.getFullName());
-
-			User user = dao.findByRefId(delegate.getRefId(), User.class);
-			if (user != null) {
-				details.setPhoneNumber(user.getPhoneNumber());
-				details.setEmail(user.getEmail());
-				details.setMemberRefId(user.getMember().getRefId());
-				details.setGender("");
-			}
 
 			JSONObject json = new JSONObject(details);
 			logger.info("JSON::" + json);
@@ -962,6 +971,18 @@ public class BookingsDaoHelper {
 				}
 			} else {
 				logger.info("Non-member cannot be send sms..");
+			}
+
+			if (user.getEmail() != null) {
+				String subject = "PAYMENT CONFIRMATION FOR "
+						+ event.getName().toUpperCase();
+				try {
+					EmailServiceHelper.sendEmail(smsMessage, "RE: ICPAK '"
+							+ subject, Arrays.asList(user.getEmail()),
+							Arrays.asList(user.getFullName()));
+				} catch (MessagingException e) {
+					e.printStackTrace();
+				}
 			}
 
 			/* Update Delegate Record */

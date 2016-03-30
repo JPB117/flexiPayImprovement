@@ -142,7 +142,7 @@ public class EventBookingView extends ViewImpl implements
 	@UiField
 	Anchor aBrowseOthers;
 
-	int counter = 0;
+	int counter = 2;
 	boolean isValid = true;
 	boolean isDelegateValid = true;
 

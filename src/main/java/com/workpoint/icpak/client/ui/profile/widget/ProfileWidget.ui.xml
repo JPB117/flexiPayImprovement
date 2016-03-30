@@ -260,7 +260,7 @@
 															</span>
 														</div>
 														<a ui:field="spnHelpIcon"
-															class="hide fa fa-question-circle popover-icon {style.help-icon}"
+															class="fa fa-question-circle popover-icon {style.help-icon}"
 															data-toggle="popover" data-trigger="hover" title="Reasons for this:"></a>
 														<d:PopOver></d:PopOver>
 													</div>

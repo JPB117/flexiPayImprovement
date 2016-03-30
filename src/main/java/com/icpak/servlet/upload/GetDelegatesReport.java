@@ -362,8 +362,8 @@ public class GetDelegatesReport {
 			}
 
 			if (j == 11) {
-				cell.setCellValue((detail.getAccommodation() == null ? "None"
-						: detail.getAccommodation().getHotel()));
+				cell.setCellValue((detail.getHotel() == null ? "None" : detail
+						.getHotel()));
 			}
 
 			// ,"PAID","RECEIPT" ,"LPO NO", "CREDIT","CLEARANCE NO","ATTEND"}
