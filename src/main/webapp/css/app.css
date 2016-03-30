@@ -163301,3 +163301,8 @@ body .jvectormap-zoomout {
 .accomodation-header {
 	width: 20% !important;
 }
+
+.credit-card-form .form-group .text-right{
+	padding:0px;
+	margin-top:10px;
+}

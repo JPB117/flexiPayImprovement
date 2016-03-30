@@ -1,5 +1,7 @@
 package com.workpoint.icpak.client.ui.payment;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -8,6 +10,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewImpl;
 import com.workpoint.icpak.client.ui.payment.widget.PaymentWidget;
+import com.workpoint.icpak.shared.model.Country;
 import com.workpoint.icpak.shared.model.CreditCardDto;
 import com.workpoint.icpak.shared.model.CreditCardResponse;
 import com.workpoint.icpak.shared.model.InvoiceDto;
@@ -99,6 +102,11 @@ public class PaymentView extends ViewImpl implements PaymentPresenter.MyView {
 	@Override
 	public void bindOfflineTransaction(TransactionDto result) {
 		panelPayment.bindOfflineTransaction(result);
+	}
+
+	@Override
+	public void setCountries(List<Country> countries) {
+		panelPayment.setCountries(countries);
 	}
 
 }

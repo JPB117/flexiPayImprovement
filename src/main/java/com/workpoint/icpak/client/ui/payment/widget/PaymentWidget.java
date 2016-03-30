@@ -31,6 +31,7 @@ import com.workpoint.icpak.client.ui.cpd.Year;
 import com.workpoint.icpak.client.ui.upload.custom.Uploader;
 import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.client.ui.util.NumberUtils;
+import com.workpoint.icpak.shared.model.Country;
 import com.workpoint.icpak.shared.model.CreditCardDto;
 import com.workpoint.icpak.shared.model.CreditCardResponse;
 import com.workpoint.icpak.shared.model.InvoiceDto;
@@ -55,6 +56,12 @@ public class PaymentWidget extends Composite {
 	DropDownList<Year> lstYears;
 	@UiField
 	TextField txtCvv;
+	@UiField
+	TextField txtCardHolderEmail;
+	@UiField
+	TextField txtCountryCode;
+	@UiField
+	TextField txtPhoneNo;
 	@UiField
 	TextField txtAmount;
 	@UiField
@@ -97,6 +104,8 @@ public class PaymentWidget extends Composite {
 	TextField txtOfflineAmount;
 	@UiField
 	RadioButton aDirectBanking;
+	@UiField
+	DropDownList<Country> lstCountry;
 
 	private int totalYears = 10;
 	private int totalMonths = 12;
@@ -188,16 +197,19 @@ public class PaymentWidget extends Composite {
 		String expiry = lstMonths.getValue().getName()
 				+ lstYears.getValue().getName();
 		creditCard = new CreditCardDto();
-		creditCard.setCard_holder_name("This can be anything");
+		creditCard.setCard_holder_name(txtCardHolderName.getValue());
 		creditCard.setCard_number(txtCardNumber.getValue());
 		creditCard.setAmount(trxAmount);
 		creditCard.setExpiry(expiry);
 		creditCard.setSecurity_code(txtCvv.getValue());
-		creditCard.setCountry("KE");
+		creditCard.setCountry(lstCountry.getValue().getCode());
+		creditCard.setMobile_number(txtCountryCode.getValue()
+				+ txtPhoneNo.getValue());
+		creditCard.setEmail(txtCardHolderEmail.getValue());
 		creditCard.setCurrency("KES");
 		creditCard.setState("Nairobi");
+		creditCard.setAddress1("Nairobi");
 		creditCard.setZip(trxAmount);
-		creditCard.setAddress1("This Can be anything!");
 		creditCard.setPaymentRefId(paymentRefId);
 		return creditCard;
 	}
@@ -397,5 +409,15 @@ public class PaymentWidget extends Composite {
 
 	public void bindOfflineTransaction(TransactionDto trx) {
 		this.trx = trx;
+	}
+
+	public void setCountries(List<Country> countries) {
+		lstCountry.setItems(countries);
+		for (Country c : countries) {
+			if (c.getName().equals("KE")) {
+				lstCountry.setValue(c);
+				break;
+			}
+		}
 	}
 }

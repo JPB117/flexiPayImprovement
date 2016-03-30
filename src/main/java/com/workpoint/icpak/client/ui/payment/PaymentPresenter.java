@@ -1,5 +1,9 @@
 package com.workpoint.icpak.client.ui.payment;
 
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -9,11 +13,14 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rest.delegates.client.ResourceDelegate;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.View;
+import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.workpoint.icpak.client.service.AbstractAsyncCallback;
 import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
 import com.workpoint.icpak.client.ui.events.ProcessingEvent;
+import com.workpoint.icpak.shared.api.CountriesResource;
 import com.workpoint.icpak.shared.api.CreditCardResource;
 import com.workpoint.icpak.shared.api.InvoiceResource;
+import com.workpoint.icpak.shared.model.Country;
 import com.workpoint.icpak.shared.model.CreditCardDto;
 import com.workpoint.icpak.shared.model.CreditCardResponse;
 import com.workpoint.icpak.shared.model.InvoiceDto;
@@ -51,24 +58,49 @@ public class PaymentPresenter extends PresenterWidget<PaymentPresenter.MyView> {
 		TransactionDto getOfflineTransactionoBject();
 
 		void bindOfflineTransaction(TransactionDto result);
+
+		void setCountries(List<Country> countries);
 	}
 
 	private ResourceDelegate<CreditCardResource> creditCardResource;
 	private InvoiceDto invoice;
 	private ResourceDelegate<InvoiceResource> invoiceResource;
+	private ResourceDelegate<CountriesResource> countriesResource;
 
 	@Inject
 	PaymentPresenter(EventBus eventBus, MyView view,
 			ResourceDelegate<CreditCardResource> creditCardResource,
+			ResourceDelegate<CountriesResource> countriesResource,
 			ResourceDelegate<InvoiceResource> invoiceResource) {
 		super(eventBus, view);
 		this.creditCardResource = creditCardResource;
 		this.invoiceResource = invoiceResource;
+		this.countriesResource = countriesResource;
 
 	}
 
 	protected void onBind() {
 		super.onBind();
+		countriesResource.withCallback(
+				new AbstractAsyncCallback<List<Country>>() {
+					public void onSuccess(List<Country> countries) {
+						Collections.sort(countries, new Comparator<Country>() {
+							@Override
+							public int compare(Country o1, Country o2) {
+								return o1.getDisplayName().compareTo(
+										o2.getDisplayName());
+							}
+						});
+
+						getView().setCountries(countries);
+					};
+
+					@Override
+					public void onFailure(Throwable caught) {
+						super.onFailure(caught);
+					}
+				}).getAll();
+
 		getView().getPayButton().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {

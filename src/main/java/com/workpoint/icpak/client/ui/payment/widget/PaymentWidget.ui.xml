@@ -30,7 +30,7 @@
 			<br />
 			<div class="alert alert-success" ui:field="panelMessage">
 				<i class="icon icon-ok"></i>
-				Thank-you for your payment. We will be processed within the next 72
+				Thank-you for your payment. It will be processed within the next 72
 				hours.
 			</div>
 		</g:HTMLPanel>
@@ -138,6 +138,7 @@
 				<div role="tabpanel" class="tab-pane" id="cards">
 					<div class="">
 						<div class="col-sm-12">
+							<br/>
 							<d:IssuesPanel ui:field="issuesPanel" styleName="hide alert alert-danger"></d:IssuesPanel>
 						</div>
 						<div class="col-sm-12">
@@ -193,7 +194,7 @@
 										<div class="col-sm-3 text-right">Names:</div>
 										<div class="col-sm-9">
 											<d:TextField class="form-control" ui:field="txtCardHolderName"
-												placeholder="eg:your email address">
+												placeholder="Names on the card">
 											</d:TextField>
 										</div>
 									</div>
@@ -219,7 +220,7 @@
 													ui:field="txtCardNumber">
 												</d:TextField>
 											</div>
-											<div class="col-sm-3 {style.no-padding}">
+											<div class="col-sm-4 {style.no-padding}" style="margin-left:10px;">
 												<d:TextField styleName="form-control" ui:field="txtCvv"
 													placeholder="Security Code"></d:TextField>
 											</div>
