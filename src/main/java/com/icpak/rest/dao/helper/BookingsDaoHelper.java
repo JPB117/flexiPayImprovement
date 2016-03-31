@@ -42,7 +42,6 @@ import com.icpak.rest.models.event.Accommodation;
 import com.icpak.rest.models.event.Booking;
 import com.icpak.rest.models.event.Delegate;
 import com.icpak.rest.models.event.Event;
-import com.icpak.rest.models.membership.ApplicationFormHeader;
 import com.icpak.rest.models.membership.Contact;
 import com.icpak.rest.models.membership.Member;
 import com.icpak.rest.models.util.Attachment;
@@ -126,16 +125,17 @@ public class BookingsDaoHelper {
 	}
 
 	public List<DelegateDto> getAllDelegates(String uriInfo, String eventId,
-			Integer offset, Integer limit, String searchTerm) {
+			Integer offset, Integer limit, String searchTerm,
+			String accomodationRefId, String bookingStatus) {
 		List<DelegateDto> delegateDtos = dao.getAllDelegates(eventId, offset,
-				limit, searchTerm);
+				limit, searchTerm, accomodationRefId, bookingStatus);
 		return delegateDtos;
 	}
 
 	public List<DelegateDto> getDelegateByQrCode(String uriInfo,
 			String eventId, Integer offset, Integer limit, String searchTerm) {
 		List<DelegateDto> delegateDtos = dao.getAllDelegates(eventId, offset,
-				limit, searchTerm, true);
+				limit, searchTerm, true, "", "");
 		return delegateDtos;
 	}
 
@@ -733,6 +733,18 @@ public class BookingsDaoHelper {
 		return createBooking(eventId, dto);
 	}
 
+	public BookingDto cancelBooking(String bookingId) {
+		Booking booking = null;
+		logger.info("Cancelling a Booking called..");
+		if (bookingId != null) {
+			booking = dao.getByBookingId(bookingId);
+			booking.setIsActive(0);
+			booking = (Booking) dao.save(booking);
+			return booking.toDto();
+		}
+		return null;
+	}
+
 	public BookingDto checkEmailExists(String email, String eventRefId) {
 		Event event = dao.findByRefId(eventRefId, Event.class);
 		Booking booking = dao.getBySponsorEmail(email, event.getId());
@@ -866,11 +878,8 @@ public class BookingsDaoHelper {
 
 		logger.error(delegateDto.getReceiptNo() + "== RCPT NO");
 		delegate.copyFrom(delegateDto);
-
 		dao.save(delegate);
-
 		cpdDao.updateCPDFromAttendance(delegate, delegate.getAttendance());
-
 		return delegate.toDto();
 	}
 
@@ -893,9 +902,11 @@ public class BookingsDaoHelper {
 
 	}
 
-	public Integer getDelegatesCount(String eventId, String searchTerm) {
+	public Integer getDelegatesCount(String eventId, String searchTerm,
+			String accomodationRefId, String bookingStatus) {
 		logger.error("== Counting delegates ===");
-		return dao.getDelegateCount(eventId, searchTerm);
+		return dao.getDelegateCount(eventId, searchTerm, accomodationRefId,
+				bookingStatus);
 	}
 
 	public void enrolDelegateToLMS(List<DelegateDto> delegates, Event event)

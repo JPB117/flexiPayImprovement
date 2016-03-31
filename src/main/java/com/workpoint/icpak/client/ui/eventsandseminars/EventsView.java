@@ -17,6 +17,7 @@ import com.gwtplatform.mvp.client.ViewImpl;
 import com.workpoint.icpak.client.model.UploadContext;
 import com.workpoint.icpak.client.model.UploadContext.UPLOADACTION;
 import com.workpoint.icpak.client.ui.component.ActionLink;
+import com.workpoint.icpak.client.ui.component.DropDownList;
 import com.workpoint.icpak.client.ui.component.PagingPanel;
 import com.workpoint.icpak.client.ui.eventsandseminars.delegates.row.DelegateTableRow;
 import com.workpoint.icpak.client.ui.eventsandseminars.delegates.table.DelegatesTable;
@@ -24,7 +25,9 @@ import com.workpoint.icpak.client.ui.eventsandseminars.header.EventsHeader;
 import com.workpoint.icpak.client.ui.eventsandseminars.row.EventsTableRow;
 import com.workpoint.icpak.client.ui.eventsandseminars.table.EventsTable;
 import com.workpoint.icpak.client.util.AppContext;
+import com.workpoint.icpak.shared.model.BookingStatus;
 import com.workpoint.icpak.shared.model.EventSummaryDto;
+import com.workpoint.icpak.shared.model.events.AccommodationDto;
 import com.workpoint.icpak.shared.model.events.BookingDto;
 import com.workpoint.icpak.shared.model.events.DelegateDto;
 import com.workpoint.icpak.shared.model.events.EventDto;
@@ -157,6 +160,20 @@ public class EventsView extends ViewImpl implements EventsPresenter.IEventsView 
 
 	public HasKeyDownHandlers getEventsSearchKeyDownHandler() {
 		return tblView.getSearchKeyDownHandler();
+	}
+
+	@Override
+	public HasValueChangeHandlers<AccommodationDto> getAccomodationValueChangeHandler() {
+		return tblDelegates.getAccomodationValueChangeHandler();
+	}
+
+	@Override
+	public HasValueChangeHandlers<BookingStatus> getBookingStatusValueChangeHandler() {
+		return tblDelegates.getBookingStatusValueChangeHandler();
+	}
+	
+	public DropDownList<AccommodationDto> getLstAccomodation() {
+		return tblDelegates.getLstAccomodation();
 	}
 
 }

@@ -19,11 +19,13 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Widget;
 import com.workpoint.icpak.client.ui.frontmember.model.MemberCategory;
+import com.workpoint.icpak.shared.model.BookingStatus;
 import com.workpoint.icpak.shared.model.Listable;
 import com.workpoint.icpak.shared.model.PaymentMode;
 import com.workpoint.icpak.shared.model.PaymentStatus;
 import com.workpoint.icpak.shared.model.PaymentType;
 import com.workpoint.icpak.shared.model.auth.ApplicationStatus;
+import com.workpoint.icpak.shared.model.events.AccommodationDto;
 
 public class TableView extends Composite {
 
@@ -77,11 +79,15 @@ public class TableView extends Composite {
 	HTMLPanel panelApplicationStatus;
 	@UiField
 	HTMLPanel panelPaymentStatus;
-
 	@UiField
 	HTMLPanel panelPaymentMode;
 	@UiField
 	HTMLPanel panelPaymentType;
+
+	@UiField
+	HTMLPanel panelAccomodation;
+	@UiField
+	HTMLPanel panelBookingStatus;
 
 	@UiField
 	DropDownList<Towns> listTowns;
@@ -96,6 +102,11 @@ public class TableView extends Composite {
 	DropDownList<PaymentMode> lstPaymentMode;
 	@UiField
 	DropDownList<PaymentType> lstPaymentType;
+
+	@UiField
+	DropDownList<AccommodationDto> lstAccomodation;
+	@UiField
+	DropDownList<BookingStatus> lstBookingStatus;
 
 	@UiField
 	DivElement divTownList;
@@ -117,7 +128,18 @@ public class TableView extends Composite {
 		setMemberCategoryVisible(false);
 		setApplicationAndPaymentVisible(false);
 		showFinanceFilters(false);
+		showDelegateFilters(false);
 		aSearch.addStyleName("hide");
+	}
+
+	public void showDelegateFilters(boolean show) {
+		if (show) {
+			panelAccomodation.setVisible(true);
+			panelBookingStatus.setVisible(true);
+		} else {
+			panelAccomodation.setVisible(false);
+			panelBookingStatus.setVisible(false);
+		}
 	}
 
 	public void setApplicationAndPaymentVisible(boolean show) {
@@ -521,6 +543,22 @@ public class TableView extends Composite {
 
 	public DropDownList<PaymentType> getLstPaymentType() {
 		return lstPaymentType;
+	}
+
+	public HasValueChangeHandlers<AccommodationDto> getAccomodationValueChangeHandler() {
+		return lstAccomodation;
+	}
+
+	public HasValueChangeHandlers<BookingStatus> getBookingStatusValueChangeHandler() {
+		return lstBookingStatus;
+	}
+
+	public DropDownList<BookingStatus> getLstBookingStatus() {
+		return lstBookingStatus;
+	}
+
+	public DropDownList<AccommodationDto> getLstAccomodation() {
+		return lstAccomodation;
 	}
 
 }

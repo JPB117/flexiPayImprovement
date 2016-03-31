@@ -49,6 +49,11 @@ public interface BookingsResource extends BaseResource {
 			BookingDto booking);
 
 	@POST
+	@Path("/cancel/{bookingId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public BookingDto cancelBooking(@PathParam("bookingId") String bookingId);
+
+	@POST
 	@Path("/{bookingId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public void sendAlert(@PathParam("bookingId") String bookingId);

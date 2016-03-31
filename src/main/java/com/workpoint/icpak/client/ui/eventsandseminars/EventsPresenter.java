@@ -1,8 +1,8 @@
 package com.workpoint.icpak.client.ui.eventsandseminars;
 
+import java.util.HashMap;
 import java.util.List;
-
-import javax.mail.search.SearchTerm;
+import java.util.Map;
 
 import com.google.gwt.event.dom.client.HasKeyDownHandlers;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -22,6 +22,7 @@ import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.annotations.TabInfo;
 import com.gwtplatform.mvp.client.annotations.UseGatekeeper;
+import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.TabContentProxyPlace;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.workpoint.icpak.client.place.NameTokens;
@@ -29,23 +30,26 @@ import com.workpoint.icpak.client.service.AbstractAsyncCallback;
 import com.workpoint.icpak.client.ui.AppManager;
 import com.workpoint.icpak.client.ui.OptionControl;
 import com.workpoint.icpak.client.ui.admin.TabDataExt;
+import com.workpoint.icpak.client.ui.component.DropDownList;
 import com.workpoint.icpak.client.ui.component.PagingConfig;
 import com.workpoint.icpak.client.ui.component.PagingLoader;
 import com.workpoint.icpak.client.ui.component.PagingPanel;
 import com.workpoint.icpak.client.ui.events.AfterSaveEvent;
 import com.workpoint.icpak.client.ui.events.EditModelEvent;
 import com.workpoint.icpak.client.ui.events.EditModelEvent.EditModelHandler;
+import com.workpoint.icpak.client.ui.events.FullScreenEvent;
 import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
 import com.workpoint.icpak.client.ui.events.ProcessingEvent;
 import com.workpoint.icpak.client.ui.events.TableActionEvent;
 import com.workpoint.icpak.client.ui.events.TableActionEvent.TableActionHandler;
 import com.workpoint.icpak.client.ui.eventsandseminars.resendProforma.ResendModel;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
-import com.workpoint.icpak.client.ui.security.AdminGateKeeper;
 import com.workpoint.icpak.client.ui.security.EventsGateKeeper;
 import com.workpoint.icpak.shared.api.EventsResource;
+import com.workpoint.icpak.shared.model.BookingStatus;
 import com.workpoint.icpak.shared.model.EventSummaryDto;
 import com.workpoint.icpak.shared.model.TableActionType;
+import com.workpoint.icpak.shared.model.events.AccommodationDto;
 import com.workpoint.icpak.shared.model.events.BookingDto;
 import com.workpoint.icpak.shared.model.events.DelegateDto;
 import com.workpoint.icpak.shared.model.events.EventDto;
@@ -81,6 +85,12 @@ public class EventsPresenter extends
 		HasKeyDownHandlers getDelegateSearchKeyDownHandler();
 
 		HasKeyDownHandlers getEventsSearchKeyDownHandler();
+
+		HasValueChangeHandlers<AccommodationDto> getAccomodationValueChangeHandler();
+
+		HasValueChangeHandlers<BookingStatus> getBookingStatusValueChangeHandler();
+
+		DropDownList<AccommodationDto> getLstAccomodation();
 	}
 
 	@ProxyCodeSplit
@@ -91,6 +101,11 @@ public class EventsPresenter extends
 
 	private String delegateSearchTerm = "";
 	protected String eventSearchTerm = "";
+	private static String accomodationRefId = "";
+	private static String bookingStatus = "";
+	private PlaceManager placeManager;
+	private ResourceDelegate<EventsResource> eventsDelegate;
+	private String eventId;
 
 	ValueChangeHandler<String> eventsValueChangeHandler = new ValueChangeHandler<String>() {
 		@Override
@@ -126,6 +141,48 @@ public class EventsPresenter extends
 		}
 	};
 
+	ValueChangeHandler<AccommodationDto> accomodationValueChangeHandler = new ValueChangeHandler<AccommodationDto>() {
+		@Override
+		public void onValueChange(ValueChangeEvent<AccommodationDto> event) {
+			if (event.getValue() != null) {
+				accomodationRefId = event.getValue().getRefId();
+			} else {
+				accomodationRefId = "";
+			}
+			Map<String, String> params = new HashMap<String, String>();
+			params.put("accomodationRefId", accomodationRefId);
+			params.put("eventId", eventId);
+			params.put("bookingStatus", bookingStatus);
+			PlaceRequest placeRequest = new PlaceRequest.Builder()
+					.nameToken(NameTokens.events).with(params).build();
+			placeManager.revealPlace(placeRequest);
+		}
+	};
+
+	ValueChangeHandler<BookingStatus> bookingStatusValueChangeHandler = new ValueChangeHandler<BookingStatus>() {
+		@Override
+		public void onValueChange(ValueChangeEvent<BookingStatus> event) {
+			if (event.getValue() != null) {
+				bookingStatus = event.getValue().getDisplayName();
+				if (bookingStatus.equals("Active")) {
+					bookingStatus = "1";
+				} else if (bookingStatus.equals("Cancelled")) {
+					bookingStatus = "0";
+				}
+			} else {
+				bookingStatus = "";
+			}
+			Map<String, String> params = new HashMap<String, String>();
+			params.put("accomodationRefId", accomodationRefId);
+			params.put("eventId", eventId);
+			params.put("bookingStatus", bookingStatus);
+			PlaceRequest placeRequest = new PlaceRequest.Builder()
+					.nameToken(NameTokens.events).with(params).build();
+			placeManager.revealPlace(placeRequest);
+		}
+	};
+	private boolean hasEventChanged = false;
+
 	@TabInfo(container = HomePresenter.class)
 	static TabData getTabLabel(EventsGateKeeper gateKeeper) {
 		String tabName = "Events & Courses";
@@ -134,15 +191,14 @@ public class EventsPresenter extends
 		return data;
 	}
 
-	private ResourceDelegate<EventsResource> eventsDelegate;
-	private String eventId;
-
 	@Inject
 	public EventsPresenter(final EventBus eventBus, final IEventsView view,
 			final IEventsProxy proxy,
-			ResourceDelegate<EventsResource> eventsDelegate) {
+			ResourceDelegate<EventsResource> eventsDelegate,
+			final PlaceManager placeManager) {
 		super(eventBus, view, proxy, HomePresenter.SLOT_SetTabContent);
 		this.eventsDelegate = eventsDelegate;
+		this.placeManager = placeManager;
 	}
 
 	@Override
@@ -156,13 +212,17 @@ public class EventsPresenter extends
 		getView().getEventsSearchKeyDownHandler().addKeyDownHandler(
 				eventsKeyHandler);
 
+		getView().getBookingStatusValueChangeHandler().addValueChangeHandler(
+				bookingStatusValueChangeHandler);
+		getView().getAccomodationValueChangeHandler().addValueChangeHandler(
+				accomodationValueChangeHandler);
+
 		getView().getEventsPagingPanel().setLoader(new PagingLoader() {
 			@Override
 			public void onLoad(int offset, int limit) {
 				loadEvents(offset, limit, eventSearchTerm);
 			}
 		});
-
 		getView().getDelegatesPagingPanel().setLoader(new PagingLoader() {
 			@Override
 			public void onLoad(int offset, int limit) {
@@ -174,7 +234,11 @@ public class EventsPresenter extends
 	@Override
 	public void prepareFromRequest(PlaceRequest request) {
 		super.prepareFromRequest(request);
+		hasEventChanged = (eventId != request.getParameter("eventId", "") ? true
+				: false);
 		eventId = request.getParameter("eventId", null);
+		accomodationRefId = request.getParameter("accomodationRefId", "");
+		bookingStatus = request.getParameter("bookingStatus", "");
 		// Load Event Details to View
 		if (eventId != null) {
 			getView().showAdvancedView(true);
@@ -214,7 +278,25 @@ public class EventsPresenter extends
 					getView().bindEvent(event);
 				}
 			}).getById(eventId);
+
+			if (hasEventChanged) {
+				// fire FullScreenEvent
+				fireEvent(new FullScreenEvent("show"));
+				eventsDelegate
+						.withCallback(
+								new AbstractAsyncCallback<List<AccommodationDto>>() {
+									@Override
+									public void onSuccess(
+											List<AccommodationDto> result) {
+										getView()
+												.getLstAccomodation()
+												.setItems(result,
+														"--Select Accomodation--");
+									}
+								}).accommodations(eventId).getAll(0, 100);
+			}
 		} else {
+			fireEvent(new FullScreenEvent("hide"));
 			// Load Events
 			eventsDelegate.withCallback(new AbstractAsyncCallback<Integer>() {
 				@Override
@@ -238,24 +320,28 @@ public class EventsPresenter extends
 						fireEvent(new ProcessingCompletedEvent());
 						getView().bindDelegates(delegates);
 					}
-				}).delegates(eventId).getAll(offset, limit, searchTerm);
+				})
+				.delegates(eventId)
+				.getAll(offset, limit, searchTerm, accomodationRefId,
+						bookingStatus);
 	}
 
 	protected void loadDelegatesCount(final String searchTerm) {
 		fireEvent(new ProcessingEvent());
-		eventsDelegate.withCallback(new AbstractAsyncCallback<Integer>() {
-			@Override
-			public void onSuccess(Integer count) {
-				fireEvent(new ProcessingCompletedEvent());
-
-				PagingPanel panel = getView().getDelegatesPagingPanel();
-				panel.setTotal(count);
-				PagingConfig config = panel.getConfig();
-				config.setPAGE_LIMIT(50);
-				loadDelegates(config.getOffset(), config.getLimit(), searchTerm);
-				fireEvent(new ProcessingCompletedEvent());
-			}
-		}).delegates(eventId).getSearchCount(searchTerm);
+		eventsDelegate
+				.withCallback(new AbstractAsyncCallback<Integer>() {
+					@Override
+					public void onSuccess(Integer count) {
+						PagingPanel panel = getView().getDelegatesPagingPanel();
+						panel.setTotal(count);
+						PagingConfig config = panel.getConfig();
+						config.setPAGE_LIMIT(50);
+						loadDelegates(config.getOffset(), config.getLimit(),
+								searchTerm);
+						fireEvent(new ProcessingCompletedEvent());
+					}
+				}).delegates(eventId)
+				.getSearchCount(searchTerm, accomodationRefId, bookingStatus);
 	}
 
 	private void loadEvents(final String searchTerm) {
@@ -287,6 +373,22 @@ public class EventsPresenter extends
 	public void onEditModel(EditModelEvent event) {
 		if (event.getModel() instanceof DelegateDto) {
 			save((DelegateDto) event.getModel());
+		} else if (event.getModel() instanceof String) {
+			fireEvent(new ProcessingEvent());
+			eventsDelegate
+					.withCallback(new AbstractAsyncCallback<BookingDto>() {
+						@Override
+						public void onSuccess(BookingDto result) {
+							if (result != null) {
+								fireEvent(new ProcessingCompletedEvent());
+								fireEvent(new AfterSaveEvent(result
+										.getContact().getCompany()
+										+ " booking has been cancelled."));
+								loadData();
+							}
+						}
+					}).bookings(eventId)
+					.cancelBooking((String) event.getModel());
 		}
 	}
 

@@ -70,7 +70,7 @@ public class TestBookingDao extends AbstractDaoTest {
 	@Ignore
 	public void testGetDelegate() {
 		List<DelegateDto> delegates = bookingsHelper.getAllDelegates(null,
-				"QEyf2DasD3X7Pybt", 0, 10, "");
+				"QEyf2DasD3X7Pybt", 0, 10, "", "", "");
 
 		for (DelegateDto del : delegates) {
 			System.err.println("Booking Ref>>" + del.getBookingRefId() + " "
@@ -181,18 +181,16 @@ public class TestBookingDao extends AbstractDaoTest {
 		bookingDao.deleteAllBookingInvoice(bookingRefid);
 	}
 
-	// @Test
+	@Test
 	public void testSearch() {
 		List<DelegateDto> delegates = bookingsHelper.getAllDelegates("",
-				"UJDQSrOzKaplbgfY", null, 1000, "");
-		System.err.println(bookingsHelper.getDelegatesCount("UJDQSrOzKaplbgfY",
-				""));
+				"IWqduDqhOKXb9nxq", null, 1000, "", "", "1");
+		System.err.println(bookingsHelper.getDelegatesCount("IWqduDqhOKXb9nxq",
+				"", "", "1"));
 		for (DelegateDto d : delegates) {
 			logger.error(" Event RefId= " + d.getEventRefId());
 		}
-
 		System.err.println(delegates.size());
-
 	}
 
 	// @Test
@@ -208,12 +206,12 @@ public class TestBookingDao extends AbstractDaoTest {
 	@Ignore
 	public void testSearchCount() {
 		System.err.println(bookingsHelper.getDelegatesCount("Jx4Ca6HpOutf2ic7",
-				"ki"));
+				"ki", "", ""));
 	}
 
 	@Ignore
 	public void testEnrolCourse() {
-//		bookingsHelper.enrolDelegateToLMS(delegates, bookingId);
+		// bookingsHelper.enrolDelegateToLMS(delegates, bookingId);
 	}
 
 	@Ignore

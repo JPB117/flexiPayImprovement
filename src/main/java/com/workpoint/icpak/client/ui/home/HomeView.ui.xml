@@ -7,7 +7,7 @@
 
 	<g:HTMLPanel styleName="set-full-height">
 		<aside ng-include="'app/views/partials/sidebar.html'"
-			ng-controller="SidebarController" class="aside ng-scope">
+			ng-controller="SidebarController" class="aside ng-scope" ui:field="elSideBar">
 			<!-- Inline template with sidebar items markup and ng-directives -->
 
 			<script type="text/ng-template" id="sidebar-renderer.html"

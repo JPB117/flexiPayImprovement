@@ -24,6 +24,8 @@ import com.workpoint.icpak.client.place.NameTokens;
 import com.workpoint.icpak.client.service.AbstractAsyncCallback;
 import com.workpoint.icpak.client.ui.MainPagePresenter;
 import com.workpoint.icpak.client.ui.events.ContextLoadedEvent;
+import com.workpoint.icpak.client.ui.events.FullScreenEvent;
+import com.workpoint.icpak.client.ui.events.FullScreenEvent.FullScreenHandler;
 import com.workpoint.icpak.client.ui.events.LogoutEvent;
 import com.workpoint.icpak.client.ui.events.LogoutEvent.LogoutHandler;
 import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
@@ -35,7 +37,8 @@ import com.workpoint.icpak.shared.api.SessionResource;
 
 public class HomePresenter extends
 		TabContainerPresenter<HomePresenter.IHomeView, HomePresenter.MyProxy>
-		implements ProcessingHandler, ProcessingCompletedHandler, LogoutHandler {
+		implements ProcessingHandler, ProcessingCompletedHandler,
+		LogoutHandler, FullScreenHandler {
 
 	public interface IHomeView extends TabView {
 		// void bindAlerts(HashMap<TaskType, Integer> alerts);
@@ -49,6 +52,8 @@ public class HomePresenter extends
 		void showDocsList();
 
 		void setMiddleHeight();
+
+		void showFullScreen(String message);
 	}
 
 	@ProxyStandard
@@ -101,7 +106,7 @@ public class HomePresenter extends
 		addRegisteredHandler(ProcessingEvent.TYPE, this);
 		addRegisteredHandler(ProcessingCompletedEvent.TYPE, this);
 		addRegisteredHandler(LogoutEvent.TYPE, this);
-
+		addRegisteredHandler(FullScreenEvent.getType(), this);
 	}
 
 	@Override
@@ -141,6 +146,11 @@ public class HomePresenter extends
 
 		}).logout();
 
+	}
+
+	@Override
+	public void onFullScreen(FullScreenEvent event) {
+		getView().showFullScreen(event.getMessage());
 	}
 
 }

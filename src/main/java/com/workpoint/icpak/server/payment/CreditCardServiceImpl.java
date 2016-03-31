@@ -76,7 +76,6 @@ public class CreditCardServiceImpl implements CreditCardService {
 	public CreditCardResponse authorizeCardTransaction(CreditCardDto cardDetails) {
 
 		System.err.println("================= Authorizing card payment");
-		System.err.println(cardDetails);
 
 		HttpClient client = new DefaultHttpClient();
 		HttpPost post = new HttpPost(

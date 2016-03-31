@@ -329,7 +329,8 @@ public class EventBookingPresenter extends
 	@Override
 	public void prepareFromRequest(PlaceRequest request) {
 		super.prepareFromRequest(request);
-		eventId = request.getParameter("eventId", "9J4oKtW898RyOClP");
+
+		eventId = request.getParameter("eventId", "");
 		bookingId = request.getParameter("bookingId", null);
 
 		countriesResource.withCallback(

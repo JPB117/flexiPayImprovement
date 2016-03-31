@@ -1,10 +1,10 @@
 package com.workpoint.icpak.client.ui.eventsandseminars.delegates.table;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasKeyDownHandlers;
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -13,13 +13,14 @@ import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 import com.workpoint.icpak.client.ui.component.ActionLink;
+import com.workpoint.icpak.client.ui.component.DropDownList;
 import com.workpoint.icpak.client.ui.component.PagingPanel;
 import com.workpoint.icpak.client.ui.component.PagingTable;
 import com.workpoint.icpak.client.ui.component.TableHeader;
 import com.workpoint.icpak.client.ui.eventsandseminars.delegates.row.DelegateTableRow;
 import com.workpoint.icpak.client.util.AppContext;
-import com.workpoint.icpak.shared.model.EventType;
-import com.workpoint.icpak.shared.model.events.EventDto;
+import com.workpoint.icpak.shared.model.BookingStatus;
+import com.workpoint.icpak.shared.model.events.AccommodationDto;
 
 public class DelegatesTable extends Composite {
 
@@ -36,7 +37,13 @@ public class DelegatesTable extends Composite {
 	public DelegatesTable() {
 		initWidget(uiBinder.createAndBindUi(this));
 		tblView.setAutoNumber(false);
+		tblView.showDelegateFilters(true);
 		createHeader();
+
+		tblView.getLstBookingStatus().setItems(
+				Arrays.asList(BookingStatus.values()),
+				"-Select Booking Status-");
+
 	}
 
 	public void createHeader() {
@@ -51,6 +58,7 @@ public class DelegatesTable extends Composite {
 		th.add(new TableHeader("Member No"));
 		th.add(new TableHeader("Delegate Names"));
 		th.add(new TableHeader("Accomodation"));
+		th.add(new TableHeader("Booking Status"));
 		th.add(new TableHeader("Payment Status"));
 		th.add(new TableHeader("Attendance"));
 		if (AppContext.isCurrentUserEventEdit()) {
@@ -98,5 +106,17 @@ public class DelegatesTable extends Composite {
 
 	public HasKeyDownHandlers getSearchKeyDownHandler() {
 		return tblView.getSearchKeyDownHandler();
+	}
+
+	public HasValueChangeHandlers<BookingStatus> getBookingStatusValueChangeHandler() {
+		return tblView.getBookingStatusValueChangeHandler();
+	}
+
+	public HasValueChangeHandlers<AccommodationDto> getAccomodationValueChangeHandler() {
+		return tblView.getAccomodationValueChangeHandler();
+	}
+
+	public DropDownList<AccommodationDto> getLstAccomodation() {
+		return tblView.getLstAccomodation();
 	}
 }

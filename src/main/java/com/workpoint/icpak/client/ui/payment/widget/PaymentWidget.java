@@ -303,7 +303,7 @@ public class PaymentWidget extends Composite {
 		return isValid;
 	}
 
-	public HasClickHandlers getCardPayButton() {
+	public ActionLink getCardPayButton() {
 		return aPay;
 	}
 

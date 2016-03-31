@@ -24,6 +24,19 @@
 				</div>
 			</g:HTMLPanel>
 
+			<g:HTMLPanel ui:field="panelAccomodation">
+				<div class="col-md-3" ui:field="divAccomodation">
+					<d:DropDownList ui:field="lstAccomodation"
+						styleName="form-control"></d:DropDownList>
+				</div>
+			</g:HTMLPanel>
+			<g:HTMLPanel ui:field="panelBookingStatus">
+				<div class="col-md-3" ui:field="divBookingStatus">
+					<d:DropDownList ui:field="lstBookingStatus"
+						styleName="form-control"></d:DropDownList>
+				</div>
+			</g:HTMLPanel>
+
 			<g:HTMLPanel ui:field="panelPaymentMode">
 				<div class="col-md-2" ui:field="divPaymentMode">
 					<d:DropDownList ui:field="lstPaymentMode" styleName="form-control"></d:DropDownList>

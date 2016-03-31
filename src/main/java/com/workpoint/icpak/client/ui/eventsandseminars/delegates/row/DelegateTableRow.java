@@ -61,6 +61,8 @@ public class DelegateTableRow extends RowWidget {
 	@UiField
 	SpanElement spnPaymentStatus;
 	@UiField
+	SpanElement spnBookingStatus;
+	@UiField
 	SpanElement spnAttendance;
 	@UiField
 	SpanElement spnIsMember;
@@ -152,11 +154,30 @@ public class DelegateTableRow extends RowWidget {
 			final String editUrl = "#eventBooking;eventId=" + event.getRefId()
 					+ ";bookingId=" + delegate.getBookingRefId();
 			// aEditBooking.setHref(editUrl);
-
 			aEditBooking.addClickHandler(new ClickHandler() {
 				@Override
 				public void onClick(ClickEvent event) {
-					Window.Location.replace(editUrl);
+					Window.open(editUrl, "Edit Booking", null);
+				}
+			});
+
+			aCancelBooking.addClickHandler(new ClickHandler() {
+				@Override
+				public void onClick(ClickEvent event) {
+					AppManager
+							.showPopUp(
+									"Confirm",
+									"Are you sure you want to cancel this booking - both the sponsor and the delegates will be notified...",
+									new OnOptionSelected() {
+										@Override
+										public void onSelect(String name) {
+											if (name.equals("Confirm")) {
+												AppContext
+														.fireEvent(new EditModelEvent(
+																delegate.getBookingRefId()));
+											}
+										}
+									}, "Confirm", "Cancel");
 				}
 			});
 		}
@@ -240,6 +261,14 @@ public class DelegateTableRow extends RowWidget {
 			spnIsMember.setClassName("fa fa-times");
 		} else {
 			spnIsMember.setClassName("fa fa-check");
+		}
+
+		if (delegate.getIsBookingActive() == 1) {
+			spnBookingStatus.setClassName("label label-success");
+			spnBookingStatus.setInnerText("Active");
+		} else {
+			spnBookingStatus.setClassName("label label-danger");
+			spnBookingStatus.setInnerText("Cancelled");
 		}
 
 		setPaymentStatus(delegate.getPaymentStatus());

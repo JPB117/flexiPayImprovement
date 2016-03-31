@@ -42,10 +42,12 @@ public class DelegatesResourceImpl implements DelegatesResource {
 	public List<DelegateDto> getAll(
 			@ApiParam(value = "Starting point to fetch") @QueryParam("offset") Integer offset,
 			@ApiParam(value = "No of Items to fetch") @QueryParam("limit") Integer limit,
-			@QueryParam("searchTerm") String searchTerm) {
+			@QueryParam("searchTerm") String searchTerm,
+			@QueryParam("accomodationRefId") String accomodationRefId,
+			@QueryParam("bookingStatus") String bookingStatus) {
 		String uri = "";
 		List<DelegateDto> dtos = helper.getAllDelegates("", eventId, offset,
-				limit, searchTerm);
+				limit, searchTerm, accomodationRefId, bookingStatus);
 		return dtos;
 	}
 
@@ -64,13 +66,16 @@ public class DelegatesResourceImpl implements DelegatesResource {
 	@GET
 	@Path("/count")
 	public Integer getCount() {
-		return getSearchCount("");
+		return getSearchCount("", "", "");
 	}
 
 	@GET
 	@Path("/searchCount")
-	public Integer getSearchCount(@QueryParam("searchTerm") String searchTerm) {
-		return helper.getDelegatesCount(eventId, searchTerm);
+	public Integer getSearchCount(@QueryParam("searchTerm") String searchTerm,
+			@QueryParam("accomodationRefId") String accomodationRefId,
+			@QueryParam("bookingStatus") String bookingStatus) {
+		return helper.getDelegatesCount(eventId, searchTerm, accomodationRefId,
+				bookingStatus);
 	}
 
 	@GET

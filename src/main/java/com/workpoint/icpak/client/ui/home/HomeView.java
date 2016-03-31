@@ -24,9 +24,11 @@ public class HomeView extends ViewImpl implements HomePresenter.IHomeView {
 	HomeTabPanel tabPanel;
 	@UiField
 	HTMLPanel tabContent;
-
 	@UiField
 	Element panelContent;
+
+	@UiField
+	Element elSideBar;
 
 	@Inject
 	public HomeView(final Binder binder) {
@@ -106,6 +108,17 @@ public class HomeView extends ViewImpl implements HomePresenter.IHomeView {
 
 		if (middleHeight > 0) {
 			panelContent.getStyle().setHeight(middleHeight, Unit.PX);
+		}
+	}
+
+	@Override
+	public void showFullScreen(String message) {
+		if (message.equals("show")) {
+			elSideBar.addClassName("hide");
+			panelContent.addClassName("ml0");
+		} else {
+			elSideBar.removeClassName("hide");
+			panelContent.removeClassName("ml0");
 		}
 	}
 

@@ -32,6 +32,7 @@ public class DelegateDto extends SerializableObj {
 	private DelegateType delegateType;
 	private String bookingId;
 	private String bookingRefId;
+	private Integer isBookingActive;
 	private String eventRefId;
 	private PaymentStatus paymentStatus;
 	public String courseId;
@@ -325,6 +326,14 @@ public class DelegateDto extends SerializableObj {
 
 	public void setDelegatePhoneNumber(String delegatePhoneNumber) {
 		this.delegatePhoneNumber = delegatePhoneNumber;
+	}
+
+	public Integer getIsBookingActive() {
+		return isBookingActive;
+	}
+
+	public void setIsBookingActive(Integer isBookingActive) {
+		this.isBookingActive = isBookingActive;
 	}
 
 }

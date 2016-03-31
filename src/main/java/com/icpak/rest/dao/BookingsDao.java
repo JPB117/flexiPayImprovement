@@ -402,56 +402,59 @@ public class BookingsDao extends BaseDao {
 	}
 
 	public int getDelegateCount(String eventId) {
-		return getDelegateCount(eventId, null);
+		return getDelegateCount(eventId, null, "", "");
 	}
 
-	public int getDelegateCount(String eventId, String searchTerm) {
+	public int getDelegateCount(String eventId, String searchTerm,
+			String accomodationRefId, String bookingStatus) {
 
 		Number number = null;
+		String sql = "select count(*) "
+				+ "from delegate d inner join booking b on (d.booking_id=b.id) "
+				+ "inner join event e on (b.event_id=e.id) "
+				+ "left join accommodation a on (a.eventId=e.id) "
+				+ "where e.refId=:eventRefId";
 
-		if (eventId != null && searchTerm != null && !searchTerm.isEmpty()) {
-			String sql = "select count(*) "
-					+ "from delegate d inner join booking b on (d.booking_id=b.id) "
-					+ "inner join event e on (b.event_id=e.id) "
-					+ "left join accommodation a on (a.eventId=e.id) "
-					+ "where e.refId=:eventRefId";
-
-			sql = sql.concat(" and "
-					+ "(d.memberRegistrationNo like :searchTerm or "
-					+ "a.hotel like :searchTerm or "
-					+ "d.title like :searchTerm or "
-					+ "d.email like :searchTerm or "
-					+ "d.otherNames like :searchTerm or "
-					+ "d.ern like :searchTerm)");
-
-			Query query = getEntityManager().createNativeQuery(sql)
-					.setParameter("eventRefId", eventId);
-			if (searchTerm != null && !searchTerm.isEmpty()) {
-				query.setParameter("searchTerm", "%" + searchTerm + "%");
-			}
-
-			number = getSingleResultOrNull(query);
-
-		} else {
-
-			String sql = "select count(*) "
-					+ "from delegate d inner join booking b on (d.booking_id=b.id) "
-					+ "inner join event e on (b.event_id=e.id) "
-					+ "left join accommodation a on (a.eventId=e.id) "
-					+ "where e.refId=:eventRefId";
-
-			number = getSingleResultOrNull(getEntityManager()
-					.createNativeQuery(sql).setParameter("eventRefId", eventId));
+		if (accomodationRefId != null && !accomodationRefId.isEmpty()) {
+			sql = sql.concat(" and a.refId=:accomodationRefId");
 		}
 
-		logger.error("=== Delegate Count ==== " + number.intValue());
+		if (bookingStatus != null && !bookingStatus.isEmpty()) {
+			sql = sql.concat(" and b.isActive=:bookingStatus");
+		}
 
+		if (searchTerm != null && !searchTerm.isEmpty()) {
+			sql = sql.concat(" and "
+					+ "(d.memberRegistrationNo like :searchTerm or "
+					+ "d.email like :searchTerm or "
+					+ "d.fullName like :searchTerm or "
+					+ "d.ern like :searchTerm or "
+					+ "b.`E-mail` like :searchTerm or "
+					+ "b.company like :searchTerm or "
+					+ "b.Contact like :searchTerm)");
+		}
+
+		Query query = getEntityManager().createNativeQuery(sql).setParameter(
+				"eventRefId", eventId);
+		if (searchTerm != null && !searchTerm.isEmpty()) {
+			query.setParameter("searchTerm", "%" + searchTerm + "%");
+		}
+		if (accomodationRefId != null && !accomodationRefId.isEmpty()) {
+			query.setParameter("accomodationRefId", accomodationRefId);
+		}
+		if (bookingStatus != null && !bookingStatus.isEmpty()) {
+			query.setParameter("bookingStatus", bookingStatus);
+		}
+		number = getSingleResultOrNull(query);
+		logger.error("=== Delegate Count ==== " + number.intValue());
 		return number.intValue();
 	}
 
 	public List<DelegateDto> getAllDelegates(String passedRefId,
-			Integer offset, Integer limit, String searchTerm) {
-		return getAllDelegates(passedRefId, offset, limit, searchTerm, false);
+			Integer offset, Integer limit, String searchTerm,
+			String accomodationRefId, String bookingStatus) {
+		return getAllDelegates(passedRefId, offset, limit, searchTerm, false,
+				accomodationRefId, bookingStatus);
 	}
 
 	/*
@@ -459,7 +462,8 @@ public class BookingsDao extends BaseDao {
 	 */
 
 	public List<DelegateDto> getAllDelegates(String passedRefId,
-			Integer offset, Integer limit, String searchTerm, boolean isByQrCode) {
+			Integer offset, Integer limit, String searchTerm,
+			boolean isByQrCode, String accomodationRefId, String bookingStatus) {
 		logger.error("==getting delegate for this event===>" + passedRefId);
 		logger.error("==Is search limitted to only QR Code==>" + isByQrCode);
 		logger.error("==Search Term ==>>>>" + searchTerm);
@@ -470,11 +474,19 @@ public class BookingsDao extends BaseDao {
 				+ "d.refId,d.memberRefId,d.memberRegistrationNo,d.ern,"
 				+ "d.title,d.otherNames,d.fullName,d.phoneNumber,a.hotel,b.paymentStatus,"
 				+ "d.attendance,d.surname,d.email,e.refid,d.booking_id,"
-				+ "d.receiptNo,d.lpoNo,d.isCredit,d.clearanceNo "
+				+ "d.receiptNo,d.lpoNo,d.isCredit,d.clearanceNo,b.isActive "
 				+ "from delegate d inner join booking b on (d.booking_id=b.id) "
 				+ "inner join event e on (b.event_id=e.id) "
 				+ "left join accommodation a on (d.accommodationId=a.id) "
 				+ "where e.refId=:eventRefId";
+
+		if (accomodationRefId != null && !accomodationRefId.isEmpty()) {
+			sql = sql.concat(" and a.refId=:accomodationRefId");
+		}
+
+		if (bookingStatus != null && !bookingStatus.isEmpty()) {
+			sql = sql.concat(" and b.isActive=:bookingStatus");
+		}
 
 		if (searchTerm != null && !searchTerm.isEmpty()) {
 			if (isByQrCode) {
@@ -495,19 +507,25 @@ public class BookingsDao extends BaseDao {
 
 		Query query = getEntityManager().createNativeQuery(sql).setParameter(
 				"eventRefId", passedRefId);
+		/* Parameters */
 		if (searchTerm != null && !searchTerm.isEmpty()) {
 			if (isByQrCode) {
 				query.setParameter("searchTerm", searchTerm);
 			} else {
 				query.setParameter("searchTerm", "%" + searchTerm + "%");
 			}
-
 		}
+		if (accomodationRefId != null && !accomodationRefId.isEmpty()) {
+			query.setParameter("accomodationRefId", accomodationRefId);
+		}
+		if (bookingStatus != null && !bookingStatus.isEmpty()) {
+			query.setParameter("bookingStatus", bookingStatus);
+		}
+
 		List<Object[]> rows = getResultList(query, offset, limit);
 		for (Object o[] : rows) {
 			int i = 0;
 			Object value = null;
-
 			String bookingRefId = (value = o[i++]) == null ? null : value
 					.toString();
 			Date bookingDate = (value = o[i++]) == null ? null : (Date) value;
@@ -550,6 +568,8 @@ public class BookingsDao extends BaseDao {
 					: (Integer) value;
 			String clearanceNo = (value = o[i++]) == null ? null : value
 					.toString();
+			Integer isBookingActive = (value = o[i++]) == null ? null
+					: (Integer) value;
 
 			DelegateDto delegateDto = new DelegateDto();
 			delegateDto.setCreatedDate(bookingDate);
@@ -568,6 +588,7 @@ public class BookingsDao extends BaseDao {
 			delegateDto.setHotel(hotel);
 			delegateDto.setErn(ern);
 			delegateDto.setBookingId(bookingId.toString());
+			delegateDto.setIsBookingActive(isBookingActive);
 			if (paymentStatus == 1) {
 				delegateDto.setPaymentStatus(PaymentStatus.PAID);
 			} else {

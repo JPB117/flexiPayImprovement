@@ -13,8 +13,8 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rest.delegates.client.ResourceDelegate;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.View;
-import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.workpoint.icpak.client.service.AbstractAsyncCallback;
+import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
 import com.workpoint.icpak.client.ui.events.ProcessingEvent;
 import com.workpoint.icpak.shared.api.CountriesResource;
@@ -29,7 +29,7 @@ import com.workpoint.icpak.shared.model.TransactionDto;
 public class PaymentPresenter extends PresenterWidget<PaymentPresenter.MyView> {
 
 	public interface MyView extends View {
-		HasClickHandlers getPayButton();
+		ActionLink getPayButton();
 
 		HasClickHandlers getMpesaCompleteButton();
 
@@ -106,11 +106,14 @@ public class PaymentPresenter extends PresenterWidget<PaymentPresenter.MyView> {
 			public void onClick(ClickEvent event) {
 				if (getView().isPaymentValid()) {
 					fireEvent(new ProcessingEvent());
+					getView().getPayButton().addStyleName("hide");
 					creditCardResource.withCallback(
 							new AbstractAsyncCallback<CreditCardResponse>() {
 								@Override
 								public void onSuccess(
 										CreditCardResponse response) {
+									getView().getPayButton().removeStyleName(
+											"hide");
 									getView().setCardResponse(response);
 									fireEvent(new ProcessingCompletedEvent());
 								}

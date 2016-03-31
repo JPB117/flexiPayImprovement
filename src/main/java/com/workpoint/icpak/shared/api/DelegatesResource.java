@@ -18,7 +18,9 @@ public interface DelegatesResource extends BaseResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<DelegateDto> getAll(@QueryParam("offset") Integer offset,
 			@QueryParam("limit") Integer limit,
-			@QueryParam("searchTerm") String searchTerm);
+			@QueryParam("searchTerm") String searchTerm,
+			@QueryParam("accomodationRefId") String accomodationRefId,
+			@QueryParam("bookingStatus") String bookingStatus);
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -27,7 +29,9 @@ public interface DelegatesResource extends BaseResource {
 
 	@GET
 	@Path("/searchCount")
-	public Integer getSearchCount(@QueryParam("searchTerm") String searchTerm);
+	public Integer getSearchCount(@QueryParam("searchTerm") String searchTer,
+			@QueryParam("accomodationRefId") String accomodationRefId,
+			@QueryParam("bookingStatus") String bookingStatus);
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)

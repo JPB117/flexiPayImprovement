@@ -31,6 +31,9 @@
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divAccomodation">
 		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td center" ui:field="divBookingStatus">
+			<span class="label label-success" ui:field="spnBookingStatus"></span>
+		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td center" ui:field="divPaymentStatus">
 			<span class="label label-success" ui:field="spnPaymentStatus"></span>
 		</g:HTMLPanel>

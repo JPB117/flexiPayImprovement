@@ -9,6 +9,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewImpl;
+import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.payment.widget.PaymentWidget;
 import com.workpoint.icpak.shared.model.Country;
 import com.workpoint.icpak.shared.model.CreditCardDto;
@@ -30,7 +31,7 @@ public class PaymentView extends ViewImpl implements PaymentPresenter.MyView {
 	}
 
 	@Override
-	public HasClickHandlers getPayButton() {
+	public ActionLink getPayButton() {
 		return panelPayment.getCardPayButton();
 	}
 
