@@ -478,6 +478,7 @@ public class BookingsDao extends BaseDao {
 				+ "from delegate d inner join booking b on (d.booking_id=b.id) "
 				+ "inner join event e on (b.event_id=e.id) "
 				+ "left join accommodation a on (d.accommodationId=a.id) "
+				+ "inner join invoice i on(b.refId=i.bookingRefId)"
 				+ "where e.refId=:eventRefId";
 
 		if (accomodationRefId != null && !accomodationRefId.isEmpty()) {
@@ -499,7 +500,8 @@ public class BookingsDao extends BaseDao {
 						+ "d.ern like :searchTerm or "
 						+ "b.`E-mail` like :searchTerm or "
 						+ "b.company like :searchTerm or "
-						+ "b.Contact like :searchTerm)");
+						+ "b.Contact like :searchTerm or "
+						+ "i.documentNo like :searchTerm)");
 			}
 		}
 
