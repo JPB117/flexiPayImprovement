@@ -72,7 +72,7 @@
 				</div>
 			</g:HTMLPanel>
 			<g:HTMLPanel ui:field="panelDates">
-				<div class="col-lg-2" style="margin-top:10px;">
+				<div class="col-lg-2" style="margin-top:10px;" ui:field="divPeriodLabel">
 					<Strong>Specify Period From:</Strong>
 				</div>
 				<div class="col-lg-2" style="padding:0px;">
@@ -100,6 +100,12 @@
 				<d:ActionLink ui:field="aDownloadXls" styleName="hide">
 					<i class="fa fa-file-pdf-o"></i>
 					Download as xls
+				</d:ActionLink>
+
+				<d:ActionLink ui:field="aDownloadAllCPDTranscripts"
+					styleName="hide">
+					<i class="fa fa-file-pdf-o"></i>
+					Generate Transcripts
 				</d:ActionLink>
 			</g:HTMLPanel>
 		</div>

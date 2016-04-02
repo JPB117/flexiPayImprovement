@@ -54,6 +54,9 @@ public class TableView extends Composite {
 	@UiField
 	ActionLink aDownloadXls;
 	@UiField
+	ActionLink aDownloadAllCPDTranscripts;
+
+	@UiField
 	TextField txtSearch;
 	@UiField
 	ActionLink aFilter;
@@ -112,6 +115,8 @@ public class TableView extends Composite {
 	DivElement divTownList;
 	@UiField
 	DivElement divMemberCategory;
+	@UiField
+	DivElement divPeriodLabel;
 
 	private boolean isAutoNumber = true;
 	private int count = 0;
@@ -181,6 +186,17 @@ public class TableView extends Composite {
 			panelDates.setVisible(true);
 		} else {
 			panelDates.setVisible(false);
+		}
+	}
+
+	public void setDatesVisible(boolean show, boolean isLabelVisible) {
+		setDatesVisible(show);
+		if (isLabelVisible) {
+			divPeriodLabel.removeClassName("hide");
+			aFilter.removeStyleName("hide");
+		} else {
+			divPeriodLabel.addClassName("hide");
+			aFilter.addStyleName("hide");
 		}
 	}
 
@@ -485,6 +501,10 @@ public class TableView extends Composite {
 
 	public ActionLink getDownloadXls() {
 		return aDownloadXls;
+	}
+
+	public ActionLink getAllTranscriptsButton() {
+		return aDownloadAllCPDTranscripts;
 	}
 
 	public ActionLink getFilterButton() {

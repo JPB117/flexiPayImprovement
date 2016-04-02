@@ -24,21 +24,16 @@
 	<!-- Other module inherits -->
 	<inherits name='com.gwtplatform.mvp.MvpWithEntryPoint' />
 
-	<!-- inherits name='com.sencha.gxt.ui.GXT'/> <inherits name='com.sencha.gxt.chart.Chart' 
-		/> <replace-with class='com.sencha.gxt.chart.client.draw.engine.SVG'> <when-type-is 
-		class='com.sencha.gxt.chart.client.draw.Surface' /> </replace-with> <replace-with 
-		class='com.sencha.gxt.chart.client.draw.engine.VML'> <when-type-is class='com.sencha.gxt.chart.client.draw.Surface' 
-		/> <any> <when-property-is name='user.agent' value='ie8' /> </any> </replace-with -->
-
 	<!-- Other Inherits -->
 	<inherits name="com.google.common.collect.Collect" />
 	<inherits name="com.google.gwt.logging.Logging" />
 
 	<!-- Specify the app entry point class. NOT REQUIRED com.gwtplatform.mvp.MvpWithEntryPoint -->
 	<!-- entry-point class='com.workpoint.icpak.client.GWTHT'/ -->
-
 	<property-provider name="user.agent"
 		generator="com.google.gwt.useragent.rebind.UserAgentPropertyGenerator" />
+
+	<set-property name="user.agent" value="ie8, gecko1_8,safari,ie9" />
 
 	<!-- Specify the paths for translatable code -->
 	<source path='client' />

@@ -1,5 +1,7 @@
 package com.workpoint.icpak.tests.dao;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -7,6 +9,7 @@ import java.util.List;
 
 import javax.persistence.Query;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -18,6 +21,7 @@ import com.icpak.rest.dao.helper.CPDDaoHelper;
 import com.icpak.rest.models.auth.User;
 import com.icpak.rest.models.cpd.CPD;
 import com.icpak.servlet.upload.GetReport;
+import com.workpoint.icpak.server.util.ServerDateUtils;
 import com.workpoint.icpak.shared.model.CPDCategory;
 import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.shared.model.MemberCPDDto;
@@ -67,16 +71,34 @@ public class TestCPDDao extends AbstractDaoTest {
 		helper.create("QpkHIcVizijvuVTH", dto);
 	}
 
-	@Test
+	// @Test
 	public void updateAllSummaries() {
 		List<User> users = usersDao.getAllUsers(0, 0, null, "");
 		int i = users.size();
 		for (User user : users) {
-			
+
 			cpdDao.updateSummary(user);
-			
-			logger.warn(" COUNT === "+i);
+
+			logger.warn(" COUNT === " + i);
 			i--;
+		}
+	}
+	
+	@Test
+	public void generateAllMemberStatements() {
+		// Create a new folder
+		String folderName = "all_members_cpd"
+				+ ServerDateUtils.FULLTIMESTAMP.format(new Date());
+		// Get All members
+		List<User> allUsers = usersDao.getAllUsers();
+
+		for (User u : allUsers) {
+			// byte[] data = processMemberCPDStatementRequest(memberNo,
+			//	memberRefId, finalStartDate, finalEndDate, resp);
+
+			// IOUtils.write(data, new FileOutputStream(new
+			// File("cpd_statement_"
+			//	+ u.getMemberNo())));
 		}
 	}
 
@@ -89,8 +111,9 @@ public class TestCPDDao extends AbstractDaoTest {
 	@Ignore
 	public void getCPD() throws ParseException {
 		String memberId = "pabGC3dh0OOzLzSC";
-		List<CPDDto> list = helper.getAllCPD("ALL", 0, 1000, formatter.parse("01/01/2000").getTime(),
-				new Date().getTime(), "Another");
+		List<CPDDto> list = helper.getAllCPD("ALL", 0, 1000,
+				formatter.parse("01/01/2000").getTime(), new Date().getTime(),
+				"Another");
 		for (CPDDto dto : list) {
 			System.err.println(dto.getTitle());
 		}
@@ -100,8 +123,11 @@ public class TestCPDDao extends AbstractDaoTest {
 	@Ignore
 	public void testCount() throws ParseException {
 		System.err.println("Total Archive>>>>"
-				+ helper.getCPDSummary("ALL", 1420059600000L, 1451494912593L).getTotalArchive() + "Total Returns"
-				+ helper.getCPDSummary("ALL", 1420059600000L, 1451494912593L).getTotalReturns());
+				+ helper.getCPDSummary("ALL", 1420059600000L, 1451494912593L)
+						.getTotalArchive()
+				+ "Total Returns"
+				+ helper.getCPDSummary("ALL", 1420059600000L, 1451494912593L)
+						.getTotalReturns());
 	}
 
 	@Ignore
@@ -146,7 +172,8 @@ public class TestCPDDao extends AbstractDaoTest {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		Date another = formatter.parse("2015-1-1");
 
-		List<CPDDto> cpdDtos = helper.getAllCPD("returnArchive", 0, 100, another.getTime(), today.getTime(), "");
+		List<CPDDto> cpdDtos = helper.getAllCPD("returnArchive", 0, 100,
+				another.getTime(), today.getTime(), "");
 
 		// Integer count = helper.getCount("ALLRETURNS", another.getTime(),
 		// today.getTime());

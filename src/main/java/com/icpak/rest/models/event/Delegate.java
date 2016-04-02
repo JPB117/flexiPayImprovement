@@ -1,6 +1,5 @@
 package com.icpak.rest.models.event;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;

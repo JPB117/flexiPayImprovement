@@ -3,8 +3,10 @@ package com.icpak.servlet.upload;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -243,7 +245,7 @@ public class GetReport extends HttpServlet {
 		}
 
 		List<DelegateDto> delegateDtos = bookingsDaoHelper.getAllDelegates("",
-				eventRefId, null, 10000, "","","");
+				eventRefId, null, 10000, "", "", "");
 		EventDto event = eventDaoHelper.getEventById(eventRefId);
 
 		GetDelegatesReport report = new GetDelegatesReport(delegateDtos,
@@ -351,10 +353,43 @@ public class GetReport extends HttpServlet {
 		Date finalStartDate = new Date(startDate);
 		Date finalEndDate = new Date(endDate);
 
-		byte[] data = processMemberCPDStatementRequest(memberNo, memberRefId,
-				finalStartDate, finalEndDate, resp);
+		if (memberRefId.equals("ALLMEMBERS")) {
+			// Create a new folder
+			String folderName = getAllMembersCPDFilePath() + "_"
+					+ ServerDateUtils.SHORTTIMESTAMP.format(new Date());
+			File d = new File(folderName);
+			// Create directory now.
+			d.mkdir();
 
-		processAttachmentRequest(resp, data, "memberCPDStatement.pdf");
+			// Get All members
+			List<User> allUsers = userDao.getAllUsers();
+			int counter = 0;
+			for (User u : allUsers) {
+				if (u.getMember() != null) {
+					counter = counter + 1;
+					byte[] data = processMemberCPDStatementRequest(null, u
+							.getMember().getRefId(), finalStartDate,
+							finalEndDate, resp);
+					File file = new File(folderName + "/memberCPDStatement_"
+							+ u.getMemberNo() + ".pdf");
+					OutputStream os = new FileOutputStream(file);
+					os.write(data);
+					os.close();
+				}
+			}
+			writeError(resp,
+					"Completed generating memberCPD statement. Total Generated:"
+							+ counter);
+		} else {
+			byte[] data = processMemberCPDStatementRequest(memberNo,
+					memberRefId, finalStartDate, finalEndDate, resp);
+			processAttachmentRequest(resp, data, "memberCPDStatement.pdf");
+		}
+
+	}
+
+	private String getAllMembersCPDFilePath() {
+		return settings.getProperty("allmembers_cpd_path");
 	}
 
 	public static String priceWithDecimal(Double price) {
@@ -902,10 +937,8 @@ public class GetReport extends HttpServlet {
 			values.put("totalStructured", totalStructured);
 			values.put("totalUnstructured", totalUnstructured);
 			values.put("total", total);
-
 			// create row to loop through
 			DocumentLine line = new DocumentLine("cpdDetails", values);
-
 			doc.addDetail(line);
 		}
 
