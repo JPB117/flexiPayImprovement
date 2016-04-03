@@ -54,6 +54,9 @@ public class TableView extends Composite {
 	@UiField
 	ActionLink aDownloadXls;
 	@UiField
+	ActionLink aDownloadOfflineSQL;
+
+	@UiField
 	ActionLink aDownloadAllCPDTranscripts;
 
 	@UiField
@@ -430,6 +433,10 @@ public class TableView extends Composite {
 
 	public void clearFooter() {
 		panelFooter.clear();
+	}
+
+	public ActionLink getOfflineSQLButton() {
+		return aDownloadOfflineSQL;
 	}
 
 	public void setFooter(List<Widget> widgets) {

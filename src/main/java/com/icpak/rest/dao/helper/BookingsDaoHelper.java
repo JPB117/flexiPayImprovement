@@ -1,5 +1,7 @@
 package com.icpak.rest.dao.helper;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -55,6 +57,7 @@ import com.icpak.rest.utils.HTMLToPDFConvertor;
 import com.itextpdf.text.DocumentException;
 import com.workpoint.icpak.server.integration.lms.LMSIntegrationUtil;
 import com.workpoint.icpak.server.integration.lms.LMSResponse;
+import com.workpoint.icpak.server.util.ServerDateUtils;
 import com.workpoint.icpak.shared.model.EventType;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.InvoiceLineDto;
@@ -995,12 +998,89 @@ public class BookingsDaoHelper {
 					e.printStackTrace();
 				}
 			}
-
 			/* Update Delegate Record */
 			Delegate d = dao.findByRefId(delegate.getRefId(), Delegate.class);
 			d.copyFrom(delegate);
 			dao.save(d);
 		}
+	}
 
+	public byte[] Backupdbtosql() {
+		try {
+
+			/* NOTE: Getting path to the Jar file being executed */
+			/*
+			 * NOTE: YourImplementingClass-> replace with the class executing
+			 * the code
+			 */
+			// CodeSource codeSource = BookingsDaoHelper.class
+			// .getProtectionDomain().getCodeSource();
+			// File jarFile = new
+			// File(codeSource.getLocation().toURI().getPath());
+			// String jarDir = jarFile.getParentFile().getPath();
+
+			String jarDir = settings.getProperty("offline_backup_path");
+			String mysqlPath = settings.getProperty("mysql_path");
+
+			/* NOTE: Creating Database Constraints */
+			String dbName = settings.getProperty("offline_backup_dbname");
+			String dbUser = settings.getProperty("offline_backup_dbuser");
+			String dbPass = settings.getProperty("offline_backup_dbpassword");
+
+			/* NOTE: Creating Path Constraints for folder saving */
+			/* NOTE: Here the backup folder is created for saving inside it */
+			String folderPath = jarDir + "\\backup";
+
+			/* NOTE: Creating Folder if it does not exist */
+			File f1 = new File(folderPath);
+			f1.mkdir();
+
+			/* NOTE: Creating Path Constraints for backup saving */
+			/*
+			 * NOTE: Here the backup is saved in a folder called backup with the
+			 * name backup.sql
+			 */
+			String savePath = "\""
+					+ jarDir
+					+ "\\backup\\"
+					+ "offlineBackup_"
+					+ ServerDateUtils.DATEFORMAT_SYS.format(new Date())
+							.replace("-", "_") + ".sql\"";
+
+			/* NOTE: Used to create a cmd command */
+			String executeCmd = mysqlPath
+					+ "mysqldump -u"
+					+ dbUser
+					+ " -p"
+					+ dbPass
+					+ " "
+					+ dbName
+					+ " event accommodation booking delegate invoice invoiceLine"
+					+ " -r " + savePath;
+			System.err.println(executeCmd);
+
+			/* NOTE: Executing the command here */
+			Process runtimeProcess = Runtime.getRuntime().exec(executeCmd);
+			int processComplete = runtimeProcess.waitFor();
+
+			/*
+			 * NOTE: processComplete=0 if correctly executed, will contain other
+			 * values if not
+			 */
+			if (processComplete == 0) {
+				System.out.println("Backup Complete");
+
+				// Convert this to bytes
+				return IOUtils.toByteArray(new FileInputStream(new File(
+						savePath)));
+
+			} else {
+				System.out.println("Backup Failure with code:"
+						+ processComplete);
+			}
+		} catch (IOException | InterruptedException ex) {
+			System.err.println("Error at Backuprestore>>" + ex.getMessage());
+		}
+		return null;
 	}
 }

@@ -181,7 +181,7 @@ public class TestBookingDao extends AbstractDaoTest {
 		bookingDao.deleteAllBookingInvoice(bookingRefid);
 	}
 
-	@Test
+	// @Test
 	public void testSearch() {
 		List<DelegateDto> delegates = bookingsHelper.getAllDelegates("",
 				"IWqduDqhOKXb9nxq", null, 1000, "", "", "1");
@@ -232,7 +232,11 @@ public class TestBookingDao extends AbstractDaoTest {
 		delegate.setIsCredit(1);
 		delegate.setAttendance(AttendanceStatus.ATTENDED);
 		delegate.setEventRefId("Jx4Ca6HpOutf2ic7");
-
 		// bookingsHelper.updateDelegate(null, delegate.getRefId(), delegate);
+	}
+
+	@Test
+	public void testDbBackUp() {
+		bookingsHelper.Backupdbtosql();
 	}
 }

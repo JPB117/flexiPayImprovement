@@ -186,6 +186,18 @@ public class GetReport extends HttpServlet {
 		if (action.equals("GETPROFORMA")) {
 			processProformaInvoice(req, resp);
 		}
+
+		if (action.equals("GETOFFLINESQL")) {
+			processOfflineSql(req, resp);
+		}
+	}
+
+	private void processOfflineSql(HttpServletRequest req,
+			HttpServletResponse resp) {
+		byte[] data = bookingsDaoHelper.Backupdbtosql();
+		processAttachmentRequest(resp, data, "backup_"
+				+ ServerDateUtils.DATEFORMAT_SYS.format(new Date()) + 
+				".sql");
 	}
 
 	private void processProformaInvoice(HttpServletRequest req,

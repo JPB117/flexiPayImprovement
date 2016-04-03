@@ -107,6 +107,11 @@
 					<i class="fa fa-file-pdf-o"></i>
 					Generate Transcripts
 				</d:ActionLink>
+
+				<d:ActionLink ui:field="aDownloadOfflineSQL" styleName="hide">
+					<i class="fa fa-file-pdf-o"></i>
+					Download Offline SQL
+				</d:ActionLink>
 			</g:HTMLPanel>
 		</div>
 		<g:HTMLPanel styleName="table table-striped table-hover table-bordered"
