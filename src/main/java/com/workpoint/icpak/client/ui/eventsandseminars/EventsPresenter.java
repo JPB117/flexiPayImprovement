@@ -211,7 +211,6 @@ public class EventsPresenter extends
 				delegateKeyHandler);
 		getView().getEventsSearchKeyDownHandler().addKeyDownHandler(
 				eventsKeyHandler);
-
 		getView().getBookingStatusValueChangeHandler().addValueChangeHandler(
 				bookingStatusValueChangeHandler);
 		getView().getAccomodationValueChangeHandler().addValueChangeHandler(
@@ -251,11 +250,9 @@ public class EventsPresenter extends
 	private void loadData() {
 		fireEvent(new ProcessingEvent());
 		if (eventId != null) {
-			// Load Bookings
 			eventsDelegate.withCallback(new AbstractAsyncCallback<Integer>() {
 				@Override
 				public void onSuccess(Integer aCount) {
-					fireEvent(new ProcessingCompletedEvent());
 					PagingPanel panel = getView().getDelegatesPagingPanel();
 					panel.setTotal(aCount);
 					PagingConfig config = panel.getConfig();
@@ -267,13 +264,11 @@ public class EventsPresenter extends
 			eventsDelegate.withCallback(new AbstractAsyncCallback<EventDto>() {
 				@Override
 				public void onSuccess(EventDto event) {
-					fireEvent(new ProcessingCompletedEvent());
 					getView().bindEvent(event);
 				}
 			}).getById(eventId);
 
 			if (hasEventChanged) {
-				// fire FullScreenEvent
 				fireEvent(new FullScreenEvent("show"));
 				eventsDelegate
 						.withCallback(
@@ -290,7 +285,6 @@ public class EventsPresenter extends
 			}
 		} else {
 			fireEvent(new FullScreenEvent("hide"));
-			// Load Events
 			eventsDelegate.withCallback(new AbstractAsyncCallback<Integer>() {
 				@Override
 				public void onSuccess(Integer aCount) {
@@ -405,7 +399,6 @@ public class EventsPresenter extends
 		if (event.getAction() == TableActionType.RESENDPROFORMA) {
 			final ResendModel resendModel = (ResendModel) event.getModel();
 			fireEvent(new ProcessingEvent());
-			Window.alert("method 1");
 			// Resend Proforma for that Booking
 			eventsDelegate
 					.withCallback(new AbstractAsyncCallback<BookingDto>() {
@@ -447,8 +440,7 @@ public class EventsPresenter extends
 	}
 
 	public void callPopOver() {
-		AppManager.showPopUp("Sorry dude ..", "", new OptionControl() {
-
+		AppManager.showPopUp("Sorry ..", "", new OptionControl() {
 			@Override
 			public void onSelect(String name) {
 				super.onSelect(name);

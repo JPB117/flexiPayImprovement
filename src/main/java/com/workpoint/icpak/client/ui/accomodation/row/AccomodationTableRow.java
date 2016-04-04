@@ -33,51 +33,49 @@ public class AccomodationTableRow extends RowWidget {
 	@UiField
 	HTMLPanel divHotelName;
 	@UiField
-	HTMLPanel divNights;
-	@UiField
 	Anchor aHotelName;
 	@UiField
 	HTMLPanel divEventName;
-	@UiField	
+	@UiField
 	ActionLink aEdit;
 	@UiField
 	ActionLink aDelete;
-	
 	@UiField
 	HTMLPanel divPrice;
 	@UiField
 	HTMLPanel divSpaces;
 	@UiField
-	HTMLPanel divOccupied;
+	HTMLPanel divAvailable;
+	@UiField
+	HTMLPanel divBooked;
 
-	
 	AccommodationDto accomodation;
 
 	public AccomodationTableRow() {
 		initWidget(uiBinder.createAndBindUi(this));
-		
+
 		aEdit.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				AppContext.fireEvent(new EditModelEvent(accomodation));
 			}
 		});
-		
+
 		aHotelName.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				AppContext.fireEvent(new EditModelEvent(accomodation));
 			}
 		});
-		
+
 		aDelete.addClickHandler(new ClickHandler() {
-			
+
 			@Override
 			public void onClick(ClickEvent arg0) {
-				AppContext.fireEvent(new EditModelEvent(accomodation,true));
+				AppContext.fireEvent(new EditModelEvent(accomodation, true));
 			}
 		});
-		
+
 	}
 
 	public AccomodationTableRow(AccommodationDto accommodation) {
@@ -86,24 +84,22 @@ public class AccomodationTableRow extends RowWidget {
 		EventDto event = accommodation.getEvent();
 		divEventName.add(new InlineLabel(event.getName()));
 		aHotelName.setText(accommodation.getHotel());
-		divNights.add(new InlineLabel(accommodation.getNights()+""));
-		
-		divOccupied.add(new InlineLabel((accommodation.getSpaces() - accommodation.getTotalBooking())+""));
-//		divNights.add(new InlineLabel(DateUtils.getTimeDifference(
-//				new Date(event.getStartDate()), new Date(event.getEndDate()))));
-		divPrice.add(new InlineLabel(NUMBERFORMAT.format(accommodation.getFee())));
-		
-		boolean hasAvailableSpace = accomodation.getSpaces() > accommodation.getTotalBooking();
-		
-		HTML html = new HTML(+accommodation.getSpaces()+"");
-		if(hasAvailableSpace){
+		divBooked.add(new InlineLabel(accommodation.getTotalBooking() + ""));
+		divAvailable.add(new InlineLabel(
+				(accommodation.getSpaces() - accommodation.getTotalBooking())
+						+ ""));
+		divPrice.add(new InlineLabel(
+				NUMBERFORMAT.format(accommodation.getFee())));
+
+		boolean hasAvailableSpace = accomodation.getSpaces() > accommodation
+				.getTotalBooking();
+		HTML html = new HTML(+accommodation.getSpaces() + "");
+		if (hasAvailableSpace) {
 			html.getElement().getStyle().setColor("green");
-		}else{
+		} else {
 			html.getElement().getStyle().setColor("red");
 		}
 		divSpaces.add(html);
 	}
-	
-	
 
 }

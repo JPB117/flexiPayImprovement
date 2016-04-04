@@ -184,16 +184,10 @@ public class EventBookingPresenter extends
 									public void onSuccess(
 											List<MemberDto> members) {
 										responseCounter = responseCounter + 1;
-										// LOGGER.log(Level.SEVERE, "Request::"
-										// + requestCounter
-										// + ">>Response::"
-										// + responseCounter);
 										if (requestCounter == responseCounter) {
 											source.setValues(members);
 											getView().getMemberColumnConfig()
 													.showSpinner(false);
-											// responseCounter = 0;
-											// requestCounter = 0;
 										}
 									}
 
@@ -204,8 +198,6 @@ public class EventBookingPresenter extends
 		getView().getANext().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				// Window.alert(getView().isValid() + "");
-
 				// Are you editing this booking?
 				if (bookingId != null) {
 					if (getView().getCounter() == 0) {

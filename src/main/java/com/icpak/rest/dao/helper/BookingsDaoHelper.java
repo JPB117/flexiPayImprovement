@@ -819,7 +819,6 @@ public class BookingsDaoHelper {
 			Accommodation accommodation = dao.findByRefId(delegateDto
 					.getAccommodation().getRefId(), Accommodation.class);
 			if (accommodation != null) {
-				accommodation.setSpaces(accommodation.getSpaces() - 1);
 				delegate.setAccommodation(accommodation);
 				dao.save(accommodation);
 			}

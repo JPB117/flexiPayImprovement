@@ -105,7 +105,6 @@ public class AccomodationPresenter
 									new ArrayList<AccommodationDto>());
 							return;
 						}
-
 						loadAccommodations(event.getValue().getRefId());
 					}
 				});
@@ -133,14 +132,15 @@ public class AccomodationPresenter
 							public void onSuccess(
 									List<AccommodationDto> accommodations) {
 								getView().bindAccommodations(accommodations);
+								fireEvent(new ProcessingCompletedEvent());
 							}
 						}).accommodations(eventId).getAll(0, 100);
 
 	}
 
 	private void loadEvents() {
+		fireEvent(new ProcessingEvent());
 		eventResource.withCallback(new AbstractAsyncCallback<List<EventDto>>() {
-
 			@Override
 			public void onSuccess(List<EventDto> events) {
 				getView().setEvents(events);

@@ -67,7 +67,7 @@ public abstract class AbstractAsyncCallback<T> implements RestCallback<T> {
 	@Override
 	public void setResponse(Response aResponse) {
 		int code = aResponse.getStatusCode();
-		AppContext.getEventBus().fireEvent(new ProcessingCompletedEvent());
+		//AppContext.getEventBus().fireEvent(new ProcessingCompletedEvent());
 
 		if (code == 200 || code == 202 || code == 203 || code == 204
 				|| code == 304) {
