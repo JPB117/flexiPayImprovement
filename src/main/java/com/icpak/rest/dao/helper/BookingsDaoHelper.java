@@ -1,11 +1,16 @@
 package com.icpak.rest.dao.helper;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,6 +29,11 @@ import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.log4j.Logger;
 import org.xml.sax.SAXException;
 
@@ -57,11 +67,11 @@ import com.icpak.rest.utils.HTMLToPDFConvertor;
 import com.itextpdf.text.DocumentException;
 import com.workpoint.icpak.server.integration.lms.LMSIntegrationUtil;
 import com.workpoint.icpak.server.integration.lms.LMSResponse;
-import com.workpoint.icpak.server.util.ServerDateUtils;
 import com.workpoint.icpak.shared.model.EventType;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.InvoiceLineDto;
 import com.workpoint.icpak.shared.model.InvoiceLineType;
+import com.workpoint.icpak.shared.model.PaymentStatus;
 import com.workpoint.icpak.shared.model.events.AttendanceStatus;
 import com.workpoint.icpak.shared.model.events.BookingDto;
 import com.workpoint.icpak.shared.model.events.ContactDto;
@@ -868,7 +878,7 @@ public class BookingsDaoHelper {
 					+ ",Thank you for attending the " + event.getName() + "."
 					+ "Your ERN No. is " + delegate.getErn();
 			smsIntergration.send(member.getUser().getPhoneNumber(), smsMessage);
-		} else {
+		} else if (event.getType() == EventType.COURSE) {
 			List<DelegateDto> delegates = new ArrayList<>();
 			delegates.add(delegate.toDto());
 			try {
@@ -1005,6 +1015,79 @@ public class BookingsDaoHelper {
 		}
 	}
 
+	public void syncWithServer(String eventRefId) {
+		List<DelegateDto> allDelegates = getAllDelegates(null, eventRefId, 0,
+				5, "", "", "");
+
+		for (DelegateDto d : allDelegates) {
+			// Post Delegate to server
+			d.setCreatedDate(null);
+			try {
+				updateDelegateToServer(eventRefId, d.getBookingId(), d);
+			} catch (URISyntaxException | ParseException | JSONException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public String updateDelegateToServer(String eventRefId, String bookingId,
+			DelegateDto delegate) throws URISyntaxException, ParseException,
+			JSONException {
+		final HttpClient httpClient = new DefaultHttpClient();
+
+		JSONObject payLoad = new JSONObject(delegate);
+		payLoad.remove("attendance");
+		payLoad.remove("paymentStatus");
+
+		// Create the understood versions
+		if (delegate.getPaymentStatus() == PaymentStatus.PAID) {
+			payLoad.put("paymentStatus", "PAID");
+		} else {
+			payLoad.put("paymentStatus", "NOTPAID");
+		}
+
+		if (delegate.getAttendance() == AttendanceStatus.ATTENDED) {
+			payLoad.put("attendance", "ATTENDED");
+		} else {
+			payLoad.put("attendance", "NOTATTENDED");
+		}
+
+		logger.info("payload to Server>>>>" + payLoad);
+		String serverAddress = settings.getProperty("delegate_sync_url");
+		String params = eventRefId + "/bookings/" + bookingId + "/delegates/"
+				+ delegate.getRefId();
+
+		URI uri = new URI(serverAddress + params);
+		final HttpPut request = new HttpPut();
+		request.setURI(uri);
+
+		String res = "";
+		HttpResponse response = null;
+		StringBuffer result = null;
+		try {
+			request.setHeader("accept", "application/json");
+			@SuppressWarnings("deprecation")
+			StringEntity stringEntity = new StringEntity(payLoad.toString(),
+					"application/json", "UTF-8");
+			request.setEntity(stringEntity);
+
+			response = httpClient.execute(request);
+			BufferedReader rd = new BufferedReader(new InputStreamReader(
+					response.getEntity().getContent()));
+
+			result = new StringBuffer();
+
+			String line = "";
+			while ((line = rd.readLine()) != null) {
+				result.append(line);
+			}
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return result.toString();
+	}
+
 	public byte[] Backupdbtosql() {
 		try {
 
@@ -1026,10 +1109,11 @@ public class BookingsDaoHelper {
 			String dbName = settings.getProperty("offline_backup_dbname");
 			String dbUser = settings.getProperty("offline_backup_dbuser");
 			String dbPass = settings.getProperty("offline_backup_dbpassword");
+			String dbPort = settings.getProperty("offline_backup_dbport");
 
 			/* NOTE: Creating Path Constraints for folder saving */
 			/* NOTE: Here the backup folder is created for saving inside it */
-			String folderPath = jarDir + "\\backup";
+			String folderPath = jarDir + "\\backup\\";
 
 			/* NOTE: Creating Folder if it does not exist */
 			File f1 = new File(folderPath);
@@ -1040,12 +1124,8 @@ public class BookingsDaoHelper {
 			 * NOTE: Here the backup is saved in a folder called backup with the
 			 * name backup.sql
 			 */
-			String savePath = "\""
-					+ jarDir
-					+ "\\backup\\"
-					+ "offlineBackup_"
-					+ ServerDateUtils.DATEFORMAT_SYS.format(new Date())
-							.replace("-", "_") + ".sql\"";
+			String savePath = "\"" + jarDir + "\\backup\\"
+					+ "offlineBackup.sql\"";
 
 			/* NOTE: Used to create a cmd command */
 			String executeCmd = mysqlPath
@@ -1053,6 +1133,8 @@ public class BookingsDaoHelper {
 					+ dbUser
 					+ " -p"
 					+ dbPass
+					+ " -P"
+					+ dbPort
 					+ " "
 					+ dbName
 					+ " event accommodation booking delegate invoice invoiceLine"
@@ -1070,9 +1152,12 @@ public class BookingsDaoHelper {
 			if (processComplete == 0) {
 				System.out.println("Backup Complete");
 
+				FileInputStream file = new FileInputStream(new File(folderPath,
+						"offlineBackup.sql"));
+
+				assert (file != null);
 				// Convert this to bytes
-				return IOUtils.toByteArray(new FileInputStream(new File(
-						savePath)));
+				return IOUtils.toByteArray(file);
 
 			} else {
 				System.out.println("Backup Failure with code:"

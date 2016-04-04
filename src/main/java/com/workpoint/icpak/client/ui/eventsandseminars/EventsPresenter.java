@@ -250,13 +250,6 @@ public class EventsPresenter extends
 
 	private void loadData() {
 		fireEvent(new ProcessingEvent());
-		eventsDelegate.withCallback(
-				new AbstractAsyncCallback<EventSummaryDto>() {
-					public void onSuccess(EventSummaryDto result) {
-						getView().bindEventSummary(result);
-					};
-				}).getEventsSummary();
-
 		if (eventId != null) {
 			// Load Bookings
 			eventsDelegate.withCallback(new AbstractAsyncCallback<Integer>() {
@@ -317,8 +310,8 @@ public class EventsPresenter extends
 				.withCallback(new AbstractAsyncCallback<List<DelegateDto>>() {
 					@Override
 					public void onSuccess(List<DelegateDto> delegates) {
-						fireEvent(new ProcessingCompletedEvent());
 						getView().bindDelegates(delegates);
+						fireEvent(new ProcessingCompletedEvent());
 					}
 				})
 				.delegates(eventId)

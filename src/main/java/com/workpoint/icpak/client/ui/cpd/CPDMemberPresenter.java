@@ -29,9 +29,9 @@ import com.workpoint.icpak.client.ui.component.PagingConfig;
 import com.workpoint.icpak.client.ui.component.PagingLoader;
 import com.workpoint.icpak.client.ui.component.PagingPanel;
 import com.workpoint.icpak.client.ui.cpd.form.RecordCPD;
+import com.workpoint.icpak.client.ui.events.AfterSaveEvent;
 import com.workpoint.icpak.client.ui.events.EditModelEvent;
 import com.workpoint.icpak.client.ui.events.EditModelEvent.EditModelHandler;
-import com.workpoint.icpak.client.ui.events.AfterSaveEvent;
 import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
 import com.workpoint.icpak.client.ui.events.ProcessingEvent;
 import com.workpoint.icpak.client.ui.events.TableActionEvent;
@@ -89,6 +89,7 @@ public class CPDMemberPresenter extends
 	protected final CurrentUser currentUser;
 	private Date startDate;
 	private Date endDate;
+	String memberId = null;
 
 	@Inject
 	public CPDMemberPresenter(final EventBus eventBus, final ICPDView view,
@@ -222,7 +223,6 @@ public class CPDMemberPresenter extends
 	}
 
 	protected void saveRecord(CPDDto dto) {
-		String memberId = currentUser.getUser().getRefId();
 		dto.setMemberRegistrationNo(currentUser.getUser().getMemberNo());
 		fireEvent(new ProcessingEvent());
 		if (dto.getRefId() != null) {
@@ -259,7 +259,6 @@ public class CPDMemberPresenter extends
 	}
 
 	protected void loadData(Date startDate, Date endDate) {
-		String memberId = currentUser.getUser().getRefId();
 		fireEvent(new ProcessingEvent());
 
 		memberDelegate.withCallback(new AbstractAsyncCallback<Integer>() {
@@ -277,7 +276,6 @@ public class CPDMemberPresenter extends
 	}
 
 	protected void loadCPD(int offset, int limit) {
-		String memberId = currentUser.getUser().getRefId();
 		fireEvent(new ProcessingEvent());
 		memberDelegate.withCallback(new AbstractAsyncCallback<List<CPDDto>>() {
 			@Override
@@ -291,9 +289,7 @@ public class CPDMemberPresenter extends
 	}
 
 	protected void loadYearSummaries() {
-		String memberId = currentUser.getUser().getRefId();
 		fireEvent(new ProcessingEvent());
-
 		memberDelegate
 				.withCallback(new AbstractAsyncCallback<List<CPDFooterDto>>() {
 					@Override
@@ -320,7 +316,6 @@ public class CPDMemberPresenter extends
 	String getApplicationRefId() {
 		String applicationRefId = currentUser.getUser() == null ? null
 				: currentUser.getUser().getApplicationRefId();
-
 		return applicationRefId;
 	}
 
@@ -328,6 +323,7 @@ public class CPDMemberPresenter extends
 	public void prepareFromRequest(PlaceRequest request) {
 		super.prepareFromRequest(request);
 		getView().showDetailedView();
+		this.memberId = currentUser.getUser().getMemberRefId();
 	}
 
 	@Override
@@ -342,7 +338,6 @@ public class CPDMemberPresenter extends
 	}
 
 	private void delete(CPDDto model) {
-		String memberId = currentUser.getUser().getRefId();
 		String cpdId = model.getRefId();
 		memberDelegate.withCallback(new AbstractAsyncCallback<CPDDto>() {
 			@Override

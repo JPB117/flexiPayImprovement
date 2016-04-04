@@ -235,8 +235,13 @@ public class TestBookingDao extends AbstractDaoTest {
 		// bookingsHelper.updateDelegate(null, delegate.getRefId(), delegate);
 	}
 
-	@Test
+	// @Test
 	public void testDbBackUp() {
 		bookingsHelper.Backupdbtosql();
+	}
+	
+	@Test
+	public void testSyncWithServer(){
+		bookingsHelper.syncWithServer("dQdcmmGqPuw7wVzr");
 	}
 }
