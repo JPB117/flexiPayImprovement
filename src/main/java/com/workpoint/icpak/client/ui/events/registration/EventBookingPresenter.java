@@ -302,7 +302,7 @@ public class EventBookingPresenter extends
 	protected void bindBooking(final BookingDto booking) {
 		// bookingId = booking.getRefId();
 		getView().bindBooking(booking);
-		getInvoice(booking.getInvoiceRef());
+		getInvoice(booking);
 
 		// Set Download Proforma Link
 		getView().getaDownloadProforma().addClickHandler(new ClickHandler() {
@@ -321,7 +321,6 @@ public class EventBookingPresenter extends
 	@Override
 	public void prepareFromRequest(PlaceRequest request) {
 		super.prepareFromRequest(request);
-
 		eventId = request.getParameter("eventId", "");
 		bookingId = request.getParameter("bookingId", null);
 
@@ -380,7 +379,7 @@ public class EventBookingPresenter extends
 						@Override
 						public void onSuccess(final BookingDto booking) {
 							getView().bindBooking(booking);
-							getInvoice(booking.getInvoiceRef(), false, false);
+							getInvoice(booking, false, false);
 							getView().getaDownloadProforma().addClickHandler(
 									new ClickHandler() {
 										@Override
@@ -400,11 +399,11 @@ public class EventBookingPresenter extends
 		}
 	}
 
-	protected void getInvoice(String invoiceRef) {
-		getInvoice(invoiceRef, true, true);
+	protected void getInvoice(BookingDto booking) {
+		getInvoice(booking, true, true);
 	}
 
-	protected void getInvoice(String invoiceRef, final boolean moveNext,
+	protected void getInvoice(final BookingDto booking, final boolean moveNext,
 			final boolean sendEmail) {
 		invoiceResource.withCallback(new AbstractAsyncCallback<InvoiceDto>() {
 			@Override
@@ -414,7 +413,7 @@ public class EventBookingPresenter extends
 
 				if (sendEmail) {
 					eventsResource.withoutCallback().bookings(eventId)
-							.sendAlert(bookingId);
+							.sendAlert(booking.getRefId());
 				}
 
 				/*
@@ -431,7 +430,7 @@ public class EventBookingPresenter extends
 			public void onFailure(Throwable caught) {
 				super.onFailure(caught);
 			}
-		}).getInvoice(invoiceRef);
+		}).getInvoice(booking.getInvoiceRef());
 
 	}
 
