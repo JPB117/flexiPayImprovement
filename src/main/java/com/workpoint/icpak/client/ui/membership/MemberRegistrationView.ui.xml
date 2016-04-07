@@ -42,7 +42,7 @@
 									</h3>
 								</div>
 
-								<ul class="nav nav-pills">
+								<ul class="nav nav-pills visible-lg">
 									<li class="active" style="width: 25%;" ui:field="liTab1">
 										<a>
 											<span class="fa fa-check-circle hide"></span>

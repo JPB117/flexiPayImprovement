@@ -17,7 +17,7 @@
 				<legend>Personal Details:</legend>
 				<div class="form-group">
 					<div class="row">
-						<div class="col-xs-6">
+						<div class="col-xs-12 col-md-6">
 							<label for="firstname">
 								Surname
 								<span style="color:red">*</span>
@@ -26,7 +26,7 @@
 								placeholder="Enter Surname" value="" required="true">
 							</d:TextField>
 						</div>
-						<div class="col-xs-6">
+						<div class="col-xs-12 col-md-6">
 							<label for="lastname">
 								Other Name
 								<span style="color:red">*</span>
@@ -40,7 +40,7 @@
 
 				<div class="form-group">
 					<div class="row">
-						<div class="col-xs-6">
+						<div class="col-xs-12 col-md-6">
 							<label for="emailaddress">
 								Email Address
 								<span style="color:red">*</span>
@@ -50,7 +50,7 @@
 							</d:TextField>
 						</div>
 
-						<div class="col-xs-6">
+						<div class="col-xs-12 col-md-6">
 							<label for="phone">
 								Phone Number
 								<span style="color:red">*</span>
@@ -64,7 +64,7 @@
 
 				<div class="form-group">
 					<div class="row">
-						<div class="col-xs-6">
+						<div class="col-xs-12 col-md-6">
 							<label for="emailaddress">
 								Date of Birth:
 								<span style="color:red">*</span>
@@ -73,7 +73,7 @@
 								required="true">
 							</d:DateField>
 						</div>
-						<div class="col-xs-6">
+						<div class="col-xs-12 col-md-6">
 							<label for="phone">
 								Gender:
 								<span style="color:red">*</span>
@@ -86,7 +86,7 @@
 
 				<div class="form-group">
 					<div class="row">
-						<div class="col-xs-6">
+						<div class="col-xs-12 col-md-6">
 							<label for="emailaddress">
 								Employer Name
 							</label>
@@ -95,7 +95,7 @@
 							</d:TextField>
 						</div>
 
-						<div class="col-xs-6">
+						<div class="col-xs-12 col-md-6">
 							<label for="applicationCategory">
 								Town/City
 								<span style="color:red">*</span>
@@ -110,7 +110,7 @@
 
 				<div class="form-group">
 					<div class="row">
-						<div class="col-xs-6">
+						<div class="col-xs-12 col-md-6">
 							<label for="emailaddress">
 								Address:
 								<span style="color:red">*</span>
@@ -120,7 +120,7 @@
 							</d:TextField>
 						</div>
 
-						<div class="col-xs-6">
+						<div class="col-xs-12 col-md-6">
 							<label for="applicationCategory">
 								Postal Code
 								<span style="color:red">*</span>
@@ -135,7 +135,7 @@
 
 				<div class="form-group">
 					<div class="row">
-						<div class="col-xs-6">
+						<div class="col-xs-12 col-md-6">
 							<label for="emailaddress">
 								Country:
 								<span style="color:red">*</span>
@@ -144,7 +144,7 @@
 							</d:DropDownList>
 						</div>
 
-						<div class="col-xs-6">
+						<div class="col-xs-12 col-md-6">
 							<label for="emailaddress">
 								Residence:
 								<span style="color:red">*</span>
@@ -158,7 +158,7 @@
 
 				<div class="form-group">
 					<div class="row">
-						<div class="col-xs-6">
+						<div class="col-xs-12 col-md-6">
 							<label for="emailaddress">
 								Id Number:
 								<span style="color:red">*</span>
@@ -168,7 +168,7 @@
 							</d:TextField>
 						</div>
 
-						<div class="col-xs-6 hide" ui:field="divIdCopy">
+						<div class="col-xs-12 col-md-6 hide" ui:field="divIdCopy">
 							<label for="emailaddress">
 								Id Copy:
 								<span style="color:red">*</span>
@@ -187,7 +187,7 @@
 				</div>
 				<div class="form-group">
 					<div class="row">
-						<div class="col-xs-6">
+						<div class="col-xs-12 col-md-6">
 							<label for="emailaddress">
 								ICPAK Branch:
 							</label>
@@ -203,7 +203,7 @@
 				<legend>Criminal offence in a court of law:</legend>
 				<div class="form-group">
 					<div class="row">
-						<div class="col-xs-12">
+						<div class="col-xs-12 col-md-6">
 							<label for="emailaddress">Offence:</label>
 							<d:TextField ui:field="txtOffence" styleName="form-control"
 								placeholder="Offence for which convicted">
@@ -213,7 +213,7 @@
 				</div>
 				<div class="form-group">
 					<div class="row">
-						<div class="col-xs-12">
+						<div class="col-xs-12 col-md-6">
 							<label for="emailaddress">Date and Place of Conviction:</label>
 							<d:TextField ui:field="txtDateAndPlace" styleName="form-control"
 								placeholder="Date and Place of Conviction">
@@ -223,7 +223,7 @@
 				</div>
 				<div class="form-group">
 					<div class="row">
-						<div class="col-xs-12">
+						<div class="col-xs-12 col-md-6">
 							<label for="emailaddress">Sentence Imposed:</label>
 							<d:TextField ui:field="txtSentence" styleName="form-control"
 								placeholder="Sentence Imposed">
@@ -247,7 +247,7 @@
 
 				<div class="form-group">
 					<div class="row">
-						<div class="col-xs-6">
+						<div class="col-xs-12 col-md-6">
 							<label for="emailaddress">
 								Name:
 								<span style="color:red">*</span>
@@ -257,7 +257,7 @@
 							</d:TextField>
 						</div>
 
-						<div class="col-xs-6">
+						<div class="col-xs-12 col-md-6">
 							<label for="emailaddress">
 								Residence:
 								<span style="color:red">*</span>
@@ -270,7 +270,7 @@
 				</div>
 				<div class="form-group">
 					<div class="row">
-						<div class="col-xs-6">
+						<div class="col-xs-12 col-md-6">
 							<label for="emailaddress">
 								Telephone:
 								<span style="color:red">*</span>
@@ -280,7 +280,7 @@
 							</d:TextField>
 						</div>
 
-						<div class="col-xs-6">
+						<div class="col-xs-12 col-md-6">
 							<label for="emailaddress">
 								E-mail:
 								<span style="color:red">*</span>

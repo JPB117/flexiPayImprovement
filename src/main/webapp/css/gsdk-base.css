@@ -1778,13 +1778,13 @@ body .GWTUpld .gwt-FileUpload {
 /* Medium devices (desktops, 992px and up) */
 @media (min-width: @screen-md-min) { 
 	.content-wrapper .main-content {
-	padding-top: 60px;
+	padding-top: 60px !important;
 	}
 }
 
 /* Large devices (large desktops, 1200px and up) */
 @media (min-width: @screen-lg-min) {  
 	.content-wrapper .main-content {
-	padding-top: 60px;
+	padding-top: 60px !important;
 	}
 }

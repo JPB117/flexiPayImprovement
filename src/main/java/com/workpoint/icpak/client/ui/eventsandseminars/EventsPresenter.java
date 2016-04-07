@@ -114,13 +114,6 @@ public class EventsPresenter extends
 		}
 	};
 
-	ValueChangeHandler<String> delegateTableValueChangeHandler = new ValueChangeHandler<String>() {
-		@Override
-		public void onValueChange(ValueChangeEvent<String> event) {
-			loadDelegatesCount(getView().getDelegateSearchValue().trim());
-		}
-	};
-
 	KeyDownHandler delegateKeyHandler = new KeyDownHandler() {
 		@Override
 		public void onKeyDown(KeyDownEvent event) {
@@ -325,7 +318,6 @@ public class EventsPresenter extends
 						config.setPAGE_LIMIT(50);
 						loadDelegates(config.getOffset(), config.getLimit(),
 								searchTerm);
-						fireEvent(new ProcessingCompletedEvent());
 					}
 				}).delegates(eventId)
 				.getSearchCount(searchTerm, accomodationRefId, bookingStatus);

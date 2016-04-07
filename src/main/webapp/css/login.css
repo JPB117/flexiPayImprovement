@@ -48,6 +48,12 @@ body {
 	min-height: 360px;
 }
 
+@media only screen and (max-width: 767px) {
+	.login-wrapper div.box{
+			width:100% !important;
+	}
+}
+
 .login-wrapper li {
 	list-style-type: none;
 }

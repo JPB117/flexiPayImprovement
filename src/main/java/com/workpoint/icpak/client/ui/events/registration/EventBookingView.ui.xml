@@ -41,7 +41,7 @@
 										</h3>
 									</div>
 
-									<ul class="nav nav-pills" ui:field="divHeaderTopics">
+									<ul class="nav nav-pills visible-lg" ui:field="divHeaderTopics">
 										<li class="active" style="width: 25%;" ui:field="liTab1">
 											<a>
 												<span class="fa fa-check-circle hide"></span>
@@ -72,7 +72,6 @@
 									<g:HTMLPanel styleName="tab-content" ui:field="divContent">
 										<div class="tab-pane active" ui:field="divPackage">
 											<div class="row">
-
 												<div class="col-sm-12">
 													<h4 class="info-text">
 														<span ui:field="spnEventName"></span>
@@ -111,7 +110,7 @@
 												<div class="col-sm-12">
 													<div class="form-group">
 														<div class="row">
-															<div class="col-xs-6">
+															<div class="col-xs-12 col-md-6">
 																<label for="firstname">Company:</label>
 																<d:TextField ui:field="txtCompanyName"
 																	styleName="form-control" placeholder="Company Name"
@@ -119,7 +118,7 @@
 																</d:TextField>
 															</div>
 
-															<div class="col-xs-6">
+															<div class="col-xs-12 col-md-6">
 																<label for="phone">Office Line:</label>
 																<d:TextField ui:field="txtPhone" styleName="form-control"
 																	placeholder="Office Name" value="" required="true">
@@ -131,7 +130,7 @@
 
 													<div class="form-group">
 														<div class="row">
-															<div class="col-xs-6">
+															<div class="col-xs-12 col-md-6">
 																<label for="emailaddress">Postal Address</label>
 																<d:TextField ui:field="txtAddress"
 																	styleName="form-control" placeholder="Enter Address"
@@ -139,7 +138,7 @@
 																</d:TextField>
 															</div>
 
-															<div class="col-xs-6">
+															<div class="col-xs-12 col-md-6">
 																<label for="applicationCategory">Postal Code</label>
 
 																<d:TextField ui:field="txtPostalCode"
@@ -153,14 +152,14 @@
 
 													<div class="form-group">
 														<div class="row">
-															<div class="col-xs-6">
+															<div class="col-xs-12 col-md-6">
 																<label for="emailaddress">Country:</label>
 																<d:DropDownList ui:field="lstCountry"
 																	styleName="form-control">
 																</d:DropDownList>
 															</div>
 
-															<div class="col-xs-6">
+															<div class="col-xs-12 col-md-6">
 																<label for="applicationCategory">Town/City</label>
 																<d:TextField ui:field="txtCity" styleName="form-control"
 																	placeholder="Enter Town/City" value="" required="true">
@@ -171,7 +170,7 @@
 
 													<div class="form-group">
 														<div class="row">
-															<div class="col-xs-6">
+															<div class="col-xs-12 col-md-6">
 																<label for="contactPerson">Contact Person:</label>
 																<d:TextField ui:field="txtContactPerson"
 																	styleName="form-control" placeholder="Contact Person"
@@ -179,7 +178,7 @@
 																</d:TextField>
 																<p class="text-warning">if self-sponsored, please enter your name</p>
 															</div>
-															<div class="col-xs-6">
+															<div class="col-xs-12 col-md-6">
 																<label for="contactPerson">
 																	Contact Email:
 																	<span ui:field="spnSpinner" class="hide">
