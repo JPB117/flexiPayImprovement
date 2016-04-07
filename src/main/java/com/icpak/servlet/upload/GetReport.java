@@ -196,8 +196,7 @@ public class GetReport extends HttpServlet {
 			HttpServletResponse resp) {
 		byte[] data = bookingsDaoHelper.Backupdbtosql();
 		processAttachmentRequest(resp, data, "backup_"
-				+ ServerDateUtils.DATEFORMAT_SYS.format(new Date()) + 
-				".sql");
+				+ ServerDateUtils.DATEFORMAT_SYS.format(new Date()) + ".sql");
 	}
 
 	private void processProformaInvoice(HttpServletRequest req,
@@ -508,7 +507,7 @@ public class GetReport extends HttpServlet {
 		values.put("eventDates", formatter.format(cpd.getStartDate()) + " to "
 				+ formatter.format(cpd.getEndDate()));
 		values.put("memberName", cpd.getFullNames());
-		values.put("dateIssued", formatter.format(new Date()));
+		values.put("dateIssued", formatter.format(cpd.getEndDate()));
 		values.put("cpdHours", cpd.getCpdHours());
 		values.put("eventVenue", cpd.getEventLocation());
 		Doc doc = new Doc(values);
@@ -845,7 +844,6 @@ public class GetReport extends HttpServlet {
 		}
 
 		log.info("CPD Records Count = " + sortedCpd.size());
-
 		Map<String, Object> values = new HashMap<String, Object>();
 		values.put("memberNames", userDto.getFullName());
 		values.put("memberNo", user.getMemberNo());
@@ -855,7 +853,6 @@ public class GetReport extends HttpServlet {
 		Doc doc = new Doc(values);
 
 		for (CPD cpd : sortedCpd) {
-
 			String cpdCategory = null;
 			values = new HashMap<String, Object>();
 			values.put("number", "CPD-" + cpd.getId());
@@ -876,10 +873,8 @@ public class GetReport extends HttpServlet {
 
 			// create row to loop through
 			DocumentLine line = new DocumentLine("invoiceDetails", values);
-
 			doc.addDetail(line);
 		}
-
 		SimpleDateFormat formatter_ = new SimpleDateFormat("yyyy");
 
 		Hashtable<String, List<CPD>> cpdStatementSummary = new Hashtable<>();
@@ -893,7 +888,6 @@ public class GetReport extends HttpServlet {
 			CPD currentCpd = sortedCpd.get(i);
 
 			for (CPD cpd : sortedCpd) {
-
 				String currentCpdYear = formatter_.format(currentCpd
 						.getEndDate());
 				String comparisonYear = formatter_.format(cpd.getEndDate());
@@ -903,7 +897,6 @@ public class GetReport extends HttpServlet {
 				}
 
 				// check if our hash tree is empty
-
 				if (cpdStatementSummary.isEmpty()) {
 					cpdStatementSummary2.put(currentCpdYear, cdpTableValues);
 				} else {
@@ -916,7 +909,6 @@ public class GetReport extends HttpServlet {
 				}
 
 			}
-
 		}
 
 		// lets print the final hash table
@@ -926,32 +918,31 @@ public class GetReport extends HttpServlet {
 
 			Double totalStructured = new Double(0);
 			Double totalUnstructured = new Double(0);
-
 			values = new HashMap<String, Object>();
 			values.put("year", m.getKey());
 			for (CPD cpdValue : hashTreeValues) {
 				if (cpdValue.getCategory() == null) {
 				} else if (cpdValue.getCategory().toString()
 						.equals("CATEGORY_A")) {
+					totalStructured = totalStructured + cpdValue.getCpdHours();
+				} else if (cpdValue.getCategory().toString()
+						.equals("CATEGORY_D")) {
 					totalUnstructured = totalUnstructured
 							+ cpdValue.getCpdHours();
-				} else {
-					totalStructured = totalStructured + cpdValue.getCpdHours();
 				}
 			}
 
 			Double total = totalStructured + totalUnstructured;
-
-			System.out.println("==total Structured " + totalStructured);
-			System.out
-					.println("==total totalUnstructured " + totalUnstructured);
-
 			values.put("totalStructured", totalStructured);
 			values.put("totalUnstructured", totalUnstructured);
 			values.put("total", total);
 			// create row to loop through
 			DocumentLine line = new DocumentLine("cpdDetails", values);
 			doc.addDetail(line);
+			System.out.println("==>total Structured> " + totalStructured);
+			System.out.println("==>total totalUnstructured> "
+					+ totalUnstructured);
+
 		}
 
 		HTMLToPDFConvertor convertor = new HTMLToPDFConvertor();
@@ -959,7 +950,6 @@ public class GetReport extends HttpServlet {
 				"cpd-statement.html");
 		String html = IOUtils.toString(is);
 		byte[] data = convertor.convert(doc, html);
-
 		String name = userDto.getFullName() + " "
 				+ formatter_.format(new Date()) + ".pdf";
 

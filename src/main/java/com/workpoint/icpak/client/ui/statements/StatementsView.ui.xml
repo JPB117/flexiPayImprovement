@@ -30,7 +30,7 @@
 			<div class="main-content">
 				<header:StatementHeader ui:field="panelHeader"></header:StatementHeader>
 				<div class="row">
-					<div class="col-lg-12 tabbable {style.top-bar}">
+					<div class="col-lg-12 tabbable {style.top-bar} visible-lg">
 						<div class="row search-bar">
 							<div class="col-lg-3" style="display: inline-flex;">
 								<Strong style="padding-top:10px;margin-right: 10px;">From:</Strong>

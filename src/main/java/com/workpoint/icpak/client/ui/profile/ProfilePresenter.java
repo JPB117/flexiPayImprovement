@@ -43,6 +43,7 @@ import com.workpoint.icpak.client.ui.events.EditModelEvent;
 import com.workpoint.icpak.client.ui.events.EditModelEvent.EditModelHandler;
 import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
 import com.workpoint.icpak.client.ui.events.ProcessingEvent;
+import com.workpoint.icpak.client.ui.events.ToggleSideBarEvent;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
 import com.workpoint.icpak.client.ui.membership.form.MemberRegistrationForm;
 import com.workpoint.icpak.client.ui.payment.PaymentPresenter;
@@ -640,6 +641,7 @@ public class ProfilePresenter
 		loadData();
 		getView().showPayForSubsPresenter(false);
 		setInSlot(PAYMENTS_SLOT, null);
+		fireEvent(new ToggleSideBarEvent(false));
 	}
 
 	private void loadData() {

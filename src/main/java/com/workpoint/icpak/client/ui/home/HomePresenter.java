@@ -26,6 +26,7 @@ import com.workpoint.icpak.client.service.AbstractAsyncCallback;
 import com.workpoint.icpak.client.ui.MainPagePresenter;
 import com.workpoint.icpak.client.ui.events.ContextLoadedEvent;
 import com.workpoint.icpak.client.ui.events.FullScreenEvent;
+import com.workpoint.icpak.client.ui.events.ToggleSideBarEvent;
 import com.workpoint.icpak.client.ui.events.FullScreenEvent.FullScreenHandler;
 import com.workpoint.icpak.client.ui.events.LogoutEvent;
 import com.workpoint.icpak.client.ui.events.LogoutEvent.LogoutHandler;
@@ -33,13 +34,14 @@ import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
 import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent.ProcessingCompletedHandler;
 import com.workpoint.icpak.client.ui.events.ProcessingEvent;
 import com.workpoint.icpak.client.ui.events.ProcessingEvent.ProcessingHandler;
+import com.workpoint.icpak.client.ui.events.ToggleSideBarEvent.ToggleSideBarHandler;
 import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.api.SessionResource;
 
 public class HomePresenter extends
 		TabContainerPresenter<HomePresenter.IHomeView, HomePresenter.MyProxy>
 		implements ProcessingHandler, ProcessingCompletedHandler,
-		LogoutHandler, FullScreenHandler {
+		LogoutHandler, FullScreenHandler, ToggleSideBarHandler {
 
 	public interface IHomeView extends TabView {
 		// void bindAlerts(HashMap<TaskType, Integer> alerts);
@@ -55,6 +57,8 @@ public class HomePresenter extends
 		void setMiddleHeight();
 
 		void showFullScreen(String message);
+
+		void showSideBar(boolean b);
 	}
 
 	@ProxyStandard
@@ -108,6 +112,7 @@ public class HomePresenter extends
 		addRegisteredHandler(ProcessingCompletedEvent.TYPE, this);
 		addRegisteredHandler(LogoutEvent.TYPE, this);
 		addRegisteredHandler(FullScreenEvent.getType(), this);
+		addRegisteredHandler(ToggleSideBarEvent.getType(), this);
 	}
 
 	@Override
@@ -152,6 +157,11 @@ public class HomePresenter extends
 	@Override
 	public void onFullScreen(FullScreenEvent event) {
 		getView().showFullScreen(event.getMessage());
+	}
+
+	@Override
+	public void onToggleSideBar(ToggleSideBarEvent event) {
+		getView().showSideBar(event.getisShown());
 	}
 
 }

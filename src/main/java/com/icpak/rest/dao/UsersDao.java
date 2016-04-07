@@ -157,8 +157,7 @@ public class UsersDao extends BaseDao {
 
 	public List<User> getAllUsers() {
 		String query = "from User u where memberNo IS NOT NULL order by memberNo asc";
-		return getResultList(getEntityManager().createQuery(query)
-				.setMaxResults(20));
+		return getResultList(getEntityManager().createQuery(query));
 	}
 
 	public void updateUser(User user) {

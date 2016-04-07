@@ -36,6 +36,7 @@ import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
 import com.workpoint.icpak.client.ui.events.ProcessingEvent;
 import com.workpoint.icpak.client.ui.events.TableActionEvent;
 import com.workpoint.icpak.client.ui.events.TableActionEvent.TableActionHandler;
+import com.workpoint.icpak.client.ui.events.ToggleSideBarEvent;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
 import com.workpoint.icpak.client.ui.security.MemberGateKeeper;
 import com.workpoint.icpak.client.ui.util.DateUtils;
@@ -256,6 +257,7 @@ public class CPDMemberPresenter extends
 
 		this.endDate = new Date();
 		loadData(startDate, new Date());
+		fireEvent(new ToggleSideBarEvent(false));
 	}
 
 	protected void loadData(Date startDate, Date endDate) {

@@ -73,7 +73,6 @@ public class HeaderPresenter extends
 		this.addRegisteredHandler(LoadAlertsEvent.TYPE, this);
 
 		getView().getALogout().addClickHandler(new ClickHandler() {
-
 			@Override
 			public void onClick(ClickEvent event) {
 				fireEvent(new LogoutEvent());

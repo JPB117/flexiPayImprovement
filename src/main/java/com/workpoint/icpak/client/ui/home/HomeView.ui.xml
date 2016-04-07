@@ -5,31 +5,106 @@
 	xmlns:d='urn:import:com.workpoint.icpak.client.ui.component' xmlns:tab='urn:import:com.workpoint.icpak.client.ui.home'
 	ui:generateLocales='default'>
 
-	<g:HTMLPanel styleName="set-full-height">
-		<aside ng-include="'app/views/partials/sidebar.html'"
-			ng-controller="SidebarController" class="aside ng-scope" ui:field="elSideBar">
+	<g:HTMLPanel styleName="set-full-height" ui:field="panelHome">
+		<div class="mobile-menu-wrap dark-div visible-xs">
+			<d:ActionLink styleName="mobile-menu-toggle" ui:field="aRemoveMenu">
+				<i class="fa fa-times-circle"></i>
+			</d:ActionLink>
+			<ul class="mobile-menu">
+				<li role="presentation" class="hide">
+					<a class="hand" href="#home">
+						<em class="icon-speedometer"></em>
+						<span>Home</span>
+					</a>
+				</li>
+				<li role="presentation" class="hide">
+					<a class="hand" href="#events">
+						<em class="fa fa-tags"></em>
+						<span>Events &amp; Courses</span>
+					</a>
+				</li>
+				<li role="presentation">
+					<a class="hand" href="#bookings">
+						<em class="fa fa-tags"></em>
+						<span>My Bookings</span>
+					</a>
+				</li>
+				<li role="presentation" class="hide">
+					<a class="hand" href="#accomodation">
+						<em class="fa fa-bed"></em>
+						<span>Accomodation</span>
+					</a>
+				</li>
+				<li role="presentation" class="hide">
+					<a class="hand" href="#usermgt">
+						<em class="fa fa-globe"></em>
+						<span>Users and Groups</span>
+					</a>
+				</li>
+				<li role="presentation" class="hide">
+					<a class="hand" href="#members">
+						<em class="icon-users"></em>
+						<span>Applications</span>
+					</a>
+				</li>
+				<li role="presentation">
+					<a class="hand" href="#cpd">
+						<em class="fa fa-graduation-cap"></em>
+						<span>My C.P.D</span>
+					</a>
+				</li>
+				<li role="presentation" class="hide">
+					<a class="hand" href="#cpdmgt">
+						<em class="fa fa-graduation-cap"></em>
+						<span>C.P.D Management</span>
+					</a>
+				</li>
+				<li role="presentation">
+					<a class="hand" href="#cpdOnline">
+						<em class="fa fa-book"></em>
+						<span>CPD Online</span>
+					</a>
+				</li>
+				<li role="presentation" class="hide">
+					<a class="hand" href="#offences">
+						<em class="fa fa-user-secret"></em>
+						<span>My Offences</span>
+					</a>
+				</li>
+				<li role="presentation" class="hide">
+					<a class="hand" href="#invoices">
+						<em class="fa fa-briefcase"></em>
+						<span>Financial Summary</span>
+					</a>
+				</li>
+				<li role="presentation" class="hide">
+					<a class="hand" href="#enquiries">
+						<em class="fa fa-bullhorn"></em>
+						<span>Enquiries</span>
+					</a>
+				</li>
+				<li role="presentation">
+					<a class="hand" href="#statements">
+						<em class="fa fa-briefcase"></em>
+						<span>Statements</span>
+					</a>
+				</li>
+				<li role="presentation" class="active">
+					<a class="hand" href="#profile">
+						<em class="icon-user"></em>
+						<span>My Profile</span>
+					</a>
+				</li>
+				<li>
+					<d:ActionLink ui:field="aLogout">
+						<em class="fa fa-power-off"></em>
+						LogOut
+					</d:ActionLink>
+				</li>
+			</ul>
+		</div>
+		<aside class="aside ng-scope" ui:field="elSideBar">
 			<!-- Inline template with sidebar items markup and ng-directives -->
-
-			<script type="text/ng-template" id="sidebar-renderer.html"
-				class="ng-scope">
-				<span ng-if="item.heading">{{(item.translate | translate) || item.text}}</span>
-				<a ng-if="!item.heading" ng-href="{{$state.href(item.sref, item.params)}}"
-					title="{{item.text}}">
-					<em ng-if="item.icon" class="{{item.icon}}"></em>
-					<div ng-if="item.alert" ng-class="item.label || 'label label-success'"
-						class="pull-right">{{item.alert}}</div>
-					<span>{{(item.translate | translate) || item.text}}</span>
-				</a>
-				<ul ng-if="item.submenu" collapse="isCollapse(pIndex)" ng-init="addCollapse(pIndex, item)"
-					class="nav sidebar-subnav">
-					<li class="sidebar-subnav-header">{{(item.translate | translate) || item.text}}</li>
-					<li ng-repeat="item in item.submenu" ng-include="'sidebar-renderer.html'"
-						ng-class="getMenuItemPropClasses(item)" ng-init="pIndex=(pIndex+'-'+$index); inSubmenu = true"
-						ng-click="toggleCollapse(pIndex)"></li>
-				</ul>
-			</script>
-
-
 			<div class="aside-inner ng-scope">
 				<nav class="sidebar" ng-transclude="" sidebar=""
 					sidebar-anyclick-close="">

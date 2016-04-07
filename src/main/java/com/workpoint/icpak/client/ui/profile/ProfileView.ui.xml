@@ -8,39 +8,40 @@
 	xmlns:password='urn:import:com.workpoint.icpak.client.ui.profile.password'
 	ui:generateLocales='default'>
 
-	<g:HTMLPanel ui:field="container"
-		styleName="content-wrapper ng-scope ng-fadeInUp">
-		<h3 class="ng-scope">
-			User Profile
-		</h3>
+	<g:HTMLPanel ui:field="container" styleName="content-wrapper">
+		<div class="row">
+			<div class="col-lg-12">
+				<h3 class="content-heading">
+					User Profile
+				</h3>
 
-		<div class="main-content">
-			<profile:ProfileWidget ui:field="divProfileContent"></profile:ProfileWidget>
-
-			<g:HTMLPanel ui:field="divPasswordContent">
-				<password:PasswordWidget ui:field="panelPasswordWidget"></password:PasswordWidget>
-			</g:HTMLPanel>
-
-			<g:HTMLPanel ui:field="panelSubsPaymentsContainer"
-				styleName="hide panel widget">
-				<div class="row">
-					<div class="col-lg-12">
-						<div class="col-lg-12">
-							<h4>
-								<d:ActionLink ui:field="aBackToProfile">
-									<i class="fa fa-angle-double-left"></i>
-									Back to My Profile
-								</d:ActionLink>
-								/
-								Pay for member subscription
-							</h4>
-							<hr />
+				<div class="main-content">
+					<profile:ProfileWidget ui:field="divProfileContent"></profile:ProfileWidget>
+					<g:HTMLPanel ui:field="divPasswordContent">
+						<password:PasswordWidget ui:field="panelPasswordWidget"></password:PasswordWidget>
+					</g:HTMLPanel>
+					<g:HTMLPanel ui:field="panelSubsPaymentsContainer"
+						styleName="hide panel widget">
+						<div class="row">
+							<div class="col-lg-12">
+								<div class="col-lg-12">
+									<h4>
+										<d:ActionLink ui:field="aBackToProfile">
+											<i class="fa fa-angle-double-left"></i>
+											Back to My Profile
+										</d:ActionLink>
+										/
+										Pay for member subscription
+									</h4>
+									<hr />
+								</div>
+								<g:HTMLPanel ui:field="panelSubsPayments">
+								</g:HTMLPanel>
+							</div>
 						</div>
-						<g:HTMLPanel ui:field="panelSubsPayments">
-						</g:HTMLPanel>
-					</div>
+					</g:HTMLPanel>
 				</div>
-			</g:HTMLPanel>
+			</div>
 		</div>
 	</g:HTMLPanel>
 </ui:UiBinder>
