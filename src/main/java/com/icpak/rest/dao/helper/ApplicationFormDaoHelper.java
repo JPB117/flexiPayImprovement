@@ -375,8 +375,6 @@ public class ApplicationFormDaoHelper {
 		User userToBeUpdated = user;
 		userToBeUpdated.getUserData().setFirstName(application.getSurname());
 		userToBeUpdated.getUserData().setLastName(application.getOtherNames());
-		userToBeUpdated.setFullName(application.getSurname() + " "
-				+ application.getOtherNames());
 		userToBeUpdated.setEmail(application.getEmail());
 		userToBeUpdated.setPhoneNumber(application.getTelephone1());
 		userDao.updateUser(userToBeUpdated);
