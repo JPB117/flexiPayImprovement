@@ -1014,19 +1014,26 @@ public class BookingsDaoHelper {
 		}
 	}
 
-	public void syncWithServer(String eventRefId) {
+	public Integer syncWithServer(String eventRefId) {
 		List<DelegateDto> allDelegates = getAllDelegates(null, eventRefId, 0,
-				5, "", "", "");
+				1000000, "", "", "");
 
+		int successCount = 0;
 		for (DelegateDto d : allDelegates) {
 			// Post Delegate to server
-			d.setCreatedDate(null);
+			d.setCreatedDate(new Date(1447850439000L));
 			try {
-				updateDelegateToServer(eventRefId, d.getBookingId(), d);
+				String response = updateDelegateToServer(eventRefId,
+						d.getBookingId(), d);
+				if (response.equals("Success")) {
+					successCount = successCount + 1;
+				}
 			} catch (URISyntaxException | ParseException | JSONException e) {
 				e.printStackTrace();
 			}
 		}
+
+		return successCount;
 	}
 
 	public String updateDelegateToServer(String eventRefId, String bookingId,
@@ -1037,6 +1044,7 @@ public class BookingsDaoHelper {
 		JSONObject payLoad = new JSONObject(delegate);
 		payLoad.remove("attendance");
 		payLoad.remove("paymentStatus");
+		payLoad.remove("createdDate");
 
 		// Create the understood versions
 		if (delegate.getPaymentStatus() == PaymentStatus.PAID) {
@@ -1051,7 +1059,9 @@ public class BookingsDaoHelper {
 			payLoad.put("attendance", "NOTATTENDED");
 		}
 
-		logger.info("payload to Server>>>>" + payLoad);
+		payLoad.put("createdDate", 1458215175000L);
+
+		logger.info("payload to Server>>>>" + payLoad.toString());
 		String serverAddress = settings.getProperty("delegate_sync_url");
 		String params = eventRefId + "/bookings/" + bookingId + "/delegates/"
 				+ delegate.getRefId();
@@ -1084,7 +1094,12 @@ public class BookingsDaoHelper {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return result.toString();
+
+		int code = response.getStatusLine().getStatusCode();
+		if (code == 200) {
+			return "Success";
+		}
+		return "Failed";
 	}
 
 	public byte[] Backupdbtosql() {

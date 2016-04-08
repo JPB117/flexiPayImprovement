@@ -20,6 +20,7 @@ public class ServerDateUtils {
 	static String shortTimeStamp = "yyyy-MM-dd";
 	static String fullHourMinuteStamp = "yyyy-MM-dd hh:mm";
 	static String fullTimeStamp = "yyyy-MM-dd hh:mm:ss";
+	static String mpesaTimeStamp = "yyyy-MM-dd HH:mm:ss";
 
 	public static final SimpleDateFormat CREATEDFORMAT = getFormat(createdpattern);
 
@@ -37,6 +38,7 @@ public class ServerDateUtils {
 	public static final SimpleDateFormat MONTHONLYFORMAT = getFormat(monthOnlyPattern);
 	public static final SimpleDateFormat FULLHOURMINUTESTAMP = getFormat(fullHourMinuteStamp);
 	public static final SimpleDateFormat FULLTIMESTAMP = getFormat(fullTimeStamp);
+	public static final SimpleDateFormat MPESATIMESTAMP = getFormat(fullTimeStamp);
 
 	static long minInMillis = 60 * 1000;
 	static long hourInMillis = 60 * minInMillis;

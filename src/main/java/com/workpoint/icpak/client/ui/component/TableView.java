@@ -46,7 +46,7 @@ public class TableView extends Composite {
 	@UiField
 	HTMLPanel panelFooter;
 	@UiField
-	DivElement divSearch;
+	HTMLPanel divSearch;
 	@UiField
 	HTMLPanel panelPaging;
 	@UiField
@@ -374,10 +374,10 @@ public class TableView extends Composite {
 	public void setSearchSectionVisible(Boolean status) {
 		if (status) {
 			tblContainer.removeStyleName("border-top");
-			divSearch.removeClassName("hide");
+			divSearch.setVisible(true);
 		} else {
 			tblContainer.addStyleName("border-top");
-			divSearch.addClassName("hide");
+			divSearch.setVisible(false);
 		}
 	}
 

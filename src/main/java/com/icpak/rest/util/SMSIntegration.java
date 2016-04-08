@@ -73,6 +73,9 @@ public class SMSIntegration {
 				return "Failed: SMS Message cannot be empty";
 			}
 
+			to = to.replaceAll("[-+.^:,]", "");
+			to = to.trim();
+			System.err.println("FinalPhone Number:" + to);
 			JSONArray resp = gateway.sendMessage(to, message, from, 1);
 
 			JSONObject object = resp.getJSONObject(0);

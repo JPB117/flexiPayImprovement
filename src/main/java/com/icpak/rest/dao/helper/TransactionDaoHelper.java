@@ -141,7 +141,7 @@ public class TransactionDaoHelper {
 		// Always store the transaction
 		Date parsedDate = null;
 		try {
-			parsedDate = ServerDateUtils.FULLTIMESTAMP.parse(trxDate);
+			parsedDate = ServerDateUtils.MPESATIMESTAMP.parse(trxDate);
 		} catch (ParseException e1) {
 			e1.printStackTrace();
 		}
@@ -463,9 +463,9 @@ public class TransactionDaoHelper {
 					}
 					return;
 				}
-				
-				//This is a normal event booking
-				//Send message to all Delegates
+
+				// This is a normal event booking
+				// Send message to all Delegates
 				for (Delegate delegate : booking.getDelegates()) {
 					smsMessage = "Dear "
 							+ delegate.getFullName()

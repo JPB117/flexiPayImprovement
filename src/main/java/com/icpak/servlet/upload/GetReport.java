@@ -190,6 +190,22 @@ public class GetReport extends HttpServlet {
 		if (action.equals("GETOFFLINESQL")) {
 			processOfflineSql(req, resp);
 		}
+		if (action.equals("SYNCTOSERVER")) {
+			processSyncToServer(req, resp);
+		}
+	}
+
+	private void processSyncToServer(HttpServletRequest req,
+			HttpServletResponse resp) {
+		if (req.getParameter("eventRefId") != null) {
+			List<DelegateDto> allDelegates = bookingsDaoHelper.getAllDelegates(
+					null, req.getParameter("eventRefId"), 0, 1000000, "", "",
+					"");
+			Integer successCount = bookingsDaoHelper.syncWithServer(req
+					.getParameter("eventRefId"));
+			writeError(resp, "Successful synced " + successCount + " out of "
+					+ allDelegates.size() + " delegates..");
+		}
 	}
 
 	private void processOfflineSql(HttpServletRequest req,

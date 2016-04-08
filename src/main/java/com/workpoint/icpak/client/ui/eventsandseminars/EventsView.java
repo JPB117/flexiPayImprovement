@@ -28,7 +28,6 @@ import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.model.BookingStatus;
 import com.workpoint.icpak.shared.model.EventSummaryDto;
 import com.workpoint.icpak.shared.model.events.AccommodationDto;
-import com.workpoint.icpak.shared.model.events.BookingDto;
 import com.workpoint.icpak.shared.model.events.DelegateDto;
 import com.workpoint.icpak.shared.model.events.EventDto;
 
@@ -54,6 +53,8 @@ public class EventsView extends ViewImpl implements EventsPresenter.IEventsView 
 	DelegatesTable tblDelegates;
 	@UiField
 	ActionLink aCreateBooking;
+	@UiField
+	ActionLink aSyncWithServer;
 
 	private EventDto event;
 
@@ -74,6 +75,16 @@ public class EventsView extends ViewImpl implements EventsPresenter.IEventsView 
 				ctx.setContext("eventRefId", EventsView.this.event.getRefId());
 				ctx.setContext("docType", "xls");
 				ctx.setAction(UPLOADACTION.GETDELEGATESREPORT);
+				Window.open(ctx.toUrl(), "", null);
+			}
+		});
+
+		aSyncWithServer.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				UploadContext ctx = new UploadContext("getreport");
+				ctx.setContext("eventRefId", EventsView.this.event.getRefId());
+				ctx.setAction(UPLOADACTION.SYNCTOSERVER);
 				Window.open(ctx.toUrl(), "", null);
 			}
 		});
@@ -171,7 +182,7 @@ public class EventsView extends ViewImpl implements EventsPresenter.IEventsView 
 	public HasValueChangeHandlers<BookingStatus> getBookingStatusValueChangeHandler() {
 		return tblDelegates.getBookingStatusValueChangeHandler();
 	}
-	
+
 	public DropDownList<AccommodationDto> getLstAccomodation() {
 		return tblDelegates.getLstAccomodation();
 	}

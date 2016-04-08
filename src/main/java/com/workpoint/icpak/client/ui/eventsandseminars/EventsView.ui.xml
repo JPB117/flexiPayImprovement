@@ -51,6 +51,9 @@
 						<div class="col-lg-12" style="margin-bottom: 12px;">
 							<d:ActionLink ui:field="aCreateBooking" styleName="btn btn-primary btn-fill">Create
 								Booking</d:ActionLink>
+
+							<d:ActionLink ui:field="aSyncWithServer"
+								styleName="pull-right">Sync With Server</d:ActionLink>
 						</div>
 						<div class="col-sm-12">
 							<table2:DelegatesTable ui:field="tblDelegates">
