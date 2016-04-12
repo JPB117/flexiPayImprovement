@@ -558,7 +558,7 @@ public class ApplicationFormDaoHelper {
 			// Copy into PO
 			ApplicationFormHeader po = new ApplicationFormHeader();
 			po.copyFrom(member.toDTO());
-			po.setInvoiceRef("jnjndjjkkkkkkkk");
+			po.setInvoiceRef("jnjndjjkkkkkkkk");// No Invoice
 			po.setApplicationStatus(ApplicationStatus.APPROVED);
 
 			User user = userDao.findUserByMemberNo(member.getMemberNo());
@@ -824,68 +824,65 @@ public class ApplicationFormDaoHelper {
 			List<MemberImport> memberImports) {
 		List<ApplicationFormHeaderDto> rtn = new ArrayList<>();
 
-		for (MemberImport memberIpmort : memberImports) {
+		for (MemberImport memberImport : memberImports) {
 
 			Member memberAvailable = memberDaoHelper
-					.findByMemberNo(memberIpmort.getMemberNo());
+					.findByMemberNo(memberImport.getMemberNo());
 			if (memberAvailable == null) {
-				logger.info("Member NAME : " + memberIpmort.getName());
+				logger.info("Member NAME: " + memberImport.getName() + " M/No:"
+						+ memberImport);
 				// Copy into PO
 				ApplicationFormHeader po = new ApplicationFormHeader();
-				po.copyFrom(memberIpmort.toDTO());
+				po.copyFrom(memberImport.toDTO());
 				po.setInvoiceRef("jnjndjjkkkkkkkk");
 				po.setApplicationStatus(ApplicationStatus.APPROVED);
 
 				logger.error(" MEMBER NO = = = == "
-						+ memberIpmort.getMemberNo());
+						+ memberImport.getMemberNo());
 
 				BioData bioData = new BioData();
 
-				if (memberIpmort.getGender() == 0) {
+				if (memberImport.getGender() == 0) {
 					bioData.setGender(Gender.MALE);
-				} else if (memberIpmort.getGender() == 1) {
+				} else if (memberImport.getGender() == 1) {
 					bioData.setGender(Gender.FEMALE);
 				}
 
-				bioData.setDob(memberIpmort.getDateOfBirth());
+				bioData.setDob(memberImport.getDateOfBirth());
 
 				User user = new User();
-				user.setEmail(memberIpmort.getEmail());
-				user.setFullName(memberIpmort.getName());
-				user.setMemberNo(memberIpmort.getMemberNo());
-				user.setAddress(memberIpmort.getAddress());
-				user.setCity(memberIpmort.getCity());
-				user.setMobileNo(memberIpmort.getPhoneNo_());
-				user.setPassword("pass1");
-				user.setUsername(memberIpmort.getEmail());
+				user.setEmail(memberImport.getEmail());
+				user.setFullName(memberImport.getName());
+				user.setMemberNo(memberImport.getMemberNo());
+				user.setAddress(memberImport.getAddress());
+				user.setCity(memberImport.getCity());
+				user.setMobileNo(memberImport.getPhoneNo_());
+				user.setPassword("1cp@kAdm1n");
+				user.setUsername(memberImport.getEmail());
 				user.setUserData(bioData);
 
 				userDao.createUser(user);
 
-				List<User> usersInDb = userDao.findUsersByMemberNo(memberIpmort
+				List<User> usersInDb = userDao.findUsersByMemberNo(memberImport
 						.getMemberNo());
-
 				User userInDb = null;
-
 				if (!usersInDb.isEmpty() && usersInDb != null) {
 					userInDb = usersInDb.get(0);
 				}
-
 				po.setUserRefId(user.getRefId());
-
 				Member member = new Member();
-				member.setMemberNo(memberIpmort.getMemberNo());
-				member.setRegistrationDate(memberIpmort.getDateRegistered());
-				member.setPractisingNo(memberIpmort.getPractisingNo());
-				member.setCustomerType(memberIpmort.getCustomerType());
-				member.setCustomerPostingGroup(memberIpmort
+				member.setMemberNo(memberImport.getMemberNo());
+				member.setRegistrationDate(memberImport.getDateRegistered());
+				member.setPractisingNo(memberImport.getPractisingNo());
+				member.setCustomerType(memberImport.getCustomerType());
+				member.setCustomerPostingGroup(memberImport
 						.getCustomerPostingGroup());
 				member.setUserRefId(user.getRefId());
 				member.setUser(userInDb);
 
-				if (memberIpmort.getStatus() == 1) {
+				if (memberImport.getStatus() == 0) {
 					member.setMemberShipStatus(MembershipStatus.ACTIVE);
-				} else {
+				} else if (memberImport.getStatus() == 1) {
 					member.setMemberShipStatus(MembershipStatus.INACTIVE);
 				}
 
@@ -896,7 +893,7 @@ public class ApplicationFormDaoHelper {
 					userDao.save(userInDb);
 				}
 
-				logger.error(" MEMBER ID = = = == " + memberIpmort.getId());
+				logger.error(" MEMBER ID = = = == " + memberImport.getId());
 			}
 		}
 

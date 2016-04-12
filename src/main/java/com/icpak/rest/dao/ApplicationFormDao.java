@@ -444,10 +444,7 @@ public class ApplicationFormDao extends BaseDao {
 		String sql = "select a.id,a.No_,a.Name,a.`E-mail`,a.Status,a.`Customer Type`,a.`Customer Posting Group`,"
 				+ "a.`Practising No`,a.`Gender`,a.paidUp,a.Address,a.Address2,a.City,a.phoneNo_,a.PostCode"
 				+ ",a.County,a.`Date Of Birth`,a.`ID No`,a.Position,a.`Practicing Cert Date`,"
-				+ "a.`Date Registered` from new_members a "
-				+ "where a.No_ not in "
-				+ "(select a.No_ from all_members a inner join member m on a.No_=m.memberNo)";
-		
+				+ "a.`Date Registered` from 11th_april_2016 a ";
 		Query query = getEntityManager().createNativeQuery(sql);
 		
 		List<Object[]> rows = getResultList(query);
