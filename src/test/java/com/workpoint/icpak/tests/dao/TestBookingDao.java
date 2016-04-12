@@ -239,9 +239,19 @@ public class TestBookingDao extends AbstractDaoTest {
 	public void testDbBackUp() {
 		bookingsHelper.Backupdbtosql();
 	}
-	
+
 	@Test
-	public void testSyncWithServer(){
+	public void testAssociateMembers() {
+		String memberNo = "ASSOC/7087";
+		if (memberNo.contains("ASSOC/")) {
+			System.err.println("Associate!");
+		} else {
+			System.err.println("Full Member!");
+		}
+	}
+
+	// @Test
+	public void testSyncWithServer() {
 		bookingsHelper.syncWithServer("dQdcmmGqPuw7wVzr");
 	}
 }

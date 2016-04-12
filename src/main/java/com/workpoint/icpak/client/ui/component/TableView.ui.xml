@@ -3,7 +3,7 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.workpoint.icpak.client.ui.component">
 
 	<g:HTMLPanel ui:field="overalContainer">
-		<g:HTMLPanel styleName="search-bar visible-lg" ui:field="divSearch">
+		<g:HTMLPanel styleName="search-bar hidden-xs" ui:field="divSearch">
 			<g:HTMLPanel ui:field="panelSearch">
 				<div class="col-md-3">
 					<d:TextField placeholder="Search here" ui:field="txtSearch"

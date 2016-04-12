@@ -482,6 +482,10 @@ public class BookingsDaoHelper {
 		memberInvoiceLine.setQuantity(0);
 		memberInvoiceLine.setMemberNames("");
 
+		InvoiceLineDto associateInvoiceLine = new InvoiceLineDto();
+		associateInvoiceLine.setQuantity(0);
+		associateInvoiceLine.setMemberNames("");
+
 		InvoiceLineDto nonMemberInvoiceLine = new InvoiceLineDto();
 		nonMemberInvoiceLine.setQuantity(0);
 		nonMemberInvoiceLine.setMemberNames("");
@@ -490,6 +494,10 @@ public class BookingsDaoHelper {
 		memberDiscountLine.setQuantity(0);
 		memberDiscountLine.setMemberNames("");
 
+		InvoiceLineDto associateDiscountLine = new InvoiceLineDto();
+		associateDiscountLine.setQuantity(0);
+		associateDiscountLine.setMemberNames("");
+
 		InvoiceLineDto nonMemberDiscountLine = new InvoiceLineDto();
 		nonMemberDiscountLine.setQuantity(0);
 		nonMemberDiscountLine.setMemberNames("");
@@ -497,6 +505,10 @@ public class BookingsDaoHelper {
 		InvoiceLineDto memberPenaltyLine = new InvoiceLineDto();
 		memberPenaltyLine.setQuantity(0);
 		memberPenaltyLine.setMemberNames("");
+
+		InvoiceLineDto associatePenaltyLine = new InvoiceLineDto();
+		associatePenaltyLine.setQuantity(0);
+		associatePenaltyLine.setMemberNames("");
 
 		InvoiceLineDto nonMemberPenaltyLine = new InvoiceLineDto();
 		nonMemberPenaltyLine.setQuantity(0);
@@ -510,7 +522,8 @@ public class BookingsDaoHelper {
 			delegate.setErn(dao.getErn(delegate.getRefId()));
 
 			// Member
-			if (delegate.getMemberRegistrationNo() != null) {
+			if (delegate.getMemberRegistrationNo() != null
+					&& !delegate.getMemberRegistrationNo().contains("ASSOC/")) {
 				String description = "%s - %s fees for %d member(s): %s";
 				memberInvoiceLine
 						.setMemberNames(memberInvoiceLine.getMemberNames()
@@ -574,6 +587,70 @@ public class BookingsDaoHelper {
 							+ totalPenaltyAmount);
 				}
 
+			} else if (delegate.getMemberRegistrationNo() != null
+					&& delegate.getMemberRegistrationNo().contains("ASSOC/")) {
+				String description = "%s - %s fees for %d associate member(s): %s";
+				associateInvoiceLine.setMemberNames(associateInvoiceLine
+						.getMemberNames().concat(
+								(associateInvoiceLine.getMemberNames()
+										.isEmpty() ? "" : ", ")
+										+ delegate.toString()));
+
+				int qty = associateInvoiceLine.getQuantity() + 1;
+
+				associateInvoiceLine.setEventDelegateRefId(delegate.getRefId());
+				description = String.format(description, event.getName(), event
+						.getType().getDisplayName(), qty, associateInvoiceLine
+						.getMemberNames());
+				associateInvoiceLine.setDescription(description);
+				associateInvoiceLine.setQuantity(qty);
+				associateInvoiceLine.setUnitPrice(delegate.getAmount());
+				associateInvoiceLine.setTotalAmount(qty * delegate.getAmount());
+				totalAmount += delegate.getAmount();// memberInvoice.getTotalAmount();
+
+				// Calculate the Discount
+				// Early Bird Discount for Member(Payment before 21st Jan 2016)
+				Event eventIndb = booking.getEvent();
+				if (eventIndb.getDiscountDate() != null) {
+					String discountDescription = "Associate Member Early Bird Discount(Payment before %s) ";
+					discountDescription = String.format(discountDescription,
+							formatter.format(eventIndb.getDiscountDate()));
+					associateDiscountLine.setDescription(discountDescription);
+					associateDiscountLine.setQuantity(qty);
+					associateDiscountLine.setUnitPrice(eventIndb
+							.getDiscountAssociatePrice());
+					associateDiscountLine.setTotalAmount(qty
+							* eventIndb.getDiscountMemberPrice());
+					associateDiscountLine.setType(InvoiceLineType.Discount);
+
+					totalDiscountAmount += eventIndb.getDiscountMemberPrice();
+
+					logger.error(discountDescription + "|"
+							+ associateDiscountLine.getQuantity() + " | " + qty
+							* eventIndb.getDiscountMemberPrice() + " | "
+							+ totalDiscountAmount);
+				}
+
+				// Penalty Calculation
+				// Member Penalty(Payment after 21st Jan 2016)
+				if (eventIndb.getPenaltyDate() != null) {
+					String penaltyDescription = "Associate Member Penalty(Payment after %s) ";
+					penaltyDescription = String.format(penaltyDescription,
+							formatter.format(eventIndb.getPenaltyDate()));
+					associatePenaltyLine.setDescription(penaltyDescription);
+					associatePenaltyLine.setQuantity(qty);
+					associatePenaltyLine.setUnitPrice(eventIndb
+							.getPenaltyAssociatePrice());
+					associatePenaltyLine.setTotalAmount(qty
+							* eventIndb.getPenaltyAssociatePrice());
+					associatePenaltyLine.setType(InvoiceLineType.Penalty);
+					totalPenaltyAmount += eventIndb.getPenaltyMemberPrice();
+
+					logger.error(penaltyDescription + "|"
+							+ associatePenaltyLine.getQuantity() + " | " + qty
+							* eventIndb.getPenaltyMemberPrice() + " | "
+							+ totalPenaltyAmount);
+				}
 			} else {
 				String description = "%s - %s fees for %d non-member(s): %s";
 				int qty = nonMemberInvoiceLine.getQuantity() + 1;
@@ -720,9 +797,20 @@ public class BookingsDaoHelper {
 			invoice.addLine(nonMemberPenaltyLine);
 		}
 
+		if (associateInvoiceLine.getQuantity() != 0) {
+			invoice.addLine(associateInvoiceLine);
+		}
+
+		if (associateDiscountLine.getQuantity() != 0) {
+			invoice.addLine(associateDiscountLine);
+		}
+
+		if (associatePenaltyLine.getQuantity() != 0) {
+			invoice.addLine(associatePenaltyLine);
+		}
+
 		invoice.addLines(memberRefLineMap.values());
 		invoice.addLines(nonMemberRefLineMap.values());
-
 		invoice.setAmount(totalAmount);
 		invoice.setDocumentNo(booking.getId() + "");
 		invoice.setCompanyName(booking.getContact().getCompany());
@@ -827,7 +915,13 @@ public class BookingsDaoHelper {
 		// Event Pricing
 		Double price = event.getNonMemberPrice();
 		if (delegateDto.getMemberNo() != null) {
-			price = event.getMemberPrice();
+			if (delegateDto.getMemberNo().contains("ASSOC/")) {
+				price = event.getAssociatePrice();
+			} else {
+				price = event.getMemberPrice();
+			}
+			logger.info("Delegate Price applied for "
+					+ delegateDto.getMemberNo() + " is:::" + price);
 		}
 		delegate.setAmount(price); // Charge for delegate
 		return delegate;
@@ -1151,7 +1245,7 @@ public class BookingsDaoHelper {
 					+ dbPort
 					+ " "
 					+ dbName
-					+ " event accommodation booking delegate invoice invoiceLine"
+					+ " event accommodation booking delegate invoice invoiceLine docnums doctypeseq"
 					+ " -r " + savePath;
 			System.err.println(executeCmd);
 
