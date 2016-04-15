@@ -244,6 +244,7 @@ public class EventBookingView extends ViewImpl implements
 						delegate.setMemberNo(dto.getMemberNo());
 						delegate.setMemberRefId(dto.getRefId());
 						delegate.setMemberQrCode(dto.getMemberQrCode());
+						delegate.setDelegatePhoneNumber(dto.getPhoneNumber());
 					}
 
 					delegate.setFullName(dto.getFullName());
@@ -566,7 +567,7 @@ public class EventBookingView extends ViewImpl implements
 
 	public void bindAccommodations(List<AccommodationDto> accommodation) {
 		List<Listable> accommodations = new ArrayList<Listable>();
-		if (accommodations != null) {
+		if (accommodation != null) {
 			for (AccommodationDto acc : accommodation) {
 				accommodations.add(acc);
 			}
@@ -587,7 +588,6 @@ public class EventBookingView extends ViewImpl implements
 		}
 
 		if (booking.getDelegates() != null) {
-
 			for (DelegateDto d : booking.getDelegates()) {
 				finalDelRefIds.put(d.getRefId(), d);
 			}

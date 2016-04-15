@@ -287,7 +287,6 @@ public class GetDelegatesReport {
 		}
 
 		for (Integer i = 0; i < data.size(); i++, rownum++) {
-
 			Row row = sheet.createRow(rownum);
 			DelegateDto detail = data.get(i);
 			bindData(detail, helper, sheet, row, i);

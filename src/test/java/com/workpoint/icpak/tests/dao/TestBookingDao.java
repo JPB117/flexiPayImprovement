@@ -67,10 +67,10 @@ public class TestBookingDao extends AbstractDaoTest {
 		bookingsHelper.sendProInvoice("C6lcgHyPYUDCcUBi");
 	}
 
-	@Ignore
+	@Test
 	public void testGetDelegate() {
-		List<DelegateDto> delegates = bookingsHelper.getAllDelegates(null,
-				"QEyf2DasD3X7Pybt", 0, 10, "", "", "");
+		List<DelegateDto> delegates = bookingsHelper.getAllDelegates(null, "W1L4UsrlOiHvkH6V",
+				0, 10, "", "", "");
 
 		for (DelegateDto del : delegates) {
 			System.err.println("Booking Ref>>" + del.getBookingRefId() + " "
@@ -240,7 +240,7 @@ public class TestBookingDao extends AbstractDaoTest {
 		bookingsHelper.Backupdbtosql();
 	}
 
-	@Test
+	// @Test
 	public void testAssociateMembers() {
 		String memberNo = "ASSOC/7087";
 		if (memberNo.contains("ASSOC/")) {

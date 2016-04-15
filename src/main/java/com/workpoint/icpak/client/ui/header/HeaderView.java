@@ -1,6 +1,7 @@
 package com.workpoint.icpak.client.ui.header;
 
 import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -36,6 +37,8 @@ public class HeaderView extends ViewImpl implements HeaderPresenter.IHeaderView 
 	SpanElement spnLoggedInUser;
 	@UiField
 	DivElement divAlert;
+	@UiField
+	Element imgLogo;
 
 	boolean isShown = false;
 	static int hideAlertInterval = 1000 * 5; // 5 secs
@@ -87,6 +90,15 @@ public class HeaderView extends ViewImpl implements HeaderPresenter.IHeaderView 
 		divAlert.removeClassName("hide");
 		spnAlertMessage.setInnerText(message);
 		timer.schedule(hideAlertInterval);
+	}
+
+	@Override
+	public void showSmallLogo(String message) {
+		if (message.equals("show")) {
+			imgLogo.addClassName("img-small");
+		} else {
+			imgLogo.removeClassName("img-small");
+		}
 	}
 
 }

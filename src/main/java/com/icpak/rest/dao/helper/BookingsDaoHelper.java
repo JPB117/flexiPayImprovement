@@ -142,6 +142,27 @@ public class BookingsDaoHelper {
 			String accomodationRefId, String bookingStatus) {
 		List<DelegateDto> delegateDtos = dao.getAllDelegates(eventId, offset,
 				limit, searchTerm, accomodationRefId, bookingStatus);
+		// Ensure that there is delegate phoneNumber
+		for (DelegateDto del : delegateDtos) {
+			if ((del.getMemberNo() != null)
+					&& (del.getDelegatePhoneNumber() == null || del
+							.getDelegatePhoneNumber().isEmpty())) {
+
+				logger.info("Updating phoneNumber for::" + del.getMemberNo()
+						+ "::" + del.getFullName());
+				User u = userDao.findUserByMemberNo(del.getMemberNo());
+				if (u.getPhoneNumber() != null
+						&& !(u.getPhoneNumber().isEmpty())) {
+					del.setDelegatePhoneNumber(u.getPhoneNumber());
+					// Save this Information
+					Delegate d = new Delegate();
+					d.setPhoneNumber(u.getPhoneNumber());
+					d.copyFrom(del);
+					dao.save(d);
+				}
+			}
+		}
+
 		return delegateDtos;
 	}
 

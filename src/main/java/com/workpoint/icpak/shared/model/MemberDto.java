@@ -20,6 +20,7 @@ public class MemberDto extends SerializableObj implements Listable {
 	private String address;
 	private String city;
 	private String practisingNo;
+	private String phoneNumber;
 	private ApplicationType customerType;
 	private String customerPostingGroup;
 	private Date practisingCertDate;
@@ -190,6 +191,14 @@ public class MemberDto extends SerializableObj implements Listable {
 
 	public void setMemberQrCode(String memberQrCode) {
 		this.memberQrCode = memberQrCode;
+	}
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
 	}
 
 }

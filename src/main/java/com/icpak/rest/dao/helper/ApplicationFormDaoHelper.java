@@ -894,6 +894,7 @@ public class ApplicationFormDaoHelper {
 				}
 
 				logger.error(" MEMBER ID = = = == " + memberImport.getId());
+				logger.error(" Registration Date === " + memberImport.getDateRegistered());
 			}
 		}
 

@@ -12,18 +12,18 @@
 	<g:HTMLPanel ui:field="container"
 		styleName="content-wrapper ng-scope ng-fadeInUp">
 
-		<h3 class="ng-scope">
-			Events and Seminars Management
-		</h3>
-
-		<div class="main-content">
+		<div class="main-content events">
 			<g:HTMLPanel styleName="row" ui:field="panelEvents">
+				<h3 class="ng-scope header-events">
+					Events and Seminars Management
+				</h3>
+
 				<div class="col-sm-12">
 					<p:EventsHeader ui:field="headerContainer"
 						styleName="hide">
 					</p:EventsHeader>
 				</div>
-				<div class="panel widget">
+				<div class="panel widget panel-events">
 					<div class="panel-body">
 						<div class="col-sm-12">
 							<table:EventsTable ui:field="tblView">
@@ -36,24 +36,23 @@
 
 			<g:HTMLPanel styleName="row" ui:field="panelEventDrillDown">
 				<div class="col-sm-12">
-					<h4 class="info-text">
+					<h3 class="ng-scope delegates">
 						<a href="#events">
 							<i class="fa fa-angle-double-left"></i>
 							Back to Events
 						</a>
 						/
 						<span ui:field="spnEventTitle"></span>
-					</h4>
-					<hr />
+					</h3>
 				</div>
-				<div class="panel">
+				<div class="panel delegates">
 					<div class="panel-body">
 						<div class="col-lg-12" style="margin-bottom: 12px;">
 							<d:ActionLink ui:field="aCreateBooking" styleName="btn btn-primary btn-fill">Create
 								Booking</d:ActionLink>
 
 							<d:ActionLink ui:field="aSyncWithServer"
-								styleName="pull-right">Sync With Server</d:ActionLink>
+								styleName="pull-right btn btn-default btn-fill">Offline Sync</d:ActionLink>
 						</div>
 						<div class="col-sm-12">
 							<table2:DelegatesTable ui:field="tblDelegates">

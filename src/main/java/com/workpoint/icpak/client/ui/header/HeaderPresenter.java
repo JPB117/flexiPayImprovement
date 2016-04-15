@@ -13,11 +13,13 @@ import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.workpoint.icpak.client.ui.events.AdminPageLoadEvent;
+import com.workpoint.icpak.client.ui.events.FullScreenEvent;
 import com.workpoint.icpak.client.ui.events.AdminPageLoadEvent.AdminPageLoadHandler;
 import com.workpoint.icpak.client.ui.events.AfterSaveEvent;
 import com.workpoint.icpak.client.ui.events.AfterSaveEvent.AfterSaveHandler;
 import com.workpoint.icpak.client.ui.events.ContextLoadedEvent;
 import com.workpoint.icpak.client.ui.events.ContextLoadedEvent.ContextLoadedHandler;
+import com.workpoint.icpak.client.ui.events.FullScreenEvent.FullScreenHandler;
 import com.workpoint.icpak.client.ui.events.LoadAlertsEvent;
 import com.workpoint.icpak.client.ui.events.LoadAlertsEvent.LoadAlertsHandler;
 import com.workpoint.icpak.client.ui.events.LogoutEvent;
@@ -27,7 +29,7 @@ import com.workpoint.icpak.shared.model.UserDto;
 public class HeaderPresenter extends
 		PresenterWidget<HeaderPresenter.IHeaderView> implements
 		AfterSaveHandler, AdminPageLoadHandler, ContextLoadedHandler,
-		LoadAlertsHandler {
+		LoadAlertsHandler, FullScreenHandler {
 
 	public interface IHeaderView extends View {
 		public HasClickHandlers getALogout();
@@ -35,6 +37,8 @@ public class HeaderPresenter extends
 		public void setLoggedInUser(UserDto currentUser);
 
 		void showPopUpMessage(String message);
+
+		public void showSmallLogo(String message);
 	}
 
 	@Inject
@@ -71,6 +75,7 @@ public class HeaderPresenter extends
 		this.addRegisteredHandler(AdminPageLoadEvent.TYPE, this);
 		this.addRegisteredHandler(ContextLoadedEvent.TYPE, this);
 		this.addRegisteredHandler(LoadAlertsEvent.TYPE, this);
+		this.addRegisteredHandler(FullScreenEvent.getType(), this);
 
 		getView().getALogout().addClickHandler(new ClickHandler() {
 			@Override
@@ -115,6 +120,11 @@ public class HeaderPresenter extends
 	@Override
 	public void onLoadAlerts(LoadAlertsEvent event) {
 		loadAlertCount();
+	}
+
+	@Override
+	public void onFullScreen(FullScreenEvent event) {
+		getView().showSmallLogo(event.getMessage());
 	}
 
 }

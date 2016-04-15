@@ -1540,7 +1540,7 @@ body, html {
 }
 
 .wrapper .aside .aside-inner {
-	padding-top: 110px;
+	padding-top: 30px;
 	height: 100%;
 	width: 220px;
 	overflow: hidden
@@ -1603,17 +1603,36 @@ body, html {
 	}
 }
 
-.content-wrapper .content-heading, .content-wrapper>h3 {
+.content-wrapper .content-heading, .content-wrapper>.main-content>h3 {
+
+}
+
+.content-wrapper div.events{
+	padding-top: 0px !important;
+}
+.content-wrapper .content-heading,.content-wrapper h3.ng-scope {
 	font-size: 24px;
 	line-height: 1.1;
 	color: #929292;
-	margin: -15px -15px 20px;
+	margin: -22px -20px 9px;
 	padding: 15px;
 	font-weight: 400;
 	background-color: #fafbfc;
 	border-bottom: 1px solid #cfdbe2
 }
 
+.content-wrapper h3.ng-scope.delegates {padding-left: 20px;position: fixed;z-index: 10;width: 98.5%;margin-top: -19px;}
+
+.panel.delegates{
+	margin-top: 41px;
+}
+
+.panel.panel-events{
+	margin-top: 41px;
+}
+h3.header-events{
+	margin-left: -3px !important;
+}
 .content-wrapper>.content-heading>small, .content-wrapper>h3>small {
 	display: block;
 	font-size: 12px;
@@ -1650,7 +1669,7 @@ body, html {
 		z-index: 116
 	}
 	.wrapper .aside .aside-inner {
-		padding-top: 55px
+		/* padding-top: 55px */
 	}
 	.wrapper>footer, .wrapper section {
 		margin-left: 220px
@@ -82307,7 +82326,7 @@ body, html {
 }
 
 .wrapper .aside .aside-inner {
-	padding-top: 110px;
+	/* padding-top: 110px; */
 	height: 100%;
 	width: 220px;
 	overflow: hidden
@@ -82407,7 +82426,7 @@ body, html {
 	.content-wrapper {
 		padding: 20px
 	}
-	.content-wrapper>.content-heading, .content-wrapper>h3 {
+	.content-wrapper>.content-heading, .content-wrapper>h3,.content-wrapper h3.ng-scope {
 		margin: -20px -20px 20px;
 		padding: 20px;
 		position: fixed;
@@ -82423,7 +82442,7 @@ body, html {
 
 @media only screen and (min-width: 768px) {
 	.content-wrapper .main-content {
-	padding-top: 60px !important;
+	padding-top: 47px !important;
 	}
 	body {
 		min-height: 100%
@@ -82432,7 +82451,7 @@ body, html {
 		z-index: 116
 	}
 	.wrapper .aside .aside-inner {
-		padding-top: 55px
+		/* padding-top: 54px; */
 	}
 	.wrapper>footer, .wrapper section {
 		margin-left: 220px;
@@ -82916,11 +82935,17 @@ header .topnavbar {
 }
 
 .topnavbar .navbar-header .brand-logo-collapsed>img, .topnavbar .navbar-header .brand-logo>img
-	{
+{
 	margin: 0 auto;
 	width: 130px;
 	height: 80px;
 	margin-top: 15px;
+}
+
+.topnavbar .navbar-header .brand-logo-collapsed>.img-small, .topnavbar .navbar-header .brand-logo>img{
+	width: 100px;
+	height: 65px;
+	margin-top: 0px;
 }
 
 .topnavbar .navbar-header .brand-logo {

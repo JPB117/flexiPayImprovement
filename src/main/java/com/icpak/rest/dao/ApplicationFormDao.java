@@ -437,50 +437,73 @@ public class ApplicationFormDao extends BaseDao {
 			// System.err.println(fullName + ">>>" + phone);
 		}
 	}
-	
-	public List<MemberImport> importMissingMembers(){
-		
+
+	public List<MemberImport> importMissingMembers() {
+
 		List<MemberImport> memberImports = new ArrayList<>();
 		String sql = "select a.id,a.No_,a.Name,a.`E-mail`,a.Status,a.`Customer Type`,a.`Customer Posting Group`,"
 				+ "a.`Practising No`,a.`Gender`,a.paidUp,a.Address,a.Address2,a.City,a.phoneNo_,a.PostCode"
 				+ ",a.County,a.`Date Of Birth`,a.`ID No`,a.Position,a.`Practicing Cert Date`,"
 				+ "a.`Date Registered` from 11th_april_2016 a ";
 		Query query = getEntityManager().createNativeQuery(sql);
-		
+
 		List<Object[]> rows = getResultList(query);
-		
-		for(Object[] row : rows){
+
+		for (Object[] row : rows) {
 			int i = 0;
 			Object value = null;
-			
+
 			MemberImport memberImport = new MemberImport();
-			
-			memberImport.setId((value = row[i++]) == null ? null : ((BigInteger)value).longValue());
-			memberImport.setMemberNo((value = row[i++]) == null ? null : value.toString());
-			memberImport.setName((value = row[i++]) == null ? null : value.toString());
-			memberImport.setEmail((value = row[i++]) == null ? null : value.toString());
-			memberImport.setStatus((value = row[i++]) == null ? null : ((Short)value).shortValue());
-			memberImport.setCustomerType((value = row[i++]) == null ? null : value.toString());
-			memberImport.setCustomerPostingGroup((value = row[i++]) == null ? null : value.toString());
-			memberImport.setPractisingNo((value = row[i++]) == null ? null : value.toString());
-			memberImport.setGender((value = row[i++]) == null ? null : (Short)value);
-			memberImport.setPaidUp((value = row[i++]) == null ? null : (Short)value);
-			memberImport.setAddress((value = row[i++]) == null ? null : value.toString());
-			memberImport.setAddress2((value = row[i++]) == null ? null : value.toString());
-			memberImport.setCity((value = row[i++]) == null ? null : value.toString());
-			memberImport.setPhoneNo_((value = row[i++]) == null ? null : value.toString());
-			memberImport.setPostCode((value = row[i++]) == null ? null : value.toString());
-			memberImport.setCounty((value = row[i++]) == null ? null : value.toString());
-			memberImport.setDateOfBirth((value = row[i++]) == null ? null : (Date)value);
-			memberImport.setIDNo((value = row[i++]) == null ? null : value.toString());
-			memberImport.setPosition((value = row[i++]) == null ? null : value.toString());
-			memberImport.setPracticingCertDate((value = row[i++]) == null ? null : (Date)value);
-			
-			
+
+			memberImport.setId((value = row[i++]) == null ? null
+					: ((Integer) value).longValue());
+			memberImport.setMemberNo((value = row[i++]) == null ? null : value
+					.toString());
+			memberImport.setName((value = row[i++]) == null ? null : value
+					.toString());
+			memberImport.setEmail((value = row[i++]) == null ? null : value
+					.toString());
+			memberImport.setStatus((value = row[i++]) == null ? null : (Integer
+					.valueOf((String) value)));
+			memberImport.setCustomerType((value = row[i++]) == null ? null
+					: value.toString());
+			memberImport
+					.setCustomerPostingGroup((value = row[i++]) == null ? null
+							: value.toString());
+			memberImport.setPractisingNo((value = row[i++]) == null ? null
+					: value.toString());
+			memberImport.setGender((value = row[i++]) == null ? null : Short
+					.valueOf((String) value));
+			memberImport.setPaidUp((value = row[i++]) == null ? null : Short
+					.valueOf((String) value));
+			memberImport.setAddress((value = row[i++]) == null ? null : value
+					.toString());
+			memberImport.setAddress2((value = row[i++]) == null ? null : value
+					.toString());
+			memberImport.setCity((value = row[i++]) == null ? null : value
+					.toString());
+			memberImport.setPhoneNo_((value = row[i++]) == null ? null : value
+					.toString());
+			memberImport.setPostCode((value = row[i++]) == null ? null : value
+					.toString());
+			memberImport.setCounty((value = row[i++]) == null ? null : value
+					.toString());
+			memberImport.setDateOfBirth((value = row[i++]) == null ? null
+					: (Date) value);
+			memberImport.setIDNo((value = row[i++]) == null ? null : value
+					.toString());
+			memberImport.setPosition((value = row[i++]) == null ? null : value
+					.toString());
+			memberImport
+					.setPracticingCertDate((value = row[i++]) == null ? null
+							: (Date) value);
+			memberImport.setDateRegistered((value = row[i++]) == null ? null
+					: (Date) value);
+
 			memberImports.add(memberImport);
-			
+
 		}
-		
+
 		return memberImports;
 	}
 }
