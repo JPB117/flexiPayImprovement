@@ -286,8 +286,8 @@ public class Event extends PO {
 			dto.setDiscountDate(ServerDateUtils.DATEFORMAT_SYS
 					.format(discountDate));
 		}
-		dto.setStatus(status);
-		dto.setType(type);
+		dto.setStatus(status.toString());
+		dto.setType(type.toString());
 		dto.setVenue(venue);
 
 		if (includeAccommodation) {
@@ -356,14 +356,17 @@ public class Event extends PO {
 		}
 
 		setName(dto.getName());
-		if (dto.getStatus() == null) {
+		if (dto.getStatus() == null || dto.getStatus().isEmpty()) {
 			setStatus(EventStatus.OPEN);
+		} else {
+			setStatus(EventStatus.valueOf(dto.getStatus()));
 		}
-		if (dto.getType() == null) {
+		if (dto.getType() == null || dto.getType().isEmpty()) {
 			setType(EventType.SEMINAR);
+		} else {
+			setType(EventType.valueOf(dto.getType()));
 		}
-		setStatus(dto.getStatus());
-		setType(dto.getType());
+
 		setVenue(dto.getVenue());
 		setCategoryName(dto.getCategoryName());
 

@@ -180,7 +180,8 @@ public class BookingsDaoHelper {
 	public List<DelegateDto> getAllDelegates(String uriInfo, String eventId,
 			Integer offset, Integer limit, String searchTerm,
 			String accomodationRefId, String bookingStatus) {
-		return getAllDelegates("", eventId, null, 10000, "", "", "", false);
+		return  dao.getAllDelegates(eventId, offset,
+				limit, searchTerm, accomodationRefId, bookingStatus);
 	}
 
 	public List<DelegateDto> getDelegateByQrCode(String uriInfo,

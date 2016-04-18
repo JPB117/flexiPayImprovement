@@ -32,8 +32,8 @@ public class EventDto extends SerializableObj implements Listable {
 	private String venue;
 	private String startDate;
 	private String endDate;
-	private EventStatus status;
-	private EventType type;
+	private String status;
+	private String type;
 	private Double memberPrice;
 	private Double discountMemberPrice;
 	private Double penaltyMemberPrice;
@@ -90,19 +90,19 @@ public class EventDto extends SerializableObj implements Listable {
 		this.venue = venue;
 	}
 
-	public EventStatus getStatus() {
+	public String getStatus() {
 		return status;
 	}
 
-	public void setStatus(EventStatus status) {
+	public void setStatus(String status) {
 		this.status = status;
 	}
 
-	public EventType getType() {
+	public String getType() {
 		return type;
 	}
 
-	public void setType(EventType type) {
+	public void setType(String type) {
 		this.type = type;
 	}
 

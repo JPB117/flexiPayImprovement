@@ -54,7 +54,7 @@ public class TestEventsDao extends AbstractDaoTest {
 		event.setDiscountDate("2015-12-09");
 		event.setPenaltyDate("2015-12-16");
 		event.setVenue("Acacia Premier Hotel");
-		event.setType(EventType.EVENT);
+		// event.setType(EventType.EVENT);
 		event.setCategoryName("Conferences");
 		event.setCpdHours(new Double(2.5));
 		helper.createEvent(event);

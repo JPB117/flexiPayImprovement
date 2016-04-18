@@ -273,7 +273,9 @@ public class DelegateTableRow extends RowWidget {
 
 		setPaymentStatus(delegate.getPaymentStatus());
 		setAttendance(delegate.getAttendance());
-		setActionButtons(event.getType());
+		if (event.getType() != null) {
+			setActionButtons(EventType.valueOf(event.getType()));
+		}
 	}
 
 	private void setActionButtons(EventType eventType) {
