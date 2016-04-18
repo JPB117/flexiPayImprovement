@@ -34,6 +34,8 @@ import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.AutoCompleteField;
 import com.workpoint.icpak.client.ui.component.TextField;
 import com.workpoint.icpak.client.ui.component.autocomplete.ServerOracle;
+import com.workpoint.icpak.client.ui.events.ClientDisconnectionEvent.ClientDisconnectionHandler;
+import com.workpoint.icpak.client.ui.events.ClientDisconnectionEvent;
 import com.workpoint.icpak.client.ui.events.PaymentCompletedEvent;
 import com.workpoint.icpak.client.ui.events.PaymentCompletedEvent.PaymentCompletedHandler;
 import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
@@ -59,7 +61,7 @@ import com.workpoint.icpak.shared.model.events.EventDto;
 public class EventBookingPresenter extends
 		Presenter<EventBookingPresenter.MyView, EventBookingPresenter.MyProxy>
 		implements ProcessingHandler, ProcessingCompletedHandler,
-		PaymentCompletedHandler {
+		PaymentCompletedHandler,ClientDisconnectionHandler {
 
 	public interface MyView extends View {
 		boolean isValid();
@@ -108,6 +110,8 @@ public class EventBookingPresenter extends
 
 		void scrollToPaymentsTop();
 
+		void showClientDisconnection(boolean b);
+
 	}
 
 	@ProxyCodeSplit
@@ -131,13 +135,36 @@ public class EventBookingPresenter extends
 	private EventDto event;
 
 	private ResourceDelegate<CountriesResource> countriesResource;
-
 	private ResourceDelegate<EventsResource> eventsResource;
-
 	private ResourceDelegate<InvoiceResource> invoiceResource;
-
 	private ResourceDelegate<MemberResource> membersDelegate;
 	private ResourceDelegate<EventsResource> eventsDelegate;
+
+	final ActivityCallback accommodationCallback = new ActivityCallback() {
+		private BookingDto bookingDto;
+		private List<AccommodationDto> accommodations;
+
+		@Override
+		public void onComplete(BookingDto booking) {
+			this.bookingDto = booking;
+			bindData();
+		}
+
+		@Override
+		public void onComplete(List<AccommodationDto> accommodations) {
+			this.accommodations = accommodations;
+			bindData();
+		}
+
+		public void bindData() {
+			if (accommodations != null && bookingDto != null) {
+				getView().showmask(false);
+				getView().bindAccommodations(accommodations);
+				getView().bindBooking(bookingDto);
+			}
+		}
+
+	};
 
 	private int requestCounter = 0;
 	private int responseCounter = 0;
@@ -169,6 +196,7 @@ public class EventBookingPresenter extends
 		addRegisteredHandler(ProcessingEvent.TYPE, this);
 		addRegisteredHandler(ProcessingCompletedEvent.TYPE, this);
 		addRegisteredHandler(PaymentCompletedEvent.TYPE, this);
+		addRegisteredHandler(ClientDisconnectionEvent.TYPE, this);
 
 		getView().getMemberColumnConfig().setLoader(
 				new AutoCompleteField.Loader() {
@@ -358,42 +386,30 @@ public class EventBookingPresenter extends
 					buffer.append(elem.getLineNumber() + ">>"
 							+ elem.getClassName() + ">>" + elem.getMethodName());
 				}
-
 				super.onFailure(caught);
 			}
 		}).getById(eventId);
 
-		final ActivityCallback accommodationCallback = new ActivityCallback() {
-			private BookingDto bookingDto;
-			private List<AccommodationDto> accommodations;
-
-			@Override
-			public void onComplete(BookingDto booking) {
-				this.bookingDto = booking;
-				bindData();
-			}
-
-			@Override
-			public void onComplete(List<AccommodationDto> accommodations) {
-				this.accommodations = accommodations;
-				bindData();
-			}
-
-			public void bindData() {
-				if (accommodations != null && bookingDto != null) {
-					getView().bindAccommodations(accommodations);
-					getView().bindBooking(bookingDto);
-				}
-			}
-
-		};
+		// Editing a Booking - We are editing a booking
 		if (bookingId != null) {
 			getView().next();
+			getView().showmask(true);
+			// Load Accommodations
+			eventsResource
+					.withCallback(
+							new AbstractAsyncCallback<List<AccommodationDto>>() {
+								@Override
+								public void onSuccess(
+										List<AccommodationDto> result) {
+									accommodationCallback.onComplete(result);
+								}
+							}).accommodations(eventId).getAll(0, 100);
+
+			// Load Booking
 			eventsResource
 					.withCallback(new AbstractAsyncCallback<BookingDto>() {
 						@Override
 						public void onSuccess(final BookingDto booking) {
-							// getView().bindBooking(booking);
 							accommodationCallback.onComplete(booking);
 							getInvoice(booking, false, false);
 
@@ -406,23 +422,23 @@ public class EventBookingPresenter extends
 											ctx.setContext("bookingRefId",
 													booking.getRefId());
 											ctx.setAction(UPLOADACTION.GETPROFORMA);
-											// ctx.setContext(key, value)
 											Window.open(ctx.toUrl(),
 													"Get Proforma", null);
 										}
 									});
 						}
 					}).bookings(eventId).getById(bookingId);
-		}else{
+		} else {
+			// New booking....
 			eventsResource
-			.withCallback(
-					new AbstractAsyncCallback<List<AccommodationDto>>() {
-						@Override
-						public void onSuccess(List<AccommodationDto> result) {
-							getView().bindAccommodations(result);
-							// accommodationCallback.onComplete(result);
-						}
-					}).accommodations(eventId).getAll(0, 100);
+					.withCallback(
+							new AbstractAsyncCallback<List<AccommodationDto>>() {
+								@Override
+								public void onSuccess(
+										List<AccommodationDto> result) {
+									getView().bindAccommodations(result);
+								}
+							}).accommodations(eventId).getAll(0, 100);
 		}
 	}
 
@@ -521,5 +537,9 @@ public class EventBookingPresenter extends
 	public void onPaymentCompleted(PaymentCompletedEvent event) {
 		getView().getANext().removeStyleName("hide");
 	}
-
+	
+	@Override
+	public void onClientDisconnection(ClientDisconnectionEvent event) {
+		getView().showClientDisconnection(true);
+	}
 }

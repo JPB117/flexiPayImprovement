@@ -97,12 +97,10 @@ public class GetReport extends HttpServlet {
 	BookingsDaoHelper bookingsDaoHelper;
 	@Inject
 	ApplicationFormDaoHelper applicationDaoHelper;
-
 	@Inject
 	InvoiceDaoHelper invoiceDaoHelper;
 	@Inject
 	EventsDaoHelper eventDaoHelper;
-
 	@Inject
 	ApplicationSettings settings;
 
@@ -136,17 +134,13 @@ public class GetReport extends HttpServlet {
 		if (action == null) {
 			action = req.getParameter("ACTION");
 		}
-
 		log.debug("GetReport Action = " + action);
-
 		if (action == null) {
 			return;
 		}
-
 		if (action.equalsIgnoreCase("GETATTACHMENT")) {
 			processAttachmentRequest(req, resp);
 		}
-
 		if (action.equalsIgnoreCase("GetUserImage")) {
 			processUserImage(req, resp);
 		}
@@ -262,22 +256,17 @@ public class GetReport extends HttpServlet {
 			HttpServletResponse resp) throws IOException {
 		String eventRefId = null;
 		String docType = null;
-
 		if (req.getParameter("eventRefId") != null) {
 			eventRefId = req.getParameter("eventRefId");
 		}
-
 		if (req.getParameter("docType") != null) {
 			docType = req.getParameter("docType");
 		}
-
 		List<DelegateDto> delegateDtos = bookingsDaoHelper.getAllDelegates("",
-				eventRefId, null, 10000, "", "", "");
+				eventRefId, null, 10000, "", "", "", true);
 		EventDto event = eventDaoHelper.getEventById(eventRefId);
-
 		GetDelegatesReport report = new GetDelegatesReport(delegateDtos,
 				docType, event.getName());
-
 		processAttachmentRequest(resp, report.getBytes(), report.getName());
 
 	}

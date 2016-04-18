@@ -44,14 +44,12 @@ public class HomePresenter extends
 		LogoutHandler, FullScreenHandler, ToggleSideBarHandler {
 
 	public interface IHomeView extends TabView {
-		// void bindAlerts(HashMap<TaskType, Integer> alerts);
 		void refreshTabs();
 
 		void changeTab(Tab tab, TabData tabData, String historyToken);
 
 		void showmask(boolean b);
 
-		// void bindAlerts(HashMap<TaskType, Integer> alerts);
 		void showDocsList();
 
 		void setMiddleHeight();

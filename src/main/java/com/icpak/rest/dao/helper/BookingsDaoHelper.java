@@ -137,33 +137,50 @@ public class BookingsDaoHelper {
 		return clones;
 	}
 
+	/*
+	 * Gets All delegates and updates delegate phone details from member records
+	 */
 	public List<DelegateDto> getAllDelegates(String uriInfo, String eventId,
 			Integer offset, Integer limit, String searchTerm,
-			String accomodationRefId, String bookingStatus) {
+			String accomodationRefId, String bookingStatus,
+			boolean updatePhoneContacts) {
 		List<DelegateDto> delegateDtos = dao.getAllDelegates(eventId, offset,
 				limit, searchTerm, accomodationRefId, bookingStatus);
-		// Ensure that there is delegate phoneNumber
-		for (DelegateDto del : delegateDtos) {
-			if ((del.getMemberNo() != null)
-					&& (del.getDelegatePhoneNumber() == null || del
-							.getDelegatePhoneNumber().isEmpty())) {
 
-				logger.info("Updating phoneNumber for::" + del.getMemberNo()
-						+ "::" + del.getFullName());
-				User u = userDao.findUserByMemberNo(del.getMemberNo());
-				if (u.getPhoneNumber() != null
-						&& !(u.getPhoneNumber().isEmpty())) {
-					del.setDelegatePhoneNumber(u.getPhoneNumber());
-					// Save this Information
-					Delegate d = new Delegate();
-					d.setPhoneNumber(u.getPhoneNumber());
-					d.copyFrom(del);
-					dao.save(d);
+		if (updatePhoneContacts) {
+			// Ensure that there is delegate phoneNumber
+			for (DelegateDto del : delegateDtos) {
+				if ((del.getMemberNo() != null)
+						&& (del.getDelegatePhoneNumber() == null || del
+								.getDelegatePhoneNumber().isEmpty())) {
+
+					logger.info("Updating phoneNumber for::"
+							+ del.getMemberNo() + "::" + del.getFullName());
+					User u = userDao.findUserByMemberNo(del.getMemberNo());
+					if (u.getPhoneNumber() != null
+							&& !(u.getPhoneNumber().isEmpty())) {
+						del.setDelegatePhoneNumber(u.getPhoneNumber());
+						// Save this Information
+						Delegate d = new Delegate();
+						d.setPhoneNumber(u.getPhoneNumber());
+						d.copyFrom(del);
+						dao.save(d);
+					}
 				}
 			}
 		}
 
 		return delegateDtos;
+	}
+
+	/*
+	 * Gets All delegates but does not updates delegate phone details from
+	 * member records
+	 */
+	public List<DelegateDto> getAllDelegates(String uriInfo, String eventId,
+			Integer offset, Integer limit, String searchTerm,
+			String accomodationRefId, String bookingStatus) {
+		return getAllDelegates("", eventId, null, 10000, "", "", "", false);
 	}
 
 	public List<DelegateDto> getDelegateByQrCode(String uriInfo,
@@ -579,7 +596,8 @@ public class BookingsDaoHelper {
 							* eventIndb.getDiscountMemberPrice());
 					memberDiscountLine.setType(InvoiceLineType.Discount);
 
-					totalDiscountAmount += eventIndb.getDiscountMemberPrice();
+					totalDiscountAmount += eventIndb
+							.getDiscountMemberPrice();
 
 					logger.error(discountDescription + "|"
 							+ memberDiscountLine.getQuantity() + " | " + qty

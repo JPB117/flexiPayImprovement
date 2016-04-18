@@ -88,6 +88,8 @@ public class EventBookingView extends ViewImpl implements
 	@UiField
 	DivElement divHeader;
 	@UiField
+	DivElement divAlert;
+	@UiField
 	LIElement liTab1;
 	@UiField
 	LIElement liTab2;
@@ -141,6 +143,8 @@ public class EventBookingView extends ViewImpl implements
 	SpanElement spnSpinner;
 	@UiField
 	Anchor aBrowseOthers;
+	@UiField
+	HTMLPanel divActionSection;
 
 	int counter = 0;
 	boolean isValid = true;
@@ -265,6 +269,7 @@ public class EventBookingView extends ViewImpl implements
 				titleConfig.setEnabled(false);
 				accommodationConfig.setEnabled(true);
 				tblDelegates.addRowData(new DataModel());
+				scrollToView();
 			}
 		});
 
@@ -276,6 +281,7 @@ public class EventBookingView extends ViewImpl implements
 				titleConfig.setEnabled(true);
 				accommodationConfig.setEnabled(true);
 				tblDelegates.addRowData(new DataModel());
+				scrollToView();
 			}
 		});
 
@@ -304,6 +310,10 @@ public class EventBookingView extends ViewImpl implements
 			}
 		});
 		initAdminAspects();
+	}
+
+	protected void scrollToView() {
+		divActionSection.getElement().scrollIntoView();
 	}
 
 	private void initAdminAspects() {
@@ -382,6 +392,7 @@ public class EventBookingView extends ViewImpl implements
 	}
 
 	public boolean isValid() {
+		isValid=true;
 		issuesPanel.clear();
 		issuesPanelDelegate.clear();
 
@@ -748,5 +759,14 @@ public class EventBookingView extends ViewImpl implements
 	@Override
 	public void scrollToPaymentsTop() {
 		panelPayment.getElement().scrollIntoView();
+	}
+
+	@Override
+	public void showClientDisconnection(boolean show) {
+		if (show) {
+			divAlert.removeClassName("hide");
+		} else {
+			divAlert.addClassName("hide");
+		}
 	}
 }

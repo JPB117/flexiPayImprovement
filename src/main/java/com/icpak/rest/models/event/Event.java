@@ -356,6 +356,12 @@ public class Event extends PO {
 		}
 
 		setName(dto.getName());
+		if (dto.getStatus() == null) {
+			setStatus(EventStatus.OPEN);
+		}
+		if (dto.getType() == null) {
+			setType(EventType.SEMINAR);
+		}
 		setStatus(dto.getStatus());
 		setType(dto.getType());
 		setVenue(dto.getVenue());

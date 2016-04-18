@@ -8,14 +8,47 @@
 	xmlns:proforma='urn:import:com.workpoint.icpak.client.ui.events.registration.proforma'
 	ui:generateLocales='default'>
 
+	<ui:style>
+	.success-message {
+		width: initial;
+		position: absolute;
+		left: 35%;
+		height: 40px;
+		top: 5px;
+		padding-top: 8px;
+	}
+	
+	.action-section {
+		margin-top: 12px;
+		margin-bottom: 50px;
+	}
+	
+	.hidden-section {
+		height: 10px;
+	}
+	</ui:style>
+
+
 	<g:HTMLPanel ui:field="divMainContainer">
 		<g:HTMLPanel ui:field="divHeaderContainer" styleName="top-header">
 			<nav class="navbar top-navbar">
 				<div class="container">
 					<div class="navbar-header" style="width: 100%; text-align: center;">
 						<a class="brand">
-							<img src="img/icpak_logo.png" width="150px" />
+							<img src="img/icpak_logo.png" width="100px" />
 						</a>
+					</div>
+					<div
+						class="alert alert-danger {style.success-message} hide alert-dismissible event-disconnected"
+						role="alert" ui:field="divAlert">
+						<button type="button" class="close" data-dismiss="alert"
+							aria-label="Close" onClick="$('event-disconnected').addClass('hide');">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<span ui:field="spnAlertMessage">
+							<span class="fa fa-exclamation-triangle"></span>
+							Not able to connect server. Verify your network connection
+						</span>
 					</div>
 				</div>
 			</nav>
@@ -208,38 +241,38 @@
 													<h4 class="info-text">
 														<span ui:field="spnSelected">Fill In the Delegates to Attend:</span>
 													</h4>
-													<hr />
+													<hr style="margin: 10px 10px;" />
 												</div>
-
-												<div class="col-sm-12">
-													<div class="dropdown">
-														<a class="btn btn-primary btn-fill dropdown-toggle" id="dropdownMenu1"
-															data-toggle="dropdown" aria-expanded="true">
-															Add Delegate
-															<span class="caret"></span>
-														</a>
-														<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-															<li>
-																<d:ActionLink ui:field="aAddMember">Member</d:ActionLink>
-															</li>
-															<li>
-																<d:ActionLink ui:field="aAddNonMember">Non-Member</d:ActionLink>
-															</li>
-														</ul>
-													</div>
-												</div>
-
-												<div class="col-sm-12" style="margin-top:12px;">
+												<div class="col-sm-12" style="margin-top:5px;">
 													<d:IssuesPanel ui:field="issuesPanelDelegate"
 														styleName="hide alert alert-danger"></d:IssuesPanel>
 												</div>
 												<br />
-
-												<div class="col-sm-12" style="margin-top:12px;">
-													<grid:AggregationGrid ui:field="tblDelegates"></grid:AggregationGrid>
+												<div class="col-sm-12">
+													<div class="row">
+														<div class="col-lg-12">
+															<grid:AggregationGrid ui:field="tblDelegates"></grid:AggregationGrid>
+														</div>
+														<g:HTMLPanel styleName="col-lg-12 {style.action-section}">
+															<div class="col-sm-2 p0">
+																<d:ActionLink ui:field="aAddMember"
+																	styleName="btn btn-fill btn-gold">
+																	<i class="fa fa-user-plus" aria-hidden="true"></i>
+																	Add Member
+																</d:ActionLink>
+															</div>
+															<div class="col-sm-2 p0">
+																<d:ActionLink ui:field="aAddNonMember"
+																	styleName="btn btn-default btn-fill">Add Non-Member</d:ActionLink>
+															</div>
+														</g:HTMLPanel>
+	
+														<g:HTMLPanel styleName="col-lg-12 {style.hidden-section}"
+															ui:field="divActionSection">
+														</g:HTMLPanel>
+														
+													</div>
 												</div>
-
-												<br />
 											</g:HTMLPanel>
 										</div>
 
