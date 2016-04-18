@@ -366,49 +366,37 @@ public class EventBookingPresenter extends
 		final ActivityCallback accommodationCallback = new ActivityCallback() {
 			private BookingDto bookingDto;
 			private List<AccommodationDto> accommodations;
-			
+
 			@Override
 			public void onComplete(BookingDto booking) {
 				this.bookingDto = booking;
 				bindData();
 			}
-			
+
 			@Override
 			public void onComplete(List<AccommodationDto> accommodations) {
 				this.accommodations = accommodations;
 				bindData();
 			}
-			
-			public void bindData(){
-				if(accommodations!=null && bookingDto!=null){
+
+			public void bindData() {
+				if (accommodations != null && bookingDto != null) {
 					getView().bindAccommodations(accommodations);
 					getView().bindBooking(bookingDto);
 				}
 			}
-			
-		};
-		eventsResource
-				.withCallback(
-						new AbstractAsyncCallback<List<AccommodationDto>>() {
-							@Override
-							public void onSuccess(List<AccommodationDto> result) {
-								//getView().bindAccommodations(result);
-								accommodationCallback.onComplete(result);
-							}
-						}).accommodations(eventId).getAll(0, 100);
-		
 
+		};
 		if (bookingId != null) {
 			getView().next();
 			eventsResource
 					.withCallback(new AbstractAsyncCallback<BookingDto>() {
 						@Override
 						public void onSuccess(final BookingDto booking) {
-//							getView().bindBooking(booking);
+							// getView().bindBooking(booking);
 							accommodationCallback.onComplete(booking);
 							getInvoice(booking, false, false);
-							
-							
+
 							getView().getaDownloadProforma().addClickHandler(
 									new ClickHandler() {
 										@Override
@@ -425,6 +413,16 @@ public class EventBookingPresenter extends
 									});
 						}
 					}).bookings(eventId).getById(bookingId);
+		}else{
+			eventsResource
+			.withCallback(
+					new AbstractAsyncCallback<List<AccommodationDto>>() {
+						@Override
+						public void onSuccess(List<AccommodationDto> result) {
+							getView().bindAccommodations(result);
+							// accommodationCallback.onComplete(result);
+						}
+					}).accommodations(eventId).getAll(0, 100);
 		}
 	}
 
