@@ -4,15 +4,11 @@
 	<g:HTMLPanel>
 		<div class="col-sm-12">
 
-			<div class="form-group hide">
+			<div class="form-group">
 				<div class="row">
 					<div class="col-xs-6">
 						<label for="firstname">Payment Status:</label>
 						<d:DropDownList ui:field="lstPaymentStatus"></d:DropDownList>
-					</div>
-					<div class="col-xs-6">
-						<label for="lastname">Payment Mode:</label>
-						<d:DropDownList ui:field="lstPaymentMode"></d:DropDownList>
 					</div>
 				</div>
 			</div>

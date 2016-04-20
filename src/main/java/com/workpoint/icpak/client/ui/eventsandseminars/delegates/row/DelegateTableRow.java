@@ -192,7 +192,6 @@ public class DelegateTableRow extends RowWidget {
 					@Override
 					public void onSelect(String name) {
 						if (name.equals("Save")) {
-							DelegateDto d = paymentWidget.getDelegate();
 							AppContext.fireEvent(new EditModelEvent(
 									paymentWidget.getDelegate()));
 						}

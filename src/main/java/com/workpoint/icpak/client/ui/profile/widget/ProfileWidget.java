@@ -11,6 +11,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.ErrorEvent;
@@ -187,6 +188,8 @@ public class ProfileWidget extends Composite {
 	ActionLink aMgmtActions;
 	@UiField
 	Element elCurrentBalance;
+	@UiField
+	HTMLPanel panelParent;
 
 	private BasicDetails basicDetail;
 	private EducationDetails educationDetail;
@@ -289,6 +292,9 @@ public class ProfileWidget extends Composite {
 		isCurrentUserAdmin = AppContext.isCurrentUserApplicationsEdit()
 				|| AppContext.isCurrentUserApplicationsRead();
 		isCurrentUserBasicMember = AppContext.isCurrentBasicMember();
+
+		panelParent.getElement().getParentElement().getStyle()
+				.setPaddingTop(0.0, Unit.PX);
 	}
 
 	public void initDisplay(ApplicationStatus applicationStatus,

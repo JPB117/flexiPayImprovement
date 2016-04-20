@@ -250,7 +250,8 @@ public class EventsPresenter extends
 					panel.setTotal(aCount);
 					PagingConfig config = panel.getConfig();
 					config.setPAGE_LIMIT(100);
-					loadDelegates(config.getOffset(), config.getLimit(), "");
+					loadDelegates(config.getOffset(), config.getLimit(),
+							delegateSearchTerm);
 				}
 			}).bookings(eventId).getCount();
 
@@ -371,7 +372,7 @@ public class EventsPresenter extends
 		}
 	}
 
-	private void save(DelegateDto model) {
+	private void save(final DelegateDto model) {
 		assert model.getBookingId() != null && model.getEventRefId() != null;
 		fireEvent(new ProcessingEvent());
 		eventsDelegate
@@ -380,7 +381,12 @@ public class EventsPresenter extends
 					public void onSuccess(DelegateDto result) {
 						fireEvent(new ProcessingCompletedEvent());
 						fireEvent(new AfterSaveEvent(result.getFullName()
-								+ " has been marked as attended."));
+								+ "'s has been marked as "
+								+ result.getPaymentStatus().getDisplayName()
+								+ " and "
+								+ result.getAttendance().getDisplayName()));
+						delegateSearchTerm = result.getContactEmail();
+						loadData();
 					}
 				}).bookings(eventId)
 				.updateDelegate(model.getBookingId(), model.getRefId(), model);

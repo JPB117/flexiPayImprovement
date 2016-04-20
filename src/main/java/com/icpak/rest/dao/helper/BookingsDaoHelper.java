@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.NumberFormat;
@@ -153,7 +154,6 @@ public class BookingsDaoHelper {
 				if ((del.getMemberNo() != null)
 						&& (del.getDelegatePhoneNumber() == null || del
 								.getDelegatePhoneNumber().isEmpty())) {
-
 					logger.info("Updating phoneNumber for::"
 							+ del.getMemberNo() + "::" + del.getFullName());
 					User u = userDao.findUserByMemberNo(del.getMemberNo());
@@ -180,8 +180,8 @@ public class BookingsDaoHelper {
 	public List<DelegateDto> getAllDelegates(String uriInfo, String eventId,
 			Integer offset, Integer limit, String searchTerm,
 			String accomodationRefId, String bookingStatus) {
-		return  dao.getAllDelegates(eventId, offset,
-				limit, searchTerm, accomodationRefId, bookingStatus);
+		return dao.getAllDelegates(eventId, offset, limit, searchTerm,
+				accomodationRefId, bookingStatus);
 	}
 
 	public List<DelegateDto> getDelegateByQrCode(String uriInfo,
@@ -597,8 +597,7 @@ public class BookingsDaoHelper {
 							* eventIndb.getDiscountMemberPrice());
 					memberDiscountLine.setType(InvoiceLineType.Discount);
 
-					totalDiscountAmount += eventIndb
-							.getDiscountMemberPrice();
+					totalDiscountAmount += eventIndb.getDiscountMemberPrice();
 
 					logger.error(discountDescription + "|"
 							+ memberDiscountLine.getQuantity() + " | " + qty
@@ -994,13 +993,36 @@ public class BookingsDaoHelper {
 
 	public DelegateDto updateDelegate(String delegateId, DelegateDto delegateDto) {
 		logger.error("+++++ <><>>>>>>>>>>>>> UPDATE DELEGATW +++++++++++++++++");
-
 		int counter = 0;
-
 		Delegate delegate = dao.findByRefId(delegateId, Delegate.class);
 		Event event = dao.findByRefId(delegate.getBooking().getEvent()
 				.getRefId(), Event.class);
+		Booking booking = delegate.getBooking();
 
+		/* Updating Payment Details */
+		if (booking != null) {
+			if (delegateDto.getPaymentStatus() == PaymentStatus.PAID) {
+				booking.setPaymentStatus(delegateDto.getPaymentStatus());
+				dao.save(booking);
+
+				for (Delegate d : booking.getDelegates()) {
+					// Copy details from the Dto....
+					d.setLpoNo(delegateDto.getLpoNo());
+					d.setIsCredit(delegateDto.getIsCredit());
+					d.setReceiptNo(delegateDto.getReceiptNo());
+					d.setClearanceNo(delegateDto.getClearanceNo());
+					dao.save(d);
+					System.err
+							.println("Successfully saved::" + d.getFullName());
+				}
+
+				sendConfirmationMessages(booking);
+			}
+		} else {
+			System.err.println("Booking is null...cannot be updated!!");
+		}
+
+		/* Updating attendance and CPD */
 		if (delegate.getMemberRefId() != null
 				&& delegate.getAttendance() != delegateDto.getAttendance()
 				&& event.getType() != EventType.COURSE) {
@@ -1011,6 +1033,9 @@ public class BookingsDaoHelper {
 					+ ",Thank you for attending the " + event.getName() + "."
 					+ "Your ERN No. is " + delegate.getErn();
 			smsIntergration.send(member.getUser().getPhoneNumber(), smsMessage);
+			delegate.copyFrom(delegateDto);
+			dao.save(delegate);
+			cpdDao.updateCPDFromAttendance(delegate, delegate.getAttendance());
 		} else if (event.getType() == EventType.COURSE) {
 			List<DelegateDto> delegates = new ArrayList<>();
 			delegates.add(delegate.toDto());
@@ -1019,14 +1044,46 @@ public class BookingsDaoHelper {
 			} catch (JSONException | IOException e) {
 				e.printStackTrace();
 			}
+		}
+		DelegateDto d = delegate.toDto();
+		d.setPaymentStatus(booking.getPaymentStatus());
+		return d;
+	}
 
+	public void sendConfirmationMessages(Booking booking) {
+		/* Payers message */
+		String smsMessage = "";
+		smsMessage = " Thank-you for your payment" + " for "
+				+ booking.getEvent().getName()
+				+ ". The booking status is PAID. ";
+
+		for (Delegate d : booking.getDelegates()) {
+			if (d.getPhoneNumber() != null) {
+				String finalPhoneNumber = d.getPhoneNumber()
+						.replace("254", "0");
+				if (finalPhoneNumber != null) {
+					smsIntergration.send(finalPhoneNumber, smsMessage);
+					logger.error("sending sms to :" + finalPhoneNumber);
+				}
+			}
 		}
 
-		logger.error(delegateDto.getReceiptNo() + "== RCPT NO");
-		delegate.copyFrom(delegateDto);
-		dao.save(delegate);
-		cpdDao.updateCPDFromAttendance(delegate, delegate.getAttendance());
-		return delegate.toDto();
+		if (booking.getContact().getEmail() != null) {
+			String subject = "PAYMENT CONFIRMATION FOR "
+					+ booking.getEvent().getName().toUpperCase();
+			try {
+				EmailServiceHelper.sendEmail(smsMessage, "RE: ICPAK '"
+						+ subject,
+						Arrays.asList(booking.getContact().getEmail()),
+						Arrays.asList(booking.getContact().getContactName()));
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (MessagingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
 	public List<MemberBookingDto> getMemberBookings(String memberRefId,
