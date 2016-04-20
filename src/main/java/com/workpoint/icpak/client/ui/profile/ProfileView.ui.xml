@@ -15,7 +15,7 @@
 					User Profile
 				</h3>
 
-				<div class="main-content">
+				<div class="main-content" style="padding-top:0px !important">
 					<profile:ProfileWidget ui:field="divProfileContent"></profile:ProfileWidget>
 					<g:HTMLPanel ui:field="divPasswordContent">
 						<password:PasswordWidget ui:field="panelPasswordWidget"></password:PasswordWidget>

@@ -293,8 +293,8 @@ public class ProfileWidget extends Composite {
 				|| AppContext.isCurrentUserApplicationsRead();
 		isCurrentUserBasicMember = AppContext.isCurrentBasicMember();
 
-		panelParent.getElement().getParentElement().getStyle()
-				.setPaddingTop(0.0, Unit.PX);
+		// panelParent.getElement().getParentElement().getStyle()
+		// .setPaddingTop(0.0, Unit.PX);
 	}
 
 	public void initDisplay(ApplicationStatus applicationStatus,
