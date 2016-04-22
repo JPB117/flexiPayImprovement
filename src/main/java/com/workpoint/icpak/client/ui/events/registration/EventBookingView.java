@@ -392,7 +392,7 @@ public class EventBookingView extends ViewImpl implements
 	}
 
 	public boolean isValid() {
-		isValid=true;
+		isValid = true;
 		issuesPanel.clear();
 		issuesPanelDelegate.clear();
 
@@ -448,9 +448,19 @@ public class EventBookingView extends ViewImpl implements
 	}
 
 	public boolean isDelegateValid() {
-		if (getDelegates().size() == 0) {
+		List<DelegateDto> allDelegates = getDelegates();
+		boolean hasIssues = false;
+		for (DelegateDto d : allDelegates) {
+			if (isNullOrEmpty(d.getFullName())
+					&& isNullOrEmpty(d.getMemberNo())) {
+				hasIssues = true;
+			}
+		}
+
+		if (getDelegates().size() == 0 || hasIssues) {
 			issuesPanelDelegate
-					.addError("You must enter at least 1 delegate for this event");
+					.addError("You have not added the member."
+							+ " Kindly enter the memberNo on the first column to add the member.");
 			isDelegateValid = false;
 		} else {
 			isDelegateValid = true;

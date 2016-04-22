@@ -239,8 +239,8 @@ public class EventBookingPresenter extends
 							submit(dto);
 						}
 					}
+				// We are creating a new booking
 				} else {
-					// We are creating a new booking
 					if (getView().getCounter() == 0) {
 						checkExists(getView().getBooking().getContact()
 								.getEmail());
@@ -252,7 +252,6 @@ public class EventBookingPresenter extends
 						}
 					}
 				}
-
 				// If counter is 2 - Take me to my Payments
 				if (getView().getCounter() == 2) {
 					getView().next();

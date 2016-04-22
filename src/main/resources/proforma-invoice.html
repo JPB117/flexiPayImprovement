@@ -2,10 +2,6 @@
 <html>
 <head>
 <style type="text/css">
-body {
-	font-family: Arial;
-}
-
 h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 	font-family: inherit;
 	font-weight: 500;
@@ -497,8 +493,25 @@ div.footer {
 	position: running(footer);
 }
 
+.pcs-entity-title {
+	font-size: 28pt;
+	color: #000000;
+}
+.pcs-label {
+    color: #817d7d;
+}
+
+
+@font-face {
+    font-family: 'Open Sans', sans-serif;
+    src: url(https://fonts.googleapis.com/css?family=Open+Sans);
+    -fs-pdf-font-embed: embed;
+    -fs-pdf-font-encoding: Identity-H;
+}
+
+
 @page {
-	size: 11.69in 8.27in;
+	size: 8.5in 11in margin:1cm;
 }
 </style>
 </head>
@@ -507,18 +520,20 @@ div.footer {
 	<div class="container">
 		<div class="row-fluid">
 			<div class="row-fluid">
-				<div class="col-print-4">
-					<br />
+				<div class="col-print-7">
+					<img src="http://localhost:8080/icpakportal/img/icpak_logo.png"
+						width="150px" height="80px" class="text-left"></img> <br />
 					<p>Institute of Certified Public Accountants of Kenya</p>
-					<p>P.O. BOX 59963 00200 (City Square), CPA Center, Ruaraka,</p>
-					<p>Thika Rd. Website: www.icpak.com | E-mail:icpak@icpak.com</p>
+					<p>P.O. BOX 59963 00200 (City Square), CPA Center,
+						Ruaraka,Thika Rd.</p>
+					<p>Website: www.icpak.com | E-mail:icpak@icpak.com</p>
 					<p>Mobile:0727-531006/0733-856262 | Wireless:020 2304226/7</p>
 				</div>
-				<div class="col-print-4 text-center">
-					<img src="http://localhost:8080/icpakportal/img/icpak_logo.png"
-						width="250px" height="150px" class="text-center"></img>
-				</div>
-				<div class="col-print-4 text-right">
+				<div class="col-print-5 text-right">
+					<h3 class="text-right pcs-entity-title">Proforma Invoice</h3>
+					<div class="text-right pcs-label">
+						<b>Invoice No:</b>@#quoteNo<br />
+					</div>
 					<br />
 					<p>Cheque Dropoff Point</p>
 					<p>Drop in Box No.164</p>
@@ -527,15 +542,9 @@ div.footer {
 				</div>
 			</div>
 			<div class="row-fluid">
-				<div class="col-print-4">
+				<div class="col-print-6">
 					<br />@#companyName<br /> @#companyAddress <br />
 					@#companyLocation <br /> <br /> <b>Date:</b>@#date, <br />
-				</div>
-				<div class="col-print-4">
-					<h1 class="text-center">Proforma Invoice</h1>
-				</div>
-				<div class="col-print-4 text-right">
-					<br /> <br /> <b>Proforma No:</b>@#quoteNo<br />
 				</div>
 			</div>
 

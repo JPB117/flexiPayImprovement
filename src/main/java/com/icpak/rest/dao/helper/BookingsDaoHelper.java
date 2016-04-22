@@ -1001,7 +1001,8 @@ public class BookingsDaoHelper {
 
 		/* Updating Payment Details */
 		if (booking != null) {
-			if (delegateDto.getPaymentStatus() == PaymentStatus.PAID) {
+			if ((delegateDto.getPaymentStatus() == PaymentStatus.PAID)
+					|| (delegateDto.getPaymentStatus() == PaymentStatus.NOTPAID)) {
 				booking.setPaymentStatus(delegateDto.getPaymentStatus());
 				dao.save(booking);
 
@@ -1016,7 +1017,9 @@ public class BookingsDaoHelper {
 							.println("Successfully saved::" + d.getFullName());
 				}
 
-				sendConfirmationMessages(booking);
+				if (delegateDto.getPaymentStatus() == PaymentStatus.PAID) {
+					sendConfirmationMessages(booking);
+				}
 			}
 		} else {
 			System.err.println("Booking is null...cannot be updated!!");
@@ -1053,6 +1056,7 @@ public class BookingsDaoHelper {
 	public void sendConfirmationMessages(Booking booking) {
 		/* Payers message */
 		String smsMessage = "";
+
 		smsMessage = " Thank-you for your payment" + " for "
 				+ booking.getEvent().getName()
 				+ ". The booking status is PAID. ";
