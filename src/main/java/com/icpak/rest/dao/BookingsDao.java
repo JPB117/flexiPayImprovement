@@ -474,7 +474,7 @@ public class BookingsDao extends BaseDao {
 				+ "d.refId,d.memberRefId,d.memberRegistrationNo,d.ern,"
 				+ "d.title,d.otherNames,d.fullName,d.phoneNumber,a.hotel,b.paymentStatus,"
 				+ "d.attendance,d.surname,d.email,e.refid,d.booking_id,"
-				+ "d.receiptNo,d.lpoNo,d.isCredit,d.clearanceNo,b.isActive "
+				+ "d.receiptNo,d.lpoNo,d.isCredit,d.clearanceNo,b.isActive,i.documentNo "
 				+ "from delegate d inner join booking b on (d.booking_id=b.id) "
 				+ "inner join event e on (b.event_id=e.id) "
 				+ "left join accommodation a on (d.accommodationId=a.id) "
@@ -572,6 +572,8 @@ public class BookingsDao extends BaseDao {
 					.toString();
 			Integer isBookingActive = (value = o[i++]) == null ? null
 					: (Integer) value;
+			String invoiceNo = (value = o[i++]) == null ? null : value
+					.toString();
 
 			DelegateDto delegateDto = new DelegateDto();
 			delegateDto.setCreatedDate(bookingDate);
@@ -591,6 +593,7 @@ public class BookingsDao extends BaseDao {
 			delegateDto.setErn(ern);
 			delegateDto.setBookingId(bookingId.toString());
 			delegateDto.setIsBookingActive(isBookingActive);
+			delegateDto.setInvoiceNo(invoiceNo);
 			if (paymentStatus == 1) {
 				delegateDto.setPaymentStatus(PaymentStatus.PAID);
 			} else {

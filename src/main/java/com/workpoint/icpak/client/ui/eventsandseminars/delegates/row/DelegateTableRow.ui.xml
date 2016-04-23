@@ -6,26 +6,20 @@
 	.center {
 		text-align: center;
 	}
+	
+	.small-text {
+		font-size: 11px;
+	}
 	</ui:style>
 
 	<g:HTMLPanel styleName="tr" ui:field="row">
 		<g:HTMLPanel styleName="td" ui:field="divBookingDate">
-		</g:HTMLPanel>
-		<g:HTMLPanel styleName="td" ui:field="divProformaLink">
-			<d:ActionLink ui:field="aProforma">Proforma</d:ActionLink>
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divErnNo">
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divSponsorNames">
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divContactName">
-		</g:HTMLPanel>
-		<g:HTMLPanel styleName="td" ui:field="divSponsorEmail">
-		</g:HTMLPanel>
-		<g:HTMLPanel styleName="td center" ui:field="divIsMember">
-			<span ui:field="spnIsMember"></span>
-		</g:HTMLPanel>
-		<g:HTMLPanel styleName="td" ui:field="divMemberNo">
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divDelegateNames">
 		</g:HTMLPanel>
@@ -42,32 +36,72 @@
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td hide" ui:field="divAction">
 			<div class="dropdown">
-				<a class="btn btn-primary btn-fill dropdown-toggle" id="dropdownMenu1"
+				<a class="btn btn-default dropdown-toggle" id="dropdownMenu1"
 					data-toggle="dropdown" aria-expanded="true">
-					-Select-
+					Select
 					<span class="caret"></span>
 				</a>
+
 				<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+					<li class="dropdown-header">Finance Actions</li>
 					<li>
-						<d:ActionLink ui:field="aEnrol">Enrol in LMS</d:ActionLink>
+						<d:ActionLink ui:field="aProforma">
+							<i class="fa fa-arrow-down" aria-hidden="true"></i>
+							Download Proforma
+						</d:ActionLink>
 					</li>
 					<li>
-						<d:ActionLink ui:field="aResendProforma">Resend Proforma</d:ActionLink>
+						<d:ActionLink ui:field="aResendProforma">
+							<i class="fa fa-paper-plane" aria-hidden="true"></i>
+							Resend Proforma
+						</d:ActionLink>
 					</li>
 					<li>
-						<d:ActionLink ui:field="aUpdatePayment">Update Payment</d:ActionLink>
+						<d:ActionLink ui:field="aUpdatePayment">
+							<i class="fa fa-money" aria-hidden="true"></i>
+							Update Payment
+						</d:ActionLink>
+					</li>
+					<li role="separator" class="divider"></li>
+					<li class="dropdown-header">Event Management</li>
+					<li>
+						<d:ActionLink ui:field="aEditBooking">
+							<i class="fa fa-pencil" aria-hidden="true"></i>
+							Edit Booking
+						</d:ActionLink>
 					</li>
 					<li>
-						<d:ActionLink ui:field="aAttended">Mark as Attended</d:ActionLink>
+						<d:ActionLink ui:field="aCancelBooking">
+							<i class="fa fa-ban" aria-hidden="true">
+							</i>
+							Cancel Booking
+						</d:ActionLink>
 					</li>
 					<li>
-						<d:ActionLink ui:field="aNotAttended">Mark as Not-Attended</d:ActionLink>
+						<d:ActionLink ui:field="aUndoCancelBooking">
+							<i class="fa fa-undo" aria-hidden="true"></i>
+							Undo Cancellation
+						</d:ActionLink>
+					</li>
+					<li role="separator" class="divider"></li>
+					<li class="dropdown-header">Cpd Actions</li>
+					<li>
+						<d:ActionLink ui:field="aEnrol">
+							<i class="fa fa-graduation-cap" aria-hidden="true"></i>
+							Enrol in LMS
+						</d:ActionLink>
 					</li>
 					<li>
-						<d:ActionLink ui:field="aEditBooking">Edit Booking</d:ActionLink>
+						<d:ActionLink ui:field="aAttended">
+							<i class="fa fa-check" aria-hidden="true"></i>
+							Mark as Attended
+						</d:ActionLink>
 					</li>
 					<li>
-						<d:ActionLink ui:field="aCancelBooking">Cancel Booking</d:ActionLink>
+						<d:ActionLink ui:field="aNotAttended">
+							<i class="fa fa-times" aria-hidden="true"></i>
+							Mark as Not-Attended
+						</d:ActionLink>
 					</li>
 				</ul>
 			</div>

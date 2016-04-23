@@ -47,10 +47,6 @@ public class DelegateTableRow extends RowWidget {
 	@UiField
 	HTMLPanel divContactName;
 	@UiField
-	HTMLPanel divSponsorEmail;
-	@UiField
-	HTMLPanel divMemberNo;
-	@UiField
 	HTMLPanel divErnNo;
 	@UiField
 	HTMLPanel divDelegateNames;
@@ -64,8 +60,6 @@ public class DelegateTableRow extends RowWidget {
 	SpanElement spnBookingStatus;
 	@UiField
 	SpanElement spnAttendance;
-	@UiField
-	SpanElement spnIsMember;
 	@UiField
 	ActionLink aEnrol;
 	@UiField
@@ -82,12 +76,15 @@ public class DelegateTableRow extends RowWidget {
 	ActionLink aEditBooking;
 	@UiField
 	ActionLink aCancelBooking;
+	@UiField
+	ActionLink aUndoCancelBooking;
 
 	private DelegateDto delegate;
 	private EventDto event;
 
 	public void initDisplay() {
-		if (AppContext.isCurrentUserEventEdit()) {
+		if (AppContext.isCurrentUserEventEdit()
+				|| AppContext.isCurrentUserFinanceEdit()) {
 			divAction.removeStyleName("hide");
 		} else {
 			divAction.addStyleName("hide");
@@ -215,7 +212,7 @@ public class DelegateTableRow extends RowWidget {
 
 	}
 
-	public DelegateTableRow(DelegateDto delegate, EventDto event) {
+	public DelegateTableRow(final DelegateDto delegate, EventDto event) {
 		initWidget(uiBinder.createAndBindUi(this));
 		this.delegate = delegate;
 		this.event = event;
@@ -224,22 +221,46 @@ public class DelegateTableRow extends RowWidget {
 		// method!
 		initDisplay();
 		divBookingDate.getElement().setInnerText(
-				DateUtils.CREATEDFORMAT.format(delegate.getCreatedDate()));
+				DateUtils.READABLETIMESTAMP.format(delegate.getCreatedDate()));
 		if (delegate.getCompanyName() != null) {
-			divSponsorNames.getElement()
-					.setInnerText(delegate.getCompanyName());
+
+			ActionLink invoiceLink = new ActionLink(delegate.getInvoiceNo());
+			invoiceLink.addClickHandler(new ClickHandler() {
+				@Override
+				public void onClick(ClickEvent event) {
+					UploadContext ctx = new UploadContext("getreport");
+					ctx.setContext("bookingRefId", delegate.getBookingRefId());
+					ctx.setAction(UPLOADACTION.GETPROFORMA);
+					Window.open(ctx.toUrl(), "Get Proforma", null);
+				}
+			});
+
+			divSponsorNames.getElement().setInnerHTML(
+					delegate.getCompanyName() + " (" + invoiceLink + ")");
 		}
 
 		if (delegate.getErn() != null) {
 			divErnNo.getElement().setInnerText(delegate.getErn());
 		}
-		divContactName.getElement().setInnerText(delegate.getContactName());
-		divSponsorEmail.getElement().setInnerText(delegate.getContactEmail());
+		divContactName.getElement().setInnerHTML(
+				delegate.getContactName() + "<br/><small class='text-muted'>"
+						+ delegate.getContactEmail() + "</small>");
+
+		InlineLabel spnIsMember = new InlineLabel();
 		if (delegate.getMemberNo() != null) {
-			divMemberNo.getElement().setInnerText(delegate.getMemberNo());
+			spnIsMember.setStyleName("label label-info");
+			spnIsMember.setText("M");
 		}
+
+		InlineLabel spnMemberNo = new InlineLabel();
+		if (delegate.getMemberNo() != null) {
+			spnMemberNo.getElement().setInnerText(
+					" - " + delegate.getMemberNo());
+		}
+
 		if (delegate.getFullName() != null) {
-			divDelegateNames.getElement().setInnerText(delegate.getFullName());
+			divDelegateNames.getElement().setInnerHTML(
+					delegate.getFullName() + spnMemberNo + " " + spnIsMember);
 		} else {
 			divDelegateNames.getElement().setInnerText(
 					(delegate.getTitle() == null ? "" : delegate.getTitle()
@@ -254,12 +275,6 @@ public class DelegateTableRow extends RowWidget {
 			divAccomodation.add(new InlineLabel(delegate.getHotel() + ""));
 		} else {
 			divAccomodation.getElement().setInnerText("None");
-		}
-
-		if (delegate.getMemberNo() == null) {
-			spnIsMember.setClassName("fa fa-times");
-		} else {
-			spnIsMember.setClassName("fa fa-check");
 		}
 
 		if (delegate.getIsBookingActive() == 1) {
@@ -278,15 +293,49 @@ public class DelegateTableRow extends RowWidget {
 	}
 
 	private void setActionButtons(EventType eventType) {
-		if (eventType == EventType.COURSE) {
-			aEnrol.setVisible(true);
-			aAttended.setVisible(false);
-			aNotAttended.setVisible(false);
-		} else {
-			aEnrol.setVisible(false);
-			aAttended.setVisible(true);
-			aNotAttended.setVisible(true);
-		}
+		boolean isUpdatePaymentVisible = (AppContext.isCurrentUserFinanceEdit()
+				&& delegate.getAttendance() == AttendanceStatus.NOTATTENDED
+				&& delegate.getIsBookingActive() == 1 ? true : false);
+
+		boolean isEditBookingVisible = (AppContext.isCurrentUserEventEdit()
+				&& delegate.getAttendance() == AttendanceStatus.NOTATTENDED
+				&& delegate.getIsBookingActive() == 1 ? true : false);
+
+		boolean isCancelBookingVisible = (AppContext.isCurrentUserEventEdit()
+				&& delegate.getAttendance() == AttendanceStatus.NOTATTENDED
+				&& delegate.getIsBookingActive() == 1 ? true : false);
+
+		boolean isUndoCancelVisible = (AppContext.isCurrentUserEventEdit()
+				&& delegate.getAttendance() == AttendanceStatus.NOTATTENDED
+				&& delegate.getIsBookingActive() == 0 ? true : false);
+
+		boolean isAttendedVisible = (eventType != EventType.EVENT
+				&& AppContext.isCurrentUserEventEdit()
+				&& delegate.getAttendance() == AttendanceStatus.NOTATTENDED
+				&& delegate.getIsBookingActive() == 1 ? true : false);
+
+		boolean isNotAttendedVisible = (eventType != EventType.EVENT
+				&& AppContext.isCurrentUserEventEdit()
+				&& delegate.getAttendance() == AttendanceStatus.ATTENDED
+				&& delegate.getIsBookingActive() == 1 ? true : false);
+		//
+		// Window.alert((eventType == EventType.EVENT) + ""
+		// + AppContext.isCurrentUserEventEdit() + ""
+		// + (delegate.getAttendance() == AttendanceStatus.NOTATTENDED)
+		// + "" + delegate.getIsBookingActive() + "");
+
+		boolean isEnrolVisible = (eventType == EventType.COURSE
+				&& AppContext.isCurrentUserEventEdit()
+				&& delegate.getAttendance() == AttendanceStatus.NOTENROLLED
+				&& delegate.getIsBookingActive() == 1 ? true : false);
+
+		aUpdatePayment.setVisible(isUpdatePaymentVisible);
+		aEditBooking.setVisible(isEditBookingVisible);
+		aCancelBooking.setVisible(isCancelBookingVisible);
+		aUndoCancelBooking.setVisible(isUndoCancelVisible);
+		aAttended.setVisible(isAttendedVisible);
+		aNotAttended.setVisible(isNotAttendedVisible);
+		aEnrol.setVisible(isEnrolVisible);
 	}
 
 	private void setAttendance(AttendanceStatus attendance) {

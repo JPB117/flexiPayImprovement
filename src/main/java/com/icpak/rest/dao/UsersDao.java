@@ -70,7 +70,6 @@ public class UsersDao extends BaseDao {
 
 	public User createUser(User user) {
 		if (user.getHashedPassword() != null && user.getId() == null) {
-			// Encrypt passwords for new entries only, not on user info update
 			user.setPassword(encrypt(user.getHashedPassword()));
 		}
 		return (User) save(user);

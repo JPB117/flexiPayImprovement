@@ -1848,3 +1848,9 @@ body .GWTUpld .gwt-FileUpload {
 		padding-top: 60px !important;
 	}
 }
+
+
+.dropdown-menu{
+	right: 0px;
+    left: inherit !important;
+}

@@ -46,6 +46,7 @@ public class DelegateDto extends SerializableObj {
 	private String contact;
 	private Date bookingDate;
 	private String memberQrCode;
+	private String invoiceNo;
 
 	public String getReceiptNo() {
 		return receiptNo;
@@ -156,6 +157,14 @@ public class DelegateDto extends SerializableObj {
 
 	public DelegateType getDelegateType() {
 		return delegateType;
+	}
+
+	public String getInvoiceNo() {
+		return invoiceNo;
+	}
+
+	public void setInvoiceNo(String invoiceNo) {
+		this.invoiceNo = invoiceNo;
 	}
 
 	public void setDelegateType(DelegateType delegateType) {
