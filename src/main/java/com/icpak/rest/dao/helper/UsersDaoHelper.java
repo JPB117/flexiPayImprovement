@@ -143,10 +143,15 @@ public class UsersDaoHelper {
 		String body = "Dear "
 				+ fullNames
 				+ ","
-				+ "<br/>An account has been created for you on the ICPAK portal. "
+				+ "<br/><br/>An account has been created for you on the ICPAK portal. "
 				+ "You will need to create your password on the portal using the following details."
 				+ "<p/><a href=" + link + ">Click this link </a>"
-				+ " to create your password." + "<p>Thank you";
+				+ " to create your password." + ""
+				+ "<p><strong>Having trouble with above link?"
+				+ " Click or copy below link on a new tab on browser.</strong>"
+				+ "<p/>" + "<a href=" + link + ">link</a>" + "</p>" +
+
+				"<p>Thank you";
 
 		try {
 			EmailServiceHelper.sendEmail(body, subject,
@@ -173,10 +178,15 @@ public class UsersDaoHelper {
 		String body = "Dear "
 				+ fullNames
 				+ ","
-				+ "<br/>An account has been created for you on the ICPAK portal. "
+				+ "<br/><br/>An account has been created for you on the ICPAK portal. "
 				+ "You will need to create your password on the portal using the following details."
 				+ "<p/><a href=" + link + ">Click this link </a>"
-				+ " to create your password." + "<p>Thank you";
+				+ " to create your password." + ""
+				+ "<p><strong>Having trouble with above link?"
+				+ " Click or copy below link on a new tab on browser.</strong>"
+				+ "<p/>" + "<a href=" + link + ">link</a>" + "</p>" +
+
+				"<p>Thank you";
 
 		try {
 			EmailServiceHelper.sendEmail(body, subject,
