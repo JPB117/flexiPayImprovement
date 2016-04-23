@@ -75,22 +75,21 @@ public class BookingsResourceImpl implements BookingsResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Create a new booking", response = Booking.class, consumes = MediaType.APPLICATION_JSON)
-	public BookingDto create(
-	// @ApiParam(value="Event for which booking is being created")
-	// @PathParam("eventId") String eventId,
-			BookingDto dto) {
-
+	public BookingDto create(BookingDto dto) {
 		String uri = "";
-		// URI requestUri = httpContext.getRequest().getRequestUri();
-		// String host = requestUri.getHost();
-		// int port = requestUri.getPort();
-		// uri = host+":"+port;
-
 		helper.createBooking(eventId, dto);
 		uri = uri + "/" + dto.getRefId();
 		dto.setUri(uri);
-
 		return dto;
+	}
+
+	@POST
+	@Path("/instantBooking")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "Make Payment for a booking", consumes = MediaType.APPLICATION_JSON)
+	public BookingDto createBookingByMemberNo(DelegateDto delegate) {
+		return helper.createBooking(eventId, delegate);
 	}
 
 	@POST
@@ -99,13 +98,10 @@ public class BookingsResourceImpl implements BookingsResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Make Payment for a booking", consumes = MediaType.APPLICATION_JSON)
 	public BookingDto makePayment(
-			// @ApiParam(value="Event for which payment is being made")
-			// @PathParam("eventId") String eventId,
 			@ApiParam(value = "Booking for which payment is being made") @PathParam("bookingId") String bookingId,
 			@ApiParam(value = "Payment Mode") @QueryParam("paymentMode") String paymentMode,
 			@ApiParam(value = "Payment referenceNo") @QueryParam("paymentRef") String paymentRef) {
 		String uri = "";
-
 		BookingDto dto = helper.processPayment(eventId, bookingId, paymentMode,
 				paymentRef);
 

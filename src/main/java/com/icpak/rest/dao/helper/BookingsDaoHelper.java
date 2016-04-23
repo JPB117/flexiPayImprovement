@@ -42,6 +42,7 @@ import com.amazonaws.util.json.JSONException;
 import com.amazonaws.util.json.JSONObject;
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
+import com.icpak.rest.dao.ApplicationFormDao;
 import com.icpak.rest.dao.BookingsDao;
 import com.icpak.rest.dao.EventsDao;
 import com.icpak.rest.dao.InvoiceDao;
@@ -55,6 +56,7 @@ import com.icpak.rest.models.event.Accommodation;
 import com.icpak.rest.models.event.Booking;
 import com.icpak.rest.models.event.Delegate;
 import com.icpak.rest.models.event.Event;
+import com.icpak.rest.models.membership.ApplicationFormHeader;
 import com.icpak.rest.models.membership.Contact;
 import com.icpak.rest.models.membership.Member;
 import com.icpak.rest.models.util.Attachment;
@@ -93,6 +95,9 @@ public class BookingsDaoHelper {
 	MemberDao memberDao;
 	@Inject
 	MemberDaoHelper memberDaoHelper;
+	@Inject
+	ApplicationFormDao applicationDao;
+
 	@Inject
 	EventsDao eventDao;
 	@Inject
@@ -201,6 +206,69 @@ public class BookingsDaoHelper {
 		bookingDto.setInvoiceRef(dao.getInvoiceRef(bookingId));
 		return bookingDto;
 	}
+
+	/*
+	 * Instantly create booking from memberNo, picking user saved information
+	 */
+	public BookingDto createBooking(String eventId, DelegateDto delegate) {
+
+		if (delegate.getMemberNo() == null) {
+			throw new ServiceException(ErrorCodes.SERVER_ERROR,
+					"MemberNo is required!");
+		}
+
+		// Find the member
+		User user = userDao.findUserByMemberNo(delegate.getMemberNo());
+		if (user == null) {
+			throw new ServiceException(ErrorCodes.NOTFOUND,
+					"Member not found. Please pass a valid memberNo");
+		}
+
+		// Find members application detail
+		ApplicationFormHeader application = applicationDao
+				.getApplicationByUserRef(user.getRefId());
+		if (application == null) {
+			throw new ServiceException(
+					ErrorCodes.NOTFOUND,
+					"Member's ApplicationForm not found. Kindly check with Admin why applicationForm is not found!");
+
+		}
+
+		// Create a new bookingDto
+		BookingDto booking = new BookingDto();
+
+		// Contact Information
+		ContactDto contact = new ContactDto();
+		if (application.getEmployer() == null) {
+			application.setEmployer("NOT SET");
+		}
+		contact.setCompany(application.getEmployer());
+		contact.setTelephoneNumbers(user.getPhoneNumber());
+		contact.setAddress((application.getAddress1() == null ? "NOT SET"
+				: application.getAddress1()));
+		contact.setPostCode((application.getPostCode() == null ? "NOT SET"
+				: application.getPostCode()));
+		contact.setContactName(user.getFullName() == null ? "NOT SET" : user
+				.getFullName());
+		contact.setEmail(user.getEmail() == null ? "NOT SET" : user.getEmail());
+		booking.setContact(contact);
+
+		// Delegate Information
+		delegate.setFullName(user.getFullName());
+		delegate.setDelegatePhoneNumber(user.getPhoneNumber());
+		delegate.setMemberQrCode(user.getMember().getMemberQrCode());
+		booking.setDelegates(Arrays.asList(delegate));
+
+		JSONObject json = new JSONObject(booking);
+		System.err.println(json);
+
+		return createBooking(eventId, booking);
+
+	}
+
+	/*
+	 * Mother function of create Booking
+	 */
 
 	public BookingDto createBooking(String eventId, BookingDto dto) {
 		Event event = eventDao.getByEventId(eventId);
@@ -851,6 +919,11 @@ public class BookingsDaoHelper {
 		invoice.addLines(memberRefLineMap.values());
 		invoice.addLines(nonMemberRefLineMap.values());
 		invoice.setAmount(totalAmount);
+		if (booking.getBookingDate() == null) {
+			// throw new ServiceException(ErrorCodes.SERVER_ERROR,
+			// "Booking cannot be null, there was a problem saving the booking..!");
+			booking.setBookingDate(new Date());
+		}
 		invoice.setDocumentNo(booking.getId() + "");
 		invoice.setCompanyName(booking.getContact().getCompany());
 		invoice.setDate(booking.getBookingDate().getTime());
@@ -860,7 +933,6 @@ public class BookingsDaoHelper {
 		invoice.setBookingRefId(booking.getRefId());
 		invoice.setTotalDiscount(totalDiscountAmount);
 		invoice.setTotalPenalty(totalPenaltyAmount);
-
 		invoice = invoiceHelper.save(invoice);
 
 		return invoice;

@@ -148,8 +148,9 @@ public class UsersDaoHelper {
 				+ "<p/><a href=" + link + ">Click this link </a>"
 				+ " to create your password." + ""
 				+ "<p><strong>Having trouble with above link?"
-				+ " Click or copy below link on a new tab on browser.</strong>"
-				+ "<p/>" + "<a href=" + link + ">link</a>" + "</p>" +
+				+ " Copy below link on a new tab on browser.</strong>" + "<p/>"
+				+ "<a style='text-decoration: underline;'>" + link + "</a>"
+				+ "</p>" +
 
 				"<p>Thank you";
 
@@ -183,8 +184,9 @@ public class UsersDaoHelper {
 				+ "<p/><a href=" + link + ">Click this link </a>"
 				+ " to create your password." + ""
 				+ "<p><strong>Having trouble with above link?"
-				+ " Click or copy below link on a new tab on browser.</strong>"
-				+ "<p/>" + "<a href=" + link + ">link</a>" + "</p>" +
+				+ " Copy below link on a new tab on browser.</strong>" + "<p/>"
+				+ "<a style='text-decoration: underline;'>" + link + "</a>"
+				+ "</p>" +
 
 				"<p>Thank you";
 

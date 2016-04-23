@@ -223,7 +223,6 @@ public class DelegateTableRow extends RowWidget {
 		divBookingDate.getElement().setInnerText(
 				DateUtils.READABLETIMESTAMP.format(delegate.getCreatedDate()));
 		if (delegate.getCompanyName() != null) {
-
 			ActionLink invoiceLink = new ActionLink(delegate.getInvoiceNo());
 			invoiceLink.addClickHandler(new ClickHandler() {
 				@Override
@@ -234,7 +233,6 @@ public class DelegateTableRow extends RowWidget {
 					Window.open(ctx.toUrl(), "Get Proforma", null);
 				}
 			});
-
 			divSponsorNames.getElement().setInnerHTML(
 					delegate.getCompanyName() + " (" + invoiceLink + ")");
 		}
