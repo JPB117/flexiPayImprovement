@@ -110,6 +110,13 @@ public class DelegateTableRow extends RowWidget {
 			}
 		});
 
+		aUndoCancelBooking.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				undoCancellation();
+			}
+		});
+
 		aUpdatePayment.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -179,6 +186,19 @@ public class DelegateTableRow extends RowWidget {
 			});
 		}
 
+	}
+
+	protected void undoCancellation() {
+		AppManager.showPopUp("Confirm", "Undo " + delegate.getFullName() + " "
+				+ " cancellation?", new OnOptionSelected() {
+			@Override
+			public void onSelect(String name) {
+				if (name.equals("Confirm")) {
+					delegate.setIsBookingActive(1);
+					AppContext.fireEvent(new EditModelEvent(delegate));
+				}
+			}
+		}, "Confirm", "Cancel");
 	}
 
 	protected void updatePaymentInfo() {

@@ -70,7 +70,8 @@
 										</d:ActionLink>
 										<h3>
 											Event Registration Centre
-											<br />
+											<d:ActionLink ui:field="aCancelLeft"
+												styleName="btn btn-danger btn-fill hide pull-right">Cancel Booking</d:ActionLink>
 										</h3>
 									</div>
 
@@ -100,9 +101,64 @@
 											</a>
 										</li>
 									</ul>
-
 									<!-- Tab Content 1 -->
 									<g:HTMLPanel styleName="tab-content" ui:field="divContent">
+										<div class="tab-pane" ui:field="divCancellation">
+
+											<g:HTMLPanel ui:field="panelCancel" styleName="hide">
+												<div class="row">
+													<div class="col-lg-8 col-lg-offset-2" style="margin-top: 55px;">
+														<div class="panel panel-default">
+															<h3 class="panel-title panel-heading">Panel title</h3>
+															<div class="panel-body">
+																<span class="">Are you sure you want to cancel this
+																	booking? All delegates will be notified by sms.</span>
+															</div>
+															<div class="panel-footer">
+																<div class="row">
+																	<div class="col-sm-12">
+																		<d:ActionLink ui:field="aConfirmCancel"
+																			styleName="btn btn-danger btn-fill pull-left">
+																			Confirm
+																		</d:ActionLink>
+
+																		<d:ActionLink ui:field="aNo"
+																			styleName="btn btn-default btn-fill pull-right">
+																			Cancel
+																		</d:ActionLink>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</g:HTMLPanel>
+
+											<g:HTMLPanel ui:field="panelConfirmCancel"
+												styleName="hide">
+												<div class="row">
+													<div class="col-lg-12" style="margin-top:55px;">
+														<div class="alert alert-success">
+															<g:HTMLPanel styleName="alert text-center"
+																ui:field="panelMessage">
+																<span class="fa fa-thumbs-up fa-5x" ui:field="spnMessageIcon"></span>
+																<br />
+																<span ui:field="spnIssues" style="font-size: 20px;">
+																	Your booking has
+																	been
+																	cancelled successfully.
+																</span>
+																<br />
+																<a class='btn btn-next btn-fill btn-success btn-wd btn-sm'
+																	href="https://icpak.com/events" style="margin-top: 25px;">Browse other
+																	events
+																</a>
+															</g:HTMLPanel>
+														</div>
+													</div>
+												</div>
+											</g:HTMLPanel>
+										</div>
 										<div class="tab-pane active" ui:field="divPackage">
 											<div class="row">
 												<div class="col-sm-12">
@@ -115,7 +171,8 @@
 												<div class="col-sm-12">
 													<a data-toggle="collapse" data-target="#eventInfo"
 														aria-expanded="false" aria-controls="#eventInfo">
-														show event information
+														show event
+														information
 													</a>
 
 													<div class="collapse" id="eventInfo">
@@ -266,11 +323,11 @@
 																	styleName="btn btn-default btn-fill">Add Non-Member</d:ActionLink>
 															</div>
 														</g:HTMLPanel>
-	
+
 														<g:HTMLPanel styleName="col-lg-12 {style.hidden-section}"
 															ui:field="divActionSection">
 														</g:HTMLPanel>
-														
+
 													</div>
 												</div>
 											</g:HTMLPanel>
@@ -306,7 +363,7 @@
 											</div>
 										</div>
 
-										<div class="wizard-footer">
+										<div class="wizard-footer" ui:field="divWizardFooter">
 											<div class="pull-right">
 												<d:ActionLink styleName='hide' ui:field="aAccount"
 													href="#bookings">Pay Later
@@ -332,6 +389,7 @@
 											<div class="clearfix"></div>
 										</div>
 									</g:HTMLPanel>
+
 								</div>
 							</div>
 						</g:HTMLPanel>

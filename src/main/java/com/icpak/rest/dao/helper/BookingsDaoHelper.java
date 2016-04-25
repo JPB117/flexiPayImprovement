@@ -428,10 +428,6 @@ public class BookingsDaoHelper {
 						numberFormat.format(dto.getTotalAmount()));
 				proformaDocument.addDetail(new DocumentLine("DiscountDetails",
 						line));
-				// System.err.println("InvoiceLineDto: " + dto.getRefId() +
-				// " | "
-				// + dto.getDescription() + " | " + dto.getTotalAmount()
-				// + " | " + dto.getType());
 
 			} else if (dto.getType() == InvoiceLineType.Penalty) {
 				// Penalty Line
@@ -445,10 +441,6 @@ public class BookingsDaoHelper {
 						numberFormat.format(dto.getTotalAmount()));
 				proformaDocument.addDetail(new DocumentLine("PenaltyDetails",
 						line));
-				// System.err.println("InvoiceLineDto: " + dto.getRefId() +
-				// " | "
-				// + dto.getDescription() + " | " + dto.getTotalAmount()
-				// + " | " + dto.getType());
 			} else {
 				Map<String, Object> line = new HashMap<>();
 				line.put("description", dto.getDescription());
@@ -1071,7 +1063,7 @@ public class BookingsDaoHelper {
 				.getRefId(), Event.class);
 		Booking booking = delegate.getBooking();
 
-		/* Updating Payment Details */
+		/* Updating Booking */
 		if (booking != null) {
 			if ((delegateDto.getPaymentStatus() == PaymentStatus.PAID)
 					|| (delegateDto.getPaymentStatus() == PaymentStatus.NOTPAID)) {
@@ -1093,6 +1085,15 @@ public class BookingsDaoHelper {
 					sendConfirmationMessages(booking);
 				}
 			}
+			/*
+			 * Undo Booking Cancellation
+			 */
+			if ((delegateDto.getIsBookingActive() == 1)
+					&& (booking.getIsActive() == 0)) {
+				booking.setIsActive(delegateDto.getIsBookingActive());
+				dao.save(booking);
+			}
+
 		} else {
 			System.err.println("Booking is null...cannot be updated!!");
 		}

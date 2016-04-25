@@ -254,14 +254,12 @@ public class EventsPresenter extends
 							delegateSearchTerm);
 				}
 			}).bookings(eventId).getCount();
-
 			eventsDelegate.withCallback(new AbstractAsyncCallback<EventDto>() {
 				@Override
 				public void onSuccess(EventDto event) {
 					getView().bindEvent(event);
 				}
 			}).getById(eventId);
-
 			if (hasEventChanged) {
 				fireEvent(new FullScreenEvent("show"));
 				eventsDelegate

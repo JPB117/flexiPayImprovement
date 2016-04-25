@@ -321,6 +321,8 @@ public class PaymentWidget extends Composite {
 				.getInvoiceAmount()));
 		txtOfflineAmount.setValue(NumberUtils.NUMBERFORMAT.format(invoice
 				.getInvoiceAmount()));
+		trxAmount = String.valueOf(invoice.getInvoiceAmount());
+		setAmount(String.valueOf(invoice.getInvoiceAmount()));
 	}
 
 	public void setCardResponse(CreditCardResponse response) {

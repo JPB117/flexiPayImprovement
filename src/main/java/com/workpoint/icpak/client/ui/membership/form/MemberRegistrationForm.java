@@ -211,7 +211,6 @@ public class MemberRegistrationForm extends Composite {
 
 	public ApplicationFormHeaderDto getApplicationForm() {
 		if (application == null) {
-			// New Application...
 			application = new ApplicationFormHeaderDto();
 		}
 		application.setSurname(txtSurname.getValue());

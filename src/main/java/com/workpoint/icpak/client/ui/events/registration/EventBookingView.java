@@ -67,6 +67,11 @@ public class EventBookingView extends ViewImpl implements
 	HTMLPanel divFooter;
 	@UiField
 	HTMLPanel panelPayment;
+
+	@UiField
+	HTMLPanel panelCancel;
+	@UiField
+	HTMLPanel panelConfirmCancel;
 	@UiField
 	Element divHeaderTopics;
 	@UiField
@@ -144,7 +149,17 @@ public class EventBookingView extends ViewImpl implements
 	@UiField
 	Anchor aBrowseOthers;
 	@UiField
+	ActionLink aCancelLeft;
+	@UiField
+	ActionLink aNo;
+	@UiField
+	ActionLink aConfirmCancel;
+	@UiField
 	HTMLPanel divActionSection;
+	@UiField
+	DivElement divCancellation;
+	@UiField
+	DivElement divWizardFooter;
 
 	int counter = 0;
 	boolean isValid = true;
@@ -169,6 +184,7 @@ public class EventBookingView extends ViewImpl implements
 
 	ColumnConfig titleConfig = new ColumnConfig("title", "Title",
 			DataType.SELECTBASIC, "", "form-control");
+	private String bookingId;
 
 	@Inject
 	public EventBookingView(final Binder binder) {
@@ -282,6 +298,20 @@ public class EventBookingView extends ViewImpl implements
 				accommodationConfig.setEnabled(true);
 				tblDelegates.addRowData(new DataModel());
 				scrollToView();
+			}
+		});
+
+		aCancelLeft.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				showCancellation(true);
+			}
+		});
+
+		aNo.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				showCancellation(false);
 			}
 		});
 
@@ -516,11 +546,13 @@ public class EventBookingView extends ViewImpl implements
 
 	public BookingDto getBooking() {
 		BookingDto dto = new BookingDto();
+		if (bookingId != null) {
+			dto.setRefId(bookingId);
+		}
 		dto.setStatus("");
 		dto.setPaymentStatus(PaymentStatus.NOTPAID);
-		dto.setBookingDate(new Date().getTime());
+		// dto.setBookingDate(new Date().getTime());
 		dto.setContact(getContact());
-		// dto.setCurrency(currency);
 		dto.setDelegates(getDelegates());
 		return dto;
 	}
@@ -598,6 +630,7 @@ public class EventBookingView extends ViewImpl implements
 
 	@Override
 	public void bindBooking(BookingDto booking) {
+		bookingId = booking.getRefId();
 		if (booking.getContact() != null) {
 			txtAddress.setValue(booking.getContact().getAddress());
 			txtCompanyName.setValue(booking.getContact().getCompany());
@@ -777,6 +810,50 @@ public class EventBookingView extends ViewImpl implements
 			divAlert.removeClassName("hide");
 		} else {
 			divAlert.addClassName("hide");
+		}
+	}
+
+	public HasClickHandlers getConfirmCancelButton() {
+		return aConfirmCancel;
+	}
+
+	public void showCancellation(boolean show) {
+		if (show) {
+			panelCancel.removeStyleName("hide");
+			divHeaderTopics.addClassName("hide");
+			divHeaderTopics.removeClassName("visible-lg");
+			divCancellation.addClassName("active");
+			divWizardFooter.addClassName("hide");
+			clearAll();
+			showInlineCancellationButton(false);
+		} else {
+			panelCancel.addStyleName("hide");
+			divCancellation.addClassName("active");
+			divHeaderTopics.removeClassName("hide");
+			divHeaderTopics.addClassName("visible-lg");
+			divCategories.addClassName("active");
+			divWizardFooter.removeClassName("hide");
+			showInlineCancellationButton(true);
+		}
+	}
+
+	@Override
+	public void showInlineCancellationButton(boolean show) {
+		if (show) {
+			aCancelLeft.removeStyleName("hide");
+		} else {
+			aCancelLeft.addStyleName("hide");
+		}
+	}
+
+	@Override
+	public void showCancellationSuccess(boolean show) {
+		if (show) {
+			panelConfirmCancel.removeStyleName("hide");
+			panelCancel.addStyleName("hide");
+		} else {
+			panelConfirmCancel.addStyleName("hide");
+			panelCancel.removeStyleName("hide");
 		}
 	}
 }

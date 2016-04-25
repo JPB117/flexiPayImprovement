@@ -34,8 +34,8 @@ import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.AutoCompleteField;
 import com.workpoint.icpak.client.ui.component.TextField;
 import com.workpoint.icpak.client.ui.component.autocomplete.ServerOracle;
-import com.workpoint.icpak.client.ui.events.ClientDisconnectionEvent.ClientDisconnectionHandler;
 import com.workpoint.icpak.client.ui.events.ClientDisconnectionEvent;
+import com.workpoint.icpak.client.ui.events.ClientDisconnectionEvent.ClientDisconnectionHandler;
 import com.workpoint.icpak.client.ui.events.PaymentCompletedEvent;
 import com.workpoint.icpak.client.ui.events.PaymentCompletedEvent.PaymentCompletedHandler;
 import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
@@ -61,7 +61,7 @@ import com.workpoint.icpak.shared.model.events.EventDto;
 public class EventBookingPresenter extends
 		Presenter<EventBookingPresenter.MyView, EventBookingPresenter.MyProxy>
 		implements ProcessingHandler, ProcessingCompletedHandler,
-		PaymentCompletedHandler,ClientDisconnectionHandler {
+		PaymentCompletedHandler, ClientDisconnectionHandler {
 
 	public interface MyView extends View {
 		boolean isValid();
@@ -111,6 +111,14 @@ public class EventBookingPresenter extends
 		void scrollToPaymentsTop();
 
 		void showClientDisconnection(boolean b);
+
+		HasClickHandlers getConfirmCancelButton();
+
+		void showCancellation(boolean show);
+
+		void showInlineCancellationButton(boolean b);
+
+		void showCancellationSuccess(boolean b);
 
 	}
 
@@ -239,7 +247,7 @@ public class EventBookingPresenter extends
 							submit(dto);
 						}
 					}
-				// We are creating a new booking
+					// We are creating a new booking
 				} else {
 					if (getView().getCounter() == 0) {
 						checkExists(getView().getBooking().getContact()
@@ -267,6 +275,32 @@ public class EventBookingPresenter extends
 				}
 			}
 		});
+
+		getView().getConfirmCancelButton().addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				if (getView().getBooking().getRefId() == null) {
+					Window.alert("No Booking set...");
+				} else {
+					getView().showmask(true);
+					eventsDelegate
+							.withCallback(
+									new AbstractAsyncCallback<BookingDto>() {
+										@Override
+										public void onSuccess(BookingDto result) {
+											if (result != null) {
+												getView()
+														.showCancellationSuccess(
+																true);
+												getView().showmask(false);
+											}
+										}
+									}).bookings(eventId)
+							.cancelBooking(getView().getBooking().getRefId());
+				}
+			}
+		});
+
 	}
 
 	protected void checkExists(String email) {
@@ -312,6 +346,7 @@ public class EventBookingPresenter extends
 							bindBooking(booking);
 						}
 					}).bookings(eventId).create(dto);
+
 		} else {
 			eventsResource
 					.withCallback(new AbstractAsyncCallback<BookingDto>() {
@@ -338,11 +373,11 @@ public class EventBookingPresenter extends
 				UploadContext ctx = new UploadContext("getreport");
 				ctx.setContext("bookingRefId", booking.getRefId());
 				ctx.setAction(UPLOADACTION.GETPROFORMA);
-
 				// ctx.setContext(key, value)
 				Window.open(ctx.toUrl(), "Get Proforma", null);
 			}
 		});
+
 	}
 
 	@Override
@@ -350,6 +385,7 @@ public class EventBookingPresenter extends
 		super.prepareFromRequest(request);
 		eventId = request.getParameter("eventId", "");
 		bookingId = request.getParameter("bookingId", null);
+		String cancel = request.getParameter("cancel", null);
 
 		countriesResource.withCallback(
 				new AbstractAsyncCallback<List<Country>>() {
@@ -393,6 +429,13 @@ public class EventBookingPresenter extends
 		if (bookingId != null) {
 			getView().next();
 			getView().showmask(true);
+
+			getView().showInlineCancellationButton(true);
+
+			// Is Cancel YES
+			if (cancel.equals("yes")) {
+				getView().showCancellation(true);
+			}
 			// Load Accommodations
 			eventsResource
 					.withCallback(
@@ -536,7 +579,7 @@ public class EventBookingPresenter extends
 	public void onPaymentCompleted(PaymentCompletedEvent event) {
 		getView().getANext().removeStyleName("hide");
 	}
-	
+
 	@Override
 	public void onClientDisconnection(ClientDisconnectionEvent event) {
 		getView().showClientDisconnection(true);

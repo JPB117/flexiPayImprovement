@@ -283,7 +283,6 @@ public class MemberRegistrationPresenter
 			public void onSuccess(InvoiceDto invoice) {
 				MemberRegistrationPresenter.this.invoice = invoice;
 				getView().bindInvoice(invoice);
-
 				if (invoice.getDocumentNo() != null) {
 					paymentPresenter.bindTransaction(invoice);
 				}
