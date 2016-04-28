@@ -19,6 +19,8 @@ import com.workpoint.icpak.client.service.AbstractAsyncCallback;
 import com.workpoint.icpak.client.ui.AppManager;
 import com.workpoint.icpak.client.ui.OptionControl;
 import com.workpoint.icpak.client.ui.admin.TabDataExt;
+import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
+import com.workpoint.icpak.client.ui.events.ProcessingEvent;
 import com.workpoint.icpak.client.ui.events.ToggleSideBarEvent;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
 import com.workpoint.icpak.client.ui.security.MemberGateKeeper;
@@ -75,12 +77,13 @@ public class BookingsPresenter
 	private void loadData() {
 		String memberId = AppContext.getCurrentUser().getUser()
 				.getMemberRefId();
-
+		fireEvent(new ProcessingEvent());
 		membersDelegate.withCallback(
 				new AbstractAsyncCallback<List<MemberBookingDto>>() {
 					@Override
 					public void onSuccess(List<MemberBookingDto> result) {
 						getView().bindBookings(result);
+						fireEvent(new ProcessingCompletedEvent());
 					}
 
 					@Override

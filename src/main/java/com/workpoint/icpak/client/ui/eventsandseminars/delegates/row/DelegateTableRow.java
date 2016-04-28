@@ -336,11 +336,6 @@ public class DelegateTableRow extends RowWidget {
 				&& AppContext.isCurrentUserEventEdit()
 				&& delegate.getAttendance() == AttendanceStatus.ATTENDED
 				&& delegate.getIsBookingActive() == 1 ? true : false);
-		//
-		// Window.alert((eventType == EventType.EVENT) + ""
-		// + AppContext.isCurrentUserEventEdit() + ""
-		// + (delegate.getAttendance() == AttendanceStatus.NOTATTENDED)
-		// + "" + delegate.getIsBookingActive() + "");
 
 		boolean isEnrolVisible = (eventType == EventType.COURSE
 				&& AppContext.isCurrentUserEventEdit()
@@ -358,15 +353,10 @@ public class DelegateTableRow extends RowWidget {
 
 	private void setAttendance(AttendanceStatus attendance) {
 		if (attendance != null) {
-			// spnAttendance.setInnerText(attendance.getDisplayName());
 			if (attendance == AttendanceStatus.NOTATTENDED
 					|| attendance == AttendanceStatus.NOTENROLLED) {
-				// spnAttendance.removeClassName("label-success");
-				// spnAttendance.addClassName("label-danger");
 				spnAttendance.setClassName("fa fa-times");
 			} else {
-				// spnAttendance.removeClassName("label-danger");
-				// spnAttendance.addClassName("label-success");
 				spnAttendance.setClassName("fa fa-check");
 			}
 		}
@@ -374,10 +364,7 @@ public class DelegateTableRow extends RowWidget {
 
 	private void setPaymentStatus(PaymentStatus paymentStatus) {
 		if (paymentStatus != null) {
-			// spnPaymentStatus.setInnerText(paymentStatus.name());
 			if (paymentStatus == PaymentStatus.NOTPAID) {
-				// spnPaymentStatus.removeClassName("label-success");
-				// spnPaymentStatus.addClassName("label-danger");
 				spnPaymentStatus.setClassName("fa fa-times");
 			} else {
 				spnPaymentStatus.setClassName("fa fa-check");
@@ -385,25 +372,4 @@ public class DelegateTableRow extends RowWidget {
 		}
 
 	}
-
-	// public void InsertParameters(TextField memberNo, TextField title,
-	// TextField surName, TextField otherNames, TextField email,
-	// Integer rowId) {
-	// divMemberNo.add(memberNo);
-	// divTitle.add(title);
-	// divSurName.add(surName);
-	// divOtherNames.add(otherNames);
-	// divEmail.add(email);
-	// this.rowId = rowId;
-	// }
-	//
-	// public void showAdvancedDetails(boolean show) {
-	// if (show) {
-	// divPaymentStatus.setVisible(true);
-	// divAttendance.setVisible(true);
-	// } else {
-	// divPaymentStatus.setVisible(false);
-	// divAttendance.setVisible(false);
-	// }
-	// }
 }

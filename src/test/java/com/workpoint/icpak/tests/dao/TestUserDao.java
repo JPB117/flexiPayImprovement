@@ -100,24 +100,24 @@ public class TestUserDao extends AbstractDaoTest {
 		helper.getUserByActivationEmail("sammurez@gmail.com");
 	}
 
-	@Ignore
+	@Test
 	public void testActivationMail() {
 		// User userInDb = usersDao.findByUserId("AoencYogwvoPxa7T");
 		// helper.sendActivationEmail2(userInDb);
-		helper.getUserByActivationEmail("tomkim@wira.io");
+		helper.getUserByActivationEmail("kiplbett@gmail.com");
 	}
-	
+
 	@Ignore
-	public void getGender(){
+	public void getGender() {
 		String gender = usersDao.getGender("7087");
-		
-		logger.warn(" GENDER === "+gender);
+
+		logger.warn(" GENDER === " + gender);
 	}
-	
-	@Test
-	public void findUserByMemberNo(){
-		User user  = usersDao.findUserByMemberNo("ASSOC/898");
-		
-		logger.warn(" USER "+ new JSONObject(user));
+
+	// @Test
+	public void findUserByMemberNo() {
+		User user = usersDao.findUserByMemberNo("ASSOC/898");
+
+		logger.warn(" USER " + new JSONObject(user));
 	}
 }

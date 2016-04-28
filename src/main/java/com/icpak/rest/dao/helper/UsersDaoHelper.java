@@ -377,7 +377,7 @@ public class UsersDaoHelper {
 
 	public User getUserByActivationEmail(String userEmail) {
 		User user = dao.findByUserActivationEmail(userEmail, false);
-		if (user != null) {
+		if (user != null && user.getMemberNo() != null) {
 			sendActivationEmail2(user);
 			return user;
 		} else {
@@ -392,7 +392,6 @@ public class UsersDaoHelper {
 
 	private User checkIfUserExistInERP(String userEmail)
 			throws URISyntaxException, ParseException, JSONException {
-
 		logger.error(" ===>>><<<< === Checking for this User In ERP ===>><<<>>== ");
 		final HttpClient httpClient = new DefaultHttpClient();
 		final List<NameValuePair> qparams = new ArrayList<NameValuePair>();
@@ -454,9 +453,7 @@ public class UsersDaoHelper {
 			String phoneNo = jo.getString("Phone No_");
 			String mobileNo = jo.getString("Mobile No_");
 			String idNo = jo.getString("ID No");
-
 			String customerType = null;
-
 			if (jo.getString("Customer Type").equals("PRAC MEMBER")) {
 				customerType = "PRAC_MEMBER";
 			} else if (jo.getString("Customer Type").equals("PRACTICING RT")) {
@@ -473,11 +470,20 @@ public class UsersDaoHelper {
 			Date practisingCertDate = formatter.parse((jo
 					.getString("Practicing Cert Date")));
 
+			/*
+			 * Check if this member exist either by memberNo OR this was a new
+			 * applicant
+			 */
 			User userInDb = dao.findUserByMemberNo(memberNo);
 			Member memberInDb = memberDaoHelper.findByMemberNo(memberNo);
+			if (userInDb == null) {
+				logger.error("Check if this was a new applicant..");
+				userInDb = dao.findByUserActivationEmail(userEmail, false);
+			}
 
 			if (memberInDb != null) {
-				logger.error(" ===>>><<<< === MEMBER IN DB NOT NULL ===>><<<>>== ");
+				logger.error(" ===>>><<<< === MEMBER IN DB NOT NULL - "
+						+ "We are only updating this member record ===>><<<>>== ");
 				memberInDb.setLastUpdate(new Date());
 				memberInDb.setRegistrationDate(dateRegistered);
 				memberInDb.setPractisingCertDate(practisingCertDate);
@@ -488,15 +494,13 @@ public class UsersDaoHelper {
 				if (status == 0) {
 					memberInDb.setMemberShipStatus(MembershipStatus.ACTIVE);
 				}
-
 				if (status == 1) {
 					memberInDb.setMemberShipStatus(MembershipStatus.INACTIVE);
 				}
 
 			} else {
-
-				logger.error(" ===>>><<<< === MEMBER IN DB NULL ===>><<<>>== ");
-
+				logger.error(" ===>>><<<< === MEMBER IN DB NULL - Insert a new memberRecord "
+						+ "+ User Record ===>><<<>>== ");
 				memberInDb = new Member();
 				memberInDb.setLastUpdate(new Date());
 				memberInDb.setRegistrationDate(dateRegistered);
@@ -504,15 +508,12 @@ public class UsersDaoHelper {
 				memberInDb.setPractisingNo(practisingNo);
 				memberInDb.setCustomerType(customerType);
 				memberInDb.setMemberNo(memberNo);
-
 				if (status == 0) {
 					memberInDb.setMemberShipStatus(MembershipStatus.ACTIVE);
 				}
-
 				if (status == 1) {
 					memberInDb.setMemberShipStatus(MembershipStatus.INACTIVE);
 				}
-
 			}
 
 			logger.error(" ===>>><<<< === MEMBER EMAIL ===>><<<>>== " + email);
@@ -520,7 +521,6 @@ public class UsersDaoHelper {
 				logger.error(" ===>>><<<< === USER IN DB NOT NULL ===>><<<>>== ");
 				memberInDb.setUser(userInDb);
 				memberInDb.setUserRefId(userInDb.getRefId());
-
 				userInDb.setAddress(address);
 				userInDb.setMobileNo(mobileNo);
 				userInDb.setPostalCode(postCode);
@@ -536,6 +536,10 @@ public class UsersDaoHelper {
 				userInDb.setEmail(email);
 				userInDb.setUsername(email);
 				userInDb.setFullName(fullNames);
+
+				dao.deleteAllRolesForCurrentUser(userInDb.getId());
+				Role r = new Role("MEMBER");
+				userInDb.addRole(r);
 
 				dao.createUser(userInDb);
 
@@ -561,10 +565,14 @@ public class UsersDaoHelper {
 				userInDb.setUserData(userData);
 				userInDb.setFullName(fullNames);
 
+				Role r = new Role("MEMBER");
+				userInDb.addRole(r);
+
 				dao.createUser(userInDb);
 
 			}
 
+			/* Update Application Form Header */
 			ApplicationFormHeader userFormHeader = new ApplicationFormHeader();
 			userFormHeader.setMobileNo(mobileNo);
 			userFormHeader.setIdNumber(idNo);
@@ -576,9 +584,7 @@ public class UsersDaoHelper {
 			userFormHeader.setContactTelephone(phoneNo);
 			userFormHeader.setApplicationType(ApplicationType
 					.valueOf(customerPostingGroup.toUpperCase()));
-
 			updateUserMemberRecords(userInDb, memberInDb, userFormHeader);
-
 			return userInDb;
 		}
 	}

@@ -11,10 +11,9 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 import com.workpoint.icpak.shared.model.EventStatus;
 import com.workpoint.icpak.shared.model.PaymentStatus;
 
-
 @XmlType
 @XmlAccessorType(XmlAccessType.FIELD)
-public class MemberBookingDto implements Serializable, IsSerializable{
+public class MemberBookingDto implements Serializable, IsSerializable {
 
 	/**
 	 * 
@@ -31,11 +30,12 @@ public class MemberBookingDto implements Serializable, IsSerializable{
 	private String cpdHours;
 	private AttendanceStatus attendance;
 	private PaymentStatus paymentStatus;
+	private Integer bookingStatus;
 	private String accommodation;
-	
+
 	public MemberBookingDto() {
 	}
-	
+
 	public String getEventName() {
 		return eventName;
 	}
@@ -131,5 +131,13 @@ public class MemberBookingDto implements Serializable, IsSerializable{
 	public void setEventRefId(String eventRefId) {
 		this.eventRefId = eventRefId;
 	}
-	
+
+	public Integer getBookingStatus() {
+		return bookingStatus;
+	}
+
+	public void setBookingStatus(Integer bookingStatus) {
+		this.bookingStatus = bookingStatus;
+	}
+
 }

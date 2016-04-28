@@ -44,7 +44,7 @@ public class BookingsDao extends BaseDao {
 	public Booking getBySponsorEmail(String email, Long eventId) {
 		Booking booking = getSingleResultOrNull(getEntityManager()
 				.createQuery(
-						"from Booking u where u.contact.email=:email and event.id=:eventId")
+						"from Booking u where u.contact.email=:email and event.id=:eventId and isActive=1")
 				.setParameter("email", email).setParameter("eventId", eventId));
 		if (booking == null) {
 			logger.debug("Booking for sponsor email:" + email
@@ -327,13 +327,12 @@ public class BookingsDao extends BaseDao {
 				+ "e.venue, "
 				+ "e.cpdhours, "
 				+ "(case when e.enddate<current_date then 'CLOSED' else 'OPEN' end) eventStatus, "
-				+ "d.attendance," + "b.paymentStatus, "
-				+ "t.status trxStatus, " + "a.hotel " + "from event e "
+				+ "d.attendance," + "b.paymentStatus,b.isActive, " + "a.hotel "
+				+ "from event e "
 				+ "inner join booking b on (e.id=b.event_Id)  "
 				+ "inner join delegate d on (d.booking_id=b.id) "
 				+ "left join accommodation a on (a.id=d.accommodationid) "
 				+ "left join invoice i on (i.bookingRefId=b.refId) "
-				+ "left join transaction t on (t.invoiceRef=i.refId) "
 				+ "where d.memberRefId=:memberRefId";
 
 		List<Object[]> rows = getResultList(getEntityManager()
@@ -362,13 +361,9 @@ public class BookingsDao extends BaseDao {
 			Integer attendance = (value = row[i++]) == null ? null
 					: ((Number) value).intValue();
 			Integer paymentStatus = (value = row[i++]) == null ? null
-					: ((Number) value).intValue();// Should
-													// remove
-													// this
-													// field
-			String trxStatus = (value = row[i++]) == null ? null : value
-					.toString();// From
-								// Transactions
+					: ((Number) value).intValue();
+			Integer bookingStatus = (value = row[i++]) == null ? null
+					: ((Number) value).intValue();
 			String hotel = (value = row[i++]) == null ? null : value.toString();
 
 			MemberBookingDto dto = new MemberBookingDto();
@@ -383,11 +378,9 @@ public class BookingsDao extends BaseDao {
 			dto.setEventRefId(eventRefId);
 			dto.setEventStatus(EventStatus.valueOf(eventStatus));
 			dto.setLocation(venue);
-			// dto.setPaymentStatus(PaymentStatus.PAID.ordinal()==paymentStatus?
-			// PaymentStatus.PAID: PaymentStatus.NOTPAID);
-			dto.setPaymentStatus(trxStatus == null ? PaymentStatus.NOTPAID
-					: PaymentStatus.valueOf(trxStatus));
-
+			dto.setPaymentStatus(PaymentStatus.PAID.ordinal() == paymentStatus ? PaymentStatus.PAID
+					: PaymentStatus.NOTPAID);
+			dto.setBookingStatus(bookingStatus);
 			dto.setStartDate(startDate);
 			memberEvents.add(dto);
 		}
