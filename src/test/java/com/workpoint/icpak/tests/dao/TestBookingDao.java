@@ -67,10 +67,10 @@ public class TestBookingDao extends AbstractDaoTest {
 		bookingsHelper.sendProInvoice("C6lcgHyPYUDCcUBi");
 	}
 
-//	@Test
+	// @Test
 	public void testGetDelegate() {
-		List<DelegateDto> delegates = bookingsHelper.getAllDelegates(null, "W1L4UsrlOiHvkH6V",
-				0, 10, "", "", "");
+		List<DelegateDto> delegates = bookingsHelper.getAllDelegates(null,
+				"W1L4UsrlOiHvkH6V", 0, 10, "", "", "");
 
 		for (DelegateDto del : delegates) {
 			System.err.println("Booking Ref>>" + del.getBookingRefId() + " "
@@ -220,7 +220,7 @@ public class TestBookingDao extends AbstractDaoTest {
 		System.err.println(eventDao.getSearchEventCount("Fin"));
 	}
 
-	@Test
+	// @Test
 	public void testUpdate() {
 		Delegate delInDb = eventDao.findByRefId("PBm588rZRt5eaShX",
 				Delegate.class);
@@ -251,5 +251,10 @@ public class TestBookingDao extends AbstractDaoTest {
 	// @Test
 	public void testSyncWithServer() {
 		bookingsHelper.syncWithServer("dQdcmmGqPuw7wVzr");
+	}
+
+	@Test
+	public void removeDoubleBookings() {
+		bookingsHelper.correctDoubleBookings("IWqduDqhOKXb9nxq");
 	}
 }

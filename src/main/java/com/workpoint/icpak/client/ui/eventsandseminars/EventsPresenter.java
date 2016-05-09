@@ -102,7 +102,7 @@ public class EventsPresenter extends
 	private String delegateSearchTerm = "";
 	protected String eventSearchTerm = "";
 	private static String accomodationRefId = "";
-	private static String bookingStatus = "";
+	private static String bookingStatus = "1";
 	private PlaceManager placeManager;
 	private ResourceDelegate<EventsResource> eventsDelegate;
 	private String eventId;
@@ -254,6 +254,7 @@ public class EventsPresenter extends
 							delegateSearchTerm);
 				}
 			}).bookings(eventId).getCount();
+
 			eventsDelegate.withCallback(new AbstractAsyncCallback<EventDto>() {
 				@Override
 				public void onSuccess(EventDto event) {
@@ -292,6 +293,7 @@ public class EventsPresenter extends
 
 	protected void loadDelegates(int offset, int limit, String searchTerm) {
 		fireEvent(new ProcessingEvent());
+		// Window.alert(">>" + bookingStatus);
 		eventsDelegate
 				.withCallback(new AbstractAsyncCallback<List<DelegateDto>>() {
 					@Override

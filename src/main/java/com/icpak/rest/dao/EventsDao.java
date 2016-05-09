@@ -124,14 +124,13 @@ public class EventsDao extends BaseDao {
 	}
 
 	public int getDelegateCount(String eventId) {
-
 		Number count = getSingleResultOrNull(getEntityManager()
 				.createNativeQuery(
 						"select count(d.refId) from"
 								+ " delegate d inner join booking b on (d.booking_id=b.id)"
-								+ " inner join event e on (e.id=b.event_id) where e.refId=:eventId")
-				.setParameter("eventId", eventId));
-
+								+ " inner join event e on (e.id=b.event_id) where e.refId=:eventId"
+								+ " and b.isActive=1").setParameter("eventId",
+						eventId));
 		return count.intValue();
 	}
 

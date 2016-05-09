@@ -263,7 +263,7 @@ public class GetReport extends HttpServlet {
 			docType = req.getParameter("docType");
 		}
 		List<DelegateDto> delegateDtos = bookingsDaoHelper.getAllDelegates("",
-				eventRefId, null, 10000, "", "", "", true);
+				eventRefId, null, 10000, "", "", "1", true);
 		EventDto event = eventDaoHelper.getEventById(eventRefId);
 		GetDelegatesReport report = new GetDelegatesReport(delegateDtos,
 				docType, event.getName());
@@ -928,12 +928,11 @@ public class GetReport extends HttpServlet {
 			for (CPD cpdValue : hashTreeValues) {
 				if (cpdValue.getCategory() == null) {
 				} else if (cpdValue.getCategory().toString()
-						.equals("CATEGORY_A")) {
-					totalStructured = totalStructured + cpdValue.getCpdHours();
-				} else if (cpdValue.getCategory().toString()
 						.equals("CATEGORY_D")) {
 					totalUnstructured = totalUnstructured
 							+ cpdValue.getCpdHours();
+				} else {
+					totalStructured = totalStructured + cpdValue.getCpdHours();
 				}
 			}
 

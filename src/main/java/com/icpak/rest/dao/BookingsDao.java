@@ -450,6 +450,32 @@ public class BookingsDao extends BaseDao {
 				accomodationRefId, bookingStatus);
 	}
 
+	public List<String> correctDoubleBookings(String eventRefId) {
+		String sql = "SELECT d.memberRegistrationNo,COUNT(memberRegistrationNo) FROM delegate d "
+				+ "LEFT JOIN booking b ON (d.booking_id = b.id) WHERE b.event_id ="
+				+ " (SELECT id FROM event WHERE refId = :eventRefId)"
+				+ " GROUP BY d.memberRegistrationNo HAVING (COUNT(d.memberRegistrationNo)> 1);";
+
+		Query query = getEntityManager().createNativeQuery(sql).setParameter(
+				"eventRefId", eventRefId);
+
+		List<Object[]> rows = getResultList(query);
+		List<String> allMembers = new ArrayList<>();
+
+		for (Object o[] : rows) {
+			int i = 0;
+			Object value = null;
+			String memberRegistrationNo = (value = o[i++]) == null ? null
+					: value.toString();
+			Integer count = (value = o[i++]) == null ? null
+					: ((BigInteger) value).intValue();
+			logger.info(">>memberNo::" + memberRegistrationNo + ">>count::"
+					+ count);
+			allMembers.add(memberRegistrationNo);
+		}
+		return allMembers;
+	}
+
 	/*
 	 * Add param isByQrCode - If you want to only get results by ONLY QR CODE
 	 */
@@ -457,6 +483,14 @@ public class BookingsDao extends BaseDao {
 	public List<DelegateDto> getAllDelegates(String passedRefId,
 			Integer offset, Integer limit, String searchTerm,
 			boolean isByQrCode, String accomodationRefId, String bookingStatus) {
+		return getAllDelegates(passedRefId, offset, limit, searchTerm,
+				isByQrCode, accomodationRefId, bookingStatus, null);
+	}
+
+	public List<DelegateDto> getAllDelegates(String passedRefId,
+			Integer offset, Integer limit, String searchTerm,
+			boolean isByQrCode, String accomodationRefId, String bookingStatus,
+			String memberRegistrationNo) {
 		logger.error("==getting delegate for this event===>" + passedRefId);
 		logger.error("==Is search limitted to only QR Code==>" + isByQrCode);
 		logger.error("==Search Term ==>>>>" + searchTerm);
@@ -480,6 +514,10 @@ public class BookingsDao extends BaseDao {
 
 		if (bookingStatus != null && !bookingStatus.isEmpty()) {
 			sql = sql.concat(" and b.isActive=:bookingStatus");
+		}
+		if (memberRegistrationNo != null && !memberRegistrationNo.isEmpty()) {
+			sql = sql
+					.concat(" and d.memberRegistrationNo=:memberRegistrationNo");
 		}
 
 		if (searchTerm != null && !searchTerm.isEmpty()) {
@@ -515,6 +553,10 @@ public class BookingsDao extends BaseDao {
 		}
 		if (bookingStatus != null && !bookingStatus.isEmpty()) {
 			query.setParameter("bookingStatus", bookingStatus);
+		}
+
+		if (memberRegistrationNo != null && !memberRegistrationNo.isEmpty()) {
+			query.setParameter("memberRegistrationNo", memberRegistrationNo);
 		}
 
 		List<Object[]> rows = getResultList(query, offset, limit);

@@ -124,6 +124,8 @@ public class BookingsDaoHelper {
 
 	private Booking booking;
 
+	private boolean hasPaid = false;
+
 	public List<BookingDto> getAllBookings(String uriInfo, String eventId,
 			Integer offset, Integer limit, String searchTerm) {
 		List<Booking> list = null;
@@ -949,6 +951,49 @@ public class BookingsDaoHelper {
 		return null;
 	}
 
+	public void correctDoubleBookings(String eventRefId) {
+		// All MemberNos
+		List<DelegateDto> delegates = new ArrayList<>();
+		List<String> memberNos = dao.correctDoubleBookings(eventRefId);
+		for (String memberNo : memberNos) {
+			List<DelegateDto> dels = dao.getAllDelegates(eventRefId,
+					new Integer(0), 10000, null, false, null, null, memberNo);
+			for (DelegateDto d : dels) {
+				delegates.add(d);
+			}
+		}
+
+		if (delegates.size() == 0) {
+			System.err.println("Problem:There is no double booking....");
+		}
+
+		List<DelegateDto> toBeUpdated = new ArrayList<>();
+		// Cancel all except the ones which are paid
+		for (DelegateDto d : delegates) {
+			if (d.getPaymentStatus() == PaymentStatus.PAID) {
+				hasPaid = true;
+			} else {
+				toBeUpdated.add(d);
+				System.err.println("To be Cancelled>>>" + d.getErn() + " >>"
+						+ d.getPaymentStatus());
+			}
+		}
+
+		// Cancel All except the first one in the List
+		if (!hasPaid) {
+			System.err.println("Cancel all except >>"
+					+ delegates.get(0).getErn());
+			toBeUpdated.remove(0);
+		}
+
+		System.err.println("To be updated Size" + toBeUpdated.size());
+		for (DelegateDto d : toBeUpdated) {
+			System.err.println("Cancelling bookingRefId>>"
+					+ d.getBookingRefId());
+			cancelBooking(d.getBookingRefId());
+		}
+	}
+
 	public BookingDto checkEmailExists(String email, String eventRefId) {
 		Event event = dao.findByRefId(eventRefId, Event.class);
 		Booking booking = dao.getBySponsorEmail(email, event.getId());
@@ -1449,5 +1494,9 @@ public class BookingsDaoHelper {
 			System.err.println("Error at Backuprestore>>" + ex.getMessage());
 		}
 		return null;
+	}
+
+	public void removeDoubleBooking() {
+
 	}
 }

@@ -538,7 +538,7 @@ public class UsersDaoHelper {
 				userInDb.setFullName(fullNames);
 
 				dao.deleteAllRolesForCurrentUser(userInDb.getId());
-				Role r = new Role("MEMBER");
+				Role r = roleDao.getByName("MEMBER");
 				userInDb.addRole(r);
 
 				dao.createUser(userInDb);
@@ -565,7 +565,10 @@ public class UsersDaoHelper {
 				userInDb.setUserData(userData);
 				userInDb.setFullName(fullNames);
 
-				Role r = new Role("MEMBER");
+				Role r = roleDao.getByName("MEMBER");
+				if (r == null) {
+					logger.error(">>>>>>>>>>>>>>>>Role cannot be found...!<<<<<<<<");
+				}
 				userInDb.addRole(r);
 
 				dao.createUser(userInDb);
@@ -601,7 +604,6 @@ public class UsersDaoHelper {
 				.getApplicationByUserRef(userInDb.getRefId());
 
 		if (userFormHeaderInDb != null) {
-
 			userFormHeaderInDb.setMobileNo(userForm.getMemberNo());
 			userFormHeaderInDb.setIdNumber(userForm.getIdNumber());
 			userFormHeaderInDb.setEmail(userForm.getEmail());
@@ -614,7 +616,6 @@ public class UsersDaoHelper {
 					.getContactTelephone());
 			userFormHeaderInDb
 					.setApplicationType(userForm.getApplicationType());
-
 			dao.save(userFormHeaderInDb);
 		} else {
 			User user = dao.findUserByEmail(userInDb.getEmail());

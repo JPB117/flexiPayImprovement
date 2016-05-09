@@ -104,7 +104,10 @@ public class TestUserDao extends AbstractDaoTest {
 	public void testActivationMail() {
 		// User userInDb = usersDao.findByUserId("AoencYogwvoPxa7T");
 		// helper.sendActivationEmail2(userInDb);
-		helper.getUserByActivationEmail("kiplbett@gmail.com");
+		// helper.getUserByActivationEmail("kiplbett@gmail.com");
+
+		Role r = roleDao.getByName("MEMBER");
+		System.err.println(r.getRefId());
 	}
 
 	@Ignore
