@@ -1000,6 +1000,7 @@ public class BookingsDaoHelper {
 	}
 
 	List<String> activeRefIds = new ArrayList<>();
+
 	public boolean checkIfAlreadyCancelled(String passedRefId) {
 		for (String bookingRefId : activeRefIds) {
 			if (bookingRefId.trim().contains(passedRefId))
@@ -1125,7 +1126,8 @@ public class BookingsDaoHelper {
 		/* Updating Booking */
 		if (booking != null) {
 			if ((delegateDto.getPaymentStatus() == PaymentStatus.PAID)
-					|| (delegateDto.getPaymentStatus() == PaymentStatus.NOTPAID)) {
+					|| (delegateDto.getPaymentStatus() == PaymentStatus.NOTPAID)
+					|| (delegateDto.getPaymentStatus() == PaymentStatus.Credit)) {
 				booking.setPaymentStatus(delegateDto.getPaymentStatus());
 				dao.save(booking);
 

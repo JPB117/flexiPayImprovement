@@ -366,7 +366,11 @@ public class DelegateTableRow extends RowWidget {
 		if (paymentStatus != null) {
 			if (paymentStatus == PaymentStatus.NOTPAID) {
 				spnPaymentStatus.setClassName("fa fa-times");
-			} else {
+			} else if (paymentStatus == PaymentStatus.Credit) {
+				spnPaymentStatus.setClassName("fa fa-check");
+				spnPaymentStatus
+						.setInnerHTML("<br/><span class='text-muted' style='font-size:11px;'>Credit</span>");
+			} else if (paymentStatus == PaymentStatus.PAID) {
 				spnPaymentStatus.setClassName("fa fa-check");
 			}
 		}

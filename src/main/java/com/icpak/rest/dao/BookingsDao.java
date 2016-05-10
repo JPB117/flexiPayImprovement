@@ -632,8 +632,10 @@ public class BookingsDao extends BaseDao {
 			delegateDto.setInvoiceNo(invoiceNo);
 			if (paymentStatus == 1) {
 				delegateDto.setPaymentStatus(PaymentStatus.PAID);
-			} else {
+			} else if (paymentStatus == 0) {
 				delegateDto.setPaymentStatus(PaymentStatus.NOTPAID);
+			} else if (paymentStatus == 2) {
+				delegateDto.setPaymentStatus(PaymentStatus.Credit);
 			}
 
 			if (attendance == 0) {

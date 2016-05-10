@@ -31,7 +31,7 @@
 
 			<div class="form-group">
 				<div class="row">
-					<div class="col-xs-6">
+					<div class="col-xs-6 hide">
 						<g:CheckBox ui:field="chckIsCredit">Is Credit?</g:CheckBox>
 					</div>
 
