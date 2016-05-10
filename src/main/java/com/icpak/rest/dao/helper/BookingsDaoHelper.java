@@ -124,8 +124,6 @@ public class BookingsDaoHelper {
 
 	private Booking booking;
 
-	private boolean hasPaid = false;
-
 	public List<BookingDto> getAllBookings(String uriInfo, String eventId,
 			Integer offset, Integer limit, String searchTerm) {
 		List<Booking> list = null;
@@ -953,45 +951,61 @@ public class BookingsDaoHelper {
 
 	public void correctDoubleBookings(String eventRefId) {
 		// All MemberNos
-		List<DelegateDto> delegates = new ArrayList<>();
 		List<String> memberNos = dao.correctDoubleBookings(eventRefId);
 		for (String memberNo : memberNos) {
+			System.err.println("Correcting booking for memberNo::" + memberNo);
 			List<DelegateDto> dels = dao.getAllDelegates(eventRefId,
 					new Integer(0), 10000, null, false, null, null, memberNo);
+			if (dels.size() == 0) {
+				System.err.println("Problem:There is no double booking....");
+			}
+
+			List<DelegateDto> toBeUpdated = new ArrayList<>();
+			boolean hasPaid = false;
+			// Cancel all except the ones which are paid
 			for (DelegateDto d : dels) {
-				delegates.add(d);
+				if (d.getPaymentStatus() == PaymentStatus.PAID) {
+					hasPaid = true;
+				} else {
+					toBeUpdated.add(d);
+					System.err.println("To be Cancelled>>>" + d.getErn()
+							+ "bookingRefId>>>" + d.getBookingRefId() + " >>"
+							+ d.getPaymentStatus());
+				}
+			}
+
+			// Cancel All except the first one in the List
+			if (!hasPaid) {
+				System.err.println("Cancel all except >>"
+						+ " >>>bookingRefId>>" + dels.get(0).getBookingRefId()
+						+ dels.get(0).getErn());
+				activeRefIds.add(dels.get(0).getBookingRefId());
+				toBeUpdated.remove(0);
+			}
+
+			System.err.println("To be updated Size::" + toBeUpdated.size());
+			for (DelegateDto d : toBeUpdated) {
+				if (!checkIfAlreadyCancelled(d.getBookingRefId())) {
+					System.err.println("Cancelling bookingRefId>>"
+							+ d.getBookingRefId() + " ERN>>" + d.getErn());
+					cancelBooking(d.getBookingRefId());
+				} else {
+					System.err
+							.println("This booking is not to be cancelled "
+									+ "because it exist in the ones marked for active:::"
+									+ d.getBookingRefId());
+				}
 			}
 		}
+	}
 
-		if (delegates.size() == 0) {
-			System.err.println("Problem:There is no double booking....");
+	List<String> activeRefIds = new ArrayList<>();
+	public boolean checkIfAlreadyCancelled(String passedRefId) {
+		for (String bookingRefId : activeRefIds) {
+			if (bookingRefId.trim().contains(passedRefId))
+				return true;
 		}
-
-		List<DelegateDto> toBeUpdated = new ArrayList<>();
-		// Cancel all except the ones which are paid
-		for (DelegateDto d : delegates) {
-			if (d.getPaymentStatus() == PaymentStatus.PAID) {
-				hasPaid = true;
-			} else {
-				toBeUpdated.add(d);
-				System.err.println("To be Cancelled>>>" + d.getErn() + " >>"
-						+ d.getPaymentStatus());
-			}
-		}
-
-		// Cancel All except the first one in the List
-		if (!hasPaid) {
-			System.err.println("Cancel all except >>"
-					+ delegates.get(0).getErn());
-			toBeUpdated.remove(0);
-		}
-
-		System.err.println("To be updated Size" + toBeUpdated.size());
-		for (DelegateDto d : toBeUpdated) {
-			System.err.println("Cancelling bookingRefId>>"
-					+ d.getBookingRefId());
-			cancelBooking(d.getBookingRefId());
-		}
+		return false;
 	}
 
 	public BookingDto checkEmailExists(String email, String eventRefId) {

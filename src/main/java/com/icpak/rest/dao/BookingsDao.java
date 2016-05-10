@@ -454,6 +454,7 @@ public class BookingsDao extends BaseDao {
 		String sql = "SELECT d.memberRegistrationNo,COUNT(memberRegistrationNo) FROM delegate d "
 				+ "LEFT JOIN booking b ON (d.booking_id = b.id) WHERE b.event_id ="
 				+ " (SELECT id FROM event WHERE refId = :eventRefId)"
+				// + " and b.`E-Mail`='anne.njagi@icpak.com'"
 				+ " GROUP BY d.memberRegistrationNo HAVING (COUNT(d.memberRegistrationNo)> 1);";
 
 		Query query = getEntityManager().createNativeQuery(sql).setParameter(
@@ -469,8 +470,8 @@ public class BookingsDao extends BaseDao {
 					: value.toString();
 			Integer count = (value = o[i++]) == null ? null
 					: ((BigInteger) value).intValue();
-			logger.info(">>memberNo::" + memberRegistrationNo + ">>count::"
-					+ count);
+			System.err.println(">>memberNo::" + memberRegistrationNo
+					+ ">>count::" + count);
 			allMembers.add(memberRegistrationNo);
 		}
 		return allMembers;
