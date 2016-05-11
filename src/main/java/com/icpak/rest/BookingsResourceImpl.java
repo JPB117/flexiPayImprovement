@@ -169,4 +169,9 @@ public class BookingsResourceImpl implements BookingsResource {
 		// helper.sendProInvoice(newEmail);
 	}
 
+	public Integer getBookingCount(String searchTerm, String accomodationRefId,
+			String bookingStatus) {
+		return helper.getDelegatesCount(eventId, searchTerm, accomodationRefId,
+				bookingStatus);
+	}
 }

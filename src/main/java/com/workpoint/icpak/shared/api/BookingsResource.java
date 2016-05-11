@@ -56,6 +56,12 @@ public interface BookingsResource extends BaseResource {
 	public BookingDto update(@PathParam("bookingId") String bookingId,
 			BookingDto booking);
 	
+	@GET
+	@Path("/filteredcount")
+	public Integer getBookingCount(
+	@QueryParam("searchTerm") String searchTerm,
+	@QueryParam("accomodationRefId") String accomodationRefId,
+	@QueryParam("bookingStatus") String bookingStatus);
 	
 	@POST
 	@Path("/cancel/{bookingId}")

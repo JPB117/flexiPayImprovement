@@ -400,12 +400,12 @@ public class BookingsDao extends BaseDao {
 
 	public int getDelegateCount(String eventId, String searchTerm,
 			String accomodationRefId, String bookingStatus) {
-
 		Number number = null;
 		String sql = "select count(*) "
 				+ "from delegate d inner join booking b on (d.booking_id=b.id) "
 				+ "inner join event e on (b.event_id=e.id) "
-				+ "left join accommodation a on (a.eventId=e.id) "
+				+ "inner join invoice i on(b.refId=i.bookingRefId)"
+				+ "left join accommodation a on (d.accommodationId=a.id) "
 				+ "where e.refId=:eventRefId";
 
 		if (accomodationRefId != null && !accomodationRefId.isEmpty()) {
@@ -415,7 +415,6 @@ public class BookingsDao extends BaseDao {
 		if (bookingStatus != null && !bookingStatus.isEmpty()) {
 			sql = sql.concat(" and b.isActive=:bookingStatus");
 		}
-
 		if (searchTerm != null && !searchTerm.isEmpty()) {
 			sql = sql.concat(" and "
 					+ "(d.memberRegistrationNo like :searchTerm or "
@@ -424,11 +423,13 @@ public class BookingsDao extends BaseDao {
 					+ "d.ern like :searchTerm or "
 					+ "b.`E-mail` like :searchTerm or "
 					+ "b.company like :searchTerm or "
-					+ "b.Contact like :searchTerm)");
+					+ "b.Contact like :searchTerm or "
+					+ "i.documentNo like :searchTerm)");
 		}
-
+		sql = sql.concat(" order by d.created DESC");
 		Query query = getEntityManager().createNativeQuery(sql).setParameter(
 				"eventRefId", eventId);
+		/* Parameters */
 		if (searchTerm != null && !searchTerm.isEmpty()) {
 			query.setParameter("searchTerm", "%" + searchTerm + "%");
 		}

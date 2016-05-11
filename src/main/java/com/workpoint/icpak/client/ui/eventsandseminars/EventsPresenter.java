@@ -243,17 +243,22 @@ public class EventsPresenter extends
 	private void loadData() {
 		fireEvent(new ProcessingEvent());
 		if (eventId != null) {
-			eventsDelegate.withCallback(new AbstractAsyncCallback<Integer>() {
-				@Override
-				public void onSuccess(Integer aCount) {
-					PagingPanel panel = getView().getDelegatesPagingPanel();
-					panel.setTotal(aCount);
-					PagingConfig config = panel.getConfig();
-					config.setPAGE_LIMIT(100);
-					loadDelegates(config.getOffset(), config.getLimit(),
-							delegateSearchTerm);
-				}
-			}).bookings(eventId).getCount();
+			eventsDelegate
+					.withCallback(new AbstractAsyncCallback<Integer>() {
+						@Override
+						public void onSuccess(Integer aCount) {
+							PagingPanel panel = getView()
+									.getDelegatesPagingPanel();
+							panel.setTotal(aCount);
+							PagingConfig config = panel.getConfig();
+							loadDelegates(config.getOffset(),
+									config.getLimit(), getView()
+											.getSearchValue());
+						}
+					})
+					.bookings(eventId)
+					.getBookingCount(getView().getSearchValue(),
+							accomodationRefId, bookingStatus);
 
 			eventsDelegate.withCallback(new AbstractAsyncCallback<EventDto>() {
 				@Override
