@@ -34,7 +34,10 @@ public class DelegateDto extends SerializableObj {
 	private String bookingRefId;
 	private Integer isBookingActive;
 	private String eventRefId;
-	private PaymentStatus paymentStatus;
+	// PaymentStatus for the booking -Updated by Online Payment methods
+	private PaymentStatus bookingPaymentStatus;
+	// PaymentStatus for the booking -Updated by Online Payment methods
+	private PaymentStatus delegatePaymentStatus;
 	public String courseId;
 	private String ern;
 	private String hotel;
@@ -45,8 +48,10 @@ public class DelegateDto extends SerializableObj {
 	private int isCredit;
 	private String contact;
 	private Date bookingDate;
+	private Date lastUpdateDate;
 	private String memberQrCode;
 	private String invoiceNo;
+	private String updatedBy;
 
 	public String getReceiptNo() {
 		return receiptNo;
@@ -281,12 +286,12 @@ public class DelegateDto extends SerializableObj {
 		this.transaction = transaction;
 	}
 
-	public PaymentStatus getPaymentStatus() {
-		return paymentStatus;
+	public PaymentStatus getBookingPaymentStatus() {
+		return bookingPaymentStatus;
 	}
 
-	public void setPaymentStatus(PaymentStatus paymentStatus) {
-		this.paymentStatus = paymentStatus;
+	public void setBookingPaymentStatus(PaymentStatus paymentStatus) {
+		this.bookingPaymentStatus = paymentStatus;
 	}
 
 	public Date getCreatedDate() {
@@ -343,6 +348,30 @@ public class DelegateDto extends SerializableObj {
 
 	public void setIsBookingActive(Integer isBookingActive) {
 		this.isBookingActive = isBookingActive;
+	}
+
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
+
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+
+	public PaymentStatus getDelegatePaymentStatus() {
+		return delegatePaymentStatus;
+	}
+
+	public void setDelegatePaymentStatus(PaymentStatus delegatePaymentStatus) {
+		this.delegatePaymentStatus = delegatePaymentStatus;
+	}
+
+	public Date getLastUpdateDate() {
+		return lastUpdateDate;
+	}
+
+	public void setLastUpdateDate(Date lastUpdateDate) {
+		this.lastUpdateDate = lastUpdateDate;
 	}
 
 }

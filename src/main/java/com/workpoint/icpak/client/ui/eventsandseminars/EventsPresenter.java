@@ -375,20 +375,21 @@ public class EventsPresenter extends
 	private void save(final DelegateDto model) {
 		assert model.getBookingId() != null && model.getEventRefId() != null;
 		fireEvent(new ProcessingEvent());
-		eventsDelegate
-				.withCallback(new AbstractAsyncCallback<DelegateDto>() {
-					@Override
-					public void onSuccess(DelegateDto result) {
-						fireEvent(new ProcessingCompletedEvent());
-						fireEvent(new AfterSaveEvent(result.getFullName()
-								+ "'s has been marked as "
-								+ result.getPaymentStatus().getDisplayName()
-								+ " and "
-								+ result.getAttendance().getDisplayName()));
-						delegateSearchTerm = result.getContactEmail();
-						loadData();
-					}
-				}).bookings(eventId)
+		eventsDelegate.withCallback(new AbstractAsyncCallback<DelegateDto>() {
+			@Override
+			public void onSuccess(DelegateDto result) {
+				fireEvent(new ProcessingCompletedEvent());
+				// fireEvent(new AfterSaveEvent(result.getFullName()
+				// + "'s has been marked as "
+				// + result.getBookingPaymentStatus().getDisplayName()
+				// + " and "
+				// + result.getAttendance().getDisplayName()));
+
+				fireEvent(new AfterSaveEvent("Changes successfully saved!"));
+				delegateSearchTerm = result.getContactEmail();
+				loadData();
+			}
+		}).bookings(eventId)
 				.updateDelegate(model.getBookingId(), model.getRefId(), model);
 	}
 

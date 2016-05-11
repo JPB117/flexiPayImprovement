@@ -367,7 +367,7 @@ public class GetDelegatesReport {
 
 			// ,"PAID","RECEIPT" ,"LPO NO", "CREDIT","CLEARANCE NO","ATTEND"}
 			if (j == 12) {
-				cell.setCellValue(detail.getPaymentStatus().getDisplayName());
+				cell.setCellValue(detail.getBookingPaymentStatus().getDisplayName());
 			}
 
 			if (j == 13) {

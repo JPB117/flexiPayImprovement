@@ -502,11 +502,12 @@ public class BookingsDao extends BaseDao {
 				+ "d.refId,d.memberRefId,d.memberRegistrationNo,d.ern,"
 				+ "d.title,d.otherNames,d.fullName,d.phoneNumber,a.hotel,b.paymentStatus,"
 				+ "d.attendance,d.surname,d.email,e.refid,d.booking_id,"
-				+ "d.receiptNo,d.lpoNo,d.isCredit,d.clearanceNo,b.isActive,i.documentNo "
+				+ "d.receiptNo,d.lpoNo,d.isCredit,d.clearanceNo,b.isActive,i.documentNo,"
+				+ "d.paymentStatus as delegatePaymentStatus,d.updated,d.updatedBy "
 				+ "from delegate d inner join booking b on (d.booking_id=b.id) "
 				+ "inner join event e on (b.event_id=e.id) "
-				+ "left join accommodation a on (d.accommodationId=a.id) "
 				+ "inner join invoice i on(b.refId=i.bookingRefId)"
+				+ "left join accommodation a on (d.accommodationId=a.id) "
 				+ "where e.refId=:eventRefId";
 
 		if (accomodationRefId != null && !accomodationRefId.isEmpty()) {
@@ -610,6 +611,12 @@ public class BookingsDao extends BaseDao {
 					: (Integer) value;
 			String invoiceNo = (value = o[i++]) == null ? null : value
 					.toString();
+			String delegatePaymentStatus = (value = o[i++]) == null ? null
+					: value.toString();
+			Date lastUpdateDate = (value = o[i++]) == null ? null
+					: (Date) value;
+			String updatedBy = (value = o[i++]) == null ? null : value
+					.toString();
 
 			DelegateDto delegateDto = new DelegateDto();
 			delegateDto.setCreatedDate(bookingDate);
@@ -630,14 +637,20 @@ public class BookingsDao extends BaseDao {
 			delegateDto.setBookingId(bookingId.toString());
 			delegateDto.setIsBookingActive(isBookingActive);
 			delegateDto.setInvoiceNo(invoiceNo);
-			if (paymentStatus == 1) {
-				delegateDto.setPaymentStatus(PaymentStatus.PAID);
-			} else if (paymentStatus == 0) {
-				delegateDto.setPaymentStatus(PaymentStatus.NOTPAID);
-			} else if (paymentStatus == 2) {
-				delegateDto.setPaymentStatus(PaymentStatus.Credit);
-			}
+			delegateDto.setLastUpdateDate(lastUpdateDate);
+			delegateDto.setUpdatedBy(updatedBy);
 
+			if (paymentStatus == 1) {
+				delegateDto.setBookingPaymentStatus(PaymentStatus.PAID);
+			} else if (paymentStatus == 0) {
+				delegateDto.setBookingPaymentStatus(PaymentStatus.NOTPAID);
+			} else if (paymentStatus == 2) {
+				delegateDto.setBookingPaymentStatus(PaymentStatus.Credit);
+			}
+			if (delegatePaymentStatus != null) {
+				delegateDto.setDelegatePaymentStatus(PaymentStatus
+						.valueOf(delegatePaymentStatus));
+			}
 			if (attendance == 0) {
 				delegateDto.setAttendance(AttendanceStatus.ATTENDED);
 			}

@@ -229,7 +229,7 @@ public class TestBookingDao extends AbstractDaoTest {
 		delegate.setLpoNo("LPO-1");
 		delegate.setReceiptNo("RCPT-1");
 		delegate.setIsCredit(1);
-		delegate.setPaymentStatus(PaymentStatus.PAID);
+		delegate.setBookingPaymentStatus(PaymentStatus.PAID);
 		bookingsHelper.updateDelegate(delegate.getRefId(), delegate);
 	}
 

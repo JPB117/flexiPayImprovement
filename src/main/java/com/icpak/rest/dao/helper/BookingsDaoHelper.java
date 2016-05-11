@@ -162,14 +162,17 @@ public class BookingsDaoHelper {
 					logger.info("Updating phoneNumber for::"
 							+ del.getMemberNo() + "::" + del.getFullName());
 					User u = userDao.findUserByMemberNo(del.getMemberNo());
-					if (u.getPhoneNumber() != null
-							&& !(u.getPhoneNumber().isEmpty())) {
-						del.setDelegatePhoneNumber(u.getPhoneNumber());
-						// Save this Information
-						Delegate d = new Delegate();
-						d.setPhoneNumber(u.getPhoneNumber());
-						d.copyFrom(del);
-						dao.save(d);
+
+					if (u != null) {
+						if (u.getPhoneNumber() != null
+								&& !(u.getPhoneNumber().isEmpty())) {
+							del.setDelegatePhoneNumber(u.getPhoneNumber());
+							// Save this Information
+							Delegate d = new Delegate();
+							d.setPhoneNumber(u.getPhoneNumber());
+							d.copyFrom(del);
+							dao.save(d);
+						}
 					}
 				}
 			}
@@ -964,13 +967,13 @@ public class BookingsDaoHelper {
 			boolean hasPaid = false;
 			// Cancel all except the ones which are paid
 			for (DelegateDto d : dels) {
-				if (d.getPaymentStatus() == PaymentStatus.PAID) {
+				if (d.getBookingPaymentStatus() == PaymentStatus.PAID) {
 					hasPaid = true;
 				} else {
 					toBeUpdated.add(d);
 					System.err.println("To be Cancelled>>>" + d.getErn()
 							+ "bookingRefId>>>" + d.getBookingRefId() + " >>"
-							+ d.getPaymentStatus());
+							+ d.getBookingPaymentStatus());
 				}
 			}
 
@@ -1117,7 +1120,6 @@ public class BookingsDaoHelper {
 
 	public DelegateDto updateDelegate(String delegateId, DelegateDto delegateDto) {
 		logger.error("+++++ <><>>>>>>>>>>>>> UPDATE DELEGATW +++++++++++++++++");
-		int counter = 0;
 		Delegate delegate = dao.findByRefId(delegateId, Delegate.class);
 		Event event = dao.findByRefId(delegate.getBooking().getEvent()
 				.getRefId(), Event.class);
@@ -1125,25 +1127,37 @@ public class BookingsDaoHelper {
 
 		/* Updating Booking */
 		if (booking != null) {
-			if ((delegateDto.getPaymentStatus() == PaymentStatus.PAID)
-					|| (delegateDto.getPaymentStatus() == PaymentStatus.NOTPAID)
-					|| (delegateDto.getPaymentStatus() == PaymentStatus.Credit)) {
-				booking.setPaymentStatus(delegateDto.getPaymentStatus());
-				dao.save(booking);
+			if ((delegateDto.getBookingPaymentStatus() == PaymentStatus.PAID)
+					|| (delegateDto.getBookingPaymentStatus() == PaymentStatus.NOTPAID)
+					|| (delegateDto.getBookingPaymentStatus() == PaymentStatus.Credit)) {
 
+				// Copy details from the Dto....
+				delegate.setLpoNo(delegateDto.getLpoNo());
+				delegate.setIsCredit(delegateDto.getIsCredit());
+				delegate.setReceiptNo(delegateDto.getReceiptNo());
+				delegate.setClearanceNo(delegateDto.getClearanceNo());
+				delegate.setPaymentStatus(delegateDto
+						.getDelegatePaymentStatus());
+				delegate.setUpdatedBy(delegateDto.getUpdatedBy());
+				dao.save(delegate);
+				System.err.println("Successfully saved::"
+						+ delegate.getFullName());
+
+				int totalDelegates = booking.getDelegates().size();
+				int totalPaid = 0;
 				for (Delegate d : booking.getDelegates()) {
-					// Copy details from the Dto....
-					d.setLpoNo(delegateDto.getLpoNo());
-					d.setIsCredit(delegateDto.getIsCredit());
-					d.setReceiptNo(delegateDto.getReceiptNo());
-					d.setClearanceNo(delegateDto.getClearanceNo());
-					dao.save(d);
-					System.err
-							.println("Successfully saved::" + d.getFullName());
+					if (delegateDto.getBookingPaymentStatus() == PaymentStatus.PAID
+							|| (delegateDto.getBookingPaymentStatus() == PaymentStatus.Credit)) {
+						totalPaid = totalPaid + 1;
+					}
 				}
 
-				if (delegateDto.getPaymentStatus() == PaymentStatus.PAID) {
-					sendConfirmationMessages(booking);
+				// Update Booking to PAID - If All the Delegates have Paid
+				if (totalPaid == totalDelegates) {
+					booking.setPaymentStatus(delegateDto
+							.getBookingPaymentStatus());
+					booking.setUpdatedBy(delegateDto.getUpdatedBy());
+					dao.save(booking);
 				}
 			}
 			/*
@@ -1183,7 +1197,7 @@ public class BookingsDaoHelper {
 			}
 		}
 		DelegateDto d = delegate.toDto();
-		d.setPaymentStatus(booking.getPaymentStatus());
+		d.setBookingPaymentStatus(booking.getPaymentStatus());
 		return d;
 	}
 
@@ -1376,7 +1390,7 @@ public class BookingsDaoHelper {
 		payLoad.remove("createdDate");
 
 		// Create the understood versions
-		if (delegate.getPaymentStatus() == PaymentStatus.PAID) {
+		if (delegate.getBookingPaymentStatus() == PaymentStatus.PAID) {
 			payLoad.put("paymentStatus", "PAID");
 		} else {
 			payLoad.put("paymentStatus", "NOTPAID");

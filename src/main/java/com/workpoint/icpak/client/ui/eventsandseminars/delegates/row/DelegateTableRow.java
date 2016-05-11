@@ -89,7 +89,6 @@ public class DelegateTableRow extends RowWidget {
 		} else {
 			divAction.addStyleName("hide");
 		}
-
 		aAttended.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -102,14 +101,12 @@ public class DelegateTableRow extends RowWidget {
 				onAttendanceChanged(AttendanceStatus.NOTATTENDED);
 			}
 		});
-
 		aEnrol.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				onAttendanceChanged(AttendanceStatus.ENROLLED);
 			}
 		});
-
 		aUndoCancelBooking.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -303,7 +300,8 @@ public class DelegateTableRow extends RowWidget {
 			spnBookingStatus.setInnerText("Cancelled");
 		}
 
-		setPaymentStatus(delegate.getPaymentStatus());
+		determinePaymentStatus(delegate.getBookingPaymentStatus(),
+				delegate.getDelegatePaymentStatus());
 		setAttendance(delegate.getAttendance());
 		if (event.getType() != null) {
 			setActionButtons(EventType.valueOf(event.getType()));
@@ -362,18 +360,27 @@ public class DelegateTableRow extends RowWidget {
 		}
 	}
 
-	private void setPaymentStatus(PaymentStatus paymentStatus) {
-		if (paymentStatus != null) {
-			if (paymentStatus == PaymentStatus.NOTPAID) {
-				spnPaymentStatus.setClassName("fa fa-times");
-			} else if (paymentStatus == PaymentStatus.Credit) {
-				spnPaymentStatus.setClassName("fa fa-check");
-				spnPaymentStatus
-						.setInnerHTML("<br/><span class='text-muted' style='font-size:11px;'>Credit</span>");
-			} else if (paymentStatus == PaymentStatus.PAID) {
-				spnPaymentStatus.setClassName("fa fa-check");
+	private void determinePaymentStatus(PaymentStatus bookingPaymentStatus,
+			PaymentStatus delegatePaymentStatus) {
+		if (bookingPaymentStatus != null) {
+			if (bookingPaymentStatus == PaymentStatus.PAID
+					|| bookingPaymentStatus == PaymentStatus.Credit) {
+				setPaymentStatus(bookingPaymentStatus);
+			} else {
+				setPaymentStatus(delegatePaymentStatus);
 			}
 		}
+	}
 
+	private void setPaymentStatus(PaymentStatus paymentStatus) {
+		if (paymentStatus == PaymentStatus.NOTPAID || paymentStatus == null) {
+			spnPaymentStatus.setClassName("fa fa-times");
+		} else if (paymentStatus == PaymentStatus.Credit) {
+			spnPaymentStatus.setClassName("fa fa-check");
+			spnPaymentStatus
+					.setInnerHTML("<br/><span class='text-muted' style='font-size:11px;'>Credit</span>");
+		} else if (paymentStatus == PaymentStatus.PAID) {
+			spnPaymentStatus.setClassName("fa fa-check");
+		}
 	}
 }

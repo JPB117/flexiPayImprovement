@@ -36,6 +36,7 @@ import com.google.inject.Singleton;
 import com.google.inject.persist.Transactional;
 import com.icpak.rest.dao.AttachmentsDao;
 import com.icpak.rest.dao.CPDDao;
+import com.icpak.rest.dao.EventsDao;
 import com.icpak.rest.dao.InvoiceDaoHelper;
 import com.icpak.rest.dao.MemberDao;
 import com.icpak.rest.dao.UsersDao;
@@ -47,6 +48,7 @@ import com.icpak.rest.dao.helper.StatementDaoHelper;
 import com.icpak.rest.dao.helper.UsersDaoHelper;
 import com.icpak.rest.models.auth.User;
 import com.icpak.rest.models.cpd.CPD;
+import com.icpak.rest.models.event.Event;
 import com.icpak.rest.models.membership.ApplicationFormHeader;
 import com.icpak.rest.models.membership.GoodStandingCertificate;
 import com.icpak.rest.models.membership.Member;
@@ -101,6 +103,8 @@ public class GetReport extends HttpServlet {
 	InvoiceDaoHelper invoiceDaoHelper;
 	@Inject
 	EventsDaoHelper eventDaoHelper;
+	@Inject
+	EventsDao eventDao;
 	@Inject
 	ApplicationSettings settings;
 
@@ -506,6 +510,8 @@ public class GetReport extends HttpServlet {
 
 		CPDDto cpd = cpdHelper.getCPD(cpdRefId);
 		assert cpd != null;
+		
+		//Event e =eventDao.getByEvenFromCPDId(id, true)
 
 		Map<String, Object> values = new HashMap<String, Object>();
 		values.put("eventName", cpd.getTitle());

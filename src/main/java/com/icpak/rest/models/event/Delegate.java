@@ -15,6 +15,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 import com.icpak.rest.models.base.PO;
 import com.wordnik.swagger.annotations.ApiModel;
+import com.workpoint.icpak.shared.model.PaymentStatus;
 import com.workpoint.icpak.shared.model.events.AttendanceStatus;
 import com.workpoint.icpak.shared.model.events.DelegateDto;
 
@@ -55,6 +56,8 @@ public class Delegate extends PO {
 	private Double amount;
 	@Enumerated(EnumType.ORDINAL)
 	private AttendanceStatus attendance = AttendanceStatus.NOTATTENDED;
+	@Enumerated(EnumType.STRING)
+	private PaymentStatus paymentStatus;
 
 	@ManyToOne
 	@JoinColumn(name = "accommodationId")
@@ -285,6 +288,13 @@ public class Delegate extends PO {
 
 	public void setLmsResponse(String lmsResponse) {
 		this.lmsResponse = lmsResponse;
+	}
+	public PaymentStatus getPaymentStatus() {
+		return paymentStatus;
+	}
+	
+	public void setPaymentStatus(PaymentStatus paymentStatus) {
+		this.paymentStatus = paymentStatus;
 	}
 
 }

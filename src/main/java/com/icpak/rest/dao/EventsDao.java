@@ -34,7 +34,16 @@ public class EventsDao extends BaseDao {
 			throw new ServiceException(ErrorCodes.NOTFOUND, "Event", "'"
 					+ refId + "'");
 		}
+		return event;
+	}
 
+	public Event getByEvenFromCPDId(String id, boolean throwExceptionIfNull) {
+		Event event = getSingleResultOrNull(getEntityManager().createQuery(
+				"from Event u where u.id=:id").setParameter("id", id));
+		if (throwExceptionIfNull && event == null) {
+			throw new ServiceException(ErrorCodes.NOTFOUND, "Event", "'" + id
+					+ "'");
+		}
 		return event;
 	}
 
@@ -313,9 +322,9 @@ public class EventsDao extends BaseDao {
 			}
 
 			if (paymentStatus == 1) {
-				delegateDto.setPaymentStatus(PaymentStatus.PAID);
+				delegateDto.setBookingPaymentStatus(PaymentStatus.PAID);
 			} else {
-				delegateDto.setPaymentStatus(PaymentStatus.PAID);
+				delegateDto.setBookingPaymentStatus(PaymentStatus.PAID);
 			}
 
 			if (contactEmail != null) {
