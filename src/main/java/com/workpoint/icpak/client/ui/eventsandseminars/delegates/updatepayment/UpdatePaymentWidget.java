@@ -79,11 +79,19 @@ public class UpdatePaymentWidget extends Composite {
 		txtReceiptNo.setValue(delegate.getReceiptNo());
 		txtClearanceNo.setValue(delegate.getClearanceNo());
 		txtLPONo.setValue(delegate.getLpoNo());
-		lstPaymentStatus.setValue(delegate.getBookingPaymentStatus());
-		if (delegate.getIsCredit() == 1) {
-			chckIsCredit.setValue(true);
-		} else {
-			chckIsCredit.setValue(false);
+		determinePaymentStatus(delegate.getBookingPaymentStatus(),
+				delegate.getDelegatePaymentStatus());
+	}
+
+	private void determinePaymentStatus(PaymentStatus bookingPaymentStatus,
+			PaymentStatus delegatePaymentStatus) {
+		if (bookingPaymentStatus != null) {
+			if (bookingPaymentStatus == PaymentStatus.PAID
+					|| bookingPaymentStatus == PaymentStatus.Credit) {
+				lstPaymentStatus.setValue(delegate.getBookingPaymentStatus());
+			} else {
+				lstPaymentStatus.setValue(delegate.getDelegatePaymentStatus());
+			}
 		}
 	}
 
