@@ -22,6 +22,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
+import com.workpoint.icpak.shared.model.PaymentStatus;
 import com.workpoint.icpak.shared.model.events.DelegateDto;
 
 public class GetDelegatesReport {
@@ -367,7 +368,9 @@ public class GetDelegatesReport {
 
 			// ,"PAID","RECEIPT" ,"LPO NO", "CREDIT","CLEARANCE NO","ATTEND"}
 			if (j == 12) {
-				cell.setCellValue(detail.getBookingPaymentStatus().getDisplayName());
+				determinePaymentStatus(detail.getBookingPaymentStatus(),
+						detail.getDelegatePaymentStatus(), cell);
+
 			}
 
 			if (j == 13) {
@@ -393,6 +396,23 @@ public class GetDelegatesReport {
 			cell.setCellStyle(styles.get(styleName));
 		}
 
+	}
+
+	private static void determinePaymentStatus(
+			PaymentStatus bookingPaymentStatus,
+			PaymentStatus delegatePaymentStatus, Cell cell) {
+		if (bookingPaymentStatus != null) {
+			if (bookingPaymentStatus == PaymentStatus.PAID
+					|| bookingPaymentStatus == PaymentStatus.Credit) {
+				cell.setCellValue(bookingPaymentStatus.getDisplayName());
+			} else {
+				if (delegatePaymentStatus == null) {
+					cell.setCellValue("Not Paid");
+				} else {
+					cell.setCellValue(delegatePaymentStatus.getDisplayName());
+				}
+			}
+		}
 	}
 
 	public void generateDelegateReport(List<DelegateDto> delegateDtos,

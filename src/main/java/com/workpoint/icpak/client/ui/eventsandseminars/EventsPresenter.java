@@ -91,6 +91,8 @@ public class EventsPresenter extends
 		HasValueChangeHandlers<BookingStatus> getBookingStatusValueChangeHandler();
 
 		DropDownList<AccommodationDto> getLstAccomodation();
+
+		void setActiveTab(String page);
 	}
 
 	@ProxyCodeSplit
@@ -103,6 +105,7 @@ public class EventsPresenter extends
 	protected String eventSearchTerm = "";
 	private static String accomodationRefId = "";
 	private static String bookingStatus = "1";
+	private static String page = "summary";
 	private PlaceManager placeManager;
 	private ResourceDelegate<EventsResource> eventsDelegate;
 	private String eventId;
@@ -231,7 +234,11 @@ public class EventsPresenter extends
 		eventId = request.getParameter("eventId", null);
 		accomodationRefId = request.getParameter("accomodationRefId", "");
 		bookingStatus = request.getParameter("bookingStatus", "");
+		page = request.getParameter("page", "");
+
 		// Load Event Details to View
+		getView().setActiveTab(page);
+
 		if (eventId != null) {
 			getView().showAdvancedView(true);
 		} else {
@@ -253,11 +260,11 @@ public class EventsPresenter extends
 							PagingConfig config = panel.getConfig();
 							loadDelegates(config.getOffset(),
 									config.getLimit(), getView()
-											.getSearchValue());
+											.getDelegateSearchValue());
 						}
 					})
 					.bookings(eventId)
-					.getBookingCount(getView().getSearchValue(),
+					.getBookingCount(getView().getDelegateSearchValue(),
 							accomodationRefId, bookingStatus);
 
 			eventsDelegate.withCallback(new AbstractAsyncCallback<EventDto>() {

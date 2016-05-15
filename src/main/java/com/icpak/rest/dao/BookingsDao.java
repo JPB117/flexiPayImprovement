@@ -284,6 +284,12 @@ public class BookingsDao extends BaseDao {
 				.setParameter("refId", eventId), offSet, limit);
 	}
 
+	public List<Booking> getAllBookings(Long eventId) {
+		return getResultList(getEntityManager().createQuery(
+				"from Booking b where b.event.id=:Id order by created")
+				.setParameter("Id", eventId));
+	}
+
 	public void updateBooking(Booking booking) {
 		createBooking(booking);
 	}
@@ -398,6 +404,39 @@ public class BookingsDao extends BaseDao {
 		return getDelegateCount(eventId, null, "", "");
 	}
 
+	public int getGenericDelegateCount(Long bookingId, String bookingType) {
+		Number number = null;
+		String sql = "select count(*) "
+				+ "from delegate d where booking_id=:bId";
+
+		/* Query */
+		if (bookingType != null && !bookingType.isEmpty()) {
+			if (bookingType.equals("paid")) {
+				sql = sql.concat(" and d.paymentStatus=:bookingType");
+			}
+			if (bookingType.equals("withAccomodation")) {
+				sql = sql.concat(" and d.accommodationId IS NOT NULL");
+			}
+			if (bookingType.equals("attended")) {
+				sql = sql.concat(" and d.attendance=0");
+			}
+		}
+
+		Query query = getEntityManager().createNativeQuery(sql).setParameter(
+				"bId", bookingId);
+		/* Parameters */
+		if (bookingType != null && !bookingType.isEmpty()) {
+			if (bookingType.equals("paid")) {
+				query.setParameter("bookingType", bookingType);
+			}
+		}
+
+		number = getSingleResultOrNull(query);
+		logger.error("=== Delegate Count ==== " + number.intValue());
+		return number.intValue();
+
+	}
+
 	public int getDelegateCount(String eventId, String searchTerm,
 			String accomodationRefId, String bookingStatus) {
 		Number number = null;
@@ -426,7 +465,6 @@ public class BookingsDao extends BaseDao {
 					+ "b.Contact like :searchTerm or "
 					+ "i.documentNo like :searchTerm)");
 		}
-		sql = sql.concat(" order by d.created DESC");
 		Query query = getEntityManager().createNativeQuery(sql).setParameter(
 				"eventRefId", eventId);
 		/* Parameters */

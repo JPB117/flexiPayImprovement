@@ -377,7 +377,7 @@ public class UsersDaoHelper {
 
 	public User getUserByActivationEmail(String userEmail) {
 		User user = dao.findByUserActivationEmail(userEmail, false);
-		if (user != null && user.getMemberNo() != null) {
+		if (user != null) {
 			sendActivationEmail2(user);
 			return user;
 		} else {

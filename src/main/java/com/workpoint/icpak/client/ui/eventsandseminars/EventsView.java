@@ -2,6 +2,8 @@ package com.workpoint.icpak.client.ui.eventsandseminars;
 
 import java.util.List;
 
+import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -10,6 +12,7 @@ import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -42,6 +45,11 @@ public class EventsView extends ViewImpl implements EventsPresenter.IEventsView 
 	HTMLPanel panelEvents;
 
 	@UiField
+	DivElement divBookings;
+	@UiField
+	DivElement divSummary;
+
+	@UiField
 	HTMLPanel panelEventDrillDown;
 	@UiField
 	SpanElement spnEventTitle;
@@ -55,7 +63,15 @@ public class EventsView extends ViewImpl implements EventsPresenter.IEventsView 
 	ActionLink aCreateBooking;
 	@UiField
 	ActionLink aSyncWithServer;
+	@UiField
+	ActionLink aBookingstab;
+	@UiField
+	ActionLink aSummarytab;
 
+	@UiField
+	Element liSummary;
+	@UiField
+	Element liBooking;
 	private EventDto event;
 
 	public interface Binder extends UiBinder<Widget, EventsView> {
@@ -88,6 +104,7 @@ public class EventsView extends ViewImpl implements EventsPresenter.IEventsView 
 				Window.open(ctx.toUrl(), "", null);
 			}
 		});
+
 	}
 
 	@Override
@@ -121,6 +138,13 @@ public class EventsView extends ViewImpl implements EventsPresenter.IEventsView 
 		if (AppContext.isCurrentUserEventEdit()) {
 			aCreateBooking.setHref("#eventBooking;eventId=" + event.getRefId());
 		}
+
+		// Window.alert(event.getRefId());
+
+		aBookingstab.setHref("#events;eventId=" + event.getRefId()
+				+ ";page=booking");
+		aSummarytab.setHref("#events;eventId=" + event.getRefId()
+				+ ";page=summary");
 	}
 
 	@Override
@@ -185,6 +209,20 @@ public class EventsView extends ViewImpl implements EventsPresenter.IEventsView 
 
 	public DropDownList<AccommodationDto> getLstAccomodation() {
 		return tblDelegates.getLstAccomodation();
+	}
+
+	public void setActiveTab(String page) {
+		if (page.equals("summary")) {
+			divSummary.addClassName("active");
+			divBookings.removeClassName("active");
+			liBooking.removeClassName("active");
+			liSummary.addClassName("active");
+		} else if (page.equals("booking")) {
+			divSummary.removeClassName("active");
+			divBookings.addClassName("active");
+			liBooking.addClassName("active");
+			liSummary.removeClassName("active");
+		}
 	}
 
 }

@@ -58,12 +58,17 @@ public class Booking extends PO {
 	private String eventId;
 	private String status; // DRAFT/ PAID
 	private int delegatesCount;
+	
 	@Column(unique = true)
 	private String paymentRef; // TrxNumber
 	private Date paymentDate;
 	private Double amountDue;
-	private PaymentStatus paymentStatus = PaymentStatus.NOTPAID;
+	private Integer totalPaid;
+	private Integer totalWithAccomodation;
+	private Integer totalAttended;
+	private Integer totalCancelled;
 
+	private PaymentStatus paymentStatus = PaymentStatus.NOTPAID;
 	@OneToMany(mappedBy = "booking", fetch = FetchType.LAZY, cascade = {
 			CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE,
 			CascadeType.REFRESH })
@@ -335,5 +340,37 @@ public class Booking extends PO {
 
 	public void setRegistrationDate(Date registrationDate) {
 		this.registrationDate = registrationDate;
+	}
+
+	public Integer getTotalPaid() {
+		return totalPaid;
+	}
+
+	public void setTotalPaid(Integer totalPaid) {
+		this.totalPaid = totalPaid;
+	}
+
+	public Integer getTotalWithAccomodation() {
+		return totalWithAccomodation;
+	}
+
+	public void setTotalWithAccomodation(Integer totalWithAccomodation) {
+		this.totalWithAccomodation = totalWithAccomodation;
+	}
+
+	public Integer getTotalAttended() {
+		return totalAttended;
+	}
+
+	public void setTotalAttended(Integer totalAttended) {
+		this.totalAttended = totalAttended;
+	}
+
+	public Integer getTotalCancelled() {
+		return totalCancelled;
+	}
+
+	public void setTotalCancelled(Integer totalCancelled) {
+		this.totalCancelled = totalCancelled;
 	}
 }

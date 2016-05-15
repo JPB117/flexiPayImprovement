@@ -47,16 +47,31 @@
 				</div>
 				<div class="panel delegates">
 					<div class="panel-body">
-						<div class="col-lg-12" style="margin-bottom: 12px;">
-							<d:ActionLink ui:field="aCreateBooking" styleName="btn btn-primary btn-fill">Create
-								Booking</d:ActionLink>
+						<ul id="mytab" class="nav nav-tabs">
+							<li class="active" ui:field="liSummary">
+								<d:ActionLink ui:field="aSummarytab">Summary</d:ActionLink>
+							</li>
+							<li ui:field="liBooking">
+								<d:ActionLink ui:field="aBookingstab">Bookings</d:ActionLink>
+							</li>
+						</ul>
+						<div class="tab-content">
+							<div class="tab-pane active" ui:field="divSummary">
+								This is Summary...
+							</div>
 
-							<d:ActionLink ui:field="aSyncWithServer"
-								styleName="pull-right btn btn-default btn-fill">Offline Sync</d:ActionLink>
-						</div>
-						<div class="col-sm-12">
-							<table2:DelegatesTable ui:field="tblDelegates">
-							</table2:DelegatesTable>
+							<div class="tab-pane" ui:field="divBookings">
+								<div class="col-lg-12" style="margin-bottom: 12px;">
+									<d:ActionLink ui:field="aCreateBooking" styleName="btn btn-primary btn-fill">Create
+										Booking</d:ActionLink>
+									<d:ActionLink ui:field="aSyncWithServer"
+										styleName="pull-right btn btn-default btn-fill">Offline Sync</d:ActionLink>
+								</div>
+								<div class="col-sm-12">
+									<table2:DelegatesTable ui:field="tblDelegates">
+									</table2:DelegatesTable>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>

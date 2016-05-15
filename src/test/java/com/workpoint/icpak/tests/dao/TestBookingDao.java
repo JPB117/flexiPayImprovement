@@ -253,8 +253,13 @@ public class TestBookingDao extends AbstractDaoTest {
 		bookingsHelper.syncWithServer("dQdcmmGqPuw7wVzr");
 	}
 
-	@Test
+	// @Test
 	public void removeDoubleBookings() {
 		bookingsHelper.correctDoubleBookings("IWqduDqhOKXb9nxq");
+	}
+
+	@Test
+	public void testUpdateStats() {
+		bookingsHelper.updateBookingStats("IWqduDqhOKXb9nxq");
 	}
 }

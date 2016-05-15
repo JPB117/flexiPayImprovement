@@ -1174,9 +1174,11 @@ public class BookingsDaoHelper {
 		}
 
 		/* Updating attendance and CPD */
+		String applicationContext = settings.getProperty("app_context");
 		if (delegate.getMemberRefId() != null
 				&& delegate.getAttendance() != delegateDto.getAttendance()
-				&& event.getType() != EventType.COURSE) {
+				&& event.getType() != EventType.COURSE
+				&& applicationContext.equals("online")) {
 			// send and SMS
 			Member member = dao.findByRefId(delegate.getMemberRefId(),
 					Member.class);
@@ -1196,6 +1198,8 @@ public class BookingsDaoHelper {
 				e.printStackTrace();
 			}
 		}
+
+		// respons
 		DelegateDto d = delegate.toDto();
 		d.setBookingPaymentStatus(booking.getPaymentStatus());
 		return d;
@@ -1526,7 +1530,58 @@ public class BookingsDaoHelper {
 		return null;
 	}
 
-	public void removeDoubleBooking() {
+	public void updateBookingStats(String eventRefId) {
+		Event e = dao.findByRefId(eventRefId, Event.class);
+		if (e == null) {
+			System.err.println("Event Not found. Please check the refId sent");
+			return;
+		}
+
+		List<Booking> allBookings = dao.getAllBookings(e.getId());
+		int allDelegates = 0;
+		int allPaid = 0;
+		int allAccomodated = 0;
+		int allAttended = 0;
+		int allCancelled = 0;
+		for (Booking b : allBookings) {
+			Integer totalDelegates = dao.getGenericDelegateCount(b.getId(),
+					"all");
+			allDelegates = allDelegates + totalDelegates;
+
+			Integer totalPaid = 0;
+			if (b.getPaymentStatus() == PaymentStatus.PAID
+					|| b.getPaymentStatus() == PaymentStatus.Credit) {
+				totalPaid = totalDelegates;
+			} else {
+				totalPaid = dao.getGenericDelegateCount(b.getId(), "paid");
+			}
+			allPaid = allPaid + totalPaid;
+
+			Integer totalCancelled = 0;
+			if (b.getIsActive() == 0) {
+				totalCancelled = totalDelegates;
+			}
+			allCancelled = allCancelled + totalCancelled;
+			Integer totalAccomodated = dao.getGenericDelegateCount(b.getId(),
+					"withAccomodation");
+			allAccomodated = allAccomodated + totalAccomodated;
+			Integer totalAttended = dao.getGenericDelegateCount(b.getId(),
+					"attended");
+			allAttended = allAttended + totalAttended;
+
+			// Update Booking:
+			b.setDelegatesCount(totalDelegates);
+			b.setTotalPaid(totalPaid);
+			b.setTotalWithAccomodation(totalAccomodated);
+			b.setTotalCancelled(totalCancelled);
+			b.setTotalAttended(totalAttended);
+		}
+
+		System.err.println("allDelegates:" + allDelegates);
+		System.err.println("allPaid:" + allPaid);
+		System.err.println("allAccomodated:" + allAccomodated);
+		System.err.println("allAttended:" + allAttended);
+		System.err.println("allCancelled:" + allCancelled);
 
 	}
 }
