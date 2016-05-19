@@ -45,12 +45,14 @@ import com.workpoint.icpak.client.ui.events.TableActionEvent.TableActionHandler;
 import com.workpoint.icpak.client.ui.eventsandseminars.resendProforma.ResendModel;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
 import com.workpoint.icpak.client.ui.security.EventsGateKeeper;
+import com.workpoint.icpak.shared.api.BookingsResource;
 import com.workpoint.icpak.shared.api.EventsResource;
 import com.workpoint.icpak.shared.model.BookingStatus;
 import com.workpoint.icpak.shared.model.EventSummaryDto;
 import com.workpoint.icpak.shared.model.TableActionType;
 import com.workpoint.icpak.shared.model.events.AccommodationDto;
 import com.workpoint.icpak.shared.model.events.BookingDto;
+import com.workpoint.icpak.shared.model.events.BookingSummaryDto;
 import com.workpoint.icpak.shared.model.events.DelegateDto;
 import com.workpoint.icpak.shared.model.events.EventDto;
 
@@ -93,6 +95,8 @@ public class EventsPresenter extends
 		DropDownList<AccommodationDto> getLstAccomodation();
 
 		void setActiveTab(String page);
+
+		void bindBookingSummary(BookingSummaryDto summary);
 	}
 
 	@ProxyCodeSplit
@@ -149,6 +153,7 @@ public class EventsPresenter extends
 			params.put("accomodationRefId", accomodationRefId);
 			params.put("eventId", eventId);
 			params.put("bookingStatus", bookingStatus);
+			params.put("page", page);
 			PlaceRequest placeRequest = new PlaceRequest.Builder()
 					.nameToken(NameTokens.events).with(params).build();
 			placeManager.revealPlace(placeRequest);
@@ -172,6 +177,7 @@ public class EventsPresenter extends
 			params.put("accomodationRefId", accomodationRefId);
 			params.put("eventId", eventId);
 			params.put("bookingStatus", bookingStatus);
+			params.put("page", page);
 			PlaceRequest placeRequest = new PlaceRequest.Builder()
 					.nameToken(NameTokens.events).with(params).build();
 			placeManager.revealPlace(placeRequest);
@@ -234,7 +240,7 @@ public class EventsPresenter extends
 		eventId = request.getParameter("eventId", null);
 		accomodationRefId = request.getParameter("accomodationRefId", "");
 		bookingStatus = request.getParameter("bookingStatus", "");
-		page = request.getParameter("page", "");
+		page = request.getParameter("page", "summary");
 
 		// Load Event Details to View
 		getView().setActiveTab(page);
@@ -249,32 +255,27 @@ public class EventsPresenter extends
 
 	private void loadData() {
 		fireEvent(new ProcessingEvent());
-		if (eventId != null) {
-			eventsDelegate
-					.withCallback(new AbstractAsyncCallback<Integer>() {
-						@Override
-						public void onSuccess(Integer aCount) {
-							PagingPanel panel = getView()
-									.getDelegatesPagingPanel();
-							panel.setTotal(aCount);
-							PagingConfig config = panel.getConfig();
-							loadDelegates(config.getOffset(),
-									config.getLimit(), getView()
-											.getDelegateSearchValue());
-						}
-					})
-					.bookings(eventId)
-					.getBookingCount(getView().getDelegateSearchValue(),
-							accomodationRefId, bookingStatus);
 
+		/*
+		 * Load a Single Event
+		 */
+		if (eventId != null) {
+			fireEvent(new FullScreenEvent("show"));
+			/*
+			 * Load the Event - This is the first step
+			 */
 			eventsDelegate.withCallback(new AbstractAsyncCallback<EventDto>() {
 				@Override
 				public void onSuccess(EventDto event) {
 					getView().bindEvent(event);
 				}
 			}).getById(eventId);
-			if (hasEventChanged) {
-				fireEvent(new FullScreenEvent("show"));
+
+			/*
+			 * If you have navigated to bookings - Load the bookings
+			 */
+			if (page.equals("booking")) {
+				// if (hasEventChanged) {
 				eventsDelegate
 						.withCallback(
 								new AbstractAsyncCallback<List<AccommodationDto>>() {
@@ -287,7 +288,48 @@ public class EventsPresenter extends
 														"--Select Accomodation--");
 									}
 								}).accommodations(eventId).getAll(0, 100);
+				// }
+
+				eventsDelegate
+						.withCallback(new AbstractAsyncCallback<Integer>() {
+							@Override
+							public void onSuccess(Integer aCount) {
+								PagingPanel panel = getView()
+										.getDelegatesPagingPanel();
+								panel.setTotal(aCount);
+								PagingConfig config = panel.getConfig();
+								loadDelegates(config.getOffset(), config
+										.getLimit(), getView()
+										.getDelegateSearchValue());
+							}
+						})
+						.bookings(eventId)
+						.getBookingCount(getView().getDelegateSearchValue(),
+								accomodationRefId, bookingStatus);
+
+			} else if (page.equals("summary")) {
+				fireEvent(new ProcessingEvent());
+
+				eventsDelegate
+						.withCallback(
+								new AbstractAsyncCallback<BookingSummaryDto>() {
+									@Override
+									public void onSuccess(
+											BookingSummaryDto summary) {
+										getView().bindBookingSummary(summary);
+										fireEvent(new ProcessingCompletedEvent());
+									}
+
+									public void onFailure(Throwable caught) {
+										Window.alert("There was a technical problem in loading the summary.");
+										fireEvent(new ProcessingCompletedEvent());
+									};
+								}).bookings(eventId).getBookingSummary(eventId);
+
 			}
+			/*
+			 * Load multiple events
+			 */
 		} else {
 			fireEvent(new FullScreenEvent("hide"));
 			eventsDelegate.withCallback(new AbstractAsyncCallback<Integer>() {
@@ -367,20 +409,19 @@ public class EventsPresenter extends
 			save((DelegateDto) event.getModel());
 		} else if (event.getModel() instanceof String) {
 			fireEvent(new ProcessingEvent());
-			eventsDelegate
-					.withCallback(new AbstractAsyncCallback<BookingDto>() {
-						@Override
-						public void onSuccess(BookingDto result) {
-							if (result != null) {
-								fireEvent(new ProcessingCompletedEvent());
-								fireEvent(new AfterSaveEvent(result
-										.getContact().getCompany()
-										+ " booking has been cancelled."));
-								loadData();
-							}
+			eventsDelegate.withCallback(new AbstractAsyncCallback<Boolean>() {
+				@Override
+				public void onSuccess(Boolean result) {
+					if (result != null) {
+						fireEvent(new ProcessingCompletedEvent());
+						if (result) {
+							fireEvent(new AfterSaveEvent(
+									"Cancellation was successful"));
 						}
-					}).bookings(eventId)
-					.cancelBooking((String) event.getModel());
+						loadData();
+					}
+				}
+			}).bookings(eventId).cancelBooking((String) event.getModel());
 		}
 	}
 
@@ -391,12 +432,6 @@ public class EventsPresenter extends
 			@Override
 			public void onSuccess(DelegateDto result) {
 				fireEvent(new ProcessingCompletedEvent());
-				// fireEvent(new AfterSaveEvent(result.getFullName()
-				// + "'s has been marked as "
-				// + result.getBookingPaymentStatus().getDisplayName()
-				// + " and "
-				// + result.getAttendance().getDisplayName()));
-
 				fireEvent(new AfterSaveEvent("Changes successfully saved!"));
 				delegateSearchTerm = result.getContactEmail();
 				loadData();

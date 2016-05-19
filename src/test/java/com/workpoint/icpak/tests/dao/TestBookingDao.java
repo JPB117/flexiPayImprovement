@@ -260,6 +260,12 @@ public class TestBookingDao extends AbstractDaoTest {
 
 	@Test
 	public void testUpdateStats() {
-		bookingsHelper.updateBookingStats("IWqduDqhOKXb9nxq");
+		bookingsHelper.updateBookingStats("dQdcmmGqPuw7wVzr");
+		// bookingsHelper.updatePaymentStats("IWqduDqhOKXb9nxq");
+	}
+
+	// @Test
+	public void testGetBookingStats() {
+		bookingDao.getBookingSummary("IWqduDqhOKXb9nxq");
 	}
 }

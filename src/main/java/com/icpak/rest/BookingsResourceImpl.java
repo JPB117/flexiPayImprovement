@@ -24,6 +24,7 @@ import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 import com.workpoint.icpak.shared.api.BookingsResource;
 import com.workpoint.icpak.shared.model.events.BookingDto;
+import com.workpoint.icpak.shared.model.events.BookingSummaryDto;
 import com.workpoint.icpak.shared.model.events.DelegateDto;
 
 @Api(value = "", description = "Handles CRUD for event Bookings")
@@ -68,6 +69,15 @@ public class BookingsResourceImpl implements BookingsResource {
 
 		String uri = "";
 		BookingDto dto = helper.getBookingById(eventId, bookingId);
+		return dto;
+	}
+
+	@GET
+	@Path("/summary/{eventRefId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public BookingSummaryDto getBookingSummary(
+			@PathParam("eventRefId") String eventRefId) {
+		BookingSummaryDto dto = helper.getBookingStats(eventRefId);
 		return dto;
 	}
 
@@ -156,7 +166,7 @@ public class BookingsResourceImpl implements BookingsResource {
 	@POST
 	@Path("/cancel/{bookingId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public BookingDto cancelBooking(@PathParam("bookingId") String bookingId) {
+	public boolean cancelBooking(@PathParam("bookingId") String bookingId) {
 		return helper.cancelBooking(bookingId);
 	}
 

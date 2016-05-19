@@ -74,9 +74,12 @@ import com.workpoint.icpak.shared.model.EventType;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.InvoiceLineDto;
 import com.workpoint.icpak.shared.model.InvoiceLineType;
+import com.workpoint.icpak.shared.model.PaymentMode;
 import com.workpoint.icpak.shared.model.PaymentStatus;
+import com.workpoint.icpak.shared.model.PaymentType;
 import com.workpoint.icpak.shared.model.events.AttendanceStatus;
 import com.workpoint.icpak.shared.model.events.BookingDto;
+import com.workpoint.icpak.shared.model.events.BookingSummaryDto;
 import com.workpoint.icpak.shared.model.events.ContactDto;
 import com.workpoint.icpak.shared.model.events.CourseRegDetailsPojo;
 import com.workpoint.icpak.shared.model.events.DelegateDto;
@@ -368,6 +371,7 @@ public class BookingsDaoHelper {
 	public void sendProInvoice(String bookingRefId) {
 		assert bookingRefId != null;
 		Booking bookingInDb = dao.findByRefId(bookingRefId, Booking.class);
+		updateBookingStats(bookingInDb);
 		booking = bookingInDb;
 		InvoiceDto invoice = invoiceHelper.getInvoice(dao
 				.getInvoiceRef(bookingRefId));
@@ -940,16 +944,27 @@ public class BookingsDaoHelper {
 		return createBooking(eventId, dto);
 	}
 
-	public BookingDto cancelBooking(String bookingId) {
+	public boolean cancelBooking(String bookingId) {
 		Booking booking = null;
 		logger.info("Cancelling a Booking called..");
 		if (bookingId != null) {
-			booking = dao.getByBookingId(bookingId);
-			booking.setIsActive(0);
-			booking = (Booking) dao.save(booking);
-			return booking.toDto();
+			booking = dao.findByRefId(bookingId, Booking.class, false);
+			if (booking != null) {
+				booking.setIsActive(0);
+				booking = (Booking) dao.save(booking);
+				updateBookingStats(booking);
+				return true;
+			} else {
+				Delegate del = dao.findByRefId(bookingId, Delegate.class);
+				if (del != null) {
+					del.setIsActive(0);
+					dao.save(del);
+					updateBookingStats(del.getBooking());
+					return true;
+				}
+			}
 		}
-		return null;
+		return false;
 	}
 
 	public void correctDoubleBookings(String eventRefId) {
@@ -1140,6 +1155,7 @@ public class BookingsDaoHelper {
 						.getDelegatePaymentStatus());
 				delegate.setUpdatedBy(delegateDto.getUpdatedBy());
 				dao.save(delegate);
+
 				System.err.println("Successfully saved::"
 						+ delegate.getFullName());
 
@@ -1159,14 +1175,22 @@ public class BookingsDaoHelper {
 					booking.setUpdatedBy(delegateDto.getUpdatedBy());
 					dao.save(booking);
 				}
+				updateBookingStats(booking);
+				updatePaymentStats(booking.getEvent().getRefId());
 			}
 			/*
 			 * Undo Booking Cancellation
 			 */
 			if ((delegateDto.getIsBookingActive() == 1)
-					&& (booking.getIsActive() == 0)) {
-				booking.setIsActive(delegateDto.getIsBookingActive());
-				dao.save(booking);
+					&& ((booking.getIsActive() == 0) || delegate.getIsActive() == 0)) {
+				if ((booking.getIsActive() == 0)) {
+					booking.setIsActive(delegateDto.getIsBookingActive());
+					dao.save(booking);
+				} else if (delegate.getIsActive() == 0) {
+					delegate.setIsActive(1);
+					dao.save(delegate);
+				}
+				updateBookingStats(booking);
 			}
 
 		} else {
@@ -1530,58 +1554,164 @@ public class BookingsDaoHelper {
 		return null;
 	}
 
+	public BookingSummaryDto getBookingStats(String eventRefId) {
+		return dao.getBookingSummary(eventRefId);
+	}
+
 	public void updateBookingStats(String eventRefId) {
 		Event e = dao.findByRefId(eventRefId, Event.class);
 		if (e == null) {
 			System.err.println("Event Not found. Please check the refId sent");
 			return;
 		}
+		updatePaymentStats(eventRefId);
 
+		/* Get All Booking Stats */
 		List<Booking> allBookings = dao.getAllBookings(e.getId());
-		int allDelegates = 0;
-		int allPaid = 0;
-		int allAccomodated = 0;
-		int allAttended = 0;
-		int allCancelled = 0;
 		for (Booking b : allBookings) {
-			Integer totalDelegates = dao.getGenericDelegateCount(b.getId(),
-					"all");
-			allDelegates = allDelegates + totalDelegates;
+			updateBookingStats(b);
+		}
+	}
 
-			Integer totalPaid = 0;
-			if (b.getPaymentStatus() == PaymentStatus.PAID
-					|| b.getPaymentStatus() == PaymentStatus.Credit) {
-				totalPaid = totalDelegates;
-			} else {
-				totalPaid = dao.getGenericDelegateCount(b.getId(), "paid");
-			}
-			allPaid = allPaid + totalPaid;
+	public void updateBookingStats(Booking booking) {
+		logger.info("Updating booking stats....");
+		int totalMembers = 0;
+		int totalNonMembers = 0;
+		int totalPaidMembers = 0;
+		int totalPaidNonMembers = 0;
+		int totalAccomodatedMembers = 0;
+		int totalAccomodatedNonMembers = 0;
+		int totalAttendedMembers = 0;
+		int totalAttendedNonMembers = 0;
+		int totalCancelledMembers = 0;
+		int totalCancelledNonMembers = 0;
 
-			Integer totalCancelled = 0;
-			if (b.getIsActive() == 0) {
-				totalCancelled = totalDelegates;
-			}
-			allCancelled = allCancelled + totalCancelled;
-			Integer totalAccomodated = dao.getGenericDelegateCount(b.getId(),
-					"withAccomodation");
-			allAccomodated = allAccomodated + totalAccomodated;
-			Integer totalAttended = dao.getGenericDelegateCount(b.getId(),
-					"attended");
-			allAttended = allAttended + totalAttended;
-
-			// Update Booking:
-			b.setDelegatesCount(totalDelegates);
-			b.setTotalPaid(totalPaid);
-			b.setTotalWithAccomodation(totalAccomodated);
-			b.setTotalCancelled(totalCancelled);
-			b.setTotalAttended(totalAttended);
+		Integer totalDelegates = dao.getGenericDelegateCount(booking.getId(),
+				"all");
+		Integer totalPaid = 0;
+		/* How many Paid */
+		if (booking.getPaymentStatus() == PaymentStatus.PAID
+				|| booking.getPaymentStatus() == PaymentStatus.Credit) {
+			totalPaid = totalDelegates;
+		} else {
+			totalPaid = dao.getGenericDelegateCount(booking.getId(), "paid");
 		}
 
-		System.err.println("allDelegates:" + allDelegates);
-		System.err.println("allPaid:" + allPaid);
-		System.err.println("allAccomodated:" + allAccomodated);
-		System.err.println("allAttended:" + allAttended);
-		System.err.println("allCancelled:" + allCancelled);
+		/* Get Members vs Non Members Summary */
+		List<Delegate> delegates = new ArrayList<>(booking.getDelegates());
+		for (Delegate d : delegates) {
+			if (d.getMemberRegistrationNo() != null) {
+				totalMembers = totalMembers + 1;
+				if (d.getPaymentStatus() == PaymentStatus.PAID
+						|| d.getPaymentStatus() == PaymentStatus.Credit) {
+					totalPaidMembers = totalPaidMembers + 1;
+				}
+				if (d.getAccommodation() != null) {
+					totalAccomodatedMembers = totalAccomodatedMembers + 1;
+				}
+				if (d.getAttendance() == AttendanceStatus.ATTENDED) {
+					totalAttendedMembers = totalAttendedMembers + 1;
+				}
+			} else {
+				// Non-Members Summation
+				totalNonMembers = totalNonMembers + 1;
+
+				if (d.getPaymentStatus() == PaymentStatus.PAID
+						|| d.getPaymentStatus() == PaymentStatus.Credit) {
+					totalPaidNonMembers = totalPaidNonMembers + 1;
+				}
+				if (d.getAccommodation() != null) {
+					totalAccomodatedNonMembers = totalAccomodatedNonMembers + 1;
+				}
+				if (d.getAttendance() == AttendanceStatus.ATTENDED) {
+					totalAttendedNonMembers = totalAttendedNonMembers + 1;
+				}
+			}
+		}
+
+		/* Calculate cancellation */
+		Integer totalCancelled = 0;
+		if (booking.getIsActive() == 0) {
+			totalCancelled = totalDelegates;
+			totalCancelledMembers = totalMembers;
+			totalCancelledNonMembers = totalNonMembers;
+		} else if (booking.getIsActive() == 1) {
+			totalCancelledMembers = dao.getGenericDelegateCount(
+					booking.getId(), "cancelled", true);
+			totalCancelledNonMembers = dao.getGenericDelegateCount(
+					booking.getId(), "cancelled", false);
+			totalCancelled = totalCancelledMembers + totalCancelledNonMembers;
+		}
+
+		Integer totalAccomodated = dao.getGenericDelegateCount(booking.getId(),
+				"withAccomodation");
+		Integer totalAttended = dao.getGenericDelegateCount(booking.getId(),
+				"attended");
+
+		// Update Booking:
+		booking.setDelegatesCount(totalDelegates);
+		booking.setTotalPaid(totalPaid);
+		booking.setTotalWithAccomodation(totalAccomodated);
+		booking.setTotalCancelled(totalCancelled);
+		booking.setTotalAttended(totalAttended);
+		booking.setTotalPaidMembers(totalPaidMembers);
+		booking.setTotalAccomodatedMembers(totalAccomodatedMembers);
+		booking.setTotalCancelledMembers(totalCancelledMembers);
+		booking.setTotalAttendedMembers(totalAttendedMembers);
+		booking.setTotalMembers(totalMembers);
+		booking.setTotalNonMembers(totalNonMembers);
+		booking.setTotalPaidNonMembers(totalPaidNonMembers);
+		booking.setTotalAccomodatedNonMembers(totalAccomodatedNonMembers);
+		booking.setTotalAttendedNonMembers(totalAttendedNonMembers);
+		booking.setTotalCancelledNonMembers(totalCancelledNonMembers);
+
+	}
+
+	public void updatePaymentStats(String eventRefId) {
+		Event e = dao.findByRefId(eventRefId, Event.class);
+		if (e == null) {
+			System.err.println("Event Not found. Please check the refId sent");
+			return;
+		}
+		String searchTerm = "Payment for " + e.getName();
+		System.err.println("searching for " + searchTerm);
+		int totalOffline = 0;
+
+		/* Online Payment modes */
+		for (PaymentMode paymentMode : PaymentMode.values()) {
+			int count = invoiceDao.getTransactionsCount(null, searchTerm, null,
+					null, PaymentType.BOOKING.name(), paymentMode.name());
+			switch (paymentMode) {
+			case MPESA:
+				e.setTotalMpesaPayments(count);
+				break;
+			case CARDS:
+				e.setTotalCardsPayment(count);
+				break;
+			case BANKTRANSFER:
+				totalOffline = totalOffline + count;
+				break;
+			case DIRECTBANKING:
+				totalOffline = totalOffline + count;
+				break;
+			default:
+				break;
+			}
+			e.setTotalOfflinePayment(totalOffline);
+		}
+		/* Modes Updated by ICPAK Staff */
+		int totalReceipt = dao.getStaffTransactionCount(e.getId(), "receipt");
+		int totalLpo = dao.getStaffTransactionCount(e.getId(), "lpo");
+		e.setTotalReceiptPayment(totalReceipt);
+		e.setTotalCredit(totalLpo);
+
+		System.err.println("Total Mpesa>>" + e.getTotalMpesaPayments());
+		System.err.println("Total Cards>>" + e.getTotalCardsPayment());
+		System.err.println("Total Offline>>" + totalOffline);
+		System.err.println("Total Receipt>>" + totalReceipt);
+		System.err.println("Total Offline>>" + totalLpo);
+
+		dao.save(e);
 
 	}
 }

@@ -1,5 +1,6 @@
 package com.icpak.rest.dao;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,6 +21,7 @@ import com.workpoint.icpak.shared.model.EventStatus;
 import com.workpoint.icpak.shared.model.PaymentStatus;
 import com.workpoint.icpak.shared.model.events.AttendanceStatus;
 import com.workpoint.icpak.shared.model.events.BookingDto;
+import com.workpoint.icpak.shared.model.events.BookingSummaryDto;
 import com.workpoint.icpak.shared.model.events.ContactDto;
 import com.workpoint.icpak.shared.model.events.DelegateDto;
 import com.workpoint.icpak.shared.model.events.MemberBookingDto;
@@ -405,6 +407,11 @@ public class BookingsDao extends BaseDao {
 	}
 
 	public int getGenericDelegateCount(Long bookingId, String bookingType) {
+		return getGenericDelegateCount(bookingId, bookingType, false);
+	}
+
+	public int getGenericDelegateCount(Long bookingId, String bookingType,
+			boolean isMember) {
 		Number number = null;
 		String sql = "select count(*) "
 				+ "from delegate d where booking_id=:bId";
@@ -420,6 +427,15 @@ public class BookingsDao extends BaseDao {
 			if (bookingType.equals("attended")) {
 				sql = sql.concat(" and d.attendance=0");
 			}
+			if (bookingType.equals("cancelled")) {
+				sql = sql.concat(" and d.isActive=0");
+				if (isMember) {
+					sql = sql.concat(" and d.memberRegistrationNo IS NOT NULL");
+				} else {
+					sql = sql.concat(" and d.memberRegistrationNo IS NULL");
+				}
+			}
+
 		}
 
 		Query query = getEntityManager().createNativeQuery(sql).setParameter(
@@ -434,7 +450,127 @@ public class BookingsDao extends BaseDao {
 		number = getSingleResultOrNull(query);
 		logger.error("=== Delegate Count ==== " + number.intValue());
 		return number.intValue();
+	}
 
+	public int getStaffTransactionCount(Long eventId, String offlinePaymentType) {
+		Number number = null;
+		String sql = "select count(*) from delegate d "
+				+ "inner join booking b on d.booking_id=b.id "
+				+ "where b.event_id=:eventId";
+
+		/* Query */
+		if (offlinePaymentType != null && !offlinePaymentType.isEmpty()) {
+			if (offlinePaymentType.equals("receipt")) {
+				sql = sql
+						.concat(" and receiptNo is not null and receiptNo<>''");
+			}
+			if (offlinePaymentType.equals("lpo")) {
+				sql = sql.concat(" and d.lpoNo is not null and d.lpoNo<>''");
+			}
+		}
+
+		Query query = getEntityManager().createNativeQuery(sql).setParameter(
+				"eventId", eventId);
+		/* Parameters */
+		if (offlinePaymentType != null && !offlinePaymentType.isEmpty()) {
+			if (offlinePaymentType.equals("paid")) {
+				query.setParameter("bookingType", offlinePaymentType);
+			}
+		}
+
+		number = getSingleResultOrNull(query);
+		logger.error("=== Delegate Count ==== " + number.intValue());
+		return number.intValue();
+
+	}
+
+	public BookingSummaryDto getBookingSummary(String eventId) {
+		String sql = "select SUM(delegatesCount),SUM(totalPaid),SUM(totalWithAccomodation),"
+				+ "SUM(totalAttended),SUM(totalCancelled),SUM(totalCancelledMembers),"
+				+ "SUM(totalCancelledNonMembers),SUM(totalMembers),SUM(totalNonMembers),"
+				+ "SUM(totalPaidMembers),SUM(totalPaidNonMembers) from booking "
+				+ "where event_id=(select id from event where refId=:eventId)";
+
+		Query query = getEntityManager().createNativeQuery(sql).setParameter(
+				"eventId", eventId);
+		Object[] row = getSingleResultOrNull(query);
+		int i = 0;
+		Object value = null;
+		Integer totalDelegates = (value = row[i++]) == null ? null
+				: ((BigDecimal) value).intValue();
+		Integer totalPaid = (value = row[i++]) == null ? null
+				: ((BigDecimal) value).intValue();
+		Integer totalWithAccomodation = (value = row[i++]) == null ? null
+				: ((BigDecimal) value).intValue();
+		Integer totalAttended = (value = row[i++]) == null ? null
+				: ((BigDecimal) value).intValue();
+		Integer totalCancelled = (value = row[i++]) == null ? null
+				: ((BigDecimal) value).intValue();
+		Integer totalCancelledMembers = (value = row[i++]) == null ? null
+				: ((BigDecimal) value).intValue();
+		Integer totalCancelledNonMembers = (value = row[i++]) == null ? null
+				: ((BigDecimal) value).intValue();
+		Integer totalMembers = (value = row[i++]) == null ? null
+				: ((BigDecimal) value).intValue();
+		Integer totalNonMembers = (value = row[i++]) == null ? null
+				: ((BigDecimal) value).intValue();
+		Integer totalPaidMembers = (value = row[i++]) == null ? null
+				: ((BigDecimal) value).intValue();
+		Integer totalPaidNonMembers = (value = row[i++]) == null ? null
+				: ((BigDecimal) value).intValue();
+
+		System.err.println(totalDelegates + " " + totalPaid + " "
+				+ totalWithAccomodation + " " + totalAttended + " "
+				+ totalCancelled);
+
+		System.err.println(totalDelegates + " " + totalPaid + " "
+				+ totalWithAccomodation + " " + totalAttended + " "
+				+ totalCancelled);
+
+		BookingSummaryDto summary = new BookingSummaryDto();
+		summary.setTotalDelegates(totalDelegates);
+		summary.setTotalPaid(totalPaid);
+		summary.setTotalWithAccomodation(totalWithAccomodation);
+		summary.setTotalAttended(totalAttended);
+		summary.setTotalCancelled(totalCancelled);
+		summary.setTotalMembers(totalMembers);
+		summary.setTotalNonMembers(totalNonMembers);
+		summary.setTotalPaid(totalPaidMembers);
+		summary.setTotalPaidNonMembers(totalPaidNonMembers);
+		summary.setTotalPaidMembers(totalPaidMembers);
+		summary.setTotalCancelledMembers(totalCancelledMembers);
+		summary.setTotalCancelledNonMembers(totalCancelledNonMembers);
+
+		return getEventSummary(summary, eventId);
+	}
+
+	private BookingSummaryDto getEventSummary(BookingSummaryDto summary,
+			String eventId) {
+		String sql = "select totalMpesaPayments,totalCardsPayment,totalOfflinePayment,"
+				+ "totalCredit,totalReceiptPayment from event "
+				+ "where refId=:eventId";
+		Query query = getEntityManager().createNativeQuery(sql).setParameter(
+				"eventId", eventId);
+		Object[] row = getSingleResultOrNull(query);
+		int i = 0;
+		Object value = null;
+		Integer totalMpesaPayments = (value = row[i++]) == null ? null
+				: (Integer) value;
+		Integer totalCardsPayment = (value = row[i++]) == null ? null
+				: ((Integer) value);
+		Integer totalOfflinePayment = (value = row[i++]) == null ? null
+				: ((Integer) value);
+		Integer totalCredit = (value = row[i++]) == null ? null
+				: ((Integer) value);
+		Integer totalReceiptPayment = (value = row[i++]) == null ? null
+				: ((Integer) value);
+
+		summary.setTotalMpesaPayments(totalMpesaPayments);
+		summary.setTotalCardsPayment(totalCardsPayment);
+		summary.setTotalOfflinePayment(totalOfflinePayment);
+		summary.setTotalCredit(totalCredit);
+		summary.setTotalReceiptPayment(totalReceiptPayment);
+		return summary;
 	}
 
 	public int getDelegateCount(String eventId, String searchTerm,
@@ -493,7 +629,7 @@ public class BookingsDao extends BaseDao {
 		String sql = "SELECT d.memberRegistrationNo,COUNT(memberRegistrationNo) FROM delegate d "
 				+ "LEFT JOIN booking b ON (d.booking_id = b.id) WHERE b.event_id ="
 				+ " (SELECT id FROM event WHERE refId = :eventRefId)"
-				// + " and b.`E-Mail`='anne.njagi@icpak.com'"
+				+ " and b.`E-Mail`='anne.njagi@icpak.com'"
 				+ " GROUP BY d.memberRegistrationNo HAVING (COUNT(d.memberRegistrationNo)> 1);";
 
 		Query query = getEntityManager().createNativeQuery(sql).setParameter(
@@ -541,7 +677,8 @@ public class BookingsDao extends BaseDao {
 				+ "d.refId,d.memberRefId,d.memberRegistrationNo,d.ern,"
 				+ "d.title,d.otherNames,d.fullName,d.phoneNumber,a.hotel,b.paymentStatus,"
 				+ "d.attendance,d.surname,d.email,e.refid,d.booking_id,"
-				+ "d.receiptNo,d.lpoNo,d.isCredit,d.clearanceNo,b.isActive,i.documentNo,"
+				+ "d.receiptNo,d.lpoNo,d.isCredit,d.clearanceNo,b.isActive,d.isActive as delegateBookingStatus,"
+				+ "i.documentNo,"
 				+ "d.paymentStatus as delegatePaymentStatus,d.updated,d.updatedBy "
 				+ "from delegate d inner join booking b on (d.booking_id=b.id) "
 				+ "inner join event e on (b.event_id=e.id) "
@@ -648,6 +785,8 @@ public class BookingsDao extends BaseDao {
 					.toString();
 			Integer isBookingActive = (value = o[i++]) == null ? null
 					: (Integer) value;
+			Integer isDelegateActive = (value = o[i++]) == null ? null
+					: (Integer) value;
 			String invoiceNo = (value = o[i++]) == null ? null : value
 					.toString();
 			String delegatePaymentStatus = (value = o[i++]) == null ? null
@@ -674,7 +813,13 @@ public class BookingsDao extends BaseDao {
 			delegateDto.setHotel(hotel);
 			delegateDto.setErn(ern);
 			delegateDto.setBookingId(bookingId.toString());
-			delegateDto.setIsBookingActive(isBookingActive);
+
+			if (isBookingActive == 1) {
+				delegateDto.setIsBookingActive(isDelegateActive);
+			} else if (isBookingActive == 0) {
+				delegateDto.setIsBookingActive(isBookingActive);
+			}
+
 			delegateDto.setInvoiceNo(invoiceNo);
 			delegateDto.setLastUpdateDate(lastUpdateDate);
 			delegateDto.setUpdatedBy(updatedBy);

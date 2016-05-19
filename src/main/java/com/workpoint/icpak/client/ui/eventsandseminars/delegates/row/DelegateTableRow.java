@@ -172,13 +172,19 @@ public class DelegateTableRow extends RowWidget {
 									new OnOptionSelected() {
 										@Override
 										public void onSelect(String name) {
-											if (name.equals("Confirm")) {
+											if (name.equals("Cancel Entire Booking")) {
 												AppContext
 														.fireEvent(new EditModelEvent(
 																delegate.getBookingRefId()));
+											} else if (name
+													.equals("Cancel Individual Delegate")) {
+												AppContext
+														.fireEvent(new EditModelEvent(
+																delegate.getRefId()));
 											}
 										}
-									}, "Confirm", "Cancel");
+									}, "Cancel Entire Booking",
+									"Cancel Individual Delegate");
 				}
 			});
 		}
@@ -186,16 +192,16 @@ public class DelegateTableRow extends RowWidget {
 	}
 
 	protected void undoCancellation() {
-		AppManager.showPopUp("Confirm", "Undo " + delegate.getFullName() + " "
-				+ " cancellation?", new OnOptionSelected() {
-			@Override
-			public void onSelect(String name) {
-				if (name.equals("Confirm")) {
-					delegate.setIsBookingActive(1);
-					AppContext.fireEvent(new EditModelEvent(delegate));
-				}
-			}
-		}, "Confirm", "Cancel");
+		AppManager.showPopUp("Confirm", "Undo this cancellation?",
+				new OnOptionSelected() {
+					@Override
+					public void onSelect(String name) {
+						if (name.equals("Confirm")) {
+							delegate.setIsBookingActive(1);
+							AppContext.fireEvent(new EditModelEvent(delegate));
+						}
+					}
+				}, "Confirm", "Cancel");
 	}
 
 	protected void updatePaymentInfo() {

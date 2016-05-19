@@ -15,6 +15,7 @@ import javax.ws.rs.core.MediaType;
 
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.workpoint.icpak.shared.model.events.BookingDto;
+import com.workpoint.icpak.shared.model.events.BookingSummaryDto;
 import com.workpoint.icpak.shared.model.events.DelegateDto;
 
 public interface BookingsResource extends BaseResource {
@@ -29,17 +30,23 @@ public interface BookingsResource extends BaseResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public BookingDto getById(@PathParam("bookingId") String bookingId);
 
+	@GET
+	@Path("/summary/{eventRefId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public BookingSummaryDto getBookingSummary(
+			@PathParam("eventRefId") String eventRefId);
+
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public BookingDto create(BookingDto booking);
-	
+
 	@POST
 	@Path("/instantBooking")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Create Booking by member No", consumes = MediaType.APPLICATION_JSON)
-	public BookingDto createBookingByMemberNo(DelegateDto delegate); 
+	public BookingDto createBookingByMemberNo(DelegateDto delegate);
 
 	@POST
 	@Path("/{bookingId}/payment")
@@ -55,18 +62,17 @@ public interface BookingsResource extends BaseResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public BookingDto update(@PathParam("bookingId") String bookingId,
 			BookingDto booking);
-	
+
 	@GET
 	@Path("/filteredcount")
-	public Integer getBookingCount(
-	@QueryParam("searchTerm") String searchTerm,
-	@QueryParam("accomodationRefId") String accomodationRefId,
-	@QueryParam("bookingStatus") String bookingStatus);
-	
+	public Integer getBookingCount(@QueryParam("searchTerm") String searchTerm,
+			@QueryParam("accomodationRefId") String accomodationRefId,
+			@QueryParam("bookingStatus") String bookingStatus);
+
 	@POST
 	@Path("/cancel/{bookingId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public BookingDto cancelBooking(@PathParam("bookingId") String bookingId);
+	public boolean cancelBooking(@PathParam("bookingId") String bookingId);
 
 	@POST
 	@Path("/{bookingId}")

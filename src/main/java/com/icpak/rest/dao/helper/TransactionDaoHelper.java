@@ -421,10 +421,8 @@ public class TransactionDaoHelper {
 				// Is this Payment for a Course
 				if (booking.getEvent().getType() != null
 						&& booking.getEvent().getType() == EventType.COURSE) {
-
 					logger.info("Payment for a course"
 							+ booking.getEvent().getName());
-
 					/* Payers message */
 					smsMessage = " Thank-you for your " + trx.getPaymentType()
 							+ " payment of " + numberFormat.format(paidAmt)

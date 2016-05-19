@@ -12,7 +12,6 @@ import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -27,10 +26,12 @@ import com.workpoint.icpak.client.ui.eventsandseminars.delegates.table.Delegates
 import com.workpoint.icpak.client.ui.eventsandseminars.header.EventsHeader;
 import com.workpoint.icpak.client.ui.eventsandseminars.row.EventsTableRow;
 import com.workpoint.icpak.client.ui.eventsandseminars.table.EventsTable;
+import com.workpoint.icpak.client.ui.util.NumberUtils;
 import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.model.BookingStatus;
 import com.workpoint.icpak.shared.model.EventSummaryDto;
 import com.workpoint.icpak.shared.model.events.AccommodationDto;
+import com.workpoint.icpak.shared.model.events.BookingSummaryDto;
 import com.workpoint.icpak.shared.model.events.DelegateDto;
 import com.workpoint.icpak.shared.model.events.EventDto;
 
@@ -69,9 +70,60 @@ public class EventsView extends ViewImpl implements EventsPresenter.IEventsView 
 	ActionLink aSummarytab;
 
 	@UiField
+	Element elTotalBooking;
+	@UiField
+	Element divTotalBookingMetric;
+
+	@UiField
+	Element elTotalMembers;
+	@UiField
+	Element divMembersMetric;
+
+	@UiField
+	Element elTotalNonMembers;
+	@UiField
+	Element divNonMemberMetric;
+
+	@UiField
+	Element divPaymentMetric;
+	@UiField
+	Element divAccomodationMetric;
+	@UiField
+	Element divCancellationMetric;
+	@UiField
+	Element divAttendanceMetric;
+
+	@UiField
 	Element liSummary;
 	@UiField
 	Element liBooking;
+
+	@UiField
+	Element spnPaid;
+	@UiField
+	Element spnAccomodated;
+	@UiField
+	Element spnCancellation;
+	@UiField
+	Element elMpesaPayments;
+	@UiField
+	Element elCardPayments;
+	@UiField
+	Element elCreditPayments;
+	@UiField
+	Element elReceiptPayments;
+	@UiField
+	Element elOfflinePayments;
+
+	@UiField
+	Element spnTotalActive;
+	@UiField
+	Element spnTotalActiveMembers;
+	@UiField
+	Element spnTotalActiveNonMembers;
+
+	@UiField
+	Element spnAttendance;
 	private EventDto event;
 
 	public interface Binder extends UiBinder<Widget, EventsView> {
@@ -84,6 +136,7 @@ public class EventsView extends ViewImpl implements EventsPresenter.IEventsView 
 
 		tblDelegates.getDownloadPDFLink().addStyleName("hide");
 		tblDelegates.getDownloadXLSLink().removeStyleName("hide");
+
 		tblDelegates.getDownloadXLSLink().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -138,9 +191,6 @@ public class EventsView extends ViewImpl implements EventsPresenter.IEventsView 
 		if (AppContext.isCurrentUserEventEdit()) {
 			aCreateBooking.setHref("#eventBooking;eventId=" + event.getRefId());
 		}
-
-		// Window.alert(event.getRefId());
-
 		aBookingstab.setHref("#events;eventId=" + event.getRefId()
 				+ ";page=booking");
 		aSummarytab.setHref("#events;eventId=" + event.getRefId()
@@ -153,6 +203,171 @@ public class EventsView extends ViewImpl implements EventsPresenter.IEventsView 
 		for (DelegateDto dto : delegates) {
 			tblDelegates.createRow(new DelegateTableRow(dto, event));
 		}
+	}
+
+	@Override
+	public void bindBookingSummary(BookingSummaryDto summary) {
+		if (summary != null) {
+			Integer activeDelegates = summary.getTotalDelegates()
+					- summary.getTotalCancelled();
+
+			Integer totalNonMembers = 0;
+			int totalActiveMembers = 0;
+			int totalActiveNonMembers = 0;
+			elTotalBooking.setInnerText(NumberUtils.NUMBERFORMAT.format(summary
+					.getTotalDelegates()) + "");
+			spnTotalActive.setInnerText(NumberUtils.NUMBERFORMAT
+					.format(activeDelegates) + " Active");
+
+			// Members
+			if (summary.getTotalMembers() != null) {
+				totalNonMembers = summary.getTotalDelegates()
+						- summary.getTotalMembers();
+				totalActiveMembers = summary.getTotalMembers()
+						- summary.getTotalCancelledMembers();
+				elTotalMembers.setInnerText(NumberUtils.NUMBERFORMAT
+						.format(summary.getTotalMembers()) + "");
+				spnTotalActiveMembers.setInnerText(NumberUtils.NUMBERFORMAT
+						.format(totalActiveMembers) + " Active");
+
+			}
+
+			// Non-Members
+			if (summary.getTotalNonMembers() != null) {
+				totalActiveNonMembers = summary.getTotalNonMembers()
+						- summary.getTotalCancelledNonMembers();
+				elTotalNonMembers.setInnerText(NumberUtils.NUMBERFORMAT
+						.format(totalNonMembers) + "");
+				spnTotalActiveNonMembers.setInnerText(NumberUtils.NUMBERFORMAT
+						.format(totalActiveNonMembers) + " Active");
+			}
+
+			// Payment metric
+			if (summary.getTotalPaid() != null) {
+				Integer percentagePaid = (summary.getTotalPaid() * 100)
+						/ summary.getTotalDelegates();
+				String converted = convertToReadableProgress(percentagePaid);
+				divPaymentMetric
+						.setClassName("progress-bar progress-bar-green progress-"
+								+ converted);
+				spnPaid.setInnerText(percentagePaid + "%");
+				divPaymentMetric.setTitle(summary.getTotalPaid() + " out of "
+						+ activeDelegates + " have paid.");
+
+			}
+
+			/* TOTAL Active METRIC */
+			if (summary.getTotalDelegates() != null) {
+				Integer percentagePaid = (activeDelegates * 100)
+						/ summary.getTotalDelegates();
+				String converted = convertToReadableProgress(percentagePaid);
+				divTotalBookingMetric
+						.setClassName("progress-bar progress-bar-green progress-"
+								+ converted);
+				divTotalBookingMetric.setTitle(activeDelegates + " out of "
+						+ summary.getTotalDelegates() + " are active.");
+			}
+
+			// Member Active metric
+			if (summary.getTotalCancelledMembers() != null) {
+				int activeMembers = summary.getTotalMembers()
+						- summary.getTotalCancelledMembers();
+				Integer percentageActiveMembers = (activeMembers * 100)
+						/ summary.getTotalMembers();
+				String converted = convertToReadableProgress(percentageActiveMembers);
+				divMembersMetric
+						.setClassName("progress-bar progress-bar-green progress-"
+								+ converted);
+				divMembersMetric.setTitle(activeMembers + " out of "
+						+ summary.getTotalMembers() + " are active.");
+			}
+
+			// Non-member Payment Metric
+			if (summary.getTotalPaidMembers() != null) {
+				int activeNonMembers = summary.getTotalNonMembers()
+						- summary.getTotalCancelledNonMembers();
+				Integer percentageNonPaidMembers = (activeNonMembers * 100)
+						/ summary.getTotalNonMembers();
+				String converted = convertToReadableProgress(percentageNonPaidMembers);
+				divNonMemberMetric
+						.setClassName("progress-bar progress-bar-green progress-"
+								+ converted);
+				divNonMemberMetric.setTitle(activeNonMembers + " out of"
+						+ totalNonMembers + " are active.");
+			}
+
+			// Accomodation metric
+			if (summary.getTotalWithAccomodation() != null) {
+				Integer percentageAccomodated = (summary
+						.getTotalWithAccomodation() * 100)
+						/ summary.getTotalDelegates();
+				String converted = convertToReadableProgress(percentageAccomodated);
+				divAccomodationMetric
+						.setClassName("progress-bar progress-bar-green progress-"
+								+ converted);
+				spnAccomodated.setInnerText(percentageAccomodated + "%");
+				divAccomodationMetric.setTitle(summary
+						.getTotalWithAccomodation()
+						+ " out of "
+						+ activeDelegates + " have accomodation.");
+			}
+
+			// Cancellation metric
+			if (summary.getTotalCancelled() != null) {
+				Integer percentageCancelled = (summary.getTotalCancelled() * 100)
+						/ summary.getTotalDelegates();
+				String converted = convertToReadableProgress(percentageCancelled);
+				divCancellationMetric
+						.setClassName("progress-bar progress-bar-green progress-"
+								+ converted);
+				spnCancellation.setInnerText(percentageCancelled + "%");
+				divCancellationMetric.setTitle(summary.getTotalCancelled()
+						+ " out of " + activeDelegates
+						+ " have cancelled their booking.");
+			}
+
+			// Attendance metric
+			if (summary.getTotalAttended() != null) {
+				Integer percentageAttended = (summary.getTotalAttended() * 100)
+						/ summary.getTotalDelegates();
+				String converted = convertToReadableProgress(percentageAttended);
+				divAttendanceMetric.setClassName("progress-" + converted);
+				spnAttendance.setInnerText(percentageAttended + "%");
+				divAttendanceMetric.setTitle(summary.getTotalAttended()
+						+ " out of " + activeDelegates
+						+ " have been marked as attended.");
+			}
+
+			// Payments Breakdown
+			elMpesaPayments.setInnerText(NumberUtils.NUMBERFORMAT
+					.format(summary.getTotalMpesaPayments()) + "");
+			elCardPayments.setInnerText(NumberUtils.NUMBERFORMAT.format(summary
+					.getTotalCardsPayment()) + "");
+			elCreditPayments.setInnerText(NumberUtils.NUMBERFORMAT
+					.format(summary.getTotalCredit()) + "");
+			elReceiptPayments.setInnerText(NumberUtils.NUMBERFORMAT
+					.format(summary.getTotalReceiptPayment()) + "");
+			elOfflinePayments.setInnerText(NumberUtils.NUMBERFORMAT
+					.format(summary.getTotalOfflinePayment()) + "");
+
+		}
+	}
+
+	private String convertToReadableProgress(Integer percentagePaid) {
+		String readable = "";
+		if (percentagePaid > 10) {
+			if (!(String.valueOf(percentagePaid).endsWith("0"))) {
+				readable = (String.valueOf(percentagePaid)).substring(0, 1)
+						+ "0";
+			} else {
+				readable = String.valueOf(percentagePaid);
+			}
+		} else if (percentagePaid == 0) {
+			readable = "0";
+		} else {
+			readable = "10";
+		}
+		return readable;
 	}
 
 	@Override

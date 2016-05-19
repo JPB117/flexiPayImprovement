@@ -19,5 +19,5 @@ public class TransactionsDao extends BaseDao {
 				"invoiceNo", invoiceNo);
 		return getSingleResultOrNull(query);
 	}
-
+	
 }

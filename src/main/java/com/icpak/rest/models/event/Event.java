@@ -70,6 +70,11 @@ public class Event extends PO {
 	private Double associatePrice;
 	private Double discountAssociatePrice;
 	private Double penaltyAssociatePrice;
+	private Integer totalMpesaPayments;
+	private Integer totalCardsPayment;
+	private Integer totalOfflinePayment;
+	private Integer totalCredit;
+	private Integer totalReceiptPayment;
 	private Date discountDate;
 	private Date penaltyDate;
 	private Integer lmsCourseId;
@@ -522,6 +527,46 @@ public class Event extends PO {
 
 	public void setLmsCourseId(Integer lmsCourseId) {
 		this.lmsCourseId = lmsCourseId;
+	}
+
+	public Integer getTotalMpesaPayments() {
+		return totalMpesaPayments;
+	}
+
+	public void setTotalMpesaPayments(Integer totalMpesaPayments) {
+		this.totalMpesaPayments = totalMpesaPayments;
+	}
+
+	public Integer getTotalCardsPayment() {
+		return totalCardsPayment;
+	}
+
+	public void setTotalCardsPayment(Integer totalCardsPayment) {
+		this.totalCardsPayment = totalCardsPayment;
+	}
+
+	public Integer getTotalOfflinePayment() {
+		return totalOfflinePayment;
+	}
+
+	public void setTotalOfflinePayment(Integer totalOfflinePayment) {
+		this.totalOfflinePayment = totalOfflinePayment;
+	}
+
+	public Integer getTotalCredit() {
+		return totalCredit;
+	}
+
+	public void setTotalCredit(Integer totalCredit) {
+		this.totalCredit = totalCredit;
+	}
+
+	public Integer getTotalReceiptPayment() {
+		return totalReceiptPayment;
+	}
+
+	public void setTotalReceiptPayment(Integer totalReceiptPayment) {
+		this.totalReceiptPayment = totalReceiptPayment;
 	}
 
 }
