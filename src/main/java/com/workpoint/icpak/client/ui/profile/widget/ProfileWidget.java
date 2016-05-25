@@ -26,12 +26,14 @@ import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
+import com.icpak.rest.models.membership.ApplicationCategory;
 import com.workpoint.icpak.client.model.UploadContext;
 import com.workpoint.icpak.client.model.UploadContext.UPLOADACTION;
 import com.workpoint.icpak.client.security.CurrentUser;
 import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.BulletListPanel;
 import com.workpoint.icpak.client.ui.component.BulletPanel;
+import com.workpoint.icpak.client.ui.component.DropDownList;
 import com.workpoint.icpak.client.ui.component.ProgressBar;
 import com.workpoint.icpak.client.ui.component.TextField;
 import com.workpoint.icpak.client.ui.component.tabs.TabContent;
@@ -53,6 +55,7 @@ import com.workpoint.icpak.shared.model.ApplicationFormEmploymentDto;
 import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 import com.workpoint.icpak.shared.model.ApplicationFormSpecializationDto;
 import com.workpoint.icpak.shared.model.ApplicationFormTrainingDto;
+import com.workpoint.icpak.shared.model.ApplicationType;
 import com.workpoint.icpak.shared.model.Country;
 import com.workpoint.icpak.shared.model.MemberStanding;
 import com.workpoint.icpak.shared.model.MembershipStatus;
@@ -134,6 +137,10 @@ public class ProfileWidget extends Composite {
 	@UiField
 	SpanElement spnRefreshSection;
 	@UiField
+	SpanElement spnChangeCategory;
+	@UiField
+	ActionLink aChngeCategory;
+	@UiField
 	Element spnHelpIcon;
 	@UiField
 	Element elSpace;
@@ -157,6 +164,13 @@ public class ProfileWidget extends Composite {
 	DivElement divGoodStandingActions;
 	@UiField
 	DivElement divGoodStanding;
+	@UiField
+	DivElement divChangeCategory;
+	@UiField
+	DropDownList<ApplicationType> lstCategories;
+	@UiField
+	ActionLink aSaveCategory;
+
 	@UiField
 	DivElement divErpSync;
 	@UiField
@@ -292,8 +306,9 @@ public class ProfileWidget extends Composite {
 				|| AppContext.isCurrentUserApplicationsRead();
 		isCurrentUserBasicMember = AppContext.isCurrentBasicMember();
 
-		// panelParent.getElement().getParentElement().getStyle()
-		// .setPaddingTop(0.0, Unit.PX);
+		lstCategories.setItems(Arrays.asList(ApplicationType.values()),
+				"--Select Application Type--");
+
 	}
 
 	public void initDisplay(ApplicationStatus applicationStatus,
@@ -314,6 +329,7 @@ public class ProfileWidget extends Composite {
 			divPaymentSection.removeClassName("hide");
 			divApplicationStatus.removeClassName("hide");
 			divSubmitApplication.removeClassName("hide");
+			spnChangeCategory.removeClassName("hide");
 			bindApplicationAndPaymentStatus(applicationStatus, paymentStatus);
 
 			// Application Status - Specific to basic Member
@@ -451,10 +467,7 @@ public class ProfileWidget extends Composite {
 		aMgmtActions.addStyleName("hide");
 		divMemberShipStatus.addClassName("hide");
 		divPaySubscription.addClassName("hide");
-	}
-
-	public void bindPaymentStatus() {
-
+		spnChangeCategory.addClassName("hide");
 	}
 
 	public void setEditMode(boolean editMode) {

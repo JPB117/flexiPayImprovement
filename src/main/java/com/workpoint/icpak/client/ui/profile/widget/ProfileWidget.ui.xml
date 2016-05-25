@@ -157,6 +157,20 @@
 											<div class="row" ui:field="divMembershipNo">
 												<span class="text-muted" ui:field="spnApplicationType">
 												</span>
+												<span ui:field="spnChangeCategory">
+													|
+													<d:ActionLink ui:field="aChngeCategory">Change Category</d:ActionLink>
+												</span>
+											</div>
+
+											<div class="row" ui:field="divChangeCategory">
+												<div class="col-lg-4">
+													<d:DropDownList ui:field="lstCategories"></d:DropDownList>
+												</div>
+												<div class="col-lg-3">
+													<d:ActionLink ui:field="aSaveCategory"
+														styleName="btn btn-fill btn-gold">Save</d:ActionLink>
+												</div>
 											</div>
 
 											<div class="row" ui:field="divMemberShipStatus">
@@ -173,12 +187,13 @@
 													)
 												</span>
 											</div>
-											
+
 											<div ui:field="divPaySubscription">
 												<div class="row">
 													Current Balance:
-													<Strong ui:field="elCurrentBalance"></Strong> 
-													| <d:ActionLink ui:field="aRenewSubscription">Pay Subscription
+													<Strong ui:field="elCurrentBalance"></Strong>
+													|
+													<d:ActionLink ui:field="aRenewSubscription">Pay Subscription
 													</d:ActionLink>
 												</div>
 											</div>

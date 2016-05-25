@@ -209,8 +209,14 @@ public class UsersDaoHelper {
 	 * @return
 	 */
 	public UserDto create(User user) {
+		return create(user, false);
+	}
+
+	public UserDto create(User user, boolean createMemberAccount) {
 		dao.createUser(user);
-		createDefaultMemberForUser(user);
+		if (createMemberAccount) {
+			createDefaultMemberForUser(user);
+		}
 		return user.toDto();
 	}
 

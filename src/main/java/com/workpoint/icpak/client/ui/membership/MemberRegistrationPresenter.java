@@ -358,10 +358,6 @@ public class MemberRegistrationPresenter
 				}).getAll();
 
 		if (applicationRefId != null) {
-			// getView().next();
-			// getView().next();
-			// getView().next();
-			// getView().next();
 			getView().setCounter(3);
 			loadApplication(applicationRefId);
 		}

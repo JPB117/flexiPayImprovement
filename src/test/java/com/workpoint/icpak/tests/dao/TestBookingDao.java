@@ -13,13 +13,16 @@ import com.icpak.rest.dao.BookingsDao;
 import com.icpak.rest.dao.EventsDao;
 import com.icpak.rest.dao.helper.BookingsDaoHelper;
 import com.icpak.rest.dao.helper.CPDDaoHelper;
+import com.icpak.rest.dao.helper.EventsDaoHelper;
 import com.icpak.rest.models.event.Delegate;
+import com.icpak.rest.models.event.Event;
 import com.workpoint.icpak.shared.model.PaymentStatus;
 import com.workpoint.icpak.shared.model.events.AccommodationDto;
 import com.workpoint.icpak.shared.model.events.AttendanceStatus;
 import com.workpoint.icpak.shared.model.events.BookingDto;
 import com.workpoint.icpak.shared.model.events.ContactDto;
 import com.workpoint.icpak.shared.model.events.DelegateDto;
+import com.workpoint.icpak.shared.model.events.EventDto;
 import com.workpoint.icpak.tests.base.AbstractDaoTest;
 
 public class TestBookingDao extends AbstractDaoTest {
@@ -32,6 +35,8 @@ public class TestBookingDao extends AbstractDaoTest {
 	CPDDaoHelper daoHelper;
 	@Inject
 	EventsDao eventDao;
+	@Inject
+	EventsDaoHelper eventDaoHelper;
 	@Inject
 	BookingsDao bookingDao;
 
@@ -260,7 +265,10 @@ public class TestBookingDao extends AbstractDaoTest {
 
 	@Test
 	public void testUpdateStats() {
-		bookingsHelper.updateBookingStats("dQdcmmGqPuw7wVzr");
+		List<EventDto> allEvents = eventDaoHelper.getAllEvents("", 0, 10000);
+		for (EventDto e : allEvents) {
+			bookingsHelper.updateBookingStats(e.getRefId());
+		}
 		// bookingsHelper.updatePaymentStats("IWqduDqhOKXb9nxq");
 	}
 

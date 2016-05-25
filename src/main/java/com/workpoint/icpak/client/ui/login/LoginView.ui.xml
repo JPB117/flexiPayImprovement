@@ -72,6 +72,9 @@
 									<br />
 									Existing Member ?
 									<a href="#activateacc;r=activate">Activate Account</a>
+									<br />
+									
+									<a href="/">Back to Website</a>
 								</div>
 
 							</fieldset>
