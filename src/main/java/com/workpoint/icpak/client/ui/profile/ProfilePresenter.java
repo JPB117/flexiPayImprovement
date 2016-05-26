@@ -300,7 +300,7 @@ public class ProfilePresenter
 				showPopUp(educationForm);
 			}
 		});
-		
+
 		getView().getAccountancyAddButton().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -308,7 +308,7 @@ public class ProfilePresenter
 				showPopUp(accountancyForm);
 			}
 		});
-		
+
 		getView().getTrainingAddButton().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -316,7 +316,7 @@ public class ProfilePresenter
 				showPopUp(trainingForm);
 			}
 		});
-		
+
 		getView().getSpecializationAddButton().addClickHandler(
 				new ClickHandler() {
 					@Override
@@ -616,6 +616,8 @@ public class ProfilePresenter
 							getView().setEditMode(true);
 							loadMemberDetails();
 							fireEvent(new ProcessingCompletedEvent());
+							fireEvent(new AfterSaveEvent(
+									"Changes successfully saved."));
 						}
 
 						@Override

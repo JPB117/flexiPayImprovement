@@ -120,11 +120,11 @@ public class ApplicationFormResourceImpl implements ApplicationFormResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Update an existing application", response = ApplicationFormHeader.class, consumes = MediaType.APPLICATION_JSON, produces = MediaType.APPLICATION_JSON)
 	public ApplicationFormHeaderDto update(
-			@ApiParam(value = "ApplicationFormHeader Id of the application to update", required = true) @PathParam("applicationId") String applicationId,
+			@ApiParam(value = "ApplicationFormHeader Id of the application to update", required = true) 
+			@PathParam("applicationId") String applicationId,
 			ApplicationFormHeaderDto application) {
 		helper.updateApplication(applicationId, application);
 		application.setUri(getUri());
-
 		return application;
 	}
 

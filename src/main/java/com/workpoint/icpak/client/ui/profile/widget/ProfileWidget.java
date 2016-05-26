@@ -26,7 +26,6 @@ import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
-import com.icpak.rest.models.membership.ApplicationCategory;
 import com.workpoint.icpak.client.model.UploadContext;
 import com.workpoint.icpak.client.model.UploadContext.UPLOADACTION;
 import com.workpoint.icpak.client.security.CurrentUser;
@@ -329,7 +328,7 @@ public class ProfileWidget extends Composite {
 			divPaymentSection.removeClassName("hide");
 			divApplicationStatus.removeClassName("hide");
 			divSubmitApplication.removeClassName("hide");
-			spnChangeCategory.removeClassName("hide");
+			// spnChangeCategory.removeClassName("hide");
 			bindApplicationAndPaymentStatus(applicationStatus, paymentStatus);
 
 			// Application Status - Specific to basic Member
@@ -468,6 +467,7 @@ public class ProfileWidget extends Composite {
 		divMemberShipStatus.addClassName("hide");
 		divPaySubscription.addClassName("hide");
 		spnChangeCategory.addClassName("hide");
+		divChangeCategory.addClassName("hide");
 	}
 
 	public void setEditMode(boolean editMode) {
@@ -500,20 +500,16 @@ public class ProfileWidget extends Composite {
 		if (result.getRefId() != null) {
 			String fullName = "";
 			// Window.alert("User is not admin!"+isCurrentUserAdmin);
-			if (!isCurrentUserAdmin) {
+			if (isCurrentUserBasicMember) {
+				fullName = result.getSurname() + " " + result.getOtherNames();
+			} else {
 				fullName = AppContext.getCurrentUser().getUser().getFullName();
 			}
 
 			if (fullName != null && !fullName.isEmpty()) {
-				spnNames.setInnerText(AppContext.getCurrentUser().getUser()
-						.getFullName());
-			} else {
-				if (result.getSurname() != null
-						&& result.getOtherNames() != null) {
-					spnNames.setInnerText(result.getSurname() + " "
-							+ result.getOtherNames());
-				}
+				spnNames.setInnerText(fullName);
 			}
+
 			if (result.getApplicationType() != null) {
 				spnApplicationType.setInnerText(result.getApplicationType()
 						.getDisplayName());
