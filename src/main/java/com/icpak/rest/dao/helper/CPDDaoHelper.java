@@ -85,6 +85,8 @@ public class CPDDaoHelper {
 		CPDDto rtn = cpd.toDTO();
 		rtn.setFullNames(userDao.getNamesBymemberNo(cpd
 				.getMemberRegistrationNo()));
+		
+		
 		return rtn;
 	}
 
@@ -238,7 +240,6 @@ public class CPDDaoHelper {
 		cpd.setEventId(event.getRefId());
 		cpd.setOrganizer("ICPAK");
 		cpd.setStatus(CPDStatus.Approved);
-		cpd.setEventId(event.getRefId());
 		cpd.setTitle(event.getName());
 		cpd.setMemberRegistrationNo(delegate.getMemberRegistrationNo());
 		cpd.setCategory(CPDCategory.CATEGORY_A);
@@ -303,7 +304,7 @@ public class CPDDaoHelper {
 
 		if (balance > 100) {
 			isGenerate = false;
-			messages.add("Member account balance must be less than Ksh100");
+			messages.add("Member account balance must be less than Ksh100.");
 		}
 
 		/**
@@ -312,7 +313,7 @@ public class CPDDaoHelper {
 		 */
 		if (member.hasDisplinaryCase()) {
 			isGenerate = false;
-			messages.add("Member must not have an ongoing displinary case for good standing");
+			messages.add("Member must not have an ongoing displinary case for good standing.");
 		}
 
 		/**
@@ -326,7 +327,7 @@ public class CPDDaoHelper {
 		if (registrationDate == null) {
 			isGenerate = false;
 			messages.add("Your registration date cannot be found in the portal, kindly request "
-					+ "for your account update from the Administrator.");
+					+ "for your account to be updated by the Administrator.");
 		} else {
 			Calendar regDate = Calendar.getInstance();
 			regDate.setTime(registrationDate);
@@ -341,7 +342,8 @@ public class CPDDaoHelper {
 					isGenerate = false;
 					messages.add("You have been a member for more than "
 							+ noOfYears.intValue() + " but you have done "
-							+ cpdHours.intValue() + "/40 expected hours.");
+							+ cpdHours.intValue()
+							+ " out of 40 expected hours.");
 				}
 			} else if (noOfYears <= 3) {
 				// >1 && <=2
@@ -349,7 +351,8 @@ public class CPDDaoHelper {
 					isGenerate = false;
 					messages.add("You have been a member for more than "
 							+ noOfYears.intValue() + "but you have done "
-							+ cpdHours.intValue() + "/80 expected hours.");
+							+ cpdHours.intValue()
+							+ " out of 80 expected hours.");
 				}
 			} else {
 				// >1 && <=2

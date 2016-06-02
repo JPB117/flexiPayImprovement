@@ -510,8 +510,8 @@ public class GetReport extends HttpServlet {
 
 		CPDDto cpd = cpdHelper.getCPD(cpdRefId);
 		assert cpd != null;
-		
-		//Event e =eventDao.getByEvenFromCPDId(id, true)
+
+		// Event e =eventDao.getByEvenFromCPDId(id, true)
 
 		Map<String, Object> values = new HashMap<String, Object>();
 		values.put("eventName", cpd.getTitle());
@@ -520,7 +520,16 @@ public class GetReport extends HttpServlet {
 		values.put("memberName", cpd.getFullNames());
 		values.put("dateIssued", formatter.format(cpd.getEndDate()));
 		values.put("cpdHours", cpd.getCpdHours());
-		values.put("eventVenue", cpd.getEventLocation());
+
+		if ((cpd.getEventLocation() == null || cpd.getEventLocation().isEmpty())) {
+			Event e = eventDao
+					.findByRefId(cpd.getEventId(), Event.class, false);
+			if (e != null) {
+				values.put("eventVenue", e.getVenue());
+			}
+		} else {
+			values.put("eventVenue", cpd.getEventLocation());
+		}
 		Doc doc = new Doc(values);
 		HTMLToPDFConvertor convertor = new HTMLToPDFConvertor();
 		InputStream is = GetReport.class.getClassLoader().getResourceAsStream(
@@ -840,20 +849,20 @@ public class GetReport extends HttpServlet {
 		User user = member.getUser();
 		UserDto userDto = user.toDto();
 
-		// List<CPDDto> cpds = cpdHelper.getAllMemberCpd(memberRefId, startDate,
-		// endDate, 0, 1000);
+		// Get All CPD Records
 		List<CPD> cpds = CPDDao.getAllCPDS(member.getRefId(),
 				startDate == null ? null : startDate, endDate == null ? null
 						: endDate, 0, 10000);
 		List<CPD> sortedCpd = new ArrayList<>();
 		for (CPD cpd : cpds) {
 			if (cpd.getStatus() != null) {
-				if (!cpd.getStatus().equals(CPDStatus.Unconfirmed)) {
+				if (cpd.getStatus().equals(CPDStatus.Approved)) {
 					sortedCpd.add(cpd);
 				}
 			}
 		}
 
+		// Write out member details
 		log.info("CPD Records Count = " + sortedCpd.size());
 		Map<String, Object> values = new HashMap<String, Object>();
 		values.put("memberNames", userDto.getFullName());
@@ -861,8 +870,8 @@ public class GetReport extends HttpServlet {
 		values.put("startYear", formatter.format(startDate));
 		values.put("endYear", formatter.format(endDate));
 
+		// Document information
 		Doc doc = new Doc(values);
-
 		for (CPD cpd : sortedCpd) {
 			String cpdCategory = null;
 			values = new HashMap<String, Object>();

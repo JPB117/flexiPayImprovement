@@ -296,7 +296,7 @@ public class MemberRegistrationPresenter
 
 	}
 
-	protected void checkExists(String email) {
+	protected void checkExists(final String email) {
 		getView().setEmailValid(true);
 
 		if (applicationRefId != null) {
@@ -312,7 +312,6 @@ public class MemberRegistrationPresenter
 			@Override
 			public boolean handleCustomError(Response aResponse) {
 				int code = aResponse.getStatusCode();
-				String message = aResponse.getText();
 				if (code == 404) {
 					getView().setEmailValid(true); // The email address does not
 													// exist in our database as
@@ -320,19 +319,23 @@ public class MemberRegistrationPresenter
 					return false;
 				}
 
-				/*
-				 * Something went wrong on the server side while checking if the
-				 * email exists esp. duplicate entries errors
-				 * (NonUniqueResultExceptions)
-				 */
+				if (code == 500) {
+					/*
+					 * Something went wrong on the server side while checking if
+					 * the email exists esp. duplicate entries errors
+					 * (NonUniqueResultExceptions)
+					 */
 
-				/*
-				 * Do not allow the user to continue lest they input duplicate
-				 * records
-				 */
-				getView().setEmailValid(false);
-				getView().getRegistrationForm().addError(message);
+					/*
+					 * Do not allow the user to continue lest they input
+					 * duplicate records
+					 */
+					getView().setEmailValid(false);
+					return false;
+				}
+
 				return false;
+
 			}
 		}).getById(email);
 	}

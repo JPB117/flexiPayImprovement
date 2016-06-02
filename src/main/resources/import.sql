@@ -86,6 +86,8 @@ create index idxBookingContact on booking(`Contact` );
 create index idxInvoicedocNo on invoice(`documentNo` );
 create index idxBookingRefId on invoice(`bookingRefId` );
 create index idxBooking_RefId on booking(`refId` );
+create index idxMemberRefId on member(`refId` );
+create index idxMemberNo on member(`memberNo` );
 
 
 
