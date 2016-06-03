@@ -38,7 +38,7 @@ public class ServerDateUtils {
 	public static final SimpleDateFormat MONTHONLYFORMAT = getFormat(monthOnlyPattern);
 	public static final SimpleDateFormat FULLHOURMINUTESTAMP = getFormat(fullHourMinuteStamp);
 	public static final SimpleDateFormat FULLTIMESTAMP = getFormat(fullTimeStamp);
-	public static final SimpleDateFormat MPESATIMESTAMP = getFormat(fullTimeStamp);
+	public static final SimpleDateFormat MPESATIMESTAMP = getFormat(mpesaTimeStamp);
 
 	static long minInMillis = 60 * 1000;
 	static long hourInMillis = 60 * minInMillis;

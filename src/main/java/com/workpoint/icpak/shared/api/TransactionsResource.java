@@ -2,10 +2,15 @@ package com.workpoint.icpak.shared.api;
 
 import java.util.List;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.workpoint.icpak.shared.model.events.MpesaDTO;
 import com.workpoint.icpak.shared.trx.OldTransactionDto;
 
 @Path("transactions")
@@ -25,5 +30,11 @@ public interface TransactionsResource {
 			@QueryParam("mpesa_sender") String payerNames);
 
 	@GET
-	public List<OldTransactionDto> getAllTrxs(@QueryParam("userId") String userId);
+	public List<OldTransactionDto> getAllTrxs(
+			@QueryParam("userId") String userId);
+
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "Receives Mpesa Info via the new api", consumes = MediaType.APPLICATION_JSON)
+	public String receiveMpesaG2(MpesaDTO mpesaTrx);
 }

@@ -171,7 +171,7 @@ public class TransactionDaoHelper {
 			saveTransactionFirst(trx);
 
 			Double amt = Double.valueOf(amount);
-			String smsMessage = " Thank-you for your payment of "
+			String smsMessage = "Thank-you for your payment of "
 					+ numberFormat.format(amt)
 					+ ".Please send details of this payment to memberservices@icpak.com ";
 

@@ -23,6 +23,7 @@ import com.workpoint.icpak.shared.model.events.BookingDto;
 import com.workpoint.icpak.shared.model.events.ContactDto;
 import com.workpoint.icpak.shared.model.events.DelegateDto;
 import com.workpoint.icpak.shared.model.events.EventDto;
+import com.workpoint.icpak.shared.model.events.MpesaDTO;
 import com.workpoint.icpak.tests.base.AbstractDaoTest;
 
 public class TestBookingDao extends AbstractDaoTest {
@@ -263,7 +264,7 @@ public class TestBookingDao extends AbstractDaoTest {
 		bookingsHelper.correctDoubleBookings("IWqduDqhOKXb9nxq");
 	}
 
-	@Test
+	// @Test
 	public void testUpdateStats() {
 		List<EventDto> allEvents = eventDaoHelper.getAllEvents("", 0, 10000);
 		for (EventDto e : allEvents) {
@@ -275,5 +276,20 @@ public class TestBookingDao extends AbstractDaoTest {
 	// @Test
 	public void testGetBookingStats() {
 		bookingDao.getBookingSummary("IWqduDqhOKXb9nxq");
+	}
+
+	@Test
+	public void testDateConversion() {
+		MpesaDTO mpesaTrx = new MpesaDTO();
+		mpesaTrx.setTransTime("20160510224710");
+		String tstamp = mpesaTrx.getTransTime().substring(0, 4) + "-"
+				+ mpesaTrx.getTransTime().substring(4, 6) + "-"
+				+ mpesaTrx.getTransTime().substring(6, 8) + " "
+				+ mpesaTrx.getTransTime().substring(8, 10) + ":"
+				+ mpesaTrx.getTransTime().substring(10, 12) + ":"
+				+ mpesaTrx.getTransTime().substring(12, 14);
+
+		System.err.println(">>>" + tstamp);
+
 	}
 }
