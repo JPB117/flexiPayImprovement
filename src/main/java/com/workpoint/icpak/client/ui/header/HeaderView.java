@@ -79,8 +79,19 @@ public class HeaderView extends ViewImpl implements HeaderPresenter.IHeaderView 
 
 	@Override
 	public void setLoggedInUser(UserDto currentUser) {
+		String firstName = "";
+
+		if (currentUser.getSurname() != null) {
+			firstName = currentUser.getSurname();
+		} else {
+			String[] names = currentUser.getFullName().split(" ");
+			if (names.length > 2) {
+				firstName = names[0] + " " + names[1];
+			}
+		}
+
 		spnLoggedInUser.setInnerText("Welcome "
-				+ currentUser.getSurname()
+				+ firstName
 				+ (AppContext.isCurrentUserMember() ? " (m/No: "
 						+ currentUser.getMemberNo() + ")" : ""));
 	}

@@ -80,7 +80,7 @@ public class TestApplicationForm extends AbstractDaoTest {
 				.importMissingMembers(applicationDao.importMissingMembers());
 	}
 
-	// @Test
+	@Test
 	public void ImportApprovedMembers() {
 		helper.importApprovedMembers();
 	}
@@ -141,7 +141,7 @@ public class TestApplicationForm extends AbstractDaoTest {
 
 	}
 
-	@Test
+	// @Test
 	public void testUpdatingOfCPDDto() {
 		ApplicationFormHeaderDto dto = applicationDao.findByApplicationId(
 				"nAvpeTnX9OmHxRPV", true).toDto();
