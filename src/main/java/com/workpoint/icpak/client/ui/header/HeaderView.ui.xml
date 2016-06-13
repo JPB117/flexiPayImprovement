@@ -38,15 +38,13 @@
 				</div>
 				<div class="nav-wrapper">
 					<div
-						class="alert alert-success {style.success-message} hide alert-dismissible"
+						class="alert {style.success-message} hide alert-dismissible"
 						role="alert" ui:field="divAlert">
 						<button type="button" class="close" data-dismiss="alert"
 							aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
 						<span ui:field="spnAlertMessage">
-							<span class="fa fa-ok"></span>
-							Successfully Saved!
 						</span>
 					</div>
 

@@ -86,9 +86,25 @@ public class HeaderView extends ViewImpl implements HeaderPresenter.IHeaderView 
 	}
 
 	public void showPopUpMessage(String message) {
+		showPopUpMessage(message, true);
+	}
+
+	public void showPopUpMessage(String message, boolean isSuccess) {
 		isShown = true;
 		divAlert.removeClassName("hide");
-		spnAlertMessage.setInnerText(message);
+		String html = "";
+		if (isSuccess) {
+			html = "<span class='fa fa-ok'></span> ";
+			html = html + message;
+			divAlert.removeClassName("alert-danger");
+			divAlert.addClassName("alert-success");
+		} else {
+			html = "<span class='fa fa-exclamation-circle' aria-hidden='true'></span> ";
+			html = html + message;
+			divAlert.removeClassName("alert-success");
+			divAlert.addClassName("alert-danger");
+		}
+		spnAlertMessage.setInnerHTML(html);
 		timer.schedule(hideAlertInterval);
 	}
 

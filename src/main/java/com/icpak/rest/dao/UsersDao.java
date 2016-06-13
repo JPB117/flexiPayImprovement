@@ -205,20 +205,29 @@ public class UsersDao extends BaseDao {
 		return user;
 	}
 
-	public User findByUserActivationEmail(String refId,
+	public User findByUserActivationEmail(String email,
 			boolean throwExceptionIfNull) {
 		User user = getSingleResultOrNull(getEntityManager()
 				.createQuery(
 						"from User u where u.isActive=1 and (u.email like :email1 or u.email like :email2)")
-				.setParameter("email1", refId + "%")
-				.setParameter("email2", "%" + refId));
+				.setParameter("email1", email + "%")
+				.setParameter("email2", "%" + email));
 
 		if (user == null && throwExceptionIfNull) {
-			throw new ServiceException(ErrorCodes.NOTFOUND, "User", "'" + refId
+			throw new ServiceException(ErrorCodes.NOTFOUND, "User", "'" + email
 					+ "'");
 
 		}
 		return user;
+	}
+
+	public List<User> findByUserActivationEmail(String email) {
+		List<User> users = getResultList(getEntityManager()
+				.createQuery(
+						"from User u where u.isActive=1 and (u.email like :email1 or u.email like :email2)")
+				.setParameter("email1", email + "%")
+				.setParameter("email2", "%" + email));
+		return users;
 	}
 
 	public int disableProfilePics(String userId) {

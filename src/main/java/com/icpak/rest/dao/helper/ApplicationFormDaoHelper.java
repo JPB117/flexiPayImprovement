@@ -343,6 +343,7 @@ public class ApplicationFormDaoHelper {
 				sendReviewEmail(dto);
 			}
 		}
+
 		// Post To ERP
 		if (dto.getErpCode() != null && !dto.getErpCode().isEmpty()
 				&& isApplicationReadyForErp) {
@@ -361,6 +362,22 @@ public class ApplicationFormDaoHelper {
 					return;
 				}
 			} catch (URISyntaxException | ParseException | JSONException e) {
+				e.printStackTrace();
+			}
+		}
+
+		if (dto.getApplicationStatus() == ApplicationStatus.APPROVED
+				&& po.getApplicationStatus() != ApplicationStatus.APPROVED) {
+			try {
+				usersDaoHelper.checkIfUserExistInERP(dto.getEmail());
+			} catch (URISyntaxException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -820,14 +837,171 @@ public class ApplicationFormDaoHelper {
 		return rtn;
 	}
 
+	/*
+	 * This method imports approved members from the ERP - whether the applied
+	 * online or the applied manually
+	 */
+	public void importApprovedMembers() {
+		List<MemberImport> newMembers = applicationDao.importMissingMembers();
+		int existingCounter = 0;
+		int newMembersCounter = 0;
+
+		for (MemberImport memberImport : newMembers) {
+			// Is there a user with the above email address -
+			// Convert him to a member and save his member Detail
+			User user = null;
+			if (!memberImport.getEmail().isEmpty()) {
+				List<User> users = userDao
+						.findByUserActivationEmail(memberImport.getEmail());
+				if (users.size() == 1) {
+					user = users.get(0);
+				} else if (users.size() == 2) {
+					System.err.println("Found 2 records for user with email::"
+							+ memberImport.getEmail());
+					// Deactivate the Associate Account
+					for (User u : users) {
+						if (u.getMemberNo().contains("Assoc/")) {
+							u.getMember().setMemberShipStatus(
+									MembershipStatus.INACTIVE);
+							u.setIsActive(0);
+							userDao.save(u);
+						} else {
+							user = u;
+						}
+					}
+				}
+			} else {
+				createNewMember(memberImport);
+				newMembersCounter = newMembersCounter + 1;
+			}
+
+			if (user != null) {
+				System.err.println("User Found>>>" + memberImport.getEmail());
+				user.setMemberNo(memberImport.getMemberNo());
+				user.setFullName(memberImport.getName());
+				user.setEmail(memberImport.getEmail());
+				if (memberImport.getGender() == 0) {
+					user.getUserData().setGender(Gender.MALE);
+				} else if (memberImport.getStatus() == 1) {
+					user.getUserData().setGender(Gender.FEMALE);
+				}
+				Role role = roleDao.getByName("MEMBER");
+				user.addRole(role);
+
+				// Find the related Application Record for Updating
+				// ApplicationFormHeader application = applicationDao
+				// .getApplicationByUserRef(user.getRefId());
+				// if (memberImport.getCustomerType() != null) {
+				// application.setApplicationType(ApplicationType
+				// .valueOf(memberImport.getCustomerType()));
+				// }
+				// applicationDao.save(application);
+
+				Member m = memberDaoHelper.findByMemberNo(memberImport
+						.getMemberNo());
+				// Check if this member has been imported before...
+				if (m == null) {
+					m = new Member();
+				}
+				m.setMemberNo(memberImport.getMemberNo());
+				m.setRegistrationDate(memberImport.getDateRegistered());
+				if (memberImport.getStatus() == 0) {
+					m.setMemberShipStatus(MembershipStatus.ACTIVE);
+				} else if (memberImport.getStatus() == 1) {
+					m.setMemberShipStatus(MembershipStatus.ACTIVE);
+				}
+				user.setMember(m);
+				userDao.save(m);
+				userDao.save(user);
+				existingCounter = existingCounter + 1;
+			} else {
+				System.err.println("User Not found>>>"
+						+ memberImport.getEmail());
+				createNewMember(memberImport);
+				newMembersCounter = newMembersCounter + 1;
+			}
+		}
+		System.err.println("Successfully Imported ::" + existingCounter
+				+ " Members who existed.");
+		System.err.println("Successfully Imported ::" + newMembersCounter
+				+ " Members who did not exist.");
+		System.err.println("Total ::" + (existingCounter + newMembersCounter));
+	}
+
+	public void createNewMember(MemberImport memberImport) {
+		System.err.println("Creating a new member>>>"
+				+ memberImport.getMemberNo());
+
+		// Copy into PO
+		ApplicationFormHeader applicationForm = new ApplicationFormHeader();
+		applicationForm.copyFrom(memberImport.toDTO());
+		applicationForm.setInvoiceRef("jnjndjjkkkkkkkk");
+		applicationForm.setApplicationStatus(ApplicationStatus.APPROVED);
+		logger.error(" MEMBER NO = = = == " + memberImport.getMemberNo());
+
+		BioData bioData = new BioData();
+		if (memberImport.getGender() == 0) {
+			bioData.setGender(Gender.MALE);
+		} else if (memberImport.getGender() == 1) {
+			bioData.setGender(Gender.FEMALE);
+		}
+		bioData.setDob(memberImport.getDateOfBirth());
+
+		User user = new User();
+		user.setEmail(memberImport.getEmail());
+		user.setFullName(memberImport.getName());
+		user.setMemberNo(memberImport.getMemberNo());
+		user.setAddress(memberImport.getAddress());
+		user.setCity(memberImport.getCity());
+		user.setMobileNo(memberImport.getPhoneNo_());
+		user.setPassword("1cp@kAdm1n");
+		user.setUsername(memberImport.getEmail());
+		user.setUserData(bioData);
+		userDao.createUser(user);
+		List<User> usersInDb = userDao.findUsersByMemberNo(memberImport
+				.getMemberNo());
+		User userInDb = null;
+		if (!usersInDb.isEmpty() && usersInDb != null) {
+			userInDb = usersInDb.get(0);
+		}
+		applicationForm.setUserRefId(user.getRefId());
+
+		// Create a new member record..
+		Member member = memberDaoHelper.findByMemberNo(memberImport
+				.getMemberNo());
+		// Check if this member has been imported before...
+		if (member == null) {
+			member = new Member();
+		}
+		member.setMemberNo(memberImport.getMemberNo());
+		member.setRegistrationDate(memberImport.getDateRegistered());
+		member.setPractisingNo(memberImport.getPractisingNo());
+		member.setCustomerType(memberImport.getCustomerType());
+		member.setCustomerPostingGroup(memberImport.getCustomerPostingGroup());
+		member.setUserRefId(user.getRefId());
+		member.setUser(userInDb);
+		if (memberImport.getStatus() == 0) {
+			member.setMemberShipStatus(MembershipStatus.ACTIVE);
+		} else if (memberImport.getStatus() == 1) {
+			member.setMemberShipStatus(MembershipStatus.INACTIVE);
+		}
+		if (userInDb != null) {
+			userInDb.setMember(member);
+			userDao.save(member);
+			userDao.save(applicationForm);
+			userDao.save(userInDb);
+		}
+	}
+
 	public List<ApplicationFormHeaderDto> importMissingMembers(
 			List<MemberImport> memberImports) {
 		List<ApplicationFormHeaderDto> rtn = new ArrayList<>();
 
 		for (MemberImport memberImport : memberImports) {
-
 			Member memberAvailable = memberDaoHelper
 					.findByMemberNo(memberImport.getMemberNo());
+
+			// Member Not found..
 			if (memberAvailable == null) {
 				logger.info("Member NAME: " + memberImport.getName() + " M/No:"
 						+ memberImport);
@@ -841,15 +1015,12 @@ public class ApplicationFormDaoHelper {
 						+ memberImport.getMemberNo());
 
 				BioData bioData = new BioData();
-
 				if (memberImport.getGender() == 0) {
 					bioData.setGender(Gender.MALE);
 				} else if (memberImport.getGender() == 1) {
 					bioData.setGender(Gender.FEMALE);
 				}
-
 				bioData.setDob(memberImport.getDateOfBirth());
-
 				User user = new User();
 				user.setEmail(memberImport.getEmail());
 				user.setFullName(memberImport.getName());
@@ -860,7 +1031,6 @@ public class ApplicationFormDaoHelper {
 				user.setPassword("1cp@kAdm1n");
 				user.setUsername(memberImport.getEmail());
 				user.setUserData(bioData);
-
 				userDao.createUser(user);
 
 				List<User> usersInDb = userDao.findUsersByMemberNo(memberImport
@@ -870,6 +1040,9 @@ public class ApplicationFormDaoHelper {
 					userInDb = usersInDb.get(0);
 				}
 				po.setUserRefId(user.getRefId());
+
+				// Create a new member record..
+
 				Member member = new Member();
 				member.setMemberNo(memberImport.getMemberNo());
 				member.setRegistrationDate(memberImport.getDateRegistered());
@@ -879,7 +1052,6 @@ public class ApplicationFormDaoHelper {
 						.getCustomerPostingGroup());
 				member.setUserRefId(user.getRefId());
 				member.setUser(userInDb);
-
 				if (memberImport.getStatus() == 0) {
 					member.setMemberShipStatus(MembershipStatus.ACTIVE);
 				} else if (memberImport.getStatus() == 1) {
@@ -894,12 +1066,12 @@ public class ApplicationFormDaoHelper {
 				}
 
 				logger.error(" MEMBER ID = = = == " + memberImport.getId());
-				logger.error(" Registration Date === " + memberImport.getDateRegistered());
+				logger.error(" Registration Date === "
+						+ memberImport.getDateRegistered());
 			}
 		}
 
 		memberDaoHelper.findDuplicateMemberNo();
-
 		return rtn;
 	}
 

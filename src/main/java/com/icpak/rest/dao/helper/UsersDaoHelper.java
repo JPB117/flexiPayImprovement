@@ -396,7 +396,7 @@ public class UsersDaoHelper {
 		}
 	}
 
-	private User checkIfUserExistInERP(String userEmail)
+	public User checkIfUserExistInERP(String userEmail)
 			throws URISyntaxException, ParseException, JSONException {
 		logger.error(" ===>>><<<< === Checking for this User In ERP ===>><<<>>== ");
 		final HttpClient httpClient = new DefaultHttpClient();
@@ -439,9 +439,7 @@ public class UsersDaoHelper {
 		res = result.toString();
 
 		logger.error(" ===>>><<<< === RESULT ===>><<<>>== " + res);
-
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
-
 		/**
 		 * Check if the erp server returns null string
 		 */

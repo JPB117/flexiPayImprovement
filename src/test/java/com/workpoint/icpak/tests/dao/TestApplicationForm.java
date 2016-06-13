@@ -32,7 +32,7 @@ import com.workpoint.icpak.shared.model.auth.ApplicationStatus;
 import com.workpoint.icpak.tests.base.AbstractDaoTest;
 
 public class TestApplicationForm extends AbstractDaoTest {
-	
+
 	Logger logger = Logger.getLogger(TestApplicationForm.class);
 
 	@Inject
@@ -73,15 +73,22 @@ public class TestApplicationForm extends AbstractDaoTest {
 	public void Import() {
 		List<ApplicationFormHeaderDto> members = helper.importMembers(0, 30000);
 	}
-	
-	@Test
+
+	// @Test
 	public void ImportMissingMembers() {
-		List<ApplicationFormHeaderDto> members = helper.importMissingMembers(applicationDao.importMissingMembers());
+		List<ApplicationFormHeaderDto> members = helper
+				.importMissingMembers(applicationDao.importMissingMembers());
+	}
+
+	// @Test
+	public void ImportApprovedMembers() {
+		helper.importApprovedMembers();
 	}
 
 	@Ignore
 	public void getApplications() {
-		List<ApplicationFormHeaderDto> members = helper.getAllApplications(0, 10, "", "");
+		List<ApplicationFormHeaderDto> members = helper.getAllApplications(0,
+				10, "", "");
 		for (ApplicationFormHeaderDto dto : members) {
 			System.out.println("Previous>>" + dto.getPreviousRefId());
 			System.out.println("Next>>" + dto.getNextRefId());
@@ -91,17 +98,18 @@ public class TestApplicationForm extends AbstractDaoTest {
 	@Ignore
 	public void testERPIntergration() {
 		String applicationNo = "C/18881";
-		ApplicationFormHeaderDto application = helper.getApplicationById("4MgvVkX0Sgr4uwIZ").toDto();
-		List<ApplicationFormEducationalDto> educationDetails = eduHelper.getAllEducationEntrys("", "4MgvVkX0Sgr4uwIZ",
-				0, 100);
-		List<ApplicationFormTrainingDto> trainings = trainingHelper.getAllTrainingEntrys("", "4MgvVkX0Sgr4uwIZ", 0,
-				100);
-		List<ApplicationFormAccountancyDto> accountancy = accountancyHelper.getAllAccountancyEntrys("",
-				"4MgvVkX0Sgr4uwIZ", 0, 100);
-		List<ApplicationFormSpecializationDto> specializations = specializationHelper.getAllSpecializationEntrys("",
-				"4MgvVkX0Sgr4uwIZ", 0, 100);
-		List<ApplicationFormEmploymentDto> employment = specializationHelper.getAllEmploymentEntrys("",
-				"4MgvVkX0Sgr4uwIZ", 0, 100);
+		ApplicationFormHeaderDto application = helper.getApplicationById(
+				"4MgvVkX0Sgr4uwIZ").toDto();
+		List<ApplicationFormEducationalDto> educationDetails = eduHelper
+				.getAllEducationEntrys("", "4MgvVkX0Sgr4uwIZ", 0, 100);
+		List<ApplicationFormTrainingDto> trainings = trainingHelper
+				.getAllTrainingEntrys("", "4MgvVkX0Sgr4uwIZ", 0, 100);
+		List<ApplicationFormAccountancyDto> accountancy = accountancyHelper
+				.getAllAccountancyEntrys("", "4MgvVkX0Sgr4uwIZ", 0, 100);
+		List<ApplicationFormSpecializationDto> specializations = specializationHelper
+				.getAllSpecializationEntrys("", "4MgvVkX0Sgr4uwIZ", 0, 100);
+		List<ApplicationFormEmploymentDto> employment = specializationHelper
+				.getAllEmploymentEntrys("", "4MgvVkX0Sgr4uwIZ", 0, 100);
 
 		application.setApplicationNo(applicationNo);
 		for (ApplicationFormEducationalDto education : educationDetails) {
@@ -131,29 +139,17 @@ public class TestApplicationForm extends AbstractDaoTest {
 		JSONObject payLoad = new JSONObject(erpDto);
 		System.err.println("payload to ERP>>>>" + payLoad);
 
-		// try {
-		// //helper.postApplicationToERP("C/18881", erpDto);
-		// } catch (URISyntaxException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// } catch (ParseException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// } catch (JSONException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
 	}
 
-	@Ignore
+	@Test
 	public void testUpdatingOfCPDDto() {
-		ApplicationFormHeaderDto dto = applicationDao.findByApplicationId("AQSSHoAkdY6VMNLv", true).toDto();
-		dto.setErpCode("C/18878595");
-		dto.setApplicationStatus(ApplicationStatus.PROCESSING);
+		ApplicationFormHeaderDto dto = applicationDao.findByApplicationId(
+				"nAvpeTnX9OmHxRPV", true).toDto();
+		dto.setApplicationStatus(ApplicationStatus.APPROVED);
 		// dto.setManagementComment("Please attach your profile photo");
-		System.err.println("Submission Date::" + dto.getDateSubmitted());
+		// System.err.println("Submission Date::" + dto.getDateSubmitted());
 
-		helper.updateApplication("4MgvVkX0Sgr4uwIZ", dto);
+		helper.updateApplication("nAvpeTnX9OmHxRPV", dto);
 	}
 
 	@Ignore
@@ -163,7 +159,8 @@ public class TestApplicationForm extends AbstractDaoTest {
 
 	@Ignore
 	public void testGettingAppDtos() {
-		List<ApplicationFormHeaderDto> applications = helper.getAllApplicationNativeQuery(0, 10, "", "", "");
+		List<ApplicationFormHeaderDto> applications = helper
+				.getAllApplicationNativeQuery(0, 10, "", "", "");
 
 		System.err.println("Applications>>>>" + applications.size());
 		for (ApplicationFormHeaderDto dto : applications) {
@@ -174,7 +171,8 @@ public class TestApplicationForm extends AbstractDaoTest {
 
 	@Ignore
 	public void testGetSingleApp() {
-		ApplicationFormHeader app = helper.getApplicationById("dAbfgoN4TvBo4hB9");
+		ApplicationFormHeader app = helper
+				.getApplicationById("dAbfgoN4TvBo4hB9");
 		System.err.println("Found:::" + app.getSurname());
 
 	}
@@ -188,14 +186,15 @@ public class TestApplicationForm extends AbstractDaoTest {
 	}
 
 	@Ignore
-	public void checkStubornMemberNo(){
-		List<MemberImport> memberImports = applicationDao.importMissingMembers();
-		
-		for(MemberImport m : memberImports){
+	public void checkStubornMemberNo() {
+		List<MemberImport> memberImports = applicationDao
+				.importMissingMembers();
+
+		for (MemberImport m : memberImports) {
 			List<User> users = usersDao.findUsersByMemberNo(m.getMemberNo());
-			
-			if(!users.isEmpty() && users.size() > 1){
-				logger.warn(" DIRTY MEMBER NO "+m.getMemberNo());
+
+			if (!users.isEmpty() && users.size() > 1) {
+				logger.warn(" DIRTY MEMBER NO " + m.getMemberNo());
 			}
 		}
 	}

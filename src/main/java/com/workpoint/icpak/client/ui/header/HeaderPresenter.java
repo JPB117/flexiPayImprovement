@@ -5,6 +5,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.PresenterWidget;
@@ -13,12 +14,14 @@ import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.workpoint.icpak.client.ui.events.AdminPageLoadEvent;
-import com.workpoint.icpak.client.ui.events.FullScreenEvent;
 import com.workpoint.icpak.client.ui.events.AdminPageLoadEvent.AdminPageLoadHandler;
 import com.workpoint.icpak.client.ui.events.AfterSaveEvent;
 import com.workpoint.icpak.client.ui.events.AfterSaveEvent.AfterSaveHandler;
+import com.workpoint.icpak.client.ui.events.ClientDisconnectionEvent;
+import com.workpoint.icpak.client.ui.events.ClientDisconnectionEvent.ClientDisconnectionHandler;
 import com.workpoint.icpak.client.ui.events.ContextLoadedEvent;
 import com.workpoint.icpak.client.ui.events.ContextLoadedEvent.ContextLoadedHandler;
+import com.workpoint.icpak.client.ui.events.FullScreenEvent;
 import com.workpoint.icpak.client.ui.events.FullScreenEvent.FullScreenHandler;
 import com.workpoint.icpak.client.ui.events.LoadAlertsEvent;
 import com.workpoint.icpak.client.ui.events.LoadAlertsEvent.LoadAlertsHandler;
@@ -29,7 +32,7 @@ import com.workpoint.icpak.shared.model.UserDto;
 public class HeaderPresenter extends
 		PresenterWidget<HeaderPresenter.IHeaderView> implements
 		AfterSaveHandler, AdminPageLoadHandler, ContextLoadedHandler,
-		LoadAlertsHandler, FullScreenHandler {
+		LoadAlertsHandler, FullScreenHandler, ClientDisconnectionHandler {
 
 	public interface IHeaderView extends View {
 		public HasClickHandlers getALogout();
@@ -39,6 +42,8 @@ public class HeaderPresenter extends
 		void showPopUpMessage(String message);
 
 		public void showSmallLogo(String message);
+
+		void showPopUpMessage(String message, boolean isSuccess);
 	}
 
 	@Inject
@@ -68,6 +73,8 @@ public class HeaderPresenter extends
 		}
 	};
 
+	private boolean isInternetConnectionLost = false;
+
 	@Override
 	protected void onBind() {
 		super.onBind();
@@ -76,6 +83,7 @@ public class HeaderPresenter extends
 		this.addRegisteredHandler(ContextLoadedEvent.TYPE, this);
 		this.addRegisteredHandler(LoadAlertsEvent.TYPE, this);
 		this.addRegisteredHandler(FullScreenEvent.getType(), this);
+		addRegisteredHandler(ClientDisconnectionEvent.TYPE, this);
 
 		getView().getALogout().addClickHandler(new ClickHandler() {
 			@Override
@@ -104,7 +112,10 @@ public class HeaderPresenter extends
 
 	@Override
 	public void onAfterSave(AfterSaveEvent event) {
-		getView().showPopUpMessage(event.getMessage());
+		if (!isInternetConnectionLost) {
+			getView().showPopUpMessage(event.getMessage(),
+					event.isSuccessMessage());
+		}
 	}
 
 	@Override
@@ -125,6 +136,15 @@ public class HeaderPresenter extends
 	@Override
 	public void onFullScreen(FullScreenEvent event) {
 		getView().showSmallLogo(event.getMessage());
+	}
+
+	@Override
+	public void onClientDisconnection(ClientDisconnectionEvent event) {
+		isInternetConnectionLost = true;
+		getView()
+				.showPopUpMessage(
+						"Internet Connection Lost, Please check and try again..",
+						false);
 	}
 
 }

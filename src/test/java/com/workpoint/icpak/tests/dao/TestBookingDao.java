@@ -1,5 +1,7 @@
 package com.workpoint.icpak.tests.dao;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -15,7 +17,6 @@ import com.icpak.rest.dao.helper.BookingsDaoHelper;
 import com.icpak.rest.dao.helper.CPDDaoHelper;
 import com.icpak.rest.dao.helper.EventsDaoHelper;
 import com.icpak.rest.models.event.Delegate;
-import com.icpak.rest.models.event.Event;
 import com.workpoint.icpak.shared.model.PaymentStatus;
 import com.workpoint.icpak.shared.model.events.AccommodationDto;
 import com.workpoint.icpak.shared.model.events.AttendanceStatus;
@@ -264,11 +265,22 @@ public class TestBookingDao extends AbstractDaoTest {
 		bookingsHelper.correctDoubleBookings("IWqduDqhOKXb9nxq");
 	}
 
-	// @Test
+	@Test
 	public void testUpdateStats() {
 		List<EventDto> allEvents = eventDaoHelper.getAllEvents("", 0, 10000);
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		for (EventDto e : allEvents) {
-			bookingsHelper.updateBookingStats(e.getRefId());
+			try {
+				if (new Date().getTime() < (df.parse(e.getEndDate())).getTime()) {
+					// System.err.println(e.getName() + "::Updated::"
+					// + e.getEndDate());
+					bookingsHelper.updateBookingStats(e.getRefId());
+				}
+			} catch (ParseException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+
 		}
 		// bookingsHelper.updatePaymentStats("IWqduDqhOKXb9nxq");
 	}
@@ -278,7 +290,7 @@ public class TestBookingDao extends AbstractDaoTest {
 		bookingDao.getBookingSummary("IWqduDqhOKXb9nxq");
 	}
 
-	@Test
+	// @Test
 	public void testDateConversion() {
 		MpesaDTO mpesaTrx = new MpesaDTO();
 		mpesaTrx.setTransTime("20160510224710");

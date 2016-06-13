@@ -1145,7 +1145,6 @@ public class BookingsDaoHelper {
 			if ((delegateDto.getBookingPaymentStatus() == PaymentStatus.PAID)
 					|| (delegateDto.getBookingPaymentStatus() == PaymentStatus.NOTPAID)
 					|| (delegateDto.getBookingPaymentStatus() == PaymentStatus.Credit)) {
-
 				// Copy details from the Dto....
 				delegate.setLpoNo(delegateDto.getLpoNo());
 				delegate.setIsCredit(delegateDto.getIsCredit());
@@ -1176,7 +1175,7 @@ public class BookingsDaoHelper {
 					dao.save(booking);
 				}
 				updateBookingStats(booking);
-				updatePaymentStats(booking.getEvent().getRefId());
+				// updatePaymentStats(booking.getEvent().getRefId());
 			}
 			/*
 			 * Undo Booking Cancellation
@@ -1199,6 +1198,8 @@ public class BookingsDaoHelper {
 
 		/* Updating attendance and CPD */
 		String applicationContext = settings.getProperty("app_context");
+
+		// Member
 		if (delegate.getMemberRefId() != null
 				&& delegate.getAttendance() != delegateDto.getAttendance()
 				&& event.getType() != EventType.COURSE
@@ -1213,6 +1214,22 @@ public class BookingsDaoHelper {
 			delegate.copyFrom(delegateDto);
 			dao.save(delegate);
 			cpdDao.updateCPDFromAttendance(delegate, delegate.getAttendance());
+
+			// Non-Member
+		} else if (delegate.getMemberRefId() == null
+				&& delegate.getAttendance() != delegateDto.getAttendance()
+				&& event.getType() != EventType.COURSE
+				&& applicationContext.equals("online")) {
+			String smsMessage = "Dear" + " " + delegateDto.getFullName()
+					+ ",Thank you for attending the " + event.getName() + "."
+					+ "Your ERN No. is " + delegate.getErn();
+			if (delegate.getBooking().getContact().getTelephoneNumbers() != null) {
+				smsIntergration.send(delegate.getBooking().getContact()
+						.getTelephoneNumbers(), smsMessage);
+			}
+			delegate.copyFrom(delegateDto);
+			dao.save(delegate);
+
 		} else if (event.getType() == EventType.COURSE) {
 			List<DelegateDto> delegates = new ArrayList<>();
 			delegates.add(delegate.toDto());

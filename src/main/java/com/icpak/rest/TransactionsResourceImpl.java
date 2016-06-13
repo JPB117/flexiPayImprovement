@@ -10,6 +10,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 import com.icpak.rest.dao.helper.TransactionDaoHelper;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -46,6 +48,13 @@ public class TransactionsResourceImpl implements TransactionsResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Receives Mpesa Info via the new api", consumes = MediaType.APPLICATION_JSON)
 	public String receiveMpesaG2(MpesaDTO mpesaTrx) {
+		System.err.println("++++++ Receive Mpesa G2 Transactions ++++++++");
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			System.err.println(mapper.writeValueAsString(mpesaTrx));
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
 		String tstamp = mpesaTrx.getTransTime().substring(0, 4) + "-"
 				+ mpesaTrx.getTransTime().substring(4, 6) + "-"
 				+ mpesaTrx.getTransTime().substring(6, 8) + " "

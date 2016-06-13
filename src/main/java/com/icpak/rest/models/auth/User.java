@@ -133,7 +133,6 @@ public class User extends PO {
 	}
 
 	public User clone(String... expand) {
-
 		User user = new User();
 		user.setRefId(refId);
 		user.setEmail(email);

@@ -70,11 +70,11 @@ public class Event extends PO {
 	private Double associatePrice;
 	private Double discountAssociatePrice;
 	private Double penaltyAssociatePrice;
-	private Integer totalMpesaPayments;
-	private Integer totalCardsPayment;
-	private Integer totalOfflinePayment;
-	private Integer totalCredit;
-	private Integer totalReceiptPayment;
+	private Integer totalMpesaPayments = 0;
+	private Integer totalCardsPayment = 0;
+	private Integer totalOfflinePayment = 0;
+	private Integer totalCredit = 0;
+	private Integer totalReceiptPayment = 0;
 	private Date discountDate;
 	private Date penaltyDate;
 	private Integer lmsCourseId;

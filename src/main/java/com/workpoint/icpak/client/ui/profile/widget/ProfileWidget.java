@@ -500,7 +500,9 @@ public class ProfileWidget extends Composite {
 		if (result.getRefId() != null) {
 			String fullName = "";
 			// Window.alert("User is not admin!"+isCurrentUserAdmin);
-			if (isCurrentUserBasicMember) {
+			if (isCurrentUserBasicMember
+					|| AppContext.isCurrentUserApplicationsEdit()
+					|| AppContext.isCurrentUserApplicationsRead()) {
 				fullName = result.getSurname() + " " + result.getOtherNames();
 			} else {
 				fullName = AppContext.getCurrentUser().getUser().getFullName();

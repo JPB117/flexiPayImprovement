@@ -320,10 +320,6 @@ public class EventsPresenter extends
 										fireEvent(new ProcessingCompletedEvent());
 									}
 
-									public void onFailure(Throwable caught) {
-										Window.alert("There was a technical problem in loading the summary.");
-										fireEvent(new ProcessingCompletedEvent());
-									};
 								}).bookings(eventId).getBookingSummary(eventId);
 
 			}
