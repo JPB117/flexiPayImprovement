@@ -708,9 +708,7 @@ public class ProfilePresenter
 			loadSpecializations();
 			loadAccountancyExamination();
 			loadGoodStanding();
-		} else {
-			// Window.alert("User refId not sent in this request!");
-		}
+		} 
 
 	}
 

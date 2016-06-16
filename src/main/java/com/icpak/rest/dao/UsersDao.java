@@ -224,7 +224,8 @@ public class UsersDao extends BaseDao {
 	public List<User> findByUserActivationEmail(String email) {
 		List<User> users = getResultList(getEntityManager()
 				.createQuery(
-						"from User u where u.isActive=1 and (u.email like :email1 or u.email like :email2)")
+						"from User u where u.isActive=1 and "
+						+ "(u.email like :email1 or u.email like :email2)")
 				.setParameter("email1", email + "%")
 				.setParameter("email2", "%" + email));
 		return users;

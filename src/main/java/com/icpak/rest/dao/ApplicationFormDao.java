@@ -439,6 +439,7 @@ public class ApplicationFormDao extends BaseDao {
 	}
 
 	public List<MemberImport> importMissingMembers() {
+
 		List<MemberImport> memberImports = new ArrayList<>();
 		String sql = "select a.id,a.No_,a.Name,a.`E-mail`,a.Status,a.`Customer Type`,a.`Customer Posting Group`,"
 				+ "a.`Practising No`,a.`Gender`,a.paidUp,a.Address,a.Address2,a.City,a.phoneNo_,a.PostCode"

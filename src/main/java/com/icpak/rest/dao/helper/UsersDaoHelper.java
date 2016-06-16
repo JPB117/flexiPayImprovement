@@ -382,7 +382,46 @@ public class UsersDaoHelper {
 	}
 
 	public User getUserByActivationEmail(String userEmail) {
-		User user = dao.findByUserActivationEmail(userEmail, false);
+		boolean isFullMembershipDetected = false;
+		boolean isAssociateDetected = false;
+		boolean isEmptyMemberNo = false;
+		List<User> users = dao.findByUserActivationEmail(userEmail);
+		User user = null;
+		if (users.size() == 1) {
+			user = users.get(0);
+		} else if (users.size() == 2) {
+			System.err.println("Found 2 records for user with email::"
+					+ userEmail);
+
+			// Deactivate the One Account and leave the other one
+			for (User u : users) {
+				if (u.getMemberNo() == null) {
+					isEmptyMemberNo = true;
+				} else if (u.getMemberNo().contains("Assoc/")
+						|| u.getMemberNo().contains("ASSOC/")) {
+					isAssociateDetected = true;
+				} else {
+					isFullMembershipDetected = true;
+				}
+			}
+			System.err.println(">>>>isAssociate Detected:"
+					+ isAssociateDetected + " \n>>>>isFullMember:"
+					+ isFullMembershipDetected
+					+ " \n>>>>isEmptyMemberDetected:" + isEmptyMemberNo);
+
+			if (isEmptyMemberNo
+					&& (isAssociateDetected || isFullMembershipDetected)) {
+				System.err.println("Detected Empty MemberNo...");
+				user = deleteEmptyMemberNo(users);
+			}
+
+			if (isAssociateDetected && isFullMembershipDetected) {
+				System.err
+						.println("Detected Associate and Full Member Accounts..");
+				user = deleteAssociateAccount(users);
+			}
+		}
+
 		if (user != null) {
 			sendActivationEmail2(user);
 			return user;
@@ -394,6 +433,41 @@ public class UsersDaoHelper {
 			}
 			return user.clone();
 		}
+	}
+
+	private User deleteAssociateAccount(List<User> users) {
+		User correctUser = null;
+		for (User u : users) {
+			if (u.getMemberNo().contains("Assoc/")
+					|| u.getMemberNo().contains("ASSOC/")) {
+				System.err.println("deleted refId::" + u.getRefId());
+				dao.delete(u);
+				ApplicationFormHeader h = applicationFormDao
+						.getApplicationByUserRef(u.getRefId());
+				dao.delete(h);
+			} else {
+				correctUser = u;
+			}
+		}
+		return correctUser;
+	}
+
+	private User deleteEmptyMemberNo(List<User> users) {
+		User correctUser = null;
+		for (User u : users) {
+			if (u.getMemberNo() == null) {
+				System.err.println("deleted refId::" + u.getRefId());
+				dao.delete(u);
+				ApplicationFormHeader h = applicationFormDao
+						.getApplicationByUserRef(u.getRefId());
+				if (h != null) {
+					dao.delete(h);
+				}
+			} else {
+				correctUser = u;
+			}
+		}
+		return correctUser;
 	}
 
 	public User checkIfUserExistInERP(String userEmail)
@@ -589,10 +663,26 @@ public class UsersDaoHelper {
 			userFormHeader.setAddress1(address);
 			userFormHeader.setTelephone1(phoneNo);
 			userFormHeader.setContactTelephone(phoneNo);
-			userFormHeader.setApplicationType(ApplicationType
-					.valueOf(customerPostingGroup.toUpperCase()));
+			userFormHeader.setApplicationType(getApplicationType(customerType
+					.toUpperCase()));
 			updateUserMemberRecords(userInDb, memberInDb, userFormHeader);
 			return userInDb;
+		}
+	}
+
+	private ApplicationType getApplicationType(String customerType) {
+		if (customerType.equals("MEMBER")) {
+			return ApplicationType.NON_PRACTISING;
+		} else if (customerType.equals("PRACTICING RT")) {
+			return ApplicationType.PRACTISING_RT;
+		} else if (customerType.equals("PRAC MEMBER")) {
+			return ApplicationType.PRACTISING;
+		} else if (customerType.equals("FOREIGN")) {
+			return ApplicationType.OVERSEAS;
+		} else if (customerType.equals("RETIRED")) {
+			return ApplicationType.RETIRED;
+		} else {
+			return ApplicationType.NON_PRACTISING;
 		}
 	}
 
@@ -695,7 +785,6 @@ public class UsersDaoHelper {
 			userDto = getUserFromCredentials(action.getUsername(),
 					action.getPassword());
 		}
-
 		isLoggedIn = userDto != null;
 
 		String loggedInCookie = "";
@@ -708,7 +797,6 @@ public class UsersDaoHelper {
 			if (userDto.getMemberNo() != null) {
 				userDto.setGender(dao.getGender(userDto.getApplicationRefId()));
 			}
-
 		}
 
 		CurrentUserDto currentUserDto = new CurrentUserDto(isLoggedIn, userDto);

@@ -10,6 +10,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import org.apache.log4j.Logger;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
@@ -25,6 +27,7 @@ public class TransactionsResourceImpl implements TransactionsResource {
 
 	@Inject
 	TransactionDaoHelper trxDaoHelper;
+	Logger logger = Logger.getLogger(TransactionsResourceImpl.class.getName());
 
 	@GET
 	@Path("/payment")
@@ -48,10 +51,11 @@ public class TransactionsResourceImpl implements TransactionsResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Receives Mpesa Info via the new api", consumes = MediaType.APPLICATION_JSON)
 	public String receiveMpesaG2(MpesaDTO mpesaTrx) {
-		System.err.println("++++++ Receive Mpesa G2 Transactions ++++++++");
+		logger.info("++++++ Receive Mpesa G2 Transactions ++++++++");
 		ObjectMapper mapper = new ObjectMapper();
 		try {
 			System.err.println(mapper.writeValueAsString(mpesaTrx));
+			logger.info(mapper.writeValueAsString(mpesaTrx));
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}
@@ -65,7 +69,6 @@ public class TransactionsResourceImpl implements TransactionsResource {
 		for (MpesaKYCDTO m : mpesaTrx.getKYCInfoList()) {
 			payerFullName = payerFullName + m.getKycValue() + " ";
 		}
-		System.err.println("Full Names>>>>" + payerFullName);
 		trxDaoHelper.receivePaymentUsingInvoiceNo(mpesaTrx.getTransID(),
 				mpesaTrx.getBusinessShortCode(), mpesaTrx.getBillRefNumber(),
 				"MPESA", mpesaTrx.getTransID(), mpesaTrx.getMSISDN(),
