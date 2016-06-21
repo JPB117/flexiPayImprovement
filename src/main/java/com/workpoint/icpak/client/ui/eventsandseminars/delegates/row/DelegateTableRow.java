@@ -316,7 +316,6 @@ public class DelegateTableRow extends RowWidget {
 
 	private void setActionButtons(EventType eventType) {
 		boolean isUpdatePaymentVisible = (AppContext.isCurrentUserFinanceEdit()
-				&& delegate.getAttendance() == AttendanceStatus.NOTATTENDED
 				&& delegate.getIsBookingActive() == 1 ? true : false);
 
 		boolean isEditBookingVisible = (AppContext.isCurrentUserEventEdit()
