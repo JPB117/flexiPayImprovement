@@ -218,6 +218,7 @@ public class LoginPresenter extends
 	public void redirectToLoggedOnPage() {
 		String redirectType = "";
 		String resource = "";
+		redirect = "";
 		if (redirect.equals("")) {
 			if (AppContext.isCurrentUserAdmin()) {
 				redirect = NameTokens.getAdminDefaultPage();

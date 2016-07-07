@@ -168,7 +168,6 @@ public class CPDMemberTableRow extends RowWidget {
 		boolean isViewVisible = AppContext.isCurrentUserAdmin()
 				&& (dto.getStatus() == CPDStatus.Unconfirmed);
 		boolean isUndoApprovalVisible = AppContext.isCurrentUserAdmin()
-				&& !(dto.getCategory() == CPDCategory.CATEGORY_A)
 				&& (dto.getStatus() == CPDStatus.Approved || dto.getStatus() == CPDStatus.Rejected);
 		boolean isEditVisible = AppContext.isCurrentUserMember()
 				&& !(dto.getCategory() == CPDCategory.CATEGORY_A)

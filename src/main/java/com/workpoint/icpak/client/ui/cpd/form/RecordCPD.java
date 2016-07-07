@@ -13,6 +13,8 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasKeyDownHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.History;
@@ -61,7 +63,13 @@ public class RecordCPD extends Composite {
 	TextField txtTitle;
 
 	@UiField
+	TextField txtVenue;
+
+	@UiField
 	TextField txtOrganizer;
+
+	@UiField
+	DivElement divLocation;
 
 	@UiField
 	DateField dtStartDate;
@@ -153,6 +161,15 @@ public class RecordCPD extends Composite {
 		}
 		lstCategory.setItems(categories);
 
+		lstCategory
+				.addValueChangeHandler(new ValueChangeHandler<CPDCategory>() {
+					@Override
+					public void onValueChange(
+							ValueChangeEvent<CPDCategory> event) {
+						showLocation(event.getValue());
+					}
+				});
+
 		List<CPDAction> cpdActions = new ArrayList<CPDAction>();
 		for (CPDAction cpd : CPDAction.values()) {
 			cpdActions.add(cpd);
@@ -177,6 +194,14 @@ public class RecordCPD extends Composite {
 			}
 		});
 
+	}
+
+	protected void showLocation(CPDCategory value) {
+		if (value == CPDCategory.CATEGORY_A) {
+			divLocation.removeClassName("hide");
+		} else {
+			divLocation.addClassName("hide");
+		}
 	}
 
 	public void showUploadPanel(boolean showForm) {
@@ -265,6 +290,9 @@ public class RecordCPD extends Composite {
 		dto.setEndDate(dtEndDate.getValueDate());
 		dto.setOrganizer(txtOrganizer.getValue());
 		dto.setTitle(txtTitle.getValue());
+		if (txtVenue.getValue() != null) {
+			dto.setEventLocation(txtVenue.getValue());
+		}
 		if (lstMgmtAction.getValue() != null) {
 			CPDStatus status = (lstMgmtAction.getValue().getName() == "APPROVED" ? CPDStatus.Approved
 					: CPDStatus.Rejected);
@@ -304,6 +332,13 @@ public class RecordCPD extends Composite {
 			} else if (dto.getStatus() == CPDStatus.Rejected) {
 				lstMgmtAction.setValue(CPDAction.REJECTED);
 			}
+		}
+
+		if (dto.getEventLocation() != null) {
+			divLocation.removeClassName("hide");
+			txtVenue.setValue(dto.getEventLocation());
+		} else {
+			divLocation.addClassName("hide");
 		}
 
 		txtMgmtComment.setValue(dto.getManagementComment());
