@@ -316,6 +316,12 @@ public class RecordCPD extends Composite {
 			return;
 		}
 		lstCategory.setValue(dto.getCategory());
+
+		if (dto.getCategory() == CPDCategory.CATEGORY_A) {
+			divLocation.removeClassName("hide");
+		} else {
+			divLocation.addClassName("hide");
+		}
 		dtEndDate.setValue(dto.getEndDate());
 		dtStartDate.setValue(dto.getStartDate());
 		txtTitle.setValue(dto.getTitle());
