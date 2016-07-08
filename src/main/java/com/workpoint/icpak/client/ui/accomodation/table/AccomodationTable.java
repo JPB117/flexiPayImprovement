@@ -41,8 +41,8 @@ public class AccomodationTable extends Composite {
 		List<TableHeader> th = new ArrayList<TableHeader>();
 		// th.add(new TableHeader("Event Name:"));
 		th.add(new TableHeader("Hotel Name:"));
-		th.add(new TableHeader("Nights:"));
 		th.add(new TableHeader("Spaces:"));
+		th.add(new TableHeader("Booked:"));
 		th.add(new TableHeader("Available:"));
 		th.add(new TableHeader("Price:"));
 		th.add(new TableHeader("Action:"));

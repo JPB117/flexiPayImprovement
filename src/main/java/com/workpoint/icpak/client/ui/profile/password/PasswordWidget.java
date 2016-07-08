@@ -85,6 +85,13 @@ public class PasswordWidget extends Composite {
 	public PasswordWidget() {
 		initWidget(uiBinder.createAndBindUi(this));
 		txtEmail.setValue("");
+
+		aContinue.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				History.back();
+			}
+		});
 	}
 
 	public HasClickHandlers getSaveButton() {
@@ -122,7 +129,7 @@ public class PasswordWidget extends Composite {
 		}
 
 		if (!txtPassword.getValue().equals(txtConfirmPassword.getValue())) {
-			issues.addError("Password and 'Confirm Password' fields do not match");
+			issues.addError("Password and Confirm Password fields do not match");
 			isValid = false;
 		}
 
@@ -136,7 +143,6 @@ public class PasswordWidget extends Composite {
 	}
 
 	public String getPassword() {
-
 		return txtPassword.getValue();
 	}
 
@@ -264,12 +270,6 @@ public class PasswordWidget extends Composite {
 	}
 
 	public void showContinueButton(boolean show) {
-		aContinue.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				History.back();
-			}
-		});
 		if (show) {
 			aContinue.removeStyleName("hide");
 		} else {

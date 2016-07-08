@@ -75,3 +75,19 @@ SET NEW.documentNo= proc_generatedocnum('GOODSTANDINGCERT', concat('ICPAK-GOODST
 
 
 
+/*Booking Search Indexes*/
+create index idxEventRefId on event(refId);
+create index idxDelegateMemberReg on delegate(memberRegistrationNo);
+create index idxDelegateEmail on delegate(email);
+create index idxDelegateFullName on delegate(fullName);
+create index idxbookingEmail on booking(`E-mail` );
+create index idxbookingCompany on booking(`company` );
+create index idxBookingContact on booking(`Contact` );
+create index idxInvoicedocNo on invoice(`documentNo` );
+create index idxBookingRefId on invoice(`bookingRefId` );
+create index idxBooking_RefId on booking(`refId` );
+create index idxMemberRefId on member(`refId` );
+create index idxMemberNo on member(`memberNo` );
+
+
+

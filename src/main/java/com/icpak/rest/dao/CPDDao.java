@@ -20,6 +20,7 @@ import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import com.icpak.rest.exceptions.ServiceException;
 import com.icpak.rest.models.ErrorCodes;
+import com.icpak.rest.models.auth.User;
 import com.icpak.rest.models.cpd.CPD;
 import com.icpak.rest.models.membership.Member;
 import com.icpak.rest.models.util.Attachment;
@@ -60,7 +61,7 @@ public class CPDDao extends BaseDao {
 		StringBuffer sql = new StringBuffer(
 				"select c.id,c.created,c.refId as cpdRefId,"
 						+ "c.title,c.status,c.memberRegistrationNo,c.memberRefId, "
-						+ "u.fullName,c.startDate,c.endDate,c.cpdHours "
+						+ "u.fullName,c.startDate,c.endDate,c.cpdHours,c.organizer,c.category "
 						+ "from cpd c "
 						+ "inner join member m on (c.memberRefId=m.refId) "
 						+ "inner join user u on (u.id=m.userId) ");
@@ -106,6 +107,11 @@ public class CPDDao extends BaseDao {
 			Date dbEndDate = (value = row[i++]) == null ? null : (Date) value;
 			Double cpdHours = (value = row[i++]) == null ? null
 					: (Double) value;
+			String organizer = (value = row[i++]) == null ? null : value
+					.toString();
+			String category = (value = row[i++]) == null ? null : value
+					.toString();
+
 			CPDDto cpd = new CPDDto();
 			cpd.setId(id);
 			cpd.setRefId(refId);
@@ -118,6 +124,9 @@ public class CPDDao extends BaseDao {
 			cpd.setStartDate(dbStartDate);
 			cpd.setEndDate(dbEndDate);
 			cpd.setCpdHours(cpdHours);
+			cpd.setOrganizer(organizer);
+			cpd.setCategory(category == null ? null : CPDCategory
+					.valueOf(category));
 			cpds.add(cpd);
 		}
 		return cpds;
@@ -473,7 +482,7 @@ public class CPDDao extends BaseDao {
 			sql.append(" memberRefId=:memberRefId");
 		}
 
-		sql.append(" order by created desc");
+		sql.append(" order by startDate desc");
 		logger.debug("jpql= " + sql);
 		Query query = getEntityManager().createQuery(sql.toString());
 		for (String key : params.keySet()) {
@@ -698,11 +707,8 @@ public class CPDDao extends BaseDao {
 	}
 
 	public List<Attachment> getAllCPDAttachment(int offset, int limit) {
-
 		String sql = "From Attachment WHERE attachment is not null";
-
 		Query query = getEntityManager().createQuery(sql);
-
 		return getResultList(query, offset, limit);
 	}
 
@@ -766,5 +772,37 @@ public class CPDDao extends BaseDao {
 
 	private String getFilePath() {
 		return settings.getProperty("upload_path");
+	}
+
+	public void updateSummary(User user) {
+		if (user.getMemberNo() != null && !user.getMemberNo().isEmpty()
+				&& user.getFullName() != null && !user.getFullName().isEmpty()) {
+			logger.info("Updating cpd for " + user.getFullName() + " m/No:"
+					+ user.getMemberNo());
+			Query query = getEntityManager().createNativeQuery(
+					"CALL proc_updatecpdsummary(:memberNo,'2011-01-01')")
+					.setParameter("memberNo", user.getMemberNo());
+			query.executeUpdate();
+
+			Query query2 = getEntityManager().createNativeQuery(
+					"CALL proc_updatecpdsummary(:memberNo,'2012-01-01')")
+					.setParameter("memberNo", user.getMemberNo());
+			query2.executeUpdate();
+
+			Query query3 = getEntityManager().createNativeQuery(
+					"CALL proc_updatecpdsummary(:memberNo,'2013-01-01')")
+					.setParameter("memberNo", user.getMemberNo());
+			query3.executeUpdate();
+
+			Query query4 = getEntityManager().createNativeQuery(
+					"CALL proc_updatecpdsummary(:memberNo,'2014-01-01')")
+					.setParameter("memberNo", user.getMemberNo());
+			query4.executeUpdate();
+
+			Query query5 = getEntityManager().createNativeQuery(
+					"CALL proc_updatecpdsummary(:memberNo,'2015-01-01')")
+					.setParameter("memberNo", user.getMemberNo());
+			query5.executeUpdate();
+		}
 	}
 }

@@ -62,6 +62,7 @@ public class SplashScreenPresenter
 	private ResourceDelegate<SessionResource> sessionResource;
 
 	private static final int REMEMBER_ME_DAYS = 14;
+	private String redirect = "";
 
 	@Inject
 	public SplashScreenPresenter(final EventBus eventBus,
@@ -109,7 +110,14 @@ public class SplashScreenPresenter
 	@Override
 	public void prepareFromRequest(PlaceRequest request) {
 		super.prepareFromRequest(request);
-		tryLoggingInWithCookieFirst();
+		redirect = request.getParameter("redirect", "");
+		// tryLoggingInWithCookieFirst();
+		/*
+		 * Removed log In with Cookie - was taking too long.
+		 */
+		PlaceRequest placeRequest = new Builder().nameToken(NameTokens.login)
+				.build();
+		placeManager.revealPlace(placeRequest);
 	}
 
 	private void onLoginCallSucceeded(CurrentUserDto currentUserDto) {
@@ -118,6 +126,7 @@ public class SplashScreenPresenter
 			fireEvent(new ContextLoadedEvent(currentUser.getUser(), null));
 			redirectToLoggedOnPage();
 		} else {
+			// Window.alert("User Not Logged In!! Redirecting to Login Presenter");
 			PlaceRequest placeRequest = new Builder().nameToken(
 					NameTokens.login).build();
 			placeManager.revealPlace(placeRequest);
@@ -126,25 +135,31 @@ public class SplashScreenPresenter
 	}
 
 	public void redirectToLoggedOnPage() {
-		String redirect = "";
 		String redirectType = "";
 		String resource = "";
-
-		if (AppContext.isCurrentUserAdmin()) {
-			redirect = NameTokens.getAdminDefaultPage();
-		} else {
-			redirect = NameTokens.getOnLoginDefaultPage();
+		if (redirect.equals("")) {
+			if (AppContext.isCurrentUserAdmin()) {
+				redirect = NameTokens.getAdminDefaultPage();
+			} else if (AppContext.isCurrentUserEventEdit()
+					|| AppContext.isCurrentUserEventRead()) {
+				redirect = NameTokens.events;
+			} else if (AppContext.isCurrentUserUsersEdit()
+					|| AppContext.isCurrentUserUsersRead()) {
+				redirect = NameTokens.usermgt;
+			} else if (AppContext.isCurrentUserApplicationsEdit()
+					|| AppContext.isCurrentUserApplicationsRead()) {
+				redirect = NameTokens.members;
+			} else if (AppContext.isCurrentUserCPDEdit()
+					|| AppContext.isCurrentUserCPDRead()) {
+				redirect = NameTokens.cpd;
+			} else if (AppContext.isCurrentUserFinanceEdit()
+					|| AppContext.isCurrentUserFinanceRead()) {
+				redirect = NameTokens.invoices;
+			} else {
+				redirect = NameTokens.getOnLoginDefaultPage();
+			}
 		}
-
-		Set<String> allStrings = placeManager.getCurrentPlaceRequest()
-				.getParameterNames();
-		Map<String, String> params = new HashMap<String, String>();
-
-		for (Iterator<String> it = allStrings.iterator(); it.hasNext();) {
-			String item = it.next();
-			params.put(item, placeManager.getCurrentPlaceRequest()
-					.getParameter(item, ""));
-		}
+		// Window.alert(redirect);
 
 		String token = placeManager.getCurrentPlaceRequest().getParameter(
 				ParameterTokens.REDIRECT, redirect);
@@ -152,25 +167,19 @@ public class SplashScreenPresenter
 				ParameterTokens.REDIRECTTYPE, redirectType);
 		String resourceValue = placeManager.getCurrentPlaceRequest()
 				.getParameter(ParameterTokens.RESOURCE, resource);
-
 		if (type.equals("website")) {
 			Window.Location.replace("https://icpak.com/resource/"
 					+ resourceValue);
 		} else {
-			PlaceRequest placeRequest = new Builder().nameToken(token)
-					.with(params).build();
+			PlaceRequest placeRequest = new Builder().nameToken(token).build();
 			placeManager.revealPlace(placeRequest);
 		}
-
 	}
 
 	@Override
 	protected void onBind() {
 		super.onBind();
 	}
-
-	protected void onReset() {
-	};
 
 	@Override
 	protected void onReveal() {

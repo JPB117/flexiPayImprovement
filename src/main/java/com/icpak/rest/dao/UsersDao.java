@@ -3,9 +3,12 @@ package com.icpak.rest.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Query;
+
 import org.apache.log4j.Logger;
 import org.apache.shiro.crypto.hash.Sha256Hash;
 
+import com.google.inject.Inject;
 import com.icpak.rest.exceptions.ServiceException;
 import com.icpak.rest.models.ErrorCodes;
 import com.icpak.rest.models.auth.Role;
@@ -16,6 +19,9 @@ import com.workpoint.icpak.shared.model.UserDto;
 
 public class UsersDao extends BaseDao {
 	Logger logger = Logger.getLogger(UsersDao.class);
+
+	@Inject
+	RolesDao rolesDao;
 
 	public User findUserByEmail(String email) {
 		assert email != null;
@@ -33,6 +39,8 @@ public class UsersDao extends BaseDao {
 
 	public User findUserByMemberNo(String memberNo) {
 		assert memberNo != null;
+		logger.warn(" MEMBER nO IN CHECK ============================= "
+				+ memberNo);
 		String query = "from User u where u.memberNo = :memberNo";
 		return getSingleResultOrNull(getEntityManager().createQuery(query)
 				.setParameter("memberNo", memberNo));
@@ -44,12 +52,24 @@ public class UsersDao extends BaseDao {
 			user = findUserByUsername(username);
 		}
 
+		if (user != null) {
+			if (user.getRoles().isEmpty()) {
+				createDefaultRoles();
+				Role role = rolesDao.getByName("MEMBER");
+
+				if (role != null) {
+					user.addRole(role);
+
+					return (User) save(user);
+				}
+			}
+		}
+
 		return user;
 	}
 
 	public User createUser(User user) {
 		if (user.getHashedPassword() != null && user.getId() == null) {
-			// Encrypt passwords for new entries only, not on user info update
 			user.setPassword(encrypt(user.getHashedPassword()));
 		}
 		return (User) save(user);
@@ -72,7 +92,6 @@ public class UsersDao extends BaseDao {
 					+ "u.userData.fullNames like :searchTerm or "
 					+ "u.email like :searchTerm or "
 					+ "u.memberNo like :searchTerm" + ")" + "order by id";
-
 			return getResultList(getEntityManager().createQuery(query)
 					.setParameter("searchTerm", "%" + searchTerm + "%"),
 					offSet, limit);
@@ -122,7 +141,6 @@ public class UsersDao extends BaseDao {
 				}
 				user.setFullName(fullName);
 				user.setEmail(email);
-				user.setLmsStatus(lmsStatus);
 				userDtos.add(user);
 			}
 
@@ -137,8 +155,7 @@ public class UsersDao extends BaseDao {
 	}
 
 	public List<User> getAllUsers() {
-		String query = "from User u order by username";
-
+		String query = "from User u where memberNo IS NOT NULL order by memberNo asc";
 		return getResultList(getEntityManager().createQuery(query));
 	}
 
@@ -188,20 +205,30 @@ public class UsersDao extends BaseDao {
 		return user;
 	}
 
-	public User findByUserActivationEmail(String refId,
+	public User findByUserActivationEmail(String email,
 			boolean throwExceptionIfNull) {
 		User user = getSingleResultOrNull(getEntityManager()
 				.createQuery(
 						"from User u where u.isActive=1 and (u.email like :email1 or u.email like :email2)")
-				.setParameter("email1", refId + "%")
-				.setParameter("email2", "%" + refId));
+				.setParameter("email1", email + "%")
+				.setParameter("email2", "%" + email));
 
 		if (user == null && throwExceptionIfNull) {
-			throw new ServiceException(ErrorCodes.NOTFOUND, "User", "'" + refId
+			throw new ServiceException(ErrorCodes.NOTFOUND, "User", "'" + email
 					+ "'");
 
 		}
 		return user;
+	}
+
+	public List<User> findByUserActivationEmail(String email) {
+		List<User> users = getResultList(getEntityManager()
+				.createQuery(
+						"from User u where u.isActive=1 and "
+						+ "(u.email like :email1 or u.email like :email2)")
+				.setParameter("email1", email + "%")
+				.setParameter("email2", "%" + email));
+		return users;
 	}
 
 	public int disableProfilePics(String userId) {
@@ -228,7 +255,6 @@ public class UsersDao extends BaseDao {
 	}
 
 	public String getApplicationRefId(String userRef) {
-
 		String sql = "select refid from `Application Form Header` where userRefId=:userRef";
 		return getSingleResultOrNull(getEntityManager().createNativeQuery(sql)
 				.setParameter("userRef", userRef));
@@ -269,4 +295,58 @@ public class UsersDao extends BaseDao {
 				.setParameter("memberNo", memberNo));
 	}
 
+	public void deleteAllRolesForCurrentUser(Long passedId) {
+		Query query = (getEntityManager().createNativeQuery(
+				"delete from user_role where userid=:passedUserId")
+				.setParameter("passedUserId", passedId));
+		query.executeUpdate();
+	}
+
+	public String getGender(String applicationRefId) {
+		return getSingleResultOrNull(getEntityManager()
+				.createNativeQuery(
+						"select a.gender from `Application Form Header` a where a.refId=:refId")
+				.setParameter("refId", applicationRefId));
+	}
+
+	public void createDefaultRoles() {
+		logger.info(" CREATING DEFAULT ROLES ======= ");
+		List<Role> roles = new ArrayList<>();
+
+		Role role = new Role();
+		role.setName("MEMBER");
+		role.setRoleId(new Long(3));
+		role.setUserTypeID(new Long(26));
+		role.setDescription(" Role for members only");
+		roles.add(role);
+
+		role = new Role();
+		role.setName("TRAINER");
+		role.setRoleId(new Long(2));
+		role.setUserTypeID(new Long(25));
+		role.setDescription(" Role for trainers only");
+		roles.add(role);
+
+		role = new Role();
+		role.setName("ADMIN");
+		role.setRoleId(new Long(1));
+		role.setUserTypeID(new Long(25));
+		role.setDescription(" Role for Administrator only");
+		roles.add(role);
+
+		for (Role r : roles) {
+			Role roleInDb = rolesDao.getByName(r.getName());
+
+			if (roleInDb == null) {
+				rolesDao.createRole(r);
+			}
+		}
+	}
+
+	public List<User> findUsersByMemberNo(String memberNo) {
+		assert memberNo != null;
+		String query = "from User u where u.memberNo = :memberNo";
+		return getResultList((getEntityManager().createQuery(query)
+				.setParameter("memberNo", memberNo)));
+	}
 }

@@ -85,18 +85,12 @@ public class UserItemView extends ViewImpl implements UserItemPresenter.MyView {
 			panelGroups.getElement().setInnerText(user.getGroupsAsString());
 		}
 
-		if (user.getLmsStatus() != null) {
-			spnLMSStatus.setInnerText(user.getLmsStatus());
-			if (user.getLmsStatus().equals("Success")) {
-				spnLMSStatus.setClassName("label label-success popover-icon");
-			} else {
-				spnLMSStatus.setClassName("label label-danger popover-icon");
-			}
-			if (user.getLmsResponse() != null) {
-				spnLMSStatus.setAttribute("data-content",
-						"LMS Response::" + user.getLmsResponse()
-								+ "<br/>LMS Payload::" + user.getLmsPayload());
-			}
+		if (AppContext.isCurrentUserUsersEdit()) {
+			aEdit.removeStyleName("hide");
+			aDelete.removeStyleName("hide");
+		} else {
+			aEdit.addStyleName("hide");
+			aDelete.addStyleName("hide");
 		}
 
 		if (user.getMemberRefId() != null) {

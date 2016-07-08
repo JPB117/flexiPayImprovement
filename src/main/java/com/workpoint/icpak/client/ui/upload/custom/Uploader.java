@@ -53,7 +53,6 @@ public class Uploader extends Composite {
 
 	public Uploader(boolean isSingleUploader) {
 		initWidget(binder.createAndBindUi(this));
-
 		if (isSingleUploader) {
 			uploader = new SingleUploader();
 		} else {
@@ -85,7 +84,6 @@ public class Uploader extends Composite {
 
 	public void setContext(UploadContext context) {
 		this.context = context;
-
 		StringBuffer servletPath = new StringBuffer();
 		String url = context.getUrl() == null ? "upload" : context.getUrl();
 		servletPath.append(url + "?" + context.getContextValuesAsURLParams());
@@ -95,7 +93,6 @@ public class Uploader extends Composite {
 	}
 
 	OnStartUploaderHandler uploadStarted = new OnStartUploaderHandler() {
-
 		@Override
 		public void onStart(IUploader uploader) {
 			AppContext.fireEvent(new UploadStartedEvent());
@@ -131,10 +128,8 @@ public class Uploader extends Composite {
 		}
 	};
 	OnLoadPreloadedImageHandler showImage = new OnLoadPreloadedImageHandler() {
-
 		@Override
 		public void onLoad(PreloadedImage image) {
-			// image.setWidth("75px");
 			panelImages.add(image);
 		}
 	};
@@ -144,7 +139,6 @@ public class Uploader extends Composite {
 		if (uploader instanceof MultiUploader) {
 			uploaders = ((MultiUploader) uploader).getUploaders();
 		} else {
-			// Single Uploader
 			uploaders.add(uploader);
 		}
 
@@ -167,6 +161,10 @@ public class Uploader extends Composite {
 
 	public void clear() {
 		uploader.clear();
+	}
+
+	public void clearImages() {
+		uploader.reset();
 	}
 
 	public void addOnCancelUploaderHandler(OnCancelUploaderHandler handler) {

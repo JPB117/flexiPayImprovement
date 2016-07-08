@@ -31,6 +31,8 @@ import com.itextpdf.text.DocumentException;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.InvoiceLineDto;
 import com.workpoint.icpak.shared.model.InvoiceSummary;
+import com.workpoint.icpak.shared.model.PaymentMode;
+import com.workpoint.icpak.shared.model.TransactionDto;
 
 @Transactional
 public class InvoiceDaoHelper {
@@ -67,7 +69,11 @@ public class InvoiceDaoHelper {
 
 	public InvoiceDto checkInvoicePaymentStatus(String invoiceRef) {
 		List<InvoiceDto> dtos = dao.checkInvoicePaymentStatus(invoiceRef);
-		return dtos.get(0);
+		if (dtos.size() == 0) {
+			return null;
+		} else {
+			return dtos.get(0);
+		}
 	}
 
 	public InvoiceDto save(InvoiceDto dto) {
@@ -104,27 +110,27 @@ public class InvoiceDaoHelper {
 		return invoice.toDto();
 	}
 
-	public List<InvoiceDto> getAllInvoices(String memberId, Integer offset,
+	public List<TransactionDto> getAllTransactions(String memberId,
+			String searchTerm, String fromDate, String endDate,
+			String paymentType, String paymentMode, Integer offset,
 			Integer limit) {
-		List<InvoiceDto> invoices = dao.getAllInvoices(memberId, offset, limit);
+		List<TransactionDto> invoices = dao.getAllTransactions(memberId,
+				searchTerm, fromDate, endDate, paymentType, paymentMode,
+				offset, limit);
+		for (TransactionDto trx : invoices) {
+			if (trx.getPaymentMode() != null) {
+				if (trx.getPaymentMode() == PaymentMode.BANKTRANSFER
+						|| trx.getPaymentMode() == PaymentMode.DIRECTBANKING) {
+					trx.setAllAttachment(dao.getAllAttachment(trx.getId()));
+				}
+			}
+		}
 		return invoices;
 	}
 
 	public int getInvoiceCount() {
-		return getInvoiceCount(null);
+		return 0;
 	}
-
-	// public List<InvoiceDto> getAllInvoicesForMember(String memberId) {
-	//
-	// List<Invoice> invoices = dao.getAllInvoicesForMember(memberId);
-	// List<InvoiceDto> dtos = new ArrayList<>();
-	//
-	// for (Invoice invoice : invoices) {
-	// dtos.add(invoice.toDto());
-	// }
-	//
-	// return dtos;
-	// }4
 
 	public byte[] generatePDFDocument(InvoiceDto invoice)
 			throws FileNotFoundException, IOException, SAXException,
@@ -161,8 +167,11 @@ public class InvoiceDaoHelper {
 		return invoicePDF;
 	}
 
-	public Integer getInvoiceCount(String memberId) {
-		return dao.getInvoiceCount(memberId);
+	public Integer getTransactionCount(String memberId, String searchTerm,
+			String fromDate, String endDate, String paymentType,
+			String paymentMode) {
+		return dao.getTransactionsCount(memberId, searchTerm, fromDate,
+				endDate, paymentType, paymentMode);
 	}
 
 	public InvoiceSummary getSummary(String memberId) {

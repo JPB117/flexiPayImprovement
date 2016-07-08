@@ -5,13 +5,16 @@ import java.util.List;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.HasKeyDownHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
 import com.workpoint.icpak.client.security.CurrentUser;
+import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.profile.password.PasswordWidget;
 import com.workpoint.icpak.client.ui.profile.widget.ProfileWidget;
 import com.workpoint.icpak.shared.model.ApplicationFormAccountancyDto;
@@ -30,13 +33,16 @@ public class ProfileView extends ViewImpl implements
 	private final Widget widget;
 	@UiField
 	HTMLPanel container;
-
 	@UiField
 	PasswordWidget panelPasswordWidget;
-
+	@UiField
+	HTMLPanel panelSubsPayments;
+	@UiField
+	HTMLPanel panelSubsPaymentsContainer;
 	@UiField
 	ProfileWidget divProfileContent;
-
+	@UiField
+	ActionLink aBackToProfile;
 	@UiField
 	HTMLPanel divPasswordContent;
 	private CurrentUser currentUser;
@@ -72,6 +78,13 @@ public class ProfileView extends ViewImpl implements
 
 					}
 				});
+
+		aBackToProfile.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				showPayForSubsPresenter(false);
+			}
+		});
 	}
 
 	@Override
@@ -267,4 +280,44 @@ public class ProfileView extends ViewImpl implements
 		return divProfileContent;
 	}
 
+	@Override
+	public String getPassword() {
+		return panelPasswordWidget.getPassword();
+	}
+
+	@Override
+	public void setInSlot(Object slot, IsWidget content) {
+		if (slot == ProfilePresenter.PAYMENTS_SLOT) {
+			panelSubsPayments.clear();
+			if (content != null) {
+				panelSubsPayments.add(content);
+			}
+			super.setInSlot(slot, content);
+		}
+	}
+
+	@Override
+	public HasKeyDownHandlers getPasswordTextField() {
+		return panelPasswordWidget.getPasswordTextField();
+	}
+
+	@Override
+	public HasClickHandlers getSubmitPassword() {
+		return panelPasswordWidget.getSaveButton();
+	}
+
+	@Override
+	public HasClickHandlers getPaySubscriptionButton() {
+		return divProfileContent.getPaySubscriptionButton();
+	}
+
+	public void showPayForSubsPresenter(boolean show) {
+		if (show) {
+			panelSubsPaymentsContainer.removeStyleName("hide");
+			divProfileContent.addStyleName("hide");
+		} else {
+			panelSubsPaymentsContainer.addStyleName("hide");
+			divProfileContent.removeStyleName("hide");
+		}
+	}
 }

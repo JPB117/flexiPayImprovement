@@ -1,0 +1,39 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui' ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
+	xmlns:d='urn:import:com.workpoint.icpak.client.ui.component' xmlns:p='urn:import:com.workpoint.icpak.client.ui.cpd.header'
+	xmlns:table='urn:import:com.workpoint.icpak.client.ui.cpd.member.table'
+	xmlns:t='urn:import:com.workpoint.icpak.client.ui.component.tabs'
+	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
+	ui:generateLocales='default'>
+
+	<g:HTMLPanel ui:field="container"
+		styleName="content-wrapper ng-scope ng-fadeInUp">
+		<h3 class="ng-scope">
+			CPD ONLINE
+		</h3>
+		<g:HTMLPanel ui:field="panelDetail" styleName="main-content">
+			<div class="row">
+				<div class="col-lg-12">
+					<g:HTMLPanel styleName="panel widget" ui:field="panelListing">
+						<div class="panel-body">
+							<div class="text-center">
+								<h1>CPD Online</h1>
+								<br/>
+								<p>Earn cpd points by doing online courses.</p>
+								<br/>
+								<p>
+									<d:ActionLink styleName="btn btn-gold btn-fill btn-lg"
+										ui:field="aCpdOnline">Access CPD
+										Online
+										<i class="fa fa-external-link"></i></d:ActionLink>
+								</p>
+							</div>
+						</div>
+					</g:HTMLPanel>
+				</div>
+			</div>
+		</g:HTMLPanel>
+	</g:HTMLPanel>
+</ui:UiBinder>

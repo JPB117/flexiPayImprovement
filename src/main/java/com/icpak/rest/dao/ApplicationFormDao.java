@@ -1,8 +1,18 @@
 package com.icpak.rest.dao;
 
+import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import javax.persistence.Query;
+
+import org.apache.log4j.Logger;
+
+import com.google.inject.Inject;
 import com.icpak.rest.exceptions.ServiceException;
 import com.icpak.rest.models.ErrorCodes;
 import com.icpak.rest.models.membership.ApplicationCategory;
@@ -13,13 +23,21 @@ import com.icpak.rest.models.membership.ApplicationFormHeader;
 import com.icpak.rest.models.membership.ApplicationFormSpecialization;
 import com.icpak.rest.models.membership.ApplicationFormTraining;
 import com.icpak.rest.models.membership.MemberImport;
+import com.icpak.rest.util.SMSIntegration;
+import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 import com.workpoint.icpak.shared.model.ApplicationSummaryDto;
 import com.workpoint.icpak.shared.model.ApplicationType;
 import com.workpoint.icpak.shared.model.EduType;
+import com.workpoint.icpak.shared.model.PaymentStatus;
 import com.workpoint.icpak.shared.model.Specializations;
 import com.workpoint.icpak.shared.model.auth.ApplicationStatus;
 
 public class ApplicationFormDao extends BaseDao {
+
+	Logger logger = Logger.getLogger(CPDDao.class);
+
+	@Inject
+	SMSIntegration integration;
 
 	public void createApplication(ApplicationFormHeader application) {
 		save(application);
@@ -53,37 +71,139 @@ public class ApplicationFormDao extends BaseDao {
 
 	}
 
+	public List<ApplicationFormHeaderDto> getAllApplicationDtos(Integer offset,
+			Integer limit, String searchTerm, String applicationStatus,
+			String paymentStatus) {
+		logger.info("++++Getting all applications");
+		if (paymentStatus != null && applicationStatus != null) {
+			System.err.println(" with application status>>" + applicationStatus
+					+ " and payment status >>>" + paymentStatus);
+		}
+		StringBuffer sql = new StringBuffer(
+				"select a.refId,a.created,a.Surname,a.`Other Names`,a.`E-mail`,"
+						+ "a.applicationStatus,a.paymentStatus,a.submissionDate "
+						+ "from `Application Form Header` a ");
+
+		Map<String, Object> params = appendParameters(sql, applicationStatus,
+				paymentStatus, searchTerm);
+		sql.append(" order by a.submissionDate asc");
+		Query query = getEntityManager().createNativeQuery(sql.toString());
+		for (String key : params.keySet()) {
+			query.setParameter(key, params.get(key));
+		}
+
+		List<Object[]> rows = getResultList(query, offset, limit);
+		List<ApplicationFormHeaderDto> applications = new ArrayList<>();
+
+		for (Object[] row : rows) {
+			int i = 0;
+			Object value = null;
+			ApplicationFormHeaderDto app = new ApplicationFormHeaderDto();
+			String refId = (value = row[i++]) == null ? null : value.toString();
+			app.setRefId(refId);
+			Date created = (value = row[i++]) == null ? null : (Date) value;
+			app.setCreated(created);
+			String surName = (value = row[i++]) == null ? null : value
+					.toString();
+			app.setSurname(surName);
+			String otherNames = (value = row[i++]) == null ? null : value
+					.toString();
+			app.setOtherNames(otherNames);
+			String email = (value = row[i++]) == null ? null : value.toString();
+			app.setEmail(email);
+			String applicationStatusDb = (value = row[i++]) == null ? null
+					: value.toString();
+			if (applicationStatusDb != null) {
+				app.setApplicationStatus(ApplicationStatus
+						.valueOf(applicationStatusDb));
+			}
+			String paymentStatusDb = (value = row[i++]) == null ? null : value
+					.toString();
+			if (paymentStatusDb != null) {
+				app.setPaymentStatus(PaymentStatus.valueOf(paymentStatusDb));
+			}
+			Date submissionDate = (value = row[i++]) == null ? null
+					: (Date) value;
+			app.setDateSubmitted(submissionDate);
+			applications.add(app);
+		}
+		return applications;
+
+	}
+
+	private Map<String, Object> appendParameters(StringBuffer sql,
+			String applicationStatus, String paymentStatus, String searchTerm) {
+		Map<String, Object> params = new HashMap<>();
+		boolean isFirstParam = true;
+
+		if (applicationStatus != null && !applicationStatus.equals("")) {
+			if (isFirstParam) {
+				isFirstParam = false;
+				sql.append(" where");
+			} else {
+				sql.append(" and");
+			}
+			params.put("applicationStatus", applicationStatus);
+			sql.append(" applicationStatus=:applicationStatus");
+		}
+
+		if (paymentStatus != null && !paymentStatus.equals("")) {
+			if (isFirstParam) {
+				isFirstParam = false;
+				sql.append(" where");
+			} else {
+				sql.append(" and");
+			}
+			params.put("paymentStatus", paymentStatus);
+			sql.append(" paymentStatus=:paymentStatus");
+		}
+
+		if (searchTerm != null && (!searchTerm.equals(""))) {
+			if (isFirstParam) {
+				isFirstParam = false;
+				sql.append(" where");
+			} else {
+				sql.append(" and");
+			}
+			sql.append("(surName like :searchTerm or `other Names` like :searchTerm "
+					+ "or `E-mail` like :searchTerm or "
+					+ "concat(surName,' ',`other Names`) like :searchTerm)");
+			params.put("searchTerm", "%" + searchTerm + "%");
+		}
+
+		if (isFirstParam) {
+			isFirstParam = false;
+			sql.append(" where");
+		} else {
+			sql.append(" and");
+		}
+		sql.append(" a.applicationStatus <> :status");
+		params.put("status", ApplicationStatus.APPROVED.getName());
+		return params;
+	}
+
 	public List<MemberImport> importMembers(Integer offSet, Integer limit) {
-		return getResultList(
-				getEntityManager().createQuery("select u from MemberImport u"),
-				offSet, limit);
+		return getResultList(getEntityManager()
+				.createQuery("from MemberImport"), offSet, limit);
 	}
 
 	public void updateApplication(ApplicationFormHeader application) {
 		createApplication(application);
 	}
 
-	public int getApplicationCount(String searchTerm) {
+	public int getApplicationCount(String searchTerm, String paymentStatus,
+			String applicationStatus) {
 		Number number = null;
-		if (searchTerm.isEmpty()) {
-			number = getSingleResultOrNull(getEntityManager()
-					.createNativeQuery(
-							"select count(*) from `Application Form Header` "
-									+ "where isactive=1 and applicationStatus=:status ")
-					.setParameter("status", ApplicationStatus.PENDING));
+		StringBuffer sql = new StringBuffer(
+				"select count(*) from `Application Form Header` a");
+		Map<String, Object> params = appendParameters(sql, applicationStatus,
+				paymentStatus, searchTerm);
 
-		} else {
-			number = getSingleResultOrNull(getEntityManager()
-					.createNativeQuery(
-							"select count(*) from `Application Form Header` "
-									+ "where isactive=1 and applicationStatus=:status "
-									+ "and (surname like :searchTerm or `Other Names` like :searchTerm "
-									+ "or `E-mail` like :searchTerm or "
-									+ "concat(surname,' ',`Other Names`) like :searchTerm)")
-					.setParameter("status", ApplicationStatus.PENDING)
-					.setParameter("searchTerm", "%" + searchTerm + "%"));
+		Query query = getEntityManager().createNativeQuery(sql.toString());
+		for (String key : params.keySet()) {
+			query.setParameter(key, params.get(key));
 		}
-
+		number = getSingleResultOrNull(query);
 		return number.intValue();
 	}
 
@@ -267,4 +387,120 @@ public class ApplicationFormDao extends BaseDao {
 				.setParameter("userRefId", userRefId));
 	}
 
+	public void sendMessageToHonourables() {
+		String sql = "select id,number from `nyeri_mca`";
+
+		/*
+		 * select * from kirinyaga_mca select * from muranga_mca select * from
+		 * nyandarua_mca select * from nyeri_mca
+		 */
+		Query query = getEntityManager().createNativeQuery(sql);
+
+		List<Object[]> rows = getResultList(query, 1, 100);
+
+		for (Object[] row : rows) {
+			int i = 0;
+			Object value = null;
+			// String fullName = (value = row[i++]) == null ? null : value
+			// .toString();
+			String id = (value = row[i++]) == null ? null : value.toString();
+			String phone = (value = row[i++]) == null ? null : value.toString();
+
+			/*
+			 * String message = "Hon." + fullName +
+			 * ", Chairman of Central Kenya Parliamentary Group " +
+			 * "and Mr. Peter Munga, Chairman, Mt. Kenya Foundation cordially invite Hon Members "
+			 * +
+			 * "from Central Kenya for a consultative meeting on 17th to 19th February 2016 at "
+			 * +
+			 * "Outspan hotel, Nyeri to deliberate comprehensively  on illicit brews and other"
+			 * +
+			 * " pertinent  issues affecting our region.  All Members are expected to arrive "
+			 * +
+			 * "on the  evening of 17th Feb 2016. Accommodation will be provided. You are  "
+			 * + "kindly requested to avail yourself.Thank you.";
+			 */
+
+			String message = "On behalf of the Central Kenya Parliamentary Group I wish to invite Hon. Members of the following County Assemblies to a Consultative Meeting with His Excellency The President tomorrow 12th February 2016 at Sagana State Lodge starting 12.00 noon."
+					+ "1. Kiambu"
+					+ "2. Muranga"
+					+ "3. Kirinyaga"
+					+ "4. Nyeri"
+					+ "5. Nyandarua" + "Hon. Dennis Waweru" + "Chairman";
+
+			phone = phone.trim();
+			phone = phone.replaceAll("[-]", "");
+
+			integration.send(phone, message);
+			// integration.send("0725050728", message);
+			// integration.send("0729472421", message);
+			// System.err.println(fullName + ">>>" + phone);
+		}
+	}
+
+	public List<MemberImport> importMissingMembers() {
+
+		List<MemberImport> memberImports = new ArrayList<>();
+		String sql = "select a.id,a.No_,a.Name,a.`E-mail`,a.Status,a.`Customer Type`,a.`Customer Posting Group`,"
+				+ "a.`Practising No`,a.`Gender`,a.paidUp,a.Address,a.Address2,a.City,a.phoneNo_,a.PostCode"
+				+ ",a.County,a.`Date Of Birth`,a.`ID No`,a.Position,a.`Practicing Cert Date`,"
+				+ "a.`Date Registered` from icpak_member_import a";
+		Query query = getEntityManager().createNativeQuery(sql);
+
+		List<Object[]> rows = getResultList(query);
+
+		for (Object[] row : rows) {
+			int i = 0;
+			Object value = null;
+
+			MemberImport memberImport = new MemberImport();
+			memberImport.setId((value = row[i++]) == null ? null
+					: ((BigInteger) value).longValue());
+			memberImport.setMemberNo((value = row[i++]) == null ? null : value
+					.toString());
+			memberImport.setName((value = row[i++]) == null ? null : value
+					.toString());
+			memberImport.setEmail((value = row[i++]) == null ? null : value
+					.toString());
+			memberImport.setStatus((value = row[i++]) == null ? null : (Integer
+					.valueOf((String) value)));
+			memberImport.setCustomerType((value = row[i++]) == null ? null
+					: value.toString());
+			memberImport
+					.setCustomerPostingGroup((value = row[i++]) == null ? null
+							: value.toString());
+			memberImport.setPractisingNo((value = row[i++]) == null ? null
+					: value.toString());
+			memberImport.setGender((value = row[i++]) == null ? null : Short
+					.valueOf((String) value));
+			memberImport.setPaidUp((value = row[i++]) == null ? null : Short
+					.valueOf((String) value));
+			memberImport.setAddress((value = row[i++]) == null ? null : value
+					.toString());
+			memberImport.setAddress2((value = row[i++]) == null ? null : value
+					.toString());
+			memberImport.setCity((value = row[i++]) == null ? null : value
+					.toString());
+			memberImport.setPhoneNo_((value = row[i++]) == null ? null : value
+					.toString());
+			memberImport.setPostCode((value = row[i++]) == null ? null : value
+					.toString());
+			memberImport.setCounty((value = row[i++]) == null ? null : value
+					.toString());
+			memberImport.setDateOfBirth((value = row[i++]) == null ? null
+					: (Date) value);
+			memberImport.setIDNo((value = row[i++]) == null ? null : value
+					.toString());
+			memberImport.setPosition((value = row[i++]) == null ? null : value
+					.toString());
+			memberImport
+					.setPracticingCertDate((value = row[i++]) == null ? null
+							: (Date) value);
+			memberImport.setDateRegistered((value = row[i++]) == null ? null
+					: (Date) value);
+			memberImports.add(memberImport);
+		}
+
+		return memberImports;
+	}
 }

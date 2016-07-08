@@ -34,7 +34,16 @@ public class EventsDao extends BaseDao {
 			throw new ServiceException(ErrorCodes.NOTFOUND, "Event", "'"
 					+ refId + "'");
 		}
+		return event;
+	}
 
+	public Event getByEvenFromCPDId(String id, boolean throwExceptionIfNull) {
+		Event event = getSingleResultOrNull(getEntityManager().createQuery(
+				"from Event u where u.id=:id").setParameter("id", id));
+		if (throwExceptionIfNull && event == null) {
+			throw new ServiceException(ErrorCodes.NOTFOUND, "Event", "'" + id
+					+ "'");
+		}
 		return event;
 	}
 
@@ -124,14 +133,13 @@ public class EventsDao extends BaseDao {
 	}
 
 	public int getDelegateCount(String eventId) {
-
 		Number count = getSingleResultOrNull(getEntityManager()
 				.createNativeQuery(
 						"select count(d.refId) from"
 								+ " delegate d inner join booking b on (d.booking_id=b.id)"
-								+ " inner join event e on (e.id=b.event_id) where e.refId=:eventId")
-				.setParameter("eventId", eventId));
-
+								+ " inner join event e on (e.id=b.event_id) where e.refId=:eventId"
+								+ " and b.isActive=1").setParameter("eventId",
+						eventId));
 		return count.intValue();
 	}
 
@@ -314,9 +322,9 @@ public class EventsDao extends BaseDao {
 			}
 
 			if (paymentStatus == 1) {
-				delegateDto.setPaymentStatus(PaymentStatus.PAID);
+				delegateDto.setBookingPaymentStatus(PaymentStatus.PAID);
 			} else {
-				delegateDto.setPaymentStatus(PaymentStatus.PAID);
+				delegateDto.setBookingPaymentStatus(PaymentStatus.PAID);
 			}
 
 			if (contactEmail != null) {

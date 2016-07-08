@@ -7,6 +7,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rest.delegates.client.ResourceDelegate;
@@ -154,11 +155,6 @@ public class AppContext {
 		return user.getUser();
 	}
 
-	public static boolean isCurrentUserAdmin() {
-		boolean isAdmin = user == null ? false : user.getUser().isAdmin();
-		return isAdmin;
-	}
-
 	public static boolean isCurrentUser(String userId) {
 
 		if (getContextUser() == null) {
@@ -214,4 +210,76 @@ public class AppContext {
 		return (user.getUser().getMemberNo() != null)
 				&& (!user.getUser().getMemberNo().isEmpty());
 	}
+
+	public static boolean isCurrentBasicMember() {
+		return (user == null ? false
+				: (user.getUser().isBasicMember() || hasNoGroup()));
+	}
+
+	public static boolean isCurrentUserEventEdit() {
+		return (user == null || user.getUser() == null ? false : (user
+				.getUser().isEventEdit()) || isCurrentUserAdmin());
+	}
+
+	public static boolean isCurrentUserEventRead() {
+		return (user == null ? false : user.getUser().isEventRead());
+	}
+
+	public static boolean isCurrentUserUsersEdit() {
+		return (user == null ? false : (user.getUser().isUsersEdit())
+				|| isCurrentUserAdmin());
+	}
+
+	public static boolean isCurrentUserUsersRead() {
+		return (user == null ? false : user.getUser().isUsersRead());
+	}
+
+	public static boolean isCurrentUserApplicationsEdit() {
+		return (user == null ? false : (user.getUser().isApplicationsEdit())
+				|| isCurrentUserAdmin());
+	}
+
+	public static boolean isCurrentUserApplicationsRead() {
+		return (user == null ? false : user.getUser().isApplicationsRead());
+	}
+
+	public static boolean isCurrentUserCPDEdit() {
+		return (user == null ? false : (user.getUser().isCPDEdit())
+				|| isCurrentUserAdmin());
+	}
+
+	public static boolean isCurrentUserCPDRead() {
+		return (user == null ? false : user.getUser().isCPDRead());
+	}
+
+	public static boolean isCurrentUserFinanceEdit() {
+		return (user == null ? false : (user.getUser().isFinanceEdit())
+				|| isCurrentUserAdmin());
+	}
+
+	public static boolean isCurrentUserFinanceApplications() {
+		return (user == null ? false : (user.getUser()
+				.isFinanceEditApplications()) || isCurrentUserAdmin());
+	}
+
+	public static boolean isCurrentUserFinanceEvents() {
+		return (user == null ? false : (user.getUser().isFinanceEditEvents())
+				|| isCurrentUserAdmin());
+	}
+
+	public static boolean isCurrentUserFinanceRead() {
+		return (user == null ? false : user.getUser().isFinanceRead());
+	}
+
+	public static boolean hasNoGroup() {
+		return (user == null ? false
+				: (user.getUser().getGroups().isEmpty() ? true : false));
+	}
+
+	/* Super Administrator */
+	public static boolean isCurrentUserAdmin() {
+		boolean isAdmin = user == null ? false : user.getUser().isAdmin();
+		return isAdmin;
+	}
+
 }

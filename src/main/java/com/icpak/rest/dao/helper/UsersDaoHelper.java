@@ -29,6 +29,8 @@ import org.apache.log4j.Logger;
 
 import com.amazonaws.util.json.JSONException;
 import com.amazonaws.util.json.JSONObject;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import com.icpak.rest.BaseResource;
@@ -67,7 +69,7 @@ import com.workpoint.icpak.shared.model.auth.ActionType;
 import com.workpoint.icpak.shared.model.auth.CurrentUserDto;
 import com.workpoint.icpak.shared.model.auth.LogInAction;
 import com.workpoint.icpak.shared.model.auth.LogInResult;
-import com.workpoint.icpak.shared.trx.TransactionDto;
+import com.workpoint.icpak.shared.trx.OldTransactionDto;
 
 @Transactional
 public class UsersDaoHelper {
@@ -75,8 +77,6 @@ public class UsersDaoHelper {
 	Logger logger = Logger.getLogger(UsersDaoHelper.class.getName());
 	@Inject
 	UsersDao dao;
-	@Inject
-	ApplicationFormDao applicationDao;
 	@Inject
 	RolesDao roleDao;
 	@Inject
@@ -92,6 +92,9 @@ public class UsersDaoHelper {
 
 	@Inject
 	MemberDaoHelper memberDaoHelper;
+
+	@Inject
+	ApplicationFormDaoHelper applicationFormDaoHelper;
 
 	/**
 	 * System User
@@ -113,7 +116,6 @@ public class UsersDaoHelper {
 		}
 		dao.createUser(user);
 		// createDefaultMemberForUser(user);
-
 		if (sendActivationEmail) {
 			sendActivationEmail(user);
 		}
@@ -125,10 +127,10 @@ public class UsersDaoHelper {
 		User user = dao.findByUserId(userId);
 		user.setEmail(emailAddress);
 		dao.updateUser(user);
-		ApplicationFormHeader application = applicationDao
+		ApplicationFormHeader application = applicationFormDao
 				.getApplicationByUserRef(user.getRefId());
 		application.setEmail(emailAddress);
-		applicationDao.updateApplication(application);
+		applicationFormDao.updateApplication(application);
 
 		sendActivationEmail(user);
 	}
@@ -141,10 +143,16 @@ public class UsersDaoHelper {
 		String body = "Dear "
 				+ fullNames
 				+ ","
-				+ "<br/>An account has been created for you on the ICPAK portal. "
+				+ "<br/><br/>An account has been created for you on the ICPAK portal. "
 				+ "You will need to create your password on the portal using the following details."
 				+ "<p/><a href=" + link + ">Click this link </a>"
-				+ " to create your password." + "<p>Thank you";
+				+ " to create your password." + ""
+				+ "<p><strong>Having trouble with above link?"
+				+ " Copy below link on a new tab on browser.</strong>" + "<p/>"
+				+ "<a style='text-decoration: underline;'>" + link + "</a>"
+				+ "</p>" +
+
+				"<p>Thank you";
 
 		try {
 			EmailServiceHelper.sendEmail(body, subject,
@@ -171,10 +179,16 @@ public class UsersDaoHelper {
 		String body = "Dear "
 				+ fullNames
 				+ ","
-				+ "<br/>An account has been created for you on the ICPAK portal. "
+				+ "<br/><br/>An account has been created for you on the ICPAK portal. "
 				+ "You will need to create your password on the portal using the following details."
 				+ "<p/><a href=" + link + ">Click this link </a>"
-				+ " to create your password." + "<p>Thank you";
+				+ " to create your password." + ""
+				+ "<p><strong>Having trouble with above link?"
+				+ " Copy below link on a new tab on browser.</strong>" + "<p/>"
+				+ "<a style='text-decoration: underline;'>" + link + "</a>"
+				+ "</p>" +
+
+				"<p>Thank you";
 
 		try {
 			EmailServiceHelper.sendEmail(body, subject,
@@ -195,8 +209,14 @@ public class UsersDaoHelper {
 	 * @return
 	 */
 	public UserDto create(User user) {
+		return create(user, false);
+	}
+
+	public UserDto create(User user, boolean createMemberAccount) {
 		dao.createUser(user);
-		createDefaultMemberForUser(user);
+		if (createMemberAccount) {
+			createDefaultMemberForUser(user);
+		}
 		return user.toDto();
 	}
 
@@ -219,20 +239,22 @@ public class UsersDaoHelper {
 			data.setFirstName(dto.getName());
 			data.setLastName(dto.getSurname());
 		}
-
+		if (po.getMember() != null) {
+			po.getMember().setMemberNo(dto.getMemberNo());
+			po.getMember().setMemberQrCode(dto.getMemberQrCode());
+		}
+		// Delete all Roles for the current User
+		dao.deleteAllRolesForCurrentUser(po.getId());
 		for (RoleDto role : dto.getGroups()) {
 			Role r = dao.findByRefId(role.getRefId(), Role.class);
 			po.addRole(r);
 		}
-
 		dao.updateUser(po);
-
 		return po.toDto();
 	}
 
 	public void update(String userId, User user) {
 		User po = dao.findByUserId(userId);
-
 		po.setEmail(user.getEmail());
 		// po.setUsername(user.getUsername());
 		po.setAddress(user.getAddress());
@@ -240,7 +262,6 @@ public class UsersDaoHelper {
 		po.setNationality(user.getNationality());
 		po.setPhoneNumber(user.getPhoneNumber());
 		po.setResidence(user.getResidence());
-
 		if (po.getUserData() == null) {
 			po.setUserData(user.getUserData());
 		} else {
@@ -256,9 +277,7 @@ public class UsersDaoHelper {
 			data.setTitle(user.getUserData().getTitle());
 			// data.setResidence(user.getUserData().getResidence());
 		}
-
 		dao.updateUser(po);
-
 		if (!dao.hasMember(po)) {
 			createDefaultMemberForUser(po);
 		}
@@ -287,10 +306,8 @@ public class UsersDaoHelper {
 
 	public List<UserDto> getAllUsers(Integer offset, Integer limit,
 			String uriInfo, String searchTerm) {
-
 		List<User> users = dao.getAllUsers(offset, limit, null, searchTerm);
 		List<UserDto> dtos = new ArrayList<>();
-
 		for (User user : users) {
 			dtos.add(user.toDto());
 		}
@@ -365,7 +382,46 @@ public class UsersDaoHelper {
 	}
 
 	public User getUserByActivationEmail(String userEmail) {
-		User user = dao.findByUserActivationEmail(userEmail, false);
+		boolean isFullMembershipDetected = false;
+		boolean isAssociateDetected = false;
+		boolean isEmptyMemberNo = false;
+		List<User> users = dao.findByUserActivationEmail(userEmail);
+		User user = null;
+		if (users.size() == 1) {
+			user = users.get(0);
+		} else if (users.size() == 2) {
+			System.err.println("Found 2 records for user with email::"
+					+ userEmail);
+
+			// Deactivate the One Account and leave the other one
+			for (User u : users) {
+				if (u.getMemberNo() == null) {
+					isEmptyMemberNo = true;
+				} else if (u.getMemberNo().contains("Assoc/")
+						|| u.getMemberNo().contains("ASSOC/")) {
+					isAssociateDetected = true;
+				} else {
+					isFullMembershipDetected = true;
+				}
+			}
+			System.err.println(">>>>isAssociate Detected:"
+					+ isAssociateDetected + " \n>>>>isFullMember:"
+					+ isFullMembershipDetected
+					+ " \n>>>>isEmptyMemberDetected:" + isEmptyMemberNo);
+
+			if (isEmptyMemberNo
+					&& (isAssociateDetected || isFullMembershipDetected)) {
+				System.err.println("Detected Empty MemberNo...");
+				user = deleteEmptyMemberNo(users);
+			}
+
+			if (isAssociateDetected && isFullMembershipDetected) {
+				System.err
+						.println("Detected Associate and Full Member Accounts..");
+				user = deleteAssociateAccount(users);
+			}
+		}
+
 		if (user != null) {
 			sendActivationEmail2(user);
 			return user;
@@ -379,9 +435,43 @@ public class UsersDaoHelper {
 		}
 	}
 
-	private User checkIfUserExistInERP(String userEmail)
-			throws URISyntaxException, ParseException, JSONException {
+	private User deleteAssociateAccount(List<User> users) {
+		User correctUser = null;
+		for (User u : users) {
+			if (u.getMemberNo().contains("Assoc/")
+					|| u.getMemberNo().contains("ASSOC/")) {
+				System.err.println("deleted refId::" + u.getRefId());
+				dao.delete(u);
+				ApplicationFormHeader h = applicationFormDao
+						.getApplicationByUserRef(u.getRefId());
+				dao.delete(h);
+			} else {
+				correctUser = u;
+			}
+		}
+		return correctUser;
+	}
 
+	private User deleteEmptyMemberNo(List<User> users) {
+		User correctUser = null;
+		for (User u : users) {
+			if (u.getMemberNo() == null) {
+				System.err.println("deleted refId::" + u.getRefId());
+				dao.delete(u);
+				ApplicationFormHeader h = applicationFormDao
+						.getApplicationByUserRef(u.getRefId());
+				if (h != null) {
+					dao.delete(h);
+				}
+			} else {
+				correctUser = u;
+			}
+		}
+		return correctUser;
+	}
+
+	public User checkIfUserExistInERP(String userEmail)
+			throws URISyntaxException, ParseException, JSONException {
 		logger.error(" ===>>><<<< === Checking for this User In ERP ===>><<<>>== ");
 		final HttpClient httpClient = new DefaultHttpClient();
 		final List<NameValuePair> qparams = new ArrayList<NameValuePair>();
@@ -423,9 +513,7 @@ public class UsersDaoHelper {
 		res = result.toString();
 
 		logger.error(" ===>>><<<< === RESULT ===>><<<>>== " + res);
-
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
-
 		/**
 		 * Check if the erp server returns null string
 		 */
@@ -443,9 +531,7 @@ public class UsersDaoHelper {
 			String phoneNo = jo.getString("Phone No_");
 			String mobileNo = jo.getString("Mobile No_");
 			String idNo = jo.getString("ID No");
-
 			String customerType = null;
-
 			if (jo.getString("Customer Type").equals("PRAC MEMBER")) {
 				customerType = "PRAC_MEMBER";
 			} else if (jo.getString("Customer Type").equals("PRACTICING RT")) {
@@ -462,11 +548,20 @@ public class UsersDaoHelper {
 			Date practisingCertDate = formatter.parse((jo
 					.getString("Practicing Cert Date")));
 
+			/*
+			 * Check if this member exist either by memberNo OR this was a new
+			 * applicant
+			 */
 			User userInDb = dao.findUserByMemberNo(memberNo);
 			Member memberInDb = memberDaoHelper.findByMemberNo(memberNo);
+			if (userInDb == null) {
+				logger.error("Check if this was a new applicant..");
+				userInDb = dao.findByUserActivationEmail(userEmail, false);
+			}
 
 			if (memberInDb != null) {
-				logger.error(" ===>>><<<< === MEMBER IN DB NOT NULL ===>><<<>>== ");
+				logger.error(" ===>>><<<< === MEMBER IN DB NOT NULL - "
+						+ "We are only updating this member record ===>><<<>>== ");
 				memberInDb.setLastUpdate(new Date());
 				memberInDb.setRegistrationDate(dateRegistered);
 				memberInDb.setPractisingCertDate(practisingCertDate);
@@ -477,15 +572,13 @@ public class UsersDaoHelper {
 				if (status == 0) {
 					memberInDb.setMemberShipStatus(MembershipStatus.ACTIVE);
 				}
-
 				if (status == 1) {
 					memberInDb.setMemberShipStatus(MembershipStatus.INACTIVE);
 				}
 
 			} else {
-
-				logger.error(" ===>>><<<< === MEMBER IN DB NULL ===>><<<>>== ");
-
+				logger.error(" ===>>><<<< === MEMBER IN DB NULL - Insert a new memberRecord "
+						+ "+ User Record ===>><<<>>== ");
 				memberInDb = new Member();
 				memberInDb.setLastUpdate(new Date());
 				memberInDb.setRegistrationDate(dateRegistered);
@@ -493,15 +586,12 @@ public class UsersDaoHelper {
 				memberInDb.setPractisingNo(practisingNo);
 				memberInDb.setCustomerType(customerType);
 				memberInDb.setMemberNo(memberNo);
-
 				if (status == 0) {
 					memberInDb.setMemberShipStatus(MembershipStatus.ACTIVE);
 				}
-
 				if (status == 1) {
 					memberInDb.setMemberShipStatus(MembershipStatus.INACTIVE);
 				}
-
 			}
 
 			logger.error(" ===>>><<<< === MEMBER EMAIL ===>><<<>>== " + email);
@@ -509,7 +599,6 @@ public class UsersDaoHelper {
 				logger.error(" ===>>><<<< === USER IN DB NOT NULL ===>><<<>>== ");
 				memberInDb.setUser(userInDb);
 				memberInDb.setUserRefId(userInDb.getRefId());
-
 				userInDb.setAddress(address);
 				userInDb.setMobileNo(mobileNo);
 				userInDb.setPostalCode(postCode);
@@ -525,6 +614,10 @@ public class UsersDaoHelper {
 				userInDb.setEmail(email);
 				userInDb.setUsername(email);
 				userInDb.setFullName(fullNames);
+
+				dao.deleteAllRolesForCurrentUser(userInDb.getId());
+				Role r = roleDao.getByName("MEMBER");
+				userInDb.addRole(r);
 
 				dao.createUser(userInDb);
 
@@ -550,10 +643,17 @@ public class UsersDaoHelper {
 				userInDb.setUserData(userData);
 				userInDb.setFullName(fullNames);
 
+				Role r = roleDao.getByName("MEMBER");
+				if (r == null) {
+					logger.error(">>>>>>>>>>>>>>>>Role cannot be found...!<<<<<<<<");
+				}
+				userInDb.addRole(r);
+
 				dao.createUser(userInDb);
 
 			}
 
+			/* Update Application Form Header */
 			ApplicationFormHeader userFormHeader = new ApplicationFormHeader();
 			userFormHeader.setMobileNo(mobileNo);
 			userFormHeader.setIdNumber(idNo);
@@ -563,12 +663,26 @@ public class UsersDaoHelper {
 			userFormHeader.setAddress1(address);
 			userFormHeader.setTelephone1(phoneNo);
 			userFormHeader.setContactTelephone(phoneNo);
-			userFormHeader.setApplicationType(ApplicationType
-					.valueOf(customerPostingGroup.toUpperCase()));
-
+			userFormHeader.setApplicationType(getApplicationType(customerType
+					.toUpperCase()));
 			updateUserMemberRecords(userInDb, memberInDb, userFormHeader);
-
 			return userInDb;
+		}
+	}
+
+	private ApplicationType getApplicationType(String customerType) {
+		if (customerType.equals("MEMBER")) {
+			return ApplicationType.NON_PRACTISING;
+		} else if (customerType.equals("PRACTICING RT")) {
+			return ApplicationType.PRACTISING_RT;
+		} else if (customerType.equals("PRAC MEMBER")) {
+			return ApplicationType.PRACTISING;
+		} else if (customerType.equals("FOREIGN")) {
+			return ApplicationType.OVERSEAS;
+		} else if (customerType.equals("RETIRED")) {
+			return ApplicationType.RETIRED;
+		} else {
+			return ApplicationType.NON_PRACTISING;
 		}
 	}
 
@@ -580,11 +694,10 @@ public class UsersDaoHelper {
 		logger.error(" ===>>><<<< === MEMBER NO ===>><<<>>== "
 				+ memberInDb.getMemberNo());
 
-		ApplicationFormHeader userFormHeaderInDb = applicationDao
+		ApplicationFormHeader userFormHeaderInDb = applicationFormDao
 				.getApplicationByUserRef(userInDb.getRefId());
 
 		if (userFormHeaderInDb != null) {
-
 			userFormHeaderInDb.setMobileNo(userForm.getMemberNo());
 			userFormHeaderInDb.setIdNumber(userForm.getIdNumber());
 			userFormHeaderInDb.setEmail(userForm.getEmail());
@@ -597,7 +710,6 @@ public class UsersDaoHelper {
 					.getContactTelephone());
 			userFormHeaderInDb
 					.setApplicationType(userForm.getApplicationType());
-
 			dao.save(userFormHeaderInDb);
 		} else {
 			User user = dao.findUserByEmail(userInDb.getEmail());
@@ -643,12 +755,12 @@ public class UsersDaoHelper {
 		dao.save(user);
 	}
 
-	public List<TransactionDto> getTransactions(String userId) {
+	public List<OldTransactionDto> getTransactions(String userId) {
 
 		List<Transaction> trxs = trxDao.getTransactions(userId);
-		List<TransactionDto> trxDtos = new ArrayList<>();
+		List<OldTransactionDto> trxDtos = new ArrayList<>();
 		for (Transaction trx : trxs) {
-			TransactionDto dto = trx.toDto();
+			OldTransactionDto dto = trx.toDto();
 			trxDtos.add(dto);
 		}
 
@@ -659,13 +771,20 @@ public class UsersDaoHelper {
 		UserDto userDto;
 		boolean isLoggedIn = true;
 
+		logger.debug("++++++ Log In Api Call ++++++++");
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			logger.debug(mapper.writeValueAsString(action));
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+
 		if (action.getActionType() == ActionType.VIA_COOKIE) {
 			userDto = getUserFromCookie(action.getLoggedInCookie());
 		} else {
 			userDto = getUserFromCredentials(action.getUsername(),
 					action.getPassword());
 		}
-
 		isLoggedIn = userDto != null;
 
 		String loggedInCookie = "";
@@ -675,10 +794,12 @@ public class UsersDaoHelper {
 			userDto.setApplicationRefId(getApplicationRefId(userDto.getRefId()));
 			userDto.setMemberRefId(dao.getMemberRefId(userDto.getUserLongId()));
 
+			if (userDto.getMemberNo() != null) {
+				userDto.setGender(dao.getGender(userDto.getApplicationRefId()));
+			}
 		}
 
 		CurrentUserDto currentUserDto = new CurrentUserDto(isLoggedIn, userDto);
-
 		logger.info("LogInHandlerexecut(): actiontype="
 				+ action.getActionType());
 		if (currentUserDto != null) {
@@ -686,7 +807,7 @@ public class UsersDaoHelper {
 					+ currentUserDto);
 		}
 		logger.info("LogInHandlerexecut(): loggedInCookie=" + loggedInCookie);
-
+		// applicationFormDaoHelper.importMissingMembers(applicationFormDao.importMissingMembers());
 		assert action.getActionType() == null;
 		return new LogInResult(action.getActionType(), currentUserDto,
 				loggedInCookie);
@@ -882,4 +1003,5 @@ public class UsersDaoHelper {
 
 		return user.toDto();
 	}
+
 }

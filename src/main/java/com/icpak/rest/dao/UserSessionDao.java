@@ -31,7 +31,6 @@ public class UserSessionDao extends BaseDao {
 		save(userSession);
 		logger.info("UserSessionDao.createLoggedInCookie(user) user=" + userDto + " userSessionCookie="
 				+ userSession.getCookie());
-
 		return userSession.getCookie();
 	}
 
@@ -47,7 +46,6 @@ public class UserSessionDao extends BaseDao {
 	}
 
 	public UserDto getUserFromCookie(String loggedInCookie) {
-
 		UserSession userSession = getSessionFromCookie(loggedInCookie);
 		if (userSession == null) {
 			return null;

@@ -8,27 +8,29 @@ import com.workpoint.icpak.shared.model.MemberDto;
 import com.workpoint.icpak.shared.model.PaymentStatus;
 import com.workpoint.icpak.shared.model.SerializableObj;
 
-@XmlSeeAlso({DelegateDto.class,ContactDto.class, MemberDto.class,AccommodationDto.class})
-public class BookingDto extends SerializableObj{
+@XmlSeeAlso({ DelegateDto.class, ContactDto.class, MemberDto.class,
+		AccommodationDto.class })
+public class BookingDto extends SerializableObj {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	private ContactDto contact;
-	private String paymentMode;//MPesa, VISA etc
+	private String paymentMode;// MPesa, VISA etc
 	private String currency;
 	private Long bookingDate;
-	private String paymentRef; //TrxNumber
+	private String paymentRef; // TrxNumber
 	private Long paymentDate;
 	private Double amountDue;
 	private Double amountPaid;
 	private String eventRefId;
 	private String invoiceRef;
-	private String status; //DRAFT/ PAID
-	private PaymentStatus paymentStatus= PaymentStatus.NOTPAID;
-	private List<DelegateDto> delegates = null; 
-	
+	private String status; // DRAFT/ PAID
+	private Integer isActive;
+	private PaymentStatus paymentStatus = PaymentStatus.NOTPAID;
+	private List<DelegateDto> delegates = null;
+
 	public BookingDto() {
 	}
 
@@ -135,5 +137,13 @@ public class BookingDto extends SerializableObj{
 	public void setPaymentDate(Long paymentDate) {
 		this.paymentDate = paymentDate;
 	}
-	
+
+	public Integer getIsActive() {
+		return isActive;
+	}
+
+	public void setIsActive(Integer isActive) {
+		this.isActive = isActive;
+	}
+
 }

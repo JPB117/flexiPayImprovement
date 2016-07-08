@@ -28,13 +28,13 @@ import com.workpoint.icpak.shared.model.MembershipStatus;
 @Entity
 @Table
 public class Member extends PO {
-
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	private String userRefId;
 	private String memberNo;
+	@Column(nullable = false)
 	private Date registrationDate;
 	private Date lastUpdate;
 	private String date;
@@ -42,6 +42,8 @@ public class Member extends PO {
 	private String customerType;
 	private Date practisingCertDate;
 	private String setPracisingNo;
+	private String customerPostingGroup;
+	private String memberQrCode;
 
 	@Column(nullable = false, columnDefinition = "int(1) not null default 0")
 	private int memberDisplinaryCase = 0;
@@ -192,6 +194,22 @@ public class Member extends PO {
 
 	public void setSetPracisingNo(String setPracisingNo) {
 		this.setPracisingNo = setPracisingNo;
+	}
+
+	public String getCustomerPostingGroup() {
+		return customerPostingGroup;
+	}
+
+	public void setCustomerPostingGroup(String customerPostingGroup) {
+		this.customerPostingGroup = customerPostingGroup;
+	}
+
+	public String getMemberQrCode() {
+		return memberQrCode;
+	}
+
+	public void setMemberQrCode(String memberQrCode) {
+		this.memberQrCode = memberQrCode;
 	}
 
 }

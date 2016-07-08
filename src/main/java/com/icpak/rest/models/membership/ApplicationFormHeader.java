@@ -35,6 +35,8 @@ public class ApplicationFormHeader extends PO {
 	@Column(name = "`Date`", columnDefinition = "datetime")
 	private Date date;
 
+	private Date submissionDate;
+
 	@Column(name = "`Application Date`", columnDefinition = "datetime")
 	private Date applicationDate;
 
@@ -84,7 +86,7 @@ public class ApplicationFormHeader extends PO {
 	private PaymentStatus paymentStatus;
 	private String memberNo;
 	private String MobileNo;
-
+	private String erpCode;
 	private String employer;
 	@Column(name = "`Employer Code`", length = 20)
 	private String employerCode;
@@ -309,7 +311,7 @@ public class ApplicationFormHeader extends PO {
 		setIdNumber(dto.getIdNumber());
 		setBranch(dto.getBranch());
 		if (dto.getGender() != null) {
-			setGender(dto.getGender().name());
+			setGender(dto.getGender().toString());
 		}
 
 		// Contact Person
@@ -324,11 +326,22 @@ public class ApplicationFormHeader extends PO {
 		setSentenceImposed(dto.getSentence());
 
 		// Application Status
+		// System.err
+		// .println(applicationStatus + " " + dto.getApplicationStatus());
+
+		if ((applicationStatus == ApplicationStatus.PENDING)
+				&& (dto.getApplicationStatus() == ApplicationStatus.SUBMITTED)) {
+			// System.err.println("Submission date changed!");
+			setSubmissionDate(new Date());
+		}
 		setApplicationStatus(dto.getApplicationStatus());
 		setPaymentStatus(dto.getPaymentStatus());
+		setErpCode(dto.getErpCode());
+
 	}
 
 	public void copyInto(ApplicationFormHeaderDto dto) {
+		dto.setId(getId());
 		dto.setRefId(getRefId());
 		dto.setCreated(getCreated());
 		dto.setApplicationDate(applicationDate);
@@ -349,6 +362,7 @@ public class ApplicationFormHeader extends PO {
 		dto.setResidence(residence);
 		dto.setIdNumber(idNumber);
 		dto.setBranch(branch);
+		dto.setErpCode(erpCode);
 		dto.setApplicationStatus(applicationStatus);
 		if (gender != null) {
 			dto.setGender(Gender.valueOf(gender));
@@ -361,6 +375,7 @@ public class ApplicationFormHeader extends PO {
 		dto.setConvictionDateAndPlace(dateAndPlace);
 		dto.setSentence(sentenceImposed);
 		dto.setPaymentStatus(paymentStatus);
+		dto.setDateSubmitted(submissionDate);
 
 		List<AttachmentDto> attachmentDtos = new ArrayList<AttachmentDto>();
 		for (Attachment attachment : attachments) {
@@ -491,4 +506,21 @@ public class ApplicationFormHeader extends PO {
 	public void setPaymentStatus(PaymentStatus paymentStatus) {
 		this.paymentStatus = paymentStatus;
 	}
+
+	public String getErpCode() {
+		return erpCode;
+	}
+
+	public void setErpCode(String erpCode) {
+		this.erpCode = erpCode;
+	}
+
+	public Date getSubmissionDate() {
+		return submissionDate;
+	}
+
+	public void setSubmissionDate(Date submissionDate) {
+		this.submissionDate = submissionDate;
+	}
+
 }

@@ -36,6 +36,7 @@ import com.workpoint.icpak.client.ui.admin.TabDataExt;
 import com.workpoint.icpak.client.ui.component.Grid;
 import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
 import com.workpoint.icpak.client.ui.events.ProcessingEvent;
+import com.workpoint.icpak.client.ui.events.ToggleSideBarEvent;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
 import com.workpoint.icpak.client.ui.security.MemberGateKeeper;
 import com.workpoint.icpak.client.ui.util.DateRange;
@@ -172,6 +173,7 @@ public class StatementsPresenter
 	@Override
 	protected void onReveal() {
 		super.onReveal();
+		fireEvent(new ToggleSideBarEvent(false));
 		getView().setInitialDates(DateRange.THISYEAR, null);
 		getView().getGrid().setDataProvider(
 				new AsyncDataProvider<StatementDto>() {

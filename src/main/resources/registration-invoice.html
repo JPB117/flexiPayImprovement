@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style type="text/css">
+body {
+	font-family: Arial;
+}
+
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+	font-family: inherit;
+	font-weight: 500;
+	line-height: 1.1;
+	color: inherit;
+}
+
+h1 small, h2 small, h3 small, h4 small, h5 small, h6 small, .h1 small,
+	.h2 small, .h3 small, .h4 small, .h5 small, .h6 small, h1 .small, h2 .small,
+	h3 .small, h4 .small, h5 .small, h6 .small, .h1 .small, .h2 .small, .h3 .small,
+	.h4 .small, .h5 .small, .h6 .small {
+	font-weight: normal;
+	line-height: 1;
+	color: #777;
+}
+
+h1, .h1, h2, .h2, h3, .h3 {
+	margin-top: 20px;
+	margin-bottom: 10px;
+}
+
+h1 small, .h1 small, h2 small, .h2 small, h3 small, .h3 small, h1 .small,
+	.h1 .small, h2 .small, .h2 .small, h3 .small, .h3 .small {
+	font-size: 65%;
+}
+
+h4, .h4, h5, .h5, h6, .h6 {
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+h4 small, .h4 small, h5 small, .h5 small, h6 small, .h6 small, h4 .small,
+	.h4 .small, h5 .small, .h5 .small, h6 .small, .h6 .small {
+	font-size: 75%;
+}
+
+h1, .h1 {
+	font-size: 36px;
+}
+
+h2, .h2 {
+	font-size: 30px;
+}
+
+h3, .h3 {
+	font-size: 24px;
+}
+
+h4, .h4 {
+	font-size: 18px;
+}
+
+h5, .h5 {
+	font-size: 14px;
+}
+
+h6, .h6 {
+	font-size: 12px;
+}
+
+p {
+	margin: 0 0 10px;
+}
+
+/* Print grid css*/
+.row-fluid {
+	width: 100%;
+	*zoom: 1;
+}
+
+.row-fluid:before, .row-fluid:after {
+	display: block;
+	line-height: 0;
+	content: "";
+}
+
+.row-fluid:after {
+	clear: both;
+}
+
+.col-print-1 {
+	width: 8%;
+	float: left;
+}
+
+.col-print-2 {
+	width: 16%;
+	float: left;
+}
+
+.col-print-3 {
+	width: 25%;
+	float: left;
+}
+
+.col-print-4 {
+	width: 33%;
+	float: left;
+}
+
+.col-print-5 {
+	width: 42%;
+	float: left;
+}
+
+.col-print-6 {
+	width: 50%;
+	float: left;
+}
+
+.col-print-7 {
+	width: 58%;
+	float: left;
+}
+
+.col-print-8 {
+	width: 66%;
+	float: left;
+}
+
+.col-print-9 {
+	width: 75%;
+	float: left;
+}
+
+.col-print-10 {
+	width: 83%;
+	float: left;
+}
+
+.col-print-11 {
+	width: 92%;
+	float: left;
+}
+
+.col-print-12 {
+	width: 100%;
+	float: left;
+}
+
+.container {
+	width: 100%;
+	margin: 10px auto;
+}
+
+table {
+	max-width: 100%;
+	background-color: transparent;
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+table thead {
+	background-color: #f9f9f9;
+}
+
+.table {
+	width: 100%;
+	margin-bottom: 20px;
+}
+
+.table th, .table td {
+	padding: 8px;
+	line-height: 20px;
+	text-align: left;
+	vertical-align: top;
+	border-top: 1px solid #dddddd;
+}
+
+.table th {
+	font-weight: bold;
+}
+
+.table thead th {
+	vertical-align: bottom;
+}
+
+.table caption+thead tr:first-child th, .table caption+thead tr:first-child td,
+	.table colgroup+thead tr:first-child th, .table colgroup+thead tr:first-child td,
+	.table thead:first-child tr:first-child th, .table thead:first-child tr:first-child td
+	{
+	border-top: 0;
+}
+
+.table tbody+tbody {
+	border-top: 2px solid #dddddd;
+}
+
+.table .table {
+	background-color: #ffffff;
+}
+
+.table-condensed th, .table-condensed td {
+	padding: 4px 5px;
+}
+
+.table-bordered {
+	border: 1px solid #dddddd;
+	border-collapse: separate;
+	*border-collapse: collapse;
+	border-left: 0;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+}
+
+.table-bordered th, .table-bordered td {
+	border-left: 1px solid #dddddd;
+}
+
+.table-bordered caption+thead tr:first-child th, .table-bordered caption+tbody tr:first-child th,
+	.table-bordered caption+tbody tr:first-child td, .table-bordered colgroup+thead tr:first-child th,
+	.table-bordered colgroup+tbody tr:first-child th, .table-bordered colgroup+tbody tr:first-child td,
+	.table-bordered thead:first-child tr:first-child th, .table-bordered tbody:first-child tr:first-child th,
+	.table-bordered tbody:first-child tr:first-child td {
+	border-top: 0;
+}
+
+.table-bordered thead:first-child tr:first-child>th:first-child,
+	.table-bordered tbody:first-child tr:first-child>td:first-child,
+	.table-bordered tbody:first-child tr:first-child>th:first-child {
+	-webkit-border-top-left-radius: 4px;
+	border-top-left-radius: 4px;
+	-moz-border-radius-topleft: 4px;
+}
+
+.table-bordered thead:first-child tr:first-child>th:last-child,
+	.table-bordered tbody:first-child tr:first-child>td:last-child,
+	.table-bordered tbody:first-child tr:first-child>th:last-child {
+	-webkit-border-top-right-radius: 4px;
+	border-top-right-radius: 4px;
+	-moz-border-radius-topright: 4px;
+}
+
+.table-bordered thead:last-child tr:last-child>th:first-child,
+	.table-bordered tbody:last-child tr:last-child>td:first-child,
+	.table-bordered tbody:last-child tr:last-child>th:first-child,
+	.table-bordered tfoot:last-child tr:last-child>td:first-child,
+	.table-bordered tfoot:last-child tr:last-child>th:first-child {
+	-webkit-border-bottom-left-radius: 4px;
+	border-bottom-left-radius: 4px;
+	-moz-border-radius-bottomleft: 4px;
+}
+
+.table-bordered thead:last-child tr:last-child>th:last-child,
+	.table-bordered tbody:last-child tr:last-child>td:last-child,
+	.table-bordered tbody:last-child tr:last-child>th:last-child,
+	.table-bordered tfoot:last-child tr:last-child>td:last-child,
+	.table-bordered tfoot:last-child tr:last-child>th:last-child {
+	-webkit-border-bottom-right-radius: 4px;
+	border-bottom-right-radius: 4px;
+	-moz-border-radius-bottomright: 4px;
+}
+
+.table-bordered tfoot+tbody:last-child tr:last-child td:first-child {
+	-webkit-border-bottom-left-radius: 0;
+	border-bottom-left-radius: 0;
+	-moz-border-radius-bottomleft: 0;
+}
+
+.table-bordered tfoot+tbody:last-child tr:last-child td:last-child {
+	-webkit-border-bottom-right-radius: 0;
+	border-bottom-right-radius: 0;
+	-moz-border-radius-bottomright: 0;
+}
+
+.table-bordered caption+thead tr:first-child th:first-child,
+	.table-bordered caption+tbody tr:first-child td:first-child,
+	.table-bordered colgroup+thead tr:first-child th:first-child,
+	.table-bordered colgroup+tbody tr:first-child td:first-child {
+	-webkit-border-top-left-radius: 4px;
+	border-top-left-radius: 4px;
+	-moz-border-radius-topleft: 4px;
+}
+
+.table-bordered caption+thead tr:first-child th:last-child,
+	.table-bordered caption+tbody tr:first-child td:last-child,
+	.table-bordered colgroup+thead tr:first-child th:last-child,
+	.table-bordered colgroup+tbody tr:first-child td:last-child {
+	-webkit-border-top-right-radius: 4px;
+	border-top-right-radius: 4px;
+	-moz-border-radius-topright: 4px;
+}
+
+.table-striped tbody>tr:nth-child(odd)>td, .table-striped tbody>tr:nth-child(odd)>th
+	{
+	background-color: #f9f9f9;
+}
+
+.table-hover tbody tr:hover>td, .table-hover tbody tr:hover>th {
+	background-color: #f5f5f5;
+}
+
+table td[class*="span"], table th[class*="span"], .row-fluid table td[class*="span"],
+	.row-fluid table th[class*="span"] {
+	display: table-cell;
+	float: none;
+	margin-left: 0;
+}
+
+.table td.span1, .table th.span1 {
+	float: none;
+	width: 44px;
+	margin-left: 0;
+}
+
+.table td.span2, .table th.span2 {
+	float: none;
+	width: 124px;
+	margin-left: 0;
+}
+
+.table td.span3, .table th.span3 {
+	float: none;
+	width: 204px;
+	margin-left: 0;
+}
+
+.table td.span4, .table th.span4 {
+	float: none;
+	width: 284px;
+	margin-left: 0;
+}
+
+.table td.span5, .table th.span5 {
+	float: none;
+	width: 364px;
+	margin-left: 0;
+}
+
+.table td.span6, .table th.span6 {
+	float: none;
+	width: 444px;
+	margin-left: 0;
+}
+
+.table td.span7, .table th.span7 {
+	float: none;
+	width: 524px;
+	margin-left: 0;
+}
+
+.table td.span8, .table th.span8 {
+	float: none;
+	width: 604px;
+	margin-left: 0;
+}
+
+.table td.span9, .table th.span9 {
+	float: none;
+	width: 684px;
+	margin-left: 0;
+}
+
+.table td.span10, .table th.span10 {
+	float: none;
+	width: 764px;
+	margin-left: 0;
+}
+
+.table td.span11, .table th.span11 {
+	float: none;
+	width: 844px;
+	margin-left: 0;
+}
+
+.table td.span12, .table th.span12 {
+	float: none;
+	width: 924px;
+	margin-left: 0;
+}
+
+.table tbody tr.success>td {
+	background-color: #dff0d8;
+}
+
+.table tbody tr.error>td {
+	background-color: #f2dede;
+}
+
+.table tbody tr.warning>td {
+	background-color: #fcf8e3;
+}
+
+.table tbody tr.info>td {
+	background-color: #d9edf7;
+}
+
+.table-hover tbody tr.success:hover>td {
+	background-color: #d0e9c6;
+}
+
+.table-hover tbody tr.error:hover>td {
+	background-color: #ebcccc;
+}
+
+.table-hover tbody tr.warning:hover>td {
+	background-color: #faf2cc;
+}
+
+.table-hover tbody tr.info:hover>td {
+	background-color: #c4e3f3;
+}
+
+.row {
+	position: relative;
+	height: auto;
+	margin-bottom: 10px;
+}
+
+.header {
+	height: 80px;
+	padding-bottom: 20px
+}
+
+.header img {
+	float: left;
+	margin: 0 auto;
+}
+
+.header .type {
+	font-size: 30px;
+	color: #2E8DEF;
+	float: right;
+}
+
+.top, bottom {
+	min-height: 100px;
+}
+
+.bottom {
+	margin-top: 40px;
+}
+
+.bottom div {
+	margin-bottom: 10px;
+}
+
+.middle {
+	height: 150px;
+}
+
+.delivery-content {
+	max-width: 340px;
+	overflow-wrap: break-word;
+	overflow-x: auto;
+}
+
+.delivery-content b {
+	width: 100px;
+}
+
+.supplier {
+	max-width: 340px;
+	width: 300px;
+}
+
+.pull-left {
+	position: absolute;
+	left: 0;
+	top: 0;
+}
+
+.pull-right {
+	position: absolute;
+	right: 0;
+	top: 0;
+}
+
+.num {
+	text-align: right !important;
+}
+
+.text-left {
+	text-align: left !important;
+}
+
+.text-right {
+	text-align: right !important;
+}
+
+.text-center {
+	text-align: center !important;
+}
+
+div.footer {
+	display: block;
+	text-align: center;
+	position: running(footer);
+}
+
+@page {
+	size: 11.69in 8.27in;
+}
+</style>
+</head>
+
+<body>
+	<div class="container">
+		<div class="row-fluid">
+			<div class="row-fluid">
+				<div class="col-print-4">
+					<br />
+					<p>Institute of Certified Public Accountants of Kenya</p>
+					<p>P.O. BOX 59963 00200 (City Square), CPA Center, Ruaraka,</p>
+					<p>Thika Rd. Website: www.icpak.com | E-mail:icpak@icpak.com</p>
+					<p>Mobile:0727-531006/0733-856262 | Wireless:020 2304226/7</p>
+				</div>
+				<div class="col-print-4 text-center">
+					<img src="https://www.icpak.com/icpakportal/img/icpak_logo.png"
+						width="250px" height="150px" class="text-center"></img>
+				</div>
+				<div class="col-print-4 text-right">
+					<br />
+					<p>Cheque Dropoff Point</p>
+					<p>Drop in Box No.164</p>
+					<p>Revlon Professional Plaza, 2nd Floor,</p>
+					<p>Biashara Street/Tubman Road</p>
+				</div>
+			</div>
+			<div class="row-fluid">
+				<div class="col-print-4">
+					<br />@#companyName<br /> @#companyAddress <br />
+					@#companyLocation <br /> <br /> <b>Date:</b>@#date, <br />
+				</div>
+				<div class="col-print-4">
+					<h1 class="text-center">Proforma Invoice</h1>
+				</div>
+				<div class="col-print-4 text-right">
+					<br /> <br /> <b>Proforma No:</b>@#quoteNo<br />
+				</div>
+			</div>
+
+			<br />
+			<div class="row=fluid">
+				<table class="table table-bordered table-condensed">
+					<thead>
+						<tr>
+							<th class="text-left" width="72%">Description</th>
+							<th class="text-center">Quantity</th>
+							<th class="num">Unit Price</th>
+							<th class="num">Amount</th>
+						</tr>
+					</thead>
+					<tbody>
+						<!--@>invoiceDetails-->
+						<tr>
+							<td class="text-left">@#description</td>
+							<td class="text-center">@#quantity</td>
+							<td class="num">@#unitPrice</td>
+							<td class="num">@#amount</td>
+						</tr>
+						<!--@<invoiceDetails-->
+						<tr>
+							<td></td>
+							<td></td>
+							<td class="num"><b>Grand Total</b></td>
+							<td class="num"><b style="border-bottom: 3px double;">@#totalAmount</b></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<div class="row-fluid">
+				<strong> NOTE: <br /> Bank Details: Barclays Bank of Kenya
+					(KSH Account), Branch: Moi Avenue, Bank Account No: 03-075-1597134
+					I&M (Dollar Account), Branch: Kenyatta Avenue, Bank Account No:
+					00100721751510, Swiftcode: IBMLKENA <br /> MPESA Payment: MPESA
+					Business No: 722722: Account No: (The Invoice Number) <br />Cash
+					payment will not be accepted
+				</strong>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

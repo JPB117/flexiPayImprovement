@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,17 +21,18 @@ import org.apache.poi.ss.usermodel.PrintSetup;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.util.CellRangeAddress;
 
+import com.workpoint.icpak.shared.model.PaymentStatus;
 import com.workpoint.icpak.shared.model.events.DelegateDto;
 
 public class GetDelegatesReport {
 	Logger logger = Logger.getLogger(GetDelegatesReport.class);
 
 	private static final String[] titles = { "ICPAK MEMBER", "MEMBER NO",
-			"ERN NO", "DELEGATE NAMES", "EMAIL", "BOOKING DATE", "SPONSOR",
-			"CONTACT PERSON", "CONTACT EMAIL", "SPONSOR TEL", "ACCOMODATION",
-			"PAID", "RECEIPT", "LPO NO", "CREDIT", "CLEARANCE NO", "ATTEND" };
+			"ERN NO", "DELEGATE NAMES", "DELEGATE PHONENUMBER", "EMAIL",
+			"BOOKING DATE", "SPONSOR", "CONTACT PERSON", "CONTACT EMAIL",
+			"SPONSOR TEL", "ACCOMODATION", "PAID", "RECEIPT", "LPO NO",
+			"CREDIT", "CLEARANCE NO", "ATTEND" };
 
 	static Map<String, CellStyle> styles = null;
 	static Map<String, Font> fonts = null;
@@ -268,15 +268,15 @@ public class GetDelegatesReport {
 		int rownum = 1;
 		paintRows(delegateDtos, rownum, helper, sheet);
 
-		sheet.setColumnWidth(0, 256 * 20);
-		sheet.setColumnWidth(1, 256 * 40);
-		sheet.setColumnWidth(2, 256 * 40);
-		sheet.setColumnWidth(3, 256 * 35);
-		sheet.setColumnWidth(4, 256 * 35);
-		sheet.setColumnWidth(5, 256 * 10);// Funding/ Estimate
-		sheet.setColumnWidth(6, 256 * 10);// Actual
-		sheet.setColumnWidth(7, 256 * 10);// Status
-		sheet.setColumnWidth(8, 256 * 15);// Remarks
+		sheet.setColumnWidth(0, 256 * 10);// ICPAK Member
+		sheet.setColumnWidth(1, 256 * 10);// MemberNo
+		sheet.setColumnWidth(2, 256 * 10);// ERN NO
+		sheet.setColumnWidth(3, 256 * 40);// DelegateNames
+		sheet.setColumnWidth(4, 256 * 20);// Delegate Email
+		sheet.setColumnWidth(5, 256 * 20);// Funding/ Estimate
+		sheet.setColumnWidth(6, 256 * 40);// Actual
+		sheet.setColumnWidth(7, 256 * 20);// Status
+		sheet.setColumnWidth(8, 256 * 20);// Remarks
 		sheet.setColumnWidth(9, 256 * 10);// Monitoring test
 		sheet.setZoom(3, 4);
 	}
@@ -288,7 +288,6 @@ public class GetDelegatesReport {
 		}
 
 		for (Integer i = 0; i < data.size(); i++, rownum++) {
-
 			Row row = sheet.createRow(rownum);
 			DelegateDto detail = data.get(i);
 			bindData(detail, helper, sheet, row, i);
@@ -314,10 +313,8 @@ public class GetDelegatesReport {
 			String styleName = null;
 
 			if (j == 0) {
-				// cell.setCellValue(formater.format(detail.getCreatedDate()));
 				cell.setCellValue((detail.getMemberNo() != null ? "1" : "0"));
 			}
-
 			if (j == 1) {
 				cell.setCellValue(detail.getMemberNo());
 			}
@@ -334,75 +331,92 @@ public class GetDelegatesReport {
 							+ detail.getOtherNames());
 				}
 			}
-
 			if (j == 4) {
-				cell.setCellValue(detail.getEmail());
+				cell.setCellValue(detail.getDelegatePhoneNumber());
 			}
 
+			if (j == 5) {
+				cell.setCellValue(detail.getEmail());
+			}
 			// "BOOKING DATE", "SPONSOR",
 			// "CONTACT PERSON","CONTACT EMAIL","SPONSOR TEL"
 			// "ACCOMODATION"
-
-			if (j == 5) {
+			if (j == 6) {
 				cell.setCellValue(formater.format(detail.getCreatedDate()));
 			}
 
-			if (j == 6) {
+			if (j == 7) {
 				cell.setCellValue(detail.getCompanyName());
 			}
 
-			if (j == 7) {
+			if (j == 8) {
 				cell.setCellValue(detail.getContactName());
 			}
 
-			if (j == 8) {
+			if (j == 9) {
 				cell.setCellValue(detail.getContactEmail());
 			}
 
-			if (j == 9) {
-				cell.setCellValue("");
+			if (j == 10) {
+				cell.setCellValue(detail.getContactPhoneNumber());
 			}
 
-			if (j == 10) {
-				cell.setCellValue((detail.getAccommodation() == null ? "None"
-						: detail.getAccommodation().getHotel()));
+			if (j == 11) {
+				cell.setCellValue((detail.getHotel() == null ? "None" : detail
+						.getHotel()));
 			}
 
 			// ,"PAID","RECEIPT" ,"LPO NO", "CREDIT","CLEARANCE NO","ATTEND"}
-			if (j == 11) {
-				cell.setCellValue(detail.getPaymentStatus().getDisplayName());
-			}
-
 			if (j == 12) {
-				cell.setCellValue(detail.getReceiptNo());
+				determinePaymentStatus(detail.getBookingPaymentStatus(),
+						detail.getDelegatePaymentStatus(), cell);
+
 			}
 
 			if (j == 13) {
-				cell.setCellValue(detail.getLpoNo());
+				cell.setCellValue(detail.getReceiptNo());
 			}
 
 			if (j == 14) {
-				cell.setCellValue(detail.getIsCredit());
+				cell.setCellValue(detail.getLpoNo());
 			}
 
 			if (j == 15) {
-				cell.setCellValue(detail.getClearanceNo());
+				cell.setCellValue(detail.getIsCredit());
 			}
 
 			if (j == 16) {
-				cell.setCellValue(detail.getAttendance().getDisplayName());
+				cell.setCellValue(detail.getClearanceNo());
 			}
 
+			if (j == 17) {
+				cell.setCellValue(detail.getAttendance().getDisplayName());
+			}
 			styleName = "cell_normal_centered";
-
 			cell.setCellStyle(styles.get(styleName));
 		}
 
 	}
 
+	private static void determinePaymentStatus(
+			PaymentStatus bookingPaymentStatus,
+			PaymentStatus delegatePaymentStatus, Cell cell) {
+		if (bookingPaymentStatus != null) {
+			if (bookingPaymentStatus == PaymentStatus.PAID
+					|| bookingPaymentStatus == PaymentStatus.Credit) {
+				cell.setCellValue(bookingPaymentStatus.getDisplayName());
+			} else {
+				if (delegatePaymentStatus == null) {
+					cell.setCellValue("Not Paid");
+				} else {
+					cell.setCellValue(delegatePaymentStatus.getDisplayName());
+				}
+			}
+		}
+	}
+
 	public void generateDelegateReport(List<DelegateDto> delegateDtos,
 			String docType) throws Exception {
-
 		byte[] bites = new GetDelegatesReport(delegateDtos, docType, "My Event")
 				.getBytes();
 

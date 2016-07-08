@@ -70,11 +70,11 @@
 									<br />
 									<a href="#activateacc;r=forgot">Forgot password</a>
 									<br />
-									New Member ?
-									<a href="#signup">Register here</a>
-									<br />
 									Existing Member ?
 									<a href="#activateacc;r=activate">Activate Account</a>
+									<br />
+									
+									<a href="/">Back to Website</a>
 								</div>
 
 							</fieldset>

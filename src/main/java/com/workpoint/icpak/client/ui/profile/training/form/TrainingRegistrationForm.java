@@ -23,6 +23,7 @@ import com.workpoint.icpak.client.ui.component.DropDownList;
 import com.workpoint.icpak.client.ui.component.IssuesPanel;
 import com.workpoint.icpak.client.ui.component.TextField;
 import com.workpoint.icpak.client.ui.upload.custom.Uploader;
+import com.workpoint.icpak.shared.model.ApplicationFormEducationalDto;
 import com.workpoint.icpak.shared.model.ApplicationFormTrainingDto;
 import com.workpoint.icpak.shared.model.AttachmentDto;
 import com.workpoint.icpak.shared.model.TrainingType;
@@ -114,6 +115,13 @@ public class TrainingRegistrationForm extends Composite {
 	}
 
 	public void clear() {
+		clear(false);
+	}
+
+	public void clear(boolean clearDto) {
+		if (clearDto) {
+			trainingDto = new ApplicationFormTrainingDto();
+		}
 		issues.clear();
 		txtOrganization.setValue("");
 		txtPosition.setValue("");
@@ -123,6 +131,7 @@ public class TrainingRegistrationForm extends Composite {
 		txtResponsibility.setValue("");
 		dtDatePassed.setValue(null);
 		panelPreviousAttachments.clear();
+		uploader.clearImages();
 		showUploadPanel(false);
 		uploader.clear();
 	}

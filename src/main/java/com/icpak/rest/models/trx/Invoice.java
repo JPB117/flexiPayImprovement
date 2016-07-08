@@ -36,7 +36,6 @@ public class Invoice extends PO {
 	private String description;
 	@Enumerated(EnumType.STRING)
 	private PaymentStatus status = PaymentStatus.NOTPAID;
-
 	private Double totalDiscount;
 	private Double totalPenalty;
 

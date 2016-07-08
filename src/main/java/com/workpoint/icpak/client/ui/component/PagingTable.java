@@ -1,5 +1,7 @@
 package com.workpoint.icpak.client.ui.component;
 
+
+
 public class PagingTable extends TableView {
 
 	PagingPanel panel = null;
@@ -19,4 +21,5 @@ public class PagingTable extends TableView {
 		return listTowns.getValue().getDisplayName();
 	}
 
+	
 }

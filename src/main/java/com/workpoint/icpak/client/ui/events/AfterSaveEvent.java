@@ -8,6 +8,7 @@ public class AfterSaveEvent extends GwtEvent<AfterSaveEvent.AfterSaveHandler> {
 
 	public static Type<AfterSaveHandler> TYPE = new Type<AfterSaveHandler>();
 	private String message;
+	private boolean isSuccessMessage = true;
 
 	public interface AfterSaveHandler extends EventHandler {
 		void onAfterSave(AfterSaveEvent event);
@@ -18,6 +19,12 @@ public class AfterSaveEvent extends GwtEvent<AfterSaveEvent.AfterSaveHandler> {
 
 	public AfterSaveEvent(String message) {
 		this.message = message;
+	}
+
+	public AfterSaveEvent(String message, boolean isSuccessMessage) {
+		this.message = message;
+		this.setSuccessMessage(isSuccessMessage);
+
 	}
 
 	@Override
@@ -45,4 +52,13 @@ public class AfterSaveEvent extends GwtEvent<AfterSaveEvent.AfterSaveHandler> {
 	public void setMessage(String message) {
 		this.message = message;
 	}
+
+	public boolean isSuccessMessage() {
+		return isSuccessMessage;
+	}
+
+	public void setSuccessMessage(boolean isSuccessMessage) {
+		this.isSuccessMessage = isSuccessMessage;
+	}
+
 }

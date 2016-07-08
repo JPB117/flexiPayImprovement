@@ -6,7 +6,7 @@ import com.workpoint.icpak.shared.model.PaymentMode;
 import com.workpoint.icpak.shared.model.PaymentStatus;
 import com.workpoint.icpak.shared.model.SerializableObj;
 
-public class TransactionDto extends SerializableObj {
+public class OldTransactionDto extends SerializableObj {
 
 	/**
 	 * 
@@ -29,7 +29,7 @@ public class TransactionDto extends SerializableObj {
 
 	private String documentNo;
 
-	public TransactionDto() {
+	public OldTransactionDto() {
 	}
 
 	public String getUserId() {

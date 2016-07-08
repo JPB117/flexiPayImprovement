@@ -2,22 +2,32 @@ package com.icpak.rest;
 
 import java.util.List;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import org.apache.log4j.Logger;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 import com.icpak.rest.dao.helper.TransactionDaoHelper;
+import com.wordnik.swagger.annotations.ApiOperation;
 import com.workpoint.icpak.shared.api.TransactionsResource;
-import com.workpoint.icpak.shared.trx.TransactionDto;
+import com.workpoint.icpak.shared.model.events.MpesaDTO;
+import com.workpoint.icpak.shared.model.events.MpesaKYCDTO;
+import com.workpoint.icpak.shared.trx.OldTransactionDto;
 
 @Path("transactions")
 public class TransactionsResourceImpl implements TransactionsResource {
 
 	@Inject
 	TransactionDaoHelper trxDaoHelper;
+	Logger logger = Logger.getLogger(TransactionsResourceImpl.class.getName());
 
 	@GET
 	@Path("/payment")
@@ -29,16 +39,47 @@ public class TransactionsResourceImpl implements TransactionsResource {
 			@QueryParam("trxNumber") String trxNumber,
 			@QueryParam("mpesa_amt") String mpesaAmt,
 			@QueryParam("mpesa_msisdn") String phoneNumber,
-			@QueryParam("tstamp") String trxDate) {
+			@QueryParam("tstamp") String trxDate,
+			@QueryParam("mpesa_sender") String payerNames) {
 		trxDaoHelper.receivePaymentUsingInvoiceNo(paymentRef, businessNo,
-				accountNo, paymentMode, trxNumber, phoneNumber, mpesaAmt,
-				trxDate);
+				accountNo, "MPESA", trxNumber, phoneNumber, mpesaAmt, trxDate,
+				payerNames);
+		return "SUCCESS";
+	}
+
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "Receives Mpesa Info via the new api", consumes = MediaType.APPLICATION_JSON)
+	public String receiveMpesaG2(MpesaDTO mpesaTrx) {
+		logger.info("++++++ Receive Mpesa G2 Transactions ++++++++");
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			System.err.println(mapper.writeValueAsString(mpesaTrx));
+			logger.info(mapper.writeValueAsString(mpesaTrx));
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		String tstamp = mpesaTrx.getTransTime().substring(0, 4) + "-"
+				+ mpesaTrx.getTransTime().substring(4, 6) + "-"
+				+ mpesaTrx.getTransTime().substring(6, 8) + " "
+				+ mpesaTrx.getTransTime().substring(8, 10) + ":"
+				+ mpesaTrx.getTransTime().substring(10, 12) + ":"
+				+ mpesaTrx.getTransTime().substring(12, 14);
+		String payerFullName = "";
+		for (MpesaKYCDTO m : mpesaTrx.getKYCInfoList()) {
+			payerFullName = payerFullName + m.getKycValue() + " ";
+		}
+		trxDaoHelper.receivePaymentUsingInvoiceNo(mpesaTrx.getTransID(),
+				mpesaTrx.getBusinessShortCode(), mpesaTrx.getBillRefNumber(),
+				"MPESA", mpesaTrx.getTransID(), mpesaTrx.getMSISDN(),
+				mpesaTrx.getTransAmount(), tstamp, payerFullName);
 		return "SUCCESS";
 	}
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<TransactionDto> getAllTrxs(@QueryParam("userId") String userId) {
+	public List<OldTransactionDto> getAllTrxs(
+			@QueryParam("userId") String userId) {
 		return trxDaoHelper.getTransactions(userId);
 	}
 }

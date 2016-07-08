@@ -5,17 +5,18 @@
 	<g:HTMLPanel styleName="tr" ui:field="row">
 		<g:HTMLPanel styleName="td" ui:field="divDate">
 		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td" ui:field="divSubmissionDate">
+		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divMemberName">
 			<d:ActionLink ui:field="aMemberName"></d:ActionLink>
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divEmail">
 		</g:HTMLPanel>
-		<g:HTMLPanel styleName="td text-center" ui:field="divProfile">
-			<div ui:field="divCompletion" class="radial-bar radial-bar-xs"
-				data-label="50%"></div>
+		<g:HTMLPanel styleName="td" ui:field="divPaymentStatus">
+			<span ui:field="spnPaymentStatus"></span>
 		</g:HTMLPanel>
-		<g:HTMLPanel styleName="td" ui:field="divStatus">
-			<span ui:field="spnStatus" class="label label-warning"></span>
+		<g:HTMLPanel styleName="td" ui:field="divApplicationStatus">
+			<span ui:field="spnApplicationStatus"></span>
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td hide" ui:field="divAction">
 			<d:ActionLink styleName="fa fa-check btn btn-primary"></d:ActionLink>

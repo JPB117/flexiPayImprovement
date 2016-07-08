@@ -3,6 +3,7 @@ package com.workpoint.icpak.client.service;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.Window;
 import com.gwtplatform.dispatch.rest.client.RestCallback;
+import com.workpoint.icpak.client.ui.events.AfterSaveEvent;
 import com.workpoint.icpak.client.ui.events.ClientDisconnectionEvent;
 import com.workpoint.icpak.client.ui.events.ErrorEvent;
 import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
@@ -61,13 +62,15 @@ public abstract class AbstractAsyncCallback<T> implements RestCallback<T> {
 		//
 
 		AppContext.getEventBus().fireEvent(new ProcessingCompletedEvent());
+		AppContext.getEventBus().fireEvent(
+				new AfterSaveEvent("A technical error occured.", false));
 		// AppContext.getEventBus().fireEvent(new ErrorEvent(message, 0L));
 	}
 
 	@Override
 	public void setResponse(Response aResponse) {
 		int code = aResponse.getStatusCode();
-		AppContext.getEventBus().fireEvent(new ProcessingCompletedEvent());
+		// AppContext.getEventBus().fireEvent(new ProcessingCompletedEvent());
 
 		if (code == 200 || code == 202 || code == 203 || code == 204
 				|| code == 304) {
@@ -78,7 +81,7 @@ public abstract class AbstractAsyncCallback<T> implements RestCallback<T> {
 				new ErrorEvent(code, aResponse.getStatusText()));
 
 		boolean isContinue = handleCustomError(aResponse);
-		
+
 		if (!isContinue) {
 			return;
 		}

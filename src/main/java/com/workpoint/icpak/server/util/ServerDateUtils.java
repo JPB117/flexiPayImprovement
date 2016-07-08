@@ -3,14 +3,14 @@ package com.workpoint.icpak.server.util;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class DateUtils {
+public class ServerDateUtils {
 
 	static String datepattern = "dd/MM/yyyy";
 	static String datepattern_sys = "yyyy-MM-dd";
 	static String yearpattern = "yyyy";
 	static String createdpattern = "dd/MM/yyyy HH:mm";
 	static String fullPattern = "EEE,MMM d,yyyy";
-	static String halfPattern = "EEEE, MMM d";
+	static String halfPattern = "EEEE, d MMMM yyyy";
 	static String monthDayPattern = "MMM d";
 	static String monthPattern = "MMM (MM)";
 	static String monthOnlyPattern = "MM";
@@ -18,7 +18,9 @@ public class DateUtils {
 	static String Time = "hh:mm a";
 	static String MonthTime = "MMM d, hh:mm a";
 	static String shortTimeStamp = "yyyy-MM-dd";
+	static String fullHourMinuteStamp = "yyyy-MM-dd hh:mm";
 	static String fullTimeStamp = "yyyy-MM-dd hh:mm:ss";
+	static String mpesaTimeStamp = "yyyy-MM-dd HH:mm:ss";
 
 	public static final SimpleDateFormat CREATEDFORMAT = getFormat(createdpattern);
 
@@ -34,7 +36,9 @@ public class DateUtils {
 	public static final SimpleDateFormat MONTHTIME = getFormat(MonthTime);
 	public static final SimpleDateFormat MONTHFORMAT = getFormat(monthPattern);
 	public static final SimpleDateFormat MONTHONLYFORMAT = getFormat(monthOnlyPattern);
+	public static final SimpleDateFormat FULLHOURMINUTESTAMP = getFormat(fullHourMinuteStamp);
 	public static final SimpleDateFormat FULLTIMESTAMP = getFormat(fullTimeStamp);
+	public static final SimpleDateFormat MPESATIMESTAMP = getFormat(mpesaTimeStamp);
 
 	static long minInMillis = 60 * 1000;
 	static long hourInMillis = 60 * minInMillis;
@@ -102,7 +106,7 @@ public class DateUtils {
 		if (date == null || date.isEmpty()) {
 			return null;
 		}
-		
+
 		try {
 			return formatter.parse(date);
 		} catch (Exception e) {

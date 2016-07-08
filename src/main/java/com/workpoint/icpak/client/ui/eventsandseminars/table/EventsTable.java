@@ -4,17 +4,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasKeyDownHandlers;
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
+import com.workpoint.icpak.client.model.UploadContext;
+import com.workpoint.icpak.client.model.UploadContext.UPLOADACTION;
 import com.workpoint.icpak.client.ui.component.PagingPanel;
 import com.workpoint.icpak.client.ui.component.PagingTable;
 import com.workpoint.icpak.client.ui.component.TableHeader;
 import com.workpoint.icpak.client.ui.eventsandseminars.row.EventsTableRow;
+import com.workpoint.icpak.client.util.AppContext;
 
 public class EventsTable extends Composite {
 
@@ -32,7 +38,25 @@ public class EventsTable extends Composite {
 	public EventsTable() {
 		initWidget(uiBinder.createAndBindUi(this));
 		tblView.setAutoNumber(false);
+
+		if (AppContext.isCurrentUserAdmin()) {
+			setDownloadHandlers();
+			tblView.getOfflineSQLButton().removeStyleName("hide");
+		} else {
+			tblView.getOfflineSQLButton().addStyleName("hide");
+		}
 		createHeader();
+	}
+
+	private void setDownloadHandlers() {
+		tblView.getOfflineSQLButton().addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				UploadContext ctx = new UploadContext("getreport");
+				ctx.setAction(UPLOADACTION.GETOFFLINESQL);
+				Window.open(ctx.toUrl(), "Offline SQL..", null);
+			}
+		});
 	}
 
 	public void createHeader() {
@@ -76,5 +100,9 @@ public class EventsTable extends Composite {
 
 	public HasValueChangeHandlers<String> getSearchKeyDownHander() {
 		return tblView.getSearchValueChangeHander();
+	}
+
+	public HasKeyDownHandlers getSearchKeyDownHandler() {
+		return tblView.getSearchKeyDownHandler();
 	}
 }

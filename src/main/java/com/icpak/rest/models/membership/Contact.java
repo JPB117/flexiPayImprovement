@@ -151,6 +151,9 @@ public class Contact {
 		this.country = country;
 	}
 
+	/*
+	 * This is the sponsor phoneNumber
+	 */
 	public String getTelephoneNumbers() {
 		return telephoneNumbers;
 	}

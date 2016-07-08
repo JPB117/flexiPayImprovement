@@ -47,102 +47,98 @@ import com.workpoint.icpak.shared.model.RoleDto;
 /**
  * Model object that represents a security role.
  */
-@ApiModel(value="Role Model", description="Model of a role")
+@ApiModel(value = "Role Model", description = "Model of a role")
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlSeeAlso(User.class)
 
 @Entity
-@Table(name="role")
-@Cache(usage= CacheConcurrencyStrategy.READ_WRITE)
-public class Role extends PO{
+@Table(name = "role")
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+public class Role extends PO {
 
-    /**
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-    
-    @Basic(optional=false)
-    @Column(length=100, unique=true,nullable=false)
-    @Index(name="idx_role_name")
-    private String name;
 
-    @Basic(optional=false)
-    @Column(length=255)
-    private String description;
+	@SuppressWarnings("deprecation")
+	@Basic(optional = false)
+	@Column(length = 100, unique = true, nullable = false)
+	@Index(name = "idx_role_name")
+	private String name;
+	private Long UserTypeID;
+	private Long RoleId;
+	@Basic(optional = false)
+	@Column(length = 255)
+	private String description;
 
-    @ElementCollection(fetch=FetchType.LAZY)
-    @CollectionTable(name="role_permission", joinColumns=
-    		@JoinColumn(name="roleid", referencedColumnName="id"))
-    @Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
-    @Column(name="permission")
-    private Set<String> permissions = new HashSet<>();
-    
-    @ManyToMany(fetch=FetchType.LAZY)
-    private Set<User> users = new HashSet<>();
+	@ElementCollection(fetch = FetchType.LAZY)
+	@CollectionTable(name = "role_permission", joinColumns = @JoinColumn(name = "roleid", referencedColumnName = "id") )
+	@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+	@Column(name = "permission")
+	private Set<String> permissions = new HashSet<>();
 
-    protected Role() {
-    }
+	@ManyToMany(fetch = FetchType.LAZY)
+	private Set<User> users = new HashSet<>();
 
-    public Role(String name) {
-        this.name = name;
-    }
+	public Role() {
+	}
 
-    public String getName() {
-        return name;
-    }
+	public Role(String name) {
+		this.name = name;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    
-    public String getDescription() {
-        return description;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+	public String getDescription() {
+		return description;
+	}
 
-    public Set<String> getPermissions() {
-        return permissions;
-    }
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-    public void setPermissions(Set<String> permissions) {
-        this.permissions = permissions;
-    }
+	public Set<String> getPermissions() {
+		return permissions;
+	}
+
+	public void setPermissions(Set<String> permissions) {
+		this.permissions = permissions;
+	}
 
 	public void addUser(User user) {
 		users.add(user);
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
-		if(!(obj instanceof Role)){
+		if (!(obj instanceof Role)) {
 			return false;
 		}
-		
-		Role other = (Role)obj;
-		
+		Role other = (Role) obj;
 		return other.getRefId().equals(getRefId());
 	}
-	
-	public Role clone(String ... expand){
-		
+
+	public Role clone(String... expand) {
 		Role role = new Role();
 		role.setRefId(getRefId());
 		role.setName(name);
-		
-		if(expand!=null){
-			for(String token: expand){
-				if(token.equals("users")){
-					for(User user: users){
+		if (expand != null) {
+			for (String token : expand) {
+				if (token.equals("users")) {
+					for (User user : users) {
 						role.addUser(user.clone());
 					}
 				}
-				
-				if(token.equals("permissions")){
+
+				if (token.equals("permissions")) {
 					role.setPermissions(permissions);
 				}
 			}
@@ -161,8 +157,8 @@ public class Role extends PO{
 	public void setUsers(Collection<User> members) {
 		users.addAll(members);
 	}
-	
-	public Collection<User> getUsers(){
+
+	public Collection<User> getUsers() {
 		return users;
 	}
 
@@ -171,14 +167,33 @@ public class Role extends PO{
 		dto.setFullName(description);
 		dto.setRefId(getRefId());
 		dto.setName(name);
-		
+		dto.setRoleId(RoleId);
+		dto.setUserTypeID(UserTypeID);
+
 		return dto;
 	}
 
 	public void copyFrom(RoleDto dto) {
 		setDescription(dto.getFullName());
 		setName(dto.getName());
+		setRoleId(dto.getRoleId());
+		setUserTypeID(dto.getUserTypeID());
 	}
+
+	public Long getUserTypeID() {
+		return UserTypeID;
+	}
+
+	public void setUserTypeID(Long userTypeID) {
+		UserTypeID = userTypeID;
+	}
+
+	public Long getRoleId() {
+		return RoleId;
+	}
+
+	public void setRoleId(Long roleId) {
+		RoleId = roleId;
+	}
+
 }
-
-

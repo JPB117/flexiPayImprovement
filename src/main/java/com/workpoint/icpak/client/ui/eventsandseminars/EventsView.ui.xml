@@ -12,18 +12,18 @@
 	<g:HTMLPanel ui:field="container"
 		styleName="content-wrapper ng-scope ng-fadeInUp">
 
-		<h3 class="ng-scope">
-			Events and Seminars Management
-		</h3>
-
-		<div class="main-content">
+		<div class="main-content events">
 			<g:HTMLPanel styleName="row" ui:field="panelEvents">
+				<h3 class="ng-scope header-events">
+					Events and Seminars Management
+				</h3>
+
 				<div class="col-sm-12">
 					<p:EventsHeader ui:field="headerContainer"
 						styleName="hide">
 					</p:EventsHeader>
 				</div>
-				<div class="panel widget">
+				<div class="panel widget panel-events">
 					<div class="panel-body">
 						<div class="col-sm-12">
 							<table:EventsTable ui:field="tblView">
@@ -36,19 +36,280 @@
 
 			<g:HTMLPanel styleName="row" ui:field="panelEventDrillDown">
 				<div class="col-sm-12">
-					<h4 class="info-text">
-						<a href="#events">Back to Events</a>
+					<h3 class="ng-scope delegates">
+						<a href="#events">
+							<i class="fa fa-angle-double-left"></i>
+							Back to Events
+						</a>
 						/
 						<span ui:field="spnEventTitle"></span>
-					</h4>
-					<hr />
+					</h3>
 				</div>
-				<div class="panel panel-default">
-					<div class="panel-heading">Delegates</div>
+				<div class="panel delegates">
 					<div class="panel-body">
-						<div class="col-sm-12">
-							<table2:DelegatesTable ui:field="tblDelegates">
-							</table2:DelegatesTable>
+						<ul id="mytab" class="nav nav-tabs">
+							<li class="active" ui:field="liSummary">
+								<d:ActionLink ui:field="aSummarytab">Summary</d:ActionLink>
+							</li>
+							<li ui:field="liBooking">
+								<d:ActionLink ui:field="aBookingstab">Bookings</d:ActionLink>
+							</li>
+						</ul>
+						<div class="tab-content">
+							<div class="tab-pane active content-wrapper" ui:field="divSummary"
+								style="background-color: #f5f7fa;">
+								<!-- Members Breakdown -->
+								<div class="row">
+									<div class="col-lg-4">
+										<!-- START widget -->
+										<div class="panel widget">
+											<div class="panel-body">
+												<div class="text-right text-muted">
+													<em class="fa fa-tags fa-2x"></em>
+												</div>
+												<h3 class="mt0" ui:field="elTotalBooking"></h3>
+												<p class="text-muted">
+													Total Delegates
+													(
+													<span ui:field="spnTotalActive"></span>
+													)
+												</p>
+												<div class="progress progress-striped progress-xs">
+													<div role="progressbar" aria-valuenow="60"
+														aria-valuemin="0" aria-valuemax="70"
+														class="progress-bar progress-bar-green progress-60"
+														ui:field="divTotalBookingMetric">
+														<span class="sr-only">60% Complete</span>
+													</div>
+												</div>
+											</div>
+										</div><!-- END widget -->
+									</div>
+									<div class="col-lg-4"><!-- START widget -->
+										<div class="panel widget">
+											<div class="panel-body">
+												<div class="text-right text-muted">
+													<em class="fa fa-user fa-2x"></em>
+												</div>
+												<h3 class="mt0" ui:field="elTotalMembers"></h3>
+												<p class="text-muted">
+													Members
+													(
+													<span ui:field="spnTotalActiveMembers"></span>
+													)
+												</p>
+												<div class="progress progress-striped progress-xs">
+													<div role="progressbar" aria-valuenow="80"
+														aria-valuemin="0" aria-valuemax="100"
+														class="progress-bar progress-bar-green" ui:field="divMembersMetric">
+														<span class="sr-only">80% Complete</span>
+													</div>
+												</div>
+											</div>
+										</div><!-- END widget -->
+									</div>
+									<div class="col-lg-4">
+										<div class="panel widget">
+											<div class="panel-body">
+												<div class="text-right text-muted">
+													<em class="fa fa-user-secret fa-2x"></em>
+												</div>
+												<h3 class="mt0" ui:field="elTotalNonMembers"></h3>
+												<p class="text-muted">
+													Non-Members(
+													<span ui:field="spnTotalActiveNonMembers"></span>
+													)
+												</p>
+												<div class="progress progress-striped progress-xs">
+													<div role="progressbar" aria-valuenow="40"
+														aria-valuemin="0" aria-valuemax="100"
+														class="progress-bar progress-bar-green" ui:field="divNonMemberMetric">
+														<span class="sr-only">40% Complete</span>
+													</div>
+												</div>
+											</div>
+										</div><!-- END widget -->
+									</div>
+								</div>
+
+
+								<div class="row">
+									<div class="col-lg-4">
+										<div class="panel panel-widget">
+											<div class="table-responsive">
+												<table class="table">
+													<thead>
+														<tr>
+															<th>#</th>
+															<th>Metric</th>
+															<th>Progress</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr>
+															<td>1</td>
+															<td>
+																Payment Rate(
+																<span ui:field="spnPaid"></span>
+																)
+															</td>
+															<td>
+																<div class="progress progress-striped progress-xs">
+																	<div aria-valuemax="100" aria-valuemin="0"
+																		aria-valuenow="80" class="progress-bar progress-bar-green"
+																		role="progressbar" ui:field="divPaymentMetric">
+																		<span class="sr-only">80% Complete</span>
+																	</div>
+																</div>
+															</td>
+														</tr>
+														<tr>
+															<td>2</td>
+															<td>
+																Accomodation Rate(
+																<span ui:field="spnAccomodated"></span>
+																)
+															</td>
+															<td>
+																<div class="progress progress-striped progress-xs">
+																	<div aria-valuemax="100" aria-valuemin="0"
+																		aria-valuenow="80" class="progress-bar progress-bar-green"
+																		role="progressbar" ui:field="divAccomodationMetric">
+																		<span class="sr-only">80% Complete</span>
+																	</div>
+																</div>
+															</td>
+														</tr>
+														<tr>
+															<td>3</td>
+															<td>
+																Cancellation Rate(
+																<span ui:field="spnCancellation"></span>
+																)
+															</td>
+															<td>
+																<div class="progress progress-striped progress-xs">
+																	<div aria-valuemax="100" aria-valuemin="0"
+																		aria-valuenow="80" class="progress-bar progress-bar-green"
+																		role="progressbar" ui:field="divCancellationMetric">
+																		<span class="sr-only">80% Complete</span>
+																	</div>
+																</div>
+															</td>
+														</tr>
+														<tr>
+															<td>4</td>
+															<td>
+																Attendance Rate(
+																<span ui:field="spnAttendance"></span>
+																)
+															</td>
+															<td>
+																<div class="progress progress-striped progress-xs">
+																	<div aria-valuemax="100" aria-valuemin="0"
+																		aria-valuenow="80" class="progress-bar progress-bar-green"
+																		role="progressbar" ui:field="divAttendanceMetric">
+																		<span class="sr-only">80% Complete</span>
+																	</div>
+																</div>
+															</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+
+									<div class="col-lg-8">
+										<div class="panel panel-widget">
+											<div class="row row-table row-flush">
+												<div class="col-xs-6 bb br">
+													<div class="row row-table row-flush">
+														<div class="col-xs-4 text-center text-muted">
+															<em class="fa fa-mobile fa-2x"></em>
+														</div>
+														<div class="col-xs-8">
+															<div class="panel-body text-center">
+																<h4 class="mt0" ui:field="elMpesaPayments"></h4>
+																<p class="mb0 text-muted">M-PESA</p>
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="col-xs-6 bb br">
+													<div class="row row-table row-flush">
+														<div class="col-xs-4 text-center text-muted">
+															<em class="fa fa-credit-card fa-2x"></em>
+														</div>
+														<div class="col-xs-8">
+															<div class="panel-body text-center">
+																<h4 class="mt0" ui:field="elCardPayments"></h4>
+																<p class="mb0 text-muted">CARDS</p>
+															</div>
+														</div>
+													</div>
+												</div>
+
+												<div class="col-xs-6 bb br">
+													<div class="row row-table row-flush">
+														<div class="col-xs-4 text-center text-muted">
+															<em class="fa fa-clock-o fa-2x"></em>
+														</div>
+														<div class="col-xs-8">
+															<div class="panel-body text-center">
+																<h4 class="mt0" ui:field="elCreditPayments"></h4>
+																<p class="mb0 text-muted">CREDIT</p>
+															</div>
+														</div>
+													</div>
+												</div>
+
+												<div class="col-xs-6 bb br">
+													<div class="row row-table row-flush">
+														<div class="col-xs-4 text-center text-muted">
+															<em class="fa fa-money fa-2x"></em>
+														</div>
+														<div class="col-xs-8">
+															<div class="panel-body text-center">
+																<h4 class="mt0" ui:field="elReceiptPayments"></h4>
+																<p class="mb0 text-muted">RECEIPT</p>
+															</div>
+														</div>
+													</div>
+												</div>
+
+												<div class="col-xs-6 bb br">
+													<div class="row row-table row-flush">
+														<div class="col-xs-4 text-center text-muted">
+															<em class="fa fa-university fa-2x"></em>
+														</div>
+														<div class="col-xs-8">
+															<div class="panel-body text-center">
+																<h4 class="mt0" ui:field="elOfflinePayments"></h4>
+																<p class="mb0 text-muted">OFFLINE</p>
+															</div>
+														</div>
+													</div>
+												</div>
+
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="tab-pane" ui:field="divBookings">
+								<div class="col-lg-12" style="margin-bottom: 12px;">
+									<d:ActionLink ui:field="aCreateBooking" styleName="btn btn-primary btn-fill">Create
+										Booking</d:ActionLink>
+									<d:ActionLink ui:field="aSyncWithServer"
+										styleName="pull-right btn btn-default btn-fill">Offline Sync</d:ActionLink>
+								</div>
+								<div class="col-sm-12">
+									<table2:DelegatesTable ui:field="tblDelegates">
+									</table2:DelegatesTable>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>

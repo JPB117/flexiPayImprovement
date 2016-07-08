@@ -28,6 +28,7 @@ import com.icpak.rest.models.event.Booking;
 import com.itextpdf.text.DocumentException;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.InvoiceLineDto;
+import com.workpoint.icpak.shared.model.TransactionDto;
 import com.workpoint.icpak.tests.base.AbstractDaoTest;
 
 public class TestInvoiceDao extends AbstractDaoTest {
@@ -61,25 +62,36 @@ public class TestInvoiceDao extends AbstractDaoTest {
 		System.err.println(count);
 	}
 
-	@Ignore
-	public void getInvoices() {
+	// @Test
+	public void getInvoiceByDocNo() {
 		InvoiceDto invoice = invoiceDao.getInvoiceByDocumentNo("INV-0024");
 		System.err.println(invoice.getDescription());
 	}
 
-	@Test
+	//@Test
+	public void getAllInvoices() {
+		List<TransactionDto> allTrxs = invoiceDao.getAllTransactions("ALL", "",
+				"2016-03-01 00:00:00", "2016-03-30 00:00:00", "BOOKING",
+				"MPESA", 0, 10000);
+		System.err.println("List Size>>" + allTrxs.size());
+		System.err.println("Database Count>>"
+				+ invoiceDao.getTransactionsCount("ALL", "",
+						"2016-03-01 00:00:00", "2016-03-30 00:00:00",
+						"BOOKING", "MPESA"));
+	}
+
+	// @Test
 	public void TestCheckPayment() {
 		List<InvoiceDto> invoice = invoiceDao
 				.checkInvoicePaymentStatus("yO8QEZ1A8c1riDsN");
-
 		System.err.println(">>>>" + invoice.get(0).getStatus());
 	}
 
-	@Ignore
+	 @Test
 	public void testPayment() {
-		trxHelper.receivePaymentUsingInvoiceNo("256399265", "722722",
-				"INV0170", "MPESA", "KAL7VZQU55", "254729472421", "18000",
-				"2016-01-31 18:42:08");
+		trxHelper.receivePaymentUsingInvoiceNo("DFAFDAF64G", "722722",
+				"INV5496", "MPESA", "DFAFDAF61G", "254729472421", "227000",
+				"2016-01-31 18:42:08", "N/A");
 	}
 
 	@Ignore

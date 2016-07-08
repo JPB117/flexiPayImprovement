@@ -25,7 +25,7 @@ import com.icpak.rest.models.membership.Member;
 import com.icpak.rest.util.ApplicationSettings;
 import com.icpak.rest.util.SMSIntegration;
 import com.icpak.rest.utils.EmailServiceHelper;
-import com.workpoint.icpak.server.util.DateUtils;
+import com.workpoint.icpak.server.util.ServerDateUtils;
 import com.workpoint.icpak.shared.model.CPDCategory;
 import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.shared.model.CPDFooterDto;
@@ -85,6 +85,8 @@ public class CPDDaoHelper {
 		CPDDto rtn = cpd.toDTO();
 		rtn.setFullNames(userDao.getNamesBymemberNo(cpd
 				.getMemberRegistrationNo()));
+		
+		
 		return rtn;
 	}
 
@@ -195,9 +197,9 @@ public class CPDDaoHelper {
 				+ "</p>Thank you<br/>Member Services";
 
 		try {
-			EmailServiceHelper.sendEmail(body, subject, Arrays.asList(
-					user.getEmail(), "molly.mwangi@icpak.com"), Arrays.asList(
-					user.getUserData().getFullNames(), "Molly Mwangi"));
+			EmailServiceHelper.sendEmail(body, subject,
+					Arrays.asList(user.getEmail(), "molly.mwangi@icpak.com"),
+					Arrays.asList(user.getFullName(), "Molly Mwangi"));
 
 		} catch (Exception e) {
 			logger.info("Review Email for " + user.getEmail()
@@ -238,7 +240,6 @@ public class CPDDaoHelper {
 		cpd.setEventId(event.getRefId());
 		cpd.setOrganizer("ICPAK");
 		cpd.setStatus(CPDStatus.Approved);
-		cpd.setEventId(event.getRefId());
 		cpd.setTitle(event.getName());
 		cpd.setMemberRegistrationNo(delegate.getMemberRegistrationNo());
 		cpd.setCategory(CPDCategory.CATEGORY_A);
@@ -312,7 +313,7 @@ public class CPDDaoHelper {
 		 */
 		if (member.hasDisplinaryCase()) {
 			isGenerate = false;
-			messages.add("Member must not have an ongoing displinary case for good standing");
+			messages.add("Member must not have an ongoing displinary case for good standing.");
 		}
 
 		/**
@@ -322,17 +323,17 @@ public class CPDDaoHelper {
 		 * 
 		 */
 		Date registrationDate = member.getRegistrationDate();
-		double cpdHours = dao.getCPDHours(memberRefId);
+		Double cpdHours = dao.getCPDHours(memberRefId);
 		if (registrationDate == null) {
 			isGenerate = false;
 			messages.add("Your registration date cannot be found in the portal, kindly request "
-					+ "for your account update from the Administrator.");
+					+ "for your account to be updated by the Administrator.");
 		} else {
 			Calendar regDate = Calendar.getInstance();
 			regDate.setTime(registrationDate);
 
-			Double noOfYears = DateUtils.getYearsBetween(registrationDate,
-					new Date());
+			Double noOfYears = ServerDateUtils.getYearsBetween(
+					registrationDate, new Date());
 			if (noOfYears <= 0.0) {
 				// do nothing - all is well<=2
 			} else if (noOfYears <= 2) {
@@ -340,24 +341,26 @@ public class CPDDaoHelper {
 				if (cpdHours < 40) {
 					isGenerate = false;
 					messages.add("You have been a member for more than "
-							+ noOfYears + ". You have done " + cpdHours
-							+ "/40 expected hours.");
+							+ noOfYears.intValue() + " but you have done "
+							+ cpdHours.intValue()
+							+ " out of 40 expected hours.");
 				}
 			} else if (noOfYears <= 3) {
 				// >1 && <=2
 				if (cpdHours < 80) {
 					isGenerate = false;
 					messages.add("You have been a member for more than "
-							+ noOfYears + ". You have done " + cpdHours
-							+ "/80 expected hours.");
+							+ noOfYears.intValue() + "but you have done "
+							+ cpdHours.intValue()
+							+ " out of 80 expected hours.");
 				}
 			} else {
 				// >1 && <=2
 				if (cpdHours < 120) {
 					isGenerate = false;
 					messages.add("You have been a member for more than "
-							+ noOfYears.intValue() + "years but have done "
-							+ cpdHours
+							+ noOfYears.intValue()
+							+ " years but you have done " + cpdHours.intValue()
 							+ " cpd hours out of 120 expected hours.");
 				}
 			}

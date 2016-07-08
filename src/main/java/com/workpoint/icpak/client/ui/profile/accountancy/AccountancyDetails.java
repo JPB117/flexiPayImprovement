@@ -11,6 +11,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Widget;
@@ -81,6 +82,8 @@ public class AccountancyDetails extends Composite {
 		tblTrainingDetails.clearRows();
 		tblTrainingDetails.setNoRecords(result.size());
 
+		allIssues.clear();
+
 		if (result.size() == 0) {
 			allIssues
 					.add("Please provide details on your Accountancy Examination under the Accountancy Examination Tab.");
@@ -132,6 +135,7 @@ public class AccountancyDetails extends Composite {
 						}
 					});
 					panelAttachment.add(link);
+					panelAttachment.add(new HTML("<br/>"));
 				}
 			} else {
 				allIssues

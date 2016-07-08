@@ -78,16 +78,11 @@ public class User extends PO {
 	@Basic(optional = false)
 	@Column(length = 100, unique = true)
 	private String username;
-
 	@ApiModelProperty(value = "user email")
-	// @Basic(optional=false)
-	// @Index(name="idx_users_email")
 	private String email;
-
 	@Basic(optional = true)
 	@Column(length = 255)
 	private String password;
-
 	@JsonIgnore
 	@XmlTransient
 	@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH,
@@ -95,6 +90,7 @@ public class User extends PO {
 	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = @JoinColumn(name = "roleid"))
 	@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 	private Set<Role> roles = new HashSet<Role>();
+
 	@Embedded
 	private BioData userData;
 	@OneToOne(fetch = FetchType.LAZY, mappedBy = "user", cascade = {
@@ -114,7 +110,6 @@ public class User extends PO {
 	private String lmsResponse;
 	@Column(columnDefinition = "TEXT")
 	private String lmsPayLoad;
-
 	@Enumerated(EnumType.STRING)
 	private AccountStatus status = AccountStatus.NEWACC;
 
@@ -138,7 +133,6 @@ public class User extends PO {
 	}
 
 	public User clone(String... expand) {
-
 		User user = new User();
 		user.setRefId(refId);
 		user.setEmail(email);
@@ -196,17 +190,14 @@ public class User extends PO {
 	}
 
 	public void copyFrom(UserDto dto) {
-		setEmail(dto.getEmail());
-		setPhoneNumber(dto.getPhoneNumber());
 		BioData bio = new BioData();
 		bio.setFirstName(dto.getName());
 		bio.setLastName(dto.getSurname());
 		setMemberNo(dto.getMemberNo());
-		setLmsResponse(dto.getLmsResponse());
-		setLmsStatus(dto.getLmsStatus());
-		setLmsPayLoad(dto.getLmsPayload());
 		setFullName(dto.getFullName());
 		setUserData(bio);
+		setEmail(dto.getEmail());
+		setPhoneNumber(dto.getPhoneNumber());
 	}
 
 	public User copyOnUpdate(UserDto dto) {
@@ -216,9 +207,6 @@ public class User extends PO {
 		bio.setFirstName(dto.getName());
 		bio.setLastName(dto.getSurname());
 		setMemberNo(dto.getMemberNo());
-		setLmsResponse(dto.getLmsResponse());
-		setLmsStatus(dto.getLmsStatus());
-		setLmsPayLoad(dto.getLmsPayload());
 		setFullName(dto.getFullName());
 		setUserData(bio);
 		return this;
@@ -303,15 +291,15 @@ public class User extends PO {
 		dto.setEmail(email);
 		if (member != null && member.getRefId() != null) {
 			dto.setMemberRefId(member.getRefId());
+			dto.setMembershipStatus(member.getMemberShipStatus());
+			dto.setHasDisciplinaryCase(member.getMemberDisplinaryCase());
+			dto.setMemberQrCode(member.getMemberQrCode());
 		}
 		dto.setName(userData.getFirstName());
 		dto.setSurname(userData.getLastName());
 		dto.setPhoneNumber(phoneNumber);
 		dto.setRefId(refId);
 		dto.setStatus(status);
-		dto.setLmsResponse(lmsResponse);
-		dto.setLmsStatus(lmsStatus);
-		dto.setLmsPayload(lmsPayLoad);
 		dto.setFullName(fullName);
 		dto.setUserLongId(getId());
 

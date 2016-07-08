@@ -23,17 +23,16 @@ public class UserDto extends SerializableObj implements Listable, Serializable {
 	private String surname;
 	private String password;
 	private String fullName;
+	private String memberQrCode;
+	private MembershipStatus membershipStatus;
+	private int hasDisciplinaryCase;
 	private ArrayList<RoleDto> groups = new ArrayList<RoleDto>();
-	private int participated;
-	private int inbox;
 	private AccountStatus status = AccountStatus.NEWACC;
 	private String phoneNumber;
 	private Date lastDateUpdateFromErp;
-	private String lmsStatus;
-	private String lmsResponse;
-	private String lmsPayload;
 	private Long userLongId;
-	
+	private String gender;
+
 	public UserDto() {
 	}
 
@@ -84,8 +83,6 @@ public class UserDto extends SerializableObj implements Listable, Serializable {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
-	
 
 	public Long getUserLongId() {
 		return userLongId;
@@ -137,8 +134,80 @@ public class UserDto extends SerializableObj implements Listable, Serializable {
 
 	@JsonIgnore
 	public boolean isAdmin() {
-
 		return hasGroup("admin");
+	}
+
+	@JsonIgnore
+	public boolean isEventEdit() {
+		return hasGroup("event_edit");
+	}
+
+	@JsonIgnore
+	public boolean isEventRead() {
+		return hasGroup("Event_read");
+	}
+
+	@JsonIgnore
+	public boolean isUsersEdit() {
+		return hasGroup("users_edit");
+	}
+
+	public int getHasDisciplinaryCase() {
+		return hasDisciplinaryCase;
+	}
+
+	public void setHasDisciplinaryCase(int hasDisciplinaryCase) {
+		this.hasDisciplinaryCase = hasDisciplinaryCase;
+	}
+
+	@JsonIgnore
+	public boolean isUsersRead() {
+		return hasGroup("users_read");
+	}
+
+	@JsonIgnore
+	public boolean isApplicationsEdit() {
+		return hasGroup("applications_edit");
+	}
+
+	@JsonIgnore
+	public boolean isApplicationsRead() {
+		return hasGroup("applications_read");
+	}
+
+	@JsonIgnore
+	public boolean isCPDEdit() {
+		return hasGroup("cpd_edit");
+	}
+
+	@JsonIgnore
+	public boolean isCPDRead() {
+		return hasGroup("cpd_read");
+	}
+
+	@JsonIgnore
+	public boolean isFinanceEdit() {
+		return hasGroup("finance_edit");
+	}
+
+	@JsonIgnore
+	public boolean isFinanceEditApplications() {
+		return hasGroup("finance_edit_applications");
+	}
+
+	@JsonIgnore
+	public boolean isFinanceEditEvents() {
+		return hasGroup("finance_edit_events");
+	}
+
+	@JsonIgnore
+	public boolean isFinanceRead() {
+		return hasGroup("finance_read");
+	}
+
+	@JsonIgnore
+	public boolean isBasicMember() {
+		return hasGroup("basic_member");
 	}
 
 	@Override
@@ -154,28 +223,6 @@ public class UserDto extends SerializableObj implements Listable, Serializable {
 		}
 
 		return name.equals(other.name);
-	}
-
-	public int getInbox() {
-		return inbox;
-	}
-
-	public void setInbox(int inbox) {
-		this.inbox = inbox;
-	}
-
-	public int getParticipated() {
-		return participated;
-	}
-
-	public void setParticipated(int participated) {
-		this.participated = participated;
-	}
-
-	@JsonIgnore
-	public int getTotal() {
-
-		return participated + inbox;
 	}
 
 	@JsonIgnore
@@ -227,27 +274,28 @@ public class UserDto extends SerializableObj implements Listable, Serializable {
 		return lastDateUpdateFromErp;
 	}
 
-	public String getLmsStatus() {
-		return lmsStatus;
+	public MembershipStatus getMembershipStatus() {
+		return membershipStatus;
 	}
 
-	public void setLmsStatus(String lmsStatus) {
-		this.lmsStatus = lmsStatus;
+	public void setMembershipStatus(MembershipStatus membershipStatus) {
+		this.membershipStatus = membershipStatus;
 	}
 
-	public String getLmsResponse() {
-		return lmsResponse;
+	public String getGender() {
+		return gender;
 	}
 
-	public void setLmsResponse(String lmsResponse) {
-		this.lmsResponse = lmsResponse;
+	public void setGender(String gender) {
+		this.gender = gender;
 	}
 
-	public String getLmsPayload() {
-		return lmsPayload;
+	public String getMemberQrCode() {
+		return memberQrCode;
 	}
 
-	public void setLmsPayload(String lmsPayload) {
-		this.lmsPayload = lmsPayload;
+	public void setMemberQrCode(String memberQrCode) {
+		this.memberQrCode = memberQrCode;
 	}
+	
 }

@@ -1,12 +1,10 @@
 package com.icpak.rest.models.util;
 
 import javax.persistence.Basic;
-import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -26,6 +24,7 @@ import com.icpak.rest.models.membership.ApplicationFormTraining;
 import com.icpak.rest.models.membership.Education;
 import com.icpak.rest.models.membership.GoodStandingCertificate;
 import com.icpak.rest.models.membership.TrainingAndExperience;
+import com.icpak.rest.models.trx.Transaction;
 import com.wordnik.swagger.annotations.ApiModel;
 
 @ApiModel(description = "File attachment model")
@@ -45,7 +44,7 @@ public class Attachment extends PO {
 	private long size;
 	private String contentType;
 
-	@Basic(fetch=FetchType.LAZY)
+	@Basic(fetch = FetchType.LAZY)
 	@Embedded
 	private DBFile file;
 
@@ -77,17 +76,21 @@ public class Attachment extends PO {
 	@JoinColumn(name = "educationId")
 	private Education education;
 
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "cpdid")
 	private CPD cpd;
 
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "applicationId")
 	private ApplicationFormHeader application;
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "transactionId")
+	private Transaction transaction;
+
 	// Profile Pic
 	private String profilePicUserId;
-	
+
 	private String fileName;
 
 	public Attachment() {
@@ -97,10 +100,11 @@ public class Attachment extends PO {
 	public Attachment(Long id, String name, byte[] attachment) {
 		this();
 		this.name = name;
-		if(this.file==null){
+		if (this.file == null) {
 			this.file = new DBFile();
 		}
-		this.file.setAttachment(attachment);;
+		this.file.setAttachment(attachment);
+		;
 		setId(id);
 	}
 
@@ -109,7 +113,7 @@ public class Attachment extends PO {
 	}
 
 	public byte[] getAttachment() {
-		if(file==null){
+		if (file == null) {
 			return null;
 		}
 		return file.getAttachment();
@@ -120,7 +124,7 @@ public class Attachment extends PO {
 	}
 
 	public void setAttachment(byte[] attachment) {
-		if(this.file==null){
+		if (this.file == null) {
 			this.file = new DBFile();
 		}
 		this.file.setAttachment(attachment);
@@ -155,8 +159,8 @@ public class Attachment extends PO {
 		Attachment a = new Attachment();
 
 		if (detail != null && detail != null) {
-			if(file!=null)
-			a.setAttachment(file.getAttachment());
+			if (file != null)
+				a.setAttachment(file.getAttachment());
 		}
 		a.setContentType(contentType);
 		a.setName(name);
@@ -221,5 +225,13 @@ public class Attachment extends PO {
 
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
+	}
+
+	public Transaction getTransaction() {
+		return transaction;
+	}
+
+	public void setTransaction(Transaction transaction) {
+		this.transaction = transaction;
 	}
 }

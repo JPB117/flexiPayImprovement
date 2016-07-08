@@ -20,6 +20,7 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -40,6 +41,7 @@ import com.workpoint.icpak.client.ui.grid.DataMapper;
 import com.workpoint.icpak.client.ui.grid.DataModel;
 import com.workpoint.icpak.client.ui.membership.PageElement;
 import com.workpoint.icpak.client.ui.util.DateUtils;
+import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.model.Country;
 import com.workpoint.icpak.shared.model.DataType;
 import com.workpoint.icpak.shared.model.InvoiceDto;
@@ -57,25 +59,23 @@ public class EventBookingView extends ViewImpl implements
 		EventBookingPresenter.MyView {
 
 	private final Widget widget;
-
 	@UiField
 	HTMLPanel divMainContainer;
-
 	@UiField
 	HTMLPanel divHeaderContainer;
-
 	@UiField
 	HTMLPanel divFooter;
-
 	@UiField
 	HTMLPanel panelPayment;
 
 	@UiField
+	HTMLPanel panelCancel;
+	@UiField
+	HTMLPanel panelConfirmCancel;
+	@UiField
 	Element divHeaderTopics;
-
 	@UiField
 	HTMLPanel divContent;
-
 	@UiField
 	Anchor aNext;
 	@UiField
@@ -84,15 +84,16 @@ public class EventBookingView extends ViewImpl implements
 	Anchor aAccount;
 	@UiField
 	DivElement divPackage;
-
 	@UiField
 	DivElement divCategories;
-
 	@UiField
 	DivElement divPayment;
 	@UiField
 	DivElement divProforma;
-
+	@UiField
+	DivElement divHeader;
+	@UiField
+	DivElement divAlert;
 	@UiField
 	LIElement liTab1;
 	@UiField
@@ -101,7 +102,6 @@ public class EventBookingView extends ViewImpl implements
 	LIElement liTab3;
 	@UiField
 	LIElement liTab4;
-
 	@UiField
 	SpanElement spnEventName;
 	@UiField
@@ -110,7 +110,6 @@ public class EventBookingView extends ViewImpl implements
 	SpanElement spnDays2Go;
 	@UiField
 	SpanElement spnDuration;
-
 	@UiField
 	TextField txtCompanyName;
 	@UiField
@@ -133,22 +132,38 @@ public class EventBookingView extends ViewImpl implements
 	IssuesPanel issuesPanelDelegate;
 	@UiField
 	AggregationGrid tblDelegates;
-
 	@UiField
 	ActionLink aAddMember;
-
 	@UiField
 	ActionLink aAddNonMember;
-
 	@UiField
 	ProformaInvoice proformaInv;
-
 	@UiField
 	ActionLink aDownloadProforma;
-
 	@UiField
 	DivElement divContainer;
+	@UiField
+	ActionLink aBackToDelegates;
+	@UiField
+	SpanElement spnSpinner;
+	@UiField
+	Anchor aBrowseOthers;
+	@UiField
+	ActionLink aCancelLeft;
+	@UiField
+	ActionLink aNo;
+	@UiField
+	ActionLink aConfirmCancel;
+	@UiField
+	HTMLPanel divActionSection;
+	@UiField
+	DivElement divCancellation;
+	@UiField
+	DivElement divWizardFooter;
+
 	int counter = 0;
+	boolean isValid = true;
+	boolean isDelegateValid = true;
 
 	private List<LIElement> liElements = new ArrayList<LIElement>();
 	private List<PageElement> pageElements = new ArrayList<PageElement>();
@@ -164,8 +179,12 @@ public class EventBookingView extends ViewImpl implements
 	ColumnConfig accommodationConfig = new ColumnConfig("accommodation",
 			"Accommodation", DataType.SELECTBASIC);
 
-	ColumnConfig fullNameConfig = new ColumnConfig("fullName", "FullNames:",
+	ColumnConfig fullNameConfig = new ColumnConfig("fullName", "FullNames",
 			DataType.STRING, "Delegate FullNames", "form-control", false);
+
+	ColumnConfig titleConfig = new ColumnConfig("title", "Title",
+			DataType.SELECTBASIC, "", "form-control");
+	private String bookingId;
 
 	@Inject
 	public EventBookingView(final Binder binder) {
@@ -175,17 +194,14 @@ public class EventBookingView extends ViewImpl implements
 		List<ColumnConfig> configs = new ArrayList<ColumnConfig>();
 		configs.add(memberColumn);
 
-		ColumnConfig config = new ColumnConfig("title", "Title",
-				DataType.SELECTBASIC, "", "form-control");
-		config.setDropDownItems(Arrays.asList(Title.values()));
-
-		configs.add(config);
-
+		titleConfig.setDropDownItems(Arrays.asList(Title.values()));
+		configs.add(titleConfig);
 		configs.add(fullNameConfig);
-
 		configs.add(accommodationConfig);
 
 		tblDelegates.setColumnConfigs(configs);
+
+		accommodationConfig.setHeaderStyleName("accomodation-header");
 
 		accommodationConfig
 				.addValueChangeHandler(new ValueChangeHandler<Listable>() {
@@ -247,6 +263,8 @@ public class EventBookingView extends ViewImpl implements
 					if (dto != null) {
 						delegate.setMemberNo(dto.getMemberNo());
 						delegate.setMemberRefId(dto.getRefId());
+						delegate.setMemberQrCode(dto.getMemberQrCode());
+						delegate.setDelegatePhoneNumber(dto.getPhoneNumber());
 					}
 
 					delegate.setFullName(dto.getFullName());
@@ -264,7 +282,10 @@ public class EventBookingView extends ViewImpl implements
 			public void onClick(ClickEvent event) {
 				memberColumn.setEnabled(true);
 				fullNameConfig.setEnabled(false);
+				titleConfig.setEnabled(false);
+				accommodationConfig.setEnabled(true);
 				tblDelegates.addRowData(new DataModel());
+				scrollToView();
 			}
 		});
 
@@ -272,7 +293,25 @@ public class EventBookingView extends ViewImpl implements
 			@Override
 			public void onClick(ClickEvent event) {
 				memberColumn.setEnabled(false);
+				fullNameConfig.setEnabled(true);
+				titleConfig.setEnabled(true);
+				accommodationConfig.setEnabled(true);
 				tblDelegates.addRowData(new DataModel());
+				scrollToView();
+			}
+		});
+
+		aCancelLeft.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				showCancellation(true);
+			}
+		});
+
+		aNo.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				showCancellation(false);
 			}
 		});
 
@@ -298,9 +337,25 @@ public class EventBookingView extends ViewImpl implements
 			public void onClick(ClickEvent event) {
 				counter = counter - 1;
 				setActivePage(counter);
-
 			}
 		});
+		initAdminAspects();
+	}
+
+	protected void scrollToView() {
+		divActionSection.getElement().scrollIntoView();
+	}
+
+	private void initAdminAspects() {
+		if (AppContext.isCurrentUserEventEdit()) {
+			aBackToDelegates.removeStyleName("hide");
+			aBackToDelegates.addClickHandler(new ClickHandler() {
+				@Override
+				public void onClick(ClickEvent event) {
+					History.back();
+				}
+			});
+		}
 	}
 
 	public void setActivePage(int index) {
@@ -367,11 +422,9 @@ public class EventBookingView extends ViewImpl implements
 	}
 
 	public boolean isValid() {
-		boolean isValid = true;
+		isValid = true;
 		issuesPanel.clear();
 		issuesPanelDelegate.clear();
-
-		// Window.alert("Counter:"+counter);
 
 		if (counter == 0) {
 			if (isNullOrEmpty(txtCompanyName.getValue())) {
@@ -406,36 +459,49 @@ public class EventBookingView extends ViewImpl implements
 
 			if (isNullOrEmpty(txtContactPerson.getValue())) {
 				isValid = false;
-				issuesPanel.addError("Contact is required");
+				issuesPanel.addError("Contact Person details is required");
 			}
 
 			if (isNullOrEmpty(txtContactEmail.getValue())) {
 				isValid = false;
-				issuesPanel.addError("e-Mail is required");
+				issuesPanel.addError("E-Mail is required");
 			}
-		} else if (counter == 1) {
-			if (getDelegates().size() == 0) {
-				issuesPanel
-						.addError("You must enter at least 1 delegate for this event");
-				isValid = false;
-			}
-
-			// for(DelegateDto dto: getDelegates()){
-			// if(dto.getMember()==null){
-			// isValid = false;
-			// issuesPanel.addError("Member cannot be null!!");
-			// }
-			// }
 		}
 
 		// show/hide isValid Panel
-		if (isValid) {
+		if (isValid && counter == 0) {
 			issuesPanel.addStyleName("hide");
 		} else {
 			issuesPanel.removeStyleName("hide");
 		}
 		return isValid;
+	}
 
+	public boolean isDelegateValid() {
+		List<DelegateDto> allDelegates = getDelegates();
+		boolean hasIssues = false;
+		for (DelegateDto d : allDelegates) {
+			if (isNullOrEmpty(d.getFullName())
+					&& isNullOrEmpty(d.getMemberNo())) {
+				hasIssues = true;
+			}
+		}
+
+		if (getDelegates().size() == 0 || hasIssues) {
+			issuesPanelDelegate
+					.addError("You have not added the member."
+							+ " Kindly enter the memberNo on the first column to add the member.");
+			isDelegateValid = false;
+		} else {
+			isDelegateValid = true;
+		}
+		if (isDelegateValid) {
+			issuesPanelDelegate.addStyleName("hide");
+		} else {
+			issuesPanelDelegate.removeStyleName("hide");
+		}
+
+		return isDelegateValid;
 	}
 
 	@Override
@@ -480,13 +546,14 @@ public class EventBookingView extends ViewImpl implements
 
 	public BookingDto getBooking() {
 		BookingDto dto = new BookingDto();
+		if (bookingId != null) {
+			dto.setRefId(bookingId);
+		}
 		dto.setStatus("");
 		dto.setPaymentStatus(PaymentStatus.NOTPAID);
-		dto.setBookingDate(new Date().getTime());
+		// dto.setBookingDate(new Date().getTime());
 		dto.setContact(getContact());
-		// dto.setCurrency(currency);
 		dto.setDelegates(getDelegates());
-
 		return dto;
 	}
 
@@ -499,9 +566,10 @@ public class EventBookingView extends ViewImpl implements
 	public void setMiddleHeight() {
 		int totalHeight = Window.getClientHeight();
 		int topHeight = divHeaderContainer.getOffsetHeight();
-		// int footerHeight = divFooter.getOffsetHeight();
-		// int topicsHeight = divHeaderContainer.getOffsetHeight();
-		int middleHeight = totalHeight - topHeight;
+		int topicsHeight = divHeader.getOffsetHeight();
+		int headerTopics = divHeaderTopics.getOffsetHeight();
+		int middleHeight = totalHeight - topHeight - topicsHeight
+				- headerTopics - 53;
 
 		// Window.alert("\nTotalHeight:" + totalHeight + "MiddleHeight>>"
 		// + middleHeight + "TopHeight" + topHeight);
@@ -512,7 +580,6 @@ public class EventBookingView extends ViewImpl implements
 	}
 
 	private ContactDto getContact() {
-
 		ContactDto contact = new ContactDto();
 		contact.setAddress(txtAddress.getValue());
 		contact.setCompany(txtCompanyName.getValue());
@@ -553,7 +620,7 @@ public class EventBookingView extends ViewImpl implements
 
 	public void bindAccommodations(List<AccommodationDto> accommodation) {
 		List<Listable> accommodations = new ArrayList<Listable>();
-		if (accommodations != null) {
+		if (accommodation != null) {
 			for (AccommodationDto acc : accommodation) {
 				accommodations.add(acc);
 			}
@@ -563,6 +630,7 @@ public class EventBookingView extends ViewImpl implements
 
 	@Override
 	public void bindBooking(BookingDto booking) {
+		bookingId = booking.getRefId();
 		if (booking.getContact() != null) {
 			txtAddress.setValue(booking.getContact().getAddress());
 			txtCompanyName.setValue(booking.getContact().getCompany());
@@ -574,7 +642,6 @@ public class EventBookingView extends ViewImpl implements
 		}
 
 		if (booking.getDelegates() != null) {
-
 			for (DelegateDto d : booking.getDelegates()) {
 				finalDelRefIds.put(d.getRefId(), d);
 			}
@@ -646,6 +713,7 @@ public class EventBookingView extends ViewImpl implements
 				member.setRefId(dto.getMemberRefId());
 				member.setMemberNo(dto.getMemberNo());
 				member.setFullName(dto.getFullName());
+				member.setMemberQrCode(dto.getMemberQrCode());
 			}
 
 			DataModel model = new DataModel();
@@ -675,6 +743,9 @@ public class EventBookingView extends ViewImpl implements
 					.toString());
 			dto.setMemberNo(memberDto == null ? null : memberDto.getMemberNo());
 			dto.setMemberRefId(memberDto == null ? null : memberDto.getRefId());
+			dto.setMemberQrCode(memberDto == null ? null : memberDto
+					.getMemberQrCode());
+
 			dto.setTitle(model.get("title") == null ? null : model.get("title")
 					.toString());
 			dto.setFullName(model.get("fullName") == null ? null : model.get(
@@ -697,4 +768,92 @@ public class EventBookingView extends ViewImpl implements
 		return aDownloadProforma;
 	}
 
+	@Override
+	public TextField getEmailTextBox() {
+		return txtContactEmail;
+	}
+
+	@Override
+	public void setEmailValid(boolean isValid, String message) {
+		this.isValid = isValid;
+		issuesPanel.clear();
+		if (isValid) {
+			issuesPanel.addStyleName("hide");
+		} else {
+			issuesPanel.addError(message);
+			issuesPanel.removeStyleName("hide");
+		}
+	}
+
+	public void showEmailValidating(boolean show) {
+		if (show) {
+			spnSpinner.removeClassName("hide");
+			aNext.addStyleName("hide");
+		} else {
+			spnSpinner.addClassName("hide");
+			aNext.removeStyleName("hide");
+		}
+	}
+
+	public Anchor browseOthersEventsButton() {
+		return aBrowseOthers;
+	}
+
+	@Override
+	public void scrollToPaymentsTop() {
+		panelPayment.getElement().scrollIntoView();
+	}
+
+	@Override
+	public void showClientDisconnection(boolean show) {
+		if (show) {
+			divAlert.removeClassName("hide");
+		} else {
+			divAlert.addClassName("hide");
+		}
+	}
+
+	public HasClickHandlers getConfirmCancelButton() {
+		return aConfirmCancel;
+	}
+
+	public void showCancellation(boolean show) {
+		if (show) {
+			panelCancel.removeStyleName("hide");
+			divHeaderTopics.addClassName("hide");
+			divHeaderTopics.removeClassName("visible-lg");
+			divCancellation.addClassName("active");
+			divWizardFooter.addClassName("hide");
+			clearAll();
+			showInlineCancellationButton(false);
+		} else {
+			panelCancel.addStyleName("hide");
+			divCancellation.addClassName("active");
+			divHeaderTopics.removeClassName("hide");
+			divHeaderTopics.addClassName("visible-lg");
+			divCategories.addClassName("active");
+			divWizardFooter.removeClassName("hide");
+			showInlineCancellationButton(true);
+		}
+	}
+
+	@Override
+	public void showInlineCancellationButton(boolean show) {
+		if (show) {
+			aCancelLeft.removeStyleName("hide");
+		} else {
+			aCancelLeft.addStyleName("hide");
+		}
+	}
+
+	@Override
+	public void showCancellationSuccess(boolean show) {
+		if (show) {
+			panelConfirmCancel.removeStyleName("hide");
+			panelCancel.addStyleName("hide");
+		} else {
+			panelConfirmCancel.addStyleName("hide");
+			panelCancel.removeStyleName("hide");
+		}
+	}
 }

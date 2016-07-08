@@ -132,6 +132,7 @@ public class SpecializationRegistrationForm extends Composite {
 	}
 
 	protected void addRemove(CheckBox source, boolean value) {
+		// Specialization Areas
 		if (source.equals(aAudit)) {
 			addRemove(Specializations.AUDIT, value);
 		} else if (source.equals(aTaxation)) {
@@ -342,6 +343,7 @@ public class SpecializationRegistrationForm extends Composite {
 	}
 
 	public void bindDetail(ApplicationFormSpecializationDto specializationDto) {
+		// Window.alert(">>" + specializationDto.getSpecialization());
 		switch (specializationDto.getSpecialization()) {
 		case AUDIT:
 			aAudit.setValue(true);
@@ -503,12 +505,37 @@ public class SpecializationRegistrationForm extends Composite {
 
 	public void clear() {
 		aAudit.setValue(false);
-		aFinancial.setValue(false);
 		aTaxation.setValue(false);
+		aFinancial.setValue(false);
+		aHRConsultancy.setValue(false);
+		aBanking.setValue(false);
+		aFinance.setValue(false);
+		aInsurance.setValue(false);
+		aManufacturing.setValue(false);
+		aHotel.setValue(false);
+		aOther.setValue(false);
+		aCentral.setValue(false);
+		aLocal.setValue(false);
+		aState.setValue(false);
+		aCooperative.setValue(false);
+		aEducation.setValue(false);
+		aNGOs.setValue(false);
+
+		aPractice.setValue(false);
+		aPublicSector.setValue(false);
+		aPrivateSector.setValue(false);
+		aBankingFinance.setValue(false);
+		aManufacturing2.setValue(false);
+		aHotel2.setValue(false);
+		aNonprofitSector.setValue(false);
+		aEducationTraining.setValue(false);
+		aCommerceRetail.setValue(false);
+		aOtherService.setValue(false);
 	}
 
 	public void bindDetails(List<ApplicationFormSpecializationDto> result) {
-		clear();
+		// clear();
+		allIssues.clear();
 		if (result.size() == 0) {
 			allIssues
 					.add("Please provide at least one area of specialization under the specialization tab");
@@ -519,6 +546,8 @@ public class SpecializationRegistrationForm extends Composite {
 	}
 
 	public void bindEmployment(List<ApplicationFormEmploymentDto> result) {
+		// clear();
+		allIssues.clear();
 		if (result.size() == 0) {
 			allIssues
 					.add("Please provide your current employment sector under  the specialization tab");

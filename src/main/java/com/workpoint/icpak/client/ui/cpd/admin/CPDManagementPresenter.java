@@ -15,7 +15,6 @@ import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -52,8 +51,7 @@ import com.workpoint.icpak.client.ui.events.TableActionEvent;
 import com.workpoint.icpak.client.ui.events.TableActionEvent.TableActionHandler;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
 import com.workpoint.icpak.client.ui.popup.GenericPopupPresenter;
-import com.workpoint.icpak.client.ui.security.AdminGateKeeper;
-import com.workpoint.icpak.client.ui.security.LoginGateKeeper;
+import com.workpoint.icpak.client.ui.security.CPDManagementGateKeeper;
 import com.workpoint.icpak.client.ui.util.DateRange;
 import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.shared.api.MemberResource;
@@ -128,13 +126,13 @@ public class CPDManagementPresenter
 
 	@ProxyCodeSplit
 	@NameToken(NameTokens.cpdmgt)
-	@UseGatekeeper(LoginGateKeeper.class)
+	@UseGatekeeper(CPDManagementGateKeeper.class)
 	public interface ICPDManagementProxy extends
 			TabContentProxyPlace<CPDManagementPresenter> {
 	}
 
 	@TabInfo(container = HomePresenter.class)
-	static TabData getTabLabel(AdminGateKeeper adminGatekeeper) {
+	static TabData getTabLabel(CPDManagementGateKeeper adminGatekeeper) {
 		TabDataExt data = new TabDataExt("C.P.D Management",
 				"fa fa-graduation-cap", 5, adminGatekeeper, true);
 		return data;
@@ -324,7 +322,6 @@ public class CPDManagementPresenter
 
 	protected void showCreatePopup() {
 		final RecordCPD cpdRecord = new RecordCPD();
-
 		// Upload Mechanism
 		cpdRecord.getStartUploadButton().addClickHandler(new ClickHandler() {
 			@Override
@@ -690,12 +687,30 @@ public class CPDManagementPresenter
 	public void onEditModel(EditModelEvent event) {
 	}
 
+	public void refreshIndividualMembersPage() {
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("refId", memberRefId);
+		params.put("p", "memberCPD");
+		PlaceRequest placeRequest = new PlaceRequest.Builder()
+				.nameToken(NameTokens.cpdmgt).with(params).build();
+		placeManager.revealPlace(placeRequest);
+	}
+
 	@Override
 	public void onTableAction(TableActionEvent event) {
 		if (event.getAction() == TableActionType.APPROVECPD) {
 			final CPDDto dto = (CPDDto) event.getModel();
 			saveRecord(dto);
+		} else if (event.getAction() == TableActionType.UPDATECPD) {
+			saveRecord((CPDDto) event.getModel());
+			refreshIndividualMembersPage();
+		} else if (event.getAction() == TableActionType.VIEWCPD) {
+			Map<String, String> params = new HashMap<String, String>();
+			params.put("refId", ((CPDDto) event.getModel()).getRefId());
+			params.put("p", "cpdReturns");
+			PlaceRequest placeRequest = new PlaceRequest.Builder()
+					.nameToken(NameTokens.cpdmgt).with(params).build();
+			placeManager.revealPlace(placeRequest);
 		}
 	}
-
 }

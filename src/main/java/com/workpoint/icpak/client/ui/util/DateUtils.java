@@ -22,8 +22,10 @@ public class DateUtils {
 	static String monthOnlyPattern = "MM";
 	static String monthDayYearPattern = "MMM d yyyy";
 	static String Time = "hh:mm a";
+	static String Time24 = "HH:MM";
 	static String MonthTime = "MMM d, hh:mm a";
 	static String shortTimeStamp = "yyyy-MM-dd";
+	static String fullHourMinuteStamp = "yyyy-MM-dd hh:mm";
 	static String fullTimeStamp = "yyyy-MM-dd hh:mm:ss";
 	static String ReadableTimeStamp = "dd/MM/yyyy hh:mm a";
 
@@ -47,6 +49,8 @@ public class DateUtils {
 			.getFormat(monthDayYearPattern);
 	public static final DateTimeFormat TIMEFORMAT12HR = DateTimeFormat
 			.getFormat(Time);
+	public static final DateTimeFormat TIMEFORMAT24HR = DateTimeFormat
+			.getFormat(Time24);
 	public static final DateTimeFormat MONTHTIME = DateTimeFormat
 			.getFormat(MonthTime);
 	public static final DateTimeFormat MONTHFORMAT = DateTimeFormat
@@ -55,6 +59,8 @@ public class DateUtils {
 			.getFormat(monthOnlyPattern);
 	public static final DateTimeFormat FULLTIMESTAMP = DateTimeFormat
 			.getFormat(fullTimeStamp);
+	public static final DateTimeFormat FULLHOURMINUTESTAMP = DateTimeFormat
+			.getFormat(fullHourMinuteStamp);
 	public static final DateTimeFormat READABLETIMESTAMP = DateTimeFormat
 			.getFormat(ReadableTimeStamp);
 

@@ -48,6 +48,9 @@
 					<li>
 						<d:ActionLink ui:field="aReject">Reject</d:ActionLink>
 					</li>
+					<li>
+						<d:ActionLink ui:field="aUndoApproval">Undo Approval</d:ActionLink>
+					</li>
 				</ul>
 			</div>
 		</g:HTMLPanel>

@@ -8,7 +8,6 @@ import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
@@ -100,6 +99,8 @@ public class MemberRegistrationView extends ViewImpl implements
 	LIElement liTab3;
 	@UiField
 	LIElement liTab4;
+	@UiField
+	LIElement liTabPayment;
 
 	@UiField
 	SpanElement spnNonPracticingFee;
@@ -152,6 +153,8 @@ public class MemberRegistrationView extends ViewImpl implements
 			Anchor selected = (Anchor) event.getSource();
 			selectedName = selected.getName();
 			selectCategory(selected);
+
+			// Window.alert(selectedName);
 		}
 	};
 
@@ -164,9 +167,9 @@ public class MemberRegistrationView extends ViewImpl implements
 		liElements.add(liTab2);
 		// liElements.add(liTab3);
 		liElements.add(liTab4);
+		liElements.add(liTabPayment);
 
 		aNonPractising.addClickHandler(selectHandler);
-		// aPractising.addClickHandler(selectHandler);
 		aOverseas.addClickHandler(selectHandler);
 		aAssociate.addClickHandler(selectHandler);
 
@@ -177,8 +180,11 @@ public class MemberRegistrationView extends ViewImpl implements
 		// .add(new PageElement(divProforma, "Proceed to Pay", liTab3));
 		pageElements.add(new PageElement(divPasswordConfiguration, null, null,
 				liTab4));
+		pageElements.add(new PageElement(divPayment, "Back To My Profile",
+				liTabPayment));
 
 		setActive(liElements.get(counter), pageElements.get(counter));
+
 		aBack.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -197,17 +203,13 @@ public class MemberRegistrationView extends ViewImpl implements
 		if (selectedName.equals("NonPractising")) {
 			removeActiveSelection();
 			selectCategory(ApplicationType.NON_PRACTISING);
-		} else if (selectedName.equals("Practising")) {
-			removeActiveSelection();
-			selectCategory(ApplicationType.PRACTISING);
 		} else if (selectedName.equals("Overseas")) {
 			removeActiveSelection();
-			selectCategory(ApplicationType.OVERSEAS);
+			selectCategory(ApplicationType.FOREIGN);
 		} else if (selectedName.equals("Associate")) {
 			removeActiveSelection();
 			selectCategory(ApplicationType.ASSOCIATE);
 		}
-
 		memberRegistrationForm.setType(type);
 	}
 
@@ -220,14 +222,7 @@ public class MemberRegistrationView extends ViewImpl implements
 			divNonPracticing.addClassName("active");
 			break;
 
-		case PRACTISING:
-			// Deactivated
-			spnSelected.setInnerText("You have selected: "
-					+ "Practising Member");
-			// spnSelected.addClassName("active");
-			break;
-
-		case OVERSEAS:
+		case FOREIGN:
 			spnSelected.setInnerText("You have selected: " + "Overseas Member");
 			divOverseas.addClassName("active");
 			break;
@@ -275,10 +270,16 @@ public class MemberRegistrationView extends ViewImpl implements
 		setButtons(page);
 		liElement.addClassName("active");
 		page.getElement().addClassName("active");
+
+		/*
+		 * Payment Li is initially hidden
+		 */
+		if (counter == 3) {
+			liElement.removeClassName("hide");
+		}
 	}
 
 	public ApplicationFormHeaderDto getApplicationForm() {
-
 		return memberRegistrationForm.getApplicationForm();
 	}
 
@@ -295,6 +296,7 @@ public class MemberRegistrationView extends ViewImpl implements
 		divPackage.removeClassName("active");
 		divPayment.removeClassName("active");
 		divCategories.removeClassName("active");
+		divPasswordConfiguration.removeClassName("active");
 		divProforma.removeClassName("active");
 	}
 
@@ -341,7 +343,12 @@ public class MemberRegistrationView extends ViewImpl implements
 				isValid = false;
 			}
 		}
-
+		// show/hide isValid Panel
+		if (isValid) {
+			issuesPanel.addStyleName("hide");
+		} else {
+			issuesPanel.removeStyleName("hide");
+		}
 		return isValid;
 	}
 
@@ -356,7 +363,7 @@ public class MemberRegistrationView extends ViewImpl implements
 								.getRenewalAmount()) + "");
 				spnNonPracticingCondition.setInnerText(dto.getDescription());
 				break;
-			case OVERSEAS:
+			case FOREIGN:
 				spnOverseasFee.setInnerText(NumberUtils.CURRENCYFORMAT
 						.format(dto.getApplicationAmount()) + "");
 				spnOverseasSubscription.setInnerText(NumberUtils.CURRENCYFORMAT
@@ -370,6 +377,8 @@ public class MemberRegistrationView extends ViewImpl implements
 						.setInnerText(NumberUtils.CURRENCYFORMAT.format(dto
 								.getRenewalAmount()) + "");
 				spnAssociateCondition.setInnerText(dto.getDescription());
+				break;
+			default:
 				break;
 			}
 		}
@@ -427,8 +436,10 @@ public class MemberRegistrationView extends ViewImpl implements
 
 	@Override
 	public void bindInvoice(InvoiceDto invoice) {
-		proformaInv.clearRows();
-		proformaInv.setInvoice(invoice);
+		// proformaInv.clearRows();
+		// proformaInv.setInvoice(invoice);
+		
+		
 	}
 
 	public Anchor getActivateAccLink() {

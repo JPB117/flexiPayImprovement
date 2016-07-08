@@ -92,7 +92,7 @@ public class MemberRegistrationForm extends Composite {
 
 	private static MemberRegistrationFormUiBinder uiBinder = GWT
 			.create(MemberRegistrationFormUiBinder.class);
-	private int counter;
+	private int counter = 1;
 	private ApplicationType type;
 	private ApplicationFormHeaderDto application;
 
@@ -171,6 +171,12 @@ public class MemberRegistrationForm extends Composite {
 				isValid = false;
 				issuesPanel.addError("Contact Email is required.");
 			}
+
+			if (txtPostalCode.getValue().length() > 10) {
+				isValid = false;
+				issuesPanel
+						.addError("Please enter a correct postal Code(Less than 10 digits)");
+			}
 			if (lstGender.getValue() == null) {
 				isValid = false;
 				issuesPanel.addError("Gender is required");
@@ -204,31 +210,35 @@ public class MemberRegistrationForm extends Composite {
 	}
 
 	public ApplicationFormHeaderDto getApplicationForm() {
-		ApplicationFormHeaderDto dto = new ApplicationFormHeaderDto();
-		dto.setSurname(txtSurname.getValue());
-		dto.setOtherNames(txtOtherNames.getValue());
-		dto.setEmail(txtEmailAddress.getValue());
-		dto.setEmployer(txtEmployer.getValue());
-		dto.setCity1(txtCity.getValue());
-		dto.setCountry(lstCountry.getValue() == null ? "" : lstCountry
+		if (application == null) {
+			application = new ApplicationFormHeaderDto();
+		}
+		application.setSurname(txtSurname.getValue());
+		application.setOtherNames(txtOtherNames.getValue());
+		application.setEmail(txtEmailAddress.getValue());
+		application.setEmployer(txtEmployer.getValue());
+		application.setCity1(txtCity.getValue());
+		application.setCountry(lstCountry.getValue() == null ? "" : lstCountry
 				.getValue().getDisplayName());
-		dto.setAddress1(txtAddress.getValue());
-		dto.setTelephone1(txtPhone.getValue());
-		dto.setPostCode(txtPostalCode.getValue());
-		dto.setApplicationType(type);
-		dto.setDob(dtDOB.getValueDate());
-		dto.setGender(lstGender.getValue());
-		dto.setResidence(txtResidence.getValue());
-		dto.setIdNumber(txtIdNo.getValue());
-		dto.setBranch(lstBranch.getValue().getName());
-		dto.setContactPerson(txtContactName.getValue());
-		dto.setContactAddress(txtContactResidence.getValue());
-		dto.setContactTelephone(txtContactTelephone.getValue());
-		dto.setContactEmail(txtContactEmail.getValue());
-		dto.setOffence(txtOffence.getValue());
-		dto.setConvictionDateAndPlace(txtDateAndPlace.getValue());
-		dto.setSentence(txtSentence.getValue());
-		return dto;
+		application.setAddress1(txtAddress.getValue());
+		application.setTelephone1(txtPhone.getValue());
+		application.setPostCode(txtPostalCode.getValue());
+		application.setApplicationType(type);
+		application.setDob(dtDOB.getValueDate());
+		application.setGender(lstGender.getValue());
+		application.setResidence(txtResidence.getValue());
+		application.setIdNumber(txtIdNo.getValue());
+		if (lstBranch.getValue() != null) {
+			application.setBranch(lstBranch.getValue().getName());
+		}
+		application.setContactPerson(txtContactName.getValue());
+		application.setContactAddress(txtContactResidence.getValue());
+		application.setContactTelephone(txtContactTelephone.getValue());
+		application.setContactEmail(txtContactEmail.getValue());
+		application.setOffence(txtOffence.getValue());
+		application.setConvictionDateAndPlace(txtDateAndPlace.getValue());
+		application.setSentence(txtSentence.getValue());
+		return application;
 	}
 
 	public void setEmailValid(boolean isEmailValid) {
@@ -315,6 +325,12 @@ public class MemberRegistrationForm extends Composite {
 		txtAddress.setValue(null);
 		txtPostalCode.setValue(null);
 		type = null;
+	}
+
+	public void clearAttachmentWidget() {
+		uploaderIdCopy.clearImages();
+		uploaderIdCopy.clear();
+
 	}
 
 	public void setCountries(List<Country> countries) {

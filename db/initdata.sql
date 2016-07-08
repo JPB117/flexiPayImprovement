@@ -1,9 +1,8 @@
 insert into ApplicationCategory(refid,type,applicationamount,renewalamount,description) values 
-					('0CigiyXk0zGlkOXw',0,26000,10000,'All CPA graduates who have experience of 3 years or more'),
-					('kmkfda3412idfafk',4,26000,7750,'CPA graduates or Holders of Foreign Accountancy with less than 3 years experience in Local law, Taxation, Accounting/auditing'),
-					('ag4m4bvZnvgOpB0m',1,10000,20000,'All existing ICPAK members who have experience of an additional 2 years or more in external audit supervised by a licensed practising member of ICPAK.'),
-					('AssQn27RNrb1e2te',2,26000,7750,'This admits members who are non-residents of Kenya.'), 
-					('bo4seWbmA7xWi8FJ',3,2500,2000,'CPA graduates with less than 3 years experience in; Local law, Taxation, Accounting/auditing');
+					('0CigiyXk0zGlkOXw','NON_PRACTISING',26000,10000,'CPA graduates with less than 3 years experience in; Local law, Taxation, Accounting/auditing'),
+					('kmkfda3412idfafk','ASSOCIATE',2500,2000,'CPA graduates or Holders of Foreign Accountancy with less than 3 years experience in Local law, Taxation, Accounting/auditing'),
+					('ag4m4bvZnvgOpB0m','PRACTISING',10000,20000,'All existing ICPAK members who have experience of an additional 2 years or more in external audit supervised by a licensed practising member of ICPAK.'),
+					('AssQn27RNrb1e2te','FOREIGN',26000,7750,'This admits members who are non-residents of Kenya.');
 
 INSERT INTO `user` (`id`, `created`, `createdBy`, `isActive`, `refId`, `updated`, `updatedBy`, `address`, `city`, `email`, `memberId`, `nationality`, `password`, `phoneNumber`, `residence`, `ageGroup`, `Birth Cert`, `Blood Group`, `delegateId`, `Date Of Birth`, `firstName`, `Name`, `Gender`, `Height`, `ID No`, `isOverseas`, `lastName`, `Marital Status`, `Citizenship`, `Name 2`, `Payments By`, `Picture`, `Religion`, `Search Name`, `title`, `Student Type`, `Weight`, `username`, `status`) VALUES
 (33, '2015-07-12 12:10:45', NULL, 1, 'gNtLJ03iEfS3LCac', '2015-07-12 12:11:56', NULL, 'P.o Box 34556', 'Nrb', 'kimani@wira.io', NULL, NULL, 'e6c3da5b206634d7f3f3586d747ffdb36b5c675757b380c6a5fe5c570c714349', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Kimani', NULL, NULL, '0.00000000000000000000', NULL, b'0', 'Muritu', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0.00000000000000000000', 'kimani@wira.io', 'NEWACC'),

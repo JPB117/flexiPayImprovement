@@ -39,8 +39,9 @@ public class BookingsView extends ViewImpl implements
 	public BookingsView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
 		tblEvents.setHeaders(Arrays.asList("Event Dates", "Event Name",
-				"Event Location", "CPD Hours", "Payment Status",
-				"Accommodation"));
+				"Event Location", "CPD Hours", "Accommodation",
+				"Booking Status", "Payment Status", "Attendance Status"));
+		tblEvents.setSearchSectionVisible(false);
 	}
 
 	@Override
@@ -60,21 +61,36 @@ public class BookingsView extends ViewImpl implements
 							new InlineLabel(dto.getEventName()),
 							new InlineLabel(dto.getLocation()),
 							new InlineLabel(dto.getCpdHours()),
+							new InlineLabel(dto.getAccommodation()),
+							setBookingStatus(dto.getBookingStatus()),
 							setPaymentStatus(dto.getPaymentStatus()),
-							new InlineLabel(dto.getAccommodation()));
+							setAttendance(dto.getAttendance()));
 		}
+	}
+
+	private InlineLabel setBookingStatus(Integer bookingStatus) {
+		InlineLabel label = new InlineLabel();
+		if (bookingStatus != null) {
+			if (bookingStatus == 1) {
+				label.setStyleName("label label-success");
+				label.getElement().setInnerText("Active");
+
+			} else {
+				label.setStyleName("label label-danger");
+				label.getElement().setInnerText("Cancelled");
+			}
+		}
+		return label;
 	}
 
 	private InlineLabel setAttendance(AttendanceStatus attendance) {
 		InlineLabel label = new InlineLabel();
+		label.getElement().setInnerText(attendance.name());
 		if (attendance != null) {
-			label.getElement().setInnerText(attendance.getDisplayName());
 			if (attendance == AttendanceStatus.NOTATTENDED) {
-				label.removeStyleName("label label-success");
-				label.addStyleName("label label-danger");
+				label.setStyleName("label label-danger");
 			} else {
-				label.removeStyleName("label label-danger");
-				label.addStyleName("label label-success");
+				label.setStyleName("label label-success");
 			}
 		}
 		return label;
@@ -85,11 +101,9 @@ public class BookingsView extends ViewImpl implements
 		if (paymentStatus != null) {
 			label.getElement().setInnerText(paymentStatus.name());
 			if (paymentStatus == PaymentStatus.NOTPAID) {
-				label.removeStyleName("label label-success");
-				label.addStyleName("label label-danger");
+				label.setStyleName("label label-danger");
 			} else {
-				label.removeStyleName("label label-danger");
-				label.addStyleName("label label-success");
+				label.setStyleName("label label-success");
 			}
 		}
 		return label;

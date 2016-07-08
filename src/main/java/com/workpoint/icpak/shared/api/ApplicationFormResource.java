@@ -26,7 +26,9 @@ public interface ApplicationFormResource extends BaseResource {
 	public List<ApplicationFormHeaderDto> getAll(
 			@QueryParam("offset") Integer offset,
 			@QueryParam("limit") Integer limit,
-			@QueryParam("searchTerm") String searchTerm);
+			@QueryParam("searchTerm") String searchTerm,
+			@QueryParam("paymentStatus") String paymentStatus,
+			@QueryParam("applicationStatus") String applicationStatus);
 
 	@GET
 	@Path("/summary")
@@ -85,64 +87,15 @@ public interface ApplicationFormResource extends BaseResource {
 
 	@GET
 	@Path("/searchCount")
-	public Integer getSearchCount(@QueryParam("searchTerm") String searchTerm);
+	public Integer getSearchCount(@QueryParam("searchTerm") String searchTerm,
+			@QueryParam("paymentStatus") String paymentStatus,
+			@QueryParam("applicationStatus") String appStatus);
 
-	/**
-	 * Member CPD
-	 * 
-	 * @param resource
-	 * @return
-	 */
-	// @Path("/{applicationId}/cpd")
-	// public CPDResource bookings(@InjectParam CPDResource resource){
-	// return resource;
-	// }
+	@POST
+	@Path("/subscribe/{applicationRefId}/{branchName}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public String subscribeToBranch(
+			@PathParam("applicationRefId") String applicationRefId,
+			@PathParam("branchName") String branchName);
 
-	/**
-	 * Member Education
-	 * 
-	 * @param resource
-	 * @return
-	 */
-	// @Path("/{applicationId}/education")
-	// public EducationResource education(@InjectParam EducationResource
-	// resource){
-	// return resource;
-	// }
-
-	/**
-	 * Member Training And Experience
-	 * 
-	 * @param resource
-	 * @return
-	 */
-	// @Path("/{applicationId}/training")
-	// public TrainingAndExperienceResource bookings(@InjectParam
-	// TrainingAndExperienceResource resource){
-	// return resource;
-	// }s
-
-	/**
-	 * Member Training And Experience
-	 * 
-	 * @param resource
-	 * @return
-	 */
-	// @Path("/{applicationId}/specialization")
-	// public SpecializationResource bookings(@InjectParam
-	// SpecializationResource resource){
-	// return resource;
-	// }
-
-	/**
-	 * Member Criminal Offenses
-	 * 
-	 * @param resource
-	 * @return
-	 */
-	// @Path("/{applicationId}/offenses")
-	// public CriminalOffensesResource bookings(@InjectParam
-	// CriminalOffensesResource resource){
-	// return resource;
-	// }
 }

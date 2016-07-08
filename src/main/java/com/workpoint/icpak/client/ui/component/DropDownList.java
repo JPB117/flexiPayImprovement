@@ -169,4 +169,12 @@ public class DropDownList<T extends Listable> extends Composite implements
 		this.aggregationGridRow = aggregationGridRow;
 
 	}
+
+	public void setEnabled(boolean isEnabled) {
+		if (isEnabled) {
+			listBox.getElement().removeAttribute("disabled");
+		} else {
+			listBox.getElement().setAttribute("disabled", "disabled");
+		}
+	}
 }

@@ -6,7 +6,6 @@ import java.util.List;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.GwtEvent.Type;
@@ -32,7 +31,6 @@ import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.workpoint.icpak.client.place.NameTokens;
 import com.workpoint.icpak.client.service.AbstractAsyncCallback;
-import com.workpoint.icpak.client.service.ServiceCallback;
 import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.TextField;
 import com.workpoint.icpak.client.ui.error.ErrorPresenter;
@@ -121,7 +119,7 @@ public class MemberRegistrationPresenter
 
 	IndirectProvider<ErrorPresenter> errorFactory;
 
-	private String applicationRefId;
+	private String applicationRefId = null;
 
 	private ResourceDelegate<UsersResource> usersDelegate;
 
@@ -168,7 +166,6 @@ public class MemberRegistrationPresenter
 
 		getView().getEmail().addValueChangeHandler(
 				new ValueChangeHandler<String>() {
-
 					@Override
 					public void onValueChange(ValueChangeEvent<String> event) {
 						String email = event.getValue();
@@ -179,7 +176,7 @@ public class MemberRegistrationPresenter
 		getView().getANext().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				if (getView().isValid() || applicationRefId != null) {
+				if (getView().isValid()) {
 					if (getView().getCounter() == 1) {
 						submit(getView().getApplicationForm());
 					} else if (getView().getCounter() == 2) {
@@ -191,9 +188,8 @@ public class MemberRegistrationPresenter
 							Window.alert("Invoice details are null!");
 						}
 					} else if (getView().getCounter() == 3) {
-						getView().getANext().setHref(
-								"#activateacc;uid="
-										+ applicationDetails.getUserRefId());
+						// Activating account
+						getView().getANext().setHref("#profile");
 					}
 
 					else {
@@ -202,6 +198,8 @@ public class MemberRegistrationPresenter
 
 				} else if (getView().getCounter() == 1) {
 					getView().showError("Kindly select a category");
+				} else {
+					// Window.alert("Either the form is not valid or app refId is null");
 				}
 
 			}
@@ -217,25 +215,25 @@ public class MemberRegistrationPresenter
 
 	@Override
 	public void onError(final ErrorEvent event) {
-		addToPopupSlot(null);
-		errorFactory.get(new ServiceCallback<ErrorPresenter>() {
-			@Override
-			public void processResult(ErrorPresenter result) {
-				String message = event.getMessage();
-
-				result.setMessage(message, event.getId());
-
-				MemberRegistrationPresenter.this.addToPopupSlot(result);
-
-			}
-		});
+		// addToPopupSlot(null);
+		/*
+		 * errorFactory.get(new ServiceCallback<ErrorPresenter>() {
+		 * 
+		 * @Override public void processResult(ErrorPresenter result) { String
+		 * message = event.getMessage();
+		 * 
+		 * result.setMessage(message, event.getId());
+		 * 
+		 * MemberRegistrationPresenter.this.addToPopupSlot(result);
+		 * 
+		 * } });
+		 */
 	}
 
 	private ApplicationFormHeaderDto applicationDetails;
 
 	protected void submit(ApplicationFormHeaderDto applicationForm) {
 		getView().setLoadingState((ActionLink) getView().getANext(), true);
-
 		getView().showmask(true);
 
 		AbstractAsyncCallback<ApplicationFormHeaderDto> callback = new AbstractAsyncCallback<ApplicationFormHeaderDto>() {
@@ -285,12 +283,20 @@ public class MemberRegistrationPresenter
 			public void onSuccess(InvoiceDto invoice) {
 				MemberRegistrationPresenter.this.invoice = invoice;
 				getView().bindInvoice(invoice);
+				if (invoice.getDocumentNo() != null) {
+					paymentPresenter.bindTransaction(invoice);
+				}
+
+				if (applicationDetails.getRefId() != null) {
+					// paymentPresenter.setAttachmentUploadContext(
+					// applicationDetails.getRefId(), "application");
+				}
 			}
 		}).getInvoice(invoiceRef);
 
 	}
 
-	protected void checkExists(String email) {
+	protected void checkExists(final String email) {
 		getView().setEmailValid(true);
 
 		if (applicationRefId != null) {
@@ -298,7 +304,6 @@ public class MemberRegistrationPresenter
 		}
 
 		usersDelegate.withCallback(new AbstractAsyncCallback<UserDto>() {
-
 			@Override
 			public void onSuccess(UserDto result) {
 				getView().setEmailValid(false);
@@ -307,7 +312,6 @@ public class MemberRegistrationPresenter
 			@Override
 			public boolean handleCustomError(Response aResponse) {
 				int code = aResponse.getStatusCode();
-				String message = aResponse.getText();
 				if (code == 404) {
 					getView().setEmailValid(true); // The email address does not
 													// exist in our database as
@@ -315,24 +319,23 @@ public class MemberRegistrationPresenter
 					return false;
 				}
 
-				/*
-				 * Something went wrong on the server side while checking if the
-				 * email exists esp. duplicate entries errors
-				 * (NonUniqueResultExceptions)
-				 */
+				if (code == 500) {
+					/*
+					 * Something went wrong on the server side while checking if
+					 * the email exists esp. duplicate entries errors
+					 * (NonUniqueResultExceptions)
+					 */
 
-				/*
-				 * Do not allow the user to continue lest they input duplicate
-				 * records
-				 */
-				getView().setEmailValid(false);
-				 
+					/*
+					 * Do not allow the user to continue lest they input
+					 * duplicate records
+					 */
+					getView().setEmailValid(false);
+					return false;
+				}
 
-				/*
-				 * Add an error message
-				 */
-				getView().getRegistrationForm().addError(message);
 				return false;
+
 			}
 		}).getById(email);
 	}
@@ -340,9 +343,7 @@ public class MemberRegistrationPresenter
 	@Override
 	public void prepareFromRequest(PlaceRequest request) {
 		super.prepareFromRequest(request);
-
 		applicationRefId = request.getParameter("applicationId", null);
-
 		// Countries
 		countriesResource.withCallback(
 				new AbstractAsyncCallback<List<Country>>() {
@@ -360,9 +361,7 @@ public class MemberRegistrationPresenter
 				}).getAll();
 
 		if (applicationRefId != null) {
-			getView().next();
-			getView().next();
-			getView().setCounter(2);
+			getView().setCounter(3);
 			loadApplication(applicationRefId);
 		}
 
@@ -376,12 +375,11 @@ public class MemberRegistrationPresenter
 	}
 
 	private void loadApplication(String applicationId) {
-
-		// this.re
 		applicationDelegate.withCallback(
 				new AbstractAsyncCallback<ApplicationFormHeaderDto>() {
 					@Override
 					public void onSuccess(ApplicationFormHeaderDto dto) {
+						applicationDetails = dto;
 						getView().bindForm(dto);
 						getInvoice(dto.getInvoiceRef());
 					}

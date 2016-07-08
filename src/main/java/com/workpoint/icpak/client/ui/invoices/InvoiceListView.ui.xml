@@ -11,7 +11,9 @@
 		<g:HTMLPanel styleName="content-wrapper ng-scope ng-fadeInUp"
 			ui:field="divMainContainer">
 			<h3 class="ng-scope">
-				Payment Summary
+				Payment Summary(
+				<span ui:field="spnDates"></span>
+				)
 			</h3>
 
 			<div class="main-content">
@@ -25,7 +27,8 @@
 					</div>
 
 					<div class="col-sm-12">
-						<p:TransactionsHeader ui:field="headerContainer" styleName="hide">
+						<p:TransactionsHeader ui:field="headerContainer"
+							styleName="hide">
 						</p:TransactionsHeader>
 					</div>
 				</g:HTMLPanel>

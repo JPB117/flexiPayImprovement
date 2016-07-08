@@ -4,7 +4,7 @@ import java.util.Date;
 
 import com.workpoint.icpak.shared.model.PaymentStatus;
 import com.workpoint.icpak.shared.model.SerializableObj;
-import com.workpoint.icpak.shared.trx.TransactionDto;
+import com.workpoint.icpak.shared.trx.OldTransactionDto;
 
 public class DelegateDto extends SerializableObj {
 
@@ -16,6 +16,8 @@ public class DelegateDto extends SerializableObj {
 	private String companyName;
 	private String contactName;
 	private String contactEmail;
+	private String contactPhoneNumber;
+	private String delegatePhoneNumber;
 	private String memberNo;
 	private String memberRefId;
 	private String title;
@@ -26,12 +28,16 @@ public class DelegateDto extends SerializableObj {
 	private AccommodationDto accommodation;
 	private Double amount;
 	private AttendanceStatus attendance;
-	private TransactionDto transaction;
+	private OldTransactionDto transaction;
 	private DelegateType delegateType;
 	private String bookingId;
 	private String bookingRefId;
+	private Integer isBookingActive;
 	private String eventRefId;
-	private PaymentStatus paymentStatus;
+	// PaymentStatus for the booking -Updated by Online Payment methods
+	private PaymentStatus bookingPaymentStatus;
+	// PaymentStatus for the booking -Updated by Online Payment methods
+	private PaymentStatus delegatePaymentStatus;
 	public String courseId;
 	private String ern;
 	private String hotel;
@@ -42,6 +48,10 @@ public class DelegateDto extends SerializableObj {
 	private int isCredit;
 	private String contact;
 	private Date bookingDate;
+	private Date lastUpdateDate;
+	private String memberQrCode;
+	private String invoiceNo;
+	private String updatedBy;
 
 	public String getReceiptNo() {
 		return receiptNo;
@@ -154,6 +164,14 @@ public class DelegateDto extends SerializableObj {
 		return delegateType;
 	}
 
+	public String getInvoiceNo() {
+		return invoiceNo;
+	}
+
+	public void setInvoiceNo(String invoiceNo) {
+		this.invoiceNo = invoiceNo;
+	}
+
 	public void setDelegateType(DelegateType delegateType) {
 		this.delegateType = delegateType;
 	}
@@ -260,20 +278,20 @@ public class DelegateDto extends SerializableObj {
 		this.clearanceNo = clearanceNo;
 	}
 
-	public TransactionDto getTransaction() {
+	public OldTransactionDto getTransaction() {
 		return transaction;
 	}
 
-	public void setTransaction(TransactionDto transaction) {
+	public void setTransaction(OldTransactionDto transaction) {
 		this.transaction = transaction;
 	}
 
-	public PaymentStatus getPaymentStatus() {
-		return paymentStatus;
+	public PaymentStatus getBookingPaymentStatus() {
+		return bookingPaymentStatus;
 	}
 
-	public void setPaymentStatus(PaymentStatus paymentStatus) {
-		this.paymentStatus = paymentStatus;
+	public void setBookingPaymentStatus(PaymentStatus paymentStatus) {
+		this.bookingPaymentStatus = paymentStatus;
 	}
 
 	public Date getCreatedDate() {
@@ -298,6 +316,62 @@ public class DelegateDto extends SerializableObj {
 
 	public void setFullName(String fullName) {
 		this.fullName = fullName;
+	}
+
+	public String getMemberQrCode() {
+		return memberQrCode;
+	}
+
+	public void setMemberQrCode(String memberQrCode) {
+		this.memberQrCode = memberQrCode;
+	}
+
+	public String getContactPhoneNumber() {
+		return contactPhoneNumber;
+	}
+
+	public void setContactPhoneNumber(String contactPhoneNumber) {
+		this.contactPhoneNumber = contactPhoneNumber;
+	}
+
+	public String getDelegatePhoneNumber() {
+		return delegatePhoneNumber;
+	}
+
+	public void setDelegatePhoneNumber(String delegatePhoneNumber) {
+		this.delegatePhoneNumber = delegatePhoneNumber;
+	}
+
+	public Integer getIsBookingActive() {
+		return isBookingActive;
+	}
+
+	public void setIsBookingActive(Integer isBookingActive) {
+		this.isBookingActive = isBookingActive;
+	}
+
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
+
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+
+	public PaymentStatus getDelegatePaymentStatus() {
+		return delegatePaymentStatus;
+	}
+
+	public void setDelegatePaymentStatus(PaymentStatus delegatePaymentStatus) {
+		this.delegatePaymentStatus = delegatePaymentStatus;
+	}
+
+	public Date getLastUpdateDate() {
+		return lastUpdateDate;
+	}
+
+	public void setLastUpdateDate(Date lastUpdateDate) {
+		this.lastUpdateDate = lastUpdateDate;
 	}
 
 }

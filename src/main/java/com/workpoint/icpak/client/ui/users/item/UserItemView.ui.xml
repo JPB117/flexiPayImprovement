@@ -11,7 +11,7 @@
 		<g:HTMLPanel ui:field="panelFullName" styleName="td"></g:HTMLPanel>
 		<g:HTMLPanel ui:field="panelEmail" styleName="td"></g:HTMLPanel>
 		<g:HTMLPanel ui:field="panelGroups" styleName="td"></g:HTMLPanel>
-		<g:HTMLPanel ui:field="panelLMSStatus" styleName="td">
+		<g:HTMLPanel ui:field="panelLMSStatus" styleName="td hide">
 			<span ui:field="spnLMSStatus" class="label" data-toggle="popover"
 				data-trigger="hover" title="Reasons for this:"></span>
 			<d:PopOver></d:PopOver>
@@ -29,7 +29,7 @@
 					title="Download Member Statements">
 					<i class="fa fa-money helper-14"></i>
 				</g:Anchor>
-				<g:Anchor styleName="btn btn-success" ui:field="almsReview"
+				<g:Anchor styleName="btn btn-success hide" ui:field="almsReview"
 					title="Review LMS Status">
 					<i class="fa fa-money helper-14"></i>
 				</g:Anchor>

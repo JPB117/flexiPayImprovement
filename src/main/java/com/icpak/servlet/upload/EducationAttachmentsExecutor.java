@@ -30,12 +30,13 @@ public class EducationAttachmentsExecutor extends FileExecutor {
 
 	@Inject
 	AttachmentsDao attachmentsDao;
-	
+
 	@Inject
 	ApplicationSettings settings;
 
 	@Override
-	String execute(HttpServletRequest request, List<FileItem> sessionFiles) throws UploadActionException {
+	String execute(HttpServletRequest request, List<FileItem> sessionFiles)
+			throws UploadActionException {
 		String err = null;
 		String educationRefId = request.getParameter("educationRefId");
 		assert educationRefId != null;
@@ -54,16 +55,17 @@ public class EducationAttachmentsExecutor extends FileExecutor {
 					attachment.setId(null);
 					attachment.setName(name);
 					attachment.setSize(size);
-					String fileName = getFilePath() + File.separator + IDUtils.generateId() + "-EDUCATION-" + name;
+					String fileName = getFilePath() + File.separator
+							+ IDUtils.generateId() + "-EDUCATION-" + name;
 					attachment.setFileName(fileName);
-					ApplicationFormEducational educationDetails = dao.findByRefId(educationRefId,
-							ApplicationFormEducational.class);
+					ApplicationFormEducational educationDetails = dao
+							.findByRefId(educationRefId,
+									ApplicationFormEducational.class);
 					assert educationDetails != null;
 					attachment.setEducation(educationDetails);
 					attachmentsDao.save(attachment);
-					
-					IOUtils.write(item.get(), new FileOutputStream(new File(fileName)));
-					
+					IOUtils.write(item.get(), new FileOutputStream(new File(
+							fileName)));
 					registerFile(request, fieldName, attachment.getId());
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -77,18 +79,18 @@ public class EducationAttachmentsExecutor extends FileExecutor {
 	public void removeItem(HttpServletRequest request, String fieldName) {
 		Hashtable<String, Long> receivedFiles = getSessionFiles(request, false);
 		Long fileId = receivedFiles.get(fieldName);
-		
+
 		Attachment attachment = null;
 		File file = null;
 
 		if (fileId != null)
 			attachment = attachmentsDao.getById(Attachment.class, fileId);
-			file = new File(attachment.getFileName());
-			file.delete();
-			attachmentsDao.delete(attachment);
+		file = new File(attachment.getFileName());
+		file.delete();
+		attachmentsDao.delete(attachment);
 	}
-	
-	private String getFilePath(){
+
+	private String getFilePath() {
 		return settings.getProperty("upload_path");
 	}
 

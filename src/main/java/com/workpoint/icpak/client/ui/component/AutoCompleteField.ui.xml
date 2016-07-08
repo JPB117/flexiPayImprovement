@@ -1,7 +1,8 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-	xmlns:g="urn:import:com.google.gwt.user.client.ui"
-	xmlns:d='urn:import:com.workpoint.icpak.client.ui.component'>
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d='urn:import:com.workpoint.icpak.client.ui.component'>
 	<g:HTMLPanel styleName="dropdown" ui:field="container">
+		<span class="fa fa-spinner fa-pulse  pull-right hide" ui:field="spnSpinner"
+			style="margin-top:5px;"></span>
 	</g:HTMLPanel>
 </ui:UiBinder> 

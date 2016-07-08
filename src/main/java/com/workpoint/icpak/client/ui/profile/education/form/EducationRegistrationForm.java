@@ -93,12 +93,10 @@ public class EducationRegistrationForm extends Composite {
 			isValid = false;
 			issues.addError("Institution is mandatory");
 		}
-
 		if (isNullOrEmpty(txtExaminingBody.getValue())) {
 			isValid = false;
 			issues.addError("Examining Body is mandatory");
 		}
-
 		if (dtStartDate.getValueDate() == null) {
 			isValid = false;
 			issues.addError("Start date is mandatory");
@@ -107,7 +105,6 @@ public class EducationRegistrationForm extends Composite {
 			isValid = false;
 			issues.addError("Date Completed is mandatory");
 		}
-
 		if (isNullOrEmpty(txtClassOrDivision.getValue())) {
 			isValid = false;
 			issues.addError("Class/Division is mandatory");
@@ -116,11 +113,17 @@ public class EducationRegistrationForm extends Composite {
 			isValid = false;
 			issues.addError("Certficate Awarded is mandatory");
 		}
-
 		return isValid;
 	}
 
 	public void clear() {
+		clear(false);
+	}
+
+	public void clear(boolean clearDto) {
+		if (clearDto) {
+			educationDto = new ApplicationFormEducationalDto();
+		}
 		txtInstitution.setValue("");
 		txtExaminingBody.setValue("");
 		dtStartDate.clear();
@@ -130,8 +133,8 @@ public class EducationRegistrationForm extends Composite {
 		txtClassOrDivision.setValue("");
 		lstCertificateAwarded.setValue(null);
 		panelPreviousAttachments.clear();
+		uploader.clearImages();
 		showUploadPanel(false);
-		uploader.clear();
 	}
 
 	public ApplicationFormEducationalDto getEducationDto() {

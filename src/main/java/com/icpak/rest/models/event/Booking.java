@@ -10,7 +10,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -59,20 +58,33 @@ public class Booking extends PO {
 	private String eventId;
 	private String status; // DRAFT/ PAID
 	private int delegatesCount;
-	// Payment
+
 	@Column(unique = true)
 	private String paymentRef; // TrxNumber
 	private Date paymentDate;
 	private Double amountDue;
-	private PaymentStatus paymentStatus = PaymentStatus.NOTPAID;
+	private Integer totalPaid;
+	private Integer totalWithAccomodation;
+	private Integer totalAttended;
+	private Integer totalCancelled;
+	private Integer totalPaidMembers;
+	private Integer totalPaidNonMembers;
+	private Integer totalAccomodatedMembers;
+	private Integer totalAccomodatedNonMembers;
+	private Integer totalAttendedMembers;
+	private Integer totalAttendedNonMembers;
+	private Integer totalCancelledMembers;
+	private Integer totalCancelledNonMembers;
+	private Integer totalMembers;
+	private Integer totalNonMembers;
 
+	private PaymentStatus paymentStatus = PaymentStatus.NOTPAID;
 	@OneToMany(mappedBy = "booking", fetch = FetchType.LAZY, cascade = {
 			CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE,
 			CascadeType.REFRESH })
 	private Collection<Delegate> delegates = new HashSet<>();
 	@ManyToOne
 	private Event event;
-
 	private Date registrationDate = new Date();
 	private String memberId; // For Courses, may not have delegates
 
@@ -253,6 +265,8 @@ public class Booking extends PO {
 		dto.setPaymentStatus(paymentStatus);
 		dto.setRefId(getRefId());
 		dto.setStatus(status);
+		dto.setIsActive(getIsActive());
+		// dto.setInvoiceRef(invoiceRe);
 
 		return dto;
 	}
@@ -336,5 +350,118 @@ public class Booking extends PO {
 
 	public void setRegistrationDate(Date registrationDate) {
 		this.registrationDate = registrationDate;
+	}
+
+	public Integer getTotalPaid() {
+		return totalPaid;
+	}
+
+	public void setTotalPaid(Integer totalPaid) {
+		this.totalPaid = totalPaid;
+	}
+
+	public Integer getTotalWithAccomodation() {
+		return totalWithAccomodation;
+	}
+
+	public void setTotalWithAccomodation(Integer totalWithAccomodation) {
+		this.totalWithAccomodation = totalWithAccomodation;
+	}
+
+	public Integer getTotalAttended() {
+		return totalAttended;
+	}
+
+	public void setTotalAttended(Integer totalAttended) {
+		this.totalAttended = totalAttended;
+	}
+
+	public Integer getTotalCancelled() {
+		return totalCancelled;
+	}
+
+	public void setTotalCancelled(Integer totalCancelled) {
+		this.totalCancelled = totalCancelled;
+	}
+
+	public Integer getTotalPaidMembers() {
+		return totalPaidMembers;
+	}
+
+	public void setTotalPaidMembers(Integer totalPaidMembers) {
+		this.totalPaidMembers = totalPaidMembers;
+	}
+
+
+	public Integer getTotalAccomodatedMembers() {
+		return totalAccomodatedMembers;
+	}
+
+	public void setTotalAccomodatedMembers(Integer totalAccomodatedMembers) {
+		this.totalAccomodatedMembers = totalAccomodatedMembers;
+	}
+
+	public Integer getTotalAttendedMembers() {
+		return totalAttendedMembers;
+	}
+
+	public void setTotalAttendedMembers(Integer totalAttendedMembers) {
+		this.totalAttendedMembers = totalAttendedMembers;
+	}
+
+	public Integer getTotalCancelledMembers() {
+		return totalCancelledMembers;
+	}
+
+	public void setTotalCancelledMembers(Integer totalCancelledMembers) {
+		this.totalCancelledMembers = totalCancelledMembers;
+	}
+
+	public Integer getTotalMembers() {
+		return totalMembers;
+	}
+
+	public void setTotalMembers(Integer totalMembers) {
+		this.totalMembers = totalMembers;
+	}
+
+	public Integer getTotalNonMembers() {
+		return totalNonMembers;
+	}
+
+	public void setTotalNonMembers(Integer totalNonMembers) {
+		this.totalNonMembers = totalNonMembers;
+	}
+
+	public Integer getTotalAccomodatedNonMembers() {
+		return totalAccomodatedNonMembers;
+	}
+
+	public void setTotalAccomodatedNonMembers(Integer totalAccomodatedNonMembers) {
+		this.totalAccomodatedNonMembers = totalAccomodatedNonMembers;
+	}
+
+	public Integer getTotalAttendedNonMembers() {
+		return totalAttendedNonMembers;
+	}
+
+	public void setTotalAttendedNonMembers(Integer totalAttendedNonMembers) {
+		this.totalAttendedNonMembers = totalAttendedNonMembers;
+	}
+
+	public Integer getTotalCancelledNonMembers() {
+		return totalCancelledNonMembers;
+	}
+
+	public void setTotalCancelledNonMembers(Integer totalCancelledNonMembers) {
+		this.totalCancelledNonMembers = totalCancelledNonMembers;
+	}
+
+	public Integer getTotalPaidNonMembers() {
+		return totalPaidNonMembers;
+	}
+
+	public void setTotalPaidNonMembers(Integer totalPaidNonMembers) {
+		this.totalPaidNonMembers = totalPaidNonMembers;
 	}
 }

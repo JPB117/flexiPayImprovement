@@ -1,5 +1,7 @@
 package com.workpoint.icpak.client.ui.payment;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -7,10 +9,13 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewImpl;
+import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.payment.widget.PaymentWidget;
+import com.workpoint.icpak.shared.model.Country;
 import com.workpoint.icpak.shared.model.CreditCardDto;
 import com.workpoint.icpak.shared.model.CreditCardResponse;
 import com.workpoint.icpak.shared.model.InvoiceDto;
+import com.workpoint.icpak.shared.model.TransactionDto;
 
 public class PaymentView extends ViewImpl implements PaymentPresenter.MyView {
 
@@ -26,7 +31,7 @@ public class PaymentView extends ViewImpl implements PaymentPresenter.MyView {
 	}
 
 	@Override
-	public HasClickHandlers getPayButton() {
+	public ActionLink getPayButton() {
 		return panelPayment.getCardPayButton();
 	}
 
@@ -68,6 +73,41 @@ public class PaymentView extends ViewImpl implements PaymentPresenter.MyView {
 	@Override
 	public void bindTransation(InvoiceDto invoice) {
 		panelPayment.bindTransaction(invoice);
+	}
+
+	@Override
+	public void setAttachmentUploadContext(String applicationRefId, String type) {
+		// panelPayment.setAttachmentUploadContext(applicationRefId, type);
+	}
+
+	@Override
+	public HasClickHandlers getStartUploadButton() {
+		return panelPayment.getStartUploadButton();
+	}
+
+	@Override
+	public boolean isOfflineValid() {
+		return panelPayment.isOfflineValid();
+	}
+
+	@Override
+	public void showUploaderWidget(boolean show) {
+		panelPayment.showUploadPanel(show);
+	}
+
+	@Override
+	public TransactionDto getOfflineTransactionoBject() {
+		return panelPayment.getTransactionObject();
+	}
+
+	@Override
+	public void bindOfflineTransaction(TransactionDto result) {
+		panelPayment.bindOfflineTransaction(result);
+	}
+
+	@Override
+	public void setCountries(List<Country> countries) {
+		panelPayment.setCountries(countries);
 	}
 
 }

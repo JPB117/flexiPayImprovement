@@ -39,9 +39,10 @@ public class UploadServlet extends UploadAction {
 	IDAttachmentsExecutor idAttachmentsExecutor;
 	@Inject
 	EducationAttachmentsExecutor educationAttachmentsExecutor;
-
 	@Inject
 	TrainingAttachmentsExecutor trainingAttachmentsExecutor;
+	@Inject
+	GenericAttachmentsExecutor genericAttachmentsExecutor;
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
@@ -97,6 +98,9 @@ public class UploadServlet extends UploadAction {
 			break;
 		case UPLOADTRAININGATTATCHMENTS:
 			executor = trainingAttachmentsExecutor;
+			break;
+		case GENERICATTATCHMENTS:
+			executor = genericAttachmentsExecutor;
 			break;
 		}
 

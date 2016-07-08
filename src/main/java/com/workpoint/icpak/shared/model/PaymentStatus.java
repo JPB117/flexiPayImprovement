@@ -3,7 +3,7 @@ package com.workpoint.icpak.shared.model;
 import java.io.Serializable;
 
 public enum PaymentStatus implements Serializable, Listable {
-	NOTPAID("Not Paid"), PAID("Paid");
+	NOTPAID("Not Paid"), PAID("Paid"), Credit("Credit");
 
 	private String displayName;
 
@@ -17,6 +17,6 @@ public enum PaymentStatus implements Serializable, Listable {
 
 	@Override
 	public String getName() {
-		return displayName;
+		return name();
 	}
 }

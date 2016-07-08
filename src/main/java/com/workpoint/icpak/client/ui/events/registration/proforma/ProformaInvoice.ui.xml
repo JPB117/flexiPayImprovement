@@ -62,7 +62,7 @@
 					<div class="col-sm-12">
 						<br />
 						<h5>
-							<b>Penalties</b>
+							<b>Late Bird Rate</b>
 						</h5>
 						<d:TableView ui:field="tblPenalties" striped="false"
 							isGrid="false" bordered="true" autoNumber="false">

@@ -79,8 +79,11 @@ public class ProformaInvoice extends Composite {
 	public void setInvoice(InvoiceDto invoice) {
 		lblCompany.setText(invoice.getCompanyName());
 		lblAddress.setText(invoice.getCompanyAddress());
-		lblInvoiceDate.setText(DateUtils.DATEFORMAT.format(new Date(invoice
-				.getDate())));
+
+		if (invoice.getDate() != null) {
+			lblInvoiceDate.setText(DateUtils.DATEFORMAT.format(new Date(invoice
+					.getDate())));
+		}
 		lblQuoteNo.setText(invoice.getDocumentNo());
 
 		for (InvoiceLineDto line : invoice.getLines()) {
@@ -114,22 +117,27 @@ public class ProformaInvoice extends Composite {
 										+ ""));
 			}
 		}
-		tblProforma.addRow(
-				new InlineLabel(),
-				new InlineLabel(),
-				new InlineLabel("Total"),
-				new InlineLabel(CURRENCYFORMAT.format(invoice
-						.getInvoiceAmount()) + ""));
+		if (invoice.getInvoiceAmount() != null) {
+			tblProforma.addRow(
+					new InlineLabel(),
+					new InlineLabel(),
+					new InlineLabel("Total"),
+					new InlineLabel(CURRENCYFORMAT.format(invoice
+							.getInvoiceAmount()) + ""));
+		}
 
-		tblDiscounts
-				.addRow(new InlineLabel(),
-						new InlineLabel(),
-						new InlineLabel("Total Discount"),
-						new InlineLabel(CURRENCYFORMAT.format(invoice
-								.getTotalDiscount()) + ""));
+		if (invoice.getTotalDiscount() != null) {
+			tblDiscounts.addRow(new InlineLabel(), new InlineLabel(),
+					new InlineLabel("Total Discount"), new InlineLabel(
+							CURRENCYFORMAT.format(invoice.getTotalDiscount())
+									+ ""));
+		}
 
-		tblPenalties.addRow(new InlineLabel(), new InlineLabel(),
-				new InlineLabel("Total Penalties"), new InlineLabel(
-						CURRENCYFORMAT.format(invoice.getTotalPenalty()) + ""));
+		if (invoice.getTotalPenalty() != null) {
+			tblPenalties.addRow(new InlineLabel(), new InlineLabel(),
+					new InlineLabel("Total Penalties"), new InlineLabel(
+							CURRENCYFORMAT.format(invoice.getTotalPenalty())
+									+ ""));
+		}
 	}
 }

@@ -42,29 +42,35 @@
 									</h3>
 								</div>
 
-								<ul class="nav nav-pills">
-									<li class="active" style="width: 33.33%;" ui:field="liTab1">
+								<ul class="nav nav-pills visible-lg">
+									<li class="active" style="width: 25%;" ui:field="liTab1">
 										<a>
 											<span class="fa fa-check-circle hide"></span>
 											1 - Personal Information
 										</a>
 									</li>
-									<li style="width: 33.33%;" ui:field="liTab2">
+									<li style="width: 25%;" ui:field="liTab2">
 										<a>
 											<span class="fa fa-check-circle hide"></span>
 											2 - Membership Category
 										</a>
 									</li>
-									<li style="width:33.33%;" ui:field="liTab3" class="hide">
+									<li style="width:25%;" ui:field="liTab3" class="hide">
 										<a>
 											<span class="fa fa-check-circle hide"></span>
 											4 - Attatchments
 										</a>
 									</li>
-									<li style="width:33.33%;" ui:field="liTab4">
+									<li style="width:25%;" ui:field="liTab4">
 										<a>
 											<span class="fa fa-check-circle hide"></span>
 											3 - Set Password
+										</a>
+									</li>
+									<li style="width:25%;" ui:field="liTabPayment">
+										<a>
+											<span class="fa fa-check-circle hide"></span>
+											4 - Make-Payment
 										</a>
 									</li>
 								</ul>
@@ -90,14 +96,17 @@
 												<br />
 												<span ui:field="spnIssues" style="font-size: 24px;">
 													Your application
-													details have been saved Successfully. A
+													details have been saved successfully. A
 													temporary account
 													has been created to allow you fill the
-													rest of the
-													application and later Pay for your
-													Membership.
-													Click on
-													'Proceed to set password' for your account.
+													rest of your
+													application and pay for your
+													registration fee.
+													<p>
+														Click on
+														the button below to set a password for your
+														account.
+													</p>
 												</span>
 												<br />
 												<br />
@@ -215,7 +224,7 @@
 												<div class="pricing-table col-xs-4" ui:field="divOverseas">
 													<div class="panel panel-primary" style="border:none;">
 														<div class="controle-header panel-heading panel-heading-landing">
-															<h1 class="panel-title panel-title-landing">Associate</h1>
+															<h1 class="panel-title panel-title-landing">OverSeas Member</h1>
 														</div>
 
 														<div class="panel-body panel-body-landing">
@@ -250,7 +259,7 @@
 														</div>
 														<div class="panel-footer panel-footer-landing">
 															<g:Anchor styleName="btn btn-price btn-block btn-success"
-																ui:field="aAssociate" name="Overseas">SELECT</g:Anchor>
+																ui:field="aOverseas" name="Overseas">SELECT</g:Anchor>
 														</div>
 													</div>
 												</div>
@@ -258,7 +267,7 @@
 												<div class="pricing-table col-xs-4" ui:field="divAssociate">
 													<div class="panel panel-primary" style="border:none;">
 														<div class="controle-header panel-heading panel-heading-landing">
-															<h1 class="panel-title panel-title-landing">OverSeas Member</h1>
+															<h1 class="panel-title panel-title-landing">Associate Member</h1>
 														</div>
 
 														<div class="panel-body panel-body-landing">
@@ -293,7 +302,7 @@
 														</div>
 														<div class="panel-footer panel-footer-landing">
 															<g:Anchor styleName="btn btn-price btn-block btn-success"
-																ui:field="aOverseas" name="Associate">SELECT</g:Anchor>
+																ui:field="aAssociate" name="Associate">SELECT</g:Anchor>
 														</div>
 													</div>
 												</div>

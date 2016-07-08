@@ -1,85 +1,203 @@
 package com.icpak.rest.dao;
 
+import java.math.BigInteger;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.Query;
 
+import org.apache.log4j.Logger;
+
+import com.workpoint.icpak.server.util.ServerDateUtils;
+import com.workpoint.icpak.shared.model.AttachmentDto;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.InvoiceLineDto;
 import com.workpoint.icpak.shared.model.InvoiceLineType;
 import com.workpoint.icpak.shared.model.InvoiceSummary;
+import com.workpoint.icpak.shared.model.PaymentMode;
 import com.workpoint.icpak.shared.model.PaymentStatus;
+import com.workpoint.icpak.shared.model.PaymentType;
+import com.workpoint.icpak.shared.model.TransactionDto;
 
 public class InvoiceDao extends BaseDao {
 
-	public List<InvoiceDto> getAllInvoices(String memberId, Integer offset,
-			Integer limit) {
-		StringBuffer sqlBuffer = new StringBuffer("select i.refId, "
-				+ "i.amount as invoiceAmount,i.date as invoiceDate,"
-				+ "i.documentNo,i.description,i.contactName,i.bookingRefId,"
-				+ "t.date,t.dueDate,t.status,"
-				+ "t.paymentMode,t.amount,t.memberId " + "from Invoice i "
-				+ "left join Transaction t on (i.refId=t.invoiceRef) "
-				+ "where i.isActive=1 ");
+	Logger logger = Logger.getLogger(InvoiceDao.class);
 
+	public List<TransactionDto> getAllTransactions(String memberId,
+			String searchTerm, String fromDate, String endDate,
+			String paymentType2, String paymentMode2, Integer offset,
+			Integer limit) {
+		StringBuffer sqlBuffer = new StringBuffer(
+				"select id,date,paymentMode,paymentType,description,trxNumber,accountNo,invoiceAmount,chargableAmount,"
+						+ "totalPreviousPayments,amount,balance,invoiceRef from transaction");
 		Query query = null;
 		if (memberId == null || memberId.equals("ALL")) {
-			sqlBuffer.append(" order by i.id desc");
+			Map<String, Object> params = appendParameters(sqlBuffer,
+					searchTerm, fromDate, endDate, paymentType2, paymentMode2);
+			sqlBuffer.append(" order by date asc");
 			query = getEntityManager().createNativeQuery(sqlBuffer.toString());
-		} else {
-			sqlBuffer.append("and t.memberId=:memberId");
-			sqlBuffer.append(" order by i.id desc");
-			query = getEntityManager().createNativeQuery(sqlBuffer.toString())
-					.setParameter("memberId", memberId);
+			for (String key : params.keySet()) {
+				query.setParameter(key, params.get(key));
+			}
 		}
 
 		List<Object[]> rows = getResultList(query, offset, limit);
-		List<InvoiceDto> statements = new ArrayList<>();
+		List<TransactionDto> transactions = new ArrayList<>();
 
 		for (Object[] row : rows) {
 			int i = 0;
 			Object value = null;
-
-			String refId = (value = row[i++]) == null ? null : value.toString();
-			Double invoiceAmount = (value = row[i++]) == null ? null
-					: new Double(value.toString());
-
-			Date invoiceDate = (value = row[i++]) == null ? null : (Date) value;
-
-			String documentNo = (value = row[i++]) == null ? null : value
-					.toString();
-
+			Long id = (value = row[i++]) == null ? null : ((BigInteger) value)
+					.longValue();
+			Date createdDate = (value = row[i++]) == null ? null : (Date) value;
+			PaymentMode paymentMode = (value = row[i++]) == null ? null
+					: PaymentMode.valueOf(value.toString());
+			PaymentType paymentType = (value = row[i++]) == null ? null
+					: PaymentType.valueOf(value.toString());
 			String description = (value = row[i++]) == null ? null : value
 					.toString();
-
-			String contactName = (value = row[i++]) == null ? null : value
+			String trxNumber = (value = row[i++]) == null ? null : value
 					.toString();
-			String bookingRefId = (value = row[i++]) == null ? null : value
+			String accountNo = (value = row[i++]) == null ? null : value
 					.toString();
-			Date transactionDate = (value = row[i++]) == null ? null
-					: (Date) value;
-			Date dueDate = (value = row[i++]) == null ? null : (Date) value;
-			String paymentStatus = (value = row[i++]) == null ? null : value
-					.toString();
-			String paymentMode = (value = row[i++]) == null ? null : value
-					.toString();
-			Double transactionAmount = (value = row[i++]) == null ? null
+			Double invoiceAmount = (value = row[i++]) == null ? null
 					: new Double(value.toString());
-			String userRefId = (value = row[i++]) == null ? null : value
+			Double chargableAmount = (value = row[i++]) == null ? null
+					: new Double(value.toString());
+			Double totalPreviousPayments = (value = row[i++]) == null ? null
+					: new Double(value.toString());
+			Double amountPaid = (value = row[i++]) == null ? null : new Double(
+					value.toString());
+			Double balance = (value = row[i++]) == null ? null : new Double(
+					value.toString());
+			String invoiceRef = (value = row[i++]) == null ? null : value
 					.toString();
 
-			InvoiceDto statement = new InvoiceDto(refId, invoiceAmount,
-					documentNo, description, invoiceDate, transactionDate,
-					dueDate, paymentStatus, paymentMode, transactionAmount,
-					userRefId, contactName);
-			statement.setBookingRefId(bookingRefId);
-			statements.add(statement);
+			TransactionDto trx = new TransactionDto();
+			trx.setId(id);
+			trx.setCreatedDate(createdDate);
+			trx.setPaymentMode(paymentMode);
+			trx.setPaymentType(paymentType);
+			trx.setDescription(description);
+			trx.setTrxNumber(trxNumber);
+			trx.setAccountNo(accountNo);
+			trx.setInvoiceAmt(invoiceAmount);
+			trx.setChargableAmnt(chargableAmount);
+			trx.setTotalPreviousPayments(totalPreviousPayments);
+			trx.setAmountPaid(amountPaid);
+			trx.setTotalBalance(balance);
+			trx.setInvoiceRef(invoiceRef);
+			transactions.add(trx);
+		}
+		return transactions;
+	}
 
+	private Map<String, Object> appendParameters(StringBuffer sql,
+			String searchTerm, String fromDate, String endDate,
+			String paymentType, String paymentMode) {
+		Map<String, Object> params = new HashMap<>();
+		boolean isFirstParam = true;
+
+		if (paymentType != null && !paymentType.equals("")) {
+			if (isFirstParam) {
+				isFirstParam = false;
+				sql.append(" where");
+			} else {
+				sql.append(" and");
+			}
+			params.put("paymentType", paymentType);
+			sql.append(" paymentType=:paymentType");
 		}
 
-		return statements;
+		if (paymentMode != null && !paymentMode.equals("")) {
+			if (isFirstParam) {
+				isFirstParam = false;
+				sql.append(" where");
+			} else {
+				sql.append(" and");
+			}
+			params.put("paymentMode", paymentMode);
+			sql.append(" paymentMode=:paymentMode");
+		}
+
+		if (searchTerm != null && (!searchTerm.equals(""))) {
+			if (isFirstParam) {
+				isFirstParam = false;
+				sql.append(" where");
+			} else {
+				sql.append(" and");
+			}
+			sql.append("(payerNames like :searchTerm or "
+					+ "trxNumber like :searchTerm or "
+					+ "accountNo like :searchTerm or "
+					+ "description like :searchTerm)");
+			params.put("searchTerm", "%" + searchTerm + "%");
+		}
+
+		if (fromDate != null && (!fromDate.equals(""))) {
+			if (isFirstParam) {
+				isFirstParam = false;
+				sql.append(" where");
+			} else {
+				sql.append(" and");
+			}
+			Date fromDateConverted = null;
+			try {
+				fromDateConverted = ServerDateUtils.FULLHOURMINUTESTAMP
+						.parse(fromDate);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			params.put("fromDate", fromDateConverted);
+			sql.append(" date>=:fromDate");
+		}
+
+		if (endDate != null && (!endDate.equals(""))) {
+			if (isFirstParam) {
+				isFirstParam = false;
+				sql.append(" where");
+			} else {
+				sql.append(" and");
+			}
+			Date endDateConverted = null;
+			try {
+				endDateConverted = ServerDateUtils.FULLHOURMINUTESTAMP
+						.parse(endDate);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			params.put("endDate", endDateConverted);
+			sql.append(" date<=:endDate");
+		}
+
+		return params;
+	}
+
+	public List<AttachmentDto> getAllAttachment(Long id) {
+		logger.info(" +++ GET Attachments for +++++ InvoiceId == " + id);
+		StringBuffer sql = new StringBuffer(
+				"select refId,name from attachment where transactionId=:passedId");
+		Query query = getEntityManager().createNativeQuery(sql.toString())
+				.setParameter("passedId", id);
+		List<Object[]> rows = getResultList(query, 0, 1000);
+		List<AttachmentDto> attachmentDtos = new ArrayList<>();
+		for (Object[] row : rows) {
+			int i = 0;
+			Object value = null;
+			String refId = (value = row[i++]) == null ? null : value.toString();
+			String name = (value = row[i++]) == null ? null : value.toString();
+			AttachmentDto attachment = new AttachmentDto();
+			attachment.setRefId(refId);
+			attachment.setAttachmentName(name);
+			attachmentDtos.add(attachment);
+		}
+		logger.info(" Found this number of attachments == "
+				+ attachmentDtos.size());
+		return attachmentDtos;
 	}
 
 	public List<InvoiceDto> checkInvoicePaymentStatus(String invoiceRefId) {
@@ -202,25 +320,22 @@ public class InvoiceDao extends BaseDao {
 	// return number.intValue();
 	// }
 
-	public Integer getInvoiceCount(String memberId) {
+	public Integer getTransactionsCount(String memberId, String searchTerm,
+			String fromDate, String endDate, String paymentType2,
+			String paymentMode2) {
 		StringBuffer sqlBuffer = new StringBuffer(
-				"select count(*) from Invoice i  "
-						+ "left join Transaction t on (i.refId=t.invoiceRef) "
-						+ "where i.isActive=1 ");
-
+				"select count(*) from transaction");
 		Query query = null;
+		Map<String, Object> params = appendParameters(sqlBuffer, searchTerm,
+				fromDate, endDate, paymentType2, paymentMode2);
 		if (memberId == null || memberId.equals("ALL")) {
 			query = getEntityManager().createNativeQuery(sqlBuffer.toString());
-		} else {
-			sqlBuffer.append("and t.memberId=:memberId ");
-			query = getEntityManager().createNativeQuery(sqlBuffer.toString())
-					.setParameter("memberId", memberId);
+			for (String key : params.keySet()) {
+				query.setParameter(key, params.get(key));
+			}
 		}
-		sqlBuffer.append(" order by i.id desc ");
 		Number number = getSingleResultOrNull(query);
-
 		return number.intValue();
-
 	}
 
 	public InvoiceSummary getSummary(String memberId) {

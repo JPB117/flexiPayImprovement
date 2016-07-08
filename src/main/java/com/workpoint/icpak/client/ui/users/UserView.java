@@ -10,6 +10,7 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasKeyDownHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -22,6 +23,7 @@ import com.workpoint.icpak.client.place.NameTokens;
 import com.workpoint.icpak.client.ui.component.PagingPanel;
 import com.workpoint.icpak.client.ui.component.TextField;
 import com.workpoint.icpak.client.ui.users.save.UserSavePresenter.TYPE;
+import com.workpoint.icpak.client.util.AppContext;
 
 public class UserView extends ViewImpl implements UserPresenter.MyView {
 
@@ -147,8 +149,12 @@ public class UserView extends ViewImpl implements UserPresenter.MyView {
 	@Override
 	public void setType(TYPE type) {
 		if (type == TYPE.GROUP) {
-			aNewUser.addStyleName("hide");
-			aNewGroup.removeStyleName("hide");
+			if (AppContext.isCurrentUserUsersEdit()) {
+				aNewUser.addStyleName("hide");
+				aNewGroup.removeStyleName("hide");
+			} else {
+				aNewGroup.addStyleName("hide");
+			}
 			liGroup.setClassName("active");
 			liUser.removeClassName("active");
 
@@ -158,8 +164,13 @@ public class UserView extends ViewImpl implements UserPresenter.MyView {
 			divGroupContent.addClassName("in");
 			divGroupContent.addClassName("active");
 		} else {
-			aNewUser.removeStyleName("hide");
-			aNewGroup.addStyleName("hide");
+			if (AppContext.isCurrentUserUsersEdit()) {
+				aNewUser.removeStyleName("hide");
+				aNewGroup.addStyleName("hide");
+			}else{
+				aNewUser.addStyleName("hide");
+			}
+
 			liGroup.removeClassName("active");
 			liUser.addClassName("active");
 
@@ -169,6 +180,7 @@ public class UserView extends ViewImpl implements UserPresenter.MyView {
 			divGroupContent.removeClassName("in");
 			divGroupContent.removeClassName("active");
 		}
+
 	}
 
 	@Override

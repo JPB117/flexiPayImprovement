@@ -7,40 +7,58 @@ import java.util.List;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.HasKeyDownHandlers;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.web.bindery.event.shared.EventBus;
+import com.gwtplatform.common.client.IndirectProvider;
+import com.gwtplatform.common.client.StandardProvider;
 import com.gwtplatform.dispatch.rest.delegates.client.ResourceDelegate;
 import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.TabData;
 import com.gwtplatform.mvp.client.View;
+import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.annotations.TabInfo;
 import com.gwtplatform.mvp.client.annotations.UseGatekeeper;
+import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.gwtplatform.mvp.client.proxy.TabContentProxyPlace;
 import com.workpoint.icpak.client.place.NameTokens;
 import com.workpoint.icpak.client.security.CurrentUser;
 import com.workpoint.icpak.client.service.AbstractAsyncCallback;
+import com.workpoint.icpak.client.service.ServiceCallback;
 import com.workpoint.icpak.client.ui.AppManager;
+import com.workpoint.icpak.client.ui.OnOptionSelected;
 import com.workpoint.icpak.client.ui.OptionControl;
 import com.workpoint.icpak.client.ui.admin.TabDataExt;
+import com.workpoint.icpak.client.ui.events.AfterSaveEvent;
 import com.workpoint.icpak.client.ui.events.EditModelEvent;
 import com.workpoint.icpak.client.ui.events.EditModelEvent.EditModelHandler;
 import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
 import com.workpoint.icpak.client.ui.events.ProcessingEvent;
+import com.workpoint.icpak.client.ui.events.ToggleSideBarEvent;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
 import com.workpoint.icpak.client.ui.membership.form.MemberRegistrationForm;
+import com.workpoint.icpak.client.ui.payment.PaymentPresenter;
 import com.workpoint.icpak.client.ui.profile.accountancy.form.AccountancyRegistrationForm;
 import com.workpoint.icpak.client.ui.profile.education.form.EducationRegistrationForm;
+import com.workpoint.icpak.client.ui.profile.paysubscription.PaymentSubscription;
 import com.workpoint.icpak.client.ui.profile.specialization.form.SpecializationRegistrationForm;
 import com.workpoint.icpak.client.ui.profile.training.form.TrainingRegistrationForm;
 import com.workpoint.icpak.client.ui.profile.widget.ProfileWidget;
 import com.workpoint.icpak.client.ui.security.BasicMemberGateKeeper;
+import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.api.ApplicationFormResource;
 import com.workpoint.icpak.shared.api.CountriesResource;
 import com.workpoint.icpak.shared.api.MemberResource;
+import com.workpoint.icpak.shared.api.UsersResource;
 import com.workpoint.icpak.shared.model.ApplicationFormAccountancyDto;
 import com.workpoint.icpak.shared.model.ApplicationFormEducationalDto;
 import com.workpoint.icpak.shared.model.ApplicationFormEmploymentDto;
@@ -48,7 +66,11 @@ import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 import com.workpoint.icpak.shared.model.ApplicationFormSpecializationDto;
 import com.workpoint.icpak.shared.model.ApplicationFormTrainingDto;
 import com.workpoint.icpak.shared.model.Country;
+import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.MemberStanding;
+import com.workpoint.icpak.shared.model.PaymentType;
+import com.workpoint.icpak.shared.model.TransactionDto;
+import com.workpoint.icpak.shared.model.UserDto;
 import com.workpoint.icpak.shared.model.auth.ApplicationStatus;
 
 public class ProfilePresenter
@@ -125,9 +147,24 @@ public class ProfilePresenter
 		ProfileWidget getProfileWidget();
 
 		void bindEmployment(List<ApplicationFormEmploymentDto> result);
+
+		String getPassword();
+
+		HasKeyDownHandlers getPasswordTextField();
+
+		HasClickHandlers getSubmitPassword();
+
+		HasClickHandlers getPaySubscriptionButton();
+
+		void showPayForSubsPresenter(boolean show);
 	}
 
 	private final CurrentUser currentUser;
+
+	private IndirectProvider<PaymentPresenter> paymentFactory;
+
+	@ContentSlot
+	public static final Type<RevealContentHandler<?>> PAYMENTS_SLOT = new Type<RevealContentHandler<?>>();
 
 	@ProxyCodeSplit
 	@NameToken(NameTokens.profile)
@@ -146,6 +183,17 @@ public class ProfilePresenter
 	private ResourceDelegate<ApplicationFormResource> applicationDelegate;
 	private ResourceDelegate<CountriesResource> countriesResource;
 	private ResourceDelegate<MemberResource> memberDelegate;
+	private ResourceDelegate<UsersResource> usersDelegate;
+	private UserDto user;
+
+	private KeyDownHandler changePasswordKeyHandler = new KeyDownHandler() {
+		@Override
+		public void onKeyDown(KeyDownEvent event) {
+			if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+				doChangePassword();
+			}
+		}
+	};
 
 	@Inject
 	public ProfilePresenter(final EventBus eventBus, final IProfileView view,
@@ -153,11 +201,16 @@ public class ProfilePresenter
 			ResourceDelegate<CountriesResource> countriesResource,
 			ResourceDelegate<ApplicationFormResource> applicationDelegate,
 			ResourceDelegate<MemberResource> memberDelegate,
-			final CurrentUser currentUser) {
+			ResourceDelegate<UsersResource> usersDelegate,
+			final CurrentUser currentUser,
+			Provider<PaymentPresenter> paymentProvider) {
 		super(eventBus, view, proxy, HomePresenter.SLOT_SetTabContent);
+		this.paymentFactory = new StandardProvider<PaymentPresenter>(
+				paymentProvider);
 		this.countriesResource = countriesResource;
 		this.applicationDelegate = applicationDelegate;
 		this.memberDelegate = memberDelegate;
+		this.usersDelegate = usersDelegate;
 		this.currentUser = currentUser;
 	}
 
@@ -169,6 +222,7 @@ public class ProfilePresenter
 
 	protected ApplicationStatus applicationStatus;
 	protected ApplicationFormHeaderDto applicationForm;
+	protected Double memberBalance;
 
 	@Override
 	protected void onBind() {
@@ -178,6 +232,7 @@ public class ProfilePresenter
 		getView().getProfileEditButton().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
+				memberForm.clearAttachmentWidget();
 				AppManager.showPopUp("Edit Basic Details", memberForm,
 						new OptionControl() {
 							@Override
@@ -206,6 +261,14 @@ public class ProfilePresenter
 			}
 		});
 
+		getView().getSubmitPassword().addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				doChangePassword();
+			}
+		});
+
+		/* Upload Buttons */
 		educationForm.getStartUploadButton().addClickHandler(
 				new ClickHandler() {
 					@Override
@@ -229,10 +292,11 @@ public class ProfilePresenter
 					}
 				});
 
+		/* Adding Records */
 		getView().getEducationAddButton().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				educationForm.clear();
+				educationForm.clear(true);
 				showPopUp(educationForm);
 			}
 		});
@@ -240,7 +304,7 @@ public class ProfilePresenter
 		getView().getAccountancyAddButton().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				accountancyForm.clear();
+				accountancyForm.clear(true);
 				showPopUp(accountancyForm);
 			}
 		});
@@ -248,7 +312,7 @@ public class ProfilePresenter
 		getView().getTrainingAddButton().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				trainingForm.clear();
+				trainingForm.clear(true);
 				showPopUp(trainingForm);
 			}
 		});
@@ -267,10 +331,65 @@ public class ProfilePresenter
 		getView().getCertStatusButton().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				loadDataFromErp(true);
+				loadDataFromErp(false);
 			}
 		});
 
+		getView().getPasswordTextField().addKeyDownHandler(
+				changePasswordKeyHandler);
+
+		getView().getPaySubscriptionButton().addClickHandler(
+				new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {
+						final PaymentSubscription subsPayment = new PaymentSubscription();
+						if (memberBalance != null) {
+							subsPayment.setCurrentBalance(memberBalance);
+						}
+						AppManager.showPopUp("Pay your Subscription",
+								subsPayment, new OnOptionSelected() {
+									@Override
+									public void onSelect(String name) {
+										// Proceed to pay-->
+										String amountToPay = subsPayment
+												.getAmountToPay();
+										if (amountToPay != null
+												&& !amountToPay.equals("")) {
+											final InvoiceDto invoice = new InvoiceDto();
+											invoice.setAmount(Double
+													.valueOf(amountToPay));
+											invoice.setDocumentNo(AppContext
+													.getCurrentUser().getUser()
+													.getMemberNo());
+
+											paymentFactory
+													.get(new ServiceCallback<PaymentPresenter>() {
+														@Override
+														public void processResult(
+																PaymentPresenter result) {
+															result.bindTransaction(invoice);
+															result.bindOfflineTransaction(initTransaction());
+															setInSlot(
+																	PAYMENTS_SLOT,
+																	result);
+														}
+
+													});
+											getView().showPayForSubsPresenter(
+													true);
+										}
+									}
+								}, "Proceed to Pay");
+					}
+				});
+	}
+
+	private TransactionDto initTransaction() {
+		TransactionDto trx = new TransactionDto();
+		trx.setDescription("Subscription payments for "
+				+ AppContext.getCurrentUser().getUser().getFullName());
+		trx.setPaymentType(PaymentType.SUBSCRIPTION);
+		return trx;
 	}
 
 	protected void saveApplication() {
@@ -281,6 +400,8 @@ public class ProfilePresenter
 					public void onSuccess(ApplicationFormHeaderDto result) {
 						fireEvent(new ProcessingCompletedEvent());
 						loadMemberDetails();
+						fireEvent(new AfterSaveEvent(
+								"Your application has been Submitted Successfully"));
 					}
 				}).update(getApplicationRefId(), applicationForm);
 	}
@@ -335,7 +456,6 @@ public class ProfilePresenter
 									}
 								}).accountancy(getApplicationRefId())
 						.update(dto.getRefId(), dto);
-
 			} else {
 				applicationDelegate
 						.withCallback(
@@ -351,7 +471,6 @@ public class ProfilePresenter
 								}).accountancy(getApplicationRefId())
 						.create(dto);
 			}
-
 			return true;
 		} else {
 			return false;
@@ -406,10 +525,20 @@ public class ProfilePresenter
 								}).training(applicationId)
 						.update(dto.getRefId(), dto);
 			}
-
 			return true;
 		} else {
 			return false;
+		}
+	}
+
+	protected void doChangePassword() {
+		user = currentUser.getUser();
+		if (getView().isValid()) {
+			if (user != null) {
+				usersDelegate.withoutCallback().changePassword(user.getRefId(),
+						getView().getPassword());
+				fireEvent(new AfterSaveEvent("Password successfully changed!"));
+			}
 		}
 	}
 
@@ -487,6 +616,8 @@ public class ProfilePresenter
 							getView().setEditMode(true);
 							loadMemberDetails();
 							fireEvent(new ProcessingCompletedEvent());
+							fireEvent(new AfterSaveEvent(
+									"Changes successfully saved."));
 						}
 
 						@Override
@@ -502,7 +633,17 @@ public class ProfilePresenter
 	@Override
 	protected void onReveal() {
 		super.onReveal();
+		// Window.alert("IsCurrentUserAdmin::" + AppContext.isCurrentUserAdmin()
+		// + ">>>>IsCurrentUserBasicMember:::"
+		// + AppContext.isCurrentBasicMember()
+		// + ">>>>IsCurrentUserEventsRead:::"
+		// + AppContext.isCurrentUserEventRead()
+		// + ">>>IsCurrentUserEdit:::"
+		// + AppContext.isCurrentUserEventEdit());
 		loadData();
+		getView().showPayForSubsPresenter(false);
+		setInSlot(PAYMENTS_SLOT, null);
+		fireEvent(new ToggleSideBarEvent(false));
 	}
 
 	private void loadData() {
@@ -516,28 +657,29 @@ public class ProfilePresenter
 	 */
 	private void loadDataFromErp(boolean forceRefesh) {
 		fireEvent(new ProcessingEvent());
-		memberDelegate.withCallback(new AbstractAsyncCallback<Boolean>() {
-			@Override
-			public void onSuccess(Boolean hasLoaded) {
-				fireEvent(new ProcessingCompletedEvent());
-				loadData(getApplicationRefId());
-				getView().setLastUpdateToNow();
-				if (!hasLoaded) {
-					Window.alert("There was a problem loading ERP Data");
-				} else {
-					loadGoodStanding();
-				}
-			}
-		}).getDataFromErp(getMemberId(), forceRefesh);
+		loadGoodStanding();
+		/*
+		 * memberDelegate.withCallback(new AbstractAsyncCallback<Boolean>() {
+		 * 
+		 * @Override public void onSuccess(Boolean hasLoaded) { fireEvent(new
+		 * ProcessingCompletedEvent()); loadData(getApplicationRefId());
+		 * getView().setLastUpdateToNow(); if (!hasLoaded) {
+		 * Window.alert("There was a problem loading ERP Data"); } else {
+		 * loadGoodStanding(); } } }).getDataFromErp(getMemberId(),
+		 * forceRefesh);
+		 */
 
 	}
 
 	private void loadGoodStanding() {
+		fireEvent(new ProcessingEvent());
 		memberDelegate.withCallback(
 				new AbstractAsyncCallback<MemberStanding>() {
 					@Override
 					public void onSuccess(MemberStanding standing) {
+						memberBalance = standing.getMemberBalance();
 						getView().bindMemberStanding(standing);
+						fireEvent(new ProcessingCompletedEvent());
 					}
 				}).getMemberStanding(getMemberId());
 	}
@@ -565,9 +707,8 @@ public class ProfilePresenter
 			loadTrainings();
 			loadSpecializations();
 			loadAccountancyExamination();
-		} else {
-			// Window.alert("User refId not sent in this request!");
-		}
+			loadGoodStanding();
+		} 
 
 	}
 

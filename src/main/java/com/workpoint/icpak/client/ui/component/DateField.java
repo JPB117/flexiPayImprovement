@@ -39,7 +39,6 @@ public class DateField extends Composite {
 		if (isNullOrEmpty(dateStr)) {
 			return null;
 		}
-
 		return DATEFORMAT_SYS.parse(dateStr);
 	}
 
@@ -47,7 +46,7 @@ public class DateField extends Composite {
 		if (date == null) {
 			txtDate.setValue("");
 		} else {
-			txtDate.setValue(DATEFORMAT_SYS.format(date));
+			txtDate.setValue(DateUtils.DATEFORMAT_SYS.format(date));
 		}
 	}
 

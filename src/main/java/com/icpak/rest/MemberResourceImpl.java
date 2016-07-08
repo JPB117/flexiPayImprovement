@@ -81,13 +81,12 @@ public class MemberResourceImpl implements MemberResource {
 	}
 
 	@GET
-	@Path("/search/{searchTerm}")
+	@Path("/search")
 	@ApiOperation(value = "Search for members based on a search term (MemberId/ Names)")
 	public List<MemberDto> search(
-			@ApiParam(value = "Search term to use", required = true) @PathParam("searchTerm") String searchTerm,
+			@ApiParam(value = "Search term to use", required = true) @QueryParam("searchTerm") String searchTerm,
 			@QueryParam("offset") Integer offset,
 			@QueryParam("limit") Integer limit) {
-
 		return membersHelper.getAllMembers(offset, limit, "", searchTerm);
 	}
 
@@ -114,8 +113,7 @@ public class MemberResourceImpl implements MemberResource {
 	@ApiOperation(value = "Search for member invoices")
 	public List<InvoiceDto> getAllInvoicesForMember(
 			@ApiParam(value = "Member Id", required = true) @PathParam("memberId") String memberId) {
-
-		return helper.getAllInvoices(memberId, 0, 50);
+		return null;
 	}
 
 	@Path("/{memberId}/statements")

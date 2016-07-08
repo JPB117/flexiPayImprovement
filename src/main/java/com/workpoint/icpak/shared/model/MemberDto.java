@@ -20,12 +20,14 @@ public class MemberDto extends SerializableObj implements Listable {
 	private String address;
 	private String city;
 	private String practisingNo;
+	private String phoneNumber;
 	private ApplicationType customerType;
 	private String customerPostingGroup;
 	private Date practisingCertDate;
 	private MembershipStatus membershipStatus;
 	private String fullName;
 	private String member;
+	private String memberQrCode;
 
 	public MemberDto() {
 	}
@@ -181,6 +183,22 @@ public class MemberDto extends SerializableObj implements Listable {
 
 	public void setCustomerPostingGroup(String customerPostingGroup) {
 		this.customerPostingGroup = customerPostingGroup;
+	}
+
+	public String getMemberQrCode() {
+		return memberQrCode;
+	}
+
+	public void setMemberQrCode(String memberQrCode) {
+		this.memberQrCode = memberQrCode;
+	}
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
 	}
 
 }

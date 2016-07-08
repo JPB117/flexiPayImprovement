@@ -32,7 +32,7 @@ public class AggregationGrid extends Composite {
 	TableView tblView;
 	@UiField
 	SpanElement spnAggregate;
-	
+
 	Map<String, Number> summaries = new HashMap<String, Number>();
 
 	List<ColumnConfig> columnConfigs = null;
@@ -54,6 +54,10 @@ public class AggregationGrid extends Composite {
 		List<String> headers = new ArrayList<String>();
 		if (configs != null)
 			for (ColumnConfig config : configs) {
+				if (!config.getHeaderStyleName().equals("")
+						&& config.getHeaderStyleName() != null) {
+					headers.add("accomodation-header");
+				}
 				headers.add("generic-header");
 				widgets.add(config.createHeaderWidget());
 			}

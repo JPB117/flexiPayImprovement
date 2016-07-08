@@ -23,10 +23,12 @@ public class ApplicationFormHeaderDto extends SerializableObj {
 	private static final long serialVersionUID = 1L;
 
 	private Title title;
+	private Long id;
 	private String applicationNo;
 	private Date date;
 	private Date created;
 	private Date applicationDate;
+	private Date dateSubmitted;
 	private String surname;
 	private String otherNames;
 	private Date dob;
@@ -112,10 +114,12 @@ public class ApplicationFormHeaderDto extends SerializableObj {
 	private List<AttachmentDto> attachments;
 	private ApplicationStatus applicationStatus;
 	private PaymentStatus paymentStatus;
+	private String managementComment;
 	private String nextRefId;
 	private String previousRefId;
 	private String branch;
 	private String erpCode;
+	private String erpMessage;
 
 	public ApplicationStatus getApplicationStatus() {
 		return applicationStatus;
@@ -790,6 +794,14 @@ public class ApplicationFormHeaderDto extends SerializableObj {
 		this.applicationDate = applicationDate;
 	}
 
+	public Date getDateSubmitted() {
+		return dateSubmitted;
+	}
+
+	public void setDateSubmitted(Date dateSubmitted) {
+		this.dateSubmitted = dateSubmitted;
+	}
+
 	public Integer getPercCompletion() {
 		return percCompletion;
 	}
@@ -881,6 +893,30 @@ public class ApplicationFormHeaderDto extends SerializableObj {
 
 	public void setPaymentStatus(PaymentStatus paymentStatus) {
 		this.paymentStatus = paymentStatus;
+	}
+
+	public String getManagementComment() {
+		return managementComment;
+	}
+
+	public void setManagementComment(String managementComment) {
+		this.managementComment = managementComment;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getErpMessage() {
+		return erpMessage;
+	}
+
+	public void setErpMessage(String erpMessage) {
+		this.erpMessage = erpMessage;
 	}
 
 }

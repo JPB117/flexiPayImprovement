@@ -8,21 +8,53 @@
 	xmlns:proforma='urn:import:com.workpoint.icpak.client.ui.events.registration.proforma'
 	ui:generateLocales='default'>
 
+	<ui:style>
+	.success-message {
+		width: initial;
+		position: absolute;
+		left: 35%;
+		height: 40px;
+		top: 5px;
+		padding-top: 8px;
+	}
+	
+	.action-section {
+		margin-top: 12px;
+		margin-bottom: 50px;
+	}
+	
+	.hidden-section {
+		height: 10px;
+	}
+	</ui:style>
+
+
 	<g:HTMLPanel ui:field="divMainContainer">
 		<g:HTMLPanel ui:field="divHeaderContainer" styleName="top-header">
 			<nav class="navbar top-navbar">
 				<div class="container">
 					<div class="navbar-header" style="width: 100%; text-align: center;">
 						<a class="brand">
-							<img src="img/icpak_logo.png" width="150px" />
+							<img src="img/icpak_logo.png" width="100px" />
 						</a>
+					</div>
+					<div
+						class="alert alert-danger {style.success-message} hide alert-dismissible event-disconnected"
+						role="alert" ui:field="divAlert">
+						<button type="button" class="close" data-dismiss="alert"
+							aria-label="Close" onClick="$('event-disconnected').addClass('hide');">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<span ui:field="spnAlertMessage">
+							<span class="fa fa-exclamation-triangle"></span>
+							Not able to connect server. Verify your network connection
+						</span>
 					</div>
 				</div>
 			</nav>
 		</g:HTMLPanel>
 
-		<g:HTMLPanel styleName="image-container set-full-height"
-			ui:field="divContent">
+		<g:HTMLPanel styleName="image-container set-full-height">
 			<div class="container">
 				<div class="row">
 					<div class="col-sm-11 col-md-offset-1">
@@ -30,14 +62,20 @@
 							<!-- Wizard container -->
 							<div class="wizard-container" ui:field="divContainer">
 								<div class="card wizard-card ct-wizard-gold">
-									<div class="wizard-header">
+									<div class="wizard-header" ui:field="divHeader">
+										<d:ActionLink ui:field="aBackToDelegates"
+											styleName="pull-left hide">
+											<i class="fa fa-angle-double-left"></i>
+											Back to Delegates
+										</d:ActionLink>
 										<h3>
 											Event Registration Centre
-											<br />
+											<d:ActionLink ui:field="aCancelLeft"
+												styleName="btn btn-danger btn-fill hide pull-right">Cancel Booking</d:ActionLink>
 										</h3>
 									</div>
 
-									<ul class="nav nav-pills" ui:field="divHeaderTopics">
+									<ul class="nav nav-pills visible-lg" ui:field="divHeaderTopics">
 										<li class="active" style="width: 25%;" ui:field="liTab1">
 											<a>
 												<span class="fa fa-check-circle hide"></span>
@@ -63,12 +101,66 @@
 											</a>
 										</li>
 									</ul>
-
 									<!-- Tab Content 1 -->
-									<g:HTMLPanel styleName="tab-content">
+									<g:HTMLPanel styleName="tab-content" ui:field="divContent">
+										<div class="tab-pane" ui:field="divCancellation">
+
+											<g:HTMLPanel ui:field="panelCancel" styleName="hide">
+												<div class="row">
+													<div class="col-lg-8 col-lg-offset-2" style="margin-top: 55px;">
+														<div class="panel panel-default">
+															<h3 class="panel-title panel-heading">Panel title</h3>
+															<div class="panel-body">
+																<span class="">Are you sure you want to cancel this
+																	booking? All delegates will be notified by sms.</span>
+															</div>
+															<div class="panel-footer">
+																<div class="row">
+																	<div class="col-sm-12">
+																		<d:ActionLink ui:field="aConfirmCancel"
+																			styleName="btn btn-danger btn-fill pull-left">
+																			Confirm
+																		</d:ActionLink>
+
+																		<d:ActionLink ui:field="aNo"
+																			styleName="btn btn-default btn-fill pull-right">
+																			Cancel
+																		</d:ActionLink>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</g:HTMLPanel>
+
+											<g:HTMLPanel ui:field="panelConfirmCancel"
+												styleName="hide">
+												<div class="row">
+													<div class="col-lg-12" style="margin-top:55px;">
+														<div class="alert alert-success">
+															<g:HTMLPanel styleName="alert text-center"
+																ui:field="panelMessage">
+																<span class="fa fa-thumbs-up fa-5x" ui:field="spnMessageIcon"></span>
+																<br />
+																<span ui:field="spnIssues" style="font-size: 20px;">
+																	Your booking has
+																	been
+																	cancelled successfully.
+																</span>
+																<br />
+																<a class='btn btn-next btn-fill btn-success btn-wd btn-sm'
+																	href="https://icpak.com/events" style="margin-top: 25px;">Browse other
+																	events
+																</a>
+															</g:HTMLPanel>
+														</div>
+													</div>
+												</div>
+											</g:HTMLPanel>
+										</div>
 										<div class="tab-pane active" ui:field="divPackage">
 											<div class="row">
-
 												<div class="col-sm-12">
 													<h4 class="info-text">
 														<span ui:field="spnEventName"></span>
@@ -79,7 +171,8 @@
 												<div class="col-sm-12">
 													<a data-toggle="collapse" data-target="#eventInfo"
 														aria-expanded="false" aria-controls="#eventInfo">
-														show event information
+														show event
+														information
 													</a>
 
 													<div class="collapse" id="eventInfo">
@@ -107,7 +200,7 @@
 												<div class="col-sm-12">
 													<div class="form-group">
 														<div class="row">
-															<div class="col-xs-6">
+															<div class="col-xs-12 col-md-6">
 																<label for="firstname">Company:</label>
 																<d:TextField ui:field="txtCompanyName"
 																	styleName="form-control" placeholder="Company Name"
@@ -115,7 +208,7 @@
 																</d:TextField>
 															</div>
 
-															<div class="col-xs-6">
+															<div class="col-xs-12 col-md-6">
 																<label for="phone">Office Line:</label>
 																<d:TextField ui:field="txtPhone" styleName="form-control"
 																	placeholder="Office Name" value="" required="true">
@@ -127,7 +220,7 @@
 
 													<div class="form-group">
 														<div class="row">
-															<div class="col-xs-6">
+															<div class="col-xs-12 col-md-6">
 																<label for="emailaddress">Postal Address</label>
 																<d:TextField ui:field="txtAddress"
 																	styleName="form-control" placeholder="Enter Address"
@@ -135,7 +228,7 @@
 																</d:TextField>
 															</div>
 
-															<div class="col-xs-6">
+															<div class="col-xs-12 col-md-6">
 																<label for="applicationCategory">Postal Code</label>
 
 																<d:TextField ui:field="txtPostalCode"
@@ -149,14 +242,14 @@
 
 													<div class="form-group">
 														<div class="row">
-															<div class="col-xs-6">
+															<div class="col-xs-12 col-md-6">
 																<label for="emailaddress">Country:</label>
 																<d:DropDownList ui:field="lstCountry"
 																	styleName="form-control">
 																</d:DropDownList>
 															</div>
 
-															<div class="col-xs-6">
+															<div class="col-xs-12 col-md-6">
 																<label for="applicationCategory">Town/City</label>
 																<d:TextField ui:field="txtCity" styleName="form-control"
 																	placeholder="Enter Town/City" value="" required="true">
@@ -167,7 +260,7 @@
 
 													<div class="form-group">
 														<div class="row">
-															<div class="col-xs-6">
+															<div class="col-xs-12 col-md-6">
 																<label for="contactPerson">Contact Person:</label>
 																<d:TextField ui:field="txtContactPerson"
 																	styleName="form-control" placeholder="Contact Person"
@@ -175,8 +268,15 @@
 																</d:TextField>
 																<p class="text-warning">if self-sponsored, please enter your name</p>
 															</div>
-															<div class="col-xs-6">
-																<label for="contactPerson">Contact Email:</label>
+															<div class="col-xs-12 col-md-6">
+																<label for="contactPerson">
+																	Contact Email:
+																	<span ui:field="spnSpinner" class="hide">
+																		<span class="fa fa-spinner fa-pulse" style="margin-top:5px;"></span>
+																		<span class="text-danger">Please wait while we validate this
+																			email</span>
+																	</span>
+																</label>
 																<d:TextField ui:field="txtContactEmail"
 																	type="email" styleName="form-control" placeholder="Email address"
 																	value="" required="true">
@@ -192,44 +292,44 @@
 											</div>
 										</div>
 
-										<div class="tab-pane" ui:field="divCategories">
+										<div class="tab-pane" ui:field="divCategories" style="min-height: 350px;">
 											<g:HTMLPanel styleName="row">
 												<div class="col-sm-12">
 													<h4 class="info-text">
 														<span ui:field="spnSelected">Fill In the Delegates to Attend:</span>
 													</h4>
-													<hr />
+													<hr style="margin: 10px 10px;" />
 												</div>
-
-												<div class="col-sm-12">
-													<div class="dropdown">
-														<a class="btn btn-primary btn-fill dropdown-toggle" id="dropdownMenu1"
-															data-toggle="dropdown" aria-expanded="true">
-															Add Delegate
-															<span class="caret"></span>
-														</a>
-														<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-															<li>
-																<d:ActionLink ui:field="aAddMember">Member</d:ActionLink>
-															</li>
-															<li>
-																<d:ActionLink ui:field="aAddNonMember">Non-Member</d:ActionLink>
-															</li>
-														</ul>
-													</div>
-												</div>
-
-												<div class="col-sm-12">
+												<div class="col-sm-12" style="margin-top:5px;">
 													<d:IssuesPanel ui:field="issuesPanelDelegate"
 														styleName="hide alert alert-danger"></d:IssuesPanel>
 												</div>
 												<br />
-
 												<div class="col-sm-12">
-													<grid:AggregationGrid ui:field="tblDelegates"></grid:AggregationGrid>
-												</div>
+													<div class="row">
+														<div class="col-lg-12">
+															<grid:AggregationGrid ui:field="tblDelegates"></grid:AggregationGrid>
+														</div>
+														<g:HTMLPanel styleName="col-lg-12 {style.action-section}">
+															<div class="col-sm-2 p0">
+																<d:ActionLink ui:field="aAddMember"
+																	styleName="btn btn-fill btn-gold">
+																	<i class="fa fa-user-plus" aria-hidden="true"></i>
+																	Add Member
+																</d:ActionLink>
+															</div>
+															<div class="col-sm-2 p0">
+																<d:ActionLink ui:field="aAddNonMember"
+																	styleName="btn btn-default btn-fill">Add Non-Member</d:ActionLink>
+															</div>
+														</g:HTMLPanel>
 
-												<br />
+														<g:HTMLPanel styleName="col-lg-12 {style.hidden-section}"
+															ui:field="divActionSection">
+														</g:HTMLPanel>
+
+													</div>
+												</div>
 											</g:HTMLPanel>
 										</div>
 
@@ -263,16 +363,20 @@
 											</div>
 										</div>
 
-										<div class="wizard-footer">
+										<div class="wizard-footer" ui:field="divWizardFooter">
 											<div class="pull-right">
 												<d:ActionLink styleName='hide' ui:field="aAccount"
 													href="#bookings">Pay Later
 												</d:ActionLink>
 
 												<g:Anchor
-													styleName='btn btn-next btn-fill btn-gold btn-wd
-										btn-sm hide'
+													styleName='btn btn-next btn-fill btn-gold btn-wd btn-sm hide'
 													ui:field="aNext">Proceed
+												</g:Anchor>
+
+												<g:Anchor
+													styleName='btn btn-next btn-fill btn-gold btn-wd btn-sm hide'
+													ui:field="aBrowseOthers" href="https://icpak.com/events">Browse other events
 												</g:Anchor>
 											</div>
 											<div class="pull-left">
@@ -285,6 +389,7 @@
 											<div class="clearfix"></div>
 										</div>
 									</g:HTMLPanel>
+
 								</div>
 							</div>
 						</g:HTMLPanel>

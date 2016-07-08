@@ -16,6 +16,7 @@ import com.workpoint.icpak.client.ui.accomodation.row.AccomodationTableRow;
 import com.workpoint.icpak.client.ui.accomodation.table.AccomodationTable;
 import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.DropDownList;
+import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.model.events.AccommodationDto;
 import com.workpoint.icpak.shared.model.events.EventDto;
 
@@ -30,9 +31,8 @@ public class AccomodationView extends ViewImpl implements
 	ActionLink aCreate;
 	@UiField
 	SpanElement spnEventTitle;
-
-	@UiField DropDownList<EventDto> lstEvents;
-	
+	@UiField
+	DropDownList<EventDto> lstEvents;
 	@UiField
 	AccomodationTable tblView;
 
@@ -42,15 +42,18 @@ public class AccomodationView extends ViewImpl implements
 	@Inject
 	public AccomodationView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
-		aCreate.setVisible(false);
-		lstEvents.addValueChangeHandler(new ValueChangeHandler<EventDto>() {
-			
-			@Override
-			public void onValueChange(ValueChangeEvent<EventDto> arg0) {
-				boolean show = arg0.getValue()!=null;
-				aCreate.setVisible(show);
-			}
-		});
+
+		if (AppContext.isCurrentUserEventEdit()) {
+			lstEvents.addValueChangeHandler(new ValueChangeHandler<EventDto>() {
+				@Override
+				public void onValueChange(ValueChangeEvent<EventDto> arg0) {
+					boolean show = arg0.getValue() != null;
+					aCreate.removeStyleName("hide");
+				}
+			});
+		} else {
+			aCreate.addStyleName("hide");
+		}
 	}
 
 	@Override
@@ -65,18 +68,18 @@ public class AccomodationView extends ViewImpl implements
 	@Override
 	public void bindAccommodations(List<AccommodationDto> accommodations) {
 		tblView.clearRows();
-		if(accommodations.isEmpty()){
-			tblView.showEmptyText(true,"No records to display");
-		}else{
-			tblView.showEmptyText(false,null);
+		if (accommodations.isEmpty()) {
+			tblView.showEmptyText(true, "No records to display");
+		} else {
+			tblView.showEmptyText(false, null);
 		}
-		
-		for(AccommodationDto accommodation: accommodations){
+
+		for (AccommodationDto accommodation : accommodations) {
 			tblView.createRow(new AccomodationTableRow(accommodation));
 		}
 	}
-	
-	public DropDownList<EventDto> getEventList(){
+
+	public DropDownList<EventDto> getEventList() {
 		return lstEvents;
 	}
 

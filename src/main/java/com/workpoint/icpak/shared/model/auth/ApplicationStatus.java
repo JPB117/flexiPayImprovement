@@ -1,5 +1,17 @@
 package com.workpoint.icpak.shared.model.auth;
 
-public enum ApplicationStatus {
-	SUBMITTED, PENDING, PROCESSING, APPROVED
+import com.workpoint.icpak.shared.model.Listable;
+
+public enum ApplicationStatus implements Listable {
+	SUBMITTED, PENDING, PROCESSING, APPROVED, CANCELLED;
+
+	@Override
+	public String getName() {
+		return name();
+	}
+
+	@Override
+	public String getDisplayName() {
+		return name();
+	}
 }

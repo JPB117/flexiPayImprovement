@@ -24,6 +24,7 @@ import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 import com.workpoint.icpak.shared.api.BookingsResource;
 import com.workpoint.icpak.shared.model.events.BookingDto;
+import com.workpoint.icpak.shared.model.events.BookingSummaryDto;
 import com.workpoint.icpak.shared.model.events.DelegateDto;
 
 @Api(value = "", description = "Handles CRUD for event Bookings")
@@ -44,10 +45,12 @@ public class BookingsResourceImpl implements BookingsResource {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Retrieve all active bookings")
-	public List<BookingDto> getAll(@ApiParam(value = "Starting point to fetch") @QueryParam("offset") Integer offset,
+	public List<BookingDto> getAll(
+			@ApiParam(value = "Starting point to fetch") @QueryParam("offset") Integer offset,
 			@ApiParam(value = "No of Items to fetch") @QueryParam("limit") Integer limit) {
 		String uri = "";
-		List<BookingDto> dtos = helper.getAllBookings(uri, eventId, offset, limit, "");
+		List<BookingDto> dtos = helper.getAllBookings(uri, eventId, offset,
+				limit, "");
 		return dtos;
 	}
 
@@ -69,26 +72,34 @@ public class BookingsResourceImpl implements BookingsResource {
 		return dto;
 	}
 
+	@GET
+	@Path("/summary/{eventRefId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public BookingSummaryDto getBookingSummary(
+			@PathParam("eventRefId") String eventRefId) {
+		BookingSummaryDto dto = helper.getBookingStats(eventRefId);
+		return dto;
+	}
+
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Create a new booking", response = Booking.class, consumes = MediaType.APPLICATION_JSON)
-	public BookingDto create(
-			// @ApiParam(value="Event for which booking is being created")
-			// @PathParam("eventId") String eventId,
-			BookingDto dto) {
-
+	public BookingDto create(BookingDto dto) {
 		String uri = "";
-		// URI requestUri = httpContext.getRequest().getRequestUri();
-		// String host = requestUri.getHost();
-		// int port = requestUri.getPort();
-		// uri = host+":"+port;
-
 		helper.createBooking(eventId, dto);
 		uri = uri + "/" + dto.getRefId();
 		dto.setUri(uri);
-
 		return dto;
+	}
+
+	@POST
+	@Path("/instantBooking")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "Make Payment for a booking", consumes = MediaType.APPLICATION_JSON)
+	public BookingDto createBookingByMemberNo(DelegateDto delegate) {
+		return helper.createBooking(eventId, delegate);
 	}
 
 	@POST
@@ -97,14 +108,12 @@ public class BookingsResourceImpl implements BookingsResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Make Payment for a booking", consumes = MediaType.APPLICATION_JSON)
 	public BookingDto makePayment(
-			// @ApiParam(value="Event for which payment is being made")
-			// @PathParam("eventId") String eventId,
 			@ApiParam(value = "Booking for which payment is being made") @PathParam("bookingId") String bookingId,
 			@ApiParam(value = "Payment Mode") @QueryParam("paymentMode") String paymentMode,
 			@ApiParam(value = "Payment referenceNo") @QueryParam("paymentRef") String paymentRef) {
 		String uri = "";
-
-		BookingDto dto = helper.processPayment(eventId, bookingId, paymentMode, paymentRef);
+		BookingDto dto = helper.processPayment(eventId, bookingId, paymentMode,
+				paymentRef);
 
 		return dto;
 	}
@@ -130,8 +139,8 @@ public class BookingsResourceImpl implements BookingsResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Delete an existing booking")
 	public void delete(
-			// @ApiParam(value="Event from which booking is being deleted")
-			// @PathParam("eventId") String eventId,
+	// @ApiParam(value="Event from which booking is being deleted")
+	// @PathParam("eventId") String eventId,
 			@ApiParam(value = "Booking Id of the booking to delete", required = true) @PathParam("bookingId") String bookingId) {
 		helper.deleteBooking(eventId, bookingId);
 	}
@@ -155,11 +164,24 @@ public class BookingsResourceImpl implements BookingsResource {
 	}
 
 	@POST
+	@Path("/cancel/{bookingId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public boolean cancelBooking(@PathParam("bookingId") String bookingId) {
+		return helper.cancelBooking(bookingId);
+	}
+
+	@POST
 	@Path("/resendProforma/{emails}/{bookingRefId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Send Proforma Invoice mail and sms")
-	public void resendProforma(@PathParam("emails") String newEmails, @PathParam("bookingRefId") String bookingRefId) {
+	public void resendProforma(@PathParam("emails") String newEmails,
+			@PathParam("bookingRefId") String bookingRefId) {
 		// helper.sendProInvoice(newEmail);
 	}
 
+	public Integer getBookingCount(String searchTerm, String accomodationRefId,
+			String bookingStatus) {
+		return helper.getDelegatesCount(eventId, searchTerm, accomodationRefId,
+				bookingStatus);
+	}
 }

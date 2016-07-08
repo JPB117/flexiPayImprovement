@@ -82,8 +82,7 @@ public class EventsTableRow extends RowWidget {
 			divEventName.addStyleName("event-active");
 		} else {
 			divDate.addStyleName("event-inactive");
-			lDays.setText("[ " + DateUtils.getTimeDifference(endDate)
-					+ " a go]");
+			lDays.setText("[ " + DateUtils.getTimeDifference(endDate) + " ago]");
 			divEventType.addStyleName("event-inactive");
 			divDelegates.addStyleName("event-inactive");
 			divEventLocation.addStyleName("event-inactive");
@@ -94,8 +93,12 @@ public class EventsTableRow extends RowWidget {
 		}
 
 		divDate.add(new InlineLabel(dates));
-		setEventType(event.getType());
-		divEventType.add(new InlineLabel(event.getType().getDisplayName()));
+		if (event.getType() != null) {
+			setEventType(EventType.valueOf(event.getType()));
+			String eventType = (EventType.valueOf(event.getType()))
+					.getDisplayName();
+			divEventType.add(new InlineLabel(eventType));
+		}
 		divDelegates.add(new InlineLabel(event.getDelegateCount() + ""));
 		divEventLocation.add(new InlineLabel(event.getVenue()));
 		if (event.getPaidCount() != null) {

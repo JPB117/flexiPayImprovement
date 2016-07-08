@@ -27,6 +27,7 @@ import com.workpoint.icpak.shared.model.PaymentStatus;
 import com.workpoint.icpak.shared.model.TableActionType;
 import com.workpoint.icpak.shared.model.events.AttendanceStatus;
 import com.workpoint.icpak.shared.model.events.DelegateDto;
+import com.workpoint.icpak.shared.model.events.EventDto;
 
 public class DelegateTableRow extends RowWidget {
 
@@ -46,21 +47,19 @@ public class DelegateTableRow extends RowWidget {
 	@UiField
 	HTMLPanel divContactName;
 	@UiField
-	HTMLPanel divSponsorEmail;
-	@UiField
-	HTMLPanel divMemberNo;
-	@UiField
 	HTMLPanel divErnNo;
 	@UiField
 	HTMLPanel divDelegateNames;
 	@UiField
 	HTMLPanel divAccomodation;
 	@UiField
+	HTMLPanel divAction;
+	@UiField
 	SpanElement spnPaymentStatus;
 	@UiField
-	SpanElement spnAttendance;
+	SpanElement spnBookingStatus;
 	@UiField
-	SpanElement spnIsMember;
+	SpanElement spnAttendance;
 	@UiField
 	ActionLink aEnrol;
 	@UiField
@@ -73,15 +72,27 @@ public class DelegateTableRow extends RowWidget {
 	ActionLink aProforma;
 	@UiField
 	ActionLink aResendProforma;
-	private DelegateDto delegate;
+	@UiField
+	ActionLink aEditBooking;
+	@UiField
+	ActionLink aCancelBooking;
+	@UiField
+	ActionLink aUndoCancelBooking;
 
-	public DelegateTableRow() {
-		initWidget(uiBinder.createAndBindUi(this));
+	private DelegateDto delegate;
+	private EventDto event;
+
+	public void initDisplay() {
+		if (AppContext.isCurrentUserEventEdit()
+				|| AppContext.isCurrentUserFinanceEdit()) {
+			divAction.removeStyleName("hide");
+		} else {
+			divAction.addStyleName("hide");
+		}
 		aAttended.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				onAttendanceChanged(AttendanceStatus.ATTENDED);
-
 			}
 		});
 		aNotAttended.addClickHandler(new ClickHandler() {
@@ -90,11 +101,16 @@ public class DelegateTableRow extends RowWidget {
 				onAttendanceChanged(AttendanceStatus.NOTATTENDED);
 			}
 		});
-
 		aEnrol.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				onAttendanceChanged(AttendanceStatus.ENROLLED);
+			}
+		});
+		aUndoCancelBooking.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				undoCancellation();
 			}
 		});
 
@@ -128,16 +144,64 @@ public class DelegateTableRow extends RowWidget {
 		aProforma.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				// Window.alert("Proforma" + delegate.getBookingRefId());
 				UploadContext ctx = new UploadContext("getreport");
 				ctx.setContext("bookingRefId", delegate.getBookingRefId());
 				ctx.setAction(UPLOADACTION.GETPROFORMA);
-
-				// ctx.setContext(key, value)
 				Window.open(ctx.toUrl(), "Get Proforma", null);
 			}
 		});
 
+		if (delegate != null) {
+			final String editUrl = "#eventBooking;eventId=" + event.getRefId()
+					+ ";bookingId=" + delegate.getBookingRefId();
+			// aEditBooking.setHref(editUrl);
+			aEditBooking.addClickHandler(new ClickHandler() {
+				@Override
+				public void onClick(ClickEvent event) {
+					Window.open(editUrl, "Edit Booking", null);
+				}
+			});
+
+			aCancelBooking.addClickHandler(new ClickHandler() {
+				@Override
+				public void onClick(ClickEvent event) {
+					AppManager
+							.showPopUp(
+									"Confirm",
+									"Are you sure you want to cancel this booking - both the sponsor and the delegates will be notified...",
+									new OnOptionSelected() {
+										@Override
+										public void onSelect(String name) {
+											if (name.equals("Cancel Entire Booking")) {
+												AppContext
+														.fireEvent(new EditModelEvent(
+																delegate.getBookingRefId()));
+											} else if (name
+													.equals("Cancel Individual Delegate")) {
+												AppContext
+														.fireEvent(new EditModelEvent(
+																delegate.getRefId()));
+											}
+										}
+									}, "Cancel Entire Booking",
+									"Cancel Individual Delegate");
+				}
+			});
+		}
+
+	}
+
+	protected void undoCancellation() {
+		AppManager.showPopUp("Confirm", "Undo this cancellation?",
+				new OnOptionSelected() {
+					@Override
+					public void onSelect(String name) {
+						if (name.equals("Confirm")) {
+							delegate.setIsBookingActive(1);
+							AppContext.fireEvent(new EditModelEvent(delegate));
+						}
+					}
+				}, "Confirm", "Cancel");
 	}
 
 	protected void updatePaymentInfo() {
@@ -148,7 +212,6 @@ public class DelegateTableRow extends RowWidget {
 					@Override
 					public void onSelect(String name) {
 						if (name.equals("Save")) {
-							DelegateDto d = paymentWidget.getDelegate();
 							AppContext.fireEvent(new EditModelEvent(
 									paymentWidget.getDelegate()));
 						}
@@ -157,7 +220,7 @@ public class DelegateTableRow extends RowWidget {
 	}
 
 	protected void onAttendanceChanged(final AttendanceStatus attendanceStatus) {
-		AppManager.showPopUp("Confirm", "Confirm " + delegate.getSurname()
+		AppManager.showPopUp("Confirm", "Confirm " + delegate.getFullName()
 				+ " " + attendanceStatus.getDisplayName() + " this event?",
 				new OnOptionSelected() {
 					@Override
@@ -172,26 +235,53 @@ public class DelegateTableRow extends RowWidget {
 
 	}
 
-	public DelegateTableRow(DelegateDto delegate, EventType eventType) {
-		this();
+	public DelegateTableRow(final DelegateDto delegate, EventDto event) {
+		initWidget(uiBinder.createAndBindUi(this));
 		this.delegate = delegate;
+		this.event = event;
+
+		// Ensure that you instanciate all variables before calling the next
+		// method!
+		initDisplay();
 		divBookingDate.getElement().setInnerText(
-				DateUtils.CREATEDFORMAT.format(delegate.getCreatedDate()));
+				DateUtils.READABLETIMESTAMP.format(delegate.getCreatedDate()));
 		if (delegate.getCompanyName() != null) {
-			divSponsorNames.getElement()
-					.setInnerText(delegate.getCompanyName());
+			ActionLink invoiceLink = new ActionLink(delegate.getInvoiceNo());
+			invoiceLink.addClickHandler(new ClickHandler() {
+				@Override
+				public void onClick(ClickEvent event) {
+					UploadContext ctx = new UploadContext("getreport");
+					ctx.setContext("bookingRefId", delegate.getBookingRefId());
+					ctx.setAction(UPLOADACTION.GETPROFORMA);
+					Window.open(ctx.toUrl(), "Get Proforma", null);
+				}
+			});
+			divSponsorNames.getElement().setInnerHTML(
+					delegate.getCompanyName() + " (" + invoiceLink + ")");
 		}
 
 		if (delegate.getErn() != null) {
 			divErnNo.getElement().setInnerText(delegate.getErn());
 		}
-		divContactName.getElement().setInnerText(delegate.getContactName());
-		divSponsorEmail.getElement().setInnerText(delegate.getContactEmail());
+		divContactName.getElement().setInnerHTML(
+				delegate.getContactName() + "<br/><small class='text-muted'>"
+						+ delegate.getContactEmail() + "</small>");
+
+		InlineLabel spnIsMember = new InlineLabel();
 		if (delegate.getMemberNo() != null) {
-			divMemberNo.getElement().setInnerText(delegate.getMemberNo());
+			spnIsMember.setStyleName("label label-info");
+			spnIsMember.setText("M");
 		}
+
+		InlineLabel spnMemberNo = new InlineLabel();
+		if (delegate.getMemberNo() != null) {
+			spnMemberNo.getElement().setInnerText(
+					" - " + delegate.getMemberNo());
+		}
+
 		if (delegate.getFullName() != null) {
-			divDelegateNames.getElement().setInnerText(delegate.getFullName());
+			divDelegateNames.getElement().setInnerHTML(
+					delegate.getFullName() + spnMemberNo + " " + spnIsMember);
 		} else {
 			divDelegateNames.getElement().setInnerText(
 					(delegate.getTitle() == null ? "" : delegate.getTitle()
@@ -202,84 +292,100 @@ public class DelegateTableRow extends RowWidget {
 									.getOtherNames() + " "));
 		}
 
-		if (delegate.getAccommodation() != null) {
-			divAccomodation.add(new InlineLabel(delegate.getAccommodation()
-					.getHotel() + ""));
+		if (delegate.getHotel() != null) {
+			divAccomodation.add(new InlineLabel(delegate.getHotel() + ""));
 		} else {
 			divAccomodation.getElement().setInnerText("None");
 		}
 
-		if (delegate.getMemberNo() == null) {
-			spnIsMember.setClassName("fa fa-times");
+		if (delegate.getIsBookingActive() == 1) {
+			spnBookingStatus.setClassName("label label-success");
+			spnBookingStatus.setInnerText("Active");
 		} else {
-			spnIsMember.setClassName("fa fa-check");
+			spnBookingStatus.setClassName("label label-danger");
+			spnBookingStatus.setInnerText("Cancelled");
 		}
 
-		setPaymentStatus(delegate.getPaymentStatus());
+		determinePaymentStatus(delegate.getBookingPaymentStatus(),
+				delegate.getDelegatePaymentStatus());
 		setAttendance(delegate.getAttendance());
-		setActionButtons(eventType);
+		if (event.getType() != null) {
+			setActionButtons(EventType.valueOf(event.getType()));
+		}
 	}
 
 	private void setActionButtons(EventType eventType) {
-		if (eventType == EventType.COURSE) {
-			aEnrol.setVisible(true);
-			aAttended.setVisible(false);
-			aNotAttended.setVisible(false);
-		} else {
-			aEnrol.setVisible(false);
-			aAttended.setVisible(true);
-			aNotAttended.setVisible(true);
-		}
+		boolean isUpdatePaymentVisible = (AppContext.isCurrentUserFinanceEdit()
+				&& delegate.getIsBookingActive() == 1 ? true : false);
+
+		boolean isEditBookingVisible = (AppContext.isCurrentUserEventEdit()
+				&& delegate.getAttendance() == AttendanceStatus.NOTATTENDED
+				&& delegate.getIsBookingActive() == 1 ? true : false);
+
+		boolean isCancelBookingVisible = (AppContext.isCurrentUserEventEdit()
+				&& delegate.getAttendance() == AttendanceStatus.NOTATTENDED
+				&& delegate.getIsBookingActive() == 1 ? true : false);
+
+		boolean isUndoCancelVisible = (AppContext.isCurrentUserEventEdit()
+				&& delegate.getAttendance() == AttendanceStatus.NOTATTENDED
+				&& delegate.getIsBookingActive() == 0 ? true : false);
+
+		boolean isAttendedVisible = (eventType != EventType.EVENT
+				&& AppContext.isCurrentUserEventEdit()
+				&& delegate.getAttendance() == AttendanceStatus.NOTATTENDED
+				&& delegate.getIsBookingActive() == 1 ? true : false);
+
+		boolean isNotAttendedVisible = (eventType != EventType.EVENT
+				&& AppContext.isCurrentUserEventEdit()
+				&& delegate.getAttendance() == AttendanceStatus.ATTENDED
+				&& delegate.getIsBookingActive() == 1 ? true : false);
+
+		boolean isEnrolVisible = (eventType == EventType.COURSE
+				&& AppContext.isCurrentUserEventEdit()
+				&& delegate.getAttendance() == AttendanceStatus.NOTENROLLED
+				&& delegate.getIsBookingActive() == 1 ? true : false);
+
+		aUpdatePayment.setVisible(isUpdatePaymentVisible);
+		aEditBooking.setVisible(isEditBookingVisible);
+		aCancelBooking.setVisible(isCancelBookingVisible);
+		aUndoCancelBooking.setVisible(isUndoCancelVisible);
+		aAttended.setVisible(isAttendedVisible);
+		aNotAttended.setVisible(isNotAttendedVisible);
+		aEnrol.setVisible(isEnrolVisible);
 	}
 
 	private void setAttendance(AttendanceStatus attendance) {
 		if (attendance != null) {
-			// spnAttendance.setInnerText(attendance.getDisplayName());
 			if (attendance == AttendanceStatus.NOTATTENDED
 					|| attendance == AttendanceStatus.NOTENROLLED) {
-				// spnAttendance.removeClassName("label-success");
-				// spnAttendance.addClassName("label-danger");
 				spnAttendance.setClassName("fa fa-times");
 			} else {
-				// spnAttendance.removeClassName("label-danger");
-				// spnAttendance.addClassName("label-success");
 				spnAttendance.setClassName("fa fa-check");
 			}
 		}
 	}
 
-	private void setPaymentStatus(PaymentStatus paymentStatus) {
-		if (paymentStatus != null) {
-			// spnPaymentStatus.setInnerText(paymentStatus.name());
-			if (paymentStatus == PaymentStatus.NOTPAID) {
-				// spnPaymentStatus.removeClassName("label-success");
-				// spnPaymentStatus.addClassName("label-danger");
-				spnPaymentStatus.setClassName("fa fa-times");
+	private void determinePaymentStatus(PaymentStatus bookingPaymentStatus,
+			PaymentStatus delegatePaymentStatus) {
+		if (bookingPaymentStatus != null) {
+			if (bookingPaymentStatus == PaymentStatus.PAID
+					|| bookingPaymentStatus == PaymentStatus.Credit) {
+				setPaymentStatus(bookingPaymentStatus);
 			} else {
-				spnPaymentStatus.setClassName("fa fa-check");
+				setPaymentStatus(delegatePaymentStatus);
 			}
 		}
-
 	}
 
-	// public void InsertParameters(TextField memberNo, TextField title,
-	// TextField surName, TextField otherNames, TextField email,
-	// Integer rowId) {
-	// divMemberNo.add(memberNo);
-	// divTitle.add(title);
-	// divSurName.add(surName);
-	// divOtherNames.add(otherNames);
-	// divEmail.add(email);
-	// this.rowId = rowId;
-	// }
-	//
-	// public void showAdvancedDetails(boolean show) {
-	// if (show) {
-	// divPaymentStatus.setVisible(true);
-	// divAttendance.setVisible(true);
-	// } else {
-	// divPaymentStatus.setVisible(false);
-	// divAttendance.setVisible(false);
-	// }
-	// }
+	private void setPaymentStatus(PaymentStatus paymentStatus) {
+		if (paymentStatus == PaymentStatus.NOTPAID || paymentStatus == null) {
+			spnPaymentStatus.setClassName("fa fa-times");
+		} else if (paymentStatus == PaymentStatus.Credit) {
+			spnPaymentStatus.setClassName("fa fa-check");
+			spnPaymentStatus
+					.setInnerHTML("<br/><span class='text-muted' style='font-size:11px;'>Credit</span>");
+		} else if (paymentStatus == PaymentStatus.PAID) {
+			spnPaymentStatus.setClassName("fa fa-check");
+		}
+	}
 }

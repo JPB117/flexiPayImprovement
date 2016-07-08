@@ -19,7 +19,7 @@ public class AccommodationsDaoHelper {
 
 	public List<AccommodationDto> getAllAccommodations(String eventId,
 			Integer offset, Integer limit) {
-
+		
 		Collection<Accommodation> accommodations = null;
 		if (eventId.equals("ALL")) {
 			accommodations = dao.getAllAccommodations();

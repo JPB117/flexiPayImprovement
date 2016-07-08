@@ -1,10 +1,6 @@
 package com.workpoint.icpak.client.ui.login;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -100,6 +96,8 @@ public class LoginPresenter extends
 	private ResourceDelegate<UsersResource> usersDelegate;
 
 	private ResourceDelegate<SessionResource> sessionResource;
+
+	private String redirect = "";
 
 	@Inject
 	public LoginPresenter(final EventBus eventBus, final ILoginView view,
@@ -218,43 +216,44 @@ public class LoginPresenter extends
 	}
 
 	public void redirectToLoggedOnPage() {
-		String redirect = "";
 		String redirectType = "";
 		String resource = "";
-
-		if (AppContext.isCurrentUserAdmin()) {
-			redirect = NameTokens.getAdminDefaultPage();
-		} else {
-			redirect = NameTokens.getOnLoginDefaultPage();
+		redirect = "";
+		if (redirect.equals("")) {
+			if (AppContext.isCurrentUserAdmin()) {
+				redirect = NameTokens.getAdminDefaultPage();
+			} else if (AppContext.isCurrentUserEventEdit()
+					|| AppContext.isCurrentUserEventRead()) {
+				redirect = NameTokens.events;
+			} else if (AppContext.isCurrentUserUsersEdit()
+					|| AppContext.isCurrentUserUsersRead()) {
+				redirect = NameTokens.usermgt;
+			} else if (AppContext.isCurrentUserApplicationsEdit()
+					|| AppContext.isCurrentUserApplicationsRead()) {
+				redirect = NameTokens.members;
+			} else if (AppContext.isCurrentUserCPDEdit()
+					|| AppContext.isCurrentUserCPDRead()) {
+				redirect = NameTokens.cpd;
+			} else if (AppContext.isCurrentUserFinanceEdit()
+					|| AppContext.isCurrentUserFinanceRead()) {
+				redirect = NameTokens.invoices;
+			} else {
+				redirect = NameTokens.getOnLoginDefaultPage();
+			}
 		}
-
-		Set<String> allStrings = placeManager.getCurrentPlaceRequest()
-				.getParameterNames();
-		Map<String, String> params = new HashMap<String, String>();
-
-		for (Iterator<String> it = allStrings.iterator(); it.hasNext();) {
-			String item = it.next();
-			params.put(item, placeManager.getCurrentPlaceRequest()
-					.getParameter(item, ""));
-		}
-
 		String token = placeManager.getCurrentPlaceRequest().getParameter(
 				ParameterTokens.REDIRECT, redirect);
 		String type = placeManager.getCurrentPlaceRequest().getParameter(
 				ParameterTokens.REDIRECTTYPE, redirectType);
 		String resourceValue = placeManager.getCurrentPlaceRequest()
 				.getParameter(ParameterTokens.RESOURCE, resource);
-
 		if (type.equals("website")) {
 			Window.Location.replace("https://icpak.com/resource/"
 					+ resourceValue);
 		} else {
-			PlaceRequest placeRequest = new Builder().nameToken(token)
-					.with(params).build();
+			PlaceRequest placeRequest = new Builder().nameToken(token).build();
 			placeManager.revealPlace(placeRequest);
-
 		}
-
 	}
 
 	public void setLoggedInCookie(String value) {

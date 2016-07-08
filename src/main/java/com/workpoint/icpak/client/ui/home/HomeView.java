@@ -2,6 +2,8 @@ package com.workpoint.icpak.client.ui.home;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
@@ -12,6 +14,9 @@ import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.Tab;
 import com.gwtplatform.mvp.client.TabData;
 import com.gwtplatform.mvp.client.ViewImpl;
+import com.workpoint.icpak.client.ui.component.ActionLink;
+import com.workpoint.icpak.client.ui.events.LogoutEvent;
+import com.workpoint.icpak.client.util.AppContext;
 
 public class HomeView extends ViewImpl implements HomePresenter.IHomeView {
 
@@ -23,14 +28,37 @@ public class HomeView extends ViewImpl implements HomePresenter.IHomeView {
 	@UiField
 	HomeTabPanel tabPanel;
 	@UiField
+	HTMLPanel panelHome;
+	@UiField
 	HTMLPanel tabContent;
-
 	@UiField
 	Element panelContent;
+	@UiField
+	Element elSideBar;
+	@UiField
+	ActionLink aRemoveMenu;
+
+	@UiField
+	ActionLink aLogout;
 
 	@Inject
 	public HomeView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
+
+		aRemoveMenu.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				showSideBar(false);
+			}
+		});
+
+		aLogout.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				AppContext.fireEvent(new LogoutEvent());
+				showSideBar(false);
+			}
+		});
 	}
 
 	@Override
@@ -97,15 +125,29 @@ public class HomeView extends ViewImpl implements HomePresenter.IHomeView {
 	public void setMiddleHeight() {
 		int totalHeight = Window.getClientHeight();
 		int topHeight = 50;
-		// int footerHeight = divFooter.getOffsetHeight();
-		// int topicsHeight = divHeaderContainer.getOffsetHeight();
 		int middleHeight = totalHeight - topHeight;
-
-		// Window.alert("\nTotalHeight:" + totalHeight + "MiddleHeight>>"
-		// + middleHeight + "TopHeight" + topHeight);
-
 		if (middleHeight > 0) {
 			panelContent.getStyle().setHeight(middleHeight, Unit.PX);
+		}
+	}
+
+	@Override
+	public void showFullScreen(String message) {
+		if (message.equals("show")) {
+			elSideBar.addClassName("hide");
+			panelContent.addClassName("ml0");
+		} else {
+			elSideBar.removeClassName("hide");
+			panelContent.removeClassName("ml0");
+		}
+	}
+
+	@Override
+	public void showSideBar(boolean show) {
+		if (show) {
+			panelHome.addStyleName("enable-mobile-menu");
+		} else {
+			panelHome.removeStyleName("enable-mobile-menu");
 		}
 	}
 

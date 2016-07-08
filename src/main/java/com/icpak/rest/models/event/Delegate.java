@@ -15,6 +15,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 import com.icpak.rest.models.base.PO;
 import com.wordnik.swagger.annotations.ApiModel;
+import com.workpoint.icpak.shared.model.PaymentStatus;
 import com.workpoint.icpak.shared.model.events.AttendanceStatus;
 import com.workpoint.icpak.shared.model.events.DelegateDto;
 
@@ -38,7 +39,14 @@ public class Delegate extends PO {
 	private String otherNames;
 	private String fullName;
 	private String email;
-
+	private String phoneNumber;
+	private String receiptNo;
+	private String lpoNo;
+	private int isCredit;
+	private String clearanceNo;
+	private String sponsorTelephoneNo;
+	private String memberQrCode;
+	private String lmsResponse;
 	@Transient
 	private String bookingId;
 	@ManyToOne
@@ -48,13 +56,12 @@ public class Delegate extends PO {
 	private Double amount;
 	@Enumerated(EnumType.ORDINAL)
 	private AttendanceStatus attendance = AttendanceStatus.NOTATTENDED;
+	@Enumerated(EnumType.STRING)
+	private PaymentStatus paymentStatus;
+
 	@ManyToOne
 	@JoinColumn(name = "accommodationId")
-	private Accommodation accommodation;
-	private String receiptNo;
-	private String lpoNo;
-	private int isCredit;
-	private String clearanceNo;
+	private Accommodation accommodationId;
 
 	public String getBookingId() {
 		return bookingId;
@@ -157,10 +164,12 @@ public class Delegate extends PO {
 		if (delegateDto.getAttendance() != null) {
 			setAttendance(delegateDto.getAttendance());
 		}
+		setMemberQrCode(delegateDto.getMemberQrCode());
 		setIsCredit(delegateDto.getIsCredit());
 		setLpoNo(delegateDto.getLpoNo());
 		setReceiptNo(delegateDto.getLpoNo());
 		setClearanceNo(delegateDto.getClearanceNo());
+		setLmsResponse(delegateDto.getLmsResponse());
 	}
 
 	public DelegateDto toDto() {
@@ -189,11 +198,11 @@ public class Delegate extends PO {
 	}
 
 	public Accommodation getAccommodation() {
-		return accommodation;
+		return accommodationId;
 	}
 
 	public void setAccommodation(Accommodation accommodation) {
-		this.accommodation = accommodation;
+		this.accommodationId = accommodation;
 	}
 
 	public Double getAmount() {
@@ -247,6 +256,45 @@ public class Delegate extends PO {
 
 	public void setFullName(String fullName) {
 		this.fullName = fullName;
+	}
+
+	public String getSponsorTelephoneNo() {
+		return sponsorTelephoneNo;
+	}
+
+	public void setSponsorTelephoneNo(String sponsorTelephoneNo) {
+		this.sponsorTelephoneNo = sponsorTelephoneNo;
+	}
+
+	public String getMemberQrCode() {
+		return memberQrCode;
+	}
+
+	public void setMemberQrCode(String memberQrCode) {
+		this.memberQrCode = memberQrCode;
+	}
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+
+	public String getLmsResponse() {
+		return lmsResponse;
+	}
+
+	public void setLmsResponse(String lmsResponse) {
+		this.lmsResponse = lmsResponse;
+	}
+	public PaymentStatus getPaymentStatus() {
+		return paymentStatus;
+	}
+	
+	public void setPaymentStatus(PaymentStatus paymentStatus) {
+		this.paymentStatus = paymentStatus;
 	}
 
 }

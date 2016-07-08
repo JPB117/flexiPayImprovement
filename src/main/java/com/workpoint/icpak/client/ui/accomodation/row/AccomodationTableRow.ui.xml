@@ -8,11 +8,11 @@
 		<g:HTMLPanel styleName="td" ui:field="divHotelName">
 			<g:Anchor ui:field="aHotelName"></g:Anchor>
 		</g:HTMLPanel>
-		<g:HTMLPanel styleName="td" ui:field="divNights">
-		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divSpaces">
 		</g:HTMLPanel>
-		<g:HTMLPanel styleName="td" ui:field="divOccupied">
+		<g:HTMLPanel styleName="td" ui:field="divBooked">
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="td" ui:field="divAvailable">
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divPrice">
 		</g:HTMLPanel>

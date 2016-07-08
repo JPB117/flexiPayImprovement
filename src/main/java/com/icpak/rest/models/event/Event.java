@@ -20,7 +20,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 import com.icpak.rest.models.base.PO;
 import com.wordnik.swagger.annotations.ApiModel;
-import com.workpoint.icpak.server.util.DateUtils;
+import com.workpoint.icpak.server.util.ServerDateUtils;
 import com.workpoint.icpak.shared.model.EventStatus;
 import com.workpoint.icpak.shared.model.EventType;
 import com.workpoint.icpak.shared.model.events.AccommodationDto;
@@ -46,7 +46,7 @@ public class Event extends PO {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@Column(length = 255, nullable = false)
+	@Column(length = 5000, nullable = false)
 	private String name;
 	@Column(length = 5000)
 	private String description;
@@ -70,6 +70,11 @@ public class Event extends PO {
 	private Double associatePrice;
 	private Double discountAssociatePrice;
 	private Double penaltyAssociatePrice;
+	private Integer totalMpesaPayments = 0;
+	private Integer totalCardsPayment = 0;
+	private Integer totalOfflinePayment = 0;
+	private Integer totalCredit = 0;
+	private Integer totalReceiptPayment = 0;
 	private Date discountDate;
 	private Date penaltyDate;
 	private Integer lmsCourseId;
@@ -263,26 +268,31 @@ public class Event extends PO {
 		dto.setCpdHours(cpdHours);
 		dto.setDescription(description);
 		dto.setCategoryName(categoryName);
+		dto.setCourseId(lmsCourseId);
 
 		if (endDate != null)
-			dto.setEndDate(DateUtils.format(endDate, DateUtils.FULLTIMESTAMP));
+			dto.setEndDate(ServerDateUtils.format(endDate,
+					ServerDateUtils.FULLTIMESTAMP));
 
 		if (startDate != null) {
-			dto.setStartDate(DateUtils.format(startDate,
-					DateUtils.FULLTIMESTAMP));
+			dto.setStartDate(ServerDateUtils.format(startDate,
+					ServerDateUtils.FULLTIMESTAMP));
 		}
+
 		dto.setMemberPrice(memberPrice);
 		dto.setName(name);
 		dto.setNonMemberPrice(nonMemberPrice);
 		dto.setAssociatePrice(associatePrice);
 		if (penaltyDate != null) {
-			dto.setPenaltyDate(DateUtils.DATEFORMAT_SYS.format(penaltyDate));
+			dto.setPenaltyDate(ServerDateUtils.DATEFORMAT_SYS
+					.format(penaltyDate));
 		}
 		if (discountDate != null) {
-			dto.setDiscountDate(DateUtils.DATEFORMAT_SYS.format(discountDate));
+			dto.setDiscountDate(ServerDateUtils.DATEFORMAT_SYS
+					.format(discountDate));
 		}
-		dto.setStatus(status);
-		dto.setType(type);
+		dto.setStatus(status.toString());
+		dto.setType(type.toString());
 		dto.setVenue(venue);
 
 		if (includeAccommodation) {
@@ -303,12 +313,12 @@ public class Event extends PO {
 		setCpdHours(dto.getCpdHours());
 		setDescription(dto.getDescription());
 		if (dto.getEndDate() != null) {
-			setEndDate(DateUtils.parse(dto.getEndDate(),
-					DateUtils.SHORTTIMESTAMP));
+			setEndDate(ServerDateUtils.parse(dto.getEndDate(),
+					ServerDateUtils.SHORTTIMESTAMP));
 		}
 		if (dto.getStartDate() != null) {
-			setStartDate(DateUtils.parse(dto.getStartDate(),
-					DateUtils.SHORTTIMESTAMP));
+			setStartDate(ServerDateUtils.parse(dto.getStartDate(),
+					ServerDateUtils.SHORTTIMESTAMP));
 		}
 
 		// Member Price
@@ -340,19 +350,28 @@ public class Event extends PO {
 
 		// Discount Date
 		if (dto.getDiscountDate() != null) {
-			setDiscountDate(DateUtils.parse(dto.getDiscountDate(),
-					DateUtils.SHORTTIMESTAMP));
+			setDiscountDate(ServerDateUtils.parse(dto.getDiscountDate(),
+					ServerDateUtils.SHORTTIMESTAMP));
 		}
 
 		// Penalty Date
 		if (dto.getPenaltyDate() != null) {
-			setPenaltyDate(DateUtils.parse(dto.getPenaltyDate(),
-					DateUtils.SHORTTIMESTAMP));
+			setPenaltyDate(ServerDateUtils.parse(dto.getPenaltyDate(),
+					ServerDateUtils.SHORTTIMESTAMP));
 		}
 
 		setName(dto.getName());
-		setStatus(dto.getStatus());
-		setType(dto.getType());
+		if (dto.getStatus() == null || dto.getStatus().isEmpty()) {
+			setStatus(EventStatus.OPEN);
+		} else {
+			setStatus(EventStatus.valueOf(dto.getStatus()));
+		}
+		if (dto.getType() == null || dto.getType().isEmpty()) {
+			setType(EventType.SEMINAR);
+		} else {
+			setType(EventType.valueOf(dto.getType()));
+		}
+
 		setVenue(dto.getVenue());
 		setCategoryName(dto.getCategoryName());
 
@@ -415,13 +434,13 @@ public class Event extends PO {
 		}
 
 		if (dto.getEndDate() != null) {
-			setEndDate(DateUtils.parse(dto.getEndDate(),
-					DateUtils.SHORTTIMESTAMP));
+			setEndDate(ServerDateUtils.parse(dto.getEndDate(),
+					ServerDateUtils.SHORTTIMESTAMP));
 		}
 
 		if (dto.getStartDate() != null) {
-			setStartDate(DateUtils.parse(dto.getStartDate(),
-					DateUtils.SHORTTIMESTAMP));
+			setStartDate(ServerDateUtils.parse(dto.getStartDate(),
+					ServerDateUtils.SHORTTIMESTAMP));
 		}
 
 		if (dto.getName() != null) {
@@ -508,6 +527,46 @@ public class Event extends PO {
 
 	public void setLmsCourseId(Integer lmsCourseId) {
 		this.lmsCourseId = lmsCourseId;
+	}
+
+	public Integer getTotalMpesaPayments() {
+		return totalMpesaPayments;
+	}
+
+	public void setTotalMpesaPayments(Integer totalMpesaPayments) {
+		this.totalMpesaPayments = totalMpesaPayments;
+	}
+
+	public Integer getTotalCardsPayment() {
+		return totalCardsPayment;
+	}
+
+	public void setTotalCardsPayment(Integer totalCardsPayment) {
+		this.totalCardsPayment = totalCardsPayment;
+	}
+
+	public Integer getTotalOfflinePayment() {
+		return totalOfflinePayment;
+	}
+
+	public void setTotalOfflinePayment(Integer totalOfflinePayment) {
+		this.totalOfflinePayment = totalOfflinePayment;
+	}
+
+	public Integer getTotalCredit() {
+		return totalCredit;
+	}
+
+	public void setTotalCredit(Integer totalCredit) {
+		this.totalCredit = totalCredit;
+	}
+
+	public Integer getTotalReceiptPayment() {
+		return totalReceiptPayment;
+	}
+
+	public void setTotalReceiptPayment(Integer totalReceiptPayment) {
+		this.totalReceiptPayment = totalReceiptPayment;
 	}
 
 }

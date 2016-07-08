@@ -38,7 +38,7 @@
 		padding-left: 0px;
 	}
 	</ui:style>
-	<g:HTMLPanel>
+	<g:HTMLPanel styleName="row" ui:field="panelParent">
 		<g:HTMLPanel ui:field="divProfileContent" styleName="col-xs-12">
 			<g:HTMLPanel styleName="row">
 				<div class="col-xs-12">
@@ -46,12 +46,18 @@
 						<g:HTMLPanel ui:field="panelBreadcrumb">
 							<ol class="breadcrumb">
 								<li>
-									<a href="#members" ui:field="aBackToApplications" class="btn btn-fill btn-primary">
+									<a ui:field="aBackToApplications" class="btn btn-fill btn-primary"
+										onClick="window.history.back()">
 										<i class="fa fa-angle-double-left"></i>
 										Applications
 									</a>
 								</li>
 								<div class="pull-right">
+									<d:ActionLink ui:field="aMgmtActions"
+										styleName="{style.previous-link} btn btn-default btn-fill">
+										Management Actions
+									</d:ActionLink>
+
 									<d:ActionLink ui:field="aPreviousApplication"
 										styleName="{style.previous-link} btn btn-default btn-fill">
 										<i class="fa fa-chevron-left"></i>
@@ -100,8 +106,12 @@
 						</div>
 
 						<div class="panel-body">
-							<g:HTMLPanel ui:field="profileViewMode" styleName="row profile-page">
+							<g:HTMLPanel ui:field="panelProfileError" styleName="alert alert-danger hide">
+								There was a problem loading your profile. Please contact
+								itsupport@icpak.com to fix this.
+							</g:HTMLPanel>
 
+							<g:HTMLPanel ui:field="profileViewMode" styleName="row profile-page">
 								<div class="row">
 									<div class="col-lg-10">
 										<g:HTMLPanel ui:field="panelIssues" styleName="alert alert-danger hide">
@@ -110,8 +120,6 @@
 										</g:HTMLPanel>
 									</div>
 								</div>
-
-
 								<div class="row">
 									<div class="col-lg-2 profile-picture">
 										<g:HTMLPanel ui:field="profileViewEditMode">
@@ -149,11 +157,25 @@
 											<div class="row" ui:field="divMembershipNo">
 												<span class="text-muted" ui:field="spnApplicationType">
 												</span>
+												<span ui:field="spnChangeCategory">
+													|
+													<d:ActionLink ui:field="aChngeCategory">Change Category</d:ActionLink>
+												</span>
+											</div>
+
+											<div class="row" ui:field="divChangeCategory">
+												<div class="col-lg-4">
+													<d:DropDownList ui:field="lstCategories"></d:DropDownList>
+												</div>
+												<div class="col-lg-3">
+													<d:ActionLink ui:field="aSaveCategory"
+														styleName="btn btn-fill btn-gold">Save</d:ActionLink>
+												</div>
 											</div>
 
 											<div class="row" ui:field="divMemberShipStatus">
 												Membership Status:
-												<span ui:field="spnMembershipStatus" class="text-muted">
+												<span ui:field="spnMembershipStatus">
 												</span>
 
 												<span ui:field="spnRefreshSection" class="hide">
@@ -164,6 +186,16 @@
 													<d:ActionLink ui:field="aRefresh">Refresh</d:ActionLink>
 													)
 												</span>
+											</div>
+
+											<div ui:field="divPaySubscription">
+												<div class="row">
+													Current Balance:
+													<Strong ui:field="elCurrentBalance"></Strong>
+													|
+													<d:ActionLink ui:field="aRenewSubscription">Pay Subscription
+													</d:ActionLink>
+												</div>
 											</div>
 
 											<div class="row hide">
@@ -197,7 +229,7 @@
 													<d:ActionLink ui:field="aPayLink">Proceed
 														to Pay</d:ActionLink>
 													<d:ActionLink ui:field="aDownloadProforma">Download
-														Proforma
+														Registration
 														Invoice
 													</d:ActionLink>
 													<div>
@@ -219,7 +251,7 @@
 														<div class="col-lg-4">
 															<d:ActionLink ui:field="aErpSync"
 																styleName="btn btn-fill btn-gold">
-																Send to ERP</d:ActionLink>
+																Sync with ERP</d:ActionLink>
 														</div>
 													</div>
 												</div>
@@ -243,7 +275,7 @@
 															</span>
 														</div>
 														<a ui:field="spnHelpIcon"
-															class="hide fa fa-question-circle popover-icon {style.help-icon}"
+															class="fa fa-question-circle popover-icon {style.help-icon}"
 															data-toggle="popover" data-trigger="hover" title="Reasons for this:"></a>
 														<d:PopOver></d:PopOver>
 													</div>
@@ -265,7 +297,7 @@
 							<br />
 
 							<!-- Tabs -->
-							<div class="row">
+							<div class="row" ui:field="panelTabs">
 								<div class="col-xs-12">
 									<t:TabPanel ui:field="divTabs">
 									</t:TabPanel>

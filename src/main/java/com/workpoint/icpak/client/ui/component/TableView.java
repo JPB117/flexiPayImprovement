@@ -8,6 +8,7 @@ import java.util.List;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasKeyDownHandlers;
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -18,7 +19,13 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Widget;
 import com.workpoint.icpak.client.ui.frontmember.model.MemberCategory;
+import com.workpoint.icpak.shared.model.BookingStatus;
 import com.workpoint.icpak.shared.model.Listable;
+import com.workpoint.icpak.shared.model.PaymentMode;
+import com.workpoint.icpak.shared.model.PaymentStatus;
+import com.workpoint.icpak.shared.model.PaymentType;
+import com.workpoint.icpak.shared.model.auth.ApplicationStatus;
+import com.workpoint.icpak.shared.model.events.AccommodationDto;
 
 public class TableView extends Composite {
 
@@ -39,7 +46,7 @@ public class TableView extends Composite {
 	@UiField
 	HTMLPanel panelFooter;
 	@UiField
-	DivElement divSearch;
+	HTMLPanel divSearch;
 	@UiField
 	HTMLPanel panelPaging;
 	@UiField
@@ -47,9 +54,20 @@ public class TableView extends Composite {
 	@UiField
 	ActionLink aDownloadXls;
 	@UiField
+	ActionLink aDownloadOfflineSQL;
+
+	@UiField
+	ActionLink aDownloadAllCPDTranscripts;
+
+	@UiField
 	TextField txtSearch;
 	@UiField
 	ActionLink aFilter;
+	@UiField
+	ActionLink aSearch;
+	@UiField
+	ActionLink aAdvancedSearch;
+
 	@UiField
 	HTMLPanel panelSearch;
 	@UiField
@@ -62,14 +80,46 @@ public class TableView extends Composite {
 	DateField dtEndDate;
 	@UiField
 	HTMLPanel panelTowns;
+
+	@UiField
+	HTMLPanel panelApplicationStatus;
+	@UiField
+	HTMLPanel panelPaymentStatus;
+	@UiField
+	HTMLPanel panelPaymentMode;
+	@UiField
+	HTMLPanel panelPaymentType;
+
+	@UiField
+	HTMLPanel panelAccomodation;
+	@UiField
+	HTMLPanel panelBookingStatus;
+
 	@UiField
 	DropDownList<Towns> listTowns;
 	@UiField
 	DropDownList<MemberCategory> listMemberCategory;
+
+	@UiField
+	DropDownList<ApplicationStatus> lstApplicationStatus;
+	@UiField
+	DropDownList<PaymentStatus> lstPaymentStatus;
+	@UiField
+	DropDownList<PaymentMode> lstPaymentMode;
+	@UiField
+	DropDownList<PaymentType> lstPaymentType;
+
+	@UiField
+	DropDownList<AccommodationDto> lstAccomodation;
+	@UiField
+	DropDownList<BookingStatus> lstBookingStatus;
+
 	@UiField
 	DivElement divTownList;
 	@UiField
 	DivElement divMemberCategory;
+	@UiField
+	DivElement divPeriodLabel;
 
 	private boolean isAutoNumber = true;
 	private int count = 0;
@@ -84,6 +134,42 @@ public class TableView extends Composite {
 		setDatesVisible(false);
 		setTownListVisible(false);
 		setMemberCategoryVisible(false);
+		setApplicationAndPaymentVisible(false);
+		showFinanceFilters(false);
+		showDelegateFilters(false);
+		aSearch.addStyleName("hide");
+	}
+
+	public void showDelegateFilters(boolean show) {
+		if (show) {
+			panelAccomodation.setVisible(true);
+			panelBookingStatus.setVisible(true);
+		} else {
+			panelAccomodation.setVisible(false);
+			panelBookingStatus.setVisible(false);
+		}
+	}
+
+	public void setApplicationAndPaymentVisible(boolean show) {
+		if (show) {
+			panelPaymentStatus.setVisible(true);
+			panelApplicationStatus.setVisible(true);
+		} else {
+			panelPaymentStatus.setVisible(false);
+			panelApplicationStatus.setVisible(false);
+		}
+	}
+
+	public void showFinanceFilters(boolean show) {
+		if (show) {
+			panelPaymentMode.setVisible(true);
+			panelPaymentType.setVisible(true);
+			aAdvancedSearch.setVisible(true);
+		} else {
+			panelPaymentType.setVisible(false);
+			panelPaymentMode.setVisible(false);
+			aAdvancedSearch.setVisible(false);
+		}
 	}
 
 	public void setHeaders(List<String> names) {
@@ -103,6 +189,17 @@ public class TableView extends Composite {
 			panelDates.setVisible(true);
 		} else {
 			panelDates.setVisible(false);
+		}
+	}
+
+	public void setDatesVisible(boolean show, boolean isLabelVisible) {
+		setDatesVisible(show);
+		if (isLabelVisible) {
+			divPeriodLabel.removeClassName("hide");
+			aFilter.removeStyleName("hide");
+		} else {
+			divPeriodLabel.addClassName("hide");
+			aFilter.addStyleName("hide");
 		}
 	}
 
@@ -277,10 +374,10 @@ public class TableView extends Composite {
 	public void setSearchSectionVisible(Boolean status) {
 		if (status) {
 			tblContainer.removeStyleName("border-top");
-			divSearch.removeClassName("hide");
+			divSearch.setVisible(true);
 		} else {
 			tblContainer.addStyleName("border-top");
-			divSearch.addClassName("hide");
+			divSearch.setVisible(false);
 		}
 	}
 
@@ -334,8 +431,12 @@ public class TableView extends Composite {
 		panelFooter.add(footer);
 	}
 
-	public void clearFooter(){
+	public void clearFooter() {
 		panelFooter.clear();
+	}
+
+	public ActionLink getOfflineSQLButton() {
+		return aDownloadOfflineSQL;
 	}
 
 	public void setFooter(List<Widget> widgets) {
@@ -409,6 +510,10 @@ public class TableView extends Composite {
 		return aDownloadXls;
 	}
 
+	public ActionLink getAllTranscriptsButton() {
+		return aDownloadAllCPDTranscripts;
+	}
+
 	public ActionLink getFilterButton() {
 		return aFilter;
 	}
@@ -423,6 +528,18 @@ public class TableView extends Composite {
 
 	public HasKeyDownHandlers getSearchKeyDownHandler() {
 		return txtSearch;
+	}
+
+	public DropDownList<ApplicationStatus> getLstApplicationStatus() {
+		return lstApplicationStatus;
+	}
+
+	public DropDownList<PaymentStatus> getLstPaymentStatus() {
+		return lstPaymentStatus;
+	}
+
+	public ActionLink getaSearch() {
+		return aSearch;
 	}
 
 	public class Towns implements Listable {
@@ -441,6 +558,34 @@ public class TableView extends Composite {
 		public String getDisplayName() {
 			return townName;
 		}
-
 	}
+
+	public HasClickHandlers getAdvancedFilter() {
+		return aAdvancedSearch;
+	}
+
+	public DropDownList<PaymentMode> getLstPaymentMode() {
+		return lstPaymentMode;
+	}
+
+	public DropDownList<PaymentType> getLstPaymentType() {
+		return lstPaymentType;
+	}
+
+	public HasValueChangeHandlers<AccommodationDto> getAccomodationValueChangeHandler() {
+		return lstAccomodation;
+	}
+
+	public HasValueChangeHandlers<BookingStatus> getBookingStatusValueChangeHandler() {
+		return lstBookingStatus;
+	}
+
+	public DropDownList<BookingStatus> getLstBookingStatus() {
+		return lstBookingStatus;
+	}
+
+	public DropDownList<AccommodationDto> getLstAccomodation() {
+		return lstAccomodation;
+	}
+
 }
