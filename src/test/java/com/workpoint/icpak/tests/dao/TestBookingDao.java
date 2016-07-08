@@ -269,7 +269,7 @@ public class TestBookingDao extends AbstractDaoTest {
 		bookingsHelper.correctDoubleBookings("IWqduDqhOKXb9nxq");
 	}
 
-	@Test
+	//@Test
 	public void testUpdateStats() {
 		List<EventDto> allEvents = eventDaoHelper.getAllEvents("", 0, 10000);
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -311,6 +311,6 @@ public class TestBookingDao extends AbstractDaoTest {
 
 	@Test
 	public void testSMSSending() {
-		smsIntergration.send("0729472421", "Test SMS.");
+		smsIntergration.send("0704489471", "Test SMS.");
 	}
 }
