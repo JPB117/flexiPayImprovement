@@ -34,6 +34,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import com.icpak.rest.BaseResource;
+import com.icpak.rest.IDUtils;
 import com.icpak.rest.dao.ApplicationFormDao;
 import com.icpak.rest.dao.RolesDao;
 import com.icpak.rest.dao.TransactionsDao;
@@ -624,6 +625,7 @@ public class UsersDaoHelper {
 			} else {
 				logger.error(" ===>>><<<< === USER IN DB NULL ===>><<<>>== ");
 				userInDb = new User();
+				userInDb.setRefId(IDUtils.generateId());
 				memberInDb.setUser(userInDb);
 				memberInDb.setUserRefId(userInDb.getRefId());
 
@@ -665,6 +667,8 @@ public class UsersDaoHelper {
 			userFormHeader.setContactTelephone(phoneNo);
 			userFormHeader.setApplicationType(getApplicationType(customerType
 					.toUpperCase()));
+			
+
 			updateUserMemberRecords(userInDb, memberInDb, userFormHeader);
 			return userInDb;
 		}
