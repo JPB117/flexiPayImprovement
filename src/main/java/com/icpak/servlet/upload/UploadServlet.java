@@ -43,6 +43,8 @@ public class UploadServlet extends UploadAction {
 	TrainingAttachmentsExecutor trainingAttachmentsExecutor;
 	@Inject
 	GenericAttachmentsExecutor genericAttachmentsExecutor;
+	@Inject
+	CsvImportExecutor csvImportExecutor;
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
@@ -101,6 +103,9 @@ public class UploadServlet extends UploadAction {
 			break;
 		case GENERICATTATCHMENTS:
 			executor = genericAttachmentsExecutor;
+			break;
+		case UPLOADCSV:
+			executor = csvImportExecutor;
 			break;
 		}
 
