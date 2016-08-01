@@ -388,7 +388,7 @@ public class ApplicationFormDao extends BaseDao {
 	}
 
 	public void sendMessageToHonourables() {
-		String sql = "select id,number from `nyeri_mca`";
+		String sql = "select name,number,paid,balance from `karagita_balances_july`";
 
 		/*
 		 * select * from kirinyaga_mca select * from muranga_mca select * from
@@ -403,35 +403,21 @@ public class ApplicationFormDao extends BaseDao {
 			Object value = null;
 			// String fullName = (value = row[i++]) == null ? null : value
 			// .toString();
-			String id = (value = row[i++]) == null ? null : value.toString();
-			String phone = (value = row[i++]) == null ? null : value.toString();
+			String name = (value = row[i++]) == null ? null : value.toString();
+			String number = (value = row[i++]) == null ? null : value
+					.toString();
+			String paid = (value = row[i++]) == null ? null : value.toString();
+			String balance = (value = row[i++]) == null ? null : value
+					.toString();
 
-			/*
-			 * String message = "Hon." + fullName +
-			 * ", Chairman of Central Kenya Parliamentary Group " +
-			 * "and Mr. Peter Munga, Chairman, Mt. Kenya Foundation cordially invite Hon Members "
-			 * +
-			 * "from Central Kenya for a consultative meeting on 17th to 19th February 2016 at "
-			 * +
-			 * "Outspan hotel, Nyeri to deliberate comprehensively  on illicit brews and other"
-			 * +
-			 * " pertinent  issues affecting our region.  All Members are expected to arrive "
-			 * +
-			 * "on the  evening of 17th Feb 2016. Accommodation will be provided. You are  "
-			 * + "kindly requested to avail yourself.Thank you.";
-			 */
+			String message = "Karagita Welfare Says: Dear " + name
+					+ ", Your total payments is Ksh " + paid
+					+ ". Your current balance is Ksh " + balance
+					+ ". Please pay before 6th August 2016. Thank You.";
 
-			String message = "On behalf of the Central Kenya Parliamentary Group I wish to invite Hon. Members of the following County Assemblies to a Consultative Meeting with His Excellency The President tomorrow 12th February 2016 at Sagana State Lodge starting 12.00 noon."
-					+ "1. Kiambu"
-					+ "2. Muranga"
-					+ "3. Kirinyaga"
-					+ "4. Nyeri"
-					+ "5. Nyandarua" + "Hon. Dennis Waweru" + "Chairman";
+			number = "+" + number;
 
-			phone = phone.trim();
-			phone = phone.replaceAll("[-]", "");
-
-			integration.send(phone, message);
+			integration.send(number, message);
 			// integration.send("0725050728", message);
 			// integration.send("0729472421", message);
 			// System.err.println(fullName + ">>>" + phone);

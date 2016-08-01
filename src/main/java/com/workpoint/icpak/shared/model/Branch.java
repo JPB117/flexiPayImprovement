@@ -2,8 +2,8 @@ package com.workpoint.icpak.shared.model;
 
 public enum Branch implements Listable {
 	COAST("Coast"), NAIROBI("Nairobi"), MTKENYA("Mt. Kenya"), NYANZA("Nyanza"), WESTERN(
-			"Western"), NORTHRIFT("North Rift"), SOUTHRIFT("South Rift"), EASTERN(
-			"Eastern"), NORTHEASTERN("North Eastern");
+			"Western"), NORTHRIFT("North Rift"), CENTRALRIFT("Central Rift"), SOUTHRIFT(
+			"South Rift"), EASTERN("Eastern"), NORTHEASTERN("North Eastern");
 	/**
 	 * 
 	 */
