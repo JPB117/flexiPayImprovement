@@ -16,10 +16,12 @@ import org.junit.Test;
 import com.amazonaws.util.json.JSONException;
 import com.google.inject.Inject;
 import com.icpak.rest.dao.MemberDao;
+import com.icpak.rest.dao.helper.CPDDaoHelper;
 import com.icpak.rest.dao.helper.MemberDaoHelper;
 import com.icpak.rest.dao.helper.UsersDaoHelper;
 import com.icpak.rest.models.membership.Member;
 import com.workpoint.icpak.shared.model.MemberDto;
+import com.workpoint.icpak.shared.model.MemberStanding;
 import com.workpoint.icpak.shared.model.UserDto;
 import com.workpoint.icpak.tests.base.AbstractDaoTest;
 
@@ -32,6 +34,9 @@ public class TestMemberDao extends AbstractDaoTest {
 	@Inject
 	UsersDaoHelper userHelper;
 	@Inject
+	CPDDaoHelper cpdDaoHelper;
+
+	@Inject
 	MemberDao memberDao;
 
 	@Ignore
@@ -41,7 +46,8 @@ public class TestMemberDao extends AbstractDaoTest {
 
 	@Ignore
 	public void testSearchMemberFromOldTable() {
-		List<MemberDto> list = helper.getMembersFromOldTable("FCPA", "nairobi", "all", 0, 0);
+		List<MemberDto> list = helper.getMembersFromOldTable("FCPA", "nairobi",
+				"all", 0, 0);
 
 		Integer count = helper.getMembersCount("FCPA", "nairobi", "all");
 
@@ -50,11 +56,12 @@ public class TestMemberDao extends AbstractDaoTest {
 
 	}
 
-	@Test
+	// @Test
 	public void search() {
 		List<MemberDto> list = helper.getAllMembers(0, 100, "", "mar");
 		for (MemberDto dto : list) {
-			System.err.println(dto.getRefId() + " " + dto.getMemberNo() + " " + dto.getFullName());
+			System.err.println(dto.getRefId() + " " + dto.getMemberNo() + " "
+					+ dto.getFullName());
 		}
 		System.err.print("Size = " + list.size());
 	}
@@ -93,7 +100,8 @@ public class TestMemberDao extends AbstractDaoTest {
 			logger.info(" TRIP = " + trips);
 			logger.info(" Offset = " + offset);
 
-			List<String> memberNos = memberDao.getAllMemberNumbers(offset, limit);
+			List<String> memberNos = memberDao.getAllMemberNumbers(offset,
+					limit);
 
 			logger.info(" LENGTH " + memberNos.size());
 			if (!memberNos.isEmpty()) {
@@ -102,7 +110,8 @@ public class TestMemberDao extends AbstractDaoTest {
 					logger.info(" i = ");
 					try {
 						helper.updateMemberRecord(memberNo, true);
-					} catch (IllegalStateException | IOException | ParseException e) {
+					} catch (IllegalStateException | IOException
+							| ParseException e) {
 						e.printStackTrace();
 					}
 				}
@@ -113,8 +122,26 @@ public class TestMemberDao extends AbstractDaoTest {
 		}
 	}
 
-	@Test
+	// @Test
 	public void findDuplicateMemberNo() {
 		helper.findDuplicateMemberNo();
+	}
+
+	@Test
+	public void getAllMemberStandingStatus() {
+		List<MemberDto> allMembers = helper.getAllMembers(0, 30000, "", "");
+
+		for (MemberDto m : allMembers) {
+			MemberStanding standing = cpdDaoHelper.getMemberStanding(m
+					.getRefId());
+			Member member = memberDao.findByRefId(m.getRefId(), Member.class);
+			member.setInGoodStanding((standing.getStanding() == 1 ? true
+					: false));
+			member.setMemberBalance(standing.getMemberBalance());
+
+			System.out.println("Completed for memberNo>>" + m.getMemberNo());
+			memberDao.save(member);
+		}
+
 	}
 }

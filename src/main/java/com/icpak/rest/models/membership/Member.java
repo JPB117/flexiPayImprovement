@@ -44,6 +44,8 @@ public class Member extends PO {
 	private String setPracisingNo;
 	private String customerPostingGroup;
 	private String memberQrCode;
+	private Double memberBalance;
+	private boolean isInGoodStanding;
 
 	@Column(nullable = false, columnDefinition = "int(1) not null default 0")
 	private int memberDisplinaryCase = 0;
@@ -210,6 +212,22 @@ public class Member extends PO {
 
 	public void setMemberQrCode(String memberQrCode) {
 		this.memberQrCode = memberQrCode;
+	}
+
+	public Double getMemberBalance() {
+		return memberBalance;
+	}
+
+	public void setMemberBalance(Double memberBalance) {
+		this.memberBalance = memberBalance;
+	}
+
+	public boolean isInGoodStanding() {
+		return isInGoodStanding;
+	}
+
+	public void setInGoodStanding(boolean isInGoodStanding) {
+		this.isInGoodStanding = isInGoodStanding;
 	}
 
 }
