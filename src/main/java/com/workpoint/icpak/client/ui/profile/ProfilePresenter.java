@@ -343,6 +343,7 @@ public class ProfilePresenter
 					@Override
 					public void onClick(ClickEvent event) {
 						final PaymentSubscription subsPayment = new PaymentSubscription();
+						subsPayment.showCollectivePaymentSection(false);
 						if (memberBalance != null) {
 							subsPayment.setCurrentBalance(memberBalance);
 						}
