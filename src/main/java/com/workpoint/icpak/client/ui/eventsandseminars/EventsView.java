@@ -18,9 +18,12 @@ import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
 import com.workpoint.icpak.client.model.UploadContext;
 import com.workpoint.icpak.client.model.UploadContext.UPLOADACTION;
+import com.workpoint.icpak.client.ui.AppManager;
+import com.workpoint.icpak.client.ui.OnOptionSelected;
 import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.DropDownList;
 import com.workpoint.icpak.client.ui.component.PagingPanel;
+import com.workpoint.icpak.client.ui.eventsandseminars.csvimport.CsvImport;
 import com.workpoint.icpak.client.ui.eventsandseminars.delegates.row.DelegateTableRow;
 import com.workpoint.icpak.client.ui.eventsandseminars.delegates.table.DelegatesTable;
 import com.workpoint.icpak.client.ui.eventsandseminars.header.EventsHeader;
@@ -68,6 +71,8 @@ public class EventsView extends ViewImpl implements EventsPresenter.IEventsView 
 	ActionLink aBookingstab;
 	@UiField
 	ActionLink aSummarytab;
+	@UiField
+	ActionLink aImportCsv;
 
 	@UiField
 	Element elTotalBooking;
@@ -125,6 +130,7 @@ public class EventsView extends ViewImpl implements EventsPresenter.IEventsView 
 	@UiField
 	Element spnAttendance;
 	private EventDto event;
+	final CsvImport csvImport = new CsvImport();
 
 	public interface Binder extends UiBinder<Widget, EventsView> {
 	}
@@ -140,11 +146,27 @@ public class EventsView extends ViewImpl implements EventsPresenter.IEventsView 
 		tblDelegates.getDownloadXLSLink().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				UploadContext ctx = new UploadContext("getreport");
+				final UploadContext ctx = new UploadContext("getreport");
 				ctx.setContext("eventRefId", EventsView.this.event.getRefId());
 				ctx.setContext("docType", "xls");
 				ctx.setAction(UPLOADACTION.GETDELEGATESREPORT);
-				Window.open(ctx.toUrl(), "", null);
+				AppManager
+						.showPopUp(
+								"Update PhoneNumbers",
+								"Do you want to update delegate phoneNumbers from the Members Database?",
+								new OnOptionSelected() {
+									@Override
+									public void onSelect(String name) {
+										if (name.equals("Yes")) {
+											ctx.setContext("updatePhones",
+													"true");
+											Window.open(ctx.toUrl(), "", null);
+										} else {
+											Window.open(ctx.toUrl(), "", null);
+										}
+									}
+								}, "Yes", "No");
+
 			}
 		});
 
@@ -155,6 +177,19 @@ public class EventsView extends ViewImpl implements EventsPresenter.IEventsView 
 				ctx.setContext("eventRefId", EventsView.this.event.getRefId());
 				ctx.setAction(UPLOADACTION.SYNCTOSERVER);
 				Window.open(ctx.toUrl(), "", null);
+			}
+		});
+
+		aImportCsv.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				AppManager.showPopUp("Upload Csv", csvImport,
+						new OnOptionSelected() {
+							@Override
+							public void onSelect(String name) {
+
+							}
+						}, "Done");
 			}
 		});
 
@@ -187,6 +222,7 @@ public class EventsView extends ViewImpl implements EventsPresenter.IEventsView 
 	@Override
 	public void bindEvent(EventDto event) {
 		this.event = event;
+		csvImport.setUploadContext(EventsView.this.event.getRefId());
 		spnEventTitle.setInnerText(event.getName());
 		if (AppContext.isCurrentUserEventEdit()) {
 			aCreateBooking.setHref("#eventBooking;eventId=" + event.getRefId());

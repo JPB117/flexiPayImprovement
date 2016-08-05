@@ -303,7 +303,14 @@
 									<d:ActionLink ui:field="aCreateBooking" styleName="btn btn-primary btn-fill">Create
 										Booking</d:ActionLink>
 									<d:ActionLink ui:field="aSyncWithServer"
-										styleName="pull-right btn btn-default btn-fill">Offline Sync</d:ActionLink>
+										styleName="pull-right btn btn-default btn-fill hide">
+										Offline Sync
+									</d:ActionLink>
+									<d:ActionLink ui:field="aImportCsv"
+										styleName="pull-right btn btn-default btn-fill">
+										<i class="fa fa-arrow-up" aria-hidden="true"></i>
+										Import Csv
+									</d:ActionLink>
 								</div>
 								<div class="col-sm-12">
 									<table2:DelegatesTable ui:field="tblDelegates">

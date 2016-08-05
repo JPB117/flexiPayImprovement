@@ -85,8 +85,7 @@ public class CPDDaoHelper {
 		CPDDto rtn = cpd.toDTO();
 		rtn.setFullNames(userDao.getNamesBymemberNo(cpd
 				.getMemberRegistrationNo()));
-		
-		
+
 		return rtn;
 	}
 
@@ -374,10 +373,8 @@ public class CPDDaoHelper {
 		MemberStanding standing = new MemberStanding();
 		boolean isInGoodStanding = isInGoodStanding(memberId, messages,
 				standing);
-
 		standing.setStanding(isInGoodStanding ? 1 : 0);
 		standing.setReasons(messages);
-
 		return standing;
 	}
 

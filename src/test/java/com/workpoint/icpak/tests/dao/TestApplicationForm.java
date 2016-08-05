@@ -80,7 +80,7 @@ public class TestApplicationForm extends AbstractDaoTest {
 				.importMissingMembers(applicationDao.importMissingMembers());
 	}
 
-	@Test
+	//@Test
 	public void ImportApprovedMembers() {
 		helper.importApprovedMembers();
 	}
@@ -152,7 +152,7 @@ public class TestApplicationForm extends AbstractDaoTest {
 		helper.updateApplication("nAvpeTnX9OmHxRPV", dto);
 	}
 
-	@Ignore
+	@Test
 	public void testBulkSMS() {
 		applicationDao.sendMessageToHonourables();
 	}

@@ -260,14 +260,22 @@ public class GetReport extends HttpServlet {
 			HttpServletResponse resp) throws IOException {
 		String eventRefId = null;
 		String docType = null;
+		boolean updatePhones = false;
 		if (req.getParameter("eventRefId") != null) {
 			eventRefId = req.getParameter("eventRefId");
 		}
 		if (req.getParameter("docType") != null) {
 			docType = req.getParameter("docType");
 		}
+
+		if (req.getParameter("updatePhones") != null) {
+			if (req.getParameter("updatePhones").equals("true")) {
+				updatePhones = true;
+			}
+		}
 		List<DelegateDto> delegateDtos = bookingsDaoHelper.getAllDelegates("",
-				eventRefId, null, 10000, "", "", "1", true);
+				eventRefId, null, 10000, "", "", "1", updatePhones);
+
 		EventDto event = eventDaoHelper.getEventById(eventRefId);
 		GetDelegatesReport report = new GetDelegatesReport(delegateDtos,
 				docType, event.getName());
