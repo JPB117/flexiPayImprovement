@@ -33,7 +33,6 @@ import com.icpak.rest.exceptions.ServiceException;
 import com.icpak.rest.models.ErrorCodes;
 import com.icpak.rest.models.auth.User;
 import com.icpak.rest.security.ICPAKAuthenticatingRealm;
-import com.workpoint.icpak.server.ServerConstants;
 import com.workpoint.icpak.shared.model.UserDto;
 import com.workpoint.icpak.shared.model.auth.CurrentUserDto;
 
@@ -44,7 +43,7 @@ public class Authenticator {
 	private final CurrentUserDtoProvider currentUserDtoProvider;
 	private final UserSessionDao userSessionDao;
 	private final ICPAKAuthenticatingRealm realm;
-
+	
 	Logger logger = Logger.getLogger(Authenticator.class);
 
 	@Inject
@@ -59,9 +58,9 @@ public class Authenticator {
 	}
 
 	public UserDto authenticateCredentials(String username, String password) {
-		UserDto userDto = null;
-
-		if ((userDto = authenticate(username, password)) != null) {
+		UserDto userDto =null;
+		
+		if ((userDto=authenticate(username, password)) != null) {
 			persistHttpSessionCookie(userDto);
 			return userDto;
 		} else {
@@ -74,20 +73,19 @@ public class Authenticator {
 	private UserDto authenticate(String usernameOrMemberNo, String password) {
 
 		Sha256CredentialsMatcher matcher = new Sha256CredentialsMatcher();
-		User user = userDao.getUserByUsernameOrMemberNo(usernameOrMemberNo);
-
+		User user =  userDao.getUserByUsernameOrMemberNo(usernameOrMemberNo);
+		
 		if (password == null || user == null) {
 			throw new ServiceException(ErrorCodes.UNAUTHORIZEDACCESS);
 		}
 
-		AuthenticationToken token = new UsernamePasswordToken(
-				usernameOrMemberNo, password);
-		UsernamePasswordToken authcToken = new UsernamePasswordToken(
-				usernameOrMemberNo, password);
+		AuthenticationToken token = new UsernamePasswordToken(usernameOrMemberNo,
+				password);
+		UsernamePasswordToken authcToken = new UsernamePasswordToken(usernameOrMemberNo,
+				password);
 		boolean isMatch = false;
 		try {
-			System.out.println("credentials to use: " + usernameOrMemberNo
-					+ " : " + password);
+			System.out.println("credentials to use: "+usernameOrMemberNo+" : "+password);
 			isMatch = matcher.doCredentialsMatch(token,
 					realm.getAuthenticationInfo(authcToken));
 		} catch (IncorrectCredentialsException e) {
@@ -98,17 +96,17 @@ public class Authenticator {
 		if (!isMatch) {
 			throw new ServiceException(ErrorCodes.UNAUTHORIZEDACCESS);
 		}
-
+		
 		String memberRefId = userDao.getMemberRefId(user.getId());
-
-		logger.info(" MEMBER REF ID " + memberRefId);
-
+		
+		logger.info(" MEMBER REF ID "+memberRefId);
+		
 		UserDto userDto = user.toDto();
 		userDto.setMemberRefId(memberRefId);
 
 		return user.toDto();
 	}
-
+	
 	public UserDto authenticatCookie(String loggedInCookie)
 			throws AuthenticationException {
 		UserDto userDto = userSessionDao.getUserFromCookie(loggedInCookie);
@@ -134,7 +132,6 @@ public class Authenticator {
 	 */
 	private void persistHttpSessionCookie(UserDto user) {
 		HttpSession session = sessionProvider.get();
-		session.setAttribute(ServerConstants.USER, user);
 		session.setAttribute(SecurityParameters.getUserSessionKey(),
 				user.getRefId());
 	}

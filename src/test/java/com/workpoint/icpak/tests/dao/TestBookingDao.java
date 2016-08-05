@@ -17,7 +17,6 @@ import com.icpak.rest.dao.helper.BookingsDaoHelper;
 import com.icpak.rest.dao.helper.CPDDaoHelper;
 import com.icpak.rest.dao.helper.EventsDaoHelper;
 import com.icpak.rest.models.event.Delegate;
-import com.icpak.rest.util.SMSIntegration;
 import com.workpoint.icpak.shared.model.PaymentStatus;
 import com.workpoint.icpak.shared.model.events.AccommodationDto;
 import com.workpoint.icpak.shared.model.events.AttendanceStatus;
@@ -42,9 +41,6 @@ public class TestBookingDao extends AbstractDaoTest {
 	EventsDaoHelper eventDaoHelper;
 	@Inject
 	BookingsDao bookingDao;
-
-	@Inject
-	SMSIntegration smsIntergration;
 
 	@Ignore
 	public void getTrx() {
@@ -307,10 +303,5 @@ public class TestBookingDao extends AbstractDaoTest {
 
 		System.err.println(">>>" + tstamp);
 
-	}
-
-	@Test
-	public void testSMSSending() {
-		smsIntergration.send("0729472421", "Test SMS.");
 	}
 }
