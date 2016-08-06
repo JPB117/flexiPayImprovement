@@ -1142,6 +1142,7 @@ public class BookingsDaoHelper {
 
 		/* Updating Booking */
 		if (booking != null) {
+			//Update Payment Status
 			if ((delegateDto.getBookingPaymentStatus() == PaymentStatus.PAID)
 					|| (delegateDto.getBookingPaymentStatus() == PaymentStatus.NOTPAID)
 					|| (delegateDto.getBookingPaymentStatus() == PaymentStatus.Credit)) {
@@ -1215,7 +1216,7 @@ public class BookingsDaoHelper {
 			dao.save(delegate);
 			cpdDao.updateCPDFromAttendance(delegate, delegate.getAttendance());
 
-			// Non-Member
+		// Non-Member
 		} else if (delegate.getMemberRefId() == null
 				&& delegate.getAttendance() != delegateDto.getAttendance()
 				&& event.getType() != EventType.COURSE

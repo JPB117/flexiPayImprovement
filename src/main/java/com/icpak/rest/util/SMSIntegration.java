@@ -51,19 +51,23 @@ public class SMSIntegration {
 		String username = null;
 		String apiKey = null;
 		String from = null;
+		boolean isSmsSendingActive = false;
 		try {
 			Properties props = new Properties();
-			props.load(SMSIntegration.class.getClassLoader()
-					.getResourceAsStream("bootstrap.properties"));
+			props.load(SMSIntegration.class.getClassLoader().getResourceAsStream("bootstrap.properties"));
 			username = props.getProperty("africastalking.username");
 			apiKey = props.getProperty("africastalking.apiKey");
 			from = props.getProperty("africastalking.from");
+			isSmsSendingActive = (props.getProperty("isSendingActive") == "true" ? true : false);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 
-		AfricasTalkingGateway gateway = new AfricasTalkingGateway(username,
-				apiKey);
+		if (!isSmsSendingActive) {
+			return "Failed: SMS Sending is disabled in settings";
+		}
+
+		AfricasTalkingGateway gateway = new AfricasTalkingGateway(username, apiKey);
 		try {
 			if (to == null || to.isEmpty()) {
 				return "Failed: The recipient telephone number must be provided. Kindly confirm the relavant fields are provided";
