@@ -6,7 +6,7 @@
 	</ui:style>
 	<g:HTMLPanel>
 		<div class="form-group">
-			<div class="row">
+			<div class="row" ui:field="divMemberBalance">
 				<div class="col-lg-8">
 					<div class="alert alert-success">
 						Your current balance is
@@ -17,10 +17,25 @@
 		</div>
 
 		<div class="form-group">
-			<div class="row">
-				<div class="col-lg-3">
+			<div class="row hide" ui:field="divMemberNo">
+				<div class="col-lg-6">
 					<label for="firstname" class="pull-right" style="padding-top:10px">
-						Amount you wish to pay
+						Enter Member
+						Number:
+					</label>
+				</div>
+				<div class="col-lg-3 p0">
+					<d:TextField ui:field="txtMemberNo" styleName="form-control"></d:TextField>
+				</div>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<div class="row">
+				<div class="col-lg-6">
+					<label for="firstname" class="pull-right" style="padding-top:10px">
+						Amount you
+						wish to pay:
 					</label>
 				</div>
 				<div class="col-lg-3 p0">

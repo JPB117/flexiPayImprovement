@@ -73,6 +73,8 @@ import com.workpoint.icpak.client.ui.offences.OffencesPresenter;
 import com.workpoint.icpak.client.ui.offences.OffencesView;
 import com.workpoint.icpak.client.ui.payment.PaymentPresenter;
 import com.workpoint.icpak.client.ui.payment.PaymentView;
+import com.workpoint.icpak.client.ui.payment.collective.collectivepayments.CollectivePaymentsPresenter;
+import com.workpoint.icpak.client.ui.payment.collective.collectivepayments.CollectivePaymentsView;
 import com.workpoint.icpak.client.ui.popup.GenericPopupPresenter;
 import com.workpoint.icpak.client.ui.popup.GenericPopupView;
 import com.workpoint.icpak.client.ui.profile.ProfilePresenter;
@@ -172,6 +174,10 @@ public class ClientModule extends AbstractPresenterModule {
 		bindPresenter(EventBookingPresenter.class,
 				EventBookingPresenter.MyView.class, EventBookingView.class,
 				EventBookingPresenter.MyProxy.class);
+		
+		bindPresenter(CollectivePaymentsPresenter.class,
+				CollectivePaymentsPresenter.MyView.class, CollectivePaymentsView.class,
+				CollectivePaymentsPresenter.MyProxy.class);
 
 		bindPresenter(DashboardPresenter.class,
 				DashboardPresenter.IDashboardView.class, DashboardView.class,
