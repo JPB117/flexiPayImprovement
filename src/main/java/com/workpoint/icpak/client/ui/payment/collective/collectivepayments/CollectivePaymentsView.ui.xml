@@ -1,0 +1,74 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d='urn:import:com.workpoint.icpak.client.ui.component'
+	xmlns:p="urn:import:com.workpoint.icpak.client.ui.profile.paysubscription">
+	<g:HTMLPanel>
+		<div>
+			<nav class="navbar top-navbar">
+				<div class="container">
+					<div class="navbar-header" style="width: 100%; text-align: center;">
+						<a class="brand">
+							<img src="img/icpak_logo.png" width="150px" />
+						</a>
+					</div>
+				</div>
+			</nav>
+		</div>
+
+
+		<g:HTMLPanel styleName="image-container set-full-height">
+			<g:HTMLPanel styleName="login-bg">
+				<g:HTMLPanel styleName="wizard-container col-md-6 col-md-offset-3">
+					<g:HTMLPanel styleName="card wizard-card ct-wizard-gold"
+						ui:field="loadingbox">
+						<g:HTMLPanel ui:field="panelSubscription">
+							<g:HTMLPanel>
+								<div class="panel-body">
+									<div class="">
+										<div class="col-lg-12">
+											<fieldset>
+												<legend>Pay for your Annual Subscription:</legend>
+												<div class="form-group">
+													<div class="col-sm-12">
+														<div class="text-muted">
+															<i class="fa fa-info-circle"></i>
+															<span ui:field="spnInfo">
+																Please enter your details and press
+																Proceed
+															</span>
+														</div>
+													</div>
+												</div>
+
+												<br />
+
+												<div class="row">
+													<div class="col-lg-12">
+														<div class="form-horizontal">
+															<p:PaymentSubscription ui:field="divPaymentWidget"></p:PaymentSubscription>
+														</div>
+													</div>
+												</div>
+
+												<div class="row">
+													<div class="col-lg-12">
+														<d:ActionLink ui:field="aProceed"
+															styleName="btn btn-fill btn-gold pull-right">Proceed
+															to
+															Pay</d:ActionLink>
+													</div>
+												</div>
+											</fieldset>
+										</div>
+									</div>
+								</div>
+							</g:HTMLPanel>
+						</g:HTMLPanel>
+						<g:HTMLPanel ui:field="panelPayment">
+						</g:HTMLPanel>
+					</g:HTMLPanel>
+				</g:HTMLPanel>
+			</g:HTMLPanel>
+		</g:HTMLPanel>
+	</g:HTMLPanel>
+</ui:UiBinder>

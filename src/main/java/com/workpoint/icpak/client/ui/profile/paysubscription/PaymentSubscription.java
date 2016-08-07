@@ -18,6 +18,12 @@ public class PaymentSubscription extends Composite {
 	Element elCurrentBalance;
 	@UiField
 	TextField txtAmountToPay;
+	@UiField
+	TextField txtMemberNo;
+	@UiField
+	Element divMemberBalance;
+	@UiField
+	Element divMemberNo;
 
 	interface PaymentSubscriptionUiBinder extends
 			UiBinder<Widget, PaymentSubscription> {
@@ -34,6 +40,20 @@ public class PaymentSubscription extends Composite {
 
 	public String getAmountToPay() {
 		return txtAmountToPay.getValue();
+	}
+
+	public String getMemberNo() {
+		return txtMemberNo.getValue();
+	}
+
+	public void showCollectivePaymentSection(boolean show) {
+		if (show) {
+			divMemberNo.removeClassName("hide");
+			divMemberBalance.addClassName("hide");
+		} else {
+			divMemberNo.addClassName("hide");
+			divMemberBalance.removeClassName("hide");
+		}
 	}
 
 }

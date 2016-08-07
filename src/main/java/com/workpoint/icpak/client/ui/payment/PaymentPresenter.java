@@ -172,6 +172,7 @@ public class PaymentPresenter extends PresenterWidget<PaymentPresenter.MyView> {
 				}
 			}
 		});
+		
 	}
 
 	public void setAmount(String amount) {
