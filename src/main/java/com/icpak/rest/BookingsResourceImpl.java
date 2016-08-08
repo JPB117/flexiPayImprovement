@@ -45,12 +45,10 @@ public class BookingsResourceImpl implements BookingsResource {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Retrieve all active bookings")
-	public List<BookingDto> getAll(
-			@ApiParam(value = "Starting point to fetch") @QueryParam("offset") Integer offset,
+	public List<BookingDto> getAll(@ApiParam(value = "Starting point to fetch") @QueryParam("offset") Integer offset,
 			@ApiParam(value = "No of Items to fetch") @QueryParam("limit") Integer limit) {
 		String uri = "";
-		List<BookingDto> dtos = helper.getAllBookings(uri, eventId, offset,
-				limit, "");
+		List<BookingDto> dtos = helper.getAllBookings(uri, eventId, offset, limit, "");
 		return dtos;
 	}
 
@@ -73,11 +71,11 @@ public class BookingsResourceImpl implements BookingsResource {
 	}
 
 	@GET
-	@Path("/summary/{eventRefId}")
+	@Path("/summary/{eventRefId}/{isRefresh}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public BookingSummaryDto getBookingSummary(
-			@PathParam("eventRefId") String eventRefId) {
-		BookingSummaryDto dto = helper.getBookingStats(eventRefId);
+	public BookingSummaryDto getBookingSummary(@PathParam("eventRefId") String eventRefId,
+			@PathParam("isRefresh") String isRefresh) {
+		BookingSummaryDto dto = helper.getBookingStats(eventRefId, isRefresh);
 		return dto;
 	}
 
@@ -112,8 +110,7 @@ public class BookingsResourceImpl implements BookingsResource {
 			@ApiParam(value = "Payment Mode") @QueryParam("paymentMode") String paymentMode,
 			@ApiParam(value = "Payment referenceNo") @QueryParam("paymentRef") String paymentRef) {
 		String uri = "";
-		BookingDto dto = helper.processPayment(eventId, bookingId, paymentMode,
-				paymentRef);
+		BookingDto dto = helper.processPayment(eventId, bookingId, paymentMode, paymentRef);
 
 		return dto;
 	}
@@ -139,8 +136,8 @@ public class BookingsResourceImpl implements BookingsResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Delete an existing booking")
 	public void delete(
-	// @ApiParam(value="Event from which booking is being deleted")
-	// @PathParam("eventId") String eventId,
+			// @ApiParam(value="Event from which booking is being deleted")
+			// @PathParam("eventId") String eventId,
 			@ApiParam(value = "Booking Id of the booking to delete", required = true) @PathParam("bookingId") String bookingId) {
 		helper.deleteBooking(eventId, bookingId);
 	}
@@ -174,14 +171,11 @@ public class BookingsResourceImpl implements BookingsResource {
 	@Path("/resendProforma/{emails}/{bookingRefId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Send Proforma Invoice mail and sms")
-	public void resendProforma(@PathParam("emails") String newEmails,
-			@PathParam("bookingRefId") String bookingRefId) {
+	public void resendProforma(@PathParam("emails") String newEmails, @PathParam("bookingRefId") String bookingRefId) {
 		// helper.sendProInvoice(newEmail);
 	}
 
-	public Integer getBookingCount(String searchTerm, String accomodationRefId,
-			String bookingStatus) {
-		return helper.getDelegatesCount(eventId, searchTerm, accomodationRefId,
-				bookingStatus);
+	public Integer getBookingCount(String searchTerm, String accomodationRefId, String bookingStatus) {
+		return helper.getDelegatesCount(eventId, searchTerm, accomodationRefId, bookingStatus);
 	}
 }

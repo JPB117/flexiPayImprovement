@@ -10,20 +10,23 @@ import com.google.gwt.user.client.ui.Widget;
 import com.workpoint.icpak.client.model.UploadContext;
 import com.workpoint.icpak.client.model.UploadContext.UPLOADACTION;
 import com.workpoint.icpak.client.ui.upload.custom.Uploader;
+import com.workpoint.icpak.shared.model.events.BookingSummaryDto;
 
 public class CsvImport extends Composite {
 
-	private static CsvImportUiBinder uiBinder = GWT
-			.create(CsvImportUiBinder.class);
+	private static CsvImportUiBinder uiBinder = GWT.create(CsvImportUiBinder.class);
 
 	@UiField
 	Uploader uploader;
+
+	private BookingSummaryDto summary;
 
 	interface CsvImportUiBinder extends UiBinder<Widget, CsvImport> {
 	}
 
 	public CsvImport() {
 		initWidget(uiBinder.createAndBindUi(this));
+
 	}
 
 	public void setUploadContext(String eventRefId) {
@@ -32,6 +35,14 @@ public class CsvImport extends Composite {
 		context.setAction(UPLOADACTION.UPLOADCSV);
 		context.setAccept(Arrays.asList("csv"));
 		uploader.setContext(context);
+	}
+
+	public void setBookingSummary(BookingSummaryDto summary) {
+		this.summary = summary;
+	}
+
+	public Uploader getUploader() {
+		return uploader;
 	}
 
 }

@@ -22,8 +22,7 @@ public interface BookingsResource extends BaseResource {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<BookingDto> getAll(@QueryParam("offset") Integer offset,
-			@QueryParam("limit") Integer limit);
+	public List<BookingDto> getAll(@QueryParam("offset") Integer offset, @QueryParam("limit") Integer limit);
 
 	@GET
 	@Path("/{bookingId}")
@@ -31,10 +30,10 @@ public interface BookingsResource extends BaseResource {
 	public BookingDto getById(@PathParam("bookingId") String bookingId);
 
 	@GET
-	@Path("/summary/{eventRefId}")
+	@Path("/summary/{eventRefId}/{isRefresh}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public BookingSummaryDto getBookingSummary(
-			@PathParam("eventRefId") String eventRefId);
+	public BookingSummaryDto getBookingSummary(@PathParam("eventRefId") String eventRefId,
+			@PathParam("isRefresh") String isRefresh);
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -53,15 +52,13 @@ public interface BookingsResource extends BaseResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public BookingDto makePayment(@PathParam("bookingId") String bookingId,
-			@QueryParam("paymentMode") String paymentMode,
-			@QueryParam("paymentRef") String paymentRef);
+			@QueryParam("paymentMode") String paymentMode, @QueryParam("paymentRef") String paymentRef);
 
 	@PUT
 	@Path("/{bookingId}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public BookingDto update(@PathParam("bookingId") String bookingId,
-			BookingDto booking);
+	public BookingDto update(@PathParam("bookingId") String bookingId, BookingDto booking);
 
 	@GET
 	@Path("/filteredcount")

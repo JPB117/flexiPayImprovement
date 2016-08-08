@@ -29,6 +29,7 @@ import com.workpoint.icpak.client.ui.eventsandseminars.delegates.table.Delegates
 import com.workpoint.icpak.client.ui.eventsandseminars.header.EventsHeader;
 import com.workpoint.icpak.client.ui.eventsandseminars.row.EventsTableRow;
 import com.workpoint.icpak.client.ui.eventsandseminars.table.EventsTable;
+import com.workpoint.icpak.client.ui.upload.custom.Uploader;
 import com.workpoint.icpak.client.ui.util.NumberUtils;
 import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.model.BookingStatus;
@@ -132,6 +133,8 @@ public class EventsView extends ViewImpl implements EventsPresenter.IEventsView 
 	private EventDto event;
 	final CsvImport csvImport = new CsvImport();
 
+	private BookingSummaryDto summary;
+
 	public interface Binder extends UiBinder<Widget, EventsView> {
 	}
 
@@ -150,22 +153,19 @@ public class EventsView extends ViewImpl implements EventsPresenter.IEventsView 
 				ctx.setContext("eventRefId", EventsView.this.event.getRefId());
 				ctx.setContext("docType", "xls");
 				ctx.setAction(UPLOADACTION.GETDELEGATESREPORT);
-				AppManager
-						.showPopUp(
-								"Update PhoneNumbers",
-								"Do you want to update delegate phoneNumbers from the Members Database?",
-								new OnOptionSelected() {
-									@Override
-									public void onSelect(String name) {
-										if (name.equals("Yes")) {
-											ctx.setContext("updatePhones",
-													"true");
-											Window.open(ctx.toUrl(), "", null);
-										} else {
-											Window.open(ctx.toUrl(), "", null);
-										}
-									}
-								}, "Yes", "No");
+				AppManager.showPopUp("Update PhoneNumbers",
+						"Do you want to update delegate phoneNumbers from the Members Database?",
+						new OnOptionSelected() {
+							@Override
+							public void onSelect(String name) {
+								if (name.equals("Yes")) {
+									ctx.setContext("updatePhones", "true");
+									Window.open(ctx.toUrl(), "", null);
+								} else {
+									Window.open(ctx.toUrl(), "", null);
+								}
+							}
+						}, "Yes", "No");
 
 			}
 		});
@@ -183,13 +183,13 @@ public class EventsView extends ViewImpl implements EventsPresenter.IEventsView 
 		aImportCsv.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				AppManager.showPopUp("Upload Csv", csvImport,
-						new OnOptionSelected() {
-							@Override
-							public void onSelect(String name) {
-
-							}
-						}, "Done");
+				csvImport.setBookingSummary(summary);
+				AppManager.showPopUp("Upload Csv", csvImport, new OnOptionSelected() {
+					@Override
+					public void onSelect(String name) {
+						
+					}
+				}, "Done");
 			}
 		});
 
@@ -227,10 +227,8 @@ public class EventsView extends ViewImpl implements EventsPresenter.IEventsView 
 		if (AppContext.isCurrentUserEventEdit()) {
 			aCreateBooking.setHref("#eventBooking;eventId=" + event.getRefId());
 		}
-		aBookingstab.setHref("#events;eventId=" + event.getRefId()
-				+ ";page=booking");
-		aSummarytab.setHref("#events;eventId=" + event.getRefId()
-				+ ";page=summary");
+		aBookingstab.setHref("#events;eventId=" + event.getRefId() + ";page=booking");
+		aSummarytab.setHref("#events;eventId=" + event.getRefId() + ";page=summary");
 	}
 
 	@Override
@@ -243,148 +241,107 @@ public class EventsView extends ViewImpl implements EventsPresenter.IEventsView 
 
 	@Override
 	public void bindBookingSummary(BookingSummaryDto summary) {
+		this.summary = summary;
 		if (summary != null) {
-			Integer activeDelegates = summary.getTotalDelegates()
-					- summary.getTotalCancelled();
+			Integer activeDelegates = summary.getTotalDelegates() - summary.getTotalCancelled();
 
 			Integer totalNonMembers = 0;
 			int totalActiveMembers = 0;
 			int totalActiveNonMembers = 0;
-			elTotalBooking.setInnerText(NumberUtils.NUMBERFORMAT.format(summary
-					.getTotalDelegates()) + "");
-			spnTotalActive.setInnerText(NumberUtils.NUMBERFORMAT
-					.format(activeDelegates) + " Active");
+			elTotalBooking.setInnerText(NumberUtils.NUMBERFORMAT.format(summary.getTotalDelegates()) + "");
+			spnTotalActive.setInnerText(NumberUtils.NUMBERFORMAT.format(activeDelegates) + " Active");
 
 			// Members
 			if (summary.getTotalMembers() != null) {
-				totalNonMembers = summary.getTotalDelegates()
-						- summary.getTotalMembers();
-				totalActiveMembers = summary.getTotalMembers()
-						- summary.getTotalCancelledMembers();
-				elTotalMembers.setInnerText(NumberUtils.NUMBERFORMAT
-						.format(summary.getTotalMembers()) + "");
-				spnTotalActiveMembers.setInnerText(NumberUtils.NUMBERFORMAT
-						.format(totalActiveMembers) + " Active");
+				totalNonMembers = summary.getTotalDelegates() - summary.getTotalMembers();
+				totalActiveMembers = summary.getTotalMembers() - summary.getTotalCancelledMembers();
+				elTotalMembers.setInnerText(NumberUtils.NUMBERFORMAT.format(summary.getTotalMembers()) + "");
+				spnTotalActiveMembers.setInnerText(NumberUtils.NUMBERFORMAT.format(totalActiveMembers) + " Active");
 
 			}
 
 			// Non-Members
 			if (summary.getTotalNonMembers() != null) {
-				totalActiveNonMembers = summary.getTotalNonMembers()
-						- summary.getTotalCancelledNonMembers();
-				elTotalNonMembers.setInnerText(NumberUtils.NUMBERFORMAT
-						.format(totalNonMembers) + "");
-				spnTotalActiveNonMembers.setInnerText(NumberUtils.NUMBERFORMAT
-						.format(totalActiveNonMembers) + " Active");
+				totalActiveNonMembers = summary.getTotalNonMembers() - summary.getTotalCancelledNonMembers();
+				elTotalNonMembers.setInnerText(NumberUtils.NUMBERFORMAT.format(totalNonMembers) + "");
+				spnTotalActiveNonMembers
+						.setInnerText(NumberUtils.NUMBERFORMAT.format(totalActiveNonMembers) + " Active");
 			}
 
 			// Payment metric
 			if (summary.getTotalPaid() != null) {
-				Integer percentagePaid = (summary.getTotalPaid() * 100)
-						/ summary.getTotalDelegates();
+				Integer percentagePaid = (summary.getTotalPaid() * 100) / summary.getTotalDelegates();
 				String converted = convertToReadableProgress(percentagePaid);
-				divPaymentMetric
-						.setClassName("progress-bar progress-bar-green progress-"
-								+ converted);
+				divPaymentMetric.setClassName("progress-bar progress-bar-green progress-" + converted);
 				spnPaid.setInnerText(percentagePaid + "%");
-				divPaymentMetric.setTitle(summary.getTotalPaid() + " out of "
-						+ activeDelegates + " have paid.");
+				divPaymentMetric.setTitle(summary.getTotalPaid() + " out of " + activeDelegates + " have paid.");
 
 			}
 
 			/* TOTAL Active METRIC */
 			if (summary.getTotalDelegates() != null) {
-				Integer percentagePaid = (activeDelegates * 100)
-						/ summary.getTotalDelegates();
+				Integer percentagePaid = (activeDelegates * 100) / summary.getTotalDelegates();
 				String converted = convertToReadableProgress(percentagePaid);
+				divTotalBookingMetric.setClassName("progress-bar progress-bar-green progress-" + converted);
 				divTotalBookingMetric
-						.setClassName("progress-bar progress-bar-green progress-"
-								+ converted);
-				divTotalBookingMetric.setTitle(activeDelegates + " out of "
-						+ summary.getTotalDelegates() + " are active.");
+						.setTitle(activeDelegates + " out of " + summary.getTotalDelegates() + " are active.");
 			}
 
 			// Member Active metric
 			if (summary.getTotalCancelledMembers() != null) {
-				int activeMembers = summary.getTotalMembers()
-						- summary.getTotalCancelledMembers();
-				Integer percentageActiveMembers = (activeMembers * 100)
-						/ summary.getTotalMembers();
+				int activeMembers = summary.getTotalMembers() - summary.getTotalCancelledMembers();
+				Integer percentageActiveMembers = (activeMembers * 100) / summary.getTotalMembers();
 				String converted = convertToReadableProgress(percentageActiveMembers);
-				divMembersMetric
-						.setClassName("progress-bar progress-bar-green progress-"
-								+ converted);
-				divMembersMetric.setTitle(activeMembers + " out of "
-						+ summary.getTotalMembers() + " are active.");
+				divMembersMetric.setClassName("progress-bar progress-bar-green progress-" + converted);
+				divMembersMetric.setTitle(activeMembers + " out of " + summary.getTotalMembers() + " are active.");
 			}
 
 			// Non-member Payment Metric
 			if (summary.getTotalPaidMembers() != null) {
-				int activeNonMembers = summary.getTotalNonMembers()
-						- summary.getTotalCancelledNonMembers();
-				Integer percentageNonPaidMembers = (activeNonMembers * 100)
-						/ summary.getTotalNonMembers();
+				int activeNonMembers = summary.getTotalNonMembers() - summary.getTotalCancelledNonMembers();
+				Integer percentageNonPaidMembers = (activeNonMembers * 100) / summary.getTotalNonMembers();
 				String converted = convertToReadableProgress(percentageNonPaidMembers);
-				divNonMemberMetric
-						.setClassName("progress-bar progress-bar-green progress-"
-								+ converted);
-				divNonMemberMetric.setTitle(activeNonMembers + " out of"
-						+ totalNonMembers + " are active.");
+				divNonMemberMetric.setClassName("progress-bar progress-bar-green progress-" + converted);
+				divNonMemberMetric.setTitle(activeNonMembers + " out of" + totalNonMembers + " are active.");
 			}
 
 			// Accomodation metric
 			if (summary.getTotalWithAccomodation() != null) {
-				Integer percentageAccomodated = (summary
-						.getTotalWithAccomodation() * 100)
+				Integer percentageAccomodated = (summary.getTotalWithAccomodation() * 100)
 						/ summary.getTotalDelegates();
 				String converted = convertToReadableProgress(percentageAccomodated);
-				divAccomodationMetric
-						.setClassName("progress-bar progress-bar-green progress-"
-								+ converted);
+				divAccomodationMetric.setClassName("progress-bar progress-bar-green progress-" + converted);
 				spnAccomodated.setInnerText(percentageAccomodated + "%");
-				divAccomodationMetric.setTitle(summary
-						.getTotalWithAccomodation()
-						+ " out of "
-						+ activeDelegates + " have accomodation.");
+				divAccomodationMetric.setTitle(
+						summary.getTotalWithAccomodation() + " out of " + activeDelegates + " have accomodation.");
 			}
 
 			// Cancellation metric
 			if (summary.getTotalCancelled() != null) {
-				Integer percentageCancelled = (summary.getTotalCancelled() * 100)
-						/ summary.getTotalDelegates();
+				Integer percentageCancelled = (summary.getTotalCancelled() * 100) / summary.getTotalDelegates();
 				String converted = convertToReadableProgress(percentageCancelled);
-				divCancellationMetric
-						.setClassName("progress-bar progress-bar-green progress-"
-								+ converted);
+				divCancellationMetric.setClassName("progress-bar progress-bar-green progress-" + converted);
 				spnCancellation.setInnerText(percentageCancelled + "%");
-				divCancellationMetric.setTitle(summary.getTotalCancelled()
-						+ " out of " + activeDelegates
-						+ " have cancelled their booking.");
+				divCancellationMetric.setTitle(
+						summary.getTotalCancelled() + " out of " + activeDelegates + " have cancelled their booking.");
 			}
 
 			// Attendance metric
 			if (summary.getTotalAttended() != null) {
-				Integer percentageAttended = (summary.getTotalAttended() * 100)
-						/ summary.getTotalDelegates();
+				Integer percentageAttended = (summary.getTotalAttended() * 100) / summary.getTotalDelegates();
 				String converted = convertToReadableProgress(percentageAttended);
 				divAttendanceMetric.setClassName("progress-" + converted);
 				spnAttendance.setInnerText(percentageAttended + "%");
-				divAttendanceMetric.setTitle(summary.getTotalAttended()
-						+ " out of " + activeDelegates
-						+ " have been marked as attended.");
+				divAttendanceMetric.setTitle(
+						summary.getTotalAttended() + " out of " + activeDelegates + " have been marked as attended.");
 			}
 
 			// Payments Breakdown
-			elMpesaPayments.setInnerText(NumberUtils.NUMBERFORMAT
-					.format(summary.getTotalMpesaPayments()) + "");
-			elCardPayments.setInnerText(NumberUtils.NUMBERFORMAT.format(summary
-					.getTotalCardsPayment()) + "");
-			elCreditPayments.setInnerText(NumberUtils.NUMBERFORMAT
-					.format(summary.getTotalCredit()) + "");
-			elReceiptPayments.setInnerText(NumberUtils.NUMBERFORMAT
-					.format(summary.getTotalReceiptPayment()) + "");
-			elOfflinePayments.setInnerText(NumberUtils.NUMBERFORMAT
-					.format(summary.getTotalOfflinePayment()) + "");
+			elMpesaPayments.setInnerText(NumberUtils.NUMBERFORMAT.format(summary.getTotalMpesaPayments()) + "");
+			elCardPayments.setInnerText(NumberUtils.NUMBERFORMAT.format(summary.getTotalCardsPayment()) + "");
+			elCreditPayments.setInnerText(NumberUtils.NUMBERFORMAT.format(summary.getTotalCredit()) + "");
+			elReceiptPayments.setInnerText(NumberUtils.NUMBERFORMAT.format(summary.getTotalReceiptPayment()) + "");
+			elOfflinePayments.setInnerText(NumberUtils.NUMBERFORMAT.format(summary.getTotalOfflinePayment()) + "");
 
 		}
 	}
@@ -393,8 +350,7 @@ public class EventsView extends ViewImpl implements EventsPresenter.IEventsView 
 		String readable = "";
 		if (percentagePaid > 10) {
 			if (!(String.valueOf(percentagePaid).endsWith("0"))) {
-				readable = (String.valueOf(percentagePaid)).substring(0, 1)
-						+ "0";
+				readable = (String.valueOf(percentagePaid)).substring(0, 1) + "0";
 			} else {
 				readable = String.valueOf(percentagePaid);
 			}
@@ -418,9 +374,8 @@ public class EventsView extends ViewImpl implements EventsPresenter.IEventsView 
 
 	@Override
 	public void bindEventSummary(EventSummaryDto eventSummary) {
-		headerContainer.setCounts(
-				eventSummary.getClosed() + eventSummary.getOpen(),
-				eventSummary.getClosed(), eventSummary.getOpen());
+		headerContainer.setCounts(eventSummary.getClosed() + eventSummary.getOpen(), eventSummary.getClosed(),
+				eventSummary.getOpen());
 	}
 
 	public String getSearchValue() {
@@ -474,6 +429,10 @@ public class EventsView extends ViewImpl implements EventsPresenter.IEventsView 
 			liBooking.addClassName("active");
 			liSummary.removeClassName("active");
 		}
+	}
+	
+	public Uploader getCsvUploader(){
+		return csvImport.getUploader();
 	}
 
 }

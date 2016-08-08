@@ -60,31 +60,27 @@ public class CPDDaoHelper {
 
 	static Logger logger = Logger.getLogger(CPDDaoHelper.class);
 
-	public List<CPDDto> getAllCPD(String memberId, Integer offset,
-			Integer limit, Long startDate, Long endDate, String searchTerm) {
+	public List<CPDDto> getAllCPD(String memberId, Integer offset, Integer limit, Long startDate, Long endDate,
+			String searchTerm) {
 
 		List<CPDDto> cpds = null;
 		if (memberId != null && memberId.equals("ALL")) {
-			cpds = dao.getAllCPDs(offset, limit, new Date(startDate), new Date(
-					endDate));
+			cpds = dao.getAllCPDs(offset, limit, new Date(startDate), new Date(endDate));
 		} else {
-			cpds = dao.getAllCPDs(memberId, offset, limit, new Date(startDate),
-					new Date(endDate), searchTerm);
+			cpds = dao.getAllCPDs(memberId, offset, limit, new Date(startDate), new Date(endDate), searchTerm);
 		}
 		logger.info(" ++++ TOTAL CPDS FOUND ++++ " + cpds.size());
 		return cpds;
 	}
 
 	public Integer getCount(String memberId, Long startDate, Long endDate) {
-		return dao
-				.getCPDCount(memberId, new Date(startDate), new Date(endDate));
+		return dao.getCPDCount(memberId, new Date(startDate), new Date(endDate));
 	}
 
 	public CPDDto getCPD(String cpdId) {
 		CPD cpd = dao.findByCPDId(cpdId);
 		CPDDto rtn = cpd.toDTO();
-		rtn.setFullNames(userDao.getNamesBymemberNo(cpd
-				.getMemberRegistrationNo()));
+		rtn.setFullNames(userDao.getNamesBymemberNo(cpd.getMemberRegistrationNo()));
 
 		return rtn;
 	}
@@ -133,20 +129,14 @@ public class CPDDaoHelper {
 	}
 
 	public void sendReviewNotifications(CPDDto cpdDto, CPD poCPD) {
-		logger.info(" +++ Sending Review Notifications FOR +++++ cpdId == "
-				+ cpdDto.getRefId());
+		logger.info(" +++ Sending Review Notifications FOR +++++ cpdId == " + cpdDto.getRefId());
 		// Compare cpd status and determine whether to send smses
-		logger.info(" Dto Status == " + cpdDto.getStatus() + " PO Status::"
-				+ poCPD.getStatus());
-		if (cpdDto.getManagementComment() != null
-				&& !cpdDto.getManagementComment().equals("")) {
+		logger.info(" Dto Status == " + cpdDto.getStatus() + " PO Status::" + poCPD.getStatus());
+		if (cpdDto.getManagementComment() != null && !cpdDto.getManagementComment().equals("")) {
 			logger.info(" Status has changed to == " + cpdDto.getStatus());
-			Member member = dao.findByRefId(poCPD.getMemberRefId(),
-					Member.class);
-			String smsMessage = "Dear" + " "
-					+ member.getUser().getUserData().getFirstName()
-					+ ". Your CPD record " + poCPD.getTitle() + " has been "
-					+ cpdDto.getStatus()
+			Member member = dao.findByRefId(poCPD.getMemberRefId(), Member.class);
+			String smsMessage = "Dear" + " " + member.getUser().getUserData().getFirstName() + ". Your CPD record "
+					+ poCPD.getTitle() + " has been " + cpdDto.getStatus()
 					+ ".Please check email for further clarification.";
 			// Send SMS Notification
 			// smsIntergration.send(member.getUser().getPhoneNumber(),
@@ -161,8 +151,7 @@ public class CPDDaoHelper {
 		String subject = cpdDto.getTitle();
 		String action = "";
 
-		if (cpdDto.getStatus() != null
-				&& cpdDto.getStatus() != CPDStatus.Unconfirmed) {
+		if (cpdDto.getStatus() != null && cpdDto.getStatus() != CPDStatus.Unconfirmed) {
 			subject = subject + " has been " + cpdDto.getStatus();
 			action = action + " has been " + cpdDto.getStatus();
 		} else {
@@ -176,47 +165,34 @@ public class CPDDaoHelper {
 
 		String additionLink = "";
 		if (isApproved) {
-			additionLink = "<p><a href=" + link + ">Click this link </a>"
-					+ " to View the CPD record.</p>";
+			additionLink = "<p><a href=" + link + ">Click this link </a>" + " to View the CPD record.</p>";
 		} else if (isNotConfirmed) {
-			additionLink = "<p><a href=" + link + ">Click this link </a>"
-					+ " to View and Rectify the CPD record.</p>";
+			additionLink = "<p><a href=" + link + ">Click this link </a>" + " to View and Rectify the CPD record.</p>";
 		}
 
-		String body = "Dear "
-				+ user.getUserData().getFullNames()
-				+ ","
-				+ "<br/> "
-				+ "<p>Your CPD activity \""
-				+ cpdDto.getTitle()
-				+ "\""
-				+ action
-				+ (cpdDto.getManagementComment() == null ? "" : " <br/>'"
-						+ cpdDto.getManagementComment() + "'") + additionLink
-				+ "</p>Thank you<br/>Member Services";
+		String body = "Dear " + user.getUserData().getFullNames() + "," + "<br/> " + "<p>Your CPD activity \""
+				+ cpdDto.getTitle() + "\"" + action
+				+ (cpdDto.getManagementComment() == null ? "" : " <br/>'" + cpdDto.getManagementComment() + "'")
+				+ additionLink + "</p>Thank you<br/>Member Services";
 
 		try {
-			EmailServiceHelper.sendEmail(body, subject,
-					Arrays.asList(user.getEmail(), "molly.mwangi@icpak.com"),
+			EmailServiceHelper.sendEmail(body, subject, Arrays.asList(user.getEmail(), "molly.mwangi@icpak.com"),
 					Arrays.asList(user.getFullName(), "Molly Mwangi"));
 
 		} catch (Exception e) {
-			logger.info("Review Email for " + user.getEmail()
-					+ " failed. Cause: " + e.getMessage());
+			logger.info("Review Email for " + user.getEmail() + " failed. Cause: " + e.getMessage());
 			e.printStackTrace();
 			// throw new Run
 		}
 
 	}
 
-	public void updateCPDFromAttendance(Delegate delegate,
-			AttendanceStatus attendance) {
+	public void updateCPDFromAttendance(Delegate delegate, AttendanceStatus attendance) {
 		if (delegate.getMemberRefId() == null) {
 			return;
 		}
 
-		Member member = dao
-				.findByRefId(delegate.getMemberRefId(), Member.class);
+		Member member = dao.findByRefId(delegate.getMemberRefId(), Member.class);
 		Event event = delegate.getBooking().getEvent();
 		String memberRefId = delegate.getMemberRefId();
 
@@ -249,19 +225,23 @@ public class CPDDaoHelper {
 		} else {
 			create(memberRefId, cpd);
 		}
+		Member m = dao.findByRefId(memberRefId, Member.class);
+
+		if (m != null) {
+			if (m.getUser() != null) {
+				sendReviewEmail(m.getUser(), cpd);
+			}
+		}
 	}
 
-	public CPDSummaryDto getCPDSummary(String memberRefId, Long startDate,
-			Long endDate) {
+	public CPDSummaryDto getCPDSummary(String memberRefId, Long startDate, Long endDate) {
 		CPDSummaryDto dto = null;
-		logger.info(" ++++ CPD SUMMARY FOR MEMBER REFID " + memberRefId
-				+ " ++++++ ");
+		logger.info(" ++++ CPD SUMMARY FOR MEMBER REFID " + memberRefId + " ++++++ ");
 
 		if (memberRefId != null && memberRefId.equals("ALL")) {
 			dto = dao.getCPDSummary(new Date(startDate), new Date(endDate));
 		} else if (memberRefId != null) {
-			dto = dao.getCPDSummary(memberRefId, new Date(startDate), new Date(
-					endDate));
+			dto = dao.getCPDSummary(memberRefId, new Date(startDate), new Date(endDate));
 		}
 		return dto;
 	}
@@ -271,8 +251,7 @@ public class CPDDaoHelper {
 	 * @param memberRefId
 	 * @return true if member meets all requirements
 	 */
-	public boolean isInGoodStanding(String memberRefId, List<String> messages,
-			MemberStanding standing) {
+	public boolean isInGoodStanding(String memberRefId, List<String> messages, MemberStanding standing) {
 		boolean isGenerate = true;
 
 		Member member = dao.findByRefId(memberRefId, Member.class);
@@ -285,9 +264,7 @@ public class CPDDaoHelper {
 		if (status != null) {
 			if (status != MembershipStatus.ACTIVE) {
 				isGenerate = false;
-				messages.add("Your Membership status is <strong>"
-						+ status.name()
-						+ "</strong>. "
+				messages.add("Your Membership status is <strong>" + status.name() + "</strong>. "
 						+ "Membership must be <strong>Active</strong> to be in good standing.");
 			}
 		} else {
@@ -331,36 +308,30 @@ public class CPDDaoHelper {
 			Calendar regDate = Calendar.getInstance();
 			regDate.setTime(registrationDate);
 
-			Double noOfYears = ServerDateUtils.getYearsBetween(
-					registrationDate, new Date());
+			Double noOfYears = ServerDateUtils.getYearsBetween(registrationDate, new Date());
 			if (noOfYears <= 0.0) {
 				// do nothing - all is well<=2
 			} else if (noOfYears <= 2) {
 				// >1 && <=2
 				if (cpdHours < 40) {
 					isGenerate = false;
-					messages.add("You have been a member for more than "
-							+ noOfYears.intValue() + " but you have done "
-							+ cpdHours.intValue()
-							+ " out of 40 expected hours.");
+					messages.add("You have been a member for more than " + noOfYears.intValue() + " but you have done "
+							+ cpdHours.intValue() + " out of 40 expected hours.");
 				}
 			} else if (noOfYears <= 3) {
 				// >1 && <=2
 				if (cpdHours < 80) {
 					isGenerate = false;
-					messages.add("You have been a member for more than "
-							+ noOfYears.intValue() + "but you have done "
-							+ cpdHours.intValue()
-							+ " out of 80 expected hours.");
+					messages.add("You have been a member for more than " + noOfYears.intValue() + "but you have done "
+							+ cpdHours.intValue() + " out of 80 expected hours.");
 				}
 			} else {
 				// >1 && <=2
 				if (cpdHours < 120) {
 					isGenerate = false;
-					messages.add("You have been a member for more than "
-							+ noOfYears.intValue()
-							+ " years but you have done " + cpdHours.intValue()
-							+ " cpd hours out of 120 expected hours.");
+					messages.add(
+							"You have been a member for more than " + noOfYears.intValue() + " years but you have done "
+									+ cpdHours.intValue() + " cpd hours out of 120 expected hours.");
 				}
 			}
 		}
@@ -371,8 +342,7 @@ public class CPDDaoHelper {
 	public MemberStanding getMemberStanding(String memberId) {
 		List<String> messages = new ArrayList<>();
 		MemberStanding standing = new MemberStanding();
-		boolean isInGoodStanding = isInGoodStanding(memberId, messages,
-				standing);
+		boolean isInGoodStanding = isInGoodStanding(memberId, messages, standing);
 		standing.setStanding(isInGoodStanding ? 1 : 0);
 		standing.setReasons(messages);
 		return standing;
@@ -388,11 +358,11 @@ public class CPDDaoHelper {
 	}
 
 	// get a list of cpds filtered by date currently logged in member
-	public List<CPDDto> getAllMemberCpd(String memberRefId, Date startDate,
-			Date endDate, Integer limit, Integer offset) {
+	public List<CPDDto> getAllMemberCpd(String memberRefId, Date startDate, Date endDate, Integer limit,
+			Integer offset) {
 
-		List<CPD> cpds = dao.getAllCPDS(memberRefId, startDate, endDate,
-				offset == null ? 0 : offset, limit == null ? 1000 : limit);
+		List<CPD> cpds = dao.getAllCPDS(memberRefId, startDate, endDate, offset == null ? 0 : offset,
+				limit == null ? 1000 : limit);
 
 		List<CPDDto> cpdDtos = new ArrayList<>();
 		for (CPD cpd : cpds) {
@@ -404,17 +374,14 @@ public class CPDDaoHelper {
 
 	}
 
-	public List<MemberCPDDto> getAllMemberCPDSummary(String searchTerm,
-			Integer offset, Integer limit) {
-		List<MemberCPDDto> memberCPDs = dao.getMemberCPD(searchTerm, offset,
-				limit);
+	public List<MemberCPDDto> getAllMemberCPDSummary(String searchTerm, Integer offset, Integer limit) {
+		List<MemberCPDDto> memberCPDs = dao.getMemberCPD(searchTerm, offset, limit);
 		return memberCPDs;
 	}
 
-	public List<CPDDto> searchCPD(String memberId, String searchTerm,
-			Integer offset, Integer limit, Long startDate, Long endDate) {
-		return dao.searchCPD(memberId, searchTerm, offset, limit, new Date(
-				startDate), new Date(endDate));
+	public List<CPDDto> searchCPD(String memberId, String searchTerm, Integer offset, Integer limit, Long startDate,
+			Long endDate) {
+		return dao.searchCPD(memberId, searchTerm, offset, limit, new Date(startDate), new Date(endDate));
 	}
 
 	public Integer cpdSearchCount(String searchTerm) {
@@ -428,8 +395,7 @@ public class CPDDaoHelper {
 	public CPDDto create(CPDDto cpdDto) {
 		String lmsResult = null;
 		if (cpdDto.getLmsCourseId() != null) {
-			lmsResult = coursesDaoHelper.updateCPDCOurse(
-					cpdDto.getLmsCourseId(), cpdDto.getLmsMemberId());
+			lmsResult = coursesDaoHelper.updateCPDCOurse(cpdDto.getLmsCourseId(), cpdDto.getLmsMemberId());
 		}
 
 		SimpleDateFormat fomatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -443,8 +409,7 @@ public class CPDDaoHelper {
 		}
 		logger.info(" +++++ LMS STARTDATE +++ " + cpdDto.getLmsStartDate());
 		logger.info(" +++++ LMS ENDDATE +++ " + cpdDto.getLmsEnddate());
-		logger.info(" +++++ MemberRegistration Number +++ "
-				+ cpdDto.getMemberRegistrationNo());
+		logger.info(" +++++ MemberRegistration Number +++ " + cpdDto.getMemberRegistrationNo());
 
 		CPD cpd = new CPD();
 		cpd.copyFrom(cpdDto);
@@ -467,15 +432,12 @@ public class CPDDaoHelper {
 		return dao.getMemberCPDCount(searchTerm).intValue();
 	}
 
-	public List<CPDFooterDto> getYearSummaries(String memberId, Long startDate,
-			Long endDate) {
-		return dao.getYearSummaries(memberId, new Date(startDate), new Date(
-				endDate));
+	public List<CPDFooterDto> getYearSummaries(String memberId, Long startDate, Long endDate) {
+		return dao.getYearSummaries(memberId, new Date(startDate), new Date(endDate));
 	}
 
-	public List<CPDDto> getAllCPDWithStringDates(String memberId,
-			Integer offset, Integer limit, String startDate, String endDate,
-			Object object) {
+	public List<CPDDto> getAllCPDWithStringDates(String memberId, Integer offset, Integer limit, String startDate,
+			String endDate, Object object) {
 
 		Date date1 = null;
 		Date date2 = null;
@@ -486,8 +448,7 @@ public class CPDDaoHelper {
 			e.printStackTrace();
 		}
 
-		return getAllCPD(memberId, offset, limit, date1.getTime(),
-				date2.getTime(), null);
+		return getAllCPD(memberId, offset, limit, date1.getTime(), date2.getTime(), null);
 	}
 
 }

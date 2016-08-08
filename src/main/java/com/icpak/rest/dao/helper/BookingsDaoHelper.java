@@ -127,8 +127,8 @@ public class BookingsDaoHelper {
 
 	private Booking booking;
 
-	public List<BookingDto> getAllBookings(String uriInfo, String eventId,
-			Integer offset, Integer limit, String searchTerm) {
+	public List<BookingDto> getAllBookings(String uriInfo, String eventId, Integer offset, Integer limit,
+			String searchTerm) {
 		List<Booking> list = null;
 		List<BookingDto> clones = new ArrayList<>();
 
@@ -149,26 +149,21 @@ public class BookingsDaoHelper {
 	/*
 	 * Gets All delegates and updates delegate phone details from member records
 	 */
-	public List<DelegateDto> getAllDelegates(String uriInfo, String eventId,
-			Integer offset, Integer limit, String searchTerm,
-			String accomodationRefId, String bookingStatus,
-			boolean updatePhoneContacts) {
-		List<DelegateDto> delegateDtos = dao.getAllDelegates(eventId, offset,
-				limit, searchTerm, accomodationRefId, bookingStatus);
+	public List<DelegateDto> getAllDelegates(String uriInfo, String eventId, Integer offset, Integer limit,
+			String searchTerm, String accomodationRefId, String bookingStatus, boolean updatePhoneContacts) {
+		List<DelegateDto> delegateDtos = dao.getAllDelegates(eventId, offset, limit, searchTerm, accomodationRefId,
+				bookingStatus);
 
 		if (updatePhoneContacts) {
 			// Ensure that there is delegate phoneNumber
 			for (DelegateDto del : delegateDtos) {
 				if ((del.getMemberNo() != null)
-						&& (del.getDelegatePhoneNumber() == null || del
-								.getDelegatePhoneNumber().isEmpty())) {
-					logger.info("Updating phoneNumber for::"
-							+ del.getMemberNo() + "::" + del.getFullName());
+						&& (del.getDelegatePhoneNumber() == null || del.getDelegatePhoneNumber().isEmpty())) {
+					logger.info("Updating phoneNumber for::" + del.getMemberNo() + "::" + del.getFullName());
 					User u = userDao.findUserByMemberNo(del.getMemberNo());
 
 					if (u != null) {
-						if (u.getPhoneNumber() != null
-								&& !(u.getPhoneNumber().isEmpty())) {
+						if (u.getPhoneNumber() != null && !(u.getPhoneNumber().isEmpty())) {
 							del.setDelegatePhoneNumber(u.getPhoneNumber());
 							// Save this Information
 							Delegate d = new Delegate();
@@ -188,17 +183,14 @@ public class BookingsDaoHelper {
 	 * Gets All delegates but does not updates delegate phone details from
 	 * member records
 	 */
-	public List<DelegateDto> getAllDelegates(String uriInfo, String eventId,
-			Integer offset, Integer limit, String searchTerm,
-			String accomodationRefId, String bookingStatus) {
-		return dao.getAllDelegates(eventId, offset, limit, searchTerm,
-				accomodationRefId, bookingStatus);
+	public List<DelegateDto> getAllDelegates(String uriInfo, String eventId, Integer offset, Integer limit,
+			String searchTerm, String accomodationRefId, String bookingStatus) {
+		return dao.getAllDelegates(eventId, offset, limit, searchTerm, accomodationRefId, bookingStatus);
 	}
 
-	public List<DelegateDto> getDelegateByQrCode(String uriInfo,
-			String eventId, Integer offset, Integer limit, String searchTerm) {
-		List<DelegateDto> delegateDtos = dao.getAllDelegates(eventId, offset,
-				limit, searchTerm, true, "", "");
+	public List<DelegateDto> getDelegateByQrCode(String uriInfo, String eventId, Integer offset, Integer limit,
+			String searchTerm) {
+		List<DelegateDto> delegateDtos = dao.getAllDelegates(eventId, offset, limit, searchTerm, true, "", "");
 		return delegateDtos;
 	}
 
@@ -219,23 +211,19 @@ public class BookingsDaoHelper {
 	public BookingDto createBooking(String eventId, DelegateDto delegate) {
 
 		if (delegate.getMemberNo() == null) {
-			throw new ServiceException(ErrorCodes.SERVER_ERROR,
-					"MemberNo is required!");
+			throw new ServiceException(ErrorCodes.SERVER_ERROR, "MemberNo is required!");
 		}
 
 		// Find the member
 		User user = userDao.findUserByMemberNo(delegate.getMemberNo());
 		if (user == null) {
-			throw new ServiceException(ErrorCodes.NOTFOUND,
-					"Member not found. Please pass a valid memberNo");
+			throw new ServiceException(ErrorCodes.NOTFOUND, "Member not found. Please pass a valid memberNo");
 		}
 
 		// Find members application detail
-		ApplicationFormHeader application = applicationDao
-				.getApplicationByUserRef(user.getRefId());
+		ApplicationFormHeader application = applicationDao.getApplicationByUserRef(user.getRefId());
 		if (application == null) {
-			throw new ServiceException(
-					ErrorCodes.NOTFOUND,
+			throw new ServiceException(ErrorCodes.NOTFOUND,
 					"Member's ApplicationForm not found. Kindly check with Admin why applicationForm is not found!");
 
 		}
@@ -250,12 +238,9 @@ public class BookingsDaoHelper {
 		}
 		contact.setCompany(application.getEmployer());
 		contact.setTelephoneNumbers(user.getPhoneNumber());
-		contact.setAddress((application.getAddress1() == null ? "NOT SET"
-				: application.getAddress1()));
-		contact.setPostCode((application.getPostCode() == null ? "NOT SET"
-				: application.getPostCode()));
-		contact.setContactName(user.getFullName() == null ? "NOT SET" : user
-				.getFullName());
+		contact.setAddress((application.getAddress1() == null ? "NOT SET" : application.getAddress1()));
+		contact.setPostCode((application.getPostCode() == null ? "NOT SET" : application.getPostCode()));
+		contact.setContactName(user.getFullName() == null ? "NOT SET" : user.getFullName());
 		contact.setEmail(user.getEmail() == null ? "NOT SET" : user.getEmail());
 		booking.setContact(contact);
 
@@ -351,18 +336,14 @@ public class BookingsDaoHelper {
 		dao.deleteAllBookingInvoice(bookingId);
 	}
 
-	public byte[] generateInvoicePdf(String bookingRefId)
-			throws FileNotFoundException, IOException, SAXException,
-			ParserConfigurationException, FactoryConfigurationError,
-			DocumentException {
+	public byte[] generateInvoicePdf(String bookingRefId) throws FileNotFoundException, IOException, SAXException,
+			ParserConfigurationException, FactoryConfigurationError, DocumentException {
 		assert bookingRefId != null;
 		Booking bookingInDb = dao.findByRefId(bookingRefId, Booking.class);
 		this.booking = bookingInDb;
-		InvoiceDto invoice = invoiceHelper.getInvoice(dao
-				.getInvoiceRef(bookingRefId));
+		InvoiceDto invoice = invoiceHelper.getInvoice(dao.getInvoiceRef(bookingRefId));
 		// Generate Email Document to be used to Map to HTML
-		Map<String, Object> emailValues = generateEmailValues(invoice,
-				bookingInDb);
+		Map<String, Object> emailValues = generateEmailValues(invoice, bookingInDb);
 		byte[] invoicePdf = generatePDFDocument(invoice, emailValues);
 
 		return invoicePdf;
@@ -373,48 +354,40 @@ public class BookingsDaoHelper {
 		Booking bookingInDb = dao.findByRefId(bookingRefId, Booking.class);
 		updateBookingStats(bookingInDb);
 		booking = bookingInDb;
-		InvoiceDto invoice = invoiceHelper.getInvoice(dao
-				.getInvoiceRef(bookingRefId));
+		InvoiceDto invoice = invoiceHelper.getInvoice(dao.getInvoiceRef(bookingRefId));
 
-		String subject = bookingInDb.getEvent().getName()
-				+ "' Event Registration";
+		String subject = bookingInDb.getEvent().getName() + "' Event Registration";
 
 		// Generate Email Document to be used to Map to HTML
-		Map<String, Object> emailValues = generateEmailValues(invoice,
-				bookingInDb);
+		Map<String, Object> emailValues = generateEmailValues(invoice, bookingInDb);
 		Doc emailDocument = new Doc(emailValues);
 
 		try {
 			byte[] invoicePdf = generatePDFDocument(invoice, emailValues);
 			Attachment attachment = new Attachment();
 			attachment.setAttachment(invoicePdf);
-			attachment.setName("ProForma Invoice_"
-					+ bookingInDb.getContact().getContactName() + ".pdf");
+			attachment.setName("ProForma Invoice_" + bookingInDb.getContact().getContactName() + ".pdf");
 
 			// Email Template parse and map variables
-			InputStream is = EmailServiceHelper.class.getClassLoader()
-					.getResourceAsStream("booking-email.html");
+			InputStream is = EmailServiceHelper.class.getClassLoader().getResourceAsStream("booking-email.html");
 			String html = IOUtils.toString(is);
 			html = new DocumentHTMLMapper().map(emailDocument, html);
 
 			EmailServiceHelper.sendEmail(html, "RE: ICPAK '" + subject,
 					Arrays.asList(bookingInDb.getContact().getEmail()),
-					Arrays.asList(bookingInDb.getContact().getContactName()),
-					attachment);
+					Arrays.asList(bookingInDb.getContact().getContactName()), attachment);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	private byte[] generatePDFDocument(InvoiceDto invoice,
-			Map<String, Object> emailValues) throws FileNotFoundException,
-			IOException, SAXException, ParserConfigurationException,
+	private byte[] generatePDFDocument(InvoiceDto invoice, Map<String, Object> emailValues)
+			throws FileNotFoundException, IOException, SAXException, ParserConfigurationException,
 			FactoryConfigurationError, DocumentException {
 
 		String documentNo = invoice.getDocumentNo();
-		List<InvoiceLineDto> invoiceLines = invoiceDao
-				.getInvoiceLinesByDocumentNo(documentNo);
+		List<InvoiceLineDto> invoiceLines = invoiceDao.getInvoiceLinesByDocumentNo(documentNo);
 
 		Doc proformaDocument = new Doc(emailValues);
 
@@ -427,56 +400,41 @@ public class BookingsDaoHelper {
 				// Discount Line
 				Map<String, Object> line = new HashMap<>();
 				line.put("discDescription", dto.getDescription());
-				line.put("discQuantity", NumberFormat.getNumberInstance()
-						.format(dto.getQuantity()));
-				line.put("discUnitPrice",
-						numberFormat.format(dto.getUnitPrice()));
-				line.put("discAmount",
-						numberFormat.format(dto.getTotalAmount()));
-				proformaDocument.addDetail(new DocumentLine("DiscountDetails",
-						line));
+				line.put("discQuantity", NumberFormat.getNumberInstance().format(dto.getQuantity()));
+				line.put("discUnitPrice", numberFormat.format(dto.getUnitPrice()));
+				line.put("discAmount", numberFormat.format(dto.getTotalAmount()));
+				proformaDocument.addDetail(new DocumentLine("DiscountDetails", line));
 
 			} else if (dto.getType() == InvoiceLineType.Penalty) {
 				// Penalty Line
 				Map<String, Object> line = new HashMap<>();
 				line.put("penaltyDescription", dto.getDescription());
-				line.put("penaltyQuantity", NumberFormat.getNumberInstance()
-						.format(dto.getQuantity()));
-				line.put("penaltyUnitPrice",
-						numberFormat.format(dto.getUnitPrice()));
-				line.put("penaltyAmount",
-						numberFormat.format(dto.getTotalAmount()));
-				proformaDocument.addDetail(new DocumentLine("PenaltyDetails",
-						line));
+				line.put("penaltyQuantity", NumberFormat.getNumberInstance().format(dto.getQuantity()));
+				line.put("penaltyUnitPrice", numberFormat.format(dto.getUnitPrice()));
+				line.put("penaltyAmount", numberFormat.format(dto.getTotalAmount()));
+				proformaDocument.addDetail(new DocumentLine("PenaltyDetails", line));
 			} else {
 				Map<String, Object> line = new HashMap<>();
 				line.put("description", dto.getDescription());
-				line.put(
-						"quantity",
-						NumberFormat.getNumberInstance().format(
-								dto.getQuantity()));
+				line.put("quantity", NumberFormat.getNumberInstance().format(dto.getQuantity()));
 				line.put("unitPrice", numberFormat.format(dto.getUnitPrice()));
 				line.put("amount", numberFormat.format(dto.getTotalAmount()));
-				logger.info("InvoiceDto: " + dto.getRefId() + " | "
-						+ dto.getDescription() + " | " + dto.getTotalAmount()
-						+ " | " + dto.getType());
+				logger.info("InvoiceDto: " + dto.getRefId() + " | " + dto.getDescription() + " | "
+						+ dto.getTotalAmount() + " | " + dto.getType());
 
-				proformaDocument.addDetail(new DocumentLine("invoiceDetails",
-						line));
+				proformaDocument.addDetail(new DocumentLine("invoiceDetails", line));
 			}
 
 		}
 
-		emailValues.put("totalAmount",
-				numberFormat.format(invoice.getInvoiceAmount()));
+		emailValues.put("totalAmount", numberFormat.format(invoice.getInvoiceAmount()));
 		if (booking.getEvent().getDiscountDate() != null) {
 			String discountDescription = "Total Discount(Payment before %s) ";
 			discountDescription = String.format(discountDescription,
 					formatter.format(booking.getEvent().getDiscountDate()));
 			emailValues.put("totalDiscountDesc", discountDescription);
 			if (invoice.getTotalDiscount() != null) {
-				emailValues.put("totalDiscAmount",
-						numberFormat.format(invoice.getTotalDiscount()));
+				emailValues.put("totalDiscAmount", numberFormat.format(invoice.getTotalDiscount()));
 			}
 		} else {
 			String discountDescription = "Total Discount ";
@@ -490,8 +448,7 @@ public class BookingsDaoHelper {
 					formatter.format(booking.getEvent().getPenaltyDate()));
 			emailValues.put("totalPenaltyDesc", penaltyDescription);
 			if (invoice.getTotalPenalty() != null) {
-				emailValues.put("totalPenaltyAmount",
-						numberFormat.format(invoice.getTotalPenalty()));
+				emailValues.put("totalPenaltyAmount", numberFormat.format(invoice.getTotalPenalty()));
 			}
 		} else {
 			String discountDescription = "Total Penalties ";
@@ -500,32 +457,26 @@ public class BookingsDaoHelper {
 		}
 
 		// PDF Invoice Generation
-		InputStream inv = EmailServiceHelper.class.getClassLoader()
-				.getResourceAsStream("proforma-invoice.html");
+		InputStream inv = EmailServiceHelper.class.getClassLoader().getResourceAsStream("proforma-invoice.html");
 		String invoiceHTML = IOUtils.toString(inv);
 
-		byte[] invoicePDF = new HTMLToPDFConvertor().convert(proformaDocument,
-				new String(invoiceHTML));
+		byte[] invoicePDF = new HTMLToPDFConvertor().convert(proformaDocument, new String(invoiceHTML));
 
 		return invoicePDF;
 	}
 
-	public Map<String, Object> generateEmailValues(InvoiceDto invoice,
-			Booking bookingInDb) {
+	public Map<String, Object> generateEmailValues(InvoiceDto invoice, Booking bookingInDb) {
 		Map<String, Object> emailValues = new HashMap<String, Object>();
 		emailValues.put("companyName", invoice.getCompanyName());
-		String companyAddress = bookingInDb.getContact().getAddress() + " "
-				+ bookingInDb.getContact().getPostCode();
+		String companyAddress = bookingInDb.getContact().getAddress() + " " + bookingInDb.getContact().getPostCode();
 		emailValues.put("companyAddress", companyAddress);
 		emailValues.put("companyLocation", bookingInDb.getContact().getCity());
-		emailValues.put("contactPhone", bookingInDb.getContact()
-				.getPhysicalAddress());
+		emailValues.put("contactPhone", bookingInDb.getContact().getPhysicalAddress());
 		emailValues.put("quoteNo", invoice.getDocumentNo());
 		emailValues.put("date", formatter.format(invoice.getDate()));
 		emailValues.put("firstName", invoice.getContactName());
 		emailValues.put("eventName", bookingInDb.getEvent().getName());
-		emailValues.put("eventStartDate",
-				formatter.format(bookingInDb.getEvent().getStartDate()));
+		emailValues.put("eventStartDate", formatter.format(bookingInDb.getEvent().getStartDate()));
 		emailValues.put("DocumentURL", settings.getApplicationPath());
 		emailValues.put("email", bookingInDb.getContact().getEmail());
 		emailValues.put("eventId", bookingInDb.getEvent().getRefId());
@@ -539,23 +490,15 @@ public class BookingsDaoHelper {
 		for (Delegate delegate : delegates) {
 			counter++;
 			emailValues.put("counter", counter);
-			emailValues.put("delegateNames", delegate.getSurname() + " "
-					+ delegate.getOtherNames());
+			emailValues.put("delegateNames", delegate.getSurname() + " " + delegate.getOtherNames());
 
-			emailValues.put("memberType",
-					(delegate.getMemberRegistrationNo() == null ? "Non-Member"
-							: "Member"));
+			emailValues.put("memberType", (delegate.getMemberRegistrationNo() == null ? "Non-Member" : "Member"));
 
-			emailValues.put("ernNo", (delegate.getErn() == null ? "----"
-					: delegate.getErn()));
+			emailValues.put("ernNo", (delegate.getErn() == null ? "----" : delegate.getErn()));
 
-			emailValues.put("accomodationName",
-					(delegate.getAccommodation() == null ? "None" : delegate
-							.getAccommodation().getHotel()
-							+ " "
-							+ delegate.getAccommodation().getNights()));
-			DocumentLine docLine = new DocumentLine("accomadationDetails",
-					emailValues);
+			emailValues.put("accomodationName", (delegate.getAccommodation() == null ? "None"
+					: delegate.getAccommodation().getHotel() + " " + delegate.getAccommodation().getNights()));
+			DocumentLine docLine = new DocumentLine("accomadationDetails", emailValues);
 			emailDocument.addDetail(docLine);
 		}
 
@@ -579,8 +522,7 @@ public class BookingsDaoHelper {
 		Collections.sort(delegates, new Comparator<Delegate>() {
 			@Override
 			public int compare(Delegate o1, Delegate o2) {
-				return o1.getMemberRegistrationNo() == null ? -1 : o2
-						.getMemberRegistrationNo() == null ? 1 : 0;
+				return o1.getMemberRegistrationNo() == null ? -1 : o2.getMemberRegistrationNo() == null ? 1 : 0;
 			}
 		});
 
@@ -628,21 +570,16 @@ public class BookingsDaoHelper {
 			delegate.setErn(dao.getErn(delegate.getRefId()));
 
 			// Member
-			if (delegate.getMemberRegistrationNo() != null
-					&& !delegate.getMemberRegistrationNo().contains("ASSOC/")) {
+			if (delegate.getMemberRegistrationNo() != null && !delegate.getMemberRegistrationNo().contains("ASSOC/")) {
 				String description = "%s - %s fees for %d member(s): %s";
-				memberInvoiceLine
-						.setMemberNames(memberInvoiceLine.getMemberNames()
-								.concat((memberInvoiceLine.getMemberNames()
-										.isEmpty() ? "" : ", ")
-										+ delegate.toString()));
+				memberInvoiceLine.setMemberNames(memberInvoiceLine.getMemberNames()
+						.concat((memberInvoiceLine.getMemberNames().isEmpty() ? "" : ", ") + delegate.toString()));
 
 				int qty = memberInvoiceLine.getQuantity() + 1;
 
 				memberInvoiceLine.setEventDelegateRefId(delegate.getRefId());
-				description = String.format(description, event.getName(), event
-						.getType().getDisplayName(), qty, memberInvoiceLine
-						.getMemberNames());
+				description = String.format(description, event.getName(), event.getType().getDisplayName(), qty,
+						memberInvoiceLine.getMemberNames());
 				memberInvoiceLine.setDescription(description);
 				memberInvoiceLine.setQuantity(qty);
 				memberInvoiceLine.setUnitPrice(delegate.getAmount());
@@ -658,18 +595,14 @@ public class BookingsDaoHelper {
 							formatter.format(eventIndb.getDiscountDate()));
 					memberDiscountLine.setDescription(discountDescription);
 					memberDiscountLine.setQuantity(qty);
-					memberDiscountLine.setUnitPrice(eventIndb
-							.getDiscountMemberPrice());
-					memberDiscountLine.setTotalAmount(qty
-							* eventIndb.getDiscountMemberPrice());
+					memberDiscountLine.setUnitPrice(eventIndb.getDiscountMemberPrice());
+					memberDiscountLine.setTotalAmount(qty * eventIndb.getDiscountMemberPrice());
 					memberDiscountLine.setType(InvoiceLineType.Discount);
 
 					totalDiscountAmount += eventIndb.getDiscountMemberPrice();
 
-					logger.error(discountDescription + "|"
-							+ memberDiscountLine.getQuantity() + " | " + qty
-							* eventIndb.getDiscountMemberPrice() + " | "
-							+ totalDiscountAmount);
+					logger.error(discountDescription + "|" + memberDiscountLine.getQuantity() + " | "
+							+ qty * eventIndb.getDiscountMemberPrice() + " | " + totalDiscountAmount);
 				}
 
 				// Penalty Calculation
@@ -680,34 +613,26 @@ public class BookingsDaoHelper {
 							formatter.format(eventIndb.getPenaltyDate()));
 					memberPenaltyLine.setDescription(penaltyDescription);
 					memberPenaltyLine.setQuantity(qty);
-					memberPenaltyLine.setUnitPrice(eventIndb
-							.getPenaltyMemberPrice());
-					memberPenaltyLine.setTotalAmount(qty
-							* eventIndb.getPenaltyMemberPrice());
+					memberPenaltyLine.setUnitPrice(eventIndb.getPenaltyMemberPrice());
+					memberPenaltyLine.setTotalAmount(qty * eventIndb.getPenaltyMemberPrice());
 					memberPenaltyLine.setType(InvoiceLineType.Penalty);
 					totalPenaltyAmount += eventIndb.getPenaltyMemberPrice();
 
-					logger.error(penaltyDescription + "|"
-							+ memberPenaltyLine.getQuantity() + " | " + qty
-							* eventIndb.getPenaltyMemberPrice() + " | "
-							+ totalPenaltyAmount);
+					logger.error(penaltyDescription + "|" + memberPenaltyLine.getQuantity() + " | "
+							+ qty * eventIndb.getPenaltyMemberPrice() + " | " + totalPenaltyAmount);
 				}
 
 			} else if (delegate.getMemberRegistrationNo() != null
 					&& delegate.getMemberRegistrationNo().contains("ASSOC/")) {
 				String description = "%s - %s fees for %d associate member(s): %s";
-				associateInvoiceLine.setMemberNames(associateInvoiceLine
-						.getMemberNames().concat(
-								(associateInvoiceLine.getMemberNames()
-										.isEmpty() ? "" : ", ")
-										+ delegate.toString()));
+				associateInvoiceLine.setMemberNames(associateInvoiceLine.getMemberNames()
+						.concat((associateInvoiceLine.getMemberNames().isEmpty() ? "" : ", ") + delegate.toString()));
 
 				int qty = associateInvoiceLine.getQuantity() + 1;
 
 				associateInvoiceLine.setEventDelegateRefId(delegate.getRefId());
-				description = String.format(description, event.getName(), event
-						.getType().getDisplayName(), qty, associateInvoiceLine
-						.getMemberNames());
+				description = String.format(description, event.getName(), event.getType().getDisplayName(), qty,
+						associateInvoiceLine.getMemberNames());
 				associateInvoiceLine.setDescription(description);
 				associateInvoiceLine.setQuantity(qty);
 				associateInvoiceLine.setUnitPrice(delegate.getAmount());
@@ -723,18 +648,14 @@ public class BookingsDaoHelper {
 							formatter.format(eventIndb.getDiscountDate()));
 					associateDiscountLine.setDescription(discountDescription);
 					associateDiscountLine.setQuantity(qty);
-					associateDiscountLine.setUnitPrice(eventIndb
-							.getDiscountAssociatePrice());
-					associateDiscountLine.setTotalAmount(qty
-							* eventIndb.getDiscountMemberPrice());
+					associateDiscountLine.setUnitPrice(eventIndb.getDiscountAssociatePrice());
+					associateDiscountLine.setTotalAmount(qty * eventIndb.getDiscountMemberPrice());
 					associateDiscountLine.setType(InvoiceLineType.Discount);
 
 					totalDiscountAmount += eventIndb.getDiscountMemberPrice();
 
-					logger.error(discountDescription + "|"
-							+ associateDiscountLine.getQuantity() + " | " + qty
-							* eventIndb.getDiscountMemberPrice() + " | "
-							+ totalDiscountAmount);
+					logger.error(discountDescription + "|" + associateDiscountLine.getQuantity() + " | "
+							+ qty * eventIndb.getDiscountMemberPrice() + " | " + totalDiscountAmount);
 				}
 
 				// Penalty Calculation
@@ -745,32 +666,24 @@ public class BookingsDaoHelper {
 							formatter.format(eventIndb.getPenaltyDate()));
 					associatePenaltyLine.setDescription(penaltyDescription);
 					associatePenaltyLine.setQuantity(qty);
-					associatePenaltyLine.setUnitPrice(eventIndb
-							.getPenaltyAssociatePrice());
-					associatePenaltyLine.setTotalAmount(qty
-							* eventIndb.getPenaltyAssociatePrice());
+					associatePenaltyLine.setUnitPrice(eventIndb.getPenaltyAssociatePrice());
+					associatePenaltyLine.setTotalAmount(qty * eventIndb.getPenaltyAssociatePrice());
 					associatePenaltyLine.setType(InvoiceLineType.Penalty);
 					totalPenaltyAmount += eventIndb.getPenaltyMemberPrice();
 
-					logger.error(penaltyDescription + "|"
-							+ associatePenaltyLine.getQuantity() + " | " + qty
-							* eventIndb.getPenaltyMemberPrice() + " | "
-							+ totalPenaltyAmount);
+					logger.error(penaltyDescription + "|" + associatePenaltyLine.getQuantity() + " | "
+							+ qty * eventIndb.getPenaltyMemberPrice() + " | " + totalPenaltyAmount);
 				}
 			} else {
 				String description = "%s - %s fees for %d non-member(s): %s";
 				int qty = nonMemberInvoiceLine.getQuantity() + 1;
 				nonMemberInvoiceLine.setEventDelegateRefId(delegate.getRefId());
 
-				nonMemberInvoiceLine.setMemberNames(nonMemberInvoiceLine
-						.getMemberNames().concat(
-								(nonMemberInvoiceLine.getMemberNames()
-										.isEmpty() ? "" : ", ")
-										+ delegate.toString()));
+				nonMemberInvoiceLine.setMemberNames(nonMemberInvoiceLine.getMemberNames()
+						.concat((nonMemberInvoiceLine.getMemberNames().isEmpty() ? "" : ", ") + delegate.toString()));
 
-				description = String.format(description, event.getName(), event
-						.getType().getDisplayName(), qty, nonMemberInvoiceLine
-						.getMemberNames());
+				description = String.format(description, event.getName(), event.getType().getDisplayName(), qty,
+						nonMemberInvoiceLine.getMemberNames());
 				nonMemberInvoiceLine.setDescription(description);
 				nonMemberInvoiceLine.setQuantity(qty);
 				nonMemberInvoiceLine.setUnitPrice(delegate.getAmount());
@@ -787,16 +700,12 @@ public class BookingsDaoHelper {
 							formatter.format(eventIndb.getDiscountDate()));
 					nonMemberDiscountLine.setDescription(discountDescription);
 					nonMemberDiscountLine.setQuantity(qty);
-					nonMemberDiscountLine.setUnitPrice(eventIndb
-							.getDiscountNonMemberPrice());
-					nonMemberDiscountLine.setTotalAmount(qty
-							* eventIndb.getDiscountNonMemberPrice());
+					nonMemberDiscountLine.setUnitPrice(eventIndb.getDiscountNonMemberPrice());
+					nonMemberDiscountLine.setTotalAmount(qty * eventIndb.getDiscountNonMemberPrice());
 					nonMemberDiscountLine.setType(InvoiceLineType.Discount);
-					totalDiscountAmount += eventIndb
-							.getDiscountNonMemberPrice();
-					logger.info(discountDescription + "|" + qty + " | " + qty
-							* eventIndb.getDiscountNonMemberPrice() + " | "
-							+ totalDiscountAmount);
+					totalDiscountAmount += eventIndb.getDiscountNonMemberPrice();
+					logger.info(discountDescription + "|" + qty + " | " + qty * eventIndb.getDiscountNonMemberPrice()
+							+ " | " + totalDiscountAmount);
 				}
 
 				// Calculate the Non-Member Penalty
@@ -808,72 +717,57 @@ public class BookingsDaoHelper {
 							formatter.format(eventIndb.getPenaltyDate()));
 					nonMemberPenaltyLine.setDescription(penaltyDescription);
 					nonMemberPenaltyLine.setQuantity(qty);
-					nonMemberPenaltyLine.setUnitPrice(eventIndb
-							.getPenaltyNonMemberPrice());
-					nonMemberPenaltyLine.setTotalAmount(qty
-							* eventIndb.getPenaltyNonMemberPrice());
+					nonMemberPenaltyLine.setUnitPrice(eventIndb.getPenaltyNonMemberPrice());
+					nonMemberPenaltyLine.setTotalAmount(qty * eventIndb.getPenaltyNonMemberPrice());
 					nonMemberPenaltyLine.setType(InvoiceLineType.Penalty);
 					totalPenaltyAmount += eventIndb.getPenaltyNonMemberPrice();
-					logger.info(penaltyDescription + "|" + qty + " | " + qty
-							* eventIndb.getPenaltyNonMemberPrice() + " | "
-							+ totalPenaltyAmount);
+					logger.info(penaltyDescription + "|" + qty + " | " + qty * eventIndb.getPenaltyNonMemberPrice()
+							+ " | " + totalPenaltyAmount);
 				}
 
 			}
 
 			if (delegate.getAccommodation() != null) {
 				if (delegate.getMemberRegistrationNo() != null) {
-					InvoiceLineDto line = memberRefLineMap.get(delegate
-							.getAccommodation().getRefId());
+					InvoiceLineDto line = memberRefLineMap.get(delegate.getAccommodation().getRefId());
 					if (line == null) {
 						line = new InvoiceLineDto();
 						line.setMemberNames("");
-						memberRefLineMap.put(delegate.getAccommodation()
-								.getRefId(), line);
+						memberRefLineMap.put(delegate.getAccommodation().getRefId(), line);
 					}
 
-					String description = "%s - Accommodation at %s "
-							+ "for %d members: %s";
-					line.setMemberNames(line.getMemberNames().concat(
-							", " + delegate.toString()));
+					String description = "%s - Accommodation at %s " + "for %d members: %s";
+					line.setMemberNames(line.getMemberNames().concat(", " + delegate.toString()));
 					int qty = line.getQuantity() + 1;
 
 					line.setEventDelegateRefId(delegate.getRefId());
-					description = String.format(description, event.getName(),
-							delegate.getAccommodation().getHotel(), qty,
-							line.getMemberNames());
+					description = String.format(description, event.getName(), delegate.getAccommodation().getHotel(),
+							qty, line.getMemberNames());
 					line.setDescription(description);
 					line.setQuantity(qty);
 					line.setUnitPrice(delegate.getAccommodation().getFee());
-					line.setTotalAmount(qty
-							* delegate.getAccommodation().getFee());
+					line.setTotalAmount(qty * delegate.getAccommodation().getFee());
 					totalAmount += delegate.getAccommodation().getFee();// line.getTotalAmount();
 				} else {
 
-					InvoiceLineDto line = nonMemberRefLineMap.get(delegate
-							.getAccommodation().getRefId());
+					InvoiceLineDto line = nonMemberRefLineMap.get(delegate.getAccommodation().getRefId());
 					if (line == null) {
 						line = new InvoiceLineDto();
 						line.setMemberNames("");
-						nonMemberRefLineMap.put(delegate.getAccommodation()
-								.getRefId(), line);
+						nonMemberRefLineMap.put(delegate.getAccommodation().getRefId(), line);
 					}
 
-					String description = "%s - Accommodation at %s "
-							+ "for %d members: %s";
-					line.setMemberNames(line.getMemberNames().concat(
-							", " + delegate.toString()));
+					String description = "%s - Accommodation at %s " + "for %d members: %s";
+					line.setMemberNames(line.getMemberNames().concat(", " + delegate.toString()));
 					int qty = line.getQuantity() + 1;
 
 					line.setEventDelegateRefId(delegate.getRefId());
-					description = String.format(description, event.getName(),
-							delegate.getAccommodation().getHotel(), qty,
-							line.getMemberNames());
+					description = String.format(description, event.getName(), delegate.getAccommodation().getHotel(),
+							qty, line.getMemberNames());
 					line.setDescription(description);
 					line.setQuantity(qty);
 					line.setUnitPrice(delegate.getAccommodation().getFee());
-					line.setTotalAmount(qty
-							* delegate.getAccommodation().getFee());
+					line.setTotalAmount(qty * delegate.getAccommodation().getFee());
 					totalAmount += delegate.getAccommodation().getFee();// line.getTotalAmount();
 				}
 			}
@@ -920,7 +814,8 @@ public class BookingsDaoHelper {
 		invoice.setAmount(totalAmount);
 		if (booking.getBookingDate() == null) {
 			// throw new ServiceException(ErrorCodes.SERVER_ERROR,
-			// "Booking cannot be null, there was a problem saving the booking..!");
+			// "Booking cannot be null, there was a problem saving the
+			// booking..!");
 			booking.setBookingDate(new Date());
 		}
 		invoice.setDocumentNo(booking.getId() + "");
@@ -937,8 +832,7 @@ public class BookingsDaoHelper {
 		return invoice;
 	}
 
-	public BookingDto updateBooking(String eventId, String bookingId,
-			BookingDto dto) {
+	public BookingDto updateBooking(String eventId, String bookingId, BookingDto dto) {
 		logger.error("==== Booking ref Id === " + bookingId);
 		dto.setRefId(bookingId);
 		return createBooking(eventId, dto);
@@ -972,8 +866,8 @@ public class BookingsDaoHelper {
 		List<String> memberNos = dao.correctDoubleBookings(eventRefId);
 		for (String memberNo : memberNos) {
 			System.err.println("Correcting booking for memberNo::" + memberNo);
-			List<DelegateDto> dels = dao.getAllDelegates(eventRefId,
-					new Integer(0), 10000, null, false, null, null, memberNo);
+			List<DelegateDto> dels = dao.getAllDelegates(eventRefId, new Integer(0), 10000, null, false, null, null,
+					memberNo);
 			if (dels.size() == 0) {
 				System.err.println("Problem:There is no double booking....");
 			}
@@ -986,16 +880,14 @@ public class BookingsDaoHelper {
 					hasPaid = true;
 				} else {
 					toBeUpdated.add(d);
-					System.err.println("To be Cancelled>>>" + d.getErn()
-							+ "bookingRefId>>>" + d.getBookingRefId() + " >>"
-							+ d.getBookingPaymentStatus());
+					System.err.println("To be Cancelled>>>" + d.getErn() + "bookingRefId>>>" + d.getBookingRefId()
+							+ " >>" + d.getBookingPaymentStatus());
 				}
 			}
 
 			// Cancel All except the first one in the List
 			if (!hasPaid) {
-				System.err.println("Cancel all except >>"
-						+ " >>>bookingRefId>>" + dels.get(0).getBookingRefId()
+				System.err.println("Cancel all except >>" + " >>>bookingRefId>>" + dels.get(0).getBookingRefId()
 						+ dels.get(0).getErn());
 				activeRefIds.add(dels.get(0).getBookingRefId());
 				toBeUpdated.remove(0);
@@ -1004,14 +896,11 @@ public class BookingsDaoHelper {
 			System.err.println("To be updated Size::" + toBeUpdated.size());
 			for (DelegateDto d : toBeUpdated) {
 				if (!checkIfAlreadyCancelled(d.getBookingRefId())) {
-					System.err.println("Cancelling bookingRefId>>"
-							+ d.getBookingRefId() + " ERN>>" + d.getErn());
+					System.err.println("Cancelling bookingRefId>>" + d.getBookingRefId() + " ERN>>" + d.getErn());
 					cancelBooking(d.getBookingRefId());
 				} else {
-					System.err
-							.println("This booking is not to be cancelled "
-									+ "because it exist in the ones marked for active:::"
-									+ d.getBookingRefId());
+					System.err.println("This booking is not to be cancelled "
+							+ "because it exist in the ones marked for active:::" + d.getBookingRefId());
 				}
 			}
 		}
@@ -1048,21 +937,16 @@ public class BookingsDaoHelper {
 		delegateList.addAll(delegates);
 
 		for (Delegate delegate : delegateList) {
-			String smsMemssage = "Dear" + " " + delegate.getFullName() + ","
-					+ "Thank you for booking for the " + event.getName()
-					+ ". Your booking status is NOT PAID. Your ERN No. is "
-					+ delegate.getErn();
+			String smsMemssage = "Dear" + " " + delegate.getFullName() + "," + "Thank you for booking for the "
+					+ event.getName() + ". Your booking status is NOT PAID. Your ERN No. is " + delegate.getErn();
 
 			if (delegate.getMemberRefId() != null) {
-				Member member = memberDao.findByRefId(
-						delegate.getMemberRefId(), Member.class);
-				System.err.println("Sending SMS to "
-						+ member.getUser().getPhoneNumber());
+				Member member = memberDao.findByRefId(delegate.getMemberRefId(), Member.class);
+				System.err.println("Sending SMS to " + member.getUser().getPhoneNumber());
 
 				if (member.getUser().getPhoneNumber() != null) {
 					try {
-						smsIntergration.send(member.getUser().getPhoneNumber(),
-								smsMemssage);
+						smsIntergration.send(member.getUser().getPhoneNumber(), smsMemssage);
 					} catch (RuntimeException e) {
 						System.err.println("Invalid Phone Number...!");
 						e.printStackTrace();
@@ -1085,8 +969,8 @@ public class BookingsDaoHelper {
 
 		// Accomodation
 		if (delegateDto.getAccommodation() != null) {
-			Accommodation accommodation = dao.findByRefId(delegateDto
-					.getAccommodation().getRefId(), Accommodation.class);
+			Accommodation accommodation = dao.findByRefId(delegateDto.getAccommodation().getRefId(),
+					Accommodation.class);
 			if (accommodation != null) {
 				delegate.setAccommodation(accommodation);
 				dao.save(accommodation);
@@ -1101,8 +985,7 @@ public class BookingsDaoHelper {
 			} else {
 				price = event.getMemberPrice();
 			}
-			logger.info("Delegate Price applied for "
-					+ delegateDto.getMemberNo() + " is:::" + price);
+			logger.info("Delegate Price applied for " + delegateDto.getMemberNo() + " is:::" + price);
 		}
 		delegate.setAmount(price); // Charge for delegate
 		return delegate;
@@ -1113,8 +996,7 @@ public class BookingsDaoHelper {
 		dao.delete(booking);
 	}
 
-	public BookingDto processPayment(String eventId, String bookingId,
-			String paymentMode, String paymentRef) {
+	public BookingDto processPayment(String eventId, String bookingId, String paymentMode, String paymentRef) {
 		Booking booking = dao.getByBookingId(bookingId);
 		// Check if payment ref already exists
 		boolean exists = dao.isPaymentValid(paymentRef);
@@ -1136,13 +1018,12 @@ public class BookingsDaoHelper {
 	public DelegateDto updateDelegate(String delegateId, DelegateDto delegateDto) {
 		logger.error("+++++ <><>>>>>>>>>>>>> UPDATE DELEGATW +++++++++++++++++");
 		Delegate delegate = dao.findByRefId(delegateId, Delegate.class);
-		Event event = dao.findByRefId(delegate.getBooking().getEvent()
-				.getRefId(), Event.class);
+		Event event = dao.findByRefId(delegate.getBooking().getEvent().getRefId(), Event.class);
 		Booking booking = delegate.getBooking();
 
 		/* Updating Booking */
 		if (booking != null) {
-			//Update Payment Status
+			// Update Payment Status
 			if ((delegateDto.getBookingPaymentStatus() == PaymentStatus.PAID)
 					|| (delegateDto.getBookingPaymentStatus() == PaymentStatus.NOTPAID)
 					|| (delegateDto.getBookingPaymentStatus() == PaymentStatus.Credit)) {
@@ -1151,13 +1032,11 @@ public class BookingsDaoHelper {
 				delegate.setIsCredit(delegateDto.getIsCredit());
 				delegate.setReceiptNo(delegateDto.getReceiptNo());
 				delegate.setClearanceNo(delegateDto.getClearanceNo());
-				delegate.setPaymentStatus(delegateDto
-						.getDelegatePaymentStatus());
+				delegate.setPaymentStatus(delegateDto.getDelegatePaymentStatus());
 				delegate.setUpdatedBy(delegateDto.getUpdatedBy());
 				dao.save(delegate);
 
-				System.err.println("Successfully saved::"
-						+ delegate.getFullName());
+				System.err.println("Successfully saved::" + delegate.getFullName());
 
 				int totalDelegates = booking.getDelegates().size();
 				int totalPaid = 0;
@@ -1170,8 +1049,7 @@ public class BookingsDaoHelper {
 
 				// Update Booking to PAID - If All the Delegates have Paid
 				if (totalPaid == totalDelegates) {
-					booking.setPaymentStatus(delegateDto
-							.getBookingPaymentStatus());
+					booking.setPaymentStatus(delegateDto.getBookingPaymentStatus());
 					booking.setUpdatedBy(delegateDto.getUpdatedBy());
 					dao.save(booking);
 				}
@@ -1201,32 +1079,24 @@ public class BookingsDaoHelper {
 		String applicationContext = settings.getProperty("app_context");
 
 		// Member
-		if (delegate.getMemberRefId() != null
-				&& delegate.getAttendance() != delegateDto.getAttendance()
-				&& event.getType() != EventType.COURSE
-				&& applicationContext.equals("online")) {
+		if (delegate.getMemberRefId() != null && delegate.getAttendance() != delegateDto.getAttendance()
+				&& event.getType() != EventType.COURSE && applicationContext.equals("online")) {
 			// send and SMS
-			Member member = dao.findByRefId(delegate.getMemberRefId(),
-					Member.class);
-			String smsMessage = "Dear" + " " + delegateDto.getFullName()
-					+ ",Thank you for attending the " + event.getName() + "."
-					+ "Your ERN No. is " + delegate.getErn();
+			Member member = dao.findByRefId(delegate.getMemberRefId(), Member.class);
+			String smsMessage = "Dear" + " " + delegateDto.getFullName() + ",Thank you for attending the "
+					+ event.getName() + "." + "Your ERN No. is " + delegate.getErn();
 			smsIntergration.send(member.getUser().getPhoneNumber(), smsMessage);
 			delegate.copyFrom(delegateDto);
 			dao.save(delegate);
 			cpdDao.updateCPDFromAttendance(delegate, delegate.getAttendance());
 
-		// Non-Member
-		} else if (delegate.getMemberRefId() == null
-				&& delegate.getAttendance() != delegateDto.getAttendance()
-				&& event.getType() != EventType.COURSE
-				&& applicationContext.equals("online")) {
-			String smsMessage = "Dear" + " " + delegateDto.getFullName()
-					+ ",Thank you for attending the " + event.getName() + "."
-					+ "Your ERN No. is " + delegate.getErn();
+			// Non-Member
+		} else if (delegate.getMemberRefId() == null && delegate.getAttendance() != delegateDto.getAttendance()
+				&& event.getType() != EventType.COURSE && applicationContext.equals("online")) {
+			String smsMessage = "Dear" + " " + delegateDto.getFullName() + ",Thank you for attending the "
+					+ event.getName() + "." + "Your ERN No. is " + delegate.getErn();
 			if (delegate.getBooking().getContact().getTelephoneNumbers() != null) {
-				smsIntergration.send(delegate.getBooking().getContact()
-						.getTelephoneNumbers(), smsMessage);
+				smsIntergration.send(delegate.getBooking().getContact().getTelephoneNumbers(), smsMessage);
 			}
 			delegate.copyFrom(delegateDto);
 			dao.save(delegate);
@@ -1251,14 +1121,12 @@ public class BookingsDaoHelper {
 		/* Payers message */
 		String smsMessage = "";
 
-		smsMessage = " Thank-you for your payment" + " for "
-				+ booking.getEvent().getName()
+		smsMessage = " Thank-you for your payment" + " for " + booking.getEvent().getName()
 				+ ". The booking status is PAID. ";
 
 		for (Delegate d : booking.getDelegates()) {
 			if (d.getPhoneNumber() != null) {
-				String finalPhoneNumber = d.getPhoneNumber()
-						.replace("254", "0");
+				String finalPhoneNumber = d.getPhoneNumber().replace("254", "0");
 				if (finalPhoneNumber != null) {
 					smsIntergration.send(finalPhoneNumber, smsMessage);
 					logger.error("sending sms to :" + finalPhoneNumber);
@@ -1267,11 +1135,9 @@ public class BookingsDaoHelper {
 		}
 
 		if (booking.getContact().getEmail() != null) {
-			String subject = "PAYMENT CONFIRMATION FOR "
-					+ booking.getEvent().getName().toUpperCase();
+			String subject = "PAYMENT CONFIRMATION FOR " + booking.getEvent().getName().toUpperCase();
 			try {
-				EmailServiceHelper.sendEmail(smsMessage, "RE: ICPAK '"
-						+ subject,
+				EmailServiceHelper.sendEmail(smsMessage, "RE: ICPAK '" + subject,
 						Arrays.asList(booking.getContact().getEmail()),
 						Arrays.asList(booking.getContact().getContactName()));
 			} catch (UnsupportedEncodingException e) {
@@ -1284,8 +1150,7 @@ public class BookingsDaoHelper {
 		}
 	}
 
-	public List<MemberBookingDto> getMemberBookings(String memberRefId,
-			int offset, int limit) {
+	public List<MemberBookingDto> getMemberBookings(String memberRefId, int offset, int limit) {
 		return dao.getMemberBookings(memberRefId, offset, limit);
 	}
 
@@ -1297,27 +1162,23 @@ public class BookingsDaoHelper {
 			int spacesOccupied = delegates.size();
 			accommodation.setSpaces(accommodation.getSpaces() - spacesOccupied);
 
-			accommodationsDaoHelper.update(event.getRefId(),
-					accommodation.getRefId(), accommodation.toDto());
+			accommodationsDaoHelper.update(event.getRefId(), accommodation.getRefId(), accommodation.toDto());
 		}
 
 	}
 
-	public Integer getDelegatesCount(String eventId, String searchTerm,
-			String accomodationRefId, String bookingStatus) {
+	public Integer getDelegatesCount(String eventId, String searchTerm, String accomodationRefId,
+			String bookingStatus) {
 		logger.error("== Counting delegates ===");
-		return dao.getDelegateCount(eventId, searchTerm, accomodationRefId,
-				bookingStatus);
+		return dao.getDelegateCount(eventId, searchTerm, accomodationRefId, bookingStatus);
 	}
 
-	public void enrolDelegateToLMS(List<DelegateDto> delegates, Event event)
-			throws JSONException, IOException {
+	public void enrolDelegateToLMS(List<DelegateDto> delegates, Event event) throws JSONException, IOException {
 		System.err.println("Enrol delegate to LMS called...");
 		logger.info("Delgates size::" + delegates.size());
 		String smsMessage = "";
 		for (DelegateDto delegate : delegates) {
-			if (delegate.getMemberNo() == null
-					|| delegate.getMemberNo().isEmpty()) {
+			if (delegate.getMemberNo() == null || delegate.getMemberNo().isEmpty()) {
 				logger.info("Cannot enrol non-members to LMS");
 				return;
 			}
@@ -1339,43 +1200,31 @@ public class BookingsDaoHelper {
 
 			JSONObject json = new JSONObject(details);
 			logger.info("JSON::" + json);
-			LMSResponse response = LMSIntegrationUtil.getInstance()
-					.executeLMSCall("/Course/EnrollCourse", json, String.class);
+			LMSResponse response = LMSIntegrationUtil.getInstance().executeLMSCall("/Course/EnrollCourse", json,
+					String.class);
 			logger.info("LMS Response::" + response.getMessage());
 			logger.info("LMS Status::" + response.getStatus());
 			delegate.setEventRefId(event.getRefId());
 			delegate.setLmsResponse(response.getMessage());
 			if (response.getStatus().equals("Success")) {
 				delegate.setAttendance(AttendanceStatus.ENROLLED);
-				smsMessage = "Dear "
-						+ delegate.getFullName()
-						+ ","
-						+ " Thank-you for your "
-						+ " payment for "
-						+ event.getName()
-						+ ".Your booking status is now PAID. "
+				smsMessage = "Dear " + delegate.getFullName() + "," + " Thank-you for your " + " payment for "
+						+ event.getName() + ".Your booking status is now PAID. "
 						+ "You have been enrolled to CPD Online to perform this course.";
 			} else {
-				smsMessage = "Dear "
-						+ delegate.getFullName()
-						+ ","
-						+ " Thank-you for your "
-						+ " payment for "
+				smsMessage = "Dear " + delegate.getFullName() + "," + " Thank-you for your " + " payment for "
 						+ event.getName()
 						+ ".Your booking status is now PAID. The was a problem enrolling you to CPD Online."
 						+ " Please contact administrator.";
 			}
 
 			if (delegate.getMemberRefId() != null) {
-				Member member = memberDao.findByRefId(
-						delegate.getMemberRefId(), Member.class);
-				logger.info("Sending SMS to "
-						+ member.getUser().getPhoneNumber());
+				Member member = memberDao.findByRefId(delegate.getMemberRefId(), Member.class);
+				logger.info("Sending SMS to " + member.getUser().getPhoneNumber());
 
 				if (member.getUser().getPhoneNumber() != null) {
 					try {
-						smsIntergration.send(member.getUser().getPhoneNumber(),
-								smsMessage);
+						smsIntergration.send(member.getUser().getPhoneNumber(), smsMessage);
 					} catch (RuntimeException e) {
 						logger.error("Invalid Phone Number");
 						e.printStackTrace();
@@ -1386,11 +1235,9 @@ public class BookingsDaoHelper {
 			}
 
 			if (user.getEmail() != null) {
-				String subject = "PAYMENT CONFIRMATION FOR "
-						+ event.getName().toUpperCase();
+				String subject = "PAYMENT CONFIRMATION FOR " + event.getName().toUpperCase();
 				try {
-					EmailServiceHelper.sendEmail(smsMessage, "RE: ICPAK '"
-							+ subject, Arrays.asList(user.getEmail()),
+					EmailServiceHelper.sendEmail(smsMessage, "RE: ICPAK '" + subject, Arrays.asList(user.getEmail()),
 							Arrays.asList(user.getFullName()));
 				} catch (MessagingException e) {
 					e.printStackTrace();
@@ -1404,16 +1251,14 @@ public class BookingsDaoHelper {
 	}
 
 	public Integer syncWithServer(String eventRefId) {
-		List<DelegateDto> allDelegates = getAllDelegates(null, eventRefId, 0,
-				1000000, "", "", "");
+		List<DelegateDto> allDelegates = getAllDelegates(null, eventRefId, 0, 1000000, "", "", "");
 
 		int successCount = 0;
 		for (DelegateDto d : allDelegates) {
 			// Post Delegate to server
 			d.setCreatedDate(new Date(1447850439000L));
 			try {
-				String response = updateDelegateToServer(eventRefId,
-						d.getBookingId(), d);
+				String response = updateDelegateToServer(eventRefId, d.getBookingId(), d);
 				if (response.equals("Success")) {
 					successCount = successCount + 1;
 				}
@@ -1425,9 +1270,8 @@ public class BookingsDaoHelper {
 		return successCount;
 	}
 
-	public String updateDelegateToServer(String eventRefId, String bookingId,
-			DelegateDto delegate) throws URISyntaxException, ParseException,
-			JSONException {
+	public String updateDelegateToServer(String eventRefId, String bookingId, DelegateDto delegate)
+			throws URISyntaxException, ParseException, JSONException {
 		final HttpClient httpClient = new DefaultHttpClient();
 
 		JSONObject payLoad = new JSONObject(delegate);
@@ -1452,8 +1296,7 @@ public class BookingsDaoHelper {
 
 		logger.info("payload to Server>>>>" + payLoad.toString());
 		String serverAddress = settings.getProperty("delegate_sync_url");
-		String params = eventRefId + "/bookings/" + bookingId + "/delegates/"
-				+ delegate.getRefId();
+		String params = eventRefId + "/bookings/" + bookingId + "/delegates/" + delegate.getRefId();
 
 		URI uri = new URI(serverAddress + params);
 		final HttpPut request = new HttpPut();
@@ -1465,13 +1308,11 @@ public class BookingsDaoHelper {
 		try {
 			request.setHeader("accept", "application/json");
 			@SuppressWarnings("deprecation")
-			StringEntity stringEntity = new StringEntity(payLoad.toString(),
-					"application/json", "UTF-8");
+			StringEntity stringEntity = new StringEntity(payLoad.toString(), "application/json", "UTF-8");
 			request.setEntity(stringEntity);
 
 			response = httpClient.execute(request);
-			BufferedReader rd = new BufferedReader(new InputStreamReader(
-					response.getEntity().getContent()));
+			BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 
 			result = new StringBuffer();
 
@@ -1527,21 +1368,12 @@ public class BookingsDaoHelper {
 			 * NOTE: Here the backup is saved in a folder called backup with the
 			 * name backup.sql
 			 */
-			String savePath = "\"" + jarDir + "\\backup\\"
-					+ "offlineBackup.sql\"";
+			String savePath = "\"" + jarDir + "\\backup\\" + "offlineBackup.sql\"";
 
 			/* NOTE: Used to create a cmd command */
-			String executeCmd = mysqlPath
-					+ "mysqldump -u"
-					+ dbUser
-					+ " -p"
-					+ dbPass
-					+ " -P"
-					+ dbPort
-					+ " "
-					+ dbName
-					+ " event accommodation booking delegate invoice invoiceLine docnums doctypeseq"
-					+ " -r " + savePath;
+			String executeCmd = mysqlPath + "mysqldump -u" + dbUser + " -p" + dbPass + " -P" + dbPort + " " + dbName
+					+ " event accommodation booking delegate invoice invoiceLine docnums doctypeseq" + " -r "
+					+ savePath;
 			System.err.println(executeCmd);
 
 			/* NOTE: Executing the command here */
@@ -1555,16 +1387,14 @@ public class BookingsDaoHelper {
 			if (processComplete == 0) {
 				System.out.println("Backup Complete");
 
-				FileInputStream file = new FileInputStream(new File(folderPath,
-						"offlineBackup.sql"));
+				FileInputStream file = new FileInputStream(new File(folderPath, "offlineBackup.sql"));
 
 				assert (file != null);
 				// Convert this to bytes
 				return IOUtils.toByteArray(file);
 
 			} else {
-				System.out.println("Backup Failure with code:"
-						+ processComplete);
+				System.out.println("Backup Failure with code:" + processComplete);
 			}
 		} catch (IOException | InterruptedException ex) {
 			System.err.println("Error at Backuprestore>>" + ex.getMessage());
@@ -1572,7 +1402,10 @@ public class BookingsDaoHelper {
 		return null;
 	}
 
-	public BookingSummaryDto getBookingStats(String eventRefId) {
+	public BookingSummaryDto getBookingStats(String eventRefId, String isRefresh) {
+		if (isRefresh.equals("true")) {
+			updateBookingStats(eventRefId);
+		}
 		return dao.getBookingSummary(eventRefId);
 	}
 
@@ -1604,12 +1437,10 @@ public class BookingsDaoHelper {
 		int totalCancelledMembers = 0;
 		int totalCancelledNonMembers = 0;
 
-		Integer totalDelegates = dao.getGenericDelegateCount(booking.getId(),
-				"all");
+		Integer totalDelegates = dao.getGenericDelegateCount(booking.getId(), "all");
 		Integer totalPaid = 0;
 		/* How many Paid */
-		if (booking.getPaymentStatus() == PaymentStatus.PAID
-				|| booking.getPaymentStatus() == PaymentStatus.Credit) {
+		if (booking.getPaymentStatus() == PaymentStatus.PAID || booking.getPaymentStatus() == PaymentStatus.Credit) {
 			totalPaid = totalDelegates;
 		} else {
 			totalPaid = dao.getGenericDelegateCount(booking.getId(), "paid");
@@ -1620,8 +1451,7 @@ public class BookingsDaoHelper {
 		for (Delegate d : delegates) {
 			if (d.getMemberRegistrationNo() != null) {
 				totalMembers = totalMembers + 1;
-				if (d.getPaymentStatus() == PaymentStatus.PAID
-						|| d.getPaymentStatus() == PaymentStatus.Credit) {
+				if (d.getPaymentStatus() == PaymentStatus.PAID || d.getPaymentStatus() == PaymentStatus.Credit) {
 					totalPaidMembers = totalPaidMembers + 1;
 				}
 				if (d.getAccommodation() != null) {
@@ -1634,8 +1464,7 @@ public class BookingsDaoHelper {
 				// Non-Members Summation
 				totalNonMembers = totalNonMembers + 1;
 
-				if (d.getPaymentStatus() == PaymentStatus.PAID
-						|| d.getPaymentStatus() == PaymentStatus.Credit) {
+				if (d.getPaymentStatus() == PaymentStatus.PAID || d.getPaymentStatus() == PaymentStatus.Credit) {
 					totalPaidNonMembers = totalPaidNonMembers + 1;
 				}
 				if (d.getAccommodation() != null) {
@@ -1654,17 +1483,13 @@ public class BookingsDaoHelper {
 			totalCancelledMembers = totalMembers;
 			totalCancelledNonMembers = totalNonMembers;
 		} else if (booking.getIsActive() == 1) {
-			totalCancelledMembers = dao.getGenericDelegateCount(
-					booking.getId(), "cancelled", true);
-			totalCancelledNonMembers = dao.getGenericDelegateCount(
-					booking.getId(), "cancelled", false);
+			totalCancelledMembers = dao.getGenericDelegateCount(booking.getId(), "cancelled", true);
+			totalCancelledNonMembers = dao.getGenericDelegateCount(booking.getId(), "cancelled", false);
 			totalCancelled = totalCancelledMembers + totalCancelledNonMembers;
 		}
 
-		Integer totalAccomodated = dao.getGenericDelegateCount(booking.getId(),
-				"withAccomodation");
-		Integer totalAttended = dao.getGenericDelegateCount(booking.getId(),
-				"attended");
+		Integer totalAccomodated = dao.getGenericDelegateCount(booking.getId(), "withAccomodation");
+		Integer totalAttended = dao.getGenericDelegateCount(booking.getId(), "attended");
 
 		// Update Booking:
 		booking.setDelegatesCount(totalDelegates);
@@ -1697,8 +1522,8 @@ public class BookingsDaoHelper {
 
 		/* Online Payment modes */
 		for (PaymentMode paymentMode : PaymentMode.values()) {
-			int count = invoiceDao.getTransactionsCount(null, searchTerm, null,
-					null, PaymentType.BOOKING.name(), paymentMode.name());
+			int count = invoiceDao.getTransactionsCount(null, searchTerm, null, null, PaymentType.BOOKING.name(),
+					paymentMode.name());
 			switch (paymentMode) {
 			case MPESA:
 				e.setTotalMpesaPayments(count);
