@@ -2,7 +2,13 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d='urn:import:com.workpoint.icpak.client.ui.component'
 	xmlns:p="urn:import:com.workpoint.icpak.client.ui.profile.paysubscription">
-	<g:HTMLPanel>
+	<ui:style>
+		.wizard{
+		height: initial;
+		min-height: initial;
+		}
+	</ui:style>
+	<g:HTMLPanel styleName="set-full-height">
 		<div>
 			<nav class="navbar top-navbar">
 				<div class="container">
@@ -17,14 +23,15 @@
 
 
 		<g:HTMLPanel styleName="image-container set-full-height">
-			<g:HTMLPanel styleName="login-bg">
-				<g:HTMLPanel styleName="wizard-container col-md-6 col-md-offset-3">
-					<g:HTMLPanel styleName="card wizard-card ct-wizard-gold"
+			<g:HTMLPanel styleName="login-bg set-full-height">
+				<g:HTMLPanel ui:field="panelWizardContainer"
+					styleName="col-md-6 col-md-offset-3 wizard-container set-full-height">
+					<g:HTMLPanel styleName="card wizard-card ct-wizard-gold {style.wizard}"
 						ui:field="loadingbox">
-						<g:HTMLPanel ui:field="panelSubscription">
+						<g:HTMLPanel>
 							<g:HTMLPanel>
 								<div class="panel-body">
-									<div class="">
+									<g:HTMLPanel ui:field="panelSubscription">
 										<div class="col-lg-12">
 											<fieldset>
 												<legend>Pay for your Annual Subscription:</legend>
@@ -33,8 +40,9 @@
 														<div class="text-muted">
 															<i class="fa fa-info-circle"></i>
 															<span ui:field="spnInfo">
-																Please enter your details and press
-																Proceed
+																This page allows you to renew your
+																member subscription by entering your membership No and
+																the amount you wish to pay.
 															</span>
 														</div>
 													</div>
@@ -60,11 +68,25 @@
 												</div>
 											</fieldset>
 										</div>
+									</g:HTMLPanel>
+
+									<div class="col-lg-12">
+										<div ui:field="elBackHeading" class="hide">
+											<h4>
+												<d:ActionLink ui:field="aBackToPage1">
+													<i class="fa fa-angle-double-left"></i>
+													Back to First Page
+												</d:ActionLink>
+												/
+												Pay for member subscription
+											</h4>
+											<hr />
+										</div>
+										<g:HTMLPanel ui:field="panelPayment">
+										</g:HTMLPanel>
 									</div>
 								</div>
 							</g:HTMLPanel>
-						</g:HTMLPanel>
-						<g:HTMLPanel ui:field="panelPayment">
 						</g:HTMLPanel>
 					</g:HTMLPanel>
 				</g:HTMLPanel>

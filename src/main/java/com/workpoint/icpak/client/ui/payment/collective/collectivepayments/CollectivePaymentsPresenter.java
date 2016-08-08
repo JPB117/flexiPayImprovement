@@ -4,6 +4,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.GwtEvent.Type;
+import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.web.bindery.event.shared.EventBus;
@@ -33,6 +34,8 @@ public class CollectivePaymentsPresenter
 		HasClickHandlers getProceedButton();
 
 		PaymentSubscription getSubscriptionWidget();
+
+		void showSubscriptionPanel(boolean b);
 	}
 
 	@ContentSlot
@@ -75,6 +78,8 @@ public class CollectivePaymentsPresenter
 					invoice.setAmount(Double.valueOf(amountToPay));
 					invoice.setDocumentNo(getView().getSubscriptionWidget()
 							.getMemberNo());
+					
+					getView().showSubscriptionPanel(false);
 
 					paymentFactory.get(new ServiceCallback<PaymentPresenter>() {
 						@Override
@@ -85,6 +90,8 @@ public class CollectivePaymentsPresenter
 						}
 
 					});
+				}else{
+					Window.alert("Please enter a valid amount and valid memberNo.");;
 				}
 			}
 		});
