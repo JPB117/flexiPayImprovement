@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasKeyDownHandlers;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
@@ -101,6 +104,8 @@ public class EventsPresenter extends Presenter<EventsPresenter.IEventsView, Even
 		void bindBookingSummary(BookingSummaryDto summary);
 
 		Uploader getCsvUploader();
+
+		HasClickHandlers getRefreshButton();
 	}
 
 	@ProxyCodeSplit
@@ -236,6 +241,22 @@ public class EventsPresenter extends Presenter<EventsPresenter.IEventsView, Even
 						int totalMarkedAsAttended = summary.getTotalAttended() - bookingSummary.getTotalAttended();
 						Window.alert("Total Imported:" + totalMarkedAsAttended);
 						loadData();
+					}
+				}).bookings(eventId).getBookingSummary(eventId, "true");
+			}
+		});
+
+		getView().getRefreshButton().addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				fireEvent(new ProcessingEvent());
+				eventsDelegate.withCallback(new AbstractAsyncCallback<BookingSummaryDto>() {
+
+					@Override
+					public void onSuccess(BookingSummaryDto summary) {
+						bookingSummary = summary;
+						getView().bindBookingSummary(summary);
+						fireEvent(new ProcessingCompletedEvent());
 					}
 				}).bookings(eventId).getBookingSummary(eventId, "true");
 			}

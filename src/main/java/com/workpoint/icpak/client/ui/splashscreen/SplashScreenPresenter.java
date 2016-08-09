@@ -1,10 +1,6 @@
 package com.workpoint.icpak.client.ui.splashscreen;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.client.GWT;
@@ -39,8 +35,7 @@ import com.workpoint.icpak.shared.model.auth.LogInAction;
 import com.workpoint.icpak.shared.model.auth.LogInResult;
 
 public class SplashScreenPresenter
-		extends
-		Presenter<SplashScreenPresenter.ILoginView, SplashScreenPresenter.ILoginProxy> {
+		extends Presenter<SplashScreenPresenter.ILoginView, SplashScreenPresenter.ILoginProxy> {
 
 	public interface ILoginView extends View {
 	}
@@ -55,8 +50,7 @@ public class SplashScreenPresenter
 	RestDispatch requestHelper;
 	@Inject
 	PlaceManager placeManager;
-	private static final Logger LOGGER = Logger
-			.getLogger(SplashScreenPresenter.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(SplashScreenPresenter.class.getName());
 	private ResourceDelegate<UsersResource> usersDelegate;
 	private final CurrentUser currentUser;
 	private ResourceDelegate<SessionResource> sessionResource;
@@ -65,10 +59,8 @@ public class SplashScreenPresenter
 	private String redirect = "";
 
 	@Inject
-	public SplashScreenPresenter(final EventBus eventBus,
-			final ILoginView view, final ILoginProxy proxy,
-			final CurrentUser currentUser,
-			ResourceDelegate<UsersResource> usersDelegate,
+	public SplashScreenPresenter(final EventBus eventBus, final ILoginView view, final ILoginProxy proxy,
+			final CurrentUser currentUser, ResourceDelegate<UsersResource> usersDelegate,
 			ResourceDelegate<SessionResource> sessionResource) {
 		super(eventBus, view, proxy);
 		this.currentUser = currentUser;
@@ -100,8 +92,8 @@ public class SplashScreenPresenter
 			@Override
 			public void onFailure(Throwable caught) {
 				super.onFailure(caught);
-				// Show Login Screen
-
+				PlaceRequest placeRequest = new Builder().nameToken(NameTokens.login).build();
+				placeManager.revealPlace(placeRequest);
 			}
 		}).execLogin(logInAction);
 
@@ -111,13 +103,13 @@ public class SplashScreenPresenter
 	public void prepareFromRequest(PlaceRequest request) {
 		super.prepareFromRequest(request);
 		redirect = request.getParameter("redirect", "");
-		// tryLoggingInWithCookieFirst();
+		tryLoggingInWithCookieFirst();
 		/*
 		 * Removed log In with Cookie - was taking too long.
 		 */
-		PlaceRequest placeRequest = new Builder().nameToken(NameTokens.login)
-				.build();
-		placeManager.revealPlace(placeRequest);
+		// PlaceRequest placeRequest = new Builder().nameToken(NameTokens.login)
+		// .build();
+		// placeManager.revealPlace(placeRequest);
 	}
 
 	private void onLoginCallSucceeded(CurrentUserDto currentUserDto) {
@@ -126,9 +118,9 @@ public class SplashScreenPresenter
 			fireEvent(new ContextLoadedEvent(currentUser.getUser(), null));
 			redirectToLoggedOnPage();
 		} else {
-			// Window.alert("User Not Logged In!! Redirecting to Login Presenter");
-			PlaceRequest placeRequest = new Builder().nameToken(
-					NameTokens.login).build();
+			// Window.alert("User Not Logged In!! Redirecting to Login
+			// Presenter");
+			PlaceRequest placeRequest = new Builder().nameToken(NameTokens.login).build();
 			placeManager.revealPlace(placeRequest);
 			// Window.alert("To Login>>");
 		}
@@ -140,20 +132,15 @@ public class SplashScreenPresenter
 		if (redirect.equals("")) {
 			if (AppContext.isCurrentUserAdmin()) {
 				redirect = NameTokens.getAdminDefaultPage();
-			} else if (AppContext.isCurrentUserEventEdit()
-					|| AppContext.isCurrentUserEventRead()) {
+			} else if (AppContext.isCurrentUserEventEdit() || AppContext.isCurrentUserEventRead()) {
 				redirect = NameTokens.events;
-			} else if (AppContext.isCurrentUserUsersEdit()
-					|| AppContext.isCurrentUserUsersRead()) {
+			} else if (AppContext.isCurrentUserUsersEdit() || AppContext.isCurrentUserUsersRead()) {
 				redirect = NameTokens.usermgt;
-			} else if (AppContext.isCurrentUserApplicationsEdit()
-					|| AppContext.isCurrentUserApplicationsRead()) {
+			} else if (AppContext.isCurrentUserApplicationsEdit() || AppContext.isCurrentUserApplicationsRead()) {
 				redirect = NameTokens.members;
-			} else if (AppContext.isCurrentUserCPDEdit()
-					|| AppContext.isCurrentUserCPDRead()) {
+			} else if (AppContext.isCurrentUserCPDEdit() || AppContext.isCurrentUserCPDRead()) {
 				redirect = NameTokens.cpd;
-			} else if (AppContext.isCurrentUserFinanceEdit()
-					|| AppContext.isCurrentUserFinanceRead()) {
+			} else if (AppContext.isCurrentUserFinanceEdit() || AppContext.isCurrentUserFinanceRead()) {
 				redirect = NameTokens.invoices;
 			} else {
 				redirect = NameTokens.getOnLoginDefaultPage();
@@ -161,15 +148,11 @@ public class SplashScreenPresenter
 		}
 		// Window.alert(redirect);
 
-		String token = placeManager.getCurrentPlaceRequest().getParameter(
-				ParameterTokens.REDIRECT, redirect);
-		String type = placeManager.getCurrentPlaceRequest().getParameter(
-				ParameterTokens.REDIRECTTYPE, redirectType);
-		String resourceValue = placeManager.getCurrentPlaceRequest()
-				.getParameter(ParameterTokens.RESOURCE, resource);
+		String token = placeManager.getCurrentPlaceRequest().getParameter(ParameterTokens.REDIRECT, redirect);
+		String type = placeManager.getCurrentPlaceRequest().getParameter(ParameterTokens.REDIRECTTYPE, redirectType);
+		String resourceValue = placeManager.getCurrentPlaceRequest().getParameter(ParameterTokens.RESOURCE, resource);
 		if (type.equals("website")) {
-			Window.Location.replace("https://icpak.com/resource/"
-					+ resourceValue);
+			Window.Location.replace("https://icpak.com/resource/" + resourceValue);
 		} else {
 			PlaceRequest placeRequest = new Builder().nameToken(token).build();
 			placeManager.revealPlace(placeRequest);
@@ -194,8 +177,7 @@ public class SplashScreenPresenter
 		Date expires = DateUtils.addDays(new Date(), REMEMBER_ME_DAYS);
 		boolean secure = true;
 
-		Cookies.setCookie(ApiParameters.LOGIN_COOKIE, value, expires, domain,
-				path, secure);
+		Cookies.setCookie(ApiParameters.LOGIN_COOKIE, value, expires, domain, path, secure);
 
 		setCookie(ApiParameters.LOGIN_COOKIE, value);
 
@@ -209,15 +191,14 @@ public class SplashScreenPresenter
 	}
 
 	public static String getDomain() {
-		String domain = GWT.getHostPageBaseURL().replaceAll(".*//", "")
-				.replaceAll("/", "").replaceAll(":.*", "");
+		String domain = GWT.getHostPageBaseURL().replaceAll(".*//", "").replaceAll("/", "").replaceAll(":.*", "");
 
 		return "localhost".equalsIgnoreCase(domain) ? null : domain;
 	}
 
 	public static native void setCookie(String cname, String cvalue) /*-{
 																		var d = new Date();
-																		d.setTime(d.getTime() + (10*24*60*60*1000));
+																		d.setTime(d.getTime() + (1*24*60*60*1000));
 																		var expires = "expires="+d.toUTCString();
 																		$doc.cookie = cname + "=" + cvalue + "; " + expires+"; path=/";
 																		}-*/;

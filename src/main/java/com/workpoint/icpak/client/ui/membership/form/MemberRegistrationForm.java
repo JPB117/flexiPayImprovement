@@ -90,14 +90,12 @@ public class MemberRegistrationForm extends Composite {
 
 	private boolean isEmailValid = true;
 
-	private static MemberRegistrationFormUiBinder uiBinder = GWT
-			.create(MemberRegistrationFormUiBinder.class);
+	private static MemberRegistrationFormUiBinder uiBinder = GWT.create(MemberRegistrationFormUiBinder.class);
 	private int counter = 1;
 	private ApplicationType type;
 	private ApplicationFormHeaderDto application;
 
-	interface MemberRegistrationFormUiBinder extends
-			UiBinder<Widget, MemberRegistrationForm> {
+	interface MemberRegistrationFormUiBinder extends UiBinder<Widget, MemberRegistrationForm> {
 	}
 
 	public MemberRegistrationForm() {
@@ -111,8 +109,7 @@ public class MemberRegistrationForm extends Composite {
 		issuesPanel.clear();
 		if (counter == 0) {
 			if (!isEmailValid) {
-				issuesPanel.addError("e-Mail " + txtEmailAddress.getValue()
-						+ " is already registered");
+				issuesPanel.addError("e-Mail " + txtEmailAddress.getValue() + " is already registered");
 			}
 			if (isNullOrEmpty(txtSurname.getValue())) {
 				isValid = false;
@@ -174,12 +171,16 @@ public class MemberRegistrationForm extends Composite {
 
 			if (txtPostalCode.getValue().length() > 10) {
 				isValid = false;
-				issuesPanel
-						.addError("Please enter a correct postal Code(Less than 10 digits)");
+				issuesPanel.addError("Please enter a correct postal Code(Less than 10 digits)");
 			}
 			if (lstGender.getValue() == null) {
 				isValid = false;
 				issuesPanel.addError("Gender is required");
+			}
+
+			if (lstBranch.getValue() == null) {
+				isValid = false;
+				issuesPanel.addError("Branch is required");
 			}
 
 			if (!isEmailValid) {
@@ -204,8 +205,7 @@ public class MemberRegistrationForm extends Composite {
 		UploadContext context = new UploadContext();
 		context.setContext("applicationRefId", applicationRefId);
 		context.setAction(UPLOADACTION.UPLOADIDPHOTOCOPY);
-		context.setAccept(Arrays.asList("doc", "pdf", "jpg", "jpeg", "png",
-				"docx"));
+		context.setAccept(Arrays.asList("doc", "pdf", "jpg", "jpeg", "png", "docx"));
 		uploaderIdCopy.setContext(context);
 	}
 
@@ -218,8 +218,7 @@ public class MemberRegistrationForm extends Composite {
 		application.setEmail(txtEmailAddress.getValue());
 		application.setEmployer(txtEmployer.getValue());
 		application.setCity1(txtCity.getValue());
-		application.setCountry(lstCountry.getValue() == null ? "" : lstCountry
-				.getValue().getDisplayName());
+		application.setCountry(lstCountry.getValue() == null ? "" : lstCountry.getValue().getDisplayName());
 		application.setAddress1(txtAddress.getValue());
 		application.setTelephone1(txtPhone.getValue());
 		application.setPostCode(txtPostalCode.getValue());
@@ -245,8 +244,7 @@ public class MemberRegistrationForm extends Composite {
 		issuesPanel.clear();
 		this.isEmailValid = isEmailValid;
 		if (!isEmailValid) {
-			issuesPanel.addError("e-Mail " + txtEmailAddress.getValue()
-					+ " is already registered");
+			issuesPanel.addError("e-Mail " + txtEmailAddress.getValue() + " is already registered");
 			issuesPanel.removeStyleName("hide");
 		} else {
 			issuesPanel.addStyleName("hide");
@@ -298,8 +296,7 @@ public class MemberRegistrationForm extends Composite {
 				link.addClickHandler(new ClickHandler() {
 					@Override
 					public void onClick(ClickEvent event) {
-						Window.open(ctx.toUrl(),
-								attachment.getAttachmentName(), "");
+						Window.open(ctx.toUrl(), attachment.getAttachmentName(), "");
 					}
 				});
 				panelPreviousAttachments.add(link);

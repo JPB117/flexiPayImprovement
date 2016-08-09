@@ -7,6 +7,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasKeyDownHandlers;
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -120,16 +121,16 @@ public class EventsView extends ViewImpl implements EventsPresenter.IEventsView 
 	Element elReceiptPayments;
 	@UiField
 	Element elOfflinePayments;
-
 	@UiField
 	Element spnTotalActive;
 	@UiField
 	Element spnTotalActiveMembers;
 	@UiField
 	Element spnTotalActiveNonMembers;
-
 	@UiField
 	Element spnAttendance;
+	@UiField
+	ActionLink aRefresh;
 	private EventDto event;
 	final CsvImport csvImport = new CsvImport();
 
@@ -187,7 +188,7 @@ public class EventsView extends ViewImpl implements EventsPresenter.IEventsView 
 				AppManager.showPopUp("Upload Csv", csvImport, new OnOptionSelected() {
 					@Override
 					public void onSelect(String name) {
-						
+
 					}
 				}, "Done");
 			}
@@ -330,7 +331,7 @@ public class EventsView extends ViewImpl implements EventsPresenter.IEventsView 
 			if (summary.getTotalAttended() != null) {
 				Integer percentageAttended = (summary.getTotalAttended() * 100) / summary.getTotalDelegates();
 				String converted = convertToReadableProgress(percentageAttended);
-				divAttendanceMetric.setClassName("progress-" + converted);
+				divAttendanceMetric.setClassName("progress-bar progress-bar-green progress-" + converted);
 				spnAttendance.setInnerText(percentageAttended + "%");
 				divAttendanceMetric.setTitle(
 						summary.getTotalAttended() + " out of " + activeDelegates + " have been marked as attended.");
@@ -430,9 +431,13 @@ public class EventsView extends ViewImpl implements EventsPresenter.IEventsView 
 			liSummary.removeClassName("active");
 		}
 	}
-	
-	public Uploader getCsvUploader(){
+
+	public Uploader getCsvUploader() {
 		return csvImport.getUploader();
+	}
+
+	public HasClickHandlers getRefreshButton() {
+		return aRefresh;
 	}
 
 }

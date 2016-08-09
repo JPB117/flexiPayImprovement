@@ -16,9 +16,12 @@ import org.apache.log4j.Logger;
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import com.icpak.rest.dao.BookingsDao;
+import com.icpak.rest.dao.UsersDao;
 import com.icpak.rest.dao.helper.BookingsDaoHelper;
 import com.icpak.rest.dao.helper.CPDDaoHelper;
 import com.icpak.rest.dao.helper.StatementDaoHelper;
+import com.icpak.rest.dao.helper.UsersDaoHelper;
+import com.icpak.rest.models.auth.User;
 import com.icpak.rest.models.event.Booking;
 import com.icpak.rest.models.event.Delegate;
 import com.icpak.rest.models.event.Event;
@@ -36,6 +39,10 @@ public class CsvImportExecutor extends FileExecutor {
 	BookingsDao bookingsDao;
 	@Inject
 	BookingsDaoHelper bookingsDaoHelper;
+	@Inject
+	UsersDaoHelper userDaoHelper;
+	@Inject
+	UsersDao userDao;
 	@Inject
 	SMSIntegration smsIntergration;
 	@Inject
@@ -73,26 +80,26 @@ public class CsvImportExecutor extends FileExecutor {
 									null, null, memberNos[0]);
 							logger.debug("found this number of delegates::" + delegateList.size());
 							if (delegateList.size() == 1) {
+								// Member Found..
 								DelegateDto delegateDto = delegateList.get(0);
 								logger.debug("Existing delegate::" + delegateDto.getFullName() + "::"
 										+ delegateDto.getMemberNo());
 								delegateDto.setAttendance(AttendanceStatus.ATTENDED);
 
-								// Find the Delegate Record.
+								// Find the Delegate Record & Update CPD Record.
 								Delegate delegateInDb = bookingsDao.findByRefId(delegateDto.getRefId(), Delegate.class);
-
-								// send an SMS confirming the attendance
-								Member member = bookingsDao.findByRefId(delegateDto.getMemberRefId(), Member.class);
-								String eventName = (event != null ? event.getName() : "");
-								String smsMessage = "Dear" + " " + delegateDto.getFullName()
-										+ ",Thank you for attending the " + eventName + "."
-										+ "You have been awarded your cpd Hours.";
-								smsIntergration.send(member.getUser().getPhoneNumber(), smsMessage);
 								delegateInDb.copyFrom(delegateDto);
 								bookingsDao.save(delegateInDb);
 								cpdDao.updateCPDFromAttendance(delegateInDb, delegateInDb.getAttendance());
+
+								// send an SMS confirming the attendance
+								if (delegateInDb.getMemberRegistrationNo() != null
+										&& !(delegateInDb.getMemberRegistrationNo().equals(""))) {
+									sendDelegateSms(delegateInDb.toDto(), event);
+								}
 								logger.debug("Successfully Imported>> " + delegateInDb.getMemberRegistrationNo());
 							} else {
+
 								// Creating a booking Record
 								logger.debug("This delegate did not book>>> " + memberNos[0]);
 								DelegateDto d = new DelegateDto();
@@ -106,7 +113,7 @@ public class CsvImportExecutor extends FileExecutor {
 									Delegate delegateInDb = bookingsDao.findByRefId(del1.getRefId(), Delegate.class);
 
 									if (delegateInDb != null) {
-										delegateInDb.copyFrom(del1);
+										delegateInDb.setAttendance(AttendanceStatus.ATTENDED);
 										bookingsDao.save(delegateInDb);
 										cpdDao.updateCPDFromAttendance(delegateInDb, delegateInDb.getAttendance());
 										logger.debug(
@@ -114,13 +121,8 @@ public class CsvImportExecutor extends FileExecutor {
 									}
 
 									// send an SMS confirming the attendance
-									Member member = bookingsDao.findByRefId(del1.getMemberRefId(), Member.class);
-									if (member != null) {
-										String eventName = (event != null ? event.getName() : "");
-										String smsMessage = "Dear" + " " + del1.getFullName()
-												+ ",Thank you for attending the " + eventName + "."
-												+ "You have been awarded your cpd Hours.";
-										smsIntergration.send(member.getUser().getPhoneNumber(), smsMessage);
+									if (del1.getMemberNo() != null && !del1.getMemberNo().equals("")) {
+										sendDelegateSms(del1, event);
 									}
 								}
 							}
@@ -136,6 +138,16 @@ public class CsvImportExecutor extends FileExecutor {
 			}
 		}
 		return err;
+	}
+
+	public void sendDelegateSms(DelegateDto del1, Event event) {
+		User user = userDao.findUserByMemberNo(del1.getMemberNo());
+		if (user != null) {
+			String eventName = (event != null ? event.getName() : "");
+			String smsMessage = "Dear" + " " + del1.getFullName() + ",Thank you for attending the " + eventName + "."
+					+ "You have been awarded your cpd Hours.";
+			smsIntergration.send(user.getPhoneNumber(), smsMessage);
+		}
 	}
 
 	public void removeItem(HttpServletRequest request, String fieldName) {

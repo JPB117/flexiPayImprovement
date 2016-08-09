@@ -95356,7 +95356,7 @@ body, html {
 
 .wrapper .aside {
 	position: absolute;
-	width: 220px;
+	width: 14%;
 	top: 43px;
 	left: 0;
 	bottom: 0;
@@ -95364,14 +95364,14 @@ body, html {
 	-webkit-backface-visibility: hidden;
 	-moz-backface-visibility: hidden;
 	backface-visibility: hidden;
-	background-color: #fff
+	background-color: #fff;
 }
 
 .wrapper .aside .aside-inner {
 	/* padding-top: 110px; */
 	height: 100%;
 	width: 220px;
-	overflow: hidden
+	overflow: hidden;
 }
 
 .wrapper .aside>.nav-floating {
@@ -95473,7 +95473,7 @@ body, html {
 		padding: 20px;
 		position: fixed;
 		height: 60px;
-		width: 82.5%;
+		width: 84.5%;
 		z-index: 100;
 		/* margin-bottom: 5px; */
 	}
@@ -95498,7 +95498,7 @@ body, html {
 	}
 	.wrapper>footer, .wrapper section {
 		margin-left: 220px;
-		margin-left: 16%;
+		margin-left: 14%;
 	}
 	.wrapper section.has-sidebar-right {
 		margin-right: 240px

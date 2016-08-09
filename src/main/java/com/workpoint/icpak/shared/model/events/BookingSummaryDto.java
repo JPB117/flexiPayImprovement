@@ -8,22 +8,22 @@ public class BookingSummaryDto extends SerializableObj {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private Integer totalDelegates;
-	private Integer totalCancelled;
-	private Integer totalPaid;
-	private Integer totalWithAccomodation;
-	private Integer totalAttended;
-	private Integer totalMpesaPayments;
-	private Integer totalCardsPayment;
-	private Integer totalOfflinePayment;
-	private Integer totalCredit;
-	private Integer totalReceiptPayment;
-	private Integer totalMembers;
-	private Integer totalNonMembers;
-	private Integer totalPaidMembers;
-	private Integer totalPaidNonMembers;
-	private Integer totalCancelledMembers;
-	private Integer totalCancelledNonMembers;
+	private Integer totalDelegates = 0;
+	private Integer totalCancelled = 0;
+	private Integer totalPaid = 0;
+	private Integer totalWithAccomodation = 0;
+	private Integer totalAttended = 0;
+	private Integer totalMpesaPayments = 0;
+	private Integer totalCardsPayment = 0;
+	private Integer totalOfflinePayment = 0;
+	private Integer totalCredit = 0;
+	private Integer totalReceiptPayment = 0;
+	private Integer totalMembers = 0;
+	private Integer totalNonMembers = 0;
+	private Integer totalPaidMembers = 0;
+	private Integer totalPaidNonMembers = 0;
+	private Integer totalCancelledMembers = 0;
+	private Integer totalCancelledNonMembers = 0;
 
 	public BookingSummaryDto() {
 
