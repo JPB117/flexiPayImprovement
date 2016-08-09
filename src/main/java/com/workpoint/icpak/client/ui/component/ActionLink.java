@@ -76,11 +76,21 @@ public class ActionLink extends Anchor {
 		if (isLoading) {
 			anchor.getElement().setAttribute("disabled", "disabled");
 			anchor.getElement()
-					.setInnerHTML(
-							"<span class='fa fa-spinner fa-spin' ui:field='spnSpinner'></span>Submitting...");
+					.setInnerHTML("<span class='fa fa-spinner fa-spin' ui:field='spnSpinner'></span>Submitting...");
 		} else {
 			anchor.getElement().removeAttribute("disabled");
 			anchor.setText(previousText);
+		}
+	}
+
+	public void setLoadingState(boolean isLoading) {
+		String previousText = this.getText();
+		if (isLoading) {
+			getElement().setAttribute("disabled", "disabled");
+			getElement().setInnerHTML("<span class='fa fa-spinner fa-spin' ui:field='spnSpinner'></span>"+previousText);
+		} else {
+			getElement().removeAttribute("disabled");
+			getElement().setInnerHTML(previousText);
 		}
 	}
 

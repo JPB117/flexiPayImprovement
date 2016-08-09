@@ -58,10 +58,8 @@ import com.workpoint.icpak.shared.model.events.AccommodationDto;
 import com.workpoint.icpak.shared.model.events.BookingDto;
 import com.workpoint.icpak.shared.model.events.EventDto;
 
-public class EventBookingPresenter extends
-		Presenter<EventBookingPresenter.MyView, EventBookingPresenter.MyProxy>
-		implements ProcessingHandler, ProcessingCompletedHandler,
-		PaymentCompletedHandler, ClientDisconnectionHandler {
+public class EventBookingPresenter extends Presenter<EventBookingPresenter.MyView, EventBookingPresenter.MyProxy>
+		implements ProcessingHandler, ProcessingCompletedHandler, PaymentCompletedHandler, ClientDisconnectionHandler {
 
 	public interface MyView extends View {
 		boolean isValid();
@@ -178,12 +176,9 @@ public class EventBookingPresenter extends
 	private int responseCounter = 0;
 
 	@Inject
-	public EventBookingPresenter(final EventBus eventBus, final MyView view,
-			final MyProxy proxy,
-			ResourceDelegate<CountriesResource> countriesResource,
-			ResourceDelegate<EventsResource> eventsResource,
-			ResourceDelegate<InvoiceResource> invoiceResource,
-			ResourceDelegate<MemberResource> membersDelegate,
+	public EventBookingPresenter(final EventBus eventBus, final MyView view, final MyProxy proxy,
+			ResourceDelegate<CountriesResource> countriesResource, ResourceDelegate<EventsResource> eventsResource,
+			ResourceDelegate<InvoiceResource> invoiceResource, ResourceDelegate<MemberResource> membersDelegate,
 			ResourceDelegate<EventsResource> eventsDelegate) {
 		super(eventBus, view, proxy);
 		this.countriesResource = countriesResource;
@@ -206,30 +201,25 @@ public class EventBookingPresenter extends
 		addRegisteredHandler(PaymentCompletedEvent.TYPE, this);
 		addRegisteredHandler(ClientDisconnectionEvent.TYPE, this);
 
-		getView().getMemberColumnConfig().setLoader(
-				new AutoCompleteField.Loader() {
+		getView().getMemberColumnConfig().setLoader(new AutoCompleteField.Loader() {
+			@Override
+			public void onLoad(final ServerOracle source, final String query) {
+				getView().getMemberColumnConfig().showSpinner(true);
+				query.replaceAll("/", "%");
+				requestCounter = requestCounter + 1;
+				membersDelegate.withCallback(new AbstractAsyncCallback<List<MemberDto>>() {
 					@Override
-					public void onLoad(final ServerOracle source,
-							final String query) {
-						getView().getMemberColumnConfig().showSpinner(true);
-						query.replaceAll("/", "%");
-						requestCounter = requestCounter + 1;
-						membersDelegate.withCallback(
-								new AbstractAsyncCallback<List<MemberDto>>() {
-									@Override
-									public void onSuccess(
-											List<MemberDto> members) {
-										responseCounter = responseCounter + 1;
-										if (requestCounter == responseCounter) {
-											source.setValues(members);
-											getView().getMemberColumnConfig()
-													.showSpinner(false);
-										}
-									}
-
-								}).search(query, 0, 30);
+					public void onSuccess(List<MemberDto> members) {
+						responseCounter = responseCounter + 1;
+						if (requestCounter == responseCounter) {
+							source.setValues(members);
+							getView().getMemberColumnConfig().showSpinner(false);
+						}
 					}
-				});
+
+				}).search(query, 0, 30);
+			}
+		});
 
 		getView().getANext().addClickHandler(new ClickHandler() {
 			@Override
@@ -250,8 +240,7 @@ public class EventBookingPresenter extends
 					// We are creating a new booking
 				} else {
 					if (getView().getCounter() == 0) {
-						checkExists(getView().getBooking().getContact()
-								.getEmail());
+						checkExists(getView().getBooking().getContact().getEmail());
 					} else if (getView().getCounter() == 1) {
 						if (getView().isDelegateValid()) {
 							BookingDto dto = getView().getBooking();
@@ -269,8 +258,7 @@ public class EventBookingPresenter extends
 				if (getView().getCounter() == 3) {
 					getView().getANext().addStyleName("hide");
 					// getView().getANext().setHref("#booking");
-					getView().browseOthersEventsButton()
-							.removeStyleName("hide");
+					getView().browseOthersEventsButton().removeStyleName("hide");
 					getView().scrollToPaymentsTop();
 				}
 			}
@@ -283,20 +271,15 @@ public class EventBookingPresenter extends
 					Window.alert("No Booking set...");
 				} else {
 					getView().showmask(true);
-					eventsDelegate
-							.withCallback(
-									new AbstractAsyncCallback<BookingDto>() {
-										@Override
-										public void onSuccess(BookingDto result) {
-											if (result != null) {
-												getView()
-														.showCancellationSuccess(
-																true);
-												getView().showmask(false);
-											}
-										}
-									}).bookings(eventId)
-							.cancelBooking(getView().getBooking().getRefId());
+					eventsDelegate.withCallback(new AbstractAsyncCallback<BookingDto>() {
+						@Override
+						public void onSuccess(BookingDto result) {
+							if (result != null) {
+								getView().showCancellationSuccess(true);
+								getView().showmask(false);
+							}
+						}
+					}).bookings(eventId).cancelBooking(getView().getBooking().getRefId());
 				}
 			}
 		});
@@ -315,15 +298,11 @@ public class EventBookingPresenter extends
 						getView().next();
 					}
 				} else {
-					getView()
-							.setEmailValid(
-									false,
-									"You have already booked for this event."
-											+ " We have resend the booking email to "
-											+ booking.getContact().getEmail()
-											+ " with instructions on how to ammend your booking.");
-					eventsResource.withoutCallback().bookings(eventId)
-							.sendAlert(booking.getRefId());
+					getView().setEmailValid(false,
+							"You have already booked for this event." + " We have resend the booking email to "
+									+ booking.getContact().getEmail()
+									+ " with instructions on how to ammend your booking.");
+					eventsResource.withoutCallback().bookings(eventId).sendAlert(booking.getRefId());
 				}
 			}
 
@@ -339,23 +318,21 @@ public class EventBookingPresenter extends
 	protected void submit(BookingDto dto) {
 		getView().showmask(true);
 		if (bookingId == null) {
-			eventsResource
-					.withCallback(new AbstractAsyncCallback<BookingDto>() {
-						@Override
-						public void onSuccess(BookingDto booking) {
-							bindBooking(booking);
-						}
-					}).bookings(eventId).create(dto);
+			eventsResource.withCallback(new AbstractAsyncCallback<BookingDto>() {
+				@Override
+				public void onSuccess(BookingDto booking) {
+					bindBooking(booking);
+				}
+			}).bookings(eventId).create(dto);
 
 		} else {
-			eventsResource
-					.withCallback(new AbstractAsyncCallback<BookingDto>() {
-						@Override
-						public void onSuccess(BookingDto booking) {
-							getView().showmask(false);
-							bindBooking(booking);
-						}
-					}).bookings(eventId).update(bookingId, dto);
+			eventsResource.withCallback(new AbstractAsyncCallback<BookingDto>() {
+				@Override
+				public void onSuccess(BookingDto booking) {
+					getView().showmask(false);
+					bindBooking(booking);
+				}
+			}).bookings(eventId).update(bookingId, dto);
 
 		}
 
@@ -387,25 +364,23 @@ public class EventBookingPresenter extends
 		bookingId = request.getParameter("bookingId", null);
 		String cancel = request.getParameter("cancel", null);
 
-		countriesResource.withCallback(
-				new AbstractAsyncCallback<List<Country>>() {
-					public void onSuccess(List<Country> countries) {
-						Collections.sort(countries, new Comparator<Country>() {
-							@Override
-							public int compare(Country o1, Country o2) {
-								return o1.getDisplayName().compareTo(
-										o2.getDisplayName());
-							}
-						});
-
-						getView().setCountries(countries);
-					};
-
+		countriesResource.withCallback(new AbstractAsyncCallback<List<Country>>() {
+			public void onSuccess(List<Country> countries) {
+				Collections.sort(countries, new Comparator<Country>() {
 					@Override
-					public void onFailure(Throwable caught) {
-						super.onFailure(caught);
+					public int compare(Country o1, Country o2) {
+						return o1.getDisplayName().compareTo(o2.getDisplayName());
 					}
-				}).getAll();
+				});
+
+				getView().setCountries(countries);
+			};
+
+			@Override
+			public void onFailure(Throwable caught) {
+				super.onFailure(caught);
+			}
+		}).getAll();
 
 		eventsResource.withCallback(new AbstractAsyncCallback<EventDto>() {
 			@Override
@@ -418,8 +393,7 @@ public class EventBookingPresenter extends
 			public void onFailure(Throwable caught) {
 				StringBuffer buffer = new StringBuffer();
 				for (StackTraceElement elem : caught.getStackTrace()) {
-					buffer.append(elem.getLineNumber() + ">>"
-							+ elem.getClassName() + ">>" + elem.getMethodName());
+					buffer.append(elem.getLineNumber() + ">>" + elem.getClassName() + ">>" + elem.getMethodName());
 				}
 				super.onFailure(caught);
 			}
@@ -437,50 +411,39 @@ public class EventBookingPresenter extends
 				getView().showCancellation(true);
 			}
 			// Load Accommodations
-			eventsResource
-					.withCallback(
-							new AbstractAsyncCallback<List<AccommodationDto>>() {
-								@Override
-								public void onSuccess(
-										List<AccommodationDto> result) {
-									accommodationCallback.onComplete(result);
-								}
-							}).accommodations(eventId).getAll(0, 100);
+			eventsResource.withCallback(new AbstractAsyncCallback<List<AccommodationDto>>() {
+				@Override
+				public void onSuccess(List<AccommodationDto> result) {
+					accommodationCallback.onComplete(result);
+				}
+			}).accommodations(eventId).getAll(0, 100);
 
 			// Load Booking
-			eventsResource
-					.withCallback(new AbstractAsyncCallback<BookingDto>() {
-						@Override
-						public void onSuccess(final BookingDto booking) {
-							accommodationCallback.onComplete(booking);
-							getInvoice(booking, false, false);
+			eventsResource.withCallback(new AbstractAsyncCallback<BookingDto>() {
+				@Override
+				public void onSuccess(final BookingDto booking) {
+					accommodationCallback.onComplete(booking);
+					getInvoice(booking, false, false);
 
-							getView().getaDownloadProforma().addClickHandler(
-									new ClickHandler() {
-										@Override
-										public void onClick(ClickEvent event) {
-											UploadContext ctx = new UploadContext(
-													"getreport");
-											ctx.setContext("bookingRefId",
-													booking.getRefId());
-											ctx.setAction(UPLOADACTION.GETPROFORMA);
-											Window.open(ctx.toUrl(),
-													"Get Proforma", null);
-										}
-									});
+					getView().getaDownloadProforma().addClickHandler(new ClickHandler() {
+						@Override
+						public void onClick(ClickEvent event) {
+							UploadContext ctx = new UploadContext("getreport");
+							ctx.setContext("bookingRefId", booking.getRefId());
+							ctx.setAction(UPLOADACTION.GETPROFORMA);
+							Window.open(ctx.toUrl(), "Get Proforma", null);
 						}
-					}).bookings(eventId).getById(bookingId);
+					});
+				}
+			}).bookings(eventId).getById(bookingId);
 		} else {
 			// New booking....
-			eventsResource
-					.withCallback(
-							new AbstractAsyncCallback<List<AccommodationDto>>() {
-								@Override
-								public void onSuccess(
-										List<AccommodationDto> result) {
-									getView().bindAccommodations(result);
-								}
-							}).accommodations(eventId).getAll(0, 100);
+			eventsResource.withCallback(new AbstractAsyncCallback<List<AccommodationDto>>() {
+				@Override
+				public void onSuccess(List<AccommodationDto> result) {
+					getView().bindAccommodations(result);
+				}
+			}).accommodations(eventId).getAll(0, 100);
 		}
 	}
 
@@ -488,8 +451,7 @@ public class EventBookingPresenter extends
 		getInvoice(booking, true, true);
 	}
 
-	protected void getInvoice(final BookingDto booking, final boolean moveNext,
-			final boolean sendEmail) {
+	protected void getInvoice(final BookingDto booking, final boolean moveNext, final boolean sendEmail) {
 		invoiceResource.withCallback(new AbstractAsyncCallback<InvoiceDto>() {
 			@Override
 			public void onSuccess(InvoiceDto invoice) {
@@ -497,8 +459,7 @@ public class EventBookingPresenter extends
 				getView().showmask(false);
 
 				if (sendEmail) {
-					eventsResource.withoutCallback().bookings(eventId)
-							.sendAlert(booking.getRefId());
+					eventsResource.withoutCallback().bookings(eventId).sendAlert(booking.getRefId());
 				}
 
 				/*
@@ -528,21 +489,17 @@ public class EventBookingPresenter extends
 			String chargableAmount = invoice.getInvoiceAmount().toString();
 
 			if (event.getPenaltyDate() != null) {
-				penaltyDate = DateUtils.DATEFORMAT_SYS.parse(event
-						.getPenaltyDate());
+				penaltyDate = DateUtils.DATEFORMAT_SYS.parse(event.getPenaltyDate());
 				if (todaysDate.getTime() >= penaltyDate.getTime()) {
-					Double penaltyPrice = invoice.getInvoiceAmount()
-							+ invoice.getTotalPenalty();
+					Double penaltyPrice = invoice.getInvoiceAmount() + invoice.getTotalPenalty();
 					chargableAmount = penaltyPrice.toString();
 				}
 			}
 
 			if (event.getDiscountDate() != null) {
-				discountDate = DateUtils.DATEFORMAT_SYS.parse(event
-						.getDiscountDate());
+				discountDate = DateUtils.DATEFORMAT_SYS.parse(event.getDiscountDate());
 				if (todaysDate.getTime() <= discountDate.getTime()) {
-					Double discountedPrice = invoice.getInvoiceAmount()
-							- invoice.getTotalDiscount();
+					Double discountedPrice = invoice.getInvoiceAmount() - invoice.getTotalDiscount();
 					chargableAmount = discountedPrice.toString();
 				}
 			}
@@ -583,5 +540,6 @@ public class EventBookingPresenter extends
 	@Override
 	public void onClientDisconnection(ClientDisconnectionEvent event) {
 		getView().showClientDisconnection(true);
+		Window.alert("Internet Connection Lost. Kindly check and try again");
 	}
 }

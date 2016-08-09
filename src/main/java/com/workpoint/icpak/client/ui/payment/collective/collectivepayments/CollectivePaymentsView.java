@@ -5,7 +5,6 @@ import javax.inject.Inject;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -13,6 +12,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewImpl;
 import com.workpoint.icpak.client.ui.component.ActionLink;
+import com.workpoint.icpak.client.ui.component.IssuesPanel;
 import com.workpoint.icpak.client.ui.profile.paysubscription.PaymentSubscription;
 
 public class CollectivePaymentsView extends ViewImpl implements CollectivePaymentsPresenter.MyView {
@@ -25,6 +25,10 @@ public class CollectivePaymentsView extends ViewImpl implements CollectivePaymen
 	HTMLPanel panelSubscription;
 	@UiField
 	HTMLPanel panelWizardContainer;
+	@UiField
+	HTMLPanel divContainer;
+	@UiField
+	IssuesPanel issuesPanel;
 
 	@UiField
 	HTMLPanel panelPayment;
@@ -35,6 +39,9 @@ public class CollectivePaymentsView extends ViewImpl implements CollectivePaymen
 
 	@UiField
 	Element elBackHeading;
+
+	@UiField
+	Element elTopLegend;
 
 	@Inject
 	CollectivePaymentsView(Binder uiBinder) {
@@ -50,7 +57,7 @@ public class CollectivePaymentsView extends ViewImpl implements CollectivePaymen
 
 	}
 
-	public HasClickHandlers getProceedButton() {
+	public ActionLink getProceedButton() {
 		return aProceed;
 	}
 
@@ -81,6 +88,29 @@ public class CollectivePaymentsView extends ViewImpl implements CollectivePaymen
 			panelSubscription.addStyleName("hide");
 			elBackHeading.removeClassName("hide");
 			panelWizardContainer.setStyleName("col-md-8 col-md-offset-2 wizard-container set-full-height");
+		}
+	}
+
+	public void showError(String error) {
+		issuesPanel.clear();
+		if (!error.isEmpty()) {
+			issuesPanel.removeStyleName("hide");
+			issuesPanel.addError(error);
+		} else {
+			issuesPanel.addStyleName("hide");
+		}
+	}
+
+	public void setLegendText(String title) {
+		elTopLegend.setInnerText(title);
+	}
+
+	@Override
+	public void showmask(boolean processing) {
+		if (processing) {
+			divContainer.addStyleName("whirl traditional");
+		} else {
+			divContainer.removeStyleName("whirl traditional");
 		}
 	}
 

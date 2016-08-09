@@ -27,8 +27,11 @@
 				<g:HTMLPanel ui:field="panelWizardContainer"
 					styleName="col-md-6 col-md-offset-3 wizard-container set-full-height">
 					<g:HTMLPanel styleName="card wizard-card ct-wizard-gold {style.wizard}"
-						ui:field="loadingbox">
+						ui:field="divContainer">
 						<g:HTMLPanel>
+							<div class="col-sm-12">
+								<d:IssuesPanel ui:field="issuesPanel" styleName="hide alert alert-danger"></d:IssuesPanel>
+							</div>
 							<g:HTMLPanel>
 								<div class="panel-body">
 									<g:HTMLPanel ui:field="panelSubscription">
@@ -78,7 +81,7 @@
 													Back to First Page
 												</d:ActionLink>
 												/
-												Pay for member subscription
+												<span ui:field="elTopLegend">Pay for member subscription</span>
 											</h4>
 											<hr />
 										</div>

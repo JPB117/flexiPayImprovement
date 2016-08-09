@@ -24,13 +24,14 @@
 
 	<g:HTMLPanel styleName="col-sm-12">
 		<br />
-		<g:HTMLPanel styleName="row-fluid container hide"
-			ui:field="panelSuccess">
+		<g:HTMLPanel styleName="row-fluid hide" ui:field="panelSuccess">
 			<br />
-			<div class="alert alert-success" ui:field="panelMessage">
-				<i class="icon icon-ok"></i>
-				Thank-you for your payment. It will be processed within the next 72
-				hours.
+			<div class="alert alert-success" ui:field="panelMessage" style="text-align:center">
+				<span class="fa fa-thumbs-up fa-5x" ui:field="spnMessageIcon"></span>
+				<br />
+				<span ui:field="spnIssues" style="font-size: 24px;">Your payment was successfully
+					processed. We will process it within 72hours and send you a
+					receipt.Thank-you</span>
 			</div>
 		</g:HTMLPanel>
 
