@@ -55,6 +55,8 @@ public class CollectivePaymentsPresenter
 		void setLegendText(String title);
 
 		void showmask(boolean b);
+
+		void setMiddleHeight();
 	}
 
 	@ContentSlot
@@ -111,6 +113,7 @@ public class CollectivePaymentsPresenter
 								final InvoiceDto invoice = new InvoiceDto();
 								invoice.setAmount(Double.valueOf(amountToPay));
 								invoice.setDocumentNo(getView().getSubscriptionWidget().getMemberNo());
+								invoice.setInvoiceRefId(getView().getSubscriptionWidget().getMemberNo());
 
 								getView().showSubscriptionPanel(false);
 
@@ -166,6 +169,12 @@ public class CollectivePaymentsPresenter
 	@Override
 	public void onClientDisconnection(ClientDisconnectionEvent event) {
 		Window.alert("Internet Connection Lost. Kindly check and try again");
+	}
+
+	@Override
+	protected void onReset() {
+		super.onReset();
+		getView().setMiddleHeight();
 	}
 
 }

@@ -9,20 +9,21 @@
 		}
 	</ui:style>
 	<g:HTMLPanel styleName="set-full-height">
-		<div>
+		<g:HTMLPanel ui:field="divHeaderContainer" styleName="top-header">
 			<nav class="navbar top-navbar">
 				<div class="container">
 					<div class="navbar-header" style="width: 100%; text-align: center;">
 						<a class="brand">
-							<img src="img/icpak_logo.png" width="150px" />
+							<img src="img/icpak_logo.png" width="100px" />
 						</a>
 					</div>
 				</div>
 			</nav>
-		</div>
+		</g:HTMLPanel>
 
 
-		<g:HTMLPanel styleName="image-container set-full-height">
+		<g:HTMLPanel styleName="image-container set-full-height"
+			ui:field="panelMiddleContainer">
 			<g:HTMLPanel styleName="login-bg set-full-height">
 				<g:HTMLPanel ui:field="panelWizardContainer"
 					styleName="col-md-6 col-md-offset-3 wizard-container set-full-height">

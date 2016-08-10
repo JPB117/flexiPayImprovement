@@ -7,6 +7,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
@@ -27,6 +28,12 @@ public class CollectivePaymentsView extends ViewImpl implements CollectivePaymen
 	HTMLPanel panelWizardContainer;
 	@UiField
 	HTMLPanel divContainer;
+	@UiField
+	HTMLPanel panelMiddleContainer;
+
+	@UiField
+	HTMLPanel divHeaderContainer;
+
 	@UiField
 	IssuesPanel issuesPanel;
 
@@ -111,6 +118,20 @@ public class CollectivePaymentsView extends ViewImpl implements CollectivePaymen
 			divContainer.addStyleName("whirl traditional");
 		} else {
 			divContainer.removeStyleName("whirl traditional");
+		}
+	}
+
+	@Override
+	public void setMiddleHeight() {
+		int totalHeight = Window.getClientHeight();
+		int topHeight = divHeaderContainer.getOffsetHeight();
+		int middleHeight = totalHeight - topHeight;
+
+		// Window.alert("\nTotalHeight:" + totalHeight + "MiddleHeight>>" +
+		// middleHeight + "TopHeight" + topHeight);
+
+		if (middleHeight > 0) {
+			panelMiddleContainer.setHeight(middleHeight + "px");
 		}
 	}
 

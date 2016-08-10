@@ -179,13 +179,13 @@
 											<div class="row">
 												<div class="col-sm-3 text-right">Phone Number:</div>
 												<div class="col-sm-9">
-													<div class="col-lg-3 {style.no-padding}">
+													<div class="col-sm-3 {style.no-padding}">
 														<d:TextField class="form-control" ui:field="txtCountryCode"
 															value="+254" disabled="true">
 														</d:TextField>
 													</div>
 
-													<div class="col-lg-8 {style.no-padding}" style="margin-left:25px;">
+													<div class="col-sm-8 {style.no-padding}" style="margin-left:25px;">
 														<d:TextField class="form-control" ui:field="txtPhoneNo">
 														</d:TextField>
 													</div>
@@ -269,7 +269,7 @@
 									</div>
 								</div>
 							</div>
-							<div class="col-lg-5">
+							<div class="col-lg-5 hidden-mobile hidden-tablet">
 								<div class="well" style="padding:10px 2px;margin-top:140px;">
 									<ul>
 										<li>We do not store your card details.</li>

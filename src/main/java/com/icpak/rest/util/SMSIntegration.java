@@ -4,12 +4,14 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
 
+import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.icpak.rest.dao.SMSDao;
+import com.icpak.rest.dao.helper.BookingsDaoHelper;
 import com.icpak.rest.models.sms.SMS;
 
 @Singleton
@@ -18,6 +20,8 @@ public class SMSIntegration {
 	Random random = new Random();
 	@Inject
 	SMSDao smsDao;
+
+	Logger logger = Logger.getLogger(SMSIntegration.class);
 
 	/**
 	 * 
@@ -58,28 +62,32 @@ public class SMSIntegration {
 			username = props.getProperty("africastalking.username");
 			apiKey = props.getProperty("africastalking.apiKey");
 			from = props.getProperty("africastalking.from");
-			isSmsSendingActive = (props.getProperty("isSendingActive") == "true" ? true : false);
+			isSmsSendingActive = (props.getProperty("isSendingActive").equals("true") ? true : false);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 
 		if (!isSmsSendingActive) {
+			logger.debug("Failed: SMS Sending is disabled in settings");
 			return "Failed: SMS Sending is disabled in settings";
 		}
 
 		AfricasTalkingGateway gateway = new AfricasTalkingGateway(username, apiKey);
 		try {
 			if (to == null || to.isEmpty()) {
+				logger.debug(
+						"Failed: The recipient telephone number must be provided. Kindly confirm the relavant fields are provided");
 				return "Failed: The recipient telephone number must be provided. Kindly confirm the relavant fields are provided";
 			}
 
 			if (message == null || message.isEmpty()) {
+				logger.debug("Failed: SMS Message cannot be empty");
 				return "Failed: SMS Message cannot be empty";
 			}
 
 			to = to.replaceAll("[-+.^:]", "");
 			to = to.trim();
-			System.err.println("FinalPhone Number:" + to);
+			logger.info("FinalPhone Number:" + to);
 			JSONArray resp = gateway.sendMessage(to, message, from, 1);
 
 			JSONObject object = resp.getJSONObject(0);

@@ -13,7 +13,7 @@ public class TestSMSIntegration extends AbstractDaoTest {
 
 	@Test
 	public void sendSMS() {
-		integration.send("0721239821", "Testing sms!!!!");
+		System.err.println(integration.send("0721239821", "Testing sms!!!!"));
 	}
 
 }
