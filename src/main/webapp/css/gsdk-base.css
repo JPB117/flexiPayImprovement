@@ -511,6 +511,8 @@ h1 .subtitle {
 
 
 
+
+
  
 
 
@@ -519,7 +521,13 @@ h1 .subtitle {
 
 
 
+
+
 .form-control
+
+
+
+
 
 
 
@@ -551,9 +559,17 @@ h1 .subtitle {
 
 
 
+
+
+
+
 :first-child
 ,
 .input-group-btn
+
+
+
+
 
 
 
@@ -573,6 +589,10 @@ h1 .subtitle {
 .btn
 ,
 .input-group-btn
+
+
+
+
 
 
 
@@ -606,9 +626,17 @@ h1 .subtitle {
 
 
 
+
+
+
+
 :last-child
 >
 .btn
+
+
+
+
 
 
 
@@ -631,7 +659,11 @@ h1 .subtitle {
 
 
 
+
+
  
+
+
 
 
 
@@ -648,7 +680,11 @@ h1 .subtitle {
 
 
 
+
+
  
+
+
 
 
 
@@ -665,7 +701,11 @@ h1 .subtitle {
 
 
 
+
+
  
+
+
 
 
 
@@ -683,7 +723,11 @@ h1 .subtitle {
 
 
 
+
+
 	
+
+
 
 
 
@@ -708,7 +752,13 @@ border-right
 
 
 
+
+
+
+
 :
+
+
 
 
 
@@ -724,8 +774,14 @@ border-right
 
 
 
+
+
 0
 none
+
+
+
+
 
 
 
@@ -750,6 +806,8 @@ none
 
 
 
+
+
  
 
 
@@ -758,7 +816,13 @@ none
 
 
 
+
+
 .form-control
+
+
+
+
 
 
 
@@ -790,9 +854,17 @@ none
 
 
 
+
+
+
+
 :last-child
 ,
 .input-group-btn
+
+
+
+
 
 
 
@@ -812,6 +884,10 @@ none
 .btn
 ,
 .input-group-btn
+
+
+
+
 
 
 
@@ -845,9 +921,17 @@ none
 
 
 
+
+
+
+
 :first-child
 >
 .btn
+
+
+
+
 
 
 
@@ -870,7 +954,11 @@ none
 
 
 
+
+
  
+
+
 
 
 
@@ -887,7 +975,11 @@ none
 
 
 
+
+
  
+
+
 
 
 
@@ -912,7 +1004,13 @@ border-left
 
 
 
+
+
+
+
 :
+
+
 
 
 
@@ -928,8 +1026,14 @@ border-left
 
 
 
+
+
 0
 none
+
+
+
+
 
 
 
@@ -1413,18 +1517,37 @@ label {
 
 .wizard-card .tab-content {
 	min-height: 340px;
-	padding:0px 20px 63px
+	padding: 0px 20px 63px
 }
 
 .wizard-card .wizard-footer {
-	padding: 10px 10px;
-    width: 100%;
-    border-top: 1px solid #E7E7E7;
-    position: fixed;
-    bottom: 0px;
-    width: 75%;
-    background: #fff;
-    margin-left: -19px;
+	padding: 10px 15px;
+	border-top: 1px solid #E7E7E7;
+	position: fixed;
+	bottom: 0px;
+	background: #fff;
+	left: 0;
+	right: 0;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+@media ( min-width :768px) {
+	.wizard-card .wizard-footer {
+		width: 725px
+	}
+}
+
+@media ( min-width :992px) {
+	.wizard-card .wizard-footer {
+		width: 935px
+	}
+}
+
+@media ( min-width :1200px) {
+	.wizard-card .wizard-footer {
+		width: 1135px;
+	}
 }
 
 .wizard-card .disabled {
@@ -1849,8 +1972,7 @@ body .GWTUpld .gwt-FileUpload {
 	}
 }
 
-
-.dropdown-menu{
+.dropdown-menu {
 	right: 0px;
-    left: inherit !important;
+	left: inherit !important;
 }

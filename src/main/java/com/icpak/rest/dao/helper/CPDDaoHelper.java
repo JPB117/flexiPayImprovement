@@ -315,14 +315,14 @@ public class CPDDaoHelper {
 				// >1 && <=2
 				if (cpdHours < 40) {
 					isGenerate = false;
-					messages.add("You have been a member for more than " + noOfYears.intValue() + " but you have done "
+					messages.add("You have been a member for more than " + noOfYears.intValue() + " years but you have done "
 							+ cpdHours.intValue() + " out of 40 expected hours.");
 				}
 			} else if (noOfYears <= 3) {
 				// >1 && <=2
 				if (cpdHours < 80) {
 					isGenerate = false;
-					messages.add("You have been a member for more than " + noOfYears.intValue() + "but you have done "
+					messages.add("You have been a member for more than " + noOfYears.intValue() + " years but you have done "
 							+ cpdHours.intValue() + " out of 80 expected hours.");
 				}
 			} else {

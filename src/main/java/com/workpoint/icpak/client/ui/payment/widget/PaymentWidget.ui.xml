@@ -118,7 +118,7 @@
 									<strong>Complete Payment</strong>
 									Button Below to finish your payment
 								</li>
-								<li>
+								<li class="hide">
 									<div class="alert alert-info col-lg-5">Please note that ICPAK confirmation message
 										might delay,but your transaction will be processed.</div>
 								</li>

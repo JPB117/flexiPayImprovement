@@ -9,23 +9,23 @@
 	ui:generateLocales='default'>
 
 	<ui:style>
-	.success-message {
+		.success-message {
 		width: initial;
 		position: absolute;
 		left: 35%;
 		height: 40px;
 		top: 5px;
 		padding-top: 8px;
-	}
-	
-	.action-section {
+		}
+
+		.action-section {
 		margin-top: 12px;
 		margin-bottom: 50px;
-	}
-	
-	.hidden-section {
+		}
+
+		.hidden-section {
 		height: 10px;
-	}
+		}
 	</ui:style>
 
 
@@ -57,7 +57,7 @@
 		<g:HTMLPanel styleName="image-container set-full-height">
 			<div class="container">
 				<div class="row">
-					<div class="col-sm-11 col-md-offset-1">
+					<div class="col-sm-12">
 						<g:HTMLPanel>
 							<!-- Wizard container -->
 							<div class="wizard-container" ui:field="divContainer">
