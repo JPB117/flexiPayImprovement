@@ -41,7 +41,7 @@ public class UsersDao extends BaseDao {
 		assert memberNo != null;
 		logger.info(" =====Searching user with memberNo ============"
 				+ memberNo);
-		String query = "from User u where u.memberNo = :memberNo";
+		String query = "from User u where u.memberNo =:memberNo";
 		return getSingleResultOrNull(getEntityManager().createQuery(query)
 				.setParameter("memberNo", memberNo));
 	}

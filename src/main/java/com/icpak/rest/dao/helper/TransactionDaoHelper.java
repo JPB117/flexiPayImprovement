@@ -1,6 +1,8 @@
 package com.icpak.rest.dao.helper;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -12,6 +14,11 @@ import java.util.Locale;
 
 import javax.mail.MessagingException;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.log4j.Logger;
 
 import com.amazonaws.util.json.JSONException;
@@ -68,8 +75,8 @@ public class TransactionDaoHelper {
 	NumberFormat numberFormat = NumberFormat.getCurrencyInstance(locale);
 	private InvoiceDto invoiceDto;
 
-	public String charge(String accountNo, Date chargeDate, String description,
-			Date dueDate, Double amount, String documentNo, String invoiceRef) {
+	public String charge(String accountNo, Date chargeDate, String description, Date dueDate, Double amount,
+			String documentNo, String invoiceRef) {
 		Transaction trx = new Transaction();
 		trx.setInvoiceRef(invoiceRef);
 		trx.setAmount(amount);
@@ -85,8 +92,8 @@ public class TransactionDaoHelper {
 	/*
 	 * Old Method for receiving payment
 	 */
-	public void receivePayment(String paymentRef, String businessNo,
-			String accountNo, String paymentMode, String trxNumber) {
+	public void receivePayment(String paymentRef, String businessNo, String accountNo, String paymentMode,
+			String trxNumber) {
 		Transaction trx = dao.findByRefId(paymentRef, Transaction.class);
 		trx.setAccountNo(accountNo);
 		trx.setPaymentMode(PaymentMode.valueOf(paymentMode));
@@ -96,11 +103,9 @@ public class TransactionDaoHelper {
 
 		// Remove this duplication #07/10/2015
 		if (trx.getInvoiceRef() != null) {
-			Invoice invoice = dao.findByRefId(trx.getInvoiceRef(),
-					Invoice.class, false);
+			Invoice invoice = dao.findByRefId(trx.getInvoiceRef(), Invoice.class, false);
 			if (invoice != null && invoice.getBookingRefId() != null) {
-				Booking booking = dao.findByRefId(invoice.getBookingRefId(),
-						Booking.class, false);
+				Booking booking = dao.findByRefId(invoice.getBookingRefId(), Booking.class, false);
 				booking.setPaymentStatus(PaymentStatus.PAID);
 				booking.setPaymentDate(new Date());
 				booking.setPaymentMode(paymentMode);
@@ -127,10 +132,8 @@ public class TransactionDaoHelper {
 		return savedTrx.toDto1();
 	}
 
-	public void receivePaymentUsingInvoiceNo(String paymentRef,
-			String businessNo, String accountNo, String paymentMode,
-			String trxNumber, String phoneNumber, String amount,
-			String trxDate, String payerNames) {
+	public void receivePaymentUsingInvoiceNo(String paymentRef, String businessNo, String accountNo, String paymentMode,
+			String trxNumber, String phoneNumber, String amount, String trxDate, String payerNames) {
 
 		// Account No Details
 		accountNo = accountNo.trim();
@@ -171,8 +174,7 @@ public class TransactionDaoHelper {
 			saveTransactionFirst(trx);
 
 			Double amt = Double.valueOf(amount);
-			String smsMessage = "Thank-you for your payment of "
-					+ numberFormat.format(amt)
+			String smsMessage = "Thank-you for your payment of " + numberFormat.format(amt)
 					+ ".Please send details of this payment to memberservices@icpak.com ";
 
 			String finalPhoneNumber = phoneNumber.replace("254", "0");
@@ -191,17 +193,14 @@ public class TransactionDaoHelper {
 			User user = usersDao.findUserByMemberNo(accountNo);
 			if (user != null) {
 				logger.info("Subscription renewal for " + accountNo);
-				trx.setDescription("Subscription payments for "
-						+ user.getFullName());
+				trx.setDescription("Subscription payments for " + user.getFullName());
 				trx.setInvoiceRef(user.getRefId());
 				trx.setPaymentType(PaymentType.SUBSCRIPTION);
 				saveTransactionFirst(trx);
 
 				Double amt = Double.valueOf(amount);
-				String smsMessage = "Dear " + user.getFullName()
-						+ ", Thank-you for your " + trx.getPaymentMode()
-						+ " payment of " + numberFormat.format(amt)
-						+ " for your member subscription. "
+				String smsMessage = "Dear " + user.getFullName() + ", Thank-you for your " + trx.getPaymentMode()
+						+ " payment of KES " + numberFormat.format(amt) + " for your member subscription. "
 						+ "Your account will be updated in the next 72 hours. ";
 
 				String finalPhoneNumber = phoneNumber.replace("254", "0");
@@ -221,8 +220,7 @@ public class TransactionDaoHelper {
 			saveTransactionFirst(trx);
 
 			Double amt = Double.valueOf(amount);
-			String smsMessage = " Thank-you for your payment of "
-					+ numberFormat.format(amt)
+			String smsMessage = " Thank-you for your payment of " + numberFormat.format(amt)
 					+ ".Please send details of this payment to memberservices@icpak.com. ";
 
 			String finalPhoneNumber = phoneNumber.replace("254", "0");
@@ -241,34 +239,30 @@ public class TransactionDaoHelper {
 		booking = dao.findByRefId(inv.getBookingRefId(), Booking.class, false);
 		if (booking != null) {
 			logger.info("Payment was for booking refId::" + booking.getRefId());
-			trx.setDescription("Payment for " + booking.getEvent().getName()
-					+ "-" + payerNames);
+			trx.setDescription("Payment for " + booking.getEvent().getName() + "-" + payerNames);
 			trx.setInvoiceRef(booking.getRefId());
 			trx.setPaymentType(PaymentType.BOOKING);
 
 			// Save this transaction
 			saveTransactionFirst(trx);
 			try {
-				sendPaymentConfirmationSMSAndEmail(phoneNumber, trxNumber,
-						inv.getContactName(), booking, trxDate, amount, trx);
+				sendPaymentConfirmationSMSAndEmail(phoneNumber, trxNumber, inv.getContactName(), booking, trxDate,
+						amount, trx);
 			} catch (UnsupportedEncodingException | MessagingException e) {
 				e.printStackTrace();
 			}
 		} else {
 			// Payment was for New Member Registration
-			logger.info("Looking for application using Invoice Ref::"
-					+ invoiceDto.getInvoiceRefId());
-			ApplicationFormHeader application = applicationDao
-					.getApplicationByInvoiceRef(invoiceDto.getInvoiceRefId());
-			trx.setDescription("Registration Payment for "
-					+ application.getSurname());
+			logger.info("Looking for application using Invoice Ref::" + invoiceDto.getInvoiceRefId());
+			ApplicationFormHeader application = applicationDao.getApplicationByInvoiceRef(invoiceDto.getInvoiceRefId());
+			trx.setDescription("Registration Payment for " + application.getSurname());
 			trx.setInvoiceRef(application.getRefId());
 			trx.setPaymentType(PaymentType.REGISTRATION);
 			// Save this transaction
 			saveTransactionFirst(trx);
 			try {
-				sendPaymentConfirmationSMSAndEmail(phoneNumber, trxNumber,
-						inv.getContactName(), application, trxDate, amount, trx);
+				sendPaymentConfirmationSMSAndEmail(phoneNumber, trxNumber, inv.getContactName(), application, trxDate,
+						amount, trx);
 			} catch (UnsupportedEncodingException | MessagingException e) {
 				e.printStackTrace();
 			}
@@ -281,11 +275,9 @@ public class TransactionDaoHelper {
 
 	private void saveTransactionFirst(Transaction trx) {
 		dao.save(trx);
-		return;
 	}
 
-	private Double applyDiscountsAndPenalties(EventDto event, String trxDate)
-			throws ParseException {
+	private Double applyDiscountsAndPenalties(EventDto event, String trxDate) throws ParseException {
 		// Parse the mpesa trx Date 2016-01-21 18:42:08
 		Date parsedDate = ServerDateUtils.FULLTIMESTAMP.parse(trxDate);
 
@@ -295,24 +287,20 @@ public class TransactionDaoHelper {
 		Double chargableAmount = invoiceDto.getInvoiceAmount();
 
 		if (event.getPenaltyDate() != null) {
-			penaltyDate = ServerDateUtils.DATEFORMAT_SYS.parse(event
-					.getPenaltyDate());
+			penaltyDate = ServerDateUtils.DATEFORMAT_SYS.parse(event.getPenaltyDate());
 			if (parsedDate.getTime() >= penaltyDate.getTime()) {
-				chargableAmount = invoiceDto.getInvoiceAmount()
-						+ invoiceDto.getTotalPenalty();
-				logger.info("Penalty of " + invoiceDto.getTotalPenalty()
-						+ " applied for late payment >>>>" + parsedDate);
+				chargableAmount = invoiceDto.getInvoiceAmount() + invoiceDto.getTotalPenalty();
+				logger.info(
+						"Penalty of " + invoiceDto.getTotalPenalty() + " applied for late payment >>>>" + parsedDate);
 			}
 		}
 
 		if (event.getDiscountDate() != null) {
-			discountDate = ServerDateUtils.DATEFORMAT_SYS.parse(event
-					.getDiscountDate());
+			discountDate = ServerDateUtils.DATEFORMAT_SYS.parse(event.getDiscountDate());
 			if (parsedDate.getTime() <= discountDate.getTime()) {
-				chargableAmount = invoiceDto.getInvoiceAmount()
-						- invoiceDto.getTotalDiscount();
-				logger.info("Discount of " + invoiceDto.getTotalDiscount()
-						+ " applied for Early Bird Payment >>>>" + parsedDate);
+				chargableAmount = invoiceDto.getInvoiceAmount() - invoiceDto.getTotalDiscount();
+				logger.info("Discount of " + invoiceDto.getTotalDiscount() + " applied for Early Bird Payment >>>>"
+						+ parsedDate);
 			}
 		}
 		return chargableAmount;
@@ -330,9 +318,8 @@ public class TransactionDaoHelper {
 	/*
 	 * Calculate if there is any balance and send an sms with this balance
 	 */
-	private void sendPaymentConfirmationSMSAndEmail(String phoneNumber,
-			String transactionNumber, String senderName, Object paymentType,
-			String trxDate, String amount, Transaction trx)
+	private void sendPaymentConfirmationSMSAndEmail(String phoneNumber, String transactionNumber, String senderName,
+			Object paymentType, String trxDate, String amount, Transaction trx)
 			throws UnsupportedEncodingException, MessagingException {
 
 		// Get the balance for this Booking/Application - What is remaining from
@@ -348,8 +335,7 @@ public class TransactionDaoHelper {
 
 			Double chargeAbleAmt = 0.0;
 			try {
-				chargeAbleAmt = applyDiscountsAndPenalties(booking.getEvent()
-						.toDto(), trxDate);
+				chargeAbleAmt = applyDiscountsAndPenalties(booking.getEvent().toDto(), trxDate);
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
@@ -368,17 +354,10 @@ public class TransactionDaoHelper {
 			// Store this value against the transaction
 
 			if (balance > 0) {
-				logger.info("This invoice still has some balance:::"
-						+ trx.getAccountNo());
-				smsMessage = " Thank-you for your "
-						+ trx.getPaymentType()
-						+ " payment of "
-						+ numberFormat.format(paidAmt)
-						+ " for "
-						+ booking.getEvent().getName()
-						+ ",Invoice No:"
-						+ invoiceDto.getDocumentNo()
-						+ ".To fully pay for this booking, kindly pay balance of "
+				logger.info("This invoice still has some balance:::" + trx.getAccountNo());
+				smsMessage = " Thank-you for your " + trx.getPaymentType() + " payment of "
+						+ numberFormat.format(paidAmt) + " for " + booking.getEvent().getName() + ",Invoice No:"
+						+ invoiceDto.getDocumentNo() + ".To fully pay for this booking, kindly pay balance of "
 						+ numberFormat.format(balance) + ".";
 
 				String finalPhoneNumber = phoneNumber.replace("254", "0");
@@ -388,8 +367,7 @@ public class TransactionDaoHelper {
 				} else {
 					// Get the sponsor phone-number;
 					String phoneNo = booking.getContact().getTelephoneNumbers();
-					String firstNo = booking.getContact().getTelephoneNumbers()
-							.substring(0, 1);
+					String firstNo = booking.getContact().getTelephoneNumbers().substring(0, 1);
 					if (firstNo.equals("0")) {
 						finalPhoneNumber = phoneNo.replace("254", "0");
 					}
@@ -397,12 +375,10 @@ public class TransactionDaoHelper {
 
 					// Get Sponsor Email
 					if (booking.getContact().getEmail() != null) {
-						String subject = "PAYMENT CONFIRMATION FOR "
-								+ booking.getEvent().getName().toUpperCase();
-						EmailServiceHelper.sendEmail(smsMessage, "RE: ICPAK '"
-								+ subject, Arrays.asList(booking.getContact()
-								.getEmail()), Arrays.asList(booking
-								.getContact().getContactName()));
+						String subject = "PAYMENT CONFIRMATION FOR " + booking.getEvent().getName().toUpperCase();
+						EmailServiceHelper.sendEmail(smsMessage, "RE: ICPAK '" + subject,
+								Arrays.asList(booking.getContact().getEmail()),
+								Arrays.asList(booking.getContact().getContactName()));
 					}
 				}
 
@@ -411,22 +387,18 @@ public class TransactionDaoHelper {
 			else {
 				booking.setPaymentStatus(PaymentStatus.PAID);
 				invoiceDto.setStatus(PaymentStatus.PAID);
-				Invoice invoiceSave = invoiceDao.findByRefId(
-						invoiceDto.getRefId(), Invoice.class);
+				Invoice invoiceSave = invoiceDao.findByRefId(invoiceDto.getRefId(), Invoice.class);
 				invoiceSave.setStatus(PaymentStatus.PAID);
 				// System.err.println("Invoice RefId>>" +
 				// invoiceSave.getRefId());
 				invoiceDao.save(invoiceSave);
 
 				// Is this Payment for a Course
-				if (booking.getEvent().getType() != null
-						&& booking.getEvent().getType() == EventType.COURSE) {
-					logger.info("Payment for a course"
-							+ booking.getEvent().getName());
+				if (booking.getEvent().getType() != null && booking.getEvent().getType() == EventType.COURSE) {
+					logger.info("Payment for a course" + booking.getEvent().getName());
 					/* Payers message */
-					smsMessage = " Thank-you for your " + trx.getPaymentType()
-							+ " payment of " + numberFormat.format(paidAmt)
-							+ " for " + booking.getEvent().getName()
+					smsMessage = " Thank-you for your " + trx.getPaymentType() + " payment of "
+							+ numberFormat.format(paidAmt) + " for " + booking.getEvent().getName()
 							+ ". The booking status is PAID. ";
 
 					String finalPhoneNumber = phoneNumber.replace("254", "0");
@@ -436,12 +408,10 @@ public class TransactionDaoHelper {
 					}
 
 					if (booking.getContact().getEmail() != null) {
-						String subject = "PAYMENT CONFIRMATION FOR "
-								+ booking.getEvent().getName().toUpperCase();
-						EmailServiceHelper.sendEmail(smsMessage, "RE: ICPAK '"
-								+ subject, Arrays.asList(booking.getContact()
-								.getEmail()), Arrays.asList(booking
-								.getContact().getContactName()));
+						String subject = "PAYMENT CONFIRMATION FOR " + booking.getEvent().getName().toUpperCase();
+						EmailServiceHelper.sendEmail(smsMessage, "RE: ICPAK '" + subject,
+								Arrays.asList(booking.getContact().getEmail()),
+								Arrays.asList(booking.getContact().getContactName()));
 					}
 
 					/* Delegates Message */
@@ -450,8 +420,7 @@ public class TransactionDaoHelper {
 						allDelegates.add(delegate.toDto());
 					}
 					try {
-						bookingDaoHelper.enrolDelegateToLMS(allDelegates,
-								booking.getEvent());
+						bookingDaoHelper.enrolDelegateToLMS(allDelegates, booking.getEvent());
 					} catch (JSONException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -465,26 +434,17 @@ public class TransactionDaoHelper {
 				// This is a normal event booking
 				// Send message to all Delegates
 				for (Delegate delegate : booking.getDelegates()) {
-					smsMessage = "Dear "
-							+ delegate.getFullName()
-							+ ","
-							+ " Thank-you for your "
-							+ trx.getPaymentType()
-							+ " payment for "
-							+ booking.getEvent().getName()
-							+ ".Your booking status is now PAID. Your ERN No. is "
-							+ delegate.getErn();
+					smsMessage = "Dear " + delegate.getFullName() + "," + " Thank-you for your " + trx.getPaymentType()
+							+ " payment for " + booking.getEvent().getName()
+							+ ".Your booking status is now PAID. Your ERN No. is " + delegate.getErn();
 
 					if (delegate.getMemberRefId() != null) {
-						Member member = memberDao.findByRefId(
-								delegate.getMemberRefId(), Member.class);
-						logger.info("Sending SMS to "
-								+ member.getUser().getPhoneNumber());
+						Member member = memberDao.findByRefId(delegate.getMemberRefId(), Member.class);
+						logger.info("Sending SMS to " + member.getUser().getPhoneNumber());
 
 						if (member.getUser().getPhoneNumber() != null) {
 							try {
-								smsIntergration.send(member.getUser()
-										.getPhoneNumber(), smsMessage);
+								smsIntergration.send(member.getUser().getPhoneNumber(), smsMessage);
 							} catch (RuntimeException e) {
 								logger.error("Invalid Phone Number");
 								e.printStackTrace();
@@ -495,11 +455,9 @@ public class TransactionDaoHelper {
 					}
 				}
 
-				logger.info("This invoice is fully paid:::"
-						+ trx.getAccountNo());
-				smsMessage = " Thank-you for your " + trx.getPaymentType()
-						+ " payment of " + numberFormat.format(paidAmt)
-						+ " for " + booking.getEvent().getName()
+				logger.info("This invoice is fully paid:::" + trx.getAccountNo());
+				smsMessage = " Thank-you for your " + trx.getPaymentType() + " payment of "
+						+ numberFormat.format(paidAmt) + " for " + booking.getEvent().getName()
 						+ ". The booking status is PAID.";
 
 				String finalPhoneNumber = phoneNumber.replace("254", "0");
@@ -509,17 +467,14 @@ public class TransactionDaoHelper {
 				}
 
 				if (booking.getContact().getEmail() != null) {
-					String subject = "PAYMENT CONFIRMATION FOR "
-							+ booking.getEvent().getName().toUpperCase();
-					EmailServiceHelper.sendEmail(smsMessage, "RE: ICPAK '"
-							+ subject, Arrays.asList(booking.getContact()
-							.getEmail()), Arrays.asList(booking.getContact()
-							.getContactName()));
+					String subject = "PAYMENT CONFIRMATION FOR " + booking.getEvent().getName().toUpperCase();
+					EmailServiceHelper.sendEmail(smsMessage, "RE: ICPAK '" + subject,
+							Arrays.asList(booking.getContact().getEmail()),
+							Arrays.asList(booking.getContact().getContactName()));
 				}
 			}
 
-		} else if (paymentType != null
-				&& paymentType instanceof ApplicationFormHeader) {
+		} else if (paymentType != null && paymentType instanceof ApplicationFormHeader) {
 			ApplicationFormHeader application = (ApplicationFormHeader) paymentType;
 
 			if (invoiceDto.getInvoiceAmount() == null) {
@@ -536,13 +491,11 @@ public class TransactionDaoHelper {
 			trx.setInvoiceAmount(invoiceDto.getInvoiceAmount());
 
 			if (balance > 0) {
-				logger.info("This invoice still has some balance:::"
-						+ trx.getAccountNo());
-				smsMessage = " Thank-you for your payment of "
-						+ numberFormat.format(paidAmt)
+				logger.info("This invoice still has some balance:::" + trx.getAccountNo());
+				smsMessage = " Thank-you for your payment of " + numberFormat.format(paidAmt)
 						+ " for your membership registration fee."
-						+ ". To fully pay for your application, kindly pay balance of "
-						+ numberFormat.format(balance) + ".";
+						+ ". To fully pay for your application, kindly pay balance of " + numberFormat.format(balance)
+						+ ".";
 
 				String finalPhoneNumber = phoneNumber.replace("254", "0");
 				if (phoneNumber != null) {
@@ -551,34 +504,25 @@ public class TransactionDaoHelper {
 				}
 
 				if (application.getEmail() != null) {
-					String subject = "PAYMENT CONFIRMATION FOR "
-							+ application.getSurname().toUpperCase()
+					String subject = "PAYMENT CONFIRMATION FOR " + application.getSurname().toUpperCase()
 							+ " MEMBER SUBSCRIPTION ";
-					EmailServiceHelper.sendEmail(
-							smsMessage,
-							"RE: ICPAK '" + subject,
+					EmailServiceHelper.sendEmail(smsMessage, "RE: ICPAK '" + subject,
 							Arrays.asList(application.getEmail()),
-							Arrays.asList(application.getSurname() + " "
-									+ application.getOtherNames()));
+							Arrays.asList(application.getSurname() + " " + application.getOtherNames()));
 				}
 
 			} else {
 				application.setPaymentStatus(PaymentStatus.PAID);
 				invoiceDto.setStatus(PaymentStatus.PAID);
-				Invoice invoiceSave = invoiceDao.findByRefId(
-						invoiceDto.getRefId(), Invoice.class);
+				Invoice invoiceSave = invoiceDao.findByRefId(invoiceDto.getRefId(), Invoice.class);
 				invoiceSave.setStatus(PaymentStatus.PAID);
 				// System.err.println("Invoice RefId>>" +
 				// invoiceSave.getRefId());
 				invoiceDao.save(invoiceSave);
 				applicationDao.save(application);
 
-				smsMessage = "Dear"
-						+ " "
-						+ application.getSurname()
-						+ ","
-						+ " Thank-you for payment for your member registration. "
-						+ "Your payment status is now PAID.";
+				smsMessage = "Dear" + " " + application.getSurname() + ","
+						+ " Thank-you for payment for your member registration. " + "Your payment status is now PAID.";
 				String finalPhoneNumber = phoneNumber.replace("254", "0");
 
 				if (phoneNumber != null) {
@@ -587,15 +531,11 @@ public class TransactionDaoHelper {
 				}
 
 				if (application.getEmail() != null) {
-					String subject = "PAYMENT CONFIRMATION FOR "
-							+ application.getSurname().toUpperCase()
+					String subject = "PAYMENT CONFIRMATION FOR " + application.getSurname().toUpperCase()
 							+ " MEMBER SUBSCRIPTION ";
-					EmailServiceHelper.sendEmail(
-							smsMessage,
-							"RE: ICPAK '" + subject,
+					EmailServiceHelper.sendEmail(smsMessage, "RE: ICPAK '" + subject,
 							Arrays.asList(application.getEmail()),
-							Arrays.asList(application.getSurname() + " "
-									+ application.getOtherNames()));
+							Arrays.asList(application.getSurname() + " " + application.getOtherNames()));
 				}
 			}
 
@@ -603,5 +543,32 @@ public class TransactionDaoHelper {
 			logger.error("No notification sent since neither booking nor application was found for this payment");
 		}
 
+	}
+
+	public void performServerIPN(String payLoad) {
+		// Perform the HTTP
+		HttpClient client = new DefaultHttpClient();
+		HttpPost post = new HttpPost("http://localhost/mTransport/index.php/paybillv2");
+		String res = "";
+		HttpResponse response = null;
+		StringBuffer result = null;
+
+		try {
+			StringEntity entity = new StringEntity(payLoad);
+			post.setEntity(entity);
+			response = client.execute(post);
+
+			BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+			result = new StringBuffer();
+			String line = "";
+			while ((line = rd.readLine()) != null) {
+				result.append(line);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		assert result != null;
+		res = result.toString();
+		System.err.println("Repsonse::::" + res);
 	}
 }

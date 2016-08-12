@@ -46,7 +46,7 @@ public class CreditCardPaymentImpl implements CreditCardResource {
 			// response.getTransactionReference(),
 			// response.getTransactionIndex());
 
-			trxDaoHelper.receivePaymentUsingInvoiceNo(dto.getPaymentRefId(),
+			trxDaoHelper.receivePaymentUsingInvoiceNo(response.getTransactionIndex(),
 					"N/A", dto.getPaymentRefId(), "CARDS",
 					response.getTransactionIndex(), dto.getMobile_number(),
 					dto.getAmount(),
