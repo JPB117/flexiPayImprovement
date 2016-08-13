@@ -1,5 +1,6 @@
 package com.icpak.rest.util;
 
+import java.util.Date;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
@@ -11,8 +12,8 @@ import org.json.JSONObject;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.icpak.rest.dao.SMSDao;
-import com.icpak.rest.dao.helper.BookingsDaoHelper;
-import com.icpak.rest.models.sms.SMS;
+import com.icpak.rest.models.sms.SMSLog;
+import com.icpak.rest.models.sms.SmsStatus;
 
 @Singleton
 public class SMSIntegration {
@@ -44,8 +45,8 @@ public class SMSIntegration {
 		message = message.replaceAll("\\{AUTHPIN\\}", pin);
 
 		String subject = values.get("subject");
-		SMS sms = new SMS(subject, to, pin);
-		smsDao.save(sms);
+		// SMS sms = new SMS(subject, to, pin);
+		// smsDao.save(sms);
 
 		return send(to, message);
 	}
@@ -55,6 +56,7 @@ public class SMSIntegration {
 		String username = null;
 		String apiKey = null;
 		String from = null;
+		String smsCost = null;
 		boolean isSmsSendingActive = false;
 		try {
 			Properties props = new Properties();
@@ -63,6 +65,7 @@ public class SMSIntegration {
 			apiKey = props.getProperty("africastalking.apiKey");
 			from = props.getProperty("africastalking.from");
 			isSmsSendingActive = (props.getProperty("isSendingActive").equals("true") ? true : false);
+			smsCost = props.getProperty("smsCost");
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -88,6 +91,7 @@ public class SMSIntegration {
 			to = to.replaceAll("[-+.^:]", "");
 			to = to.trim();
 			logger.info("FinalPhone Number:" + to);
+
 			JSONArray resp = gateway.sendMessage(to, message, from, 1);
 
 			JSONObject object = resp.getJSONObject(0);
@@ -96,9 +100,19 @@ public class SMSIntegration {
 			String messageId = object.getString("messageId");
 			String cost = object.getString("cost");
 
+			SMSLog sms = new SMSLog();
+			sms.setTstamp(new Date());
+			sms.setText(message);
+			sms.setFrom(from);
+			sms.setCost(Double.valueOf(smsCost) * Double.valueOf(cost.substring(4)));
+			sms.setSmsId(messageId);
+			sms.setTo(number);
+			sms.setStatus(SmsStatus.valueOf(status.toUpperCase()));
+			smsDao.save(sms);
+
 			if (!status.equals("Success")) {
 				System.err.println("SMS Failed: " + status);
-				// throw new RuntimeException("SMS Failed: " + status);
+
 			}
 			System.err.println(resp);
 		} catch (Exception e) {

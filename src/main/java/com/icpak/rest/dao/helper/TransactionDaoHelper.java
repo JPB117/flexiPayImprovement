@@ -547,8 +547,11 @@ public class TransactionDaoHelper {
 
 	public void performServerIPN(String payLoad) {
 		// Perform the HTTP
+		String urlHost = "https://www.icpak.com/mTransport/index.php/paybillv2";
+		String urlLocal = "http://localhost/mTransport/index.php/paybillv2";
+
 		HttpClient client = new DefaultHttpClient();
-		HttpPost post = new HttpPost("http://localhost/mTransport/index.php/paybillv2");
+		HttpPost post = new HttpPost(urlLocal);
 		String res = "";
 		HttpResponse response = null;
 		StringBuffer result = null;
