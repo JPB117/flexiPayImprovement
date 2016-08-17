@@ -103,10 +103,10 @@ public class SMSIntegration {
 			SMSLog sms = new SMSLog();
 			sms.setTstamp(new Date());
 			sms.setText(message);
-			sms.setFrom(from);
+			sms.setSmsFrom(from);
 			sms.setCost(Double.valueOf(smsCost) * Double.valueOf(cost.substring(4)));
 			sms.setSmsId(messageId);
-			sms.setTo(number);
+			sms.setSmsTo(number);
 			sms.setStatus(SmsStatus.valueOf(status.toUpperCase()));
 			smsDao.save(sms);
 

@@ -15,24 +15,24 @@ public class TestSMSIntegration extends AbstractDaoTest {
 
 	@Inject
 	SMSIntegration integration;
-	
+
 	@Inject
 	SMSDao smsDao;
 
-	//@Test
+	// @Test
 	public void sendSMS() {
 		System.err.println(integration.send("0721239821", "Testing sms!!!!"));
 	}
-	
+
 	@Test
-	public void testSaveLog(){
+	public void testSaveLog() {
 		SMSLog sms = new SMSLog();
 		sms.setTstamp(new Date());
 		sms.setText("Testing SMS");
-		sms.setFrom("ICPAK");
+		sms.setSmsFrom("ICPAK");
 		sms.setCost(Double.valueOf("1.5") * Double.valueOf("KES 2.000".substring(4)));
 		sms.setSmsId("ATXid_cba0dd7cd1dac62e1c4448e09cb5694f");
-		sms.setTo("+254729472421");
+		sms.setSmsTo("+254729472421");
 		sms.setStatus(SmsStatus.valueOf("Success".toUpperCase()));
 		smsDao.save(sms);
 
