@@ -224,6 +224,7 @@ public class EventBookingPresenter extends Presenter<EventBookingPresenter.MyVie
 		getView().getANext().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
+				getView().browseOthersEventsButton().addStyleName("hide");
 				// Are you editing this booking?
 				if (bookingId != null) {
 					if (getView().getCounter() == 0) {
@@ -503,7 +504,8 @@ public class EventBookingPresenter extends Presenter<EventBookingPresenter.MyVie
 					chargableAmount = discountedPrice.toString();
 				}
 			}
-			paymentPresenter.setAmount(chargableAmount);
+			invoice.setAmount(Double.valueOf(chargableAmount));
+			// paymentPresenter.setAmount(chargableAmount);
 		}
 
 		if (invoice.getDocumentNo() != null) {
