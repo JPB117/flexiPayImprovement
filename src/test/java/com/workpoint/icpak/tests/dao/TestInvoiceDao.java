@@ -142,6 +142,14 @@ public class TestInvoiceDao extends AbstractDaoTest {
 	}
 
 	@Test
+	public void testChargeableAmount() {
+		String invoiceRefid = "jjGL44t6rxum4Dx6";
+		InvoiceDto inv = invoiceHelper.getInvoice(invoiceRefid);
+		System.err.println("Chargable Amount:::" + inv.getChargeableAmount());
+
+	}
+
+	// @Test
 	public void testLocalTransaction() {
 		String sample = "1{\"Id\":\"b2ff1658-c81b-cf0a-f7ae-08d3c0ec5647\",\"MSISDN\":\"254729472421\",\"BusinessShortCode\":\"722722\",\"InvoiceNumber\":\"\",\"TransID\":\"KHA7FGYRQT\",\"TransAmount\":\"10.00\",\"ThirdPartyTransID\":\"\",\"TransTime\":\"20160810100240\",\"BillRefNumber\":\"7087\",\"KYCInfoList\":[{\"KYCName\":\"[Personal Details][First Name]\",\"KYCValue\":\"TOM\"},{\"KYCName\":\"[Personal Details][Middle Name]\",\"KYCValue\":\"KIMANI\"},{\"KYCName\":\"[Personal Details][Last Name]\",\"KYCValue\":\"MURIRANJA\"}]";
 		trxHelper.performServerIPN(sample);

@@ -30,6 +30,7 @@ public class InvoiceDto extends SerializableObj implements HasKey {
 	private Double transactionAmount;
 	private Double totalDiscount;
 	private Double totalPenalty;
+	private Double chargeableAmount;
 	private String trxRefId;
 	private String userId;
 	private PaymentStatus status;
@@ -37,10 +38,9 @@ public class InvoiceDto extends SerializableObj implements HasKey {
 	public InvoiceDto() {
 	}
 
-	public InvoiceDto(String refId, Double invoiceAmount, String documentNo,
-			String description, Date invoiceDate, Date transactionDate,
-			Date dueDate, String paymentStatus, String paymentMode,
-			Double transactionAmount, String userId, String contactName) {
+	public InvoiceDto(String refId, Double invoiceAmount, String documentNo, String description, Date invoiceDate,
+			Date transactionDate, Date dueDate, String paymentStatus, String paymentMode, Double transactionAmount,
+			String userId, String contactName) {
 		this.invoiceRefId = refId;
 		this.documentNo = documentNo;
 		this.description = description;
@@ -55,9 +55,8 @@ public class InvoiceDto extends SerializableObj implements HasKey {
 		this.setTransactionAmount(transactionAmount);
 	}
 
-	public InvoiceDto(String refId, Double invoiceAmount2, String documentNo2,
-			String description2, Date invoiceDate2, String contactName2,
-			String trxRefId, String bookingRefId) {
+	public InvoiceDto(String refId, Double invoiceAmount2, String documentNo2, String description2, Date invoiceDate2,
+			String contactName2, String trxRefId, String bookingRefId) {
 		this.invoiceRefId = refId;
 		invoiceAmount = invoiceAmount2;
 		this.documentNo = documentNo2;
@@ -253,13 +252,21 @@ public class InvoiceDto extends SerializableObj implements HasKey {
 	public void setTrxRefId(String trxRefId) {
 		this.trxRefId = trxRefId;
 	}
-	
+
 	public PaymentStatus getStatus() {
 		return status;
 	}
 
 	public void setStatus(PaymentStatus status) {
 		this.status = status;
+	}
+
+	public Double getChargeableAmount() {
+		return chargeableAmount;
+	}
+
+	public void setChargeableAmount(Double chargeableAmount) {
+		this.chargeableAmount = chargeableAmount;
 	}
 
 }

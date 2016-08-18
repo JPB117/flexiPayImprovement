@@ -482,30 +482,8 @@ public class EventBookingPresenter extends Presenter<EventBookingPresenter.MyVie
 	}
 
 	protected void bindPaymentValues(InvoiceDto invoice) {
-		if (invoice.getInvoiceAmount() != null) {
-			// Apply Discount && Penalties based on todays Date
-			Date todaysDate = new Date();
-			Date penaltyDate = null;
-			Date discountDate = null;
-			String chargableAmount = invoice.getInvoiceAmount().toString();
-
-			if (event.getPenaltyDate() != null) {
-				penaltyDate = DateUtils.DATEFORMAT_SYS.parse(event.getPenaltyDate());
-				if (todaysDate.getTime() >= penaltyDate.getTime()) {
-					Double penaltyPrice = invoice.getInvoiceAmount() + invoice.getTotalPenalty();
-					chargableAmount = penaltyPrice.toString();
-				}
-			}
-
-			if (event.getDiscountDate() != null) {
-				discountDate = DateUtils.DATEFORMAT_SYS.parse(event.getDiscountDate());
-				if (todaysDate.getTime() <= discountDate.getTime()) {
-					Double discountedPrice = invoice.getInvoiceAmount() - invoice.getTotalDiscount();
-					chargableAmount = discountedPrice.toString();
-				}
-			}
-			invoice.setAmount(Double.valueOf(chargableAmount));
-			// paymentPresenter.setAmount(chargableAmount);
+		if (invoice.getChargeableAmount() != null) {
+			invoice.setAmount(invoice.getChargeableAmount());
 		}
 
 		if (invoice.getDocumentNo() != null) {

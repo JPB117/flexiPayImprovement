@@ -211,8 +211,11 @@ public class TransactionDaoHelper {
 				return;
 			}
 		}
-
+		
+		//Booking or Registration Payment
 		invoiceDto = invoiceDao.getInvoiceByDocumentNo(accountNo);
+		
+		//If No Invoice is found
 		if (invoiceDto == null) {
 			logger.info("No Invoice found for this transaction..");
 			trx.setDescription("Unknown payment with invalid account no");
