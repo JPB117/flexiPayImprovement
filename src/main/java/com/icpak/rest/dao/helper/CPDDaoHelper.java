@@ -222,9 +222,12 @@ public class CPDDaoHelper {
 
 		if (cpd.getRefId() != null) {
 			update(memberRefId, cpd.getRefId(), cpd);
+			logger.debug("Successfully updated the cpd record!!");
 		} else {
 			create(memberRefId, cpd);
+			logger.debug("Successfully created the cpd record!!");
 		}
+		
 		Member m = dao.findByRefId(memberRefId, Member.class);
 
 		if (m != null) {

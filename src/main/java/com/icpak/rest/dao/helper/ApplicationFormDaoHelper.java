@@ -178,8 +178,7 @@ public class ApplicationFormDaoHelper {
 		po.setNationality(application.getNationality());
 		po.setMemberNo(application.getMemberNo());
 		po.setPhoneNumber(application.getMobileNo());
-		po.setFullName(application.getSurname() + " "
-				+ application.getOtherNames());
+		po.setFullName(application.getSurname() + " " + application.getOtherNames());
 		BioData bioData = new BioData();
 		bioData.setFirstName(application.getSurname());
 		bioData.setLastName(application.getOtherNames());
@@ -200,8 +199,7 @@ public class ApplicationFormDaoHelper {
 	}
 
 	@SuppressWarnings("unused")
-	private void sendEmail(ApplicationFormHeader application,
-			InvoiceDto invoice, User user) {
+	private void sendEmail(ApplicationFormHeader application, InvoiceDto invoice, User user) {
 		try {
 			byte[] invoicePDF = generateInvoicePDF(application, invoice);
 			String documentNo = "ProForma Invoice_" + application.getSurname();
@@ -213,16 +211,11 @@ public class ApplicationFormDaoHelper {
 
 			String subject = "ICPAK Member Registration";
 			// Email Template parse and map variables
-			InputStream is = EmailServiceHelper.class.getClassLoader()
-					.getResourceAsStream("application-email.html");
+			InputStream is = EmailServiceHelper.class.getClassLoader().getResourceAsStream("application-email.html");
 			String html = IOUtils.toString(is);
 			html = new DocumentHTMLMapper().map(doc, html);
-			EmailServiceHelper.sendEmail(
-					html,
-					"RE: ICPAK Member Registration",
-					Arrays.asList(application.getEmail()),
-					Arrays.asList(application.getSurname() + " "
-							+ application.getOtherNames()), attachment);
+			EmailServiceHelper.sendEmail(html, "RE: ICPAK Member Registration", Arrays.asList(application.getEmail()),
+					Arrays.asList(application.getSurname() + " " + application.getOtherNames()), attachment);
 
 			// trxHelper.charge(user.getMember() == null ? null :
 			// user.getMember()
@@ -235,27 +228,22 @@ public class ApplicationFormDaoHelper {
 
 	}
 
-	public byte[] generateInvoicePDF(ApplicationFormHeader application,
-			InvoiceDto invoice) throws FileNotFoundException, IOException,
-			SAXException, ParserConfigurationException,
+	public byte[] generateInvoicePDF(ApplicationFormHeader application, InvoiceDto invoice)
+			throws FileNotFoundException, IOException, SAXException, ParserConfigurationException,
 			FactoryConfigurationError, DocumentException {
 		Doc doc = generateEmailValues(application, invoice);
 		// PDF Invoice Generation
-		InputStream inv = EmailServiceHelper.class.getClassLoader()
-				.getResourceAsStream("registration-invoice.html");
+		InputStream inv = EmailServiceHelper.class.getClassLoader().getResourceAsStream("registration-invoice.html");
 		String invoiceHTML = IOUtils.toString(inv);
-		byte[] invoicePDF = new HTMLToPDFConvertor().convert(doc, new String(
-				invoiceHTML));
+		byte[] invoicePDF = new HTMLToPDFConvertor().convert(doc, new String(invoiceHTML));
 		return invoicePDF;
 	}
 
-	private Doc generateEmailValues(ApplicationFormHeader application,
-			InvoiceDto invoice) {
+	private Doc generateEmailValues(ApplicationFormHeader application, InvoiceDto invoice) {
 		Map<String, Object> values = new HashMap<String, Object>();
 		values.put("companyName", application.getEmployer());
-		values.put("companyAddress", application.getAddress1() + " "
-				+ application.getPostCode() + " " + application.getResidence()
-				+ "," + application.getCountry());
+		values.put("companyAddress", application.getAddress1() + " " + application.getPostCode() + " "
+				+ application.getResidence() + "," + application.getCountry());
 		values.put("quoteNo", invoice.getDocumentNo());
 		values.put("date", formatter.format(invoice.getDate()));
 		values.put("firstName", application.getOtherNames());
@@ -270,8 +258,7 @@ public class ApplicationFormDaoHelper {
 		line.put("description", lineDto.getDescription());
 		line.put("unitPrice", numberFormat.format(lineDto.getUnitPrice()));
 		line.put("amount", numberFormat.format(lineDto.getTotalAmount()));
-		values.put("totalAmount",
-				numberFormat.format(invoice.getInvoiceAmount()));
+		values.put("totalAmount", numberFormat.format(invoice.getInvoiceAmount()));
 		doc.addDetail(new DocumentLine("invoiceDetails", line));
 
 		return doc;
@@ -280,14 +267,12 @@ public class ApplicationFormDaoHelper {
 
 	private InvoiceDto generateInvoice(ApplicationFormHeader application) {
 		ApplicationType type = application.getApplicationType();
-		ApplicationCategory category = applicationDao
-				.findApplicationCategory(type);
+		ApplicationCategory category = applicationDao.findApplicationCategory(type);
 
 		if (category == null) {
 			// throw new
 			// NullPointerException("Application Category "+type+" not found");
-			throw new ServiceException(ErrorCodes.NOTFOUND,
-					"Application Category '" + type + "'");
+			throw new ServiceException(ErrorCodes.NOTFOUND, "Application Category '" + type + "'");
 		}
 
 		String documentNo = "ProForma Invoice_" + application.getSurname();
@@ -297,18 +282,15 @@ public class ApplicationFormDaoHelper {
 		dto.setDocumentNo(documentNo);
 		dto.setAmount(category.getApplicationAmount());
 		dto.setCompanyName(application.getEmployer());
-		dto.setCompanyAddress(application.getAddress1() + "-"
-				+ application.getPostCode() + " " + application.getResidence()
-				+ "," + application.getCountry());
+		dto.setCompanyAddress(application.getAddress1() + "-" + application.getPostCode() + " "
+				+ application.getResidence() + "," + application.getCountry());
 		dto.setPhoneNumber(application.getContactTelephone());
-		dto.setContactName(application.getSurname() + " "
-				+ application.getOtherNames());
+		dto.setContactName(application.getSurname() + " " + application.getOtherNames());
 		dto.setDate(new Date().getTime());
 
-		InvoiceLineDto invLine = new InvoiceLineDto(dto.getContactName() + ", "
-				+ "'" + category.getType().getDisplayName()
-				+ "' member registration fee", category.getApplicationAmount(),
-				category.getApplicationAmount());
+		InvoiceLineDto invLine = new InvoiceLineDto(
+				dto.getContactName() + ", " + "'" + category.getType().getDisplayName() + "' member registration fee",
+				category.getApplicationAmount(), category.getApplicationAmount());
 		invLine.setQuantity(1);
 		dto.addLine(invLine);
 
@@ -317,10 +299,8 @@ public class ApplicationFormDaoHelper {
 		return dto;
 	}
 
-	public void updateApplication(String applicationId,
-			ApplicationFormHeaderDto dto) {
-		ApplicationFormHeader po = applicationDao.findByApplicationId(
-				applicationId, true);
+	public void updateApplication(String applicationId, ApplicationFormHeaderDto dto) {
+		ApplicationFormHeader po = applicationDao.findByApplicationId(applicationId, true);
 		User user = applicationDao.findByRefId(po.getUserRefId(), User.class);
 		updateUserFromApplicationFormChanges(po, user);
 		// Fields only generated once
@@ -331,12 +311,10 @@ public class ApplicationFormDaoHelper {
 		if (dto.getApplicationStatus() != null) {
 			isApplicationReadyForErp = (po.getApplicationStatus() == ApplicationStatus.SUBMITTED)
 					&& (dto.getApplicationStatus() == ApplicationStatus.PROCESSING);
-			isApplicationReadyForEmail = ((po.getApplicationStatus() != dto
-					.getApplicationStatus()) || (dto.getManagementComment() != null));
-			logger.info("Is the Application Ready For Email::"
-					+ isApplicationReadyForEmail);
-			logger.info("Is the Application ready for ERP::"
-					+ isApplicationReadyForErp);
+			isApplicationReadyForEmail = ((po.getApplicationStatus() != dto.getApplicationStatus())
+					|| (dto.getManagementComment() != null));
+			logger.info("Is the Application Ready For Email::" + isApplicationReadyForEmail);
+			logger.info("Is the Application ready for ERP::" + isApplicationReadyForErp);
 
 			// Send Review notification
 			if (isApplicationReadyForEmail && !isApplicationReadyForErp) {
@@ -345,11 +323,9 @@ public class ApplicationFormDaoHelper {
 		}
 
 		// Post To ERP
-		if (dto.getErpCode() != null && !dto.getErpCode().isEmpty()
-				&& isApplicationReadyForErp) {
+		if (dto.getErpCode() != null && !dto.getErpCode().isEmpty() && isApplicationReadyForErp) {
 			try {
-				String successMessage = postApplicationToERP(dto.getErpCode(),
-						prepareErpDto(dto));
+				String successMessage = postApplicationToERP(dto.getErpCode(), prepareErpDto(dto));
 				if (successMessage.equals("success")) {
 					sendReviewEmail(dto);
 					logger.warn("This application was synced and email has been sent to applicant..");
@@ -386,8 +362,7 @@ public class ApplicationFormDaoHelper {
 		applicationDao.updateApplication(po);
 	}
 
-	public User updateUserFromApplicationFormChanges(
-			ApplicationFormHeader application, User user) {
+	public User updateUserFromApplicationFormChanges(ApplicationFormHeader application, User user) {
 		logger.info("Updating User Object" + user.getRefId());
 		User userToBeUpdated = user;
 		userToBeUpdated.getUserData().setFirstName(application.getSurname());
@@ -402,8 +377,7 @@ public class ApplicationFormDaoHelper {
 	private Properties props = new Properties();
 
 	private void sendReviewEmail(ApplicationFormHeaderDto application) {
-		logger.info("------Sending review email for "
-				+ application.getSurname());
+		logger.info("------Sending review email for " + application.getSurname());
 		boolean isSubmitted = application.getApplicationStatus() == ApplicationStatus.SUBMITTED;
 		boolean hasPaid = application.getPaymentStatus() == PaymentStatus.PAID;
 		boolean hasNotPaid = application.getPaymentStatus() == PaymentStatus.NOTPAID;
@@ -412,8 +386,7 @@ public class ApplicationFormDaoHelper {
 		boolean isBeingProcessed = application.getApplicationStatus() == ApplicationStatus.PROCESSING;
 		boolean isCancelled = application.getApplicationStatus() == ApplicationStatus.CANCELLED;
 
-		String subject = "Your ICPAK Application for Membership #"
-				+ application.getId() + " ";
+		String subject = "Your ICPAK Application for Membership #" + application.getId() + " ";
 		String action = "";
 
 		if (isPending) {
@@ -424,8 +397,7 @@ public class ApplicationFormDaoHelper {
 			action = "  has been cancelled because of the following reason:<br/>";
 		} else if (isBeingProcessed) {
 			try {
-				props.load(ApplicationFormDaoHelper.class.getClassLoader()
-						.getResourceAsStream("bootstrap.properties"));
+				props.load(ApplicationFormDaoHelper.class.getClassLoader().getResourceAsStream("bootstrap.properties"));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -437,8 +409,7 @@ public class ApplicationFormDaoHelper {
 					nextRQA = formatter2.parse(nextRQAString.toString());
 					subject = subject + " is Being Processed!";
 					action = " is now being processed. Please note that the next Registration and Quality Assuarance"
-							+ " meeting is on "
-							+ ServerDateUtils.format(nextRQA, formatter)
+							+ " meeting is on " + ServerDateUtils.format(nextRQA, formatter)
 							+ " and you will be notified when the status changes.";
 				}
 				logger.info(action);
@@ -463,36 +434,23 @@ public class ApplicationFormDaoHelper {
 		}
 
 		String link = settings.getApplicationPath();
-		String additionLink = "<p><a href=" + link
-				+ ">Go to my Application</a>" + "</p>";
+		String additionLink = "<p><a href=" + link + ">Go to my Application</a>" + "</p>";
 
 		String noReplyMessage = "<p><Strong>Please DO NOT REPLY to this email. "
-				+ "In case of any queries, kindly get in touch with us via "
-				+ "memberservices@icpak.com" + "</Strong></p>";
+				+ "In case of any queries, kindly get in touch with us via " + "memberservices@icpak.com"
+				+ "</Strong></p>";
 
-		String body = "Dear "
-				+ application.getSurname()
-				+ " "
-				+ application.getOtherNames()
-				+ ","
-				+ "<br/> "
-				+ "<p>Your ICPAK Application for Membership "
-				+ action
-				+ (application.getManagementComment() == null ? "" : " <br/>'"
-						+ application.getManagementComment() + "'")
-				+ additionLink + "</p>" + noReplyMessage
-				+ "<br/>Thank you,<br/>Member Services";
+		String body = "Dear " + application.getSurname() + " " + application.getOtherNames() + "," + "<br/> "
+				+ "<p>Your ICPAK Application for Membership " + action
+				+ (application.getManagementComment() == null ? ""
+						: " <br/>'" + application.getManagementComment() + "'")
+				+ additionLink + "</p>" + noReplyMessage + "<br/>Thank you,<br/>Member Services";
 		try {
-			EmailServiceHelper
-					.sendEmail(body, subject, Arrays.asList(
-							application.getEmail(), "itsupport@icpak.com"),
-							Arrays.asList(application.getSurname() + " "
-									+ application.getOtherNames(),
-									"ICPAK ICT SUPPORT"));
+			EmailServiceHelper.sendEmail(body, subject, Arrays.asList(application.getEmail(), "itsupport@icpak.com"),
+					Arrays.asList(application.getSurname() + " " + application.getOtherNames(), "ICPAK ICT SUPPORT"));
 
 		} catch (Exception e) {
-			logger.info("Review Email for " + application.getEmail()
-					+ " failed. Cause: " + e.getMessage());
+			logger.info("Review Email for " + application.getEmail() + " failed. Cause: " + e.getMessage());
 			e.printStackTrace();
 			// throw new Run
 		}
@@ -501,16 +459,16 @@ public class ApplicationFormDaoHelper {
 
 	private ApplicationERPDto prepareErpDto(ApplicationFormHeaderDto passedDto) {
 		ApplicationFormHeaderDto application = passedDto;
-		List<ApplicationFormEducationalDto> educationDetails = eduHelper
-				.getAllEducationEntrys("", passedDto.getRefId(), 0, 100);
-		List<ApplicationFormTrainingDto> trainings = trainingHelper
-				.getAllTrainingEntrys("", passedDto.getRefId(), 0, 100);
-		List<ApplicationFormAccountancyDto> accountancy = accountancyHelper
-				.getAllAccountancyEntrys("", passedDto.getRefId(), 0, 100);
-		List<ApplicationFormSpecializationDto> specializations = specializationHelper
-				.getAllSpecializationEntrys("", passedDto.getRefId(), 0, 100);
-		List<ApplicationFormEmploymentDto> employment = specializationHelper
-				.getAllEmploymentEntrys("", passedDto.getRefId(), 0, 100);
+		List<ApplicationFormEducationalDto> educationDetails = eduHelper.getAllEducationEntrys("", passedDto.getRefId(),
+				0, 100);
+		List<ApplicationFormTrainingDto> trainings = trainingHelper.getAllTrainingEntrys("", passedDto.getRefId(), 0,
+				100);
+		List<ApplicationFormAccountancyDto> accountancy = accountancyHelper.getAllAccountancyEntrys("",
+				passedDto.getRefId(), 0, 100);
+		List<ApplicationFormSpecializationDto> specializations = specializationHelper.getAllSpecializationEntrys("",
+				passedDto.getRefId(), 0, 100);
+		List<ApplicationFormEmploymentDto> employment = specializationHelper.getAllEmploymentEntrys("",
+				passedDto.getRefId(), 0, 100);
 
 		application.setApplicationNo(passedDto.getErpCode());
 		for (ApplicationFormEducationalDto education : educationDetails) {
@@ -543,11 +501,10 @@ public class ApplicationFormDaoHelper {
 	public void deleteApplication(String applicationId) {
 	}
 
-	public List<ApplicationFormHeaderDto> getAllApplications(Integer offset,
-			Integer limit, String uri, String searchTerm) {
+	public List<ApplicationFormHeaderDto> getAllApplications(Integer offset, Integer limit, String uri,
+			String searchTerm) {
 
-		List<ApplicationFormHeader> applications = applicationDao
-				.getAllApplications(offset, limit, searchTerm);
+		List<ApplicationFormHeader> applications = applicationDao.getAllApplications(offset, limit, searchTerm);
 
 		List<ApplicationFormHeaderDto> rtn = new ArrayList<>();
 		for (ApplicationFormHeader application : applications) {
@@ -557,17 +514,13 @@ public class ApplicationFormDaoHelper {
 		return rtn;
 	}
 
-	public List<ApplicationFormHeaderDto> getAllApplicationNativeQuery(
-			Integer offset, Integer limit, String searchTerm,
+	public List<ApplicationFormHeaderDto> getAllApplicationNativeQuery(Integer offset, Integer limit, String searchTerm,
 			String applicationStatus, String paymentStatus) {
-		return applicationDao.getAllApplicationDtos(offset, limit, searchTerm,
-				applicationStatus, paymentStatus);
+		return applicationDao.getAllApplicationDtos(offset, limit, searchTerm, applicationStatus, paymentStatus);
 	}
 
-	public List<ApplicationFormHeaderDto> importMembers(Integer offset,
-			Integer limit) {
-		List<MemberImport> applications = applicationDao.importMembers(offset,
-				limit);
+	public List<ApplicationFormHeaderDto> importMembers(Integer offset, Integer limit) {
+		List<MemberImport> applications = applicationDao.importMembers(offset, limit);
 		List<ApplicationFormHeaderDto> rtn = new ArrayList<>();
 
 		for (MemberImport member : applications) {
@@ -581,18 +534,14 @@ public class ApplicationFormDaoHelper {
 			User user = userDao.findUserByMemberNo(member.getMemberNo());
 			if (user != null && user.getMember() != null) {
 				// Update User Information - If Stale
-				user.getMember()
-						.setRegistrationDate(member.getDateRegistered());
+				user.getMember().setRegistrationDate(member.getDateRegistered());
 				user.getMember().setPractisingNo(member.getPractisingNo());
 				user.getMember().setCustomerType(member.getCustomerType());
-				user.getMember().setCustomerPostingGroup(
-						member.getCustomerPostingGroup());
+				user.getMember().setCustomerPostingGroup(member.getCustomerPostingGroup());
 				if (member.getStatus() == 1) {
-					user.getMember().setMemberShipStatus(
-							MembershipStatus.ACTIVE);
+					user.getMember().setMemberShipStatus(MembershipStatus.ACTIVE);
 				} else {
-					user.getMember().setMemberShipStatus(
-							MembershipStatus.INACTIVE);
+					user.getMember().setMemberShipStatus(MembershipStatus.INACTIVE);
 				}
 				// Update Member Information
 				po.setUserRefId(user.getRefId());
@@ -602,8 +551,7 @@ public class ApplicationFormDaoHelper {
 				System.err.println("Id No::" + po.getIdNumber());
 				// Create this as an Application
 				applicationDao.save(po);
-				logger.info("Successfully saved application for member:::"
-						+ member.getMemberNo() + " and refId ::"
+				logger.info("Successfully saved application for member:::" + member.getMemberNo() + " and refId ::"
 						+ po.getRefId() + "User RefId::" + user.getRefId());
 			}
 		}
@@ -612,16 +560,13 @@ public class ApplicationFormDaoHelper {
 	}
 
 	public ApplicationFormHeader getApplicationById(String applicationId) {
-		ApplicationFormHeader application = applicationDao
-				.findByApplicationId(applicationId);
+		ApplicationFormHeader application = applicationDao.findByApplicationId(applicationId);
 		if (application == null) {
-			throw new ServiceException(ErrorCodes.NOTFOUND, "'" + applicationId
-					+ "'");
+			throw new ServiceException(ErrorCodes.NOTFOUND, "'" + applicationId + "'");
 		}
 
 		// Check if there is a corresponding invoice if this is pending;
-		if (application.getInvoiceRef() == null
-				|| application.getInvoiceRef().isEmpty()) {
+		if (application.getInvoiceRef() == null || application.getInvoiceRef().isEmpty()) {
 			// Generate a New Invoice
 			InvoiceDto invoice = generateInvoice(application);
 			application.setInvoiceRef(invoice.getRefId());
@@ -635,8 +580,7 @@ public class ApplicationFormDaoHelper {
 	}
 
 	public List<ApplicationCategoryDto> getAllCategories() {
-		List<ApplicationCategory> categories = applicationDao
-				.getAllCategories();
+		List<ApplicationCategory> categories = applicationDao.getAllCategories();
 
 		List<ApplicationCategoryDto> dtos = new ArrayList<>();
 		for (ApplicationCategory c : categories) {
@@ -681,9 +625,8 @@ public class ApplicationFormDaoHelper {
 		return applicationDao.getApplicationsSummary();
 	}
 
-	public String postApplicationToERP(String erpAppId,
-			ApplicationERPDto application) throws URISyntaxException,
-			ParseException, JSONException {
+	public String postApplicationToERP(String erpAppId, ApplicationERPDto application)
+			throws URISyntaxException, ParseException, JSONException {
 		final HttpClient httpClient = new DefaultHttpClient();
 
 		JSONObject payLoad = new JSONObject(application);
@@ -692,9 +635,8 @@ public class ApplicationFormDaoHelper {
 		final List<NameValuePair> qparams = new ArrayList<NameValuePair>();
 		qparams.add(new BasicNameValuePair("app_no", erpAppId));
 
-		final URI uri = URIUtils.createURI("http", "41.139.138.165/", -1,
-				"members/newapp.php", URLEncodedUtils.format(qparams, "UTF-8"),
-				null);
+		final URI uri = URIUtils.createURI("http", "41.139.138.165/", -1, "members/newapp.php",
+				URLEncodedUtils.format(qparams, "UTF-8"), null);
 		final HttpPost request = new HttpPost();
 		request.setURI(uri);
 
@@ -706,13 +648,11 @@ public class ApplicationFormDaoHelper {
 		try {
 			request.setHeader("accept", "application/json");
 			@SuppressWarnings("deprecation")
-			StringEntity stringEntity = new StringEntity(payLoad.toString(),
-					"application/json", "UTF-8");
+			StringEntity stringEntity = new StringEntity(payLoad.toString(), "application/json", "UTF-8");
 			request.setEntity(stringEntity);
 
 			response = httpClient.execute(request);
-			BufferedReader rd = new BufferedReader(new InputStreamReader(
-					response.getEntity().getContent()));
+			BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 
 			result = new StringBuffer();
 
@@ -727,18 +667,15 @@ public class ApplicationFormDaoHelper {
 		return result.toString();
 	}
 
-	public Integer getApplicationCount(String searchTerm, String paymentStatus,
-			String applicationStatus) {
-		return applicationDao.getApplicationCount(searchTerm, paymentStatus,
-				applicationStatus);
+	public Integer getApplicationCount(String searchTerm, String paymentStatus, String applicationStatus) {
+		return applicationDao.getApplicationCount(searchTerm, paymentStatus, applicationStatus);
 	}
 
 	public Integer getApplicationCount() {
 		return 1;
 	}
 
-	public List<ApplicationFormHeaderDto> importMembers(
-			List<MemberImport> memberImports) {
+	public List<ApplicationFormHeaderDto> importMembers(List<MemberImport> memberImports) {
 		List<ApplicationFormHeaderDto> rtn = new ArrayList<>();
 
 		for (MemberImport memberIpmort : memberImports) {
@@ -752,33 +689,25 @@ public class ApplicationFormDaoHelper {
 			User user = userDao.findUserByMemberNo(memberIpmort.getMemberNo());
 			if (user != null && user.getMember() != null) {
 				// Update User Information - If Stale
-				user.getMember().setRegistrationDate(
-						memberIpmort.getDateRegistered());
-				user.getMember()
-						.setPractisingNo(memberIpmort.getPractisingNo());
-				user.getMember()
-						.setCustomerType(memberIpmort.getCustomerType());
-				user.getMember().setCustomerPostingGroup(
-						memberIpmort.getCustomerPostingGroup());
+				user.getMember().setRegistrationDate(memberIpmort.getDateRegistered());
+				user.getMember().setPractisingNo(memberIpmort.getPractisingNo());
+				user.getMember().setCustomerType(memberIpmort.getCustomerType());
+				user.getMember().setCustomerPostingGroup(memberIpmort.getCustomerPostingGroup());
 				if (memberIpmort.getStatus() == 1) {
-					user.getMember().setMemberShipStatus(
-							MembershipStatus.ACTIVE);
+					user.getMember().setMemberShipStatus(MembershipStatus.ACTIVE);
 				} else {
-					user.getMember().setMemberShipStatus(
-							MembershipStatus.INACTIVE);
+					user.getMember().setMemberShipStatus(MembershipStatus.INACTIVE);
 				}
 				// Update Member Information
 				po.setUserRefId(user.getRefId());
 
-				System.err.println("Date of Birth::"
-						+ memberIpmort.getDateOfBirth());
+				System.err.println("Date of Birth::" + memberIpmort.getDateOfBirth());
 				System.err.println("Email::" + memberIpmort.getEmail());
 				System.err.println("Id No::" + po.getIdNumber());
 				// Create this as an Application
 				applicationDao.save(po);
-				logger.info("Successfully saved application for member:::"
-						+ memberIpmort.getMemberNo() + " and refId ::"
-						+ po.getRefId() + "User RefId::" + user.getRefId());
+				logger.info("Successfully saved application for member:::" + memberIpmort.getMemberNo()
+						+ " and refId ::" + po.getRefId() + "User RefId::" + user.getRefId());
 			} else {
 				logger.warn(" MEMBER NO = = = == " + memberIpmort.getMemberNo());
 
@@ -805,8 +734,7 @@ public class ApplicationFormDaoHelper {
 
 				userDao.createUser(user);
 
-				User userInDb = userDao.findUserByMemberNo(memberIpmort
-						.getMemberNo());
+				User userInDb = userDao.findUserByMemberNo(memberIpmort.getMemberNo());
 
 				po.setUserRefId(user.getRefId());
 
@@ -815,8 +743,7 @@ public class ApplicationFormDaoHelper {
 				member.setRegistrationDate(memberIpmort.getDateRegistered());
 				member.setPractisingNo(memberIpmort.getPractisingNo());
 				member.setCustomerType(memberIpmort.getCustomerType());
-				member.setCustomerPostingGroup(memberIpmort
-						.getCustomerPostingGroup());
+				member.setCustomerPostingGroup(memberIpmort.getCustomerPostingGroup());
 				member.setUserRefId(user.getRefId());
 				member.setUser(userInDb);
 				if (memberIpmort.getStatus() == 1) {
@@ -848,21 +775,17 @@ public class ApplicationFormDaoHelper {
 
 		for (MemberImport memberImport : newMembers) {
 			// Is there a user with the above email address -
-			// Convert him to a member and save his member Detail
 			User user = null;
 			if (!memberImport.getEmail().isEmpty()) {
-				List<User> users = userDao
-						.findByUserActivationEmail(memberImport.getEmail());
+				List<User> users = userDao.findByUserActivationEmail(memberImport.getEmail());
 				if (users.size() == 1) {
 					user = users.get(0);
 				} else if (users.size() == 2) {
-					System.err.println("Found 2 records for user with email::"
-							+ memberImport.getEmail());
+					System.err.println("Found 2 records for user with email::" + memberImport.getEmail());
 					// Deactivate the Associate Account
 					for (User u : users) {
 						if (u.getMemberNo().contains("Assoc/")) {
-							u.getMember().setMemberShipStatus(
-									MembershipStatus.INACTIVE);
+							u.getMember().setMemberShipStatus(MembershipStatus.INACTIVE);
 							u.setIsActive(0);
 							userDao.save(u);
 						} else {
@@ -888,23 +811,14 @@ public class ApplicationFormDaoHelper {
 				Role role = roleDao.getByName("MEMBER");
 				user.addRole(role);
 
-				// Find the related Application Record for Updating
-				// ApplicationFormHeader application = applicationDao
-				// .getApplicationByUserRef(user.getRefId());
-				// if (memberImport.getCustomerType() != null) {
-				// application.setApplicationType(ApplicationType
-				// .valueOf(memberImport.getCustomerType()));
-				// }
-				// applicationDao.save(application);
-
-				Member m = memberDaoHelper.findByMemberNo(memberImport
-						.getMemberNo());
+				Member m = memberDaoHelper.findByMemberNo(memberImport.getMemberNo());
 				// Check if this member has been imported before...
 				if (m == null) {
 					m = new Member();
 				}
 				m.setMemberNo(memberImport.getMemberNo());
 				m.setRegistrationDate(memberImport.getDateRegistered());
+				m.setUserRefId(user.getRefId());
 				if (memberImport.getStatus() == 0) {
 					m.setMemberShipStatus(MembershipStatus.ACTIVE);
 				} else if (memberImport.getStatus() == 1) {
@@ -915,22 +829,18 @@ public class ApplicationFormDaoHelper {
 				userDao.save(user);
 				existingCounter = existingCounter + 1;
 			} else {
-				System.err.println("User Not found>>>"
-						+ memberImport.getEmail());
+				System.err.println("User Not found>>>" + memberImport.getEmail());
 				createNewMember(memberImport);
 				newMembersCounter = newMembersCounter + 1;
 			}
 		}
-		System.err.println("Successfully Imported ::" + existingCounter
-				+ " Members who existed.");
-		System.err.println("Successfully Imported ::" + newMembersCounter
-				+ " Members who did not exist.");
+		System.err.println("Successfully Imported ::" + existingCounter + " Members who existed.");
+		System.err.println("Successfully Imported ::" + newMembersCounter + " Members who did not exist.");
 		System.err.println("Total ::" + (existingCounter + newMembersCounter));
 	}
 
 	public void createNewMember(MemberImport memberImport) {
-		System.err.println("Creating a new member>>>"
-				+ memberImport.getMemberNo());
+		System.err.println("Creating a new member>>>" + memberImport.getMemberNo());
 
 		// Copy into PO
 		ApplicationFormHeader applicationForm = new ApplicationFormHeader();
@@ -958,8 +868,7 @@ public class ApplicationFormDaoHelper {
 		user.setUsername(memberImport.getEmail());
 		user.setUserData(bioData);
 		userDao.createUser(user);
-		List<User> usersInDb = userDao.findUsersByMemberNo(memberImport
-				.getMemberNo());
+		List<User> usersInDb = userDao.findUsersByMemberNo(memberImport.getMemberNo());
 		User userInDb = null;
 		if (!usersInDb.isEmpty() && usersInDb != null) {
 			userInDb = usersInDb.get(0);
@@ -967,8 +876,7 @@ public class ApplicationFormDaoHelper {
 		applicationForm.setUserRefId(user.getRefId());
 
 		// Create a new member record..
-		Member member = memberDaoHelper.findByMemberNo(memberImport
-				.getMemberNo());
+		Member member = memberDaoHelper.findByMemberNo(memberImport.getMemberNo());
 		// Check if this member has been imported before...
 		if (member == null) {
 			member = new Member();
@@ -993,26 +901,22 @@ public class ApplicationFormDaoHelper {
 		}
 	}
 
-	public List<ApplicationFormHeaderDto> importMissingMembers(
-			List<MemberImport> memberImports) {
+	public List<ApplicationFormHeaderDto> importMissingMembers(List<MemberImport> memberImports) {
 		List<ApplicationFormHeaderDto> rtn = new ArrayList<>();
 
 		for (MemberImport memberImport : memberImports) {
-			Member memberAvailable = memberDaoHelper
-					.findByMemberNo(memberImport.getMemberNo());
+			Member memberAvailable = memberDaoHelper.findByMemberNo(memberImport.getMemberNo());
 
 			// Member Not found..
 			if (memberAvailable == null) {
-				logger.info("Member NAME: " + memberImport.getName() + " M/No:"
-						+ memberImport);
+				logger.info("Member NAME: " + memberImport.getName() + " M/No:" + memberImport);
 				// Copy into PO
 				ApplicationFormHeader po = new ApplicationFormHeader();
 				po.copyFrom(memberImport.toDTO());
 				po.setInvoiceRef("jnjndjjkkkkkkkk");
 				po.setApplicationStatus(ApplicationStatus.APPROVED);
 
-				logger.error(" MEMBER NO = = = == "
-						+ memberImport.getMemberNo());
+				logger.error(" MEMBER NO = = = == " + memberImport.getMemberNo());
 
 				BioData bioData = new BioData();
 				if (memberImport.getGender() == 0) {
@@ -1033,8 +937,7 @@ public class ApplicationFormDaoHelper {
 				user.setUserData(bioData);
 				userDao.createUser(user);
 
-				List<User> usersInDb = userDao.findUsersByMemberNo(memberImport
-						.getMemberNo());
+				List<User> usersInDb = userDao.findUsersByMemberNo(memberImport.getMemberNo());
 				User userInDb = null;
 				if (!usersInDb.isEmpty() && usersInDb != null) {
 					userInDb = usersInDb.get(0);
@@ -1048,8 +951,7 @@ public class ApplicationFormDaoHelper {
 				member.setRegistrationDate(memberImport.getDateRegistered());
 				member.setPractisingNo(memberImport.getPractisingNo());
 				member.setCustomerType(memberImport.getCustomerType());
-				member.setCustomerPostingGroup(memberImport
-						.getCustomerPostingGroup());
+				member.setCustomerPostingGroup(memberImport.getCustomerPostingGroup());
 				member.setUserRefId(user.getRefId());
 				member.setUser(userInDb);
 				if (memberImport.getStatus() == 0) {
@@ -1066,8 +968,7 @@ public class ApplicationFormDaoHelper {
 				}
 
 				logger.error(" MEMBER ID = = = == " + memberImport.getId());
-				logger.error(" Registration Date === "
-						+ memberImport.getDateRegistered());
+				logger.error(" Registration Date === " + memberImport.getDateRegistered());
 			}
 		}
 
@@ -1077,8 +978,7 @@ public class ApplicationFormDaoHelper {
 
 	public String subribeToBranch(String applicationRefId, String branchName) {
 		Branch subcribedBranch = Branch.valueOf(branchName);
-		ApplicationFormHeader application = applicationDao
-				.findByApplicationId(applicationRefId);
+		ApplicationFormHeader application = applicationDao.findByApplicationId(applicationRefId);
 		if (application != null && subcribedBranch != null) {
 			application.setBranch(subcribedBranch.name());
 			applicationDao.save(application);

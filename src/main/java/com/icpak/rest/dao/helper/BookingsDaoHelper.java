@@ -1020,6 +1020,8 @@ public class BookingsDaoHelper {
 		Delegate delegate = dao.findByRefId(delegateId, Delegate.class);
 		Event event = dao.findByRefId(delegate.getBooking().getEvent().getRefId(), Event.class);
 		Booking booking = delegate.getBooking();
+		/* Updating attendance and CPD */
+		String applicationContext = settings.getProperty("app_context");
 
 		/* Updating Booking */
 		if (booking != null) {
@@ -1027,60 +1029,21 @@ public class BookingsDaoHelper {
 			if ((delegateDto.getBookingPaymentStatus() == PaymentStatus.PAID)
 					|| (delegateDto.getBookingPaymentStatus() == PaymentStatus.NOTPAID)
 					|| (delegateDto.getBookingPaymentStatus() == PaymentStatus.Credit)) {
-				// Copy details from the Dto....
-				delegate.setLpoNo(delegateDto.getLpoNo());
-				delegate.setIsCredit(delegateDto.getIsCredit());
-				delegate.setReceiptNo(delegateDto.getReceiptNo());
-				delegate.setClearanceNo(delegateDto.getClearanceNo());
-				delegate.setPaymentStatus(delegateDto.getDelegatePaymentStatus());
-				delegate.setUpdatedBy(delegateDto.getUpdatedBy());
-				dao.save(delegate);
-
-				System.err.println("Successfully saved::" + delegate.getFullName());
-
-				int totalDelegates = booking.getDelegates().size();
-				int totalPaid = 0;
-				for (Delegate d : booking.getDelegates()) {
-					if (delegateDto.getBookingPaymentStatus() == PaymentStatus.PAID
-							|| (delegateDto.getBookingPaymentStatus() == PaymentStatus.Credit)) {
-						totalPaid = totalPaid + 1;
-					}
-				}
-
-				// Update Booking to PAID - If All the Delegates have Paid
-				if (totalPaid == totalDelegates) {
-					booking.setPaymentStatus(delegateDto.getBookingPaymentStatus());
-					booking.setUpdatedBy(delegateDto.getUpdatedBy());
-					dao.save(booking);
-				}
-				updateBookingStats(booking);
-				// updatePaymentStats(booking.getEvent().getRefId());
+				updatePaymentInfo(delegate, delegateDto, booking);
 			}
-			/*
-			 * Undo Booking Cancellation
-			 */
+			// Undo Cancellation
 			if ((delegateDto.getIsBookingActive() == 1)
 					&& ((booking.getIsActive() == 0) || delegate.getIsActive() == 0)) {
-				if ((booking.getIsActive() == 0)) {
-					booking.setIsActive(delegateDto.getIsBookingActive());
-					dao.save(booking);
-				} else if (delegate.getIsActive() == 0) {
-					delegate.setIsActive(1);
-					dao.save(delegate);
-				}
-				updateBookingStats(booking);
+				undoCancellation(booking, delegateDto, delegate);
 			}
-
 		} else {
 			System.err.println("Booking is null...cannot be updated!!");
 		}
 
-		/* Updating attendance and CPD */
-		String applicationContext = settings.getProperty("app_context");
-
 		// Member
 		if (delegate.getMemberRefId() != null && delegate.getAttendance() != delegateDto.getAttendance()
 				&& event.getType() != EventType.COURSE && applicationContext.equals("online")) {
+			cpdDao.updateCPDFromAttendance(delegate, delegate.getAttendance());
 			// send and SMS
 			Member member = dao.findByRefId(delegate.getMemberRefId(), Member.class);
 			String smsMessage = "Dear" + " " + delegateDto.getFullName() + ",Thank you for attending the "
@@ -1088,7 +1051,6 @@ public class BookingsDaoHelper {
 			smsIntergration.send(member.getUser().getPhoneNumber(), smsMessage);
 			delegate.copyFrom(delegateDto);
 			dao.save(delegate);
-			cpdDao.updateCPDFromAttendance(delegate, delegate.getAttendance());
 
 			// Non-Member
 		} else if (delegate.getMemberRefId() == null && delegate.getAttendance() != delegateDto.getAttendance()
@@ -1111,10 +1073,53 @@ public class BookingsDaoHelper {
 			}
 		}
 
-		// respons
+		// response
 		DelegateDto d = delegate.toDto();
 		d.setBookingPaymentStatus(booking.getPaymentStatus());
 		return d;
+	}
+
+	private void undoCancellation(Booking booking, DelegateDto delegateDto, Delegate delegate) {
+		if ((booking.getIsActive() == 0)) {
+			booking.setIsActive(delegateDto.getIsBookingActive());
+			dao.save(booking);
+		} else if (delegate.getIsActive() == 0) {
+			delegate.setIsActive(1);
+			dao.save(delegate);
+		}
+	}
+
+	public void updatePaymentInfo(Delegate delegate, DelegateDto delegateDto, Booking booking) {
+		// Copy details from the Dto....
+		delegate.setLpoNo(delegateDto.getLpoNo());
+		delegate.setIsCredit(delegateDto.getIsCredit());
+		delegate.setReceiptNo(delegateDto.getReceiptNo());
+		delegate.setClearanceNo(delegateDto.getClearanceNo());
+		delegate.setPaymentStatus(delegateDto.getDelegatePaymentStatus());
+		delegate.setUpdatedBy(delegateDto.getUpdatedBy());
+		dao.save(delegate);
+
+		logger.debug("Successfully saved::" + delegate.getFullName());
+
+		int totalDelegates = booking.getDelegates().size();
+		int totalPaid = 0;
+
+		for (Delegate d : booking.getDelegates()) {
+			DelegateDto del = d.toDto();
+			if (del.getBookingPaymentStatus() == PaymentStatus.PAID
+					|| (del.getBookingPaymentStatus() == PaymentStatus.Credit)) {
+				totalPaid = totalPaid + 1;
+			}
+		}
+
+		// Update Booking to PAID - If All the Delegates have Paid
+		if (totalPaid == totalDelegates) {
+			booking.setPaymentStatus(delegateDto.getBookingPaymentStatus());
+			booking.setUpdatedBy(delegateDto.getUpdatedBy());
+			dao.save(booking);
+		}
+		// updateBookingStats(booking);
+		// updatePaymentStats(booking.getEvent().getRefId());
 	}
 
 	public void sendConfirmationMessages(Booking booking) {
