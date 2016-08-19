@@ -42,6 +42,7 @@ import com.google.inject.persist.Transactional;
 import com.icpak.rest.IDUtils;
 import com.icpak.rest.dao.ApplicationFormDao;
 import com.icpak.rest.dao.InvoiceDaoHelper;
+import com.icpak.rest.dao.MemberDao;
 import com.icpak.rest.dao.RolesDao;
 import com.icpak.rest.dao.UsersDao;
 import com.icpak.rest.exceptions.ServiceException;
@@ -90,6 +91,8 @@ public class ApplicationFormDaoHelper {
 	RolesDao roleDao;
 	@Inject
 	UsersDao userDao;
+	@Inject
+	MemberDao memberDao;
 	@Inject
 	UsersDaoHelper usersDaoHelper;
 	@Inject
@@ -811,7 +814,7 @@ public class ApplicationFormDaoHelper {
 				Role role = roleDao.getByName("MEMBER");
 				user.addRole(role);
 
-				Member m = memberDaoHelper.findByMemberNo(memberImport.getMemberNo());
+				Member m = memberDao.findByUserId(user.getId());
 				// Check if this member has been imported before...
 				if (m == null) {
 					m = new Member();
