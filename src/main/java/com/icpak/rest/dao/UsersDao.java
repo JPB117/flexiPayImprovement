@@ -199,7 +199,7 @@ public class UsersDao extends BaseDao {
 	public List<User> findByUserActivationEmailExclusive(String email) {
 		List<User> users = getResultList(
 				getEntityManager().createQuery("from User u where u.isActive=1 and " + "u.email = :email1")
-						.setParameter("email1", email + "%").setParameter("email2", "%" + email));
+						.setParameter("email1", email));
 		return users;
 	}
 
