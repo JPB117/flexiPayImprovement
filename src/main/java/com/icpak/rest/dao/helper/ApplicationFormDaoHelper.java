@@ -780,17 +780,19 @@ public class ApplicationFormDaoHelper {
 			// Is there a user with the above email address -
 			User user = null;
 			if (!memberImport.getEmail().isEmpty()) {
-				List<User> users = userDao.findByUserActivationEmail(memberImport.getEmail());
+				List<User> users = userDao.findByUserActivationEmailExclusive(memberImport.getEmail());
 				if (users.size() == 1) {
 					user = users.get(0);
 				} else if (users.size() == 2) {
 					System.err.println("Found 2 records for user with email::" + memberImport.getEmail());
 					// Deactivate the Associate Account
 					for (User u : users) {
-						if (u.getMemberNo().contains("Assoc/")) {
-							u.getMember().setMemberShipStatus(MembershipStatus.INACTIVE);
-							u.setIsActive(0);
-							userDao.save(u);
+						if (u.getMemberNo() != null) {
+							if (u.getMemberNo().contains("Assoc/")) {
+								u.getMember().setMemberShipStatus(MembershipStatus.INACTIVE);
+								u.setIsActive(0);
+								userDao.save(u);
+							}
 						} else {
 							user = u;
 						}
