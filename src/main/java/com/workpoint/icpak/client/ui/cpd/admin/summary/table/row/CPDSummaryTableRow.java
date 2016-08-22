@@ -12,11 +12,9 @@ import com.workpoint.icpak.shared.model.MemberCPDDto;
 
 public class CPDSummaryTableRow extends RowWidget {
 
-	private static ActivitiesTableRowUiBinder uiBinder = GWT
-			.create(ActivitiesTableRowUiBinder.class);
+	private static ActivitiesTableRowUiBinder uiBinder = GWT.create(ActivitiesTableRowUiBinder.class);
 
-	interface ActivitiesTableRowUiBinder extends
-			UiBinder<Widget, CPDSummaryTableRow> {
+	interface ActivitiesTableRowUiBinder extends UiBinder<Widget, CPDSummaryTableRow> {
 	}
 
 	@UiField
@@ -45,7 +43,7 @@ public class CPDSummaryTableRow extends RowWidget {
 	public CPDSummaryTableRow(MemberCPDDto dto) {
 		initWidget(uiBinder.createAndBindUi(this));
 		aMemberNo.setText(dto.getMemberNo());
-		aMemberNo.setHref("#cpdmgt;p=memberCPD;refId=" + dto.getRefId());
+		aMemberNo.setHref("#cpdmgt;p=memberCPD;refId=" + dto.getRefId() + ";fullNames=" + dto.getMemberNames());
 		divMemberName.add(new InlineLabel(dto.getMemberNames()));
 		divCategory.add(new InlineLabel(dto.getCustomerType()));
 		divStatus.add(setStatus(dto.getStatus()));
@@ -58,8 +56,7 @@ public class CPDSummaryTableRow extends RowWidget {
 	}
 
 	private InlineLabel setStatus(String status) {
-		InlineLabel label = new InlineLabel((status.equals("1") ? "Active"
-				: "Inactive"));
+		InlineLabel label = new InlineLabel((status.equals("1") ? "Active" : "Inactive"));
 		if (status.equals("1")) {
 			label.addStyleName("label label-success");
 		} else {

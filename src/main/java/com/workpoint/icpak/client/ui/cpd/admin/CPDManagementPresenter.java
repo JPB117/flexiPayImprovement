@@ -15,6 +15,7 @@ import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -121,6 +122,10 @@ public class CPDManagementPresenter
 
 		CPDMemberTable getMemberSummaryTable();
 
+		void setMemberFullNames(String fullNames);
+
+		HasClickHandlers getBackButton();
+
 	}
 
 	@ProxyCodeSplit
@@ -140,6 +145,13 @@ public class CPDManagementPresenter
 	private String recordMemberRefId;
 	private String recordMemberNo;
 	protected String searchTerm = "";
+	@Inject
+	GenericPopupPresenter popup;
+	private Date startDate;
+	private Date endDate;
+	private String page;
+	protected int pageLimit = 20;
+	private String memberRefId;
 
 	ValueChangeHandler<String> cpdValueChangeHandler = new ValueChangeHandler<String>() {
 		@Override
@@ -296,6 +308,18 @@ public class CPDManagementPresenter
 			}
 		});
 
+		getView().getBackButton().addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				Map<String, String> params = new HashMap<String, String>();
+				params.put("searchTerm", searchTerm);
+				params.put("p", "memberCPD");
+				PlaceRequest placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.cpdmgt).with(params)
+						.build();
+				placeManager.revealPlace(placeRequest);
+			}
+		});
+
 	}
 
 	protected void showCreatePopup() {
@@ -377,14 +401,6 @@ public class CPDManagementPresenter
 		}, "Save", "Cancel");
 
 	}
-
-	@Inject
-	GenericPopupPresenter popup;
-	private Date startDate;
-	private Date endDate;
-	private String page;
-	protected int pageLimit = 10;
-	private String memberRefId;
 
 	protected void saveRecord(CPDDto dto) {
 		fireEvent(new ProcessingEvent());
@@ -556,6 +572,7 @@ public class CPDManagementPresenter
 		page = request.getParameter("p", "cpdReturns");
 		String refId = request.getParameter("refId", "");
 		searchTerm = request.getParameter("searchTerm", "");
+		String fullName = request.getParameter("fullNames", "");
 
 		// Set Tab to Front End
 		getView().setTab(page, refId);
@@ -589,6 +606,7 @@ public class CPDManagementPresenter
 				this.memberRefId = refId;
 				loadIndividualData(memberRefId, startDate, endDate);
 				getView().setIndividualMemberInitialDates(startDate, endDate);
+				getView().setMemberFullNames(fullName);
 			} else {
 				// Load Individual CPD - Return OR Archive
 				getView().setIndividualMemberInitialDates(startDate, endDate);

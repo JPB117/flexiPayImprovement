@@ -1,7 +1,9 @@
 package com.workpoint.icpak.client.ui.cpd.admin;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.LIElement;
@@ -19,6 +21,8 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
+import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
+import com.workpoint.icpak.client.place.NameTokens;
 import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.PagingPanel;
 import com.workpoint.icpak.client.ui.cpd.admin.summary.table.CPDSummaryTable;
@@ -38,8 +42,7 @@ import com.workpoint.icpak.shared.model.CPDSummaryDto;
 import com.workpoint.icpak.shared.model.Listable;
 import com.workpoint.icpak.shared.model.MemberCPDDto;
 
-public class CPDManagementView extends ViewImpl implements
-		CPDManagementPresenter.ICPDManagementView {
+public class CPDManagementView extends ViewImpl implements CPDManagementPresenter.ICPDManagementView {
 
 	private final Widget widget;
 	@UiField
@@ -97,13 +100,12 @@ public class CPDManagementView extends ViewImpl implements
 	public CPDManagementView(final Binder binder) {
 		widget = binder.createAndBindUi(this);
 
-		headerContainer.setTitles("Total CPD Requests", "Total Processed",
-				"Total Pending");
+		headerContainer.setTitles("Total CPD Requests", "Total Processed", "Total Pending");
 
 		aBack.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				History.back();
+				// History.back();
 			}
 		});
 
@@ -143,8 +145,7 @@ public class CPDManagementView extends ViewImpl implements
 				tblCPDReturns.createRow(new CPDAdminTableRow(dto));
 			}
 
-		} else if (loadType.equals("ALLARCHIVE")
-				|| loadType.equals("returnArchive")) {
+		} else if (loadType.equals("ALLARCHIVE") || loadType.equals("returnArchive")) {
 			for (CPDDto dto : result) {
 				tblCpdArchive.createRow(new CPDAdminTableRow(dto));
 			}
@@ -153,7 +154,7 @@ public class CPDManagementView extends ViewImpl implements
 
 	@Override
 	public void showDetailedView() {
-		
+
 	}
 
 	@Override
@@ -179,10 +180,8 @@ public class CPDManagementView extends ViewImpl implements
 
 	@Override
 	public void setInitialDates(DateRange thisYear, Date endDate) {
-		tblCPDReturns.setInitialDates(DateUtils.getDateByRange(thisYear, true),
-				endDate);
-		tblMemberTable.setInitialDates(
-				DateUtils.getDateByRange(thisYear, true), endDate);
+		tblCPDReturns.setInitialDates(DateUtils.getDateByRange(thisYear, true), endDate);
+		tblMemberTable.setInitialDates(DateUtils.getDateByRange(thisYear, true), endDate);
 	}
 
 	@Override
@@ -294,15 +293,13 @@ public class CPDManagementView extends ViewImpl implements
 			frmViewReturns.setCPD(result);
 			frmViewReturns.setAdminMode(true);
 			frmViewReturns.setBackHref("#cpdmgt;p=cpdReturns");
-			frmViewReturns.setMemberName(result.getFullNames() + " - "
-					+ result.getMemberRegistrationNo());
+			frmViewReturns.setMemberName(result.getFullNames() + " - " + result.getMemberRegistrationNo());
 		} else if (loadType.equals("returnArchive")) {
 			frmViewArchive.showForm(true);
 			frmViewArchive.setCPD(result);
 			frmViewArchive.setAdminMode(true);
 			frmViewArchive.setBackHref("#cpdmgt;p=returnArchive");
-			frmViewArchive.setMemberName(result.getFullNames() + " - "
-					+ result.getMemberRegistrationNo());
+			frmViewArchive.setMemberName(result.getFullNames() + " - " + result.getMemberRegistrationNo());
 		}
 	}
 
@@ -353,6 +350,14 @@ public class CPDManagementView extends ViewImpl implements
 	@Override
 	public String getArchiveSummaryTxtSearch() {
 		return tblCpdArchive.getSearchValue();
+	}
+
+	public void setMemberFullNames(String fullNames) {
+		spnMemberName.setInnerText(fullNames);
+	}
+
+	public HasClickHandlers getBackButton() {
+		return aBack;
 	}
 
 }

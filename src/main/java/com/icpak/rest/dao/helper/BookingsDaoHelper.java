@@ -981,7 +981,11 @@ public class BookingsDaoHelper {
 		Double price = event.getNonMemberPrice();
 		if (delegateDto.getMemberNo() != null) {
 			if (delegateDto.getMemberNo().contains("ASSOC/")) {
-				price = event.getAssociatePrice();
+				if (event.getAssociatePrice() != null) {
+					price = event.getAssociatePrice();
+				} else {
+					price = event.getMemberPrice();
+				}
 			} else {
 				price = event.getMemberPrice();
 			}
@@ -1020,31 +1024,38 @@ public class BookingsDaoHelper {
 		Delegate delegate = dao.findByRefId(delegateId, Delegate.class);
 		Event event = dao.findByRefId(delegate.getBooking().getEvent().getRefId(), Event.class);
 		Booking booking = delegate.getBooking();
-		/* Updating attendance and CPD */
 		String applicationContext = settings.getProperty("app_context");
 
-		/* Updating Booking */
+		/* 1. Payment Update - Is this a payment update? */
 		if (booking != null) {
 			// Update Payment Status
 			if ((delegateDto.getBookingPaymentStatus() == PaymentStatus.PAID)
 					|| (delegateDto.getBookingPaymentStatus() == PaymentStatus.NOTPAID)
 					|| (delegateDto.getBookingPaymentStatus() == PaymentStatus.Credit)) {
+				logger.debug("Updating delegate payment info");
 				updatePaymentInfo(delegate, delegateDto, booking);
 			}
 			// Undo Cancellation
 			if ((delegateDto.getIsBookingActive() == 1)
 					&& ((booking.getIsActive() == 0) || delegate.getIsActive() == 0)) {
+				logger.debug("Updating delegate/booking cancellation info");
 				undoCancellation(booking, delegateDto, delegate);
 			}
 		} else {
-			System.err.println("Booking is null...cannot be updated!!");
+			logger.debug("Booking is Null - Cannot update payment or booking status");
 		}
 
-		// Member
-		if (delegate.getMemberRefId() != null && delegate.getAttendance() != delegateDto.getAttendance()
-				&& event.getType() != EventType.COURSE && applicationContext.equals("online")) {
-			cpdDao.updateCPDFromAttendance(delegate, delegate.getAttendance());
-			// send and SMS
+		/* CPD Updates - Is this a CPD Update? */
+		// Member - Has attendance changed and Is this an Event?
+		boolean isMemberCPDUpdate = delegate.getMemberRefId() != null
+				&& delegate.getAttendance() != delegateDto.getAttendance() && event.getType() != EventType.COURSE
+				&& applicationContext.equals("online");
+		boolean isNonMemberCPDUpdate = delegate.getMemberRefId() == null
+				&& delegate.getAttendance() != delegateDto.getAttendance() && event.getType() != EventType.COURSE
+				&& applicationContext.equals("online");
+		if (isMemberCPDUpdate) {
+			logger.info("Updating CPD records for a member.");
+			cpdDao.updateCPDFromAttendance(delegate, delegateDto.getAttendance());
 			Member member = dao.findByRefId(delegate.getMemberRefId(), Member.class);
 			String smsMessage = "Dear" + " " + delegateDto.getFullName() + ",Thank you for attending the "
 					+ event.getName() + "." + "Your ERN No. is " + delegate.getErn();
@@ -1053,8 +1064,8 @@ public class BookingsDaoHelper {
 			dao.save(delegate);
 
 			// Non-Member
-		} else if (delegate.getMemberRefId() == null && delegate.getAttendance() != delegateDto.getAttendance()
-				&& event.getType() != EventType.COURSE && applicationContext.equals("online")) {
+		} else if (isNonMemberCPDUpdate) {
+			logger.info("Updating CPD records for Non-Member.");
 			String smsMessage = "Dear" + " " + delegateDto.getFullName() + ",Thank you for attending the "
 					+ event.getName() + "." + "Your ERN No. is " + delegate.getErn();
 			if (delegate.getBooking().getContact().getTelephoneNumbers() != null) {
@@ -1073,7 +1084,7 @@ public class BookingsDaoHelper {
 			}
 		}
 
-		// response
+		// Prepare Response
 		DelegateDto d = delegate.toDto();
 		d.setBookingPaymentStatus(booking.getPaymentStatus());
 		return d;
@@ -1099,7 +1110,7 @@ public class BookingsDaoHelper {
 		delegate.setUpdatedBy(delegateDto.getUpdatedBy());
 		dao.save(delegate);
 
-		logger.debug("Successfully saved::" + delegate.getFullName());
+		logger.debug("Updated payment info for:" + delegate.getFullName());
 
 		int totalDelegates = booking.getDelegates().size();
 		int totalPaid = 0;

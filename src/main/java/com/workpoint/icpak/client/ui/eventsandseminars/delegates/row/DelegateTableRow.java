@@ -31,11 +31,9 @@ import com.workpoint.icpak.shared.model.events.EventDto;
 
 public class DelegateTableRow extends RowWidget {
 
-	private static ActivitiesTableRowUiBinder uiBinder = GWT
-			.create(ActivitiesTableRowUiBinder.class);
+	private static ActivitiesTableRowUiBinder uiBinder = GWT.create(ActivitiesTableRowUiBinder.class);
 
-	interface ActivitiesTableRowUiBinder extends
-			UiBinder<Widget, DelegateTableRow> {
+	interface ActivitiesTableRowUiBinder extends UiBinder<Widget, DelegateTableRow> {
 	}
 
 	@UiField
@@ -83,8 +81,7 @@ public class DelegateTableRow extends RowWidget {
 	private EventDto event;
 
 	public void initDisplay() {
-		if (AppContext.isCurrentUserEventEdit()
-				|| AppContext.isCurrentUserFinanceEdit()) {
+		if (AppContext.isCurrentUserEventEdit() || AppContext.isCurrentUserFinanceEdit()) {
 			divAction.removeStyleName("hide");
 		} else {
 			divAction.addStyleName("hide");
@@ -125,18 +122,16 @@ public class DelegateTableRow extends RowWidget {
 			@Override
 			public void onClick(ClickEvent event) {
 				final ResendProforma resendWidget = new ResendProforma(delegate);
-				AppManager.showPopUp("Resend Proforma", resendWidget,
-						new OnOptionSelected() {
-							@Override
-							public void onSelect(String name) {
-								if (name.equals("Resend")) {
-									AppContext.fireEvent(new TableActionEvent(
-											resendWidget.getResendObject(),
-											TableActionType.RESENDPROFORMA));
+				AppManager.showPopUp("Resend Proforma", resendWidget, new OnOptionSelected() {
+					@Override
+					public void onSelect(String name) {
+						if (name.equals("Resend")) {
+							AppContext.fireEvent(new TableActionEvent(resendWidget.getResendObject(),
+									TableActionType.RESENDPROFORMA));
 
-								}
-							}
-						}, "Resend", "Cancel");
+						}
+					}
+				}, "Resend", "Cancel");
 
 			}
 		});
@@ -152,8 +147,8 @@ public class DelegateTableRow extends RowWidget {
 		});
 
 		if (delegate != null) {
-			final String editUrl = "#eventBooking;eventId=" + event.getRefId()
-					+ ";bookingId=" + delegate.getBookingRefId();
+			final String editUrl = "#eventBooking;eventId=" + event.getRefId() + ";bookingId="
+					+ delegate.getBookingRefId();
 			// aEditBooking.setHref(editUrl);
 			aEditBooking.addClickHandler(new ClickHandler() {
 				@Override
@@ -165,26 +160,18 @@ public class DelegateTableRow extends RowWidget {
 			aCancelBooking.addClickHandler(new ClickHandler() {
 				@Override
 				public void onClick(ClickEvent event) {
-					AppManager
-							.showPopUp(
-									"Confirm",
-									"Are you sure you want to cancel this booking - both the sponsor and the delegates will be notified...",
-									new OnOptionSelected() {
-										@Override
-										public void onSelect(String name) {
-											if (name.equals("Cancel Entire Booking")) {
-												AppContext
-														.fireEvent(new EditModelEvent(
-																delegate.getBookingRefId()));
-											} else if (name
-													.equals("Cancel Individual Delegate")) {
-												AppContext
-														.fireEvent(new EditModelEvent(
-																delegate.getRefId()));
-											}
-										}
-									}, "Cancel Entire Booking",
-									"Cancel Individual Delegate");
+					AppManager.showPopUp("Confirm",
+							"Are you sure you want to cancel this booking - both the sponsor and the delegates will be notified...",
+							new OnOptionSelected() {
+								@Override
+								public void onSelect(String name) {
+									if (name.equals("Cancel Entire Booking")) {
+										AppContext.fireEvent(new EditModelEvent(delegate.getBookingRefId()));
+									} else if (name.equals("Cancel Individual Delegate")) {
+										AppContext.fireEvent(new EditModelEvent(delegate.getRefId()));
+									}
+								}
+							}, "Cancel Entire Booking", "Cancel Individual Delegate");
 				}
 			});
 		}
@@ -192,42 +179,38 @@ public class DelegateTableRow extends RowWidget {
 	}
 
 	protected void undoCancellation() {
-		AppManager.showPopUp("Confirm", "Undo this cancellation?",
-				new OnOptionSelected() {
-					@Override
-					public void onSelect(String name) {
-						if (name.equals("Confirm")) {
-							delegate.setIsBookingActive(1);
-							AppContext.fireEvent(new EditModelEvent(delegate));
-						}
-					}
-				}, "Confirm", "Cancel");
+		AppManager.showPopUp("Confirm", "Undo this cancellation?", new OnOptionSelected() {
+			@Override
+			public void onSelect(String name) {
+				if (name.equals("Confirm")) {
+					delegate.setIsBookingActive(1);
+					AppContext.fireEvent(new EditModelEvent(delegate));
+				}
+			}
+		}, "Confirm", "Cancel");
 	}
 
 	protected void updatePaymentInfo() {
-		final UpdatePaymentWidget paymentWidget = new UpdatePaymentWidget(
-				delegate);
-		AppManager.showPopUp("Update Payment Info", paymentWidget,
-				new OnOptionSelected() {
-					@Override
-					public void onSelect(String name) {
-						if (name.equals("Save")) {
-							AppContext.fireEvent(new EditModelEvent(
-									paymentWidget.getDelegate()));
-						}
-					}
-				}, "Save", "Cancel");
+		final UpdatePaymentWidget paymentWidget = new UpdatePaymentWidget(delegate);
+		AppManager.showPopUp("Update Payment Info", paymentWidget, new OnOptionSelected() {
+			@Override
+			public void onSelect(String name) {
+				if (name.equals("Save")) {
+					AppContext.fireEvent(new EditModelEvent(paymentWidget.getDelegate()));
+				}
+			}
+		}, "Save", "Cancel");
 	}
 
 	protected void onAttendanceChanged(final AttendanceStatus attendanceStatus) {
-		AppManager.showPopUp("Confirm", "Confirm " + delegate.getFullName()
-				+ " " + attendanceStatus.getDisplayName() + " this event?",
+		AppManager.showPopUp("Confirm",
+				"Confirm " + delegate.getFullName() + " " + attendanceStatus.getDisplayName() + " this event?",
 				new OnOptionSelected() {
 					@Override
 					public void onSelect(String name) {
 						if (name.equals("Confirm")) {
 							delegate.setAttendance(attendanceStatus);
-							setAttendance(delegate.getAttendance());
+							// setAttendance(delegate.getAttendance());
 							AppContext.fireEvent(new EditModelEvent(delegate));
 						}
 					}
@@ -243,8 +226,7 @@ public class DelegateTableRow extends RowWidget {
 		// Ensure that you instanciate all variables before calling the next
 		// method!
 		initDisplay();
-		divBookingDate.getElement().setInnerText(
-				DateUtils.READABLETIMESTAMP.format(delegate.getCreatedDate()));
+		divBookingDate.getElement().setInnerText(DateUtils.READABLETIMESTAMP.format(delegate.getCreatedDate()));
 		if (delegate.getCompanyName() != null) {
 			ActionLink invoiceLink = new ActionLink(delegate.getInvoiceNo());
 			invoiceLink.addClickHandler(new ClickHandler() {
@@ -256,16 +238,14 @@ public class DelegateTableRow extends RowWidget {
 					Window.open(ctx.toUrl(), "Get Proforma", null);
 				}
 			});
-			divSponsorNames.getElement().setInnerHTML(
-					delegate.getCompanyName() + " (" + invoiceLink + ")");
+			divSponsorNames.getElement().setInnerHTML(delegate.getCompanyName() + " (" + invoiceLink + ")");
 		}
 
 		if (delegate.getErn() != null) {
 			divErnNo.getElement().setInnerText(delegate.getErn());
 		}
-		divContactName.getElement().setInnerHTML(
-				delegate.getContactName() + "<br/><small class='text-muted'>"
-						+ delegate.getContactEmail() + "</small>");
+		divContactName.getElement().setInnerHTML(delegate.getContactName() + "<br/><small class='text-muted'>"
+				+ delegate.getContactEmail() + "</small>");
 
 		InlineLabel spnIsMember = new InlineLabel();
 		if (delegate.getMemberNo() != null) {
@@ -275,21 +255,16 @@ public class DelegateTableRow extends RowWidget {
 
 		InlineLabel spnMemberNo = new InlineLabel();
 		if (delegate.getMemberNo() != null) {
-			spnMemberNo.getElement().setInnerText(
-					" - " + delegate.getMemberNo());
+			spnMemberNo.getElement().setInnerText(" - " + delegate.getMemberNo());
 		}
 
 		if (delegate.getFullName() != null) {
-			divDelegateNames.getElement().setInnerHTML(
-					delegate.getFullName() + spnMemberNo + " " + spnIsMember);
+			divDelegateNames.getElement().setInnerHTML(delegate.getFullName() + spnMemberNo + " " + spnIsMember);
 		} else {
-			divDelegateNames.getElement().setInnerText(
-					(delegate.getTitle() == null ? "" : delegate.getTitle()
-							+ " ")
-							+ (delegate.getSurname() == null ? "" : delegate
-									.getSurname() + " ")
-							+ (delegate.getOtherNames() == null ? "" : delegate
-									.getOtherNames() + " "));
+			divDelegateNames.getElement()
+					.setInnerText((delegate.getTitle() == null ? "" : delegate.getTitle() + " ")
+							+ (delegate.getSurname() == null ? "" : delegate.getSurname() + " ")
+							+ (delegate.getOtherNames() == null ? "" : delegate.getOtherNames() + " "));
 		}
 
 		if (delegate.getHotel() != null) {
@@ -306,8 +281,7 @@ public class DelegateTableRow extends RowWidget {
 			spnBookingStatus.setInnerText("Cancelled");
 		}
 
-		determinePaymentStatus(delegate.getBookingPaymentStatus(),
-				delegate.getDelegatePaymentStatus());
+		determinePaymentStatus(delegate.getBookingPaymentStatus(), delegate.getDelegatePaymentStatus());
 		setAttendance(delegate.getAttendance());
 		if (event.getType() != null) {
 			setActionButtons(EventType.valueOf(event.getType()));
@@ -315,35 +289,32 @@ public class DelegateTableRow extends RowWidget {
 	}
 
 	private void setActionButtons(EventType eventType) {
-		boolean isUpdatePaymentVisible = (AppContext.isCurrentUserFinanceEdit()
-				&& delegate.getIsBookingActive() == 1 ? true : false);
+		boolean isUpdatePaymentVisible = (AppContext.isCurrentUserFinanceEdit() && delegate.getIsBookingActive() == 1
+				? true : false);
 
 		boolean isEditBookingVisible = (AppContext.isCurrentUserEventEdit()
-				&& delegate.getAttendance() == AttendanceStatus.NOTATTENDED
-				&& delegate.getIsBookingActive() == 1 ? true : false);
+				&& delegate.getAttendance() == AttendanceStatus.NOTATTENDED && delegate.getIsBookingActive() == 1 ? true
+						: false);
 
 		boolean isCancelBookingVisible = (AppContext.isCurrentUserEventEdit()
-				&& delegate.getAttendance() == AttendanceStatus.NOTATTENDED
-				&& delegate.getIsBookingActive() == 1 ? true : false);
+				&& delegate.getAttendance() == AttendanceStatus.NOTATTENDED && delegate.getIsBookingActive() == 1 ? true
+						: false);
 
 		boolean isUndoCancelVisible = (AppContext.isCurrentUserEventEdit()
-				&& delegate.getAttendance() == AttendanceStatus.NOTATTENDED
-				&& delegate.getIsBookingActive() == 0 ? true : false);
+				&& delegate.getAttendance() == AttendanceStatus.NOTATTENDED && delegate.getIsBookingActive() == 0 ? true
+						: false);
 
-		boolean isAttendedVisible = (eventType != EventType.EVENT
-				&& AppContext.isCurrentUserEventEdit()
-				&& delegate.getAttendance() == AttendanceStatus.NOTATTENDED
-				&& delegate.getIsBookingActive() == 1 ? true : false);
+		boolean isAttendedVisible = (eventType != EventType.EVENT && AppContext.isCurrentUserEventEdit()
+				&& delegate.getAttendance() == AttendanceStatus.NOTATTENDED && delegate.getIsBookingActive() == 1 ? true
+						: false);
 
-		boolean isNotAttendedVisible = (eventType != EventType.EVENT
-				&& AppContext.isCurrentUserEventEdit()
-				&& delegate.getAttendance() == AttendanceStatus.ATTENDED
-				&& delegate.getIsBookingActive() == 1 ? true : false);
+		boolean isNotAttendedVisible = (eventType != EventType.EVENT && AppContext.isCurrentUserEventEdit()
+				&& delegate.getAttendance() == AttendanceStatus.ATTENDED && delegate.getIsBookingActive() == 1 ? true
+						: false);
 
-		boolean isEnrolVisible = (eventType == EventType.COURSE
-				&& AppContext.isCurrentUserEventEdit()
-				&& delegate.getAttendance() == AttendanceStatus.NOTENROLLED
-				&& delegate.getIsBookingActive() == 1 ? true : false);
+		boolean isEnrolVisible = (eventType == EventType.COURSE && AppContext.isCurrentUserEventEdit()
+				&& delegate.getAttendance() == AttendanceStatus.NOTENROLLED && delegate.getIsBookingActive() == 1 ? true
+						: false);
 
 		aUpdatePayment.setVisible(isUpdatePaymentVisible);
 		aEditBooking.setVisible(isEditBookingVisible);
@@ -356,8 +327,7 @@ public class DelegateTableRow extends RowWidget {
 
 	private void setAttendance(AttendanceStatus attendance) {
 		if (attendance != null) {
-			if (attendance == AttendanceStatus.NOTATTENDED
-					|| attendance == AttendanceStatus.NOTENROLLED) {
+			if (attendance == AttendanceStatus.NOTATTENDED || attendance == AttendanceStatus.NOTENROLLED) {
 				spnAttendance.setClassName("fa fa-times");
 			} else {
 				spnAttendance.setClassName("fa fa-check");
@@ -365,11 +335,9 @@ public class DelegateTableRow extends RowWidget {
 		}
 	}
 
-	private void determinePaymentStatus(PaymentStatus bookingPaymentStatus,
-			PaymentStatus delegatePaymentStatus) {
+	private void determinePaymentStatus(PaymentStatus bookingPaymentStatus, PaymentStatus delegatePaymentStatus) {
 		if (bookingPaymentStatus != null) {
-			if (bookingPaymentStatus == PaymentStatus.PAID
-					|| bookingPaymentStatus == PaymentStatus.Credit) {
+			if (bookingPaymentStatus == PaymentStatus.PAID || bookingPaymentStatus == PaymentStatus.Credit) {
 				setPaymentStatus(bookingPaymentStatus);
 			} else {
 				setPaymentStatus(delegatePaymentStatus);
@@ -382,8 +350,7 @@ public class DelegateTableRow extends RowWidget {
 			spnPaymentStatus.setClassName("fa fa-times");
 		} else if (paymentStatus == PaymentStatus.Credit) {
 			spnPaymentStatus.setClassName("fa fa-check");
-			spnPaymentStatus
-					.setInnerHTML("<br/><span class='text-muted' style='font-size:11px;'>Credit</span>");
+			spnPaymentStatus.setInnerHTML("<br/><span class='text-muted' style='font-size:11px;'>Credit</span>");
 		} else if (paymentStatus == PaymentStatus.PAID) {
 			spnPaymentStatus.setClassName("fa fa-check");
 		}

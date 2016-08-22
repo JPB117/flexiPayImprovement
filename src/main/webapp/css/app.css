@@ -95356,7 +95356,7 @@ body, html {
 
 .wrapper .aside {
 	position: absolute;
-	width: 14%;
+	width: 220px;
 	top: 43px;
 	left: 0;
 	bottom: 0;
@@ -95498,7 +95498,7 @@ body, html {
 	}
 	.wrapper>footer, .wrapper section {
 		margin-left: 220px;
-		margin-left: 14%;
+		/* margin-left: 14%; */
 	}
 	.wrapper section.has-sidebar-right {
 		margin-right: 240px
@@ -96213,7 +96213,7 @@ header .topnavbar {
 	margin-right: -17px;
 	overflow-x: hidden;
 	overflow-y: scroll;
-	-webkit-overflow-scrolling: touch
+	-webkit-overflow-scrolling: touch;
 }
 
 .sidebar:after {

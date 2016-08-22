@@ -13,6 +13,7 @@ public class SMSDao extends BaseDao {
 			sms.setFailureReason(FailureReason.valueOf(failureReason));
 		}
 		save(sms);
+		System.err.println("Successfully updated!");
 	}
 
 	public SMSLog findSMSLogById(String smsId) {

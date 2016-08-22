@@ -34,7 +34,7 @@ public class SMSIntegration {
 		String message = values.get("message");
 
 		if (to == null || to.isEmpty()) {
-			return "Failed: The recipient telephone number must be provided. Kindly confirm the relavant fields are provided";
+			return "Failed to send SMS: The recipient telephone number must be provided. Kindly confirm the relavant fields are provided";
 		}
 
 		if (message == null || message.isEmpty()) {
