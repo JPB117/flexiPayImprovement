@@ -84,13 +84,10 @@ public class CsvImportExecutor extends FileExecutor {
 								DelegateDto delegateDto = delegateList.get(0);
 								logger.debug("Existing delegate::" + delegateDto.getFullName() + "::"
 										+ delegateDto.getMemberNo());
-								delegateDto.setAttendance(AttendanceStatus.ATTENDED);
 
 								// Find the Delegate Record & Update CPD Record.
 								Delegate delegateInDb = bookingsDao.findByRefId(delegateDto.getRefId(), Delegate.class);
-								delegateInDb.copyFrom(delegateDto);
-								bookingsDao.save(delegateInDb);
-								cpdDao.updateCPDFromAttendance(delegateInDb, delegateInDb.getAttendance());
+								cpdDao.updateCPDFromAttendance(delegateInDb, AttendanceStatus.ATTENDED);
 
 								// send an SMS confirming the attendance
 								if (delegateInDb.getMemberRegistrationNo() != null
@@ -111,11 +108,8 @@ public class CsvImportExecutor extends FileExecutor {
 								for (DelegateDto del1 : dels) {
 									// Find the Delegate Record.
 									Delegate delegateInDb = bookingsDao.findByRefId(del1.getRefId(), Delegate.class);
-
 									if (delegateInDb != null) {
-										delegateInDb.setAttendance(AttendanceStatus.ATTENDED);
-										bookingsDao.save(delegateInDb);
-										cpdDao.updateCPDFromAttendance(delegateInDb, delegateInDb.getAttendance());
+										cpdDao.updateCPDFromAttendance(delegateInDb, AttendanceStatus.ATTENDED);
 										logger.debug(
 												"Successfully Imported>> " + delegateInDb.getMemberRegistrationNo());
 									}

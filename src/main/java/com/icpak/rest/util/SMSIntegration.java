@@ -67,7 +67,9 @@ public class SMSIntegration {
 			isSmsSendingActive = (props.getProperty("isSendingActive").equals("true") ? true : false);
 			smsCost = props.getProperty("smsCost");
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			logger.fatal("Could not send sms to : " + to + ": Cause " + e.getMessage());
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 		if (!isSmsSendingActive) {
@@ -104,7 +106,10 @@ public class SMSIntegration {
 			sms.setTstamp(new Date());
 			sms.setText(message);
 			sms.setSmsFrom(from);
-			sms.setCost(Double.valueOf(smsCost) * Double.valueOf(cost.substring(4)));
+			// if (!cost.isEmpty()) {
+			// // sms.setCost(Double.valueOf(smsCost) *
+			// // Double.valueOf(cost.substring(4)));
+			// }
 			sms.setSmsId(messageId);
 			sms.setSmsTo(number);
 			sms.setStatus(SmsStatus.valueOf(status.toUpperCase()));
@@ -116,7 +121,8 @@ public class SMSIntegration {
 			}
 			System.err.println(resp);
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			logger.fatal("Could not send sms to : " + to + ": Cause " + e.getMessage());
+			e.printStackTrace();
 		}
 
 		return null;

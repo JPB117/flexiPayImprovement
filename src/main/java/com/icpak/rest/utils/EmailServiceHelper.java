@@ -55,8 +55,9 @@ public class EmailServiceHelper {
 			Object protocol = sysProps.get("mail.transport.protocol");
 			Object starttls = sysProps.get("mail.smtp.starttls.enable");
 			Object organizationName = sysProps.get("organization.name");
-			
-			props.put("mail.smtp.auth",auth);
+			Object isEmailSendingActive = sysProps.get("isEmailSendingActive");
+
+			props.put("mail.smtp.auth", auth);
 			props.put("mail.smtp.host", host);
 			props.put("mail.smtp.password", password);
 			props.put("mail.smtp.from", account);
@@ -64,6 +65,7 @@ public class EmailServiceHelper {
 			props.put("mail.transport.protocol", protocol);
 			props.put("mail.smtp.starttls.enable", starttls);
 			props.put("organization.name", organizationName);
+			props.put("isEmailSendingActive", isEmailSendingActive);
 
 			for (Object prop : props.keySet()) {
 				if (prop.equals("mail.smtp.password")) {
@@ -76,16 +78,14 @@ public class EmailServiceHelper {
 			session = Session.getInstance(props, new Authenticator() {
 				@Override
 				protected PasswordAuthentication getPasswordAuthentication() {
-					return new PasswordAuthentication(props
-							.getProperty("mail.smtp.from"), props
-							.getProperty("mail.smtp.password"));
+					return new PasswordAuthentication(props.getProperty("mail.smtp.from"),
+							props.getProperty("mail.smtp.password"));
 				}
 
 			});
 
 		} catch (Exception e) {
-			log.warn("EmailServiceHelper.initProperties failed to initialize: "
-					+ e.getMessage());
+			log.warn("EmailServiceHelper.initProperties failed to initialize: " + e.getMessage());
 			e.printStackTrace();
 		}
 
@@ -96,25 +96,25 @@ public class EmailServiceHelper {
 		return val;
 	}
 
-	public static void sendEmail(String body, String subject,
-			List<String> emails, List<String> recipientNames, Attachment...attachments)
-			throws MessagingException, UnsupportedEncodingException {
+	public static void sendEmail(String body, String subject, List<String> emails, List<String> recipientNames,
+			Attachment... attachments) throws MessagingException, UnsupportedEncodingException {
 		initProperties();
+		boolean isSmsSendingActive = (props.getProperty("isEmailSendingActive").equals("true") ? true : false);
+		if (!isSmsSendingActive) {
+			return;
+		}
 		assert session != null;
 		MimeMessage message = new MimeMessage(session);
-		message.setFrom(new InternetAddress(getProperties().getProperty(
-				"mail.smtp.from"), props.getProperty("organization.name") == null ? "WIRA BPMS" : props
-				.getProperty("organization.name")));
+		message.setFrom(new InternetAddress(getProperties().getProperty("mail.smtp.from"),
+				props.getProperty("organization.name") == null ? "WIRA BPMS" : props.getProperty("organization.name")));
 
 		InternetAddress dests[] = new InternetAddress[emails.size()];
 		for (int i = 0; i < emails.size(); i++) {
 			String email = emails.get(i);
 			String fullName = recipientNames.get(i);
 			assert emails.get(i) != null;
-			log.debug("Recipient : " + email + " : "
-					+ fullName);
-			dests[i] = new InternetAddress(email,
-					fullName);
+			log.debug("Recipient : " + email + " : " + fullName);
+			dests[i] = new InternetAddress(email, fullName);
 		}
 
 		message.setRecipients(Message.RecipientType.TO, dests);
@@ -130,26 +130,24 @@ public class EmailServiceHelper {
 			String rootFolder = "com/icpak/rest/utils";
 
 			{
-				MimeBodyPart part = getBodyType(null, "<imageLogo>",
-						rootFolder + "/logo.png");
+				MimeBodyPart part = getBodyType(null, "<imageLogo>", rootFolder + "/logo.png");
 				if (part != null) {
 					multipart.addBodyPart(part);
 				}
 			}
 
 			if (attachments != null) {
-				for(Attachment a: attachments){
-					MimeBodyPart part = getBodyType(a.getAttachment(), "","");
+				for (Attachment a : attachments) {
+					MimeBodyPart part = getBodyType(a.getAttachment(), "", "");
 					part.setDescription(a.getName());
 					part.setFileName(a.getName());
-					
+
 					if (part != null) {
 						multipart.addBodyPart(part);
 					}
 				}
 			} else {
-				MimeBodyPart part = getBodyType(null, "<imageUser>",
-						rootFolder + "/blueman(small).png");
+				MimeBodyPart part = getBodyType(null, "<imageUser>", rootFolder + "/blueman(small).png");
 				if (part != null) {
 					multipart.addBodyPart(part);
 				}
@@ -163,8 +161,7 @@ public class EmailServiceHelper {
 			Transport.send(message);
 			log.debug("Email Successfully send........");
 		} catch (Exception e) {
-			log.fatal("Could not send email: " + subject + ": Cause "
-					+ e.getMessage());
+			log.fatal("Could not send email: " + subject + ": Cause " + e.getMessage());
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -197,15 +194,13 @@ public class EmailServiceHelper {
 	 * @throws UnsupportedEncodingException
 	 */
 	@Deprecated
-	public static void sendEmail(String body, String subject, String recipient,
-			String initiatorId) throws MessagingException,
-			UnsupportedEncodingException {
+	public static void sendEmail(String body, String subject, String recipient, String initiatorId)
+			throws MessagingException, UnsupportedEncodingException {
 
 		initProperties();
 		assert session != null;
 		MimeMessage message = new MimeMessage(session);
-		message.setFrom(new InternetAddress("WIRA BPM", getProperties()
-				.getProperty("mail.smtp.from")));
+		message.setFrom(new InternetAddress("WIRA BPM", getProperties().getProperty("mail.smtp.from")));
 
 		String[] emails = recipient.split(",");
 		InternetAddress dests[] = new InternetAddress[emails.length];
@@ -225,23 +220,20 @@ public class EmailServiceHelper {
 			String rootFolder = "com/duggan/workflow/server/helper/email";
 
 			{
-				MimeBodyPart part = getBodyType(null, "<imageLogo>",
-						rootFolder + "/logo.png");
+				MimeBodyPart part = getBodyType(null, "<imageLogo>", rootFolder + "/logo.png");
 
 				if (part != null)
 					multipart.addBodyPart(part);
 			}
 
 			if (initiatorId != null) {
-				MimeBodyPart part = getBodyType(null, "<imageUser>", rootFolder
-						+ "/blueman(small).png");
+				MimeBodyPart part = getBodyType(null, "<imageUser>", rootFolder + "/blueman(small).png");
 
 				if (part != null)
 					multipart.addBodyPart(part);
 
 			} else {
-				MimeBodyPart part = getBodyType(null, "<imageUser>", rootFolder
-						+ "/blueman(small).png");
+				MimeBodyPart part = getBodyType(null, "<imageUser>", rootFolder + "/blueman(small).png");
 
 				if (part != null)
 					multipart.addBodyPart(part);
@@ -256,29 +248,26 @@ public class EmailServiceHelper {
 			Transport.send(message);
 			log.warn("Email Successfully send........");
 		} catch (Exception e) {
-			log.fatal("Could not send email: " + subject + ": Cause "
-					+ e.getMessage());
+			log.fatal("Could not send email: " + subject + ": Cause " + e.getMessage());
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 	}
 
-	public static MimeBodyPart getBodyType(byte[] attachment, String imageId,
-			String fallbackImageName) throws IOException, MessagingException {
+	public static MimeBodyPart getBodyType(byte[] attachment, String imageId, String fallbackImageName)
+			throws IOException, MessagingException {
 		// Image
 		MimeBodyPart imageBodyPart = new MimeBodyPart();
 		DataSource fds = null;
 		if (attachment != null) {
 			fds = new ByteArrayDataSource(attachment, "image/png");
 		} else {
-			InputStream imageStream = EmailServiceHelper.class.getClass()
-					.getResourceAsStream("/" + fallbackImageName);
+			InputStream imageStream = EmailServiceHelper.class.getClass().getResourceAsStream("/" + fallbackImageName);
 			assert imageStream != null;
 
 			try {
-				fds = new ByteArrayDataSource(IOUtils.toByteArray(imageStream),
-						"image/png");
+				fds = new ByteArrayDataSource(IOUtils.toByteArray(imageStream), "image/png");
 			} catch (Exception e) {
 			}
 

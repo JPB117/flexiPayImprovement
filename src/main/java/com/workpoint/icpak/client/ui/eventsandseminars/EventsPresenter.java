@@ -37,6 +37,7 @@ import com.workpoint.icpak.client.ui.component.DropDownList;
 import com.workpoint.icpak.client.ui.component.PagingConfig;
 import com.workpoint.icpak.client.ui.component.PagingLoader;
 import com.workpoint.icpak.client.ui.component.PagingPanel;
+import com.workpoint.icpak.client.ui.cpd.admin.CPDManagementPresenter;
 import com.workpoint.icpak.client.ui.events.AfterSaveEvent;
 import com.workpoint.icpak.client.ui.events.EditModelEvent;
 import com.workpoint.icpak.client.ui.events.EditModelEvent.EditModelHandler;
@@ -45,6 +46,8 @@ import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
 import com.workpoint.icpak.client.ui.events.ProcessingEvent;
 import com.workpoint.icpak.client.ui.events.TableActionEvent;
 import com.workpoint.icpak.client.ui.events.TableActionEvent.TableActionHandler;
+import com.workpoint.icpak.client.ui.events.cpd.MemberCPDEvent;
+import com.workpoint.icpak.client.ui.events.cpd.MemberCPDEvent.MemberCPDHandler;
 import com.workpoint.icpak.client.ui.eventsandseminars.resendProforma.ResendModel;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
 import com.workpoint.icpak.client.ui.security.EventsGateKeeper;
@@ -63,7 +66,7 @@ import gwtupload.client.IUploader;
 import gwtupload.client.IUploader.OnFinishUploaderHandler;
 
 public class EventsPresenter extends Presenter<EventsPresenter.IEventsView, EventsPresenter.IEventsProxy>
-		implements EditModelHandler, TableActionHandler {
+		implements EditModelHandler, TableActionHandler, MemberCPDHandler {
 
 	public interface IEventsView extends View {
 
@@ -123,6 +126,9 @@ public class EventsPresenter extends Presenter<EventsPresenter.IEventsView, Even
 	private ResourceDelegate<EventsResource> eventsDelegate;
 	private String eventId;
 	private BookingSummaryDto bookingSummary;
+
+	@Inject
+	CPDManagementPresenter mgmntPresenter;
 
 	ValueChangeHandler<String> eventsValueChangeHandler = new ValueChangeHandler<String>() {
 		@Override
@@ -213,6 +219,7 @@ public class EventsPresenter extends Presenter<EventsPresenter.IEventsView, Even
 		super.onBind();
 		addRegisteredHandler(EditModelEvent.TYPE, this);
 		addRegisteredHandler(TableActionEvent.TYPE, this);
+		addRegisteredHandler(MemberCPDEvent.getType(), this);
 
 		getView().getDelegateSearchKeyDownHandler().addKeyDownHandler(delegateKeyHandler);
 		getView().getEventsSearchKeyDownHandler().addKeyDownHandler(eventsKeyHandler);
@@ -489,6 +496,15 @@ public class EventsPresenter extends Presenter<EventsPresenter.IEventsView, Even
 				hide();
 			}
 		}, "Proceed");
+	}
+
+	@Override
+	public void onMemberCPD(MemberCPDEvent event) {
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("p", "memberCPD");
+		params.put("refId", event.getMember().getRefId());
+		PlaceRequest placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.cpdmgt).with(params).build();
+		placeManager.revealPlace(placeRequest);
 	}
 
 }

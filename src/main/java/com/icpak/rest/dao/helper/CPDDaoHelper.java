@@ -192,7 +192,6 @@ public class CPDDaoHelper {
 			return;
 		}
 
-		Member member = dao.findByRefId(delegate.getMemberRefId(), Member.class);
 		Event event = delegate.getBooking().getEvent();
 		String memberRefId = delegate.getMemberRefId();
 
@@ -227,7 +226,11 @@ public class CPDDaoHelper {
 			create(memberRefId, cpd);
 			logger.debug("Successfully created the cpd record!!");
 		}
-		
+
+		/* Updating Delegate Record */
+		delegate.setAttendance(AttendanceStatus.ATTENDED);
+		dao.save(delegate);
+
 		Member m = dao.findByRefId(memberRefId, Member.class);
 
 		if (m != null) {
@@ -318,15 +321,15 @@ public class CPDDaoHelper {
 				// >1 && <=2
 				if (cpdHours < 40) {
 					isGenerate = false;
-					messages.add("You have been a member for more than " + noOfYears.intValue() + " years but you have done "
-							+ cpdHours.intValue() + " out of 40 expected hours.");
+					messages.add("You have been a member for more than " + noOfYears.intValue()
+							+ " years but you have done " + cpdHours.intValue() + " out of 40 expected hours.");
 				}
 			} else if (noOfYears <= 3) {
 				// >1 && <=2
 				if (cpdHours < 80) {
 					isGenerate = false;
-					messages.add("You have been a member for more than " + noOfYears.intValue() + " years but you have done "
-							+ cpdHours.intValue() + " out of 80 expected hours.");
+					messages.add("You have been a member for more than " + noOfYears.intValue()
+							+ " years but you have done " + cpdHours.intValue() + " out of 80 expected hours.");
 				}
 			} else {
 				// >1 && <=2

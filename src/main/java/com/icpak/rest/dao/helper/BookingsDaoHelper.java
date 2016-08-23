@@ -248,10 +248,11 @@ public class BookingsDaoHelper {
 		delegate.setFullName(user.getFullName());
 		delegate.setDelegatePhoneNumber(user.getPhoneNumber());
 		delegate.setMemberQrCode(user.getMember().getMemberQrCode());
+		delegate.setMemberRefId(user.getMember().getRefId());
 		booking.setDelegates(Arrays.asList(delegate));
 
 		JSONObject json = new JSONObject(booking);
-		System.err.println(json);
+		logger.info("Successfully created the booking");
 
 		return createBooking(eventId, booking);
 
@@ -270,8 +271,11 @@ public class BookingsDaoHelper {
 			booking = dao.getByBookingId(dto.getRefId());
 			logger.info("Booking already exist so its a matter of ammending...");
 		} else {
-			booking = new Booking();
-			logger.info("Creating a new booking");
+			booking = dao.getBySponsorEmail(dto.getContact().getEmail(), event.getId());
+			if (booking == null) {
+				booking = new Booking();
+				logger.info("Creating a new booking");
+			}
 		}
 		booking.setEvent(event);
 

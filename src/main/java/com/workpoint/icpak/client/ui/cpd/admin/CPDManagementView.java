@@ -41,6 +41,7 @@ import com.workpoint.icpak.shared.model.CPDFooterDto;
 import com.workpoint.icpak.shared.model.CPDSummaryDto;
 import com.workpoint.icpak.shared.model.Listable;
 import com.workpoint.icpak.shared.model.MemberCPDDto;
+import com.workpoint.icpak.shared.model.MemberDto;
 
 public class CPDManagementView extends ViewImpl implements CPDManagementPresenter.ICPDManagementView {
 
@@ -358,6 +359,13 @@ public class CPDManagementView extends ViewImpl implements CPDManagementPresente
 
 	public HasClickHandlers getBackButton() {
 		return aBack;
+	}
+
+	@Override
+	public void bindMemberDetails(MemberDto member) {
+		if (member != null) {
+			spnMemberName.setInnerText(member.getFullName() + " - " + member.getMemberNo());
+		}
 	}
 
 }

@@ -1,6 +1,7 @@
 package com.workpoint.icpak.client.ui.eventsandseminars.delegates.row;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -18,11 +19,13 @@ import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.component.RowWidget;
 import com.workpoint.icpak.client.ui.events.EditModelEvent;
 import com.workpoint.icpak.client.ui.events.TableActionEvent;
+import com.workpoint.icpak.client.ui.events.cpd.MemberCPDEvent;
 import com.workpoint.icpak.client.ui.eventsandseminars.delegates.updatepayment.UpdatePaymentWidget;
 import com.workpoint.icpak.client.ui.eventsandseminars.resendProforma.ResendProforma;
 import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.model.EventType;
+import com.workpoint.icpak.shared.model.MemberDto;
 import com.workpoint.icpak.shared.model.PaymentStatus;
 import com.workpoint.icpak.shared.model.TableActionType;
 import com.workpoint.icpak.shared.model.events.AttendanceStatus;
@@ -47,7 +50,7 @@ public class DelegateTableRow extends RowWidget {
 	@UiField
 	HTMLPanel divErnNo;
 	@UiField
-	HTMLPanel divDelegateNames;
+	Element divDelegateNames;
 	@UiField
 	HTMLPanel divAccomodation;
 	@UiField
@@ -76,6 +79,8 @@ public class DelegateTableRow extends RowWidget {
 	ActionLink aCancelBooking;
 	@UiField
 	ActionLink aUndoCancelBooking;
+	@UiField
+	ActionLink aMemberCPD;
 
 	private DelegateDto delegate;
 	private EventDto event;
@@ -161,7 +166,7 @@ public class DelegateTableRow extends RowWidget {
 				@Override
 				public void onClick(ClickEvent event) {
 					AppManager.showPopUp("Confirm",
-							"Are you sure you want to cancel this booking - both the sponsor and the delegates will be notified...",
+							"Are you sure you want to cancel this booking - both the sponsor and the delegates will be notified.",
 							new OnOptionSelected() {
 								@Override
 								public void onSelect(String name) {
@@ -259,12 +264,11 @@ public class DelegateTableRow extends RowWidget {
 		}
 
 		if (delegate.getFullName() != null) {
-			divDelegateNames.getElement().setInnerHTML(delegate.getFullName() + spnMemberNo + " " + spnIsMember);
+			divDelegateNames.setInnerHTML(delegate.getFullName() + spnMemberNo + " " + spnIsMember);
 		} else {
-			divDelegateNames.getElement()
-					.setInnerText((delegate.getTitle() == null ? "" : delegate.getTitle() + " ")
-							+ (delegate.getSurname() == null ? "" : delegate.getSurname() + " ")
-							+ (delegate.getOtherNames() == null ? "" : delegate.getOtherNames() + " "));
+			divDelegateNames.setInnerText((delegate.getTitle() == null ? "" : delegate.getTitle() + " ")
+					+ (delegate.getSurname() == null ? "" : delegate.getSurname() + " ")
+					+ (delegate.getOtherNames() == null ? "" : delegate.getOtherNames() + " "));
 		}
 
 		if (delegate.getHotel() != null) {
@@ -281,14 +285,32 @@ public class DelegateTableRow extends RowWidget {
 			spnBookingStatus.setInnerText("Cancelled");
 		}
 
+		if (delegate.getMemberRefId() != null) {
+			// aMemberCPD.setHref("#cpdmgt;p=memberCPD;refId=" +
+			// delegate.getMemberRefId());
+			aMemberCPD.addClickHandler(new ClickHandler() {
+				@Override
+				public void onClick(ClickEvent event) {
+					MemberDto member = new MemberDto();
+					member.setFullName(delegate.getFullName());
+					member.setMemberNo(delegate.getMemberNo());
+					member.setRefId(delegate.getMemberRefId());
+					AppContext.fireEvent(new MemberCPDEvent(member));
+				}
+			});
+
+		} else {
+
+		}
+
 		determinePaymentStatus(delegate.getBookingPaymentStatus(), delegate.getDelegatePaymentStatus());
 		setAttendance(delegate.getAttendance());
 		if (event.getType() != null) {
-			setActionButtons(EventType.valueOf(event.getType()));
+			setActionButtons(EventType.valueOf(event.getType()), delegate);
 		}
 	}
 
-	private void setActionButtons(EventType eventType) {
+	private void setActionButtons(EventType eventType, DelegateDto delegate) {
 		boolean isUpdatePaymentVisible = (AppContext.isCurrentUserFinanceEdit() && delegate.getIsBookingActive() == 1
 				? true : false);
 
@@ -316,6 +338,9 @@ public class DelegateTableRow extends RowWidget {
 				&& delegate.getAttendance() == AttendanceStatus.NOTENROLLED && delegate.getIsBookingActive() == 1 ? true
 						: false);
 
+		// boolean isMemberCPDVisible = (delegate.getMemberRefId() != null ?
+		// true : false);
+
 		aUpdatePayment.setVisible(isUpdatePaymentVisible);
 		aEditBooking.setVisible(isEditBookingVisible);
 		aCancelBooking.setVisible(isCancelBookingVisible);
@@ -323,6 +348,7 @@ public class DelegateTableRow extends RowWidget {
 		aAttended.setVisible(isAttendedVisible);
 		aNotAttended.setVisible(isNotAttendedVisible);
 		aEnrol.setVisible(isEnrolVisible);
+		// aMemberCPD.setVisible(isMemberCPDVisible);
 	}
 
 	private void setAttendance(AttendanceStatus attendance) {

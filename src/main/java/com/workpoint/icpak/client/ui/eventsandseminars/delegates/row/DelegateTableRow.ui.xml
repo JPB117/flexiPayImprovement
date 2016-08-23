@@ -21,7 +21,10 @@
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divContactName">
 		</g:HTMLPanel>
-		<g:HTMLPanel styleName="td" ui:field="divDelegateNames">
+		<g:HTMLPanel styleName="td">
+			<d:ActionLink ui:field="aMemberCPD">
+				<div ui:field="divDelegateNames"></div>
+			</d:ActionLink>
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="td" ui:field="divAccomodation">
 		</g:HTMLPanel>
@@ -85,6 +88,7 @@
 					</li>
 					<li role="separator" class="divider"></li>
 					<li class="dropdown-header">Cpd Actions</li>
+
 					<li>
 						<d:ActionLink ui:field="aEnrol">
 							<i class="fa fa-graduation-cap" aria-hidden="true"></i>

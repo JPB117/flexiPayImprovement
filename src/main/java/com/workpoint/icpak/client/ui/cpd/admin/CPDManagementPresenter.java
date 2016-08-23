@@ -50,6 +50,8 @@ import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
 import com.workpoint.icpak.client.ui.events.ProcessingEvent;
 import com.workpoint.icpak.client.ui.events.TableActionEvent;
 import com.workpoint.icpak.client.ui.events.TableActionEvent.TableActionHandler;
+import com.workpoint.icpak.client.ui.events.cpd.MemberCPDEvent;
+import com.workpoint.icpak.client.ui.events.cpd.MemberCPDEvent.MemberCPDHandler;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
 import com.workpoint.icpak.client.ui.popup.GenericPopupPresenter;
 import com.workpoint.icpak.client.ui.security.CPDManagementGateKeeper;
@@ -65,7 +67,7 @@ import com.workpoint.icpak.shared.model.TableActionType;
 
 public class CPDManagementPresenter
 		extends Presenter<CPDManagementPresenter.ICPDManagementView, CPDManagementPresenter.ICPDManagementProxy>
-		implements EditModelHandler, TableActionHandler {
+		implements EditModelHandler, TableActionHandler, MemberCPDHandler {
 
 	public interface ICPDManagementView extends View {
 		void bindResults(List<CPDDto> result, String loadType);
@@ -126,6 +128,8 @@ public class CPDManagementPresenter
 
 		HasClickHandlers getBackButton();
 
+		void bindMemberDetails(MemberDto member);
+
 	}
 
 	@ProxyCodeSplit
@@ -151,7 +155,7 @@ public class CPDManagementPresenter
 	private Date endDate;
 	private String page;
 	protected int pageLimit = 20;
-	private String memberRefId;
+	private String memberRefId = "";
 
 	ValueChangeHandler<String> cpdValueChangeHandler = new ValueChangeHandler<String>() {
 		@Override
@@ -221,6 +225,7 @@ public class CPDManagementPresenter
 		super.onBind();
 		addRegisteredHandler(EditModelEvent.TYPE, this);
 		addRegisteredHandler(TableActionEvent.TYPE, this);
+		addRegisteredHandler(MemberCPDEvent.getType(), this);
 
 		getView().getRecordButton().addClickHandler(new ClickHandler() {
 			@Override
@@ -311,12 +316,7 @@ public class CPDManagementPresenter
 		getView().getBackButton().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				Map<String, String> params = new HashMap<String, String>();
-				params.put("searchTerm", searchTerm);
-				params.put("p", "memberCPD");
-				PlaceRequest placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.cpdmgt).with(params)
-						.build();
-				placeManager.revealPlace(placeRequest);
+				History.back();
 			}
 		});
 
@@ -512,6 +512,7 @@ public class CPDManagementPresenter
 
 	protected void loadIndividualData(String memberId, Date startDate, Date endDate) {
 		fireEvent(new ProcessingEvent());
+
 		memberDelegate.withCallback(new AbstractAsyncCallback<Integer>() {
 			@Override
 			public void onSuccess(Integer aCount) {
@@ -572,7 +573,8 @@ public class CPDManagementPresenter
 		page = request.getParameter("p", "cpdReturns");
 		String refId = request.getParameter("refId", "");
 		searchTerm = request.getParameter("searchTerm", "");
-		String fullName = request.getParameter("fullNames", "");
+		this.startDate = DateUtils.DATEFORMAT_SYS.parse("2011-01-01");
+		this.endDate = new Date();
 
 		// Set Tab to Front End
 		getView().setTab(page, refId);
@@ -580,8 +582,6 @@ public class CPDManagementPresenter
 		// If there is no refId - Load Table Data else load individual CPD
 		// Record
 		if (refId.isEmpty()) {
-			this.startDate = DateUtils.DATEFORMAT_SYS.parse("2011-01-01");
-			this.endDate = new Date();
 			if (page.equals("cpdReturns")) {
 				if (searchTerm.equals("")) {
 					loadData(startDate, endDate, "ALLRETURNS", null);
@@ -606,7 +606,7 @@ public class CPDManagementPresenter
 				this.memberRefId = refId;
 				loadIndividualData(memberRefId, startDate, endDate);
 				getView().setIndividualMemberInitialDates(startDate, endDate);
-				getView().setMemberFullNames(fullName);
+				// getView().setMemberFullNames(fullName);
 			} else {
 				// Load Individual CPD - Return OR Archive
 				getView().setIndividualMemberInitialDates(startDate, endDate);
@@ -668,5 +668,10 @@ public class CPDManagementPresenter
 			PlaceRequest placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.cpdmgt).with(params).build();
 			placeManager.revealPlace(placeRequest);
 		}
+	}
+
+	@Override
+	public void onMemberCPD(MemberCPDEvent event) {
+		getView().bindMemberDetails(event.getMember());
 	}
 }
