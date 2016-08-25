@@ -46,7 +46,6 @@ import com.icpak.rest.dao.ApplicationFormDao;
 import com.icpak.rest.dao.BookingsDao;
 import com.icpak.rest.dao.EventsDao;
 import com.icpak.rest.dao.InvoiceDao;
-import com.icpak.rest.dao.InvoiceDaoHelper;
 import com.icpak.rest.dao.MemberDao;
 import com.icpak.rest.dao.UsersDao;
 import com.icpak.rest.exceptions.ServiceException;

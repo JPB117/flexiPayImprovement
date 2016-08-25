@@ -245,15 +245,14 @@ public class ApplicationFormDao extends BaseDao {
 	}
 
 	public List<ApplicationCategory> getAllCategories() {
-
 		return getResultList(getEntityManager().createQuery("FROM ApplicationCategory c where c.isActive=1"));
 	}
 
 	public ApplicationCategory getCategory(String categoryId) {
-
 		return getSingleResultOrNull(getEntityManager().createQuery("FROM ApplicationCategory c where c.refId=:refId")
 				.setParameter("refId", categoryId));
 	}
+	
 
 	public Collection<ApplicationFormTraining> getTraining(String applicationId) {
 

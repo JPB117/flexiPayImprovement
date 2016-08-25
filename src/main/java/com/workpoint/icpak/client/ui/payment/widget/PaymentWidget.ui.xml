@@ -3,23 +3,23 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d='urn:import:com.workpoint.icpak.client.ui.component'
 	xmlns:up='urn:import:com.workpoint.icpak.client.ui.upload.custom'>
 	<ui:style>
-		.left {
+	.left {
 		padding-left: 34px;
-		}
-
-		.bottom {
+	}
+	
+	.bottom {
 		margin-bottom: 24px;
-		}
-
-		.help-text {
+	}
+	
+	.help-text {
 		font-style: italic;
 		color: #C3C1C1;
 		font-size: 14px;
-		}
-
-		.no-padding {
+	}
+	
+	.no-padding {
 		padding: 0px !important;
-		}
+	}
 	</ui:style>
 
 	<g:HTMLPanel styleName="col-sm-12">
@@ -29,18 +29,18 @@
 			<div class="alert alert-success" ui:field="panelMessage" style="text-align:center">
 				<span class="fa fa-thumbs-up fa-5x" ui:field="spnMessageIcon"></span>
 				<br />
-				<span ui:field="spnIssues" style="font-size: 24px;">Your payment was successfully
-					processed. We will process it within 72hours and send you a
+				<span ui:field="spnIssues" style="font-size: 24px;">Your payment was successful.
+					We will process it within 72hours and send you a
 					receipt.Thank-you</span>
 			</div>
 		</g:HTMLPanel>
 
 		<g:HTMLPanel ui:field="PanelPayment">
-			<ul class="nav nav-tabs">
+			<ul class="nav nav-pills nav-justified nav-stacked">
 				<li role="presentation" class="active">
 					<!-- <span class="fa fa-mobile"></span> -->
 					<a href="#mobile" aria-controls="home" role="tab" data-toggle="tab">Pay
-						with Mobile Money</a>
+						with M-Pesa</a>
 				</li>
 				<li role="presentation" ui:field="liCards">
 					<!-- <span class="fa fa-credit-card"></span> -->
@@ -100,17 +100,13 @@
 								<li>
 									7. Enter your M-PESA PIN and Press Send
 								</li>
-								<li>8. You will receive a confirmation SMS from M-PESA with a
-									Confirmation
+								<li>8. You will receive a confirmation SMS from M-PESA.
 									Code</li>
 								<li>
-									9. You will receive a confirmation SMS on the number you paid
-									with
-									from
+									9. You will receive a confirmation SMS from
 									<Strong ui:field="spnOrgName">
 										ICPAK.
 									</Strong>
-									confirming that your payment has received.
 								</li>
 
 								<li>
@@ -137,154 +133,166 @@
 				</div>
 
 				<div role="tabpanel" class="tab-pane" id="cards">
-					<div class="">
+					<div class="row">
 						<div class="col-sm-12">
 							<br />
 							<d:IssuesPanel ui:field="issuesPanel" styleName="hide alert alert-danger"></d:IssuesPanel>
 						</div>
 						<div class="col-sm-12">
-							<div class="col-lg-7 credit-card-form">
-								<div class="form-group">
-									<div class="row">
+							<div class="row">
+								<div class="col-lg-7 credit-card-form p0">
+									<div class="form-group">
+										<div class="row">
+											<div class="col-lg-12">
+												<br />
+												<div class="alert alert-success" style="margin-bottom: 0px;">
+													We will charge
+													<span ui:field="elCardAmount" style="font-weight:bold"></span>
+													<d:TextField ui:field="txtAmount" disabled="true"
+														styleName="hide"></d:TextField>
+													to your card.
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<fieldset>
 										<div class="col-lg-12">
-											<br />
-											<div class="alert alert-success" style="margin-bottom: 0px;">
-												We will charge
-												<span ui:field="elCardAmount" style="font-weight:bold"></span>
-												<d:TextField ui:field="txtAmount" disabled="true"
-													styleName="hide"></d:TextField>
-												to your card.
-											</div>
-										</div>
-									</div>
-								</div>
-
-								<fieldset>
-									<div class="col-lg-12">
-										<legend>Enter Customer Card Billing Details</legend>
-										<div class="form-group">
-											<div class="row">
-												<div class="col-sm-3 text-right">
-													<label for="emailaddress">Country:</label>
-												</div>
-												<div class="col-sm-9">
-													<d:DropDownList ui:field="lstCountry"
-														styleName="form-control">
-													</d:DropDownList>
-												</div>
-											</div>
-										</div>
-
-										<div class="form-group">
-											<div class="row">
-												<div class="col-sm-3 text-right">Phone Number:</div>
-												<div class="col-sm-9">
-													<div class="col-sm-3 {style.no-padding}">
-														<d:TextField class="form-control" ui:field="txtCountryCode"
-															value="+254" disabled="true">
-														</d:TextField>
+											<legend>Enter Customer Card Billing Details</legend>
+											<div class="form-group">
+												<div class="row">
+													<div class="col-sm-3 col-xs-3 col-sm-3 col-md-3 text-right">
+														<label for="emailaddress">Country:</label>
 													</div>
-
-													<div class="col-sm-8 {style.no-padding}" style="margin-left:25px;">
-														<d:TextField class="form-control" ui:field="txtPhoneNo">
-														</d:TextField>
-													</div>
-												</div>
-											</div>
-										</div>
-
-										<div class="form-group">
-											<div class="row">
-												<div class="col-sm-3 text-right">Names:</div>
-												<div class="col-sm-9">
-													<d:TextField class="form-control" ui:field="txtCardHolderName"
-														placeholder="Names on the card">
-													</d:TextField>
-												</div>
-											</div>
-										</div>
-
-										<div class="form-group">
-											<div class="row">
-												<div class="col-sm-3 text-right">Email:</div>
-												<div class="col-sm-9">
-													<d:TextField class="form-control" ui:field="txtCardHolderEmail"
-														placeholder="your email address">
-													</d:TextField>
-												</div>
-											</div>
-										</div>
-
-										<div class="form-group">
-											<div class="row">
-												<div class="col-sm-3 text-right">Card Number:</div>
-												<div class="col-sm-9">
-													<div class="col-sm-7 {style.no-padding}">
-														<d:TextField class="form-control" placeholder="Debit/Credit Card Number"
-															ui:field="txtCardNumber">
-														</d:TextField>
-													</div>
-													<div class="col-sm-4 {style.no-padding}" style="margin-left:25px;">
-														<d:TextField styleName="form-control"
-															ui:field="txtCvv" placeholder="Security Code"></d:TextField>
-													</div>
-													<div class="col-sm-3 hide" style="padding-left:0px">
-														<span class="help-block {style.help-text}">(The
-															last three digits at the back of your
-															card)</span>
-													</div>
-												</div>
-											</div>
-										</div>
-
-										<div class="form-group">
-											<div class="row">
-												<div class="col-sm-3 text-right">Expiry Date:</div>
-												<div class="col-sm-9">
-													<div class="col-sm-5 {style.no-padding}">
-														<d:DropDownList styleName="form-control col-sm-2"
-															ui:field="lstMonths">
-														</d:DropDownList>
-													</div>
-
-													<div class="col-sm-6 {style.no-padding}" style="margin-left: 25px;">
-														<d:DropDownList styleName="form-control"
-															ui:field="lstYears">
+													<div class="col-sm-9 col-xs-9 col-sm-9 col-md-9">
+														<d:DropDownList ui:field="lstCountry"
+															styleName="form-control">
 														</d:DropDownList>
 													</div>
 												</div>
 											</div>
+
+											<div class="form-group">
+												<div class="row">
+													<div class="col-sm-3 col-xs-3 col-md-3 col-lg-3 text-right">Phone Number:</div>
+													<div class="col-sm-9 col-xs-9 col-sm-9 col-md-9">
+														<div
+															class="col-xs-3 col-sm-3 col-md-3 col-lg-3 {style.no-padding}">
+															<d:TextField class="form-control" ui:field="txtCountryCode"
+																value="+254" disabled="true">
+															</d:TextField>
+														</div>
+
+														<div
+															class="col-xs-8 col-sm-8 col-md-8 col-lg-8 {style.no-padding}"
+															style="margin-left:7%">
+															<d:TextField class="form-control" ui:field="txtPhoneNo">
+															</d:TextField>
+														</div>
+													</div>
+												</div>
+											</div>
+
+											<div class="form-group">
+												<div class="row">
+													<div class="col-sm-3 col-xs-3 col-sm-3 col-md-3 text-right">Names:</div>
+													<div class="col-sm-9 col-xs-9 col-sm-9 col-md-9">
+														<d:TextField class="form-control" ui:field="txtCardHolderName"
+															placeholder="Names on the card">
+														</d:TextField>
+													</div>
+												</div>
+											</div>
+
+											<div class="form-group">
+												<div class="row">
+													<div class="col-sm-3 col-xs-3 col-sm-3 col-md-3 text-right">Email:</div>
+													<div class="col-sm-9 col-xs-9 col-sm-9 col-md-9">
+														<d:TextField class="form-control" ui:field="txtCardHolderEmail"
+															placeholder="your email address">
+														</d:TextField>
+													</div>
+												</div>
+											</div>
+
+											<div class="form-group">
+												<div class="row">
+													<div class="col-sm-3 col-xs-3 col-sm-3 col-md-3 text-right">Card Number:</div>
+													<div class="col-sm-9 col-xs-9 col-sm-9 col-md-9">
+														<div
+															class="col-xs-7 col-sm-7 col-md-7 col-lg-7 {style.no-padding}">
+															<d:TextField class="form-control"
+																placeholder="Debit/Credit Card Number" ui:field="txtCardNumber">
+															</d:TextField>
+														</div>
+														<div
+															class="col-xs-4 col-sm-4 col-md-4 col-lg-4 {style.no-padding}"
+															style="margin-left:7%">
+															<d:TextField styleName="form-control"
+																ui:field="txtCvv" placeholder="Security Code"></d:TextField>
+														</div>
+														<div class="col-xs-3 hide" style="padding-left:0px">
+															<span class="help-block {style.help-text}">(The
+																last three digits at the back of
+																your
+																card)</span>
+														</div>
+													</div>
+												</div>
+											</div>
+
+											<div class="form-group">
+												<div class="row">
+													<div class="col-sm-3 col-xs-3 col-sm-3 col-md-3 text-right">Expiry Date:</div>
+													<div class="col-sm-9 col-xs-9 col-sm-9 col-md-9">
+														<div
+															class="col-xs-6 col-sm-6 col-md-6 col-lg-6 {style.no-padding}">
+															<d:DropDownList styleName="form-control col-sm-2"
+																ui:field="lstMonths">
+															</d:DropDownList>
+														</div>
+
+														<div
+															class="col-xs-5 col-sm-5 col-md-5 col-lg-5 {style.no-padding}"
+															style="margin-left: 7%;">
+															<d:DropDownList styleName="form-control"
+																ui:field="lstYears">
+															</d:DropDownList>
+														</div>
+													</div>
+												</div>
+											</div>
 										</div>
-									</div>
-								</fieldset>
+									</fieldset>
 
 
-								<div class="form-group">
-									<div class="row">
-										<div class="col-sm-9">
-											<d:ActionLink ui:field="aPay" styleName="btn btn-gold btn-fill">
-												Complete
-											</d:ActionLink>
+									<div class="form-group">
+										<div class="row">
+											<div class="col-sm-9">
+												<d:ActionLink ui:field="aPay" styleName="btn btn-gold btn-fill">
+													Complete
+												</d:ActionLink>
+											</div>
 										</div>
 									</div>
 								</div>
-							</div>
-							<div class="col-lg-5 hidden-mobile hidden-tablet">
-								<div class="well" style="padding:10px 2px;margin-top:140px;">
-									<ul>
-										<li>We do not store your card details.</li>
-										<li>
-											Processed by
-											Lipisha Consortium and secured by
-											<a href="https://www.thawte.com" target="_blank"> Thwarte</a>
-											.
-										</li>
-										<li>Ensure your card is activated for
-											online transactions.</li>
-									</ul>
-									<br />
-									<g:Image url="img/Visa_Logo.png"></g:Image>
-									<g:Image url="img/Mastercard_Logo.png"></g:Image>
+								<div class="col-lg-5 hidden-xs hidden-sm hidden-md">
+									<div class="well" style="padding:10px 2px;margin-top:140px;">
+										<ul>
+											<li>We do not store your card details.</li>
+											<li>
+												Processed by
+												Lipisha Consortium and secured by
+												<a href="https://www.thawte.com" target="_blank">Thawte</a>
+												.
+											</li>
+											<li>Ensure your card is activated for
+												online transactions.</li>
+										</ul>
+										<br />
+										<g:Image url="img/Visa_Logo.png"></g:Image>
+										<g:Image url="img/Mastercard_Logo.png"></g:Image>
+									</div>
 								</div>
 							</div>
 						</div>

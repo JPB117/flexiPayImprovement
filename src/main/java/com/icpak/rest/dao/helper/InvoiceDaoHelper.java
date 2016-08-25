@@ -1,4 +1,4 @@
-package com.icpak.rest.dao;
+package com.icpak.rest.dao.helper;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -23,6 +23,8 @@ import org.xml.sax.SAXException;
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import com.icpak.rest.IDUtils;
+import com.icpak.rest.dao.BookingsDao;
+import com.icpak.rest.dao.InvoiceDao;
 import com.icpak.rest.models.event.Booking;
 import com.icpak.rest.models.event.Delegate;
 import com.icpak.rest.models.event.Event;

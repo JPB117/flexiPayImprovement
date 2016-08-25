@@ -24,6 +24,7 @@ import com.workpoint.icpak.shared.model.Country;
 import com.workpoint.icpak.shared.model.CreditCardDto;
 import com.workpoint.icpak.shared.model.CreditCardResponse;
 import com.workpoint.icpak.shared.model.InvoiceDto;
+import com.workpoint.icpak.shared.model.PaymentStatus;
 import com.workpoint.icpak.shared.model.TransactionDto;
 
 public class PaymentPresenter extends PresenterWidget<PaymentPresenter.MyView> {
@@ -68,10 +69,8 @@ public class PaymentPresenter extends PresenterWidget<PaymentPresenter.MyView> {
 	private ResourceDelegate<CountriesResource> countriesResource;
 
 	@Inject
-	PaymentPresenter(EventBus eventBus, MyView view,
-			ResourceDelegate<CreditCardResource> creditCardResource,
-			ResourceDelegate<CountriesResource> countriesResource,
-			ResourceDelegate<InvoiceResource> invoiceResource) {
+	PaymentPresenter(EventBus eventBus, MyView view, ResourceDelegate<CreditCardResource> creditCardResource,
+			ResourceDelegate<CountriesResource> countriesResource, ResourceDelegate<InvoiceResource> invoiceResource) {
 		super(eventBus, view);
 		this.creditCardResource = creditCardResource;
 		this.invoiceResource = invoiceResource;
@@ -81,25 +80,23 @@ public class PaymentPresenter extends PresenterWidget<PaymentPresenter.MyView> {
 
 	protected void onBind() {
 		super.onBind();
-		countriesResource.withCallback(
-				new AbstractAsyncCallback<List<Country>>() {
-					public void onSuccess(List<Country> countries) {
-						Collections.sort(countries, new Comparator<Country>() {
-							@Override
-							public int compare(Country o1, Country o2) {
-								return o1.getDisplayName().compareTo(
-										o2.getDisplayName());
-							}
-						});
-
-						getView().setCountries(countries);
-					};
-
+		countriesResource.withCallback(new AbstractAsyncCallback<List<Country>>() {
+			public void onSuccess(List<Country> countries) {
+				Collections.sort(countries, new Comparator<Country>() {
 					@Override
-					public void onFailure(Throwable caught) {
-						super.onFailure(caught);
+					public int compare(Country o1, Country o2) {
+						return o1.getDisplayName().compareTo(o2.getDisplayName());
 					}
-				}).getAll();
+				});
+
+				getView().setCountries(countries);
+			};
+
+			@Override
+			public void onFailure(Throwable caught) {
+				super.onFailure(caught);
+			}
+		}).getAll();
 
 		getView().getPayButton().addClickHandler(new ClickHandler() {
 			@Override
@@ -107,17 +104,14 @@ public class PaymentPresenter extends PresenterWidget<PaymentPresenter.MyView> {
 				if (getView().isPaymentValid()) {
 					fireEvent(new ProcessingEvent());
 					getView().getPayButton().addStyleName("hide");
-					creditCardResource.withCallback(
-							new AbstractAsyncCallback<CreditCardResponse>() {
-								@Override
-								public void onSuccess(
-										CreditCardResponse response) {
-									getView().getPayButton().removeStyleName(
-											"hide");
-									getView().setCardResponse(response);
-									fireEvent(new ProcessingCompletedEvent());
-								}
-							}).postPayment(getView().getCreditCardDetails());
+					creditCardResource.withCallback(new AbstractAsyncCallback<CreditCardResponse>() {
+						@Override
+						public void onSuccess(CreditCardResponse response) {
+							getView().getPayButton().removeStyleName("hide");
+							getView().setCardResponse(response);
+							fireEvent(new ProcessingCompletedEvent());
+						}
+					}).postPayment(getView().getCreditCardDetails());
 				}
 			}
 		});
@@ -126,21 +120,26 @@ public class PaymentPresenter extends PresenterWidget<PaymentPresenter.MyView> {
 			@Override
 			public void onClick(ClickEvent event) {
 				fireEvent(new ProcessingEvent());
-				invoiceResource.withCallback(
-						new AbstractAsyncCallback<InvoiceDto>() {
-							@Override
-							public void onSuccess(InvoiceDto result) {
-								fireEvent(new ProcessingCompletedEvent());
-								getView().setInvoiceResult(result);
-							}
+				if (invoice.getRefId().equals("SUBSCRIPTION")) {
+					fireEvent(new ProcessingCompletedEvent());
+					invoice.setStatus(PaymentStatus.PAID);
+					getView().setInvoiceResult(invoice);
+				} else {
+					invoiceResource.withCallback(new AbstractAsyncCallback<InvoiceDto>() {
+						@Override
+						public void onSuccess(InvoiceDto result) {
+							fireEvent(new ProcessingCompletedEvent());
+							getView().setInvoiceResult(result);
+						}
 
-							@Override
-							public void onFailure(Throwable caught) {
-								fireEvent(new ProcessingCompletedEvent());
-								Window.alert("Something went wrong..Please report this to Administrator..");
-								super.onFailure(caught);
-							}
-						}).checkPaymentStatus(invoice.getRefId());
+						@Override
+						public void onFailure(Throwable caught) {
+							fireEvent(new ProcessingCompletedEvent());
+							Window.alert("Something went wrong..Please report this to Administrator..");
+							super.onFailure(caught);
+						}
+					}).checkPaymentStatus(invoice.getRefId());
+				}
 			}
 		});
 
@@ -150,29 +149,27 @@ public class PaymentPresenter extends PresenterWidget<PaymentPresenter.MyView> {
 				if (getView().isOfflineValid()) {
 					// Submit the transaction
 					fireEvent(new ProcessingEvent());
-					TransactionDto trx = getView()
-							.getOfflineTransactionoBject();
-					invoiceResource.withCallback(
-							new AbstractAsyncCallback<TransactionDto>() {
-								@Override
-								public void onSuccess(TransactionDto result) {
-									getView().bindOfflineTransaction(result);
-									getView().showUploaderWidget(true);
-									fireEvent(new ProcessingCompletedEvent());
-								}
+					TransactionDto trx = getView().getOfflineTransactionoBject();
+					invoiceResource.withCallback(new AbstractAsyncCallback<TransactionDto>() {
+						@Override
+						public void onSuccess(TransactionDto result) {
+							getView().bindOfflineTransaction(result);
+							getView().showUploaderWidget(true);
+							fireEvent(new ProcessingCompletedEvent());
+						}
 
-								@Override
-								public void onFailure(Throwable caught) {
-									fireEvent(new ProcessingCompletedEvent());
-									Window.alert("Something went wrong..Please report this to Administrator..");
-									super.onFailure(caught);
-								}
-							}).create(trx);
+						@Override
+						public void onFailure(Throwable caught) {
+							fireEvent(new ProcessingCompletedEvent());
+							Window.alert("Something went wrong..Please report this to Administrator..");
+							super.onFailure(caught);
+						}
+					}).create(trx);
 
 				}
 			}
 		});
-		
+
 	}
 
 	public void setAmount(String amount) {

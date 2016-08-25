@@ -1,5 +1,7 @@
 package com.icpak.rest.models.membership;
 
+import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -30,6 +32,7 @@ public class ApplicationCategory extends PO {
 	private String description;
 	private double applicationAmount;
 	private Double renewalAmount;
+	private Date renewalDueDate;
 
 	public ApplicationCategory() {
 	}
@@ -81,5 +84,13 @@ public class ApplicationCategory extends PO {
 		setDescription(dto.getDescription());
 		setApplicationAmount(dto.getApplicationAmount());
 		setRenewalAmount(dto.getRenewalAmount());
+	}
+
+	public Date getRenewalDueDate() {
+		return renewalDueDate;
+	}
+
+	public void setRenewalDueDate(Date renewalDueDate) {
+		this.renewalDueDate = renewalDueDate;
 	}
 }

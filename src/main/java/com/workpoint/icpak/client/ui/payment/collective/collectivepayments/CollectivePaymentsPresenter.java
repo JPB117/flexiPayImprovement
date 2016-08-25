@@ -2,7 +2,6 @@ package com.workpoint.icpak.client.ui.payment.collective.collectivepayments;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
@@ -25,12 +24,12 @@ import com.workpoint.icpak.client.service.AbstractAsyncCallback;
 import com.workpoint.icpak.client.service.ServiceCallback;
 import com.workpoint.icpak.client.ui.component.ActionLink;
 import com.workpoint.icpak.client.ui.events.ClientDisconnectionEvent;
-import com.workpoint.icpak.client.ui.events.PaymentCompletedEvent;
-import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
-import com.workpoint.icpak.client.ui.events.ProcessingEvent;
 import com.workpoint.icpak.client.ui.events.ClientDisconnectionEvent.ClientDisconnectionHandler;
+import com.workpoint.icpak.client.ui.events.PaymentCompletedEvent;
 import com.workpoint.icpak.client.ui.events.PaymentCompletedEvent.PaymentCompletedHandler;
+import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
 import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent.ProcessingCompletedHandler;
+import com.workpoint.icpak.client.ui.events.ProcessingEvent;
 import com.workpoint.icpak.client.ui.events.ProcessingEvent.ProcessingHandler;
 import com.workpoint.icpak.client.ui.payment.PaymentPresenter;
 import com.workpoint.icpak.client.ui.profile.paysubscription.PaymentSubscription;
@@ -111,6 +110,7 @@ public class CollectivePaymentsPresenter
 							if (member.getRefId() != null) {
 								getView().setLegendText("Paying for " + member.getFullName());
 								final InvoiceDto invoice = new InvoiceDto();
+								invoice.setRefId("SUBSCRIPTION");
 								invoice.setAmount(Double.valueOf(amountToPay));
 								invoice.setDocumentNo(getView().getSubscriptionWidget().getMemberNo());
 								invoice.setInvoiceRefId(getView().getSubscriptionWidget().getMemberNo());

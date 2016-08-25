@@ -1,8 +1,10 @@
 package com.workpoint.icpak.tests.dao;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.json.JSONArray;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -79,7 +81,7 @@ public class TestApplicationForm extends AbstractDaoTest {
 		List<ApplicationFormHeaderDto> members = helper.importMissingMembers(applicationDao.importMissingMembers());
 	}
 
-	@Test
+	//@Test
 	public void ImportApprovedMembers() {
 		helper.importApprovedMembers();
 	}
@@ -190,5 +192,13 @@ public class TestApplicationForm extends AbstractDaoTest {
 				logger.warn(" DIRTY MEMBER NO " + m.getMemberNo());
 			}
 		}
+	}
+
+	@Test
+	public void testArrayEncode() {
+		String[] applicationNos = { "C/101", "C/102", "C/103" };
+		JSONArray mJSONArray = new JSONArray(Arrays.asList(applicationNos));
+		
+		System.err.println(mJSONArray);
 	}
 }

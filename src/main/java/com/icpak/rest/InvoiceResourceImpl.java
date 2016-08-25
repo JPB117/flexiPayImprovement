@@ -12,7 +12,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import com.google.inject.Inject;
-import com.icpak.rest.dao.InvoiceDaoHelper;
+import com.icpak.rest.dao.helper.InvoiceDaoHelper;
 import com.icpak.rest.dao.helper.TransactionDaoHelper;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.workpoint.icpak.shared.api.InvoiceResource;

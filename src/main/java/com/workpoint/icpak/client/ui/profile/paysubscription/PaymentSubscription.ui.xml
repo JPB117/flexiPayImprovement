@@ -19,13 +19,13 @@
 
 			<div class="form-group">
 				<div class="row hide" ui:field="divMemberNo">
-					<div class="col-lg-5">
+					<div class="col-lg-5 col-sm-5 col-xs-5 col-md-5">
 						<label for="firstname" class="pull-right" style="padding-top:10px">
 							Enter Member
 							Number:
 						</label>
 					</div>
-					<div class="col-lg-3 p0">
+					<div class="col-lg-3 col-sm-3 col-xs-5 col-md-3 p0">
 						<d:TextField ui:field="txtMemberNo" styleName="form-control"
 							placeholder="eg:1234"></d:TextField>
 					</div>
@@ -34,13 +34,13 @@
 
 			<div class="form-group">
 				<div class="row">
-					<div class="col-lg-5">
+					<div class="col-lg-5 col-sm-5 col-xs-5 col-md-5">
 						<label for="firstname" class="pull-right" style="padding-top:10px">
 							Amount you
 							wish to pay:
 						</label>
 					</div>
-					<div class="col-lg-3 p0">
+					<div class="col-lg-3 col-sm-3 col-xs-5 col-md-3 p0">
 						<d:TextField ui:field="txtAmountToPay" styleName="form-control"
 							type="number" placeholder="eg:10000"></d:TextField>
 					</div>
