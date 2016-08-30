@@ -190,6 +190,27 @@ public class BookingsDaoHelper {
 	public List<DelegateDto> getDelegateByQrCode(String uriInfo, String eventId, Integer offset, Integer limit,
 			String searchTerm) {
 		List<DelegateDto> delegateDtos = dao.getAllDelegates(eventId, offset, limit, searchTerm, true, "", "");
+
+		// If No Result is found - Search for this Member and book him for this
+		// event;
+		if (delegateDtos.isEmpty()) {
+			Member member = memberDao.findByMemberQrCode(searchTerm);
+			if (member != null) {
+				DelegateDto delegate = new DelegateDto();
+				delegate.setMemberNo(member.getMemberNo());
+
+				BookingDto b = createBooking(eventId, delegate);
+				delegateDtos = b.getDelegates();
+
+				if (b.getRefId() != null) {
+					sendProInvoice(b.getRefId());
+					sendDelegateSMS(b.getRefId());
+				}
+			} else {
+				logger.debug("No member found for this qr Code::" + searchTerm);
+			}
+		}
+
 		return delegateDtos;
 	}
 

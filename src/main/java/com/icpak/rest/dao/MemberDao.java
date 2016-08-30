@@ -419,6 +419,12 @@ public class MemberDao extends BaseDao {
 		return getSingleResultOrNull(query);
 	}
 
+	public Member findByMemberQrCode(String memberQrCode) {
+		String sql = "FROM Member where memberQrCode=:memberQrCode";
+		Query query = getEntityManager().createQuery(sql).setParameter("memberQrCode", memberQrCode);
+		return getSingleResultOrNull(query);
+	}
+
 	public Member findByUserId(Long userId) {
 		String sql = "FROM Member where userId=:userId";
 		Query query = getEntityManager().createQuery(sql).setParameter("userId", userId);

@@ -39,15 +39,13 @@ public class DelegatesResourceImpl implements DelegatesResource {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Retrieve all active bookings")
-	public List<DelegateDto> getAll(
-			@ApiParam(value = "Starting point to fetch") @QueryParam("offset") Integer offset,
+	public List<DelegateDto> getAll(@ApiParam(value = "Starting point to fetch") @QueryParam("offset") Integer offset,
 			@ApiParam(value = "No of Items to fetch") @QueryParam("limit") Integer limit,
-			@QueryParam("searchTerm") String searchTerm,
-			@QueryParam("accomodationRefId") String accomodationRefId,
+			@QueryParam("searchTerm") String searchTerm, @QueryParam("accomodationRefId") String accomodationRefId,
 			@QueryParam("bookingStatus") String bookingStatus) {
 		String uri = "";
-		List<DelegateDto> dtos = helper.getAllDelegates("", eventId, offset,
-				limit, searchTerm, accomodationRefId, bookingStatus);
+		List<DelegateDto> dtos = helper.getAllDelegates("", eventId, offset, limit, searchTerm, accomodationRefId,
+				bookingStatus);
 		return dtos;
 	}
 
@@ -55,11 +53,8 @@ public class DelegatesResourceImpl implements DelegatesResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Retrieve booking by qr code")
 	@Path("/qrCodeSearch")
-	public List<DelegateDto> getByQrCode(
-			@QueryParam("searchTerm") String searchTerm) {
-		String uri = "";
-		List<DelegateDto> dtos = helper.getDelegateByQrCode("", eventId, 0, 10,
-				searchTerm);
+	public List<DelegateDto> getByQrCode(@QueryParam("searchTerm") String searchTerm) {
+		List<DelegateDto> dtos = helper.getDelegateByQrCode("", eventId, 0, 10, searchTerm);
 		return dtos;
 	}
 
@@ -74,8 +69,7 @@ public class DelegatesResourceImpl implements DelegatesResource {
 	public Integer getSearchCount(@QueryParam("searchTerm") String searchTerm,
 			@QueryParam("accomodationRefId") String accomodationRefId,
 			@QueryParam("bookingStatus") String bookingStatus) {
-		return helper.getDelegatesCount(eventId, searchTerm, accomodationRefId,
-				bookingStatus);
+		return helper.getDelegatesCount(eventId, searchTerm, accomodationRefId, bookingStatus);
 	}
 
 	@GET
