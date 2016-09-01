@@ -112,7 +112,12 @@ public class SMSIntegration {
 			// }
 			sms.setSmsId(messageId);
 			sms.setSmsTo(number);
-			sms.setStatus(SmsStatus.valueOf(status.toUpperCase()));
+			try {
+				sms.setStatus(SmsStatus.valueOf(status.toUpperCase().trim()));
+			} catch (IllegalArgumentException e) {
+				sms.setStatus(SmsStatus.FAILED);
+				System.err.println("*****Unknown response status*******");
+			}
 			smsDao.save(sms);
 
 			if (!status.equals("Success")) {

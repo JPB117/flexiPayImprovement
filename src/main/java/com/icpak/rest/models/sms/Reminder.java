@@ -20,6 +20,7 @@ public class Reminder extends PO {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private String reminderName;
 	private String reminderFrom;
 	private String reminderTo;
 	private String copiesTo;
@@ -93,6 +94,14 @@ public class Reminder extends PO {
 
 	public void setExecutionTime(Date executionTime) {
 		this.executionTime = executionTime;
+	}
+
+	public String getReminderName() {
+		return reminderName;
+	}
+
+	public void setReminderName(String reminderName) {
+		this.reminderName = reminderName;
 	}
 
 }

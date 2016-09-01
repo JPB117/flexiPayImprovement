@@ -8,6 +8,7 @@ public class ReminderDto extends SerializableObj {
 
 	private static final long serialVersionUID = 1L;
 
+	private String reminderName;
 	private String reminderFrom;
 	private String reminderTo;
 	private String copiesTo;
@@ -79,5 +80,13 @@ public class ReminderDto extends SerializableObj {
 
 	public void setExecutionDate(Date executionDate) {
 		this.executionDate = executionDate;
+	}
+
+	public String getReminderName() {
+		return reminderName;
+	}
+
+	public void setReminderName(String reminderName) {
+		this.reminderName = reminderName;
 	}
 }

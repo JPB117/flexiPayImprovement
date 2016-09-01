@@ -9,7 +9,8 @@ public enum SmsStatus {
 	REJECTED("Rejected","The message has been rejected by the MSP. This is a final status."),
 	SUCCESS("Success","The message has successfully been delivered to the receiver's handset. This is a final status."),
 	FAILED("Failed","The message could not be delivered to the receiver's handset. This is a final status"),
-	INSUFFICIENTBALANCE("Insufficient Balance","The credit is insufficient");
+	INSUFFICIENTBALANCE("Insufficient Balance","The credit is insufficient"),
+	INVALIDPHONENUMBER("Invalid Phone Number","Invalid Phone Number");
 	
 	private String displayName;
 	private String description;

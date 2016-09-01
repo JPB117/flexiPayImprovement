@@ -27,14 +27,15 @@ public class TestReminders extends AbstractDaoTest {
 
 	@Test
 	public void testReminderCreation() {
-		String message = "Dear {fullName}, Please note that this month contribution of Kes 2,000 is due on 10th. Paybill 510511, Account No: 2141.";
+		String message = "Dear {fullName}, Its time to go home..because this thing is now working fine";
 		ReminderDto r = new ReminderDto();
 		r.setReminderFrom("ICPAK");
 		r.setReminderTo("ALLMEMBERS");
+		r.setReminderName("Testing Reminders");
 		r.setCopiesTo("ME");
 		r.setReminderType(ReminderType.SMS);
 		r.setMessage(message);
-		r.setExecutionString("10 days before 2016-08-31 at 10:00");
+		r.setExecutionString("0 days before 2016-09-01 at 21:10");
 
 		reminderHelper.createReminder(r);
 
@@ -42,21 +43,7 @@ public class TestReminders extends AbstractDaoTest {
 
 	// @Test
 	public void testWindowsSchedulor() throws IOException, InterruptedException {
-		String executeCmd = "SchTasks /Create /SC DAILY /TN \"My Task\" /TR \"C:RunMe.bat\" /ST 09:00";
-		/* NOTE: Executing the command here */
-		Process runtimeProcess = Runtime.getRuntime().exec(executeCmd);
-		int processComplete = runtimeProcess.waitFor();
-
-		/*
-		 * NOTE: processComplete=0 if correctly executed, will contain other
-		 * values if not
-		 */
-		if (processComplete == 0) {
-			System.out.println("Execution successful.");
-
-		} else {
-			System.out.println("Execution Failed with code:" + processComplete);
-		}
+		// reminderHelper.createReminderInSchedulor();
 
 	}
 
