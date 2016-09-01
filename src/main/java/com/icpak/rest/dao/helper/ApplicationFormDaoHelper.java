@@ -33,6 +33,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.log4j.Logger;
+import org.json.JSONArray;
 import org.xml.sax.SAXException;
 
 import com.amazonaws.util.json.JSONException;
@@ -53,6 +54,7 @@ import com.icpak.rest.models.membership.ApplicationCategory;
 import com.icpak.rest.models.membership.ApplicationFormHeader;
 import com.icpak.rest.models.membership.Member;
 import com.icpak.rest.models.membership.MemberImport;
+import com.icpak.rest.models.payloads.ApplicationSyncPayLoad;
 import com.icpak.rest.models.util.Attachment;
 import com.icpak.rest.util.ApplicationSettings;
 import com.icpak.rest.utils.Doc;
@@ -990,5 +992,94 @@ public class ApplicationFormDaoHelper {
 		} else {
 			return "FAILED";
 		}
+	}
+
+	public void syncApprovedApplicantsFromErp() {
+		// Get all Processed applications
+		List<String> allErpCodes = applicationDao.getAllProcessedApplicationFileNos();
+		List<ApplicationSyncPayLoad> syncedApplicants = new ArrayList<>();
+		if (!allErpCodes.isEmpty()) {
+			JSONArray mJSONArray = new JSONArray(allErpCodes);
+
+			// Send this to ERP
+			try {
+				String results = postErpCodesToERP(mJSONArray);
+
+				if (results.equals("null")) {
+					logger.error(" ===>>><<<< === NO REPLY FROM ERP ===>><<<>>== ");
+				} else {
+					JSONObject jo = new JSONObject(results);
+					for (int i = 0; i < jo.names().length(); i++) {
+						JSONObject jObject = (JSONObject) jo.getJSONObject(jo.names().getString(i));
+						ApplicationSyncPayLoad syncPayLoad = new ApplicationSyncPayLoad();
+						syncPayLoad.setApplicationNo_(jObject.getString("ApplicationNo_"));
+						syncPayLoad.setEmail(jObject.getString("email"));
+						syncPayLoad.setReg_no(jo.getString("reg_no"));
+						syncedApplicants.add(syncPayLoad);
+					}
+
+					for (ApplicationSyncPayLoad appSync : syncedApplicants) {
+						// Update this Applications
+						// ApplicationFormHeader application =
+						// applicationDao.findByErpCode(appSync.getApplicationNo_());
+
+						// if (application != null) {
+						// application.setApplicationStatus(ApplicationStatus.APPROVED);
+						//
+						// // Find the User and Member Object
+						// // user
+						// } else {
+						//
+						// }
+					}
+
+				}
+
+			} catch (URISyntaxException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public String postErpCodesToERP(JSONArray mJSONArray) throws URISyntaxException, ParseException, JSONException {
+		final HttpClient httpClient = new DefaultHttpClient();
+
+		logger.info("payload to ERP>>>>" + mJSONArray);
+
+		final URI uri = URIUtils.createURI("http", "41.139.138.165/", -1, "members/new_m_api.php", null, null);
+		final HttpPost request = new HttpPost();
+		request.setURI(uri);
+
+		HttpResponse response = null;
+
+		StringBuffer result = null;
+
+		try {
+			request.setHeader("accept", "application/json");
+			@SuppressWarnings("deprecation")
+			StringEntity stringEntity = new StringEntity(mJSONArray.toString(), "application/json", "UTF-8");
+			request.setEntity(stringEntity);
+
+			response = httpClient.execute(request);
+			BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+
+			result = new StringBuffer();
+
+			String line = "";
+			while ((line = rd.readLine()) != null) {
+				result.append(line);
+			}
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return result.toString();
 	}
 }

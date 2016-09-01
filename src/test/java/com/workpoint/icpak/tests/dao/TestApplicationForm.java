@@ -81,7 +81,7 @@ public class TestApplicationForm extends AbstractDaoTest {
 		List<ApplicationFormHeaderDto> members = helper.importMissingMembers(applicationDao.importMissingMembers());
 	}
 
-	//@Test
+	// @Test
 	public void ImportApprovedMembers() {
 		helper.importApprovedMembers();
 	}
@@ -194,11 +194,15 @@ public class TestApplicationForm extends AbstractDaoTest {
 		}
 	}
 
-	@Test
+	// @Test
 	public void testArrayEncode() {
 		String[] applicationNos = { "C/101", "C/102", "C/103" };
 		JSONArray mJSONArray = new JSONArray(Arrays.asList(applicationNos));
-		
 		System.err.println(mJSONArray);
+	}
+
+	@Test
+	public void testSyncToErp() {
+		helper.syncApprovedApplicantsFromErp();
 	}
 }

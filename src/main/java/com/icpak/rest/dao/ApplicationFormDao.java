@@ -59,6 +59,17 @@ public class ApplicationFormDao extends BaseDao {
 					.setParameter("status", ApplicationStatus.APPROVED)
 					.setParameter("searchTerm", "%" + searchTerm + "%"), offSet, limit);
 		}
+	}
+
+	public List<String> getAllProcessedApplicationFileNos() {
+
+		StringBuffer sql = new StringBuffer(
+				" select erpCode from `application form header` where applicationStatus=\"PROCESSING\" "
+						+ " and erpCode IS NOT NULL");
+		Query query = getEntityManager().createNativeQuery(sql.toString());
+		List<String> allErpCodes = getResultList(query);
+
+		return allErpCodes;
 
 	}
 
@@ -252,7 +263,6 @@ public class ApplicationFormDao extends BaseDao {
 		return getSingleResultOrNull(getEntityManager().createQuery("FROM ApplicationCategory c where c.refId=:refId")
 				.setParameter("refId", categoryId));
 	}
-	
 
 	public Collection<ApplicationFormTraining> getTraining(String applicationId) {
 
@@ -331,7 +341,6 @@ public class ApplicationFormDao extends BaseDao {
 
 	public void sendMessageToHonourables() {
 		String sql = "select name,number,paid,balance from `karagita_balances_july`";
-
 		/*
 		 * select * from kirinyaga_mca select * from muranga_mca select * from
 		 * nyandarua_mca select * from nyeri_mca
@@ -363,7 +372,6 @@ public class ApplicationFormDao extends BaseDao {
 	}
 
 	public List<MemberImport> importMissingMembers() {
-
 		List<MemberImport> memberImports = new ArrayList<>();
 		String sql = "select a.id,a.No_,a.Name,a.`E-mail`,a.Status,a.`Customer Type`,a.`Customer Posting Group`,"
 				+ "a.`Practising No`,a.`Gender`,a.paidUp,a.Address,a.Address2,a.City,a.phoneNo_,a.PostCode"
@@ -401,7 +409,7 @@ public class ApplicationFormDao extends BaseDao {
 			memberImport.setDateRegistered((value = row[i++]) == null ? null : (Date) value);
 			memberImports.add(memberImport);
 		}
-
 		return memberImports;
 	}
+
 }
