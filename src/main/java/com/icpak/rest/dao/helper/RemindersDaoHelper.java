@@ -106,7 +106,7 @@ public class RemindersDaoHelper {
 		}
 		String executeCmd = "SchTasks /Create /SC " + reminder.getRepetitionType() + " /TN \""
 				+ reminder.getReminderName() + "_" + reminder.getRefId() + "\" /TR " + curl + " /SD "
-				+ ServerDateUtils.DATEFORMAT.format(reminder.getExecutionTime()) + " /ST "
+				+ ServerDateUtils.DATEFORMATAMERICAN.format(reminder.getExecutionTime()) + " /ST "
 				+ ServerDateUtils.TWENTYFOURHOURTIMESTAMP.format(reminder.getExecutionTime()) + additionals;
 
 		System.err.println(executeCmd);
