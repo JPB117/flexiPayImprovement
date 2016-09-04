@@ -10,7 +10,8 @@ import javax.persistence.Table;
 
 import com.icpak.rest.models.base.PO;
 import com.workpoint.icpak.shared.model.reminders.ReminderDto;
-import com.workpoint.icpak.shared.model.reminders.ReminderType;
+import com.workpoint.icpak.shared.model.reminders.ReminderRepetitionType;
+import com.workpoint.icpak.shared.model.reminders.ReminderActionType;
 
 @Entity
 @Table(name = "reminders")
@@ -28,7 +29,9 @@ public class Reminder extends PO {
 	@Column(name = "message", columnDefinition = "TEXT")
 	private String message;
 	@Enumerated(EnumType.STRING)
-	private ReminderType reminderType;
+	private ReminderActionType reminderType;
+	@Enumerated(EnumType.STRING)
+	private ReminderRepetitionType repetitionType;
 	private Date executionTime;
 
 	public String getReminderFrom() {
@@ -71,11 +74,11 @@ public class Reminder extends PO {
 		this.message = message;
 	}
 
-	public ReminderType getReminderType() {
+	public ReminderActionType getReminderType() {
 		return reminderType;
 	}
 
-	public void setReminderType(ReminderType reminderType) {
+	public void setReminderType(ReminderActionType reminderType) {
 		this.reminderType = reminderType;
 	}
 
@@ -86,6 +89,7 @@ public class Reminder extends PO {
 		setSubject(reminder.getSubject());
 		setMessage(reminder.getMessage());
 		setReminderType(reminder.getReminderType());
+		setReminderName(reminder.getReminderName());
 	}
 
 	public Date getExecutionTime() {
@@ -102,6 +106,14 @@ public class Reminder extends PO {
 
 	public void setReminderName(String reminderName) {
 		this.reminderName = reminderName;
+	}
+
+	public ReminderRepetitionType getRepetitionType() {
+		return repetitionType;
+	}
+
+	public void setRepetitionType(ReminderRepetitionType repetitionType) {
+		this.repetitionType = repetitionType;
 	}
 
 }

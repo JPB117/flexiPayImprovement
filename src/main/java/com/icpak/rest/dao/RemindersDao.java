@@ -7,7 +7,7 @@ import java.util.List;
 import com.icpak.rest.models.sms.Reminder;
 import com.workpoint.icpak.server.util.ServerDateUtils;
 import com.workpoint.icpak.shared.model.reminders.ReminderDto;
-import com.workpoint.icpak.shared.model.reminders.ReminderType;
+import com.workpoint.icpak.shared.model.reminders.ReminderActionType;
 
 public class RemindersDao extends BaseDao {
 
@@ -33,7 +33,7 @@ public class RemindersDao extends BaseDao {
 			r.setCopiesTo((value = row[i++]) == null ? null : value.toString());
 			r.setSubject((value = row[i++]) == null ? null : value.toString());
 			r.setMessage((value = row[i++]) == null ? null : value.toString());
-			r.setReminderType((value = row[i++]) == null ? null : ReminderType.valueOf(value.toString()));
+			r.setReminderType((value = row[i++]) == null ? null : ReminderActionType.valueOf(value.toString()));
 			reminders.add(r);
 		}
 		return reminders;

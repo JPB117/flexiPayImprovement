@@ -1,6 +1,8 @@
 package com.icpak.rest.dao;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Query;
@@ -13,6 +15,7 @@ import com.icpak.rest.exceptions.ServiceException;
 import com.icpak.rest.models.ErrorCodes;
 import com.icpak.rest.models.auth.Role;
 import com.icpak.rest.models.auth.User;
+import com.icpak.rest.models.membership.MemberImport;
 import com.icpak.rest.models.util.Attachment;
 import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.shared.model.UserDto;
@@ -312,5 +315,23 @@ public class UsersDao extends BaseDao {
 		assert memberNo != null;
 		String query = "from User u where u.memberNo = :memberNo";
 		return getResultList((getEntityManager().createQuery(query).setParameter("memberNo", memberNo)));
+	}
+
+	public List<MemberImport> importUsers() {
+		List<MemberImport> memberImports = new ArrayList<>();
+		String sql = "select Name,phoneNo_ from karagita a";
+		Query query = getEntityManager().createNativeQuery(sql);
+
+		List<Object[]> rows = getResultList(query);
+
+		for (Object[] row : rows) {
+			int i = 0;
+			Object value = null;
+			MemberImport memberImport = new MemberImport();
+			memberImport.setName((value = row[i++]) == null ? null : value.toString());
+			memberImport.setPhoneNo_((value = row[i++]) == null ? null : value.toString());
+			memberImports.add(memberImport);
+		}
+		return memberImports;
 	}
 }

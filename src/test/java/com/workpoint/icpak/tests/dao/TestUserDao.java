@@ -17,6 +17,7 @@ import com.icpak.rest.dao.UsersDao;
 import com.icpak.rest.dao.helper.UsersDaoHelper;
 import com.icpak.rest.models.auth.Role;
 import com.icpak.rest.models.auth.User;
+import com.icpak.rest.models.membership.MemberImport;
 import com.workpoint.icpak.shared.model.RoleDto;
 import com.workpoint.icpak.shared.model.UserDto;
 import com.workpoint.icpak.tests.base.AbstractDaoTest;
@@ -43,8 +44,7 @@ public class TestUserDao extends AbstractDaoTest {
 		user.setName("Dennis");
 		user.setSurname("Milgo");
 		user.setPhoneNumber("0721002323");
-		RoleDto dto = ((Role) roleDao.findByRefId("ngfLt4ERZm0hQtXp",
-				Role.class)).toDto();
+		RoleDto dto = ((Role) roleDao.findByRefId("ngfLt4ERZm0hQtXp", Role.class)).toDto();
 		user.setGroups(Arrays.asList(dto));
 
 		// This was previously failing due to a not null contraint on the
@@ -100,7 +100,7 @@ public class TestUserDao extends AbstractDaoTest {
 		helper.getUserByActivationEmail("sammurez@gmail.com");
 	}
 
-	@Test
+	// @Test
 	public void testActivationMail() {
 		// User userInDb = usersDao.findByUserId("AoencYogwvoPxa7T");
 		// helper.sendActivationEmail2(userInDb);
@@ -121,5 +121,25 @@ public class TestUserDao extends AbstractDaoTest {
 	public void findUserByMemberNo() {
 		User user = usersDao.findUserByMemberNo("ASSOC/898");
 		logger.warn(" USER " + new JSONObject(user));
+	}
+
+	@Test
+	public void testImportUsers() {
+		List<MemberImport> allMembers = usersDao.importUsers();
+		int counter = 1;
+		for (MemberImport i : allMembers) {
+
+			UserDto dto = new UserDto();
+			dto.setFullName(i.getName());
+			dto.setPhoneNumber(i.getPhoneNo_());
+			dto.setEmail(i.getPhoneNo_());
+			dto.setMemberNo(counter + "");
+			UserDto userDto = helper.create(dto, false);
+
+			User u = usersDao.findByRefId(userDto.getRefId(), User.class);
+			u.copyFrom(userDto);
+			helper.createDefaultMemberForUser(u);
+			counter++;
+		}
 	}
 }

@@ -14,7 +14,8 @@ public class ReminderDto extends SerializableObj {
 	private String copiesTo;
 	private String subject;
 	private String message;
-	private ReminderType reminderType;
+	private ReminderRepetitionType repetitionRepetitionType;
+	private ReminderActionType reminderType;
 	private String executionDateString;
 	private Date executionDate;
 
@@ -66,11 +67,11 @@ public class ReminderDto extends SerializableObj {
 		this.message = message;
 	}
 
-	public ReminderType getReminderType() {
+	public ReminderActionType getReminderType() {
 		return reminderType;
 	}
 
-	public void setReminderType(ReminderType reminderType) {
+	public void setReminderType(ReminderActionType reminderType) {
 		this.reminderType = reminderType;
 	}
 
@@ -88,5 +89,13 @@ public class ReminderDto extends SerializableObj {
 
 	public void setReminderName(String reminderName) {
 		this.reminderName = reminderName;
+	}
+
+	public ReminderRepetitionType getRepetitionType() {
+		return repetitionRepetitionType;
+	}
+
+	public void setRepetitionType(ReminderRepetitionType repetitionType) {
+		this.repetitionRepetitionType = repetitionType;
 	}
 }

@@ -6,6 +6,7 @@ import java.util.Date;
 public class ServerDateUtils {
 
 	static String datepattern = "dd/MM/yyyy";
+	static String datepattern_american = "MM/dd/yyyy";
 	static String datepattern_sys = "yyyy-MM-dd";
 	static String yearpattern = "yyyy";
 	static String createdpattern = "dd/MM/yyyy HH:mm";
@@ -24,8 +25,8 @@ public class ServerDateUtils {
 	static String mpesaTimeStamp = "yyyy-MM-dd HH:mm:ss";
 
 	public static final SimpleDateFormat CREATEDFORMAT = getFormat(createdpattern);
-
 	public static final SimpleDateFormat DATEFORMAT = getFormat(datepattern);
+	public static final SimpleDateFormat DATEFORMATAMERICAN = getFormat(datepattern_american);
 	public static final SimpleDateFormat DATEFORMAT_SYS = getFormat(datepattern_sys);
 	public static final SimpleDateFormat SHORTTIMESTAMP = getFormat(shortTimeStamp);
 	public static final SimpleDateFormat YEARFORMAT = getFormat(yearpattern);

@@ -17,6 +17,8 @@ public class TestExecuteReminders extends AbstractDaoTest {
 
 	@Test
 	public void executeReminders() {
-		reminderHelper.executeReminder();
+		// reminderHelper.executeReminder();
+
+		reminderHelper.executeReminder("6kPa2FYP6SAgpzOU");
 	}
 }
