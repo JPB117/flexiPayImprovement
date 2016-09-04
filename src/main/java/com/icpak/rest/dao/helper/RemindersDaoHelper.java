@@ -95,7 +95,7 @@ public class RemindersDaoHelper {
 	 */
 	public void createReminderInSchedulor(Reminder reminder) throws IOException, InterruptedException {
 		String curl = "\"\'C:\\Program Files\\curl-7.50.1-win64-mingw\\curl-7.50.1-win64-mingw\\bin\\curl.exe' "
-				+ "http://localhost:8888/api/reminders/" + reminder.getRefId() + " -s -X POST\"";
+				+ "http://localhost:8080/karagita/api/reminders/" + reminder.getRefId() + " -s -X POST\"";
 
 		String additionals = "";
 		if (reminder.getRepetitionType() == ReminderRepetitionType.MONTHLY) {
