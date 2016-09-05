@@ -51,20 +51,20 @@ public class TestBookingDao extends AbstractDaoTest {
 		bookingsHelper.getMemberBookings("lYEAuIVOBGoh9e9j", 0, 100);
 	}
 
-	@Test
+	// @Test
 	public void member() {
 		Delegate d = eventDao.findByRefId("z95JrnnPCnbNlNMj", Delegate.class);
 		// daoHelper.updateCPDFromAttendance(d, AttendanceStatus.ATTENDED);
-		 DelegateDto dto = d.toDto();
-		 dto.setIsBookingActive(1);
-		bookingsHelper.updateDelegate("z95JrnnPCnbNlNMj",dto);
+		DelegateDto dto = d.toDto();
+		dto.setIsBookingActive(1);
+		bookingsHelper.updateDelegate("z95JrnnPCnbNlNMj", dto);
 	}
 
 	// @Test
 	public void getBooking() {
-		BookingDto dto = bookingsHelper.getBookingById("Jx4Ca6HpOutf2ic7", "Ac920rNN12ILqKFN");
+		BookingDto dto = bookingsHelper.getBookingById("1JKH5e8rLJjnjjwv", "DYWKsoP44X1llBKc");
 		for (DelegateDto delegate : dto.getDelegates()) {
-			delegate.getAccommodation();
+			System.err.println(delegate.getMemberNo() + " - " + delegate.getFullName());
 		}
 	}
 
@@ -88,10 +88,10 @@ public class TestBookingDao extends AbstractDaoTest {
 		}
 	}
 
-	// @Test
+	@Test
 	public void testUpdateBooking() {
 		BookingDto dto = new BookingDto();
-		dto.setRefId("TdtJ9I4RtlGqoAKT");
+		// dto.setRefId("TdtJ9I4RtlGqoAKT"); //Ammending booking
 		dto.setPaymentStatus(PaymentStatus.NOTPAID);
 		dto.setBookingDate(new Date().getTime());
 		ContactDto contact = new ContactDto();
@@ -108,7 +108,7 @@ public class TestBookingDao extends AbstractDaoTest {
 		List<DelegateDto> delegates = new ArrayList<>();
 		DelegateDto delegate = new DelegateDto();
 		delegate.setEmail("tomkim@wira.io");
-		delegate.setFullName("CPA TOM KIMANI MURIRANJA");
+		delegate.setFullName("TOM KIMANI MURIRANJA");
 		delegates.add(delegate);
 
 		DelegateDto delegate2 = new DelegateDto();
@@ -118,13 +118,14 @@ public class TestBookingDao extends AbstractDaoTest {
 		delegates.add(delegate2);
 
 		DelegateDto delegate3 = new DelegateDto();
-		delegate3.setMemberNo("7087");
+		delegate3.setMemberNo("5305");
 		delegate3.setEmail("tkm2020@wira.io");
-		delegate3.setFullName("CPA IMELDA MUENI");
+		delegate3.setFullName("CPA DANIEL MUTHAMA");
 		delegates.add(delegate3);
+		
 		dto.setDelegates(delegates);
 
-		BookingDto booking = bookingsHelper.createBooking("UJDQSrOzKaplbgfY", dto);
+		BookingDto booking = bookingsHelper.createBooking("1JKH5e8rLJjnjjwv", dto);
 
 		System.err.println("Ammended delegate size>>>>" + booking.getDelegates().size());
 

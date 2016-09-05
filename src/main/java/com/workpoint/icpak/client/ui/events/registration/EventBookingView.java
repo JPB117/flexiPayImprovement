@@ -13,6 +13,7 @@ import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -55,8 +56,7 @@ import com.workpoint.icpak.shared.model.events.ContactDto;
 import com.workpoint.icpak.shared.model.events.DelegateDto;
 import com.workpoint.icpak.shared.model.events.EventDto;
 
-public class EventBookingView extends ViewImpl implements
-		EventBookingPresenter.MyView {
+public class EventBookingView extends ViewImpl implements EventBookingPresenter.MyView {
 
 	private final Widget widget;
 	@UiField
@@ -144,6 +144,12 @@ public class EventBookingView extends ViewImpl implements
 	DivElement divContainer;
 	@UiField
 	ActionLink aBackToDelegates;
+
+	@UiField
+	ActionLink aUndoCancel;
+	@UiField
+	HTMLPanel panelCancelled;
+
 	@UiField
 	SpanElement spnSpinner;
 	@UiField
@@ -173,17 +179,15 @@ public class EventBookingView extends ViewImpl implements
 	public interface Binder extends UiBinder<Widget, EventBookingView> {
 	}
 
-	ColumnConfig memberColumn = new ColumnConfig("memberNo", "Member No",
-			DataType.SELECTAUTOCOMPLETE, "", "form-control");
+	ColumnConfig memberColumn = new ColumnConfig("memberNo", "Member No", DataType.SELECTAUTOCOMPLETE, "",
+			"form-control");
 
-	ColumnConfig accommodationConfig = new ColumnConfig("accommodation",
-			"Accommodation", DataType.SELECTBASIC);
+	ColumnConfig accommodationConfig = new ColumnConfig("accommodation", "Accommodation", DataType.SELECTBASIC);
 
-	ColumnConfig fullNameConfig = new ColumnConfig("fullName", "FullNames",
-			DataType.STRING, "Delegate FullNames", "form-control", false);
+	ColumnConfig fullNameConfig = new ColumnConfig("fullName", "FullNames", DataType.STRING, "Delegate FullNames",
+			"form-control", false);
 
-	ColumnConfig titleConfig = new ColumnConfig("title", "Title",
-			DataType.SELECTBASIC, "", "form-control");
+	ColumnConfig titleConfig = new ColumnConfig("title", "Title", DataType.SELECTBASIC, "", "form-control");
 	private String bookingId;
 
 	@Inject
@@ -203,52 +207,45 @@ public class EventBookingView extends ViewImpl implements
 
 		accommodationConfig.setHeaderStyleName("accomodation-header");
 
-		accommodationConfig
-				.addValueChangeHandler(new ValueChangeHandler<Listable>() {
-					@Override
-					public void onValueChange(ValueChangeEvent<Listable> event) {
-						if (event.getValue() == null) {
-							return;
-						}
+		accommodationConfig.addValueChangeHandler(new ValueChangeHandler<Listable>() {
+			@Override
+			public void onValueChange(ValueChangeEvent<Listable> event) {
+				if (event.getValue() == null) {
+					return;
+				}
 
-						Widget source = (Widget) event.getSource();
-						DropDownList<AccommodationDto> field = (DropDownList) source;
-						AggregationGridRow row = field.getParentRow();
-						DelegateDto delegate = mapper.getData(row.getData());
-						DelegateDto saved = finalDelRefIds.get(delegate
-								.getRefId());
+				Widget source = (Widget) event.getSource();
+				DropDownList<AccommodationDto> field = (DropDownList) source;
+				AggregationGridRow row = field.getParentRow();
+				DelegateDto delegate = mapper.getData(row.getData());
+				DelegateDto saved = finalDelRefIds.get(delegate.getRefId());
 
-						AccommodationDto dto = (AccommodationDto) event
-								.getValue();
-						if (saved != null && saved.getAccommodation() != null
-								&& saved.getAccommodation().equals(dto)) {
-							return;
-						}
+				AccommodationDto dto = (AccommodationDto) event.getValue();
+				if (saved != null && saved.getAccommodation() != null && saved.getAccommodation().equals(dto)) {
+					return;
+				}
 
-						if (dto.getTotalBooking() > dto.getSpaces()) {
-							Window.alert("No spaces available in '"
-									+ dto.getHotel() + "'");
-							field.setValue(null);
-							return;
-						}
+				if (dto.getTotalBooking() > dto.getSpaces()) {
+					Window.alert("No spaces available in '" + dto.getHotel() + "'");
+					field.setValue(null);
+					return;
+				}
 
-						List<DelegateDto> delegates = getDelegates();
-						int count = 0;
-						for (DelegateDto d : delegates) {
-							if (d.getAccommodation() != null
-									&& d.getAccommodation().equals(dto)) {
-								++count;
-							}
-						}
-
-						if ((dto.getTotalBooking() + count) > dto.getSpaces()) {
-							Window.alert("No more spaces available in '"
-									+ dto.getHotel() + "'");
-							field.setValue(null);
-							return;
-						}
+				List<DelegateDto> delegates = getDelegates();
+				int count = 0;
+				for (DelegateDto d : delegates) {
+					if (d.getAccommodation() != null && d.getAccommodation().equals(dto)) {
+						++count;
 					}
-				});
+				}
+
+				if ((dto.getTotalBooking() + count) > dto.getSpaces()) {
+					Window.alert("No more spaces available in '" + dto.getHotel() + "'");
+					field.setValue(null);
+					return;
+				}
+			}
+		});
 
 		memberColumn.addValueChangeHandler(new ValueChangeHandler<Listable>() {
 			@Override
@@ -323,12 +320,9 @@ public class EventBookingView extends ViewImpl implements
 
 		// Div Elements
 		pageElements.add(new PageElement(divPackage, "Proceed", liTab1));
-		pageElements.add(new PageElement(divCategories, "Submit", "Back",
-				liTab2));
-		pageElements
-				.add(new PageElement(divProforma, "Proceed to Pay", liTab3));
-		pageElements.add(new PageElement(divPayment, "Go to My Bookings",
-				"Back", liTab4));
+		pageElements.add(new PageElement(divCategories, "Submit", "Back", liTab2));
+		pageElements.add(new PageElement(divProforma, "Proceed to Pay", liTab3));
+		pageElements.add(new PageElement(divPayment, "Go to My Bookings", "Back", liTab4));
 
 		setActive(liElements.get(counter), pageElements.get(counter));
 
@@ -339,6 +333,8 @@ public class EventBookingView extends ViewImpl implements
 				setActivePage(counter);
 			}
 		});
+
+		aUndoCancel.getElement().getStyle().setMarginTop(25.0, Unit.PX);
 		initAdminAspects();
 	}
 
@@ -408,8 +404,7 @@ public class EventBookingView extends ViewImpl implements
 	private void clearAll() {
 		for (PageElement pageElement : pageElements) {
 			if (pageElement.isComplete()) {
-				pageElement.getLiElement().getFirstChildElement()
-						.getFirstChildElement().removeClassName("hide");
+				pageElement.getLiElement().getFirstChildElement().getFirstChildElement().removeClassName("hide");
 			} else {
 				pageElement.getLiElement().removeClassName("active");
 			}
@@ -481,16 +476,14 @@ public class EventBookingView extends ViewImpl implements
 		List<DelegateDto> allDelegates = getDelegates();
 		boolean hasIssues = false;
 		for (DelegateDto d : allDelegates) {
-			if (isNullOrEmpty(d.getFullName())
-					&& isNullOrEmpty(d.getMemberNo())) {
+			if (isNullOrEmpty(d.getFullName()) && isNullOrEmpty(d.getMemberNo())) {
 				hasIssues = true;
 			}
 		}
 
 		if (getDelegates().size() == 0 || hasIssues) {
-			issuesPanelDelegate
-					.addError("You have not added the member."
-							+ " Kindly enter the memberNo on the first column to add the member.");
+			issuesPanelDelegate.addError("You have not added the member."
+					+ " Kindly enter the memberNo on the first column to add the member.");
 			isDelegateValid = false;
 		} else {
 			isDelegateValid = true;
@@ -568,8 +561,7 @@ public class EventBookingView extends ViewImpl implements
 		int topHeight = divHeaderContainer.getOffsetHeight();
 		int topicsHeight = divHeader.getOffsetHeight();
 		int headerTopics = divHeaderTopics.getOffsetHeight();
-		int middleHeight = totalHeight - topHeight - topicsHeight
-				- headerTopics - 53;
+		int middleHeight = totalHeight - topHeight - topicsHeight - headerTopics - 53;
 
 		// Window.alert("\nTotalHeight:" + totalHeight + "MiddleHeight>>"
 		// + middleHeight + "TopHeight" + topHeight);
@@ -601,18 +593,14 @@ public class EventBookingView extends ViewImpl implements
 
 		if (event.getStartDate() != null) {
 
-			Date startDate = DateUtils.parse(event.getStartDate(),
-					DateUtils.FULLTIMESTAMP);
+			Date startDate = DateUtils.parse(event.getStartDate(), DateUtils.FULLTIMESTAMP);
 			spnStartDate.setInnerText(DateUtils.DATEFORMAT.format(startDate));
 			if (event.getEndDate() != null) {
-				Date endDate = DateUtils.parse(event.getEndDate(),
-						DateUtils.FULLTIMESTAMP);
-				spnDuration.setInnerText(DateUtils.getTimeDifference(startDate,
-						endDate));
+				Date endDate = DateUtils.parse(event.getEndDate(), DateUtils.FULLTIMESTAMP);
+				spnDuration.setInnerText(DateUtils.getTimeDifference(startDate, endDate));
 			}
 
-			spnDays2Go.setInnerText(DateUtils.getTimeDifference(new Date(),
-					startDate));
+			spnDays2Go.setInnerText(DateUtils.getTimeDifference(new Date(), startDate));
 		}
 
 		// bindAccommodations(event.getAccommodation());
@@ -646,8 +634,7 @@ public class EventBookingView extends ViewImpl implements
 				finalDelRefIds.put(d.getRefId(), d);
 			}
 
-			List<DataModel> models = mapper.getDataModels(booking
-					.getDelegates());
+			List<DataModel> models = mapper.getDataModels(booking.getDelegates());
 			tblDelegates.setData(models);
 		}
 
@@ -719,10 +706,7 @@ public class EventBookingView extends ViewImpl implements
 			DataModel model = new DataModel();
 			model.setId(dto.getRefId());
 			model.set("memberNo", member);
-			model.set(
-					"title",
-					dto.getTitle() == null ? null : Title.valueOf(dto
-							.getTitle()));
+			model.set("title", dto.getTitle() == null ? null : Title.valueOf(dto.getTitle()));
 			model.set("fullName", dto.getFullName());
 			model.set("email", dto.getEmail());
 			model.set("accommodation", dto.getAccommodation());
@@ -737,23 +721,17 @@ public class EventBookingView extends ViewImpl implements
 				return null;
 			}
 
-			MemberDto memberDto = model.get("memberNo") == null ? null
-					: ((MemberDto) model.get("memberNo"));
-			dto.setRefId(model.getId() == null ? null : model.getId()
-					.toString());
+			MemberDto memberDto = model.get("memberNo") == null ? null : ((MemberDto) model.get("memberNo"));
+			dto.setRefId(model.getId() == null ? null : model.getId().toString());
 			dto.setMemberNo(memberDto == null ? null : memberDto.getMemberNo());
 			dto.setMemberRefId(memberDto == null ? null : memberDto.getRefId());
-			dto.setMemberQrCode(memberDto == null ? null : memberDto
-					.getMemberQrCode());
+			dto.setMemberQrCode(memberDto == null ? null : memberDto.getMemberQrCode());
 
-			dto.setTitle(model.get("title") == null ? null : model.get("title")
-					.toString());
-			dto.setFullName(model.get("fullName") == null ? null : model.get(
-					"fullName").toString());
-			dto.setEmail(model.get("email") == null ? null : model.get("email")
-					.toString());
-			dto.setAccommodation(model.get("accommodation") == null ? null
-					: (AccommodationDto) model.get("accommodation"));
+			dto.setTitle(model.get("title") == null ? null : model.get("title").toString());
+			dto.setFullName(model.get("fullName") == null ? null : model.get("fullName").toString());
+			dto.setEmail(model.get("email") == null ? null : model.get("email").toString());
+			dto.setAccommodation(
+					model.get("accommodation") == null ? null : (AccommodationDto) model.get("accommodation"));
 
 			return dto;
 		}
@@ -855,5 +833,30 @@ public class EventBookingView extends ViewImpl implements
 			panelConfirmCancel.addStyleName("hide");
 			panelCancel.removeStyleName("hide");
 		}
+	}
+
+	@Override
+	public void showBookingCancelled(boolean show) {
+		if (show) {
+			panelCancelled.removeStyleName("hide");
+			divHeaderTopics.addClassName("hide");
+			divHeaderTopics.removeClassName("visible-lg");
+			divCancellation.addClassName("active");
+			divWizardFooter.addClassName("hide");
+			clearAll();
+			showInlineCancellationButton(false);
+		} else {
+			panelCancelled.addStyleName("hide");
+			divCancellation.addClassName("active");
+			divHeaderTopics.removeClassName("hide");
+			divHeaderTopics.addClassName("visible-lg");
+			divCategories.addClassName("active");
+			divWizardFooter.removeClassName("hide");
+			showInlineCancellationButton(true);
+		}
+	}
+
+	public HasClickHandlers getUndoCancellationButton() {
+		return aUndoCancel;
 	}
 }

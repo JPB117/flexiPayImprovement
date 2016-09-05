@@ -870,14 +870,12 @@ public class BookingsDaoHelper {
 			if (booking != null) {
 				booking.setIsActive(0);
 				booking = (Booking) dao.save(booking);
-				updateBookingStats(booking);
 				return true;
 			} else {
 				Delegate del = dao.findByRefId(bookingId, Delegate.class);
 				if (del != null) {
 					del.setIsActive(0);
 					dao.save(del);
-					updateBookingStats(del.getBooking());
 					return true;
 				}
 			}

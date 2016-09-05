@@ -79,10 +79,10 @@ public class Booking extends PO {
 	private Integer totalNonMembers;
 
 	private PaymentStatus paymentStatus = PaymentStatus.NOTPAID;
-	@OneToMany(mappedBy = "booking", fetch = FetchType.LAZY, cascade = {
-			CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE,
-			CascadeType.REFRESH })
+	@OneToMany(mappedBy = "booking", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.REMOVE,
+			CascadeType.MERGE, CascadeType.REFRESH })
 	private Collection<Delegate> delegates = new HashSet<>();
+
 	@ManyToOne
 	private Event event;
 	private Date registrationDate = new Date();
@@ -272,12 +272,10 @@ public class Booking extends PO {
 	}
 
 	public void copyFrom(BookingDto dto) {
-		setBookingDate(dto.getBookingDate() == null ? null : new Date(
-				dto.getBookingDate()));
+		setBookingDate(dto.getBookingDate() == null ? null : new Date(dto.getBookingDate()));
 		setPaymentStatus(dto.getPaymentStatus());
 		setPaymentMode(dto.getPaymentMode());
-		setPaymentDate(dto.getPaymentDate() == null ? null : new Date(
-				dto.getPaymentDate()));
+		setPaymentDate(dto.getPaymentDate() == null ? null : new Date(dto.getPaymentDate()));
 		setStatus(dto.getStatus());
 		setCurrency(dto.getCurrency());
 	}
@@ -325,11 +323,9 @@ public class Booking extends PO {
 	}
 
 	public void copyFrom(EnrollmentDto dto) {
-		setBookingDate(dto.getBookingDate() == null ? null : new Date(
-				dto.getBookingDate()));
+		setBookingDate(dto.getBookingDate() == null ? null : new Date(dto.getBookingDate()));
 		setPaymentMode(dto.getPaymentMode());
-		setPaymentDate(dto.getPaymentDate() == null ? null : new Date(
-				dto.getPaymentDate()));
+		setPaymentDate(dto.getPaymentDate() == null ? null : new Date(dto.getPaymentDate()));
 		setStatus(dto.getStatus());
 		setCurrency(dto.getCurrency());
 		setMemberId(dto.getMemberId());
@@ -391,7 +387,6 @@ public class Booking extends PO {
 	public void setTotalPaidMembers(Integer totalPaidMembers) {
 		this.totalPaidMembers = totalPaidMembers;
 	}
-
 
 	public Integer getTotalAccomodatedMembers() {
 		return totalAccomodatedMembers;

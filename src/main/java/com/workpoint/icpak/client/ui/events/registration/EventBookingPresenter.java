@@ -35,6 +35,7 @@ import com.workpoint.icpak.client.ui.component.AutoCompleteField;
 import com.workpoint.icpak.client.ui.component.TextField;
 import com.workpoint.icpak.client.ui.component.autocomplete.ServerOracle;
 import com.workpoint.icpak.client.ui.events.ClientDisconnectionEvent;
+import com.workpoint.icpak.client.ui.events.EditModelEvent;
 import com.workpoint.icpak.client.ui.events.ClientDisconnectionEvent.ClientDisconnectionHandler;
 import com.workpoint.icpak.client.ui.events.PaymentCompletedEvent;
 import com.workpoint.icpak.client.ui.events.PaymentCompletedEvent.PaymentCompletedHandler;
@@ -45,6 +46,7 @@ import com.workpoint.icpak.client.ui.events.ProcessingEvent.ProcessingHandler;
 import com.workpoint.icpak.client.ui.grid.ColumnConfig;
 import com.workpoint.icpak.client.ui.payment.PaymentPresenter;
 import com.workpoint.icpak.client.ui.util.DateUtils;
+import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.api.CountriesResource;
 import com.workpoint.icpak.shared.api.EventsResource;
 import com.workpoint.icpak.shared.api.InvoiceResource;
@@ -56,6 +58,7 @@ import com.workpoint.icpak.shared.model.MemberDto;
 import com.workpoint.icpak.shared.model.TransactionDto;
 import com.workpoint.icpak.shared.model.events.AccommodationDto;
 import com.workpoint.icpak.shared.model.events.BookingDto;
+import com.workpoint.icpak.shared.model.events.DelegateDto;
 import com.workpoint.icpak.shared.model.events.EventDto;
 
 public class EventBookingPresenter extends Presenter<EventBookingPresenter.MyView, EventBookingPresenter.MyProxy>
@@ -118,6 +121,10 @@ public class EventBookingPresenter extends Presenter<EventBookingPresenter.MyVie
 
 		void showCancellationSuccess(boolean b);
 
+		void showBookingCancelled(boolean show);
+
+		HasClickHandlers getUndoCancellationButton();
+
 	}
 
 	@ProxyCodeSplit
@@ -164,9 +171,13 @@ public class EventBookingPresenter extends Presenter<EventBookingPresenter.MyVie
 
 		public void bindData() {
 			if (accommodations != null && bookingDto != null) {
-				getView().showmask(false);
-				getView().bindAccommodations(accommodations);
-				getView().bindBooking(bookingDto);
+				if (bookingDto.getIsActive() == 0) {
+					bindCancellation(bookingDto);
+				} else {
+					getView().showmask(false);
+					getView().bindAccommodations(accommodations);
+					getView().bindBooking(bookingDto);
+				}
 			}
 		}
 
@@ -272,12 +283,14 @@ public class EventBookingPresenter extends Presenter<EventBookingPresenter.MyVie
 					Window.alert("No Booking set...");
 				} else {
 					getView().showmask(true);
-					eventsDelegate.withCallback(new AbstractAsyncCallback<BookingDto>() {
+					eventsDelegate.withCallback(new AbstractAsyncCallback<Boolean>() {
 						@Override
-						public void onSuccess(BookingDto result) {
-							if (result != null) {
+						public void onSuccess(Boolean result) {
+							if (result == true) {
 								getView().showCancellationSuccess(true);
 								getView().showmask(false);
+							} else {
+								Window.alert("A technical problem occured while doing this request..");
 							}
 						}
 					}).bookings(eventId).cancelBooking(getView().getBooking().getRefId());
@@ -351,11 +364,35 @@ public class EventBookingPresenter extends Presenter<EventBookingPresenter.MyVie
 				UploadContext ctx = new UploadContext("getreport");
 				ctx.setContext("bookingRefId", booking.getRefId());
 				ctx.setAction(UPLOADACTION.GETPROFORMA);
-				// ctx.setContext(key, value)
 				Window.open(ctx.toUrl(), "Get Proforma", null);
 			}
 		});
+	}
 
+	public void bindCancellation(final BookingDto booking) {
+		getView().showBookingCancelled(true);
+		// Undo Cancellation
+		getView().getUndoCancellationButton().addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				getView().showmask(true);
+
+				List<DelegateDto> delegates = booking.getDelegates();
+				if (delegates.size() > 0) {
+					DelegateDto d = delegates.get(0);
+					d.setIsBookingActive(1);
+
+					eventsResource.withCallback(new AbstractAsyncCallback<DelegateDto>() {
+						@Override
+						public void onSuccess(DelegateDto delegateDto) {
+							getView().showmask(false);
+							getView().bindBooking(booking);
+							getView().showBookingCancelled(false);
+						}
+					}).bookings(eventId).updateDelegate(booking.getRefId(), d.getRefId(), d);
+				}
+			}
+		});
 	}
 
 	@Override
@@ -411,6 +448,7 @@ public class EventBookingPresenter extends Presenter<EventBookingPresenter.MyVie
 			if (cancel.equals("yes")) {
 				getView().showCancellation(true);
 			}
+
 			// Load Accommodations
 			eventsResource.withCallback(new AbstractAsyncCallback<List<AccommodationDto>>() {
 				@Override
@@ -435,6 +473,7 @@ public class EventBookingPresenter extends Presenter<EventBookingPresenter.MyVie
 							Window.open(ctx.toUrl(), "Get Proforma", null);
 						}
 					});
+
 				}
 			}).bookings(eventId).getById(bookingId);
 		} else {

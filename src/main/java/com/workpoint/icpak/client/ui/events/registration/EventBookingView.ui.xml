@@ -9,23 +9,23 @@
 	ui:generateLocales='default'>
 
 	<ui:style>
-		.success-message {
+	.success-message {
 		width: initial;
 		position: absolute;
 		left: 35%;
 		height: 40px;
 		top: 5px;
 		padding-top: 8px;
-		}
-
-		.action-section {
+	}
+	
+	.action-section {
 		margin-top: 12px;
 		margin-bottom: 50px;
-		}
-
-		.hidden-section {
+	}
+	
+	.hidden-section {
 		height: 10px;
-		}
+	}
 	</ui:style>
 
 
@@ -43,7 +43,7 @@
 						role="alert" ui:field="divAlert">
 						<button type="button" class="close" data-dismiss="alert"
 							aria-label="Close" onClick="$('event-disconnected').addClass('hide');">
-							<span aria-hidden="true">&times;</span>
+							<span aria-hidden="true">&times; </span>
 						</button>
 						<span ui:field="spnAlertMessage">
 							<span class="fa fa-exclamation-triangle"></span>
@@ -150,9 +150,32 @@
 																</span>
 																<br />
 																<a class='btn btn-next btn-fill btn-success btn-wd btn-sm'
-																	href="https://icpak.com/events" style="margin-top: 25px;">Browse other
+																	href="https://www.icpak.com/registration" style="margin-top: 25px;">Browse
+																	other
 																	events
 																</a>
+															</g:HTMLPanel>
+														</div>
+													</div>
+												</div>
+											</g:HTMLPanel>
+
+											<g:HTMLPanel ui:field="panelCancelled" styleName="hide">
+												<div class="row">
+													<div class="col-lg-12" style="margin-top:55px;">
+														<div class="alert alert-warning">
+															<g:HTMLPanel styleName="alert text-center">
+																<span class="fa fa-ban fa-5x"></span>
+																<br />
+																<span style="font-size: 20px;">
+																	This booking has been cancelled. If you
+																	wish to Undo Press the button below
+																</span>
+																<br />
+																<d:ActionLink
+																	styleName='btn btn-next btn-fill btn-success btn-wd btn-sm'
+																	 ui:field="aUndoCancel">Undo Cancellation
+																</d:ActionLink>
 															</g:HTMLPanel>
 														</div>
 													</div>
@@ -376,7 +399,7 @@
 
 												<g:Anchor
 													styleName='btn btn-next btn-fill btn-gold btn-wd btn-sm hide'
-													ui:field="aBrowseOthers" href="https://icpak.com/events">Browse other events
+													ui:field="aBrowseOthers" href="https://www.icpak.com/registration">Browse Other events
 												</g:Anchor>
 											</div>
 											<div class="pull-left">
