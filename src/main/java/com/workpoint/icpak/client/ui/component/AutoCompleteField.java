@@ -27,15 +27,12 @@ import com.workpoint.icpak.client.ui.component.autocomplete.SimpleOracle;
 import com.workpoint.icpak.client.ui.grid.AggregationGridRow;
 import com.workpoint.icpak.shared.model.Listable;
 
-public class AutoCompleteField<T extends Listable> extends Composite implements
-		HasValueChangeHandlers<T>, HasValue<T>,
-		ServerOracle.StoreChangedHandler<T> {
+public class AutoCompleteField<T extends Listable> extends Composite
+		implements HasValueChangeHandlers<T>, HasValue<T>, ServerOracle.StoreChangedHandler<T> {
 
-	private static AutoCompleteFieldUiBinder uiBinder = GWT
-			.create(AutoCompleteFieldUiBinder.class);
+	private static AutoCompleteFieldUiBinder uiBinder = GWT.create(AutoCompleteFieldUiBinder.class);
 
-	interface AutoCompleteFieldUiBinder extends
-			UiBinder<Widget, AutoCompleteField> {
+	interface AutoCompleteFieldUiBinder extends UiBinder<Widget, AutoCompleteField> {
 	}
 
 	@UiField
@@ -62,12 +59,9 @@ public class AutoCompleteField<T extends Listable> extends Composite implements
 
 	public AutoCompleteField(Loader<T> loader) {
 		initWidget(uiBinder.createAndBindUi(this));
-		itemBox.getElement()
-				.setAttribute(
-						"style",
-						"outline-color: -moz-use-text-color; outline-style: none; outline-width: medium;");
-		container.getElement().setAttribute("onclick",
-				"document.getElementById('" + id + "').focus()");
+		itemBox.getElement().setAttribute("style",
+				"outline-color: -moz-use-text-color; outline-style: none; outline-width: medium;width:85%");
+		container.getElement().setAttribute("onclick", "document.getElementById('" + id + "').focus()");
 
 		if (loader != null) {
 			this.oracle = new ServerOracle<T>(loader);
@@ -92,8 +86,7 @@ public class AutoCompleteField<T extends Listable> extends Composite implements
 		});
 
 		if (oracle instanceof ServerOracle) {
-			((ServerOracle<T>) oracle)
-					.addStoreChangedHandler(AutoCompleteField.this);
+			((ServerOracle<T>) oracle).addStoreChangedHandler(AutoCompleteField.this);
 		}
 
 		container.add(box);
@@ -129,8 +122,7 @@ public class AutoCompleteField<T extends Listable> extends Composite implements
 	public void setEnabled(boolean isEnabled) {
 		if (isEnabled) {
 			itemBox.getElement().removeAttribute("disabled");
-			itemBox.getElement().setAttribute("placeholder",
-					"Start typing to autocomplete");
+			itemBox.getElement().setAttribute("placeholder", "Search by member No");
 		} else {
 			itemBox.getElement().setAttribute("disabled", "disabled");
 		}
@@ -179,8 +171,7 @@ public class AutoCompleteField<T extends Listable> extends Composite implements
 	}
 
 	@Override
-	public HandlerRegistration addValueChangeHandler(
-			ValueChangeHandler<T> handler) {
+	public HandlerRegistration addValueChangeHandler(ValueChangeHandler<T> handler) {
 		return this.addHandler(handler, ValueChangeEvent.getType());
 	}
 

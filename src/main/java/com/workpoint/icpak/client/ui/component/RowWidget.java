@@ -19,24 +19,24 @@ import com.workpoint.icpak.client.util.AppContext;
 public abstract class RowWidget extends Composite {
 
 	private boolean isAutoNumber;
-	private int rowNum=0;
+	private int rowNum = 0;
 	HTMLPanel row;
 	List<HandlerRegistration> handlers = new ArrayList<HandlerRegistration>();
-	private Object data=null;
+	private Object data = null;
 	private boolean isShowRemove;
-	
-	public void setRow(HTMLPanel row){
+
+	public void setRow(HTMLPanel row) {
 		this.row = row;
 	}
-	
-	public void setRowNumber(int number){
-		this.rowNum=number;
-		if(isAttached())
-		if(this.isAutoNumber){
-			row.getWidget(0).getElement().setInnerText(number+"");
-		}
+
+	public void setRowNumber(int number) {
+		this.rowNum = number;
+		if (isAttached())
+			if (this.isAutoNumber) {
+				row.getWidget(0).getElement().setInnerText(number + "");
+			}
 	}
-	
+
 	public boolean isAutoNumber() {
 		return isAutoNumber;
 	}
@@ -44,24 +44,22 @@ public abstract class RowWidget extends Composite {
 	public void setAutoNumber(boolean isAutoNumber) {
 		this.isAutoNumber = isAutoNumber;
 	}
-	
-	
-	public void createRow(List<Widget> widgets){
-		if(isAutoNumber){
-			row.add(getTd(new InlineLabel(rowNum+"")));
+
+	public void createRow(List<Widget> widgets) {
+		if (isAutoNumber) {
+			row.add(getTd(new InlineLabel(rowNum + "")));
 		}
-		
-		for(Widget widget: widgets){
+
+		for (Widget widget : widgets) {
 			row.add(getTd(widget));
 		}
-		
-		
-		if(isShowRemove){
+
+		if (isShowRemove) {
 			ActionLink anchor = new ActionLink();
 			anchor.setTitle("Remove Line");
-			anchor.getElement().setInnerHTML("<i class=\"icon-trash\"></i>");
+			anchor.getElement().setInnerHTML("<i class=\"fa fa-times-circle\" style='color:red;font-size:17px;opacity:.5'></i>");
 			anchor.addClickHandler(new ClickHandler() {
-				
+
 				@Override
 				public void onClick(ClickEvent event) {
 					RowWidget.this.removeFromParent();
@@ -70,64 +68,64 @@ public abstract class RowWidget extends Composite {
 			row.add(getTd(anchor));
 		}
 	}
-	
+
 	protected Widget getTd(Widget widget) {
 		HTMLPanel td = new HTMLPanel("");
 		td.addStyleName("td");
-		td.add(widget);				
+		td.add(widget);
 		return td;
 	}
-	
-	protected void createTd(Widget widget){
+
+	protected void createTd(Widget widget) {
 		createTd(widget, TextAlign.CENTER);
 	}
-	
+
 	public void createTd(Widget widget, TextAlign align) {
-		createTd(widget, align,null);
+		createTd(widget, align, null);
 	}
-	
+
 	public void createTd(Widget widget, String width) {
-		createTd(widget, TextAlign.CENTER,width);
+		createTd(widget, TextAlign.CENTER, width);
 	}
-	
-	public void createTd(Widget widget,TextAlign align,String width){
-		HTMLPanel td = (HTMLPanel)getTd(widget);
+
+	public void createTd(Widget widget, TextAlign align, String width) {
+		HTMLPanel td = (HTMLPanel) getTd(widget);
 		td.getElement().getStyle().setTextAlign(align);
-		
-		if(width!=null){
+
+		if (width != null) {
 			td.setWidth(width);
 		}
 		row.add(td);
 	}
-	
-	
+
 	/**
 	 * Remove widget in index i
-	 * @param index Index of widget to be removed
+	 * 
+	 * @param index
+	 *            Index of widget to be removed
 	 * @return
 	 */
-	public boolean remove(Widget w){
-		
+	public boolean remove(Widget w) {
+
 		return row.remove(w);
 	}
-	
+
 	/**
 	 * 
 	 * @param type
 	 * @param handler
 	 */
-	public <H extends EventHandler> void addRegisteredHandler(Type<H> type, H handler){
+	public <H extends EventHandler> void addRegisteredHandler(Type<H> type, H handler) {
 		@SuppressWarnings("unchecked")
-		HandlerRegistration hr = AppContext.getEventBus().addHandler(
-				(GwtEvent.Type<EventHandler>)type, handler);
+		HandlerRegistration hr = AppContext.getEventBus().addHandler((GwtEvent.Type<EventHandler>) type, handler);
 		handlers.add(hr);
 	}
-	
+
 	/**
 	 * 
 	 */
 	private void cleanUpEvents() {
-		for(HandlerRegistration hr: handlers){
+		for (HandlerRegistration hr : handlers) {
 			hr.removeHandler();
 		}
 		handlers.clear();

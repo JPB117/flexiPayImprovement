@@ -296,6 +296,7 @@ public class CPDDaoHelper {
 		if (member.hasDisplinaryCase()) {
 			isGenerate = false;
 			messages.add("Member must not have an ongoing displinary case for good standing.");
+
 		}
 
 		/**
@@ -306,7 +307,13 @@ public class CPDDaoHelper {
 		 */
 		Date registrationDate = member.getRegistrationDate();
 		Double cpdHours = dao.getCPDHours(memberRefId);
-		if (registrationDate == null) {
+
+		/**
+		 * If member is Associate OR RETIRED - Don't check any cpd points.
+		 */
+		if (member.getCustomerType().equals("ASSOCIATE") || member.getCustomerType().equals("RETIRED")) {
+
+		} else if (registrationDate == null) {
 			isGenerate = false;
 			messages.add("Your registration date cannot be found in the portal, kindly request "
 					+ "for your account to be updated by the Administrator.");

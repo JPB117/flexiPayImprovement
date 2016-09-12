@@ -29,8 +29,7 @@ import com.workpoint.icpak.shared.model.events.AccommodationDto;
 
 public class TableView extends Composite {
 
-	private static TableViewUiBinder uiBinder = GWT
-			.create(TableViewUiBinder.class);
+	private static TableViewUiBinder uiBinder = GWT.create(TableViewUiBinder.class);
 
 	interface TableViewUiBinder extends UiBinder<Widget, TableView> {
 	}
@@ -267,8 +266,7 @@ public class TableView extends Composite {
 
 			// add to row
 			if (header.getWidth() != null) {
-				th.getElement().getStyle()
-						.setWidth(header.getWidth(), Unit.PCT);
+				th.getElement().getStyle().setWidth(header.getWidth(), Unit.PCT);
 			}
 
 			if (header.getStyleName() != null) {
@@ -398,11 +396,19 @@ public class TableView extends Composite {
 	}
 
 	public void setBordered(Boolean status) {
-		tblContainer.removeStyleName("table-bordered");
 		if (status) {
 			tblContainer.addStyleName("table-bordered");
 		} else {
-			tblContainer.addStyleName("table-noborder");
+			tblContainer.removeStyleName("table-bordered");
+		}
+	}
+
+	public void setHovered(Boolean status) {
+		tblContainer.removeStyleName("table-hover");
+		if (status) {
+			tblContainer.addStyleName("table-hover");
+		} else {
+			tblContainer.removeStyleName("table-hover");
 		}
 	}
 
@@ -458,8 +464,7 @@ public class TableView extends Composite {
 		count = 0;
 	}
 
-	public void createHeader(String name, String width, String labelStyle,
-			String thStyle) {
+	public void createHeader(String name, String width, String labelStyle, String thStyle) {
 		HTMLPanel th = new HTMLPanel("");
 		th.addStyleName("th");
 		if (thStyle != null) {

@@ -155,6 +155,7 @@
 											</div>
 
 											<div class="row" ui:field="divMembershipNo">
+												<strong>Membership Category:</strong>
 												<span class="text-muted" ui:field="spnApplicationType">
 												</span>
 												<span ui:field="spnChangeCategory">

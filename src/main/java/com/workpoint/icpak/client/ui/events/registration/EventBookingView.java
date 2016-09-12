@@ -188,6 +188,7 @@ public class EventBookingView extends ViewImpl implements EventBookingPresenter.
 			"form-control", false);
 
 	ColumnConfig titleConfig = new ColumnConfig("title", "Title", DataType.SELECTBASIC, "", "form-control");
+
 	private String bookingId;
 
 	@Inject
@@ -474,20 +475,29 @@ public class EventBookingView extends ViewImpl implements EventBookingPresenter.
 
 	public boolean isDelegateValid() {
 		List<DelegateDto> allDelegates = getDelegates();
-		boolean hasIssues = false;
+
+		// Is Delegate Empty
+		if (getDelegates().size() == 0) {
+			issuesPanelDelegate.addError("No delegates entered. Please add at least on delegates to continue.");
+			isDelegateValid = false;
+		}
+
+		/* Check if the members Entered are correct */
 		for (DelegateDto d : allDelegates) {
+			// Window.alert(d.getFullName() + "::" + d.getMemberNo());
 			if (isNullOrEmpty(d.getFullName()) && isNullOrEmpty(d.getMemberNo())) {
-				hasIssues = true;
+				isDelegateValid = false;
+				issuesPanelDelegate
+						.addError("Empty delegate details. Please provide all the details in your delegate List.");
+			}
+
+			if (!isNullOrEmpty(d.getMemberNo()) && isNullOrEmpty(d.getMemberRefId())) {
+				isDelegateValid = false;
+				issuesPanelDelegate.addError("Incomplete member details for memberNo: " + d.getMemberNo()
+						+ ". Please wait for the delegate list suggestion.");
 			}
 		}
 
-		if (getDelegates().size() == 0 || hasIssues) {
-			issuesPanelDelegate.addError("You have not added the member."
-					+ " Kindly enter the memberNo on the first column to add the member.");
-			isDelegateValid = false;
-		} else {
-			isDelegateValid = true;
-		}
 		if (isDelegateValid) {
 			issuesPanelDelegate.addStyleName("hide");
 		} else {
@@ -636,6 +646,7 @@ public class EventBookingView extends ViewImpl implements EventBookingPresenter.
 
 			List<DataModel> models = mapper.getDataModels(booking.getDelegates());
 			tblDelegates.setData(models);
+
 		}
 
 	}

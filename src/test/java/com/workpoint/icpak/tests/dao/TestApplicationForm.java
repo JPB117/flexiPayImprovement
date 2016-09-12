@@ -166,9 +166,9 @@ public class TestApplicationForm extends AbstractDaoTest {
 		}
 	}
 
-	@Ignore
+	@Test
 	public void testGetSingleApp() {
-		ApplicationFormHeader app = helper.getApplicationById("dAbfgoN4TvBo4hB9");
+		ApplicationFormHeader app = helper.getApplicationById("bpvVV8vaSK7d1QUR");
 		System.err.println("Found:::" + app.getSurname());
 
 	}
@@ -201,7 +201,7 @@ public class TestApplicationForm extends AbstractDaoTest {
 		System.err.println(mJSONArray);
 	}
 
-	@Test
+	// @Test
 	public void testSyncToErp() {
 		helper.syncApprovedApplicantsFromErp();
 	}

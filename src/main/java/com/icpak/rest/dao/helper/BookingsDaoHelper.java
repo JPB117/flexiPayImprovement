@@ -673,7 +673,7 @@ public class BookingsDaoHelper {
 					associateDiscountLine.setDescription(discountDescription);
 					associateDiscountLine.setQuantity(qty);
 					associateDiscountLine.setUnitPrice(eventIndb.getDiscountAssociatePrice());
-					associateDiscountLine.setTotalAmount(qty * eventIndb.getDiscountMemberPrice());
+					associateDiscountLine.setTotalAmount(qty * eventIndb.getDiscountAssociatePrice());
 					associateDiscountLine.setType(InvoiceLineType.Discount);
 
 					totalDiscountAmount += eventIndb.getDiscountMemberPrice();

@@ -109,22 +109,22 @@
 												<div class="row">
 													<div class="col-lg-8 col-lg-offset-2" style="margin-top: 55px;">
 														<div class="panel panel-default">
-															<h3 class="panel-title panel-heading">Panel title</h3>
+															<h3 class="panel-title panel-heading">Booking Cancellation</h3>
 															<div class="panel-body">
-																<span class="">Are you sure you want to cancel this
-																	booking? All delegates will be notified by sms.</span>
+																<span class="">Press Yes if you wish to continue with
+																	the cancellation</span>
 															</div>
 															<div class="panel-footer">
 																<div class="row">
 																	<div class="col-sm-12">
 																		<d:ActionLink ui:field="aConfirmCancel"
 																			styleName="btn btn-danger btn-fill pull-left">
-																			Confirm
+																			Yes
 																		</d:ActionLink>
 
 																		<d:ActionLink ui:field="aNo"
 																			styleName="btn btn-default btn-fill pull-right">
-																			Cancel
+																			No
 																		</d:ActionLink>
 																	</div>
 																</div>
@@ -174,7 +174,7 @@
 																<br />
 																<d:ActionLink
 																	styleName='btn btn-next btn-fill btn-success btn-wd btn-sm'
-																	 ui:field="aUndoCancel">Undo Cancellation
+																	ui:field="aUndoCancel">Undo Cancellation
 																</d:ActionLink>
 															</g:HTMLPanel>
 														</div>
@@ -334,17 +334,18 @@
 															<grid:AggregationGrid ui:field="tblDelegates"></grid:AggregationGrid>
 														</div>
 														<g:HTMLPanel styleName="col-lg-12 {style.action-section}">
-															<div class="col-sm-2 p0">
+															<div class="col-sm-2 p0" style="width:150px">
 																<d:ActionLink ui:field="aAddMember"
-																	styleName="btn btn-fill btn-gold">
+																	styleName="btn btn-fill btn-gold btn-sm">
 																	<i class="fa fa-user-plus" aria-hidden="true"></i>
 																	Add Member
 																</d:ActionLink>
 															</div>
-															<div class="col-sm-2 p0">
+															<div class="col-sm-2 p0" style="width:150px">
 																<d:ActionLink ui:field="aAddNonMember"
-																	styleName="btn btn-default btn-fill">Add Non-Member</d:ActionLink>
+																	styleName="btn btn-default btn-fill btn-sm">Add Non-Member</d:ActionLink>
 															</div>
+															<hr style="border-top: 1px solid #eee;" />
 														</g:HTMLPanel>
 
 														<g:HTMLPanel styleName="col-lg-12 {style.hidden-section}"

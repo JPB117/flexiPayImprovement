@@ -2,13 +2,13 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.workpoint.icpak.client.ui.component">
 	<ui:style>
-
+	
 	</ui:style>
 	<g:HTMLPanel styleName="row">
 		<g:HTMLPanel styleName="col-lg-8" ui:field="panelParent1">
 			<div class="form-group">
 				<div class="row" ui:field="divMemberBalance">
-					<div class="col-lg-8">
+					<div class="col-lg-9">
 						<div class="alert alert-success">
 							Your current balance is
 							<Strong ui:field="elCurrentBalance"></Strong>

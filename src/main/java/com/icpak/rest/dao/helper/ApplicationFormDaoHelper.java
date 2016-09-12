@@ -569,6 +569,12 @@ public class ApplicationFormDaoHelper {
 			throw new ServiceException(ErrorCodes.NOTFOUND, "'" + applicationId + "'");
 		}
 
+		User user = userDao.findByUserId(application.getUserRefId());
+
+		if (user != null) {
+			application = setApplicationType(user, application);
+		}
+
 		// Check if there is a corresponding invoice if this is pending;
 		if (application.getInvoiceRef() == null || application.getInvoiceRef().isEmpty()) {
 			// Generate a New Invoice
@@ -580,6 +586,26 @@ public class ApplicationFormDaoHelper {
 			application.setPaymentStatus(PaymentStatus.NOTPAID);
 		}
 
+		return application;
+	}
+
+	private ApplicationFormHeader setApplicationType(User user, ApplicationFormHeader application) {
+		if (user.getMember() != null) {
+			String customerType = user.getMember().getCustomerType();
+			if (customerType.equals("MEMBER")) {
+				application.setApplicationType(ApplicationType.NON_PRACTISING);
+			} else if (customerType.equals("PRACTICING RT")) {
+				application.setApplicationType(ApplicationType.PRACTISING_RT);
+			} else if (customerType.equals("PRAC MEMBER")) {
+				application.setApplicationType(ApplicationType.PRACTISING);
+			} else if (customerType.equals("FOREIGN")) {
+				application.setApplicationType(ApplicationType.OVERSEAS);
+			} else if (customerType.equals("RETIRED")) {
+				application.setApplicationType(ApplicationType.RETIRED);
+			} else if (customerType.equals("ASSOCIATE")) {
+				application.setApplicationType(ApplicationType.ASSOCIATE);
+			}
+		}
 		return application;
 	}
 
@@ -951,7 +977,6 @@ public class ApplicationFormDaoHelper {
 				po.setUserRefId(user.getRefId());
 
 				// Create a new member record..
-
 				Member member = new Member();
 				member.setMemberNo(memberImport.getMemberNo());
 				member.setRegistrationDate(memberImport.getDateRegistered());

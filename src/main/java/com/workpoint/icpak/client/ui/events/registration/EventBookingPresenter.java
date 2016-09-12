@@ -266,7 +266,8 @@ public class EventBookingPresenter extends Presenter<EventBookingPresenter.MyVie
 					getView().next();
 				}
 
-				// If counter is 3 - Take me to my bookings
+				// If counter is 3 - Take me to my bookings or Logins into the
+				// customer portal
 				if (getView().getCounter() == 3) {
 					getView().getANext().addStyleName("hide");
 					// getView().getANext().setHref("#booking");

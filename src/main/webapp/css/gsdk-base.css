@@ -8,11 +8,8 @@ html, body {
 }
 
 .search-bar {
-	background: linear-gradient(rgb(248, 248, 248) 0px, rgb(236, 236, 236)
-		100%) repeat-x rgb(242, 242, 242);
+	background-color: #F9F8F8;
 	border: 1px solid #E6E6E6;
-	margin-right: 0px;
-	border-radius: 0px 0px;
 	height: 50px;
 	padding-top: 5px;
 }
@@ -513,6 +510,8 @@ h1 .subtitle {
 
 
 
+
+
  
 
 
@@ -523,7 +522,13 @@ h1 .subtitle {
 
 
 
+
+
 .form-control
+
+
+
+
 
 
 
@@ -563,9 +568,17 @@ h1 .subtitle {
 
 
 
+
+
+
+
 :first-child
 ,
 .input-group-btn
+
+
+
+
 
 
 
@@ -589,6 +602,10 @@ h1 .subtitle {
 .btn
 ,
 .input-group-btn
+
+
+
+
 
 
 
@@ -630,9 +647,17 @@ h1 .subtitle {
 
 
 
+
+
+
+
 :last-child
 >
 .btn
+
+
+
+
 
 
 
@@ -661,7 +686,11 @@ h1 .subtitle {
 
 
 
+
+
  
+
+
 
 
 
@@ -682,7 +711,11 @@ h1 .subtitle {
 
 
 
+
+
  
+
+
 
 
 
@@ -703,7 +736,11 @@ h1 .subtitle {
 
 
 
+
+
  
+
+
 
 
 
@@ -725,7 +762,11 @@ h1 .subtitle {
 
 
 
+
+
 	
+
+
 
 
 
@@ -756,7 +797,13 @@ border-right
 
 
 
+
+
+
+
 :
+
+
 
 
 
@@ -776,8 +823,14 @@ border-right
 
 
 
+
+
 0
 none
+
+
+
+
 
 
 
@@ -808,6 +861,8 @@ none
 
 
 
+
+
  
 
 
@@ -818,7 +873,13 @@ none
 
 
 
+
+
 .form-control
+
+
+
+
 
 
 
@@ -858,9 +919,17 @@ none
 
 
 
+
+
+
+
 :last-child
 ,
 .input-group-btn
+
+
+
+
 
 
 
@@ -884,6 +953,10 @@ none
 .btn
 ,
 .input-group-btn
+
+
+
+
 
 
 
@@ -925,9 +998,17 @@ none
 
 
 
+
+
+
+
 :first-child
 >
 .btn
+
+
+
+
 
 
 
@@ -956,7 +1037,11 @@ none
 
 
 
+
+
  
+
+
 
 
 
@@ -977,7 +1062,11 @@ none
 
 
 
+
+
  
+
+
 
 
 
@@ -1008,7 +1097,13 @@ border-left
 
 
 
+
+
+
+
 :
+
+
 
 
 
@@ -1028,8 +1123,14 @@ border-left
 
 
 
+
+
 0
 none
+
+
+
+
 
 
 
@@ -1975,4 +2076,9 @@ body .GWTUpld .gwt-FileUpload {
 .dropdown-menu {
 	right: 0px;
 	left: inherit !important;
+}
+
+.aggregation-grid .form-control {
+	height: 32px;
+	padding: 3px 16px;
 }

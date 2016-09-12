@@ -17,8 +17,10 @@ Re-written for purposes of GWT
 	border-color: inherit;
 	color: rgb(112, 112, 112);
 	font-weight: normal;
-	background: linear-gradient(rgb(248, 248, 248) 0px, rgb(236, 236, 236)
-		100%) repeat-x rgb(242, 242, 242);
+	/* background: linear-gradient(rgb(248, 248, 248) 0px, rgb(236, 236, 236)
+		100%) repeat-x rgb(242, 242, 242); */
+	background-color: #F9F8F8;
+	color: #222;
 }
 
 .tbody {
@@ -67,15 +69,15 @@ Re-written for purposes of GWT
 }
 
 .table .tbody>.tr>.td {
-	border-top: 1px solid #dddddd;
+	/*border-top: 1px solid #dddddd;*/
 }
 
 .table .thead>.tr>.th {
 	padding: 5px;
 	line-height: 1.428571429;
-	vertical-align: top;
 	vertical-align: bottom;
-	/* border-bottom: 2px solid #dddddd; */
+	/* border: 1px solid #ECECEC; */
+	padding: 8px 16px;
 }
 
 .table caption+.thead .tr:first-child .th, .table colgroup+.thead .tr:first-child .th,
@@ -267,8 +269,7 @@ Re-written for purposes of GWT
 }
 
 .tabbable .search-bar {
-	background: linear-gradient(rgb(248, 248, 248) 0px, rgb(236, 236, 236)
-		100%) repeat-x rgb(242, 242, 242);
+	background-color: #F9F8F8;
 	border: 1px solid #E6E6E6;
 	margin-right: 0px;
 	border-radius: 0px 0px;
