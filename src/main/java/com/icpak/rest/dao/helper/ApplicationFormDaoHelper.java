@@ -592,18 +592,20 @@ public class ApplicationFormDaoHelper {
 	private ApplicationFormHeader setApplicationType(User user, ApplicationFormHeader application) {
 		if (user.getMember() != null) {
 			String customerType = user.getMember().getCustomerType();
-			if (customerType.equals("MEMBER")) {
-				application.setApplicationType(ApplicationType.NON_PRACTISING);
-			} else if (customerType.equals("PRACTICING RT")) {
-				application.setApplicationType(ApplicationType.PRACTISING_RT);
-			} else if (customerType.equals("PRAC MEMBER")) {
-				application.setApplicationType(ApplicationType.PRACTISING);
-			} else if (customerType.equals("FOREIGN")) {
-				application.setApplicationType(ApplicationType.OVERSEAS);
-			} else if (customerType.equals("RETIRED")) {
-				application.setApplicationType(ApplicationType.RETIRED);
-			} else if (customerType.equals("ASSOCIATE")) {
-				application.setApplicationType(ApplicationType.ASSOCIATE);
+			if (customerType != null) {
+				if (customerType.equals("MEMBER")) {
+					application.setApplicationType(ApplicationType.NON_PRACTISING);
+				} else if (customerType.equals("PRACTICING RT")) {
+					application.setApplicationType(ApplicationType.PRACTISING_RT);
+				} else if (customerType.equals("PRAC MEMBER")) {
+					application.setApplicationType(ApplicationType.PRACTISING);
+				} else if (customerType.equals("FOREIGN")) {
+					application.setApplicationType(ApplicationType.OVERSEAS);
+				} else if (customerType.equals("RETIRED")) {
+					application.setApplicationType(ApplicationType.RETIRED);
+				} else if (customerType.equals("ASSOCIATE")) {
+					application.setApplicationType(ApplicationType.ASSOCIATE);
+				}
 			}
 		}
 		return application;

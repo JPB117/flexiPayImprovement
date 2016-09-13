@@ -48,7 +48,7 @@ public class CPDSummaryTableRow extends RowWidget {
 	public CPDSummaryTableRow(final MemberCPDDto dto) {
 		initWidget(uiBinder.createAndBindUi(this));
 		aMemberNo.setText(dto.getMemberNo());
-		aMemberNo.setHref("#cpdmgt;p=memberCPD;refId=" + dto.getRefId());
+		// aMemberNo.setHref("#cpdmgt;refId=" + dto.getRefId());
 		divMemberName.add(new InlineLabel(dto.getMemberNames()));
 		divCategory.add(new InlineLabel(dto.getCustomerType()));
 		divStatus.add(setStatus(dto.getStatus()));
@@ -63,6 +63,7 @@ public class CPDSummaryTableRow extends RowWidget {
 			@Override
 			public void onClick(ClickEvent event) {
 				MemberDto member = new MemberDto();
+				member.setRefId(dto.getRefId());
 				member.setFullName(dto.getMemberNames());
 				member.setMemberNo(dto.getMemberNo());
 				AppContext.fireEvent(new MemberCPDEvent(member));

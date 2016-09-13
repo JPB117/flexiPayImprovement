@@ -576,6 +576,8 @@ public class CPDManagementPresenter
 		this.startDate = DateUtils.DATEFORMAT_SYS.parse("2011-01-01");
 		this.endDate = new Date();
 
+		// Window.alert("r>>" + refId);
+
 		// Set Tab to Front End
 		getView().setTab(page, refId);
 
@@ -606,7 +608,6 @@ public class CPDManagementPresenter
 				this.memberRefId = refId;
 				loadIndividualData(memberRefId, startDate, endDate);
 				getView().setIndividualMemberInitialDates(startDate, endDate);
-				// getView().setMemberFullNames(fullName);
 			} else {
 				// Load Individual CPD - Return OR Archive
 				getView().setIndividualMemberInitialDates(startDate, endDate);
@@ -672,6 +673,8 @@ public class CPDManagementPresenter
 
 	@Override
 	public void onMemberCPD(MemberCPDEvent event) {
+		// loadIndividualData(event.getMember().getRefId(), startDate, endDate);
+		// getView().setIndividualMemberInitialDates(startDate, endDate);
 		getView().bindMemberDetails(event.getMember());
 	}
 }

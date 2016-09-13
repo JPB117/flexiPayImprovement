@@ -311,8 +311,9 @@ public class CPDDaoHelper {
 		/**
 		 * If member is Associate OR RETIRED - Don't check any cpd points.
 		 */
-		if (member.getCustomerType().equals("ASSOCIATE") || member.getCustomerType().equals("RETIRED")) {
-
+		boolean isExceptedFromCPD = (member.getCustomerType() != null)
+				&& (member.getCustomerType().equals("ASSOCIATE") || member.getCustomerType().equals("RETIRED"));
+		if (isExceptedFromCPD) {
 		} else if (registrationDate == null) {
 			isGenerate = false;
 			messages.add("Your registration date cannot be found in the portal, kindly request "
