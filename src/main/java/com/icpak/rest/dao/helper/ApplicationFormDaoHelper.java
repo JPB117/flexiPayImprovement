@@ -14,10 +14,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
@@ -42,6 +44,7 @@ import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import com.icpak.rest.IDUtils;
 import com.icpak.rest.dao.ApplicationFormDao;
+import com.icpak.rest.dao.InvoiceDao;
 import com.icpak.rest.dao.MemberDao;
 import com.icpak.rest.dao.RolesDao;
 import com.icpak.rest.dao.UsersDao;
@@ -55,6 +58,8 @@ import com.icpak.rest.models.membership.ApplicationFormHeader;
 import com.icpak.rest.models.membership.Member;
 import com.icpak.rest.models.membership.MemberImport;
 import com.icpak.rest.models.payloads.ApplicationSyncPayLoad;
+import com.icpak.rest.models.trx.Invoice;
+import com.icpak.rest.models.trx.InvoiceLine;
 import com.icpak.rest.models.util.Attachment;
 import com.icpak.rest.util.ApplicationSettings;
 import com.icpak.rest.utils.Doc;
@@ -87,7 +92,8 @@ public class ApplicationFormDaoHelper {
 
 	@Inject
 	ApplicationFormDao applicationDao;
-
+	@Inject
+	InvoiceDao invoiceDao;
 	@Inject
 	RolesDao roleDao;
 	@Inject
@@ -269,7 +275,7 @@ public class ApplicationFormDaoHelper {
 
 	}
 
-	private InvoiceDto generateInvoice(ApplicationFormHeader application) {
+	public InvoiceDto generateInvoice(ApplicationFormHeader application) {
 		ApplicationType type = application.getApplicationType();
 		ApplicationCategory category = applicationDao.findApplicationCategory(type);
 
@@ -279,11 +285,8 @@ public class ApplicationFormDaoHelper {
 			throw new ServiceException(ErrorCodes.NOTFOUND, "Application Category '" + type + "'");
 		}
 
-		String documentNo = "ProForma Invoice_" + application.getSurname();
-
 		InvoiceDto dto = new InvoiceDto();
 		dto.setDescription("Member Registration Invoice");
-		dto.setDocumentNo(documentNo);
 		dto.setAmount(category.getApplicationAmount());
 		dto.setCompanyName(application.getEmployer());
 		dto.setCompanyAddress(application.getAddress1() + "-" + application.getPostCode() + " "
@@ -307,11 +310,13 @@ public class ApplicationFormDaoHelper {
 		ApplicationFormHeader po = applicationDao.findByApplicationId(applicationId, true);
 		User user = applicationDao.findByRefId(po.getUserRefId(), User.class);
 		updateUserFromApplicationFormChanges(po, user);
+
 		// Fields only generated once
 		dto.setUserId(po.getUserRefId());
-
 		boolean isApplicationReadyForErp = false;
 		boolean isApplicationReadyForEmail = false;
+
+		// Has application status changed to PROCESSING - Proceed to update;
 		if (dto.getApplicationStatus() != null) {
 			isApplicationReadyForErp = (po.getApplicationStatus() == ApplicationStatus.SUBMITTED)
 					&& (dto.getApplicationStatus() == ApplicationStatus.PROCESSING);
@@ -346,24 +351,60 @@ public class ApplicationFormDaoHelper {
 			}
 		}
 
+		// Approved Member - Extract Member Details from ERP
 		if (dto.getApplicationStatus() == ApplicationStatus.APPROVED
 				&& po.getApplicationStatus() != ApplicationStatus.APPROVED) {
 			try {
 				usersDaoHelper.checkIfUserExistInERP(dto.getEmail());
 			} catch (URISyntaxException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 
+		// update the application changes
 		po.copyFrom(dto);
 		applicationDao.updateApplication(po);
+
+		// Update the invoice for this application
+		updateInvoice(dto, po);
+	}
+
+	/*
+	 * Update Application Invoice
+	 */
+	public void updateInvoice(ApplicationFormHeaderDto dto, ApplicationFormHeader po) {
+		logger.info("===Updating invoice====" + dto.getRefId());
+		InvoiceDto invoice = invoiceHelper.getInvoice(po.getInvoiceRef());
+		Invoice invoicePO = applicationDao.findByRefId(po.getInvoiceRef(), Invoice.class);
+		ApplicationType type = po.getApplicationType();
+		ApplicationCategory category = applicationDao.findApplicationCategory(type);
+
+		List<InvoiceLine> lines = new ArrayList<>();
+		if (invoice != null && category != null) {
+			InvoiceLine invLinePO = new InvoiceLine();
+			InvoiceLineDto invLine = new InvoiceLineDto(
+					invoice.getContactName() + ", " + "'" + category.getType().getDisplayName()
+							+ "' member registration fee",
+					category.getApplicationAmount(), category.getApplicationAmount());
+			invLine.setQuantity(1);
+
+			invLinePO.copyFrom(invLine);
+			invLinePO.setInvoice(invoicePO);
+			lines.add(invLinePO);
+		}
+
+		if (!lines.isEmpty()) {
+			// delete existing invoiceLines
+			invoiceDao.deleteInvoiceLine(invoicePO);
+			Set<InvoiceLine> invoiceLinesSet = new HashSet<>(lines);
+			invoicePO.setLines(invoiceLinesSet);
+
+			invoiceDao.save(invoicePO);
+		}
 	}
 
 	public User updateUserFromApplicationFormChanges(ApplicationFormHeader application, User user) {

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -29,8 +30,7 @@ import com.workpoint.icpak.shared.model.ApplicationType;
 import com.workpoint.icpak.shared.model.Country;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 
-public class MemberRegistrationView extends ViewImpl implements
-		MemberRegistrationPresenter.MyView {
+public class MemberRegistrationView extends ViewImpl implements MemberRegistrationPresenter.MyView {
 
 	private final Widget widget;
 
@@ -80,7 +80,6 @@ public class MemberRegistrationView extends ViewImpl implements
 	Anchor aNonPractising;
 	@UiField
 	DivElement divNonPracticing;
-
 	@UiField
 	DivElement divContainer;
 
@@ -90,6 +89,10 @@ public class MemberRegistrationView extends ViewImpl implements
 	DivElement divOverseas;
 	@UiField
 	IssuesPanel issuesPanel;
+	@UiField
+	DivElement divHeader;
+	@UiField
+	Element divHeaderTopics;
 
 	@UiField
 	LIElement liTab1;
@@ -174,14 +177,11 @@ public class MemberRegistrationView extends ViewImpl implements
 		aAssociate.addClickHandler(selectHandler);
 
 		pageElements.add(new PageElement(divPackage, "Proceed", liTab1));
-		pageElements.add(new PageElement(divCategories, "Submit", "Back",
-				liTab2));
+		pageElements.add(new PageElement(divCategories, "Submit", "Back", liTab2));
 		// pageElements
 		// .add(new PageElement(divProforma, "Proceed to Pay", liTab3));
-		pageElements.add(new PageElement(divPasswordConfiguration, null, null,
-				liTab4));
-		pageElements.add(new PageElement(divPayment, "Back To My Profile",
-				liTabPayment));
+		pageElements.add(new PageElement(divPasswordConfiguration, "Skip Step", "Back", liTab4));
+		pageElements.add(new PageElement(divPayment, "Back To My Profile", "Back", liTabPayment));
 
 		setActive(liElements.get(counter), pageElements.get(counter));
 
@@ -217,8 +217,7 @@ public class MemberRegistrationView extends ViewImpl implements
 		type = type2;
 		switch (type2) {
 		case NON_PRACTISING:
-			spnSelected.setInnerText("You have selected: "
-					+ "Non Practising Member");
+			spnSelected.setInnerText("You have selected: " + "Non Practising Member");
 			divNonPracticing.addClassName("active");
 			break;
 
@@ -228,8 +227,7 @@ public class MemberRegistrationView extends ViewImpl implements
 			break;
 
 		case ASSOCIATE:
-			spnSelected
-					.setInnerText("You have selected: " + "Associate Member");
+			spnSelected.setInnerText("You have selected: " + "Associate Member");
 			divAssociate.addClassName("active");
 			break;
 		default:
@@ -286,8 +284,7 @@ public class MemberRegistrationView extends ViewImpl implements
 	private void clearAll() {
 		for (PageElement pageElement : pageElements) {
 			if (pageElement.isComplete()) {
-				pageElement.getLiElement().getFirstChildElement()
-						.getFirstChildElement().removeClassName("hide");
+				pageElement.getLiElement().getFirstChildElement().getFirstChildElement().removeClassName("hide");
 			} else {
 				pageElement.getLiElement().removeClassName("active");
 			}
@@ -314,7 +311,13 @@ public class MemberRegistrationView extends ViewImpl implements
 	public void setMiddleHeight() {
 		int totalHeight = Window.getClientHeight();
 		int topHeight = divHeaderContainer.getOffsetHeight();
-		int middleHeight = totalHeight - topHeight;
+		int topicsHeight = divHeader.getOffsetHeight();
+		int headerTopics = divHeaderTopics.getOffsetHeight();
+		int middleHeight = totalHeight - topHeight - topicsHeight - headerTopics - 53;
+
+		// Window.alert("\nTotalHeight:" + totalHeight + "MiddleHeight>>"
+		// + middleHeight + "TopHeight" + topHeight);
+
 		if (middleHeight > 0) {
 			divContent.setHeight(middleHeight + "px");
 		}
@@ -338,8 +341,7 @@ public class MemberRegistrationView extends ViewImpl implements
 			isValid = memberRegistrationForm.isValid();
 		} else if (counter == 1) {
 			if (type == null) {
-				issuesPanel
-						.addError("Kindly select your category before Submitting..");
+				issuesPanel.addError("Kindly select your category before Submitting..");
 				isValid = false;
 			}
 		}
@@ -356,26 +358,19 @@ public class MemberRegistrationView extends ViewImpl implements
 		for (ApplicationCategoryDto dto : dtos) {
 			switch (dto.getType()) {
 			case NON_PRACTISING:
-				spnNonPracticingFee.setInnerText(NumberUtils.CURRENCYFORMAT
-						.format(dto.getApplicationAmount()) + "");
+				spnNonPracticingFee.setInnerText(NumberUtils.CURRENCYFORMAT.format(dto.getApplicationAmount()) + "");
 				spnNonPracticingSubscription
-						.setInnerText(NumberUtils.CURRENCYFORMAT.format(dto
-								.getRenewalAmount()) + "");
+						.setInnerText(NumberUtils.CURRENCYFORMAT.format(dto.getRenewalAmount()) + "");
 				spnNonPracticingCondition.setInnerText(dto.getDescription());
 				break;
 			case FOREIGN:
-				spnOverseasFee.setInnerText(NumberUtils.CURRENCYFORMAT
-						.format(dto.getApplicationAmount()) + "");
-				spnOverseasSubscription.setInnerText(NumberUtils.CURRENCYFORMAT
-						.format(dto.getRenewalAmount()) + "");
+				spnOverseasFee.setInnerText(NumberUtils.CURRENCYFORMAT.format(dto.getApplicationAmount()) + "");
+				spnOverseasSubscription.setInnerText(NumberUtils.CURRENCYFORMAT.format(dto.getRenewalAmount()) + "");
 				spnOverseasCondition.setInnerText(dto.getDescription());
 				break;
 			case ASSOCIATE:
-				spnAssociateFee.setInnerText(NumberUtils.CURRENCYFORMAT
-						.format(dto.getApplicationAmount()) + "");
-				spnAssociateSubscription
-						.setInnerText(NumberUtils.CURRENCYFORMAT.format(dto
-								.getRenewalAmount()) + "");
+				spnAssociateFee.setInnerText(NumberUtils.CURRENCYFORMAT.format(dto.getApplicationAmount()) + "");
+				spnAssociateSubscription.setInnerText(NumberUtils.CURRENCYFORMAT.format(dto.getRenewalAmount()) + "");
 				spnAssociateCondition.setInnerText(dto.getDescription());
 				break;
 			default:
@@ -438,8 +433,7 @@ public class MemberRegistrationView extends ViewImpl implements
 	public void bindInvoice(InvoiceDto invoice) {
 		// proformaInv.clearRows();
 		// proformaInv.setInvoice(invoice);
-		
-		
+
 	}
 
 	public Anchor getActivateAccLink() {

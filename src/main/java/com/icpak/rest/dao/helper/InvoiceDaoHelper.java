@@ -35,7 +35,6 @@ import com.icpak.rest.utils.DocumentLine;
 import com.icpak.rest.utils.EmailServiceHelper;
 import com.icpak.rest.utils.HTMLToPDFConvertor;
 import com.itextpdf.text.DocumentException;
-import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.server.util.ServerDateUtils;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.InvoiceLineDto;
@@ -58,72 +57,78 @@ public class InvoiceDaoHelper {
 	Logger logger = Logger.getLogger(InvoiceDaoHelper.class);
 
 	public InvoiceDto getInvoice(String invoiceRef) {
-		Invoice invoice = dao.findByRefId(invoiceRef, Invoice.class);
-		InvoiceDto dto = invoice.toDto();
+		Invoice invoice = dao.findByRefId(invoiceRef, Invoice.class, false);
 
-		if (invoice.getBookingRefId() != null) {
-			Booking booking = dao.findByRefId(invoice.getBookingRefId(), Booking.class);
-			if (booking != null) {
-				// Apply Discount && Penalties based on todays Date
-				Date todaysDate = null;
-				try {
-					todaysDate = ServerDateUtils.DATEFORMAT_SYS
-							.parse(ServerDateUtils.DATEFORMAT_SYS.format(new Date()));
-				} catch (ParseException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				Date penaltyDate = null;
-				Date discountDate = null;
-				Double chargableAmount = invoice.getAmount();
-				Event event = booking.getEvent();
+		if (invoice != null) {
+			InvoiceDto dto = invoice.toDto();
 
-				if (event.getPenaltyDate() != null) {
+			// Is this a booking invoice - Add discount and Penalty details
+			if (invoice.getBookingRefId() != null) {
+				Booking booking = dao.findByRefId(invoice.getBookingRefId(), Booking.class);
+				if (booking != null) {
+					// Apply Discount && Penalties based on todays Date
+					Date todaysDate = null;
 					try {
-						penaltyDate = ServerDateUtils.DATEFORMAT_SYS
-								.parse(ServerDateUtils.DATEFORMAT_SYS.format(event.getPenaltyDate()));
-					} catch (ParseException e) {
+						todaysDate = ServerDateUtils.DATEFORMAT_SYS
+								.parse(ServerDateUtils.DATEFORMAT_SYS.format(new Date()));
+					} catch (ParseException e1) {
 						// TODO Auto-generated catch block
-						e.printStackTrace();
+						e1.printStackTrace();
 					}
-					if (todaysDate.getTime() >= penaltyDate.getTime()) {
-						Double penaltyPrice = invoice.getAmount() + invoice.getTotalPenalty();
-						chargableAmount = penaltyPrice;
-						logger.debug("Applied penalty of >>>" + chargableAmount);
+					Date penaltyDate = null;
+					Date discountDate = null;
+					Double chargableAmount = invoice.getAmount();
+					Event event = booking.getEvent();
+
+					if (event.getPenaltyDate() != null) {
+						try {
+							penaltyDate = ServerDateUtils.DATEFORMAT_SYS
+									.parse(ServerDateUtils.DATEFORMAT_SYS.format(event.getPenaltyDate()));
+						} catch (ParseException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						if (todaysDate.getTime() >= penaltyDate.getTime()) {
+							Double penaltyPrice = invoice.getAmount() + invoice.getTotalPenalty();
+							chargableAmount = penaltyPrice;
+							logger.debug("Applied penalty of >>>" + chargableAmount);
+						}
 					}
+
+					if (event.getDiscountDate() != null) {
+						try {
+							discountDate = ServerDateUtils.DATEFORMAT_SYS
+									.parse(ServerDateUtils.DATEFORMAT_SYS.format(event.getDiscountDate()));
+						} catch (ParseException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						if (todaysDate.getTime() <= discountDate.getTime()) {
+							Double discountedPrice = invoice.getAmount() - invoice.getTotalDiscount();
+							chargableAmount = discountedPrice;
+							logger.debug("Applied Discount of >>>" + chargableAmount);
+						}
+					}
+					dto.setChargeableAmount(chargableAmount);
 				}
 
-				if (event.getDiscountDate() != null) {
-					try {
-						discountDate = ServerDateUtils.DATEFORMAT_SYS
-								.parse(ServerDateUtils.DATEFORMAT_SYS.format(event.getDiscountDate()));
-					} catch (ParseException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					if (todaysDate.getTime() <= discountDate.getTime()) {
-						Double discountedPrice = invoice.getAmount() - invoice.getTotalDiscount();
-						chargableAmount = discountedPrice;
-						logger.debug("Applied Discount of >>>" + chargableAmount);
-					}
-				}
-				dto.setChargeableAmount(chargableAmount);
 			}
 
-		}
+			for (InvoiceLineDto line : dto.getLines()) {
+				// For Events Only
+				String eventDelegateRefId = line.getEventDelegateRefId();
+				if (eventDelegateRefId != null) {
+					Delegate delegate = bookingsDao.findByRefId(eventDelegateRefId, Delegate.class);
+					line.setMemberId(delegate.getMemberRegistrationNo());
 
-		for (InvoiceLineDto line : dto.getLines()) {
-			// For Events Only
-			String eventDelegateRefId = line.getEventDelegateRefId();
-			if (eventDelegateRefId != null) {
-				Delegate delegate = bookingsDao.findByRefId(eventDelegateRefId, Delegate.class);
-				line.setMemberId(delegate.getMemberRegistrationNo());
-
-				line.setDelegateERN(delegate.getErn());
-				line.setAccommodation(delegate.getAccommodation() == null ? null : delegate.getAccommodation().toDto());
+					line.setDelegateERN(delegate.getErn());
+					line.setAccommodation(
+							delegate.getAccommodation() == null ? null : delegate.getAccommodation().toDto());
+				}
 			}
+			return dto;
 		}
-		return dto;
+		return null;// If no invoice was found!
 	}
 
 	public InvoiceDto checkInvoicePaymentStatus(String invoiceRef) {
@@ -147,6 +152,8 @@ public class InvoiceDaoHelper {
 
 		dao.save(invoice);
 		dao.merge(invoice);
+		dao.flush(); // force the SQL INSERT
+		dao.refresh(invoice);// re-read the state (after the trigger executes)
 
 		return invoice.toDto();
 	}

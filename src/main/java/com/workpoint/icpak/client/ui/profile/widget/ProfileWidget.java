@@ -1,7 +1,6 @@
 package com.workpoint.icpak.client.ui.profile.widget;
 
 import static com.workpoint.icpak.client.ui.util.StringUtils.isNullOrEmpty;
-import gwtupload.client.IUploader;
 
 import java.util.Arrays;
 import java.util.List;
@@ -61,13 +60,13 @@ import com.workpoint.icpak.shared.model.MembershipStatus;
 import com.workpoint.icpak.shared.model.PaymentStatus;
 import com.workpoint.icpak.shared.model.auth.ApplicationStatus;
 
+import gwtupload.client.IUploader;
+
 public class ProfileWidget extends Composite {
 
-	private static ProfileWidgetUiBinder uiBinder = GWT
-			.create(ProfileWidgetUiBinder.class);
+	private static ProfileWidgetUiBinder uiBinder = GWT.create(ProfileWidgetUiBinder.class);
 
-	private static final Logger LOGGER = Logger
-			.getLogger(ProfilePresenter.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(ProfilePresenter.class.getName());
 
 	@UiField
 	TabPanel divTabs;
@@ -105,6 +104,9 @@ public class ProfileWidget extends Composite {
 	ActionLink aRefresh;
 	@UiField
 	ActionLink aChangePhoto;
+
+	@UiField
+	ActionLink aChangeCategory;
 	@UiField
 	Element aBackToApplications;
 	@UiField
@@ -231,23 +233,17 @@ public class ProfileWidget extends Composite {
 		setEditMode(true);
 		setChangeProfilePicture(false);
 
-		divTabs.setHeaders(Arrays.asList(new TabHeader("Basic Information",
-				true, "basic_details"), new TabHeader("Education Background",
-				false, "education_details"), new TabHeader(
-				"Practical Training", false, "training_details"),
-				new TabHeader("Accountancy Examinations", false,
-						"accountancy_details"),
-				new TabHeader("Specialization Areas", false,
-						"specialisation_details")));
+		divTabs.setHeaders(Arrays.asList(new TabHeader("Basic Information", true, "basic_details"),
+				new TabHeader("Education Background", false, "education_details"),
+				new TabHeader("Practical Training", false, "training_details"),
+				new TabHeader("Accountancy Examinations", false, "accountancy_details"),
+				new TabHeader("Specialization Areas", false, "specialisation_details")));
 		divTabs.setPosition(TabPosition.PILLS);
-		divTabs.setContent(Arrays
-				.asList(new TabContent(basicDetail, "basic_details", true),
-						new TabContent(educationDetail, "education_details",
-								false), new TabContent(specializationDetail,
-								"specialisation_details", false),
-						new TabContent(accountancyDetail,
-								"accountancy_details", false), new TabContent(
-								trainingDetail, "training_details", false)));
+		divTabs.setContent(Arrays.asList(new TabContent(basicDetail, "basic_details", true),
+				new TabContent(educationDetail, "education_details", false),
+				new TabContent(specializationDetail, "specialisation_details", false),
+				new TabContent(accountancyDetail, "accountancy_details", false),
+				new TabContent(trainingDetail, "training_details", false)));
 
 		/* Set Edit Mode */
 		aEditPicture.addClickHandler(new ClickHandler() {
@@ -294,24 +290,20 @@ public class ProfileWidget extends Composite {
 			public void onClick(ClickEvent arg0) {
 				UploadContext ctx = new UploadContext("getreport");
 				ctx.setAction(UPLOADACTION.DownloadCertGoodStanding);
-				ctx.setContext("memberRefId", AppContext.getContextUser()
-						.getMemberRefId());
+				ctx.setContext("memberRefId", AppContext.getContextUser().getMemberRefId());
 				Window.open(ctx.toUrl(), "Certificate Of Good Standing", "");
 			}
 		});
 
 		isCurrentUserMember = AppContext.isCurrentUserMember();
-		isCurrentUserAdmin = AppContext.isCurrentUserApplicationsEdit()
-				|| AppContext.isCurrentUserApplicationsRead();
+		isCurrentUserAdmin = AppContext.isCurrentUserApplicationsEdit() || AppContext.isCurrentUserApplicationsRead();
 		isCurrentUserBasicMember = AppContext.isCurrentBasicMember();
 
-		lstCategories.setItems(Arrays.asList(ApplicationType.values()),
-				"--Select Application Type--");
+		lstCategories.setItems(Arrays.asList(ApplicationType.values()), "--Select Application Type--");
 
 	}
 
-	public void initDisplay(ApplicationStatus applicationStatus,
-			PaymentStatus paymentStatus) {
+	public void initDisplay(ApplicationStatus applicationStatus, PaymentStatus paymentStatus) {
 		ulIssues.clear();
 		// Window.alert("Is User Admin>>>" + isCurrentUserAdmin);
 		// Window.alert("Is User Member>>>" + isCurrentUserMember);
@@ -328,6 +320,7 @@ public class ProfileWidget extends Composite {
 			divPaymentSection.removeClassName("hide");
 			divApplicationStatus.removeClassName("hide");
 			divSubmitApplication.removeClassName("hide");
+			aChangeCategory.removeStyleName("hide");
 			// spnChangeCategory.removeClassName("hide");
 			bindApplicationAndPaymentStatus(applicationStatus, paymentStatus);
 
@@ -347,15 +340,13 @@ public class ProfileWidget extends Composite {
 				spnStatusDescription.removeClassName("hide");
 				// Application Status - If Not Paid- Tell User to Pay
 				if (paymentStatus != PaymentStatus.PAID) {
-					spnStatusDescription
-							.setInnerText("(Please pay your registration fee.)");
+					spnStatusDescription.setInnerText("(Please pay your registration fee.)");
 					spnStatusDescription.addClassName("text-muted");
 					aPayLink.setStyleName("btn btn-fill btn-gold");
 					aDownloadProforma.setStyleName("btn btn-fill btn-default");
 				} else {
-					spnStatusDescription
-							.setInnerText("(Your application is being processed, "
-									+ "you will be notified on email when the status changes.)");
+					spnStatusDescription.setInnerText("(Your application is being processed, "
+							+ "you will be notified on email when the status changes.)");
 				}
 				// If Application is not in pending state -send email;
 				if (applicationStatus != ApplicationStatus.PENDING) {
@@ -368,17 +359,16 @@ public class ProfileWidget extends Composite {
 				aSubmit.addStyleName("hide");
 
 			}
-		} else if (isCurrentUserAdmin
-				|| AppContext.isCurrentUserApplicationsEdit()) {
+		} else if (isCurrentUserAdmin || AppContext.isCurrentUserApplicationsEdit()) {
 			bindApplicationAndPaymentStatus(applicationStatus, paymentStatus);
 			aSubmit.addStyleName("hide");
 			aPayLink.addStyleName("hide");
+			aChangeCategory.removeStyleName("hide");
 			aDownloadProforma.removeStyleName("hide");
 			divApplicationStatus.removeClassName("hide");
 			divSubmitApplication.removeClassName("hide");
 			divPaymentSection.removeClassName("hide");
-			if (applicationStatus == ApplicationStatus.SUBMITTED
-					&& AppContext.isCurrentUserApplicationsEdit()) {
+			if (applicationStatus == ApplicationStatus.SUBMITTED && AppContext.isCurrentUserApplicationsEdit()) {
 				divErpSync.removeClassName("hide");
 			}
 			elSpace.removeClassName("hide");
@@ -390,8 +380,7 @@ public class ProfileWidget extends Composite {
 		}
 	}
 
-	private void bindApplicationAndPaymentStatus(
-			ApplicationStatus applicationStatus, PaymentStatus paymentStatus) {
+	private void bindApplicationAndPaymentStatus(ApplicationStatus applicationStatus, PaymentStatus paymentStatus) {
 		// Payment Status
 		if (paymentStatus == PaymentStatus.PAID) {
 			spnPaymentStatus.setInnerText(PaymentStatus.PAID.name());
@@ -405,8 +394,7 @@ public class ProfileWidget extends Composite {
 				aPayLink.addClickHandler(new ClickHandler() {
 					@Override
 					public void onClick(ClickEvent event) {
-						aPayLink.setHref("#signup;applicationId="
-								+ applicationForm.getRefId());
+						aPayLink.setHref("#signup;applicationId=" + applicationForm.getRefId());
 					}
 				});
 
@@ -416,12 +404,10 @@ public class ProfileWidget extends Composite {
 						@Override
 						public void onClick(ClickEvent event) {
 							UploadContext ctx = new UploadContext("getreport");
-							ctx.setContext("applicationRefId",
-									applicationForm.getRefId());
+							ctx.setContext("applicationRefId", applicationForm.getRefId());
 							ctx.setAction(UPLOADACTION.GETPROFORMA);
 							// ctx.setContext(key, value)
-							Window.open(ctx.toUrl(),
-									"Get Registration Proforma", null);
+							Window.open(ctx.toUrl(), "Get Registration Proforma", null);
 						}
 					});
 				}
@@ -431,8 +417,7 @@ public class ProfileWidget extends Composite {
 
 		if (applicationStatus != null) {
 			// Application status
-			spnApplicationStatus.setInnerText(applicationStatus.name()
-					.toUpperCase());
+			spnApplicationStatus.setInnerText(applicationStatus.name().toUpperCase());
 			// Application Status - Specific to basic Member
 			if (applicationStatus == ApplicationStatus.PENDING) {
 				spnApplicationStatus.addClassName("label label-default");
@@ -443,6 +428,19 @@ public class ProfileWidget extends Composite {
 			} else {
 				spnApplicationStatus.addClassName("label label-success");
 			}
+		}
+
+		if (isCurrentUserAdmin || AppContext.isCurrentUserApplicationsEdit()) {
+			aChangeCategory.setText("Edit Application");
+			aChangeCategory.addClickHandler(new ClickHandler() {
+				@Override
+				public void onClick(ClickEvent event) {
+					Window.open("#signup;applicationId=" + applicationForm.getRefId() + ";page=1",
+							"Member Registration Center", null);
+				}
+			});
+		} else {
+			aChangeCategory.setHref("#signup;applicationId=" + applicationForm.getRefId() + ";page=2");
 		}
 
 	}
@@ -468,6 +466,7 @@ public class ProfileWidget extends Composite {
 		divPaySubscription.addClassName("hide");
 		spnChangeCategory.addClassName("hide");
 		divChangeCategory.addClassName("hide");
+		aChangeCategory.addStyleName("hide");
 	}
 
 	public void setEditMode(boolean editMode) {
@@ -500,8 +499,7 @@ public class ProfileWidget extends Composite {
 		if (result.getRefId() != null) {
 			String fullName = "";
 			// Window.alert("User is not admin!"+isCurrentUserAdmin);
-			if (isCurrentUserBasicMember
-					|| AppContext.isCurrentUserApplicationsEdit()
+			if (isCurrentUserBasicMember || AppContext.isCurrentUserApplicationsEdit()
 					|| AppContext.isCurrentUserApplicationsRead()) {
 				fullName = result.getSurname() + " " + result.getOtherNames();
 			} else {
@@ -513,8 +511,7 @@ public class ProfileWidget extends Composite {
 			}
 
 			if (result.getApplicationType() != null) {
-				spnApplicationType.setInnerText(result.getApplicationType()
-						.getDisplayName());
+				spnApplicationType.setInnerText(result.getApplicationType().getDisplayName());
 			}
 
 			if (result.getErpCode() != null) {
@@ -534,8 +531,7 @@ public class ProfileWidget extends Composite {
 		uploader.setContext(ctx);
 
 		if (user.getUser().getMembershipStatus() != null) {
-			spnMembershipStatus.setInnerText(user.getUser()
-					.getMembershipStatus().name());
+			spnMembershipStatus.setInnerText(user.getUser().getMembershipStatus().name());
 			if (user.getUser().getMembershipStatus() == MembershipStatus.ACTIVE) {
 				spnMembershipStatus.setClassName("label label-success");
 			} else {
@@ -627,20 +623,17 @@ public class ProfileWidget extends Composite {
 		basicDetail.setCountries(countries);
 	}
 
-	public void bindSpecializations(
-			List<ApplicationFormSpecializationDto> result) {
+	public void bindSpecializations(List<ApplicationFormSpecializationDto> result) {
 		specializationDetail.bindSpecializations(result);
 	}
 
-	public void bindAccountancyDetails(
-			List<ApplicationFormAccountancyDto> result) {
+	public void bindAccountancyDetails(List<ApplicationFormAccountancyDto> result) {
 		accountancyDetail.bindDetails(result);
 	}
 
 	public void bindMemberStanding(MemberStanding standing) {
 		if (standing.getMemberBalance() != null) {
-			elCurrentBalance.setInnerText(NumberUtils.CURRENCYFORMAT
-					.format(standing.getMemberBalance()));
+			elCurrentBalance.setInnerText(NumberUtils.CURRENCYFORMAT.format(standing.getMemberBalance()));
 		}
 
 		showGoodStandingPanel(true);
@@ -668,11 +661,8 @@ public class ProfileWidget extends Composite {
 			iconSuccess.removeClassName("hide");
 			spnHelpIcon.removeClassName("hide");
 			aDownloadCert.removeStyleName("hide");
-			spnHelpIcon
-					.setAttribute(
-							"data-content",
-							"Your account is in Good-Standing, You can proceed to download "
-									+ "your good-standing certificate for your own use.");
+			spnHelpIcon.setAttribute("data-content", "Your account is in Good-Standing, You can proceed to download "
+					+ "your good-standing certificate for your own use.");
 
 		}
 	}
@@ -714,24 +704,18 @@ public class ProfileWidget extends Composite {
 
 	public boolean validateAllIssues() {
 		ulIssues.clear();
-		boolean isBasicDetailOK = basicDetail.getBasicDetailIssues().size() == 0 ? true
-				: false;
-		boolean isEducationDetailOk = educationDetail
-				.getEducationDetailIssues().size() == 0 ? true : false;
-		boolean isTrainingDetailOk = trainingDetail.getTrainingDetailIssues()
-				.size() == 0 ? true : false;
-		boolean isExaminationDetailOk = accountancyDetail
-				.getExaminationDetailIssues().size() == 0 ? true : false;
-		boolean isSpecializationOk = specializationDetail
-				.getSpecializationDetailIssues().size() == 0 ? true : false;
+		boolean isBasicDetailOK = basicDetail.getBasicDetailIssues().size() == 0 ? true : false;
+		boolean isEducationDetailOk = educationDetail.getEducationDetailIssues().size() == 0 ? true : false;
+		boolean isTrainingDetailOk = trainingDetail.getTrainingDetailIssues().size() == 0 ? true : false;
+		boolean isExaminationDetailOk = accountancyDetail.getExaminationDetailIssues().size() == 0 ? true : false;
+		boolean isSpecializationOk = specializationDetail.getSpecializationDetailIssues().size() == 0 ? true : false;
 
 		// Window.alert("Is Basic Details Ok:" + isBasicDetailOK
 		// + "Education Detail OK:" + isEducationDetailOk
 		// + "Training Detail OK:" + isTrainingDetailOk
 		// + "Examination Detail OK:" + isExaminationDetailOk);
 
-		if (isProfileOK && isBasicDetailOK && isEducationDetailOk
-				&& isTrainingDetailOk && isExaminationDetailOk
+		if (isProfileOK && isBasicDetailOK && isEducationDetailOk && isTrainingDetailOk && isExaminationDetailOk
 				&& isSpecializationOk) {
 			panelIssues.addStyleName("hide");
 			return true;
@@ -762,8 +746,7 @@ public class ProfileWidget extends Composite {
 				ulIssues.add(listItem);
 			}
 
-			for (String issue : specializationDetail
-					.getSpecializationDetailIssues()) {
+			for (String issue : specializationDetail.getSpecializationDetailIssues()) {
 				BulletPanel listItem = new BulletPanel();
 				listItem.setText(issue);
 				ulIssues.add(listItem);
@@ -778,8 +761,7 @@ public class ProfileWidget extends Composite {
 		// Date()));
 	}
 
-	public void setNavigationLinks(String previousRefId, String nextRefId,
-			int maxSize) {
+	public void setNavigationLinks(String previousRefId, String nextRefId, int maxSize) {
 		if ((Integer.parseInt(nextRefId) + 1) < maxSize) {
 			aNextApplication.removeStyleName("hide");
 			aNextApplication.setHref("#members;counter=" + nextRefId);

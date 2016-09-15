@@ -229,9 +229,13 @@
 														Application</d:ActionLink>
 													<d:ActionLink ui:field="aPayLink">Proceed
 														to Pay</d:ActionLink>
-													<d:ActionLink ui:field="aDownloadProforma">Download
+													<d:ActionLink ui:field="aDownloadProforma"
+														styleName="btn btn-fill btn-default">Download
 														Registration
 														Invoice
+													</d:ActionLink>
+													<d:ActionLink ui:field="aChangeCategory"
+														styleName="btn btn-fill btn-default">Change Application Category
 													</d:ActionLink>
 													<div>
 														<span ui:field="spnStatusDescription"></span>

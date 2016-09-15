@@ -56,10 +56,8 @@ import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.UserDto;
 
 public class MemberRegistrationPresenter
-		extends
-		Presenter<MemberRegistrationPresenter.MyView, MemberRegistrationPresenter.MyProxy>
-		implements ErrorHandler, PaymentCompletedHandler, ProcessingHandler,
-		ProcessingCompletedHandler {
+		extends Presenter<MemberRegistrationPresenter.MyView, MemberRegistrationPresenter.MyProxy>
+		implements ErrorHandler, PaymentCompletedHandler, ProcessingHandler, ProcessingCompletedHandler {
 
 	public interface MyView extends View {
 		ApplicationFormHeaderDto getApplicationForm();
@@ -134,14 +132,10 @@ public class MemberRegistrationPresenter
 	private ResourceDelegate<CountriesResource> countriesResource;
 
 	@Inject
-	public MemberRegistrationPresenter(final EventBus eventBus,
-			final MyView view, final MyProxy proxy,
-			Provider<ErrorPresenter> provider,
-			ResourceDelegate<ApplicationFormResource> applicationDelegate,
-			ResourceDelegate<UsersResource> usersDelegate,
-			ResourceDelegate<CategoriesResource> categoriesDelegate,
-			ResourceDelegate<InvoiceResource> invoiceResource,
-			ResourceDelegate<CountriesResource> countriesResource) {
+	public MemberRegistrationPresenter(final EventBus eventBus, final MyView view, final MyProxy proxy,
+			Provider<ErrorPresenter> provider, ResourceDelegate<ApplicationFormResource> applicationDelegate,
+			ResourceDelegate<UsersResource> usersDelegate, ResourceDelegate<CategoriesResource> categoriesDelegate,
+			ResourceDelegate<InvoiceResource> invoiceResource, ResourceDelegate<CountriesResource> countriesResource) {
 		super(eventBus, view, proxy);
 		this.applicationDelegate = applicationDelegate;
 		this.usersDelegate = usersDelegate;
@@ -164,19 +158,19 @@ public class MemberRegistrationPresenter
 		addRegisteredHandler(ProcessingCompletedEvent.TYPE, this);
 		addRegisteredHandler(PaymentCompletedEvent.TYPE, this);
 
-		getView().getEmail().addValueChangeHandler(
-				new ValueChangeHandler<String>() {
-					@Override
-					public void onValueChange(ValueChangeEvent<String> event) {
-						String email = event.getValue();
-						checkExists(email);
-					}
-				});
+		getView().getEmail().addValueChangeHandler(new ValueChangeHandler<String>() {
+			@Override
+			public void onValueChange(ValueChangeEvent<String> event) {
+				String email = event.getValue();
+				checkExists(email);
+			}
+		});
 
 		getView().getANext().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				if (getView().isValid()) {
+					getView().getANext().getElement().removeAttribute("href");
 					if (getView().getCounter() == 1) {
 						submit(getView().getApplicationForm());
 					} else if (getView().getCounter() == 2) {
@@ -199,7 +193,8 @@ public class MemberRegistrationPresenter
 				} else if (getView().getCounter() == 1) {
 					getView().showError("Kindly select a category");
 				} else {
-					// Window.alert("Either the form is not valid or app refId is null");
+					// Window.alert("Either the form is not valid or app refId
+					// is null");
 				}
 
 			}
@@ -243,8 +238,7 @@ public class MemberRegistrationPresenter
 				getView().showmask(false);
 				removeError();
 				getView().bindForm(result);
-				getView().getActivateAccLink().setHref(
-						"#activateacc;uid=" + result.getUserRefId());
+				getView().getActivateAccLink().setHref("#activateacc;uid=" + result.getUserRefId());
 				getView().getABack().addStyleName("hide");
 				getView().getANext().addStyleName("hide");
 				// This section removed on 5/12/2015
@@ -255,8 +249,7 @@ public class MemberRegistrationPresenter
 			}
 
 			private void removeError() {
-				getView().setLoadingState((ActionLink) getView().getANext(),
-						false);
+				getView().setLoadingState((ActionLink) getView().getANext(), false);
 			}
 
 			@Override
@@ -271,8 +264,7 @@ public class MemberRegistrationPresenter
 		if (applicationRefId == null) {
 			applicationDelegate.withCallback(callback).create(applicationForm);
 		} else {
-			applicationDelegate.withCallback(callback).update(applicationRefId,
-					applicationForm);
+			applicationDelegate.withCallback(callback).update(applicationRefId, applicationForm);
 		}
 
 	}
@@ -344,46 +336,47 @@ public class MemberRegistrationPresenter
 	public void prepareFromRequest(PlaceRequest request) {
 		super.prepareFromRequest(request);
 		applicationRefId = request.getParameter("applicationId", null);
+		String page = request.getParameter("page", "4");
 		// Countries
-		countriesResource.withCallback(
-				new AbstractAsyncCallback<List<Country>>() {
-					public void onSuccess(List<Country> countries) {
-						Collections.sort(countries, new Comparator<Country>() {
-							@Override
-							public int compare(Country o1, Country o2) {
-								return o1.getDisplayName().compareTo(
-										o2.getDisplayName());
-							}
-						});
+		countriesResource.withCallback(new AbstractAsyncCallback<List<Country>>() {
+			public void onSuccess(List<Country> countries) {
+				Collections.sort(countries, new Comparator<Country>() {
+					@Override
+					public int compare(Country o1, Country o2) {
+						return o1.getDisplayName().compareTo(o2.getDisplayName());
+					}
+				});
 
-						getView().setCountries(countries);
-					};
-				}).getAll();
+				getView().setCountries(countries);
+			};
+		}).getAll();
 
 		if (applicationRefId != null) {
-			getView().setCounter(3);
+			getView().getANext().removeStyleName("hide");
+			int pageToNavigate = Integer.valueOf(page) - 1;
+			getView().setCounter(pageToNavigate);
 			loadApplication(applicationRefId);
+		} else {
+			getView().getANext().addStyleName("hide");
 		}
 
-		categoriesDelegate.withCallback(
-				new AbstractAsyncCallback<List<ApplicationCategoryDto>>() {
-					@Override
-					public void onSuccess(List<ApplicationCategoryDto> result) {
-						getView().setCategories(result);
-					}
-				}).getAll();
+		categoriesDelegate.withCallback(new AbstractAsyncCallback<List<ApplicationCategoryDto>>() {
+			@Override
+			public void onSuccess(List<ApplicationCategoryDto> result) {
+				getView().setCategories(result);
+			}
+		}).getAll();
 	}
 
 	private void loadApplication(String applicationId) {
-		applicationDelegate.withCallback(
-				new AbstractAsyncCallback<ApplicationFormHeaderDto>() {
-					@Override
-					public void onSuccess(ApplicationFormHeaderDto dto) {
-						applicationDetails = dto;
-						getView().bindForm(dto);
-						getInvoice(dto.getInvoiceRef());
-					}
-				}).getById(applicationId);
+		applicationDelegate.withCallback(new AbstractAsyncCallback<ApplicationFormHeaderDto>() {
+			@Override
+			public void onSuccess(ApplicationFormHeaderDto dto) {
+				applicationDetails = dto;
+				getView().bindForm(dto);
+				getInvoice(dto.getInvoiceRef());
+			}
+		}).getById(applicationId);
 	}
 
 	@Override

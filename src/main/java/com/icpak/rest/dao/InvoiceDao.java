@@ -12,6 +12,7 @@ import javax.persistence.Query;
 
 import org.apache.log4j.Logger;
 
+import com.icpak.rest.models.trx.Invoice;
 import com.workpoint.icpak.server.util.ServerDateUtils;
 import com.workpoint.icpak.shared.model.AttachmentDto;
 import com.workpoint.icpak.shared.model.InvoiceDto;
@@ -27,17 +28,15 @@ public class InvoiceDao extends BaseDao {
 
 	Logger logger = Logger.getLogger(InvoiceDao.class);
 
-	public List<TransactionDto> getAllTransactions(String memberId,
-			String searchTerm, String fromDate, String endDate,
-			String paymentType2, String paymentMode2, Integer offset,
-			Integer limit) {
+	public List<TransactionDto> getAllTransactions(String memberId, String searchTerm, String fromDate, String endDate,
+			String paymentType2, String paymentMode2, Integer offset, Integer limit) {
 		StringBuffer sqlBuffer = new StringBuffer(
 				"select id,date,paymentMode,paymentType,description,trxNumber,accountNo,invoiceAmount,chargableAmount,"
 						+ "totalPreviousPayments,amount,balance,invoiceRef from transaction");
 		Query query = null;
 		if (memberId == null || memberId.equals("ALL")) {
-			Map<String, Object> params = appendParameters(sqlBuffer,
-					searchTerm, fromDate, endDate, paymentType2, paymentMode2);
+			Map<String, Object> params = appendParameters(sqlBuffer, searchTerm, fromDate, endDate, paymentType2,
+					paymentMode2);
 			sqlBuffer.append(" order by date asc");
 			query = getEntityManager().createNativeQuery(sqlBuffer.toString());
 			for (String key : params.keySet()) {
@@ -51,31 +50,19 @@ public class InvoiceDao extends BaseDao {
 		for (Object[] row : rows) {
 			int i = 0;
 			Object value = null;
-			Long id = (value = row[i++]) == null ? null : ((BigInteger) value)
-					.longValue();
+			Long id = (value = row[i++]) == null ? null : ((BigInteger) value).longValue();
 			Date createdDate = (value = row[i++]) == null ? null : (Date) value;
-			PaymentMode paymentMode = (value = row[i++]) == null ? null
-					: PaymentMode.valueOf(value.toString());
-			PaymentType paymentType = (value = row[i++]) == null ? null
-					: PaymentType.valueOf(value.toString());
-			String description = (value = row[i++]) == null ? null : value
-					.toString();
-			String trxNumber = (value = row[i++]) == null ? null : value
-					.toString();
-			String accountNo = (value = row[i++]) == null ? null : value
-					.toString();
-			Double invoiceAmount = (value = row[i++]) == null ? null
-					: new Double(value.toString());
-			Double chargableAmount = (value = row[i++]) == null ? null
-					: new Double(value.toString());
-			Double totalPreviousPayments = (value = row[i++]) == null ? null
-					: new Double(value.toString());
-			Double amountPaid = (value = row[i++]) == null ? null : new Double(
-					value.toString());
-			Double balance = (value = row[i++]) == null ? null : new Double(
-					value.toString());
-			String invoiceRef = (value = row[i++]) == null ? null : value
-					.toString();
+			PaymentMode paymentMode = (value = row[i++]) == null ? null : PaymentMode.valueOf(value.toString());
+			PaymentType paymentType = (value = row[i++]) == null ? null : PaymentType.valueOf(value.toString());
+			String description = (value = row[i++]) == null ? null : value.toString();
+			String trxNumber = (value = row[i++]) == null ? null : value.toString();
+			String accountNo = (value = row[i++]) == null ? null : value.toString();
+			Double invoiceAmount = (value = row[i++]) == null ? null : new Double(value.toString());
+			Double chargableAmount = (value = row[i++]) == null ? null : new Double(value.toString());
+			Double totalPreviousPayments = (value = row[i++]) == null ? null : new Double(value.toString());
+			Double amountPaid = (value = row[i++]) == null ? null : new Double(value.toString());
+			Double balance = (value = row[i++]) == null ? null : new Double(value.toString());
+			String invoiceRef = (value = row[i++]) == null ? null : value.toString();
 
 			TransactionDto trx = new TransactionDto();
 			trx.setId(id);
@@ -96,8 +83,7 @@ public class InvoiceDao extends BaseDao {
 		return transactions;
 	}
 
-	private Map<String, Object> appendParameters(StringBuffer sql,
-			String searchTerm, String fromDate, String endDate,
+	private Map<String, Object> appendParameters(StringBuffer sql, String searchTerm, String fromDate, String endDate,
 			String paymentType, String paymentMode) {
 		Map<String, Object> params = new HashMap<>();
 		boolean isFirstParam = true;
@@ -131,10 +117,8 @@ public class InvoiceDao extends BaseDao {
 			} else {
 				sql.append(" and");
 			}
-			sql.append("(payerNames like :searchTerm or "
-					+ "trxNumber like :searchTerm or "
-					+ "accountNo like :searchTerm or "
-					+ "description like :searchTerm)");
+			sql.append("(payerNames like :searchTerm or " + "trxNumber like :searchTerm or "
+					+ "accountNo like :searchTerm or " + "description like :searchTerm)");
 			params.put("searchTerm", "%" + searchTerm + "%");
 		}
 
@@ -147,8 +131,7 @@ public class InvoiceDao extends BaseDao {
 			}
 			Date fromDateConverted = null;
 			try {
-				fromDateConverted = ServerDateUtils.FULLHOURMINUTESTAMP
-						.parse(fromDate);
+				fromDateConverted = ServerDateUtils.FULLHOURMINUTESTAMP.parse(fromDate);
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
@@ -165,8 +148,7 @@ public class InvoiceDao extends BaseDao {
 			}
 			Date endDateConverted = null;
 			try {
-				endDateConverted = ServerDateUtils.FULLHOURMINUTESTAMP
-						.parse(endDate);
+				endDateConverted = ServerDateUtils.FULLHOURMINUTESTAMP.parse(endDate);
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
@@ -179,10 +161,8 @@ public class InvoiceDao extends BaseDao {
 
 	public List<AttachmentDto> getAllAttachment(Long id) {
 		logger.info(" +++ GET Attachments for +++++ InvoiceId == " + id);
-		StringBuffer sql = new StringBuffer(
-				"select refId,name from attachment where transactionId=:passedId");
-		Query query = getEntityManager().createNativeQuery(sql.toString())
-				.setParameter("passedId", id);
+		StringBuffer sql = new StringBuffer("select refId,name from attachment where transactionId=:passedId");
+		Query query = getEntityManager().createNativeQuery(sql.toString()).setParameter("passedId", id);
 		List<Object[]> rows = getResultList(query, 0, 1000);
 		List<AttachmentDto> attachmentDtos = new ArrayList<>();
 		for (Object[] row : rows) {
@@ -195,22 +175,19 @@ public class InvoiceDao extends BaseDao {
 			attachment.setAttachmentName(name);
 			attachmentDtos.add(attachment);
 		}
-		logger.info(" Found this number of attachments == "
-				+ attachmentDtos.size());
+		logger.info(" Found this number of attachments == " + attachmentDtos.size());
 		return attachmentDtos;
 	}
 
 	public List<InvoiceDto> checkInvoicePaymentStatus(String invoiceRefId) {
 		StringBuffer sqlBuffer = new StringBuffer("select i.refId, "
 				+ "i.amount as invoiceAmount,i.date as invoiceDate,"
-				+ "i.documentNo,i.description,i.contactName,i.status "
-				+ "from Invoice i " + "where i.isActive=1 ");
+				+ "i.documentNo,i.description,i.contactName,i.status " + "from Invoice i " + "where i.isActive=1 ");
 
 		Query query = null;
 		sqlBuffer.append("and i.refId=:invoiceRef");
 		sqlBuffer.append(" order by i.id desc");
-		query = getEntityManager().createNativeQuery(sqlBuffer.toString())
-				.setParameter("invoiceRef", invoiceRefId);
+		query = getEntityManager().createNativeQuery(sqlBuffer.toString()).setParameter("invoiceRef", invoiceRefId);
 
 		List<Object[]> rows = getResultList(query);
 		List<InvoiceDto> statements = new ArrayList<>();
@@ -220,22 +197,17 @@ public class InvoiceDao extends BaseDao {
 			Object value = null;
 
 			String refId = (value = row[i++]) == null ? null : value.toString();
-			Double invoiceAmount = (value = row[i++]) == null ? null
-					: new Double(value.toString());
+			Double invoiceAmount = (value = row[i++]) == null ? null : new Double(value.toString());
 
 			Date invoiceDate = (value = row[i++]) == null ? null : (Date) value;
 
-			String documentNo = (value = row[i++]) == null ? null : value
-					.toString();
+			String documentNo = (value = row[i++]) == null ? null : value.toString();
 
-			String description = (value = row[i++]) == null ? null : value
-					.toString();
+			String description = (value = row[i++]) == null ? null : value.toString();
 
-			String contactName = (value = row[i++]) == null ? null : value
-					.toString();
+			String contactName = (value = row[i++]) == null ? null : value.toString();
 
-			PaymentStatus status = (value = row[i++]) == null ? null
-					: PaymentStatus.valueOf((String) value);
+			PaymentStatus status = (value = row[i++]) == null ? null : PaymentStatus.valueOf((String) value);
 
 			InvoiceDto statement = new InvoiceDto();
 			statement.setRefId(refId);
@@ -252,18 +224,13 @@ public class InvoiceDao extends BaseDao {
 	}
 
 	public InvoiceDto getInvoiceByDocumentNo(String docNo) {
-		StringBuffer sqlBuffer = new StringBuffer(
-				"select i.refId, "
-						+ "i.amount as invoiceAmount,i.date as invoiceDate,"
-						+ "i.documentNo,i.description,i.contactName,t.refId as trxRefId,"
-						+ "i.bookingRefId,i.totalDiscount,i.totalPenalty "
-						+ "from Invoice i "
-						+ "left join Transaction t on (i.refId=t.invoiceRef) "
-						+ "where i.isActive=1 and i.documentNo=:docNo ");
+		StringBuffer sqlBuffer = new StringBuffer("select i.refId, "
+				+ "i.amount as invoiceAmount,i.date as invoiceDate,"
+				+ "i.documentNo,i.description,i.contactName,t.refId as trxRefId,"
+				+ "i.bookingRefId,i.totalDiscount,i.totalPenalty " + "from Invoice i "
+				+ "left join Transaction t on (i.refId=t.invoiceRef) " + "where i.isActive=1 and i.documentNo=:docNo ");
 
-		Query query = getEntityManager()
-				.createNativeQuery(sqlBuffer.toString()).setParameter("docNo",
-						docNo);
+		Query query = getEntityManager().createNativeQuery(sqlBuffer.toString()).setParameter("docNo", docNo);
 
 		List<Object[]> rows = getResultList(query);
 		InvoiceDto dbInvoice = null;
@@ -272,34 +239,25 @@ public class InvoiceDao extends BaseDao {
 			Object value = null;
 
 			String refId = (value = row[i++]) == null ? null : value.toString();
-			Double invoiceAmount = (value = row[i++]) == null ? null
-					: new Double(value.toString());
+			Double invoiceAmount = (value = row[i++]) == null ? null : new Double(value.toString());
 
 			Date invoiceDate = (value = row[i++]) == null ? null : (Date) value;
 
-			String documentNo = (value = row[i++]) == null ? null : value
-					.toString();
+			String documentNo = (value = row[i++]) == null ? null : value.toString();
 
-			String description = (value = row[i++]) == null ? null : value
-					.toString();
+			String description = (value = row[i++]) == null ? null : value.toString();
 
-			String contactName = (value = row[i++]) == null ? null : value
-					.toString();
+			String contactName = (value = row[i++]) == null ? null : value.toString();
 
-			String trxRefId = (value = row[i++]) == null ? null : value
-					.toString();
+			String trxRefId = (value = row[i++]) == null ? null : value.toString();
 
-			String bookingRefId = (value = row[i++]) == null ? null : value
-					.toString();
-			Double totalDiscount = (value = row[i++]) == null ? null
-					: new Double(value.toString());
+			String bookingRefId = (value = row[i++]) == null ? null : value.toString();
+			Double totalDiscount = (value = row[i++]) == null ? null : new Double(value.toString());
 
-			Double totalPenalty = (value = row[i++]) == null ? null
-					: new Double(value.toString());
+			Double totalPenalty = (value = row[i++]) == null ? null : new Double(value.toString());
 
-			dbInvoice = new InvoiceDto(refId, invoiceAmount, documentNo,
-					description, invoiceDate, contactName, trxRefId,
-					bookingRefId);
+			dbInvoice = new InvoiceDto(refId, invoiceAmount, documentNo, description, invoiceDate, contactName,
+					trxRefId, bookingRefId);
 			dbInvoice.setRefId(refId);
 			dbInvoice.setTotalDiscount(totalDiscount);
 			dbInvoice.setTotalPenalty(totalPenalty);
@@ -320,14 +278,12 @@ public class InvoiceDao extends BaseDao {
 	// return number.intValue();
 	// }
 
-	public Integer getTransactionsCount(String memberId, String searchTerm,
-			String fromDate, String endDate, String paymentType2,
-			String paymentMode2) {
-		StringBuffer sqlBuffer = new StringBuffer(
-				"select count(*) from transaction");
+	public Integer getTransactionsCount(String memberId, String searchTerm, String fromDate, String endDate,
+			String paymentType2, String paymentMode2) {
+		StringBuffer sqlBuffer = new StringBuffer("select count(*) from transaction");
 		Query query = null;
-		Map<String, Object> params = appendParameters(sqlBuffer, searchTerm,
-				fromDate, endDate, paymentType2, paymentMode2);
+		Map<String, Object> params = appendParameters(sqlBuffer, searchTerm, fromDate, endDate, paymentType2,
+				paymentMode2);
 		if (memberId == null || memberId.equals("ALL")) {
 			query = getEntityManager().createNativeQuery(sqlBuffer.toString());
 			for (String key : params.keySet()) {
@@ -339,10 +295,8 @@ public class InvoiceDao extends BaseDao {
 	}
 
 	public InvoiceSummary getSummary(String memberId) {
-		StringBuffer sqlBuffer = new StringBuffer(
-				"select sum(i.amount),status from Invoice i "
-						+ "left join Transaction t "
-						+ "on (i.refId=t.invoiceRef) " + "where i.isActive=1 ");
+		StringBuffer sqlBuffer = new StringBuffer("select sum(i.amount),status from Invoice i "
+				+ "left join Transaction t " + "on (i.refId=t.invoiceRef) " + "where i.isActive=1 ");
 
 		Query query = null;
 		if (memberId == null || memberId.equals("ALL")) {
@@ -351,8 +305,7 @@ public class InvoiceDao extends BaseDao {
 		} else {
 			sqlBuffer.append("and t.memberId=:memberId ");
 			sqlBuffer.append("group by t.status ");
-			query = getEntityManager().createNativeQuery(sqlBuffer.toString())
-					.setParameter("memberId", memberId);
+			query = getEntityManager().createNativeQuery(sqlBuffer.toString()).setParameter("memberId", memberId);
 		}
 
 		List<Object[]> rows = getResultList(query);
@@ -362,14 +315,10 @@ public class InvoiceDao extends BaseDao {
 			int i = 0;
 			Object value = null;
 
-			Double invoiceAmount = (value = row[i++]) == null ? null
-					: new Double(value.toString());
-			String status = (value = row[i++]) == null ? null : value
-					.toString();
+			Double invoiceAmount = (value = row[i++]) == null ? null : new Double(value.toString());
+			String status = (value = row[i++]) == null ? null : value.toString();
 			if (status == null || status.equals("NOTPAID")) {
-				summary.setUnpaid(invoiceAmount
-						+ (summary.getUnpaid() == null ? 0 : summary
-								.getUnpaid()));
+				summary.setUnpaid(invoiceAmount + (summary.getUnpaid() == null ? 0 : summary.getUnpaid()));
 			} else {
 				summary.setPaid(invoiceAmount);
 			}
@@ -381,13 +330,11 @@ public class InvoiceDao extends BaseDao {
 	public List<InvoiceLineDto> getInvoiceLinesByDocumentNo(String documentNo) {
 		List<InvoiceLineDto> invoiceLines = new ArrayList<>();
 
-		String sql = "select "
-				+ "l.refId,l.description,l.quantity,l.unitprice,l.totalamount,l.type "
-				+ "from " + "invoiceline l " + "where " + "l.invoiceId="
+		String sql = "select " + "l.refId,l.description,l.quantity,l.unitprice,l.totalamount,l.type " + "from "
+				+ "invoiceline l " + "where " + "l.invoiceId="
 				+ "(select n.id from invoice n where n.documentNo=:documentNo)";
 
-		Query query = getEntityManager().createNativeQuery(sql).setParameter(
-				"documentNo", documentNo);
+		Query query = getEntityManager().createNativeQuery(sql).setParameter("documentNo", documentNo);
 
 		List<Object[]> rows = getResultList(query);
 
@@ -395,15 +342,11 @@ public class InvoiceDao extends BaseDao {
 			int i = 0;
 			Object value = null;
 			String refId = (value = row[i++]) == null ? null : value.toString();
-			String description = (value = row[i++]) == null ? null : value
-					.toString();
+			String description = (value = row[i++]) == null ? null : value.toString();
 			int quantity = (value = row[i++]) == null ? null : (Integer) value;
-			Double unitPrice = (value = row[i++]) == null ? null
-					: (Double) value;
-			Double totalAmount = (value = row[i++]) == null ? null
-					: (Double) value;
-			InvoiceLineType type = (value = row[i++]) == null ? null
-					: InvoiceLineType.valueOf((String) value);
+			Double unitPrice = (value = row[i++]) == null ? null : (Double) value;
+			Double totalAmount = (value = row[i++]) == null ? null : (Double) value;
+			InvoiceLineType type = (value = row[i++]) == null ? null : InvoiceLineType.valueOf((String) value);
 
 			InvoiceLineDto dto = new InvoiceLineDto();
 			dto.setRefId(refId);
@@ -416,6 +359,14 @@ public class InvoiceDao extends BaseDao {
 		}
 
 		return invoiceLines;
+	}
+
+	public void deleteInvoiceLine(Invoice invoice) {
+		logger.error("Deleting invoice line ====== ><><<>>>>>>>>===");
+		Query deleteQuery = getEntityManager()
+				.createNativeQuery("delete from InvoiceLine " + "where invoiceId=:invoiceId");
+		deleteQuery.setParameter("invoiceId", invoice.getId());
+		deleteQuery.executeUpdate();
 	}
 
 }

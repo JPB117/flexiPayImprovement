@@ -39,8 +39,7 @@ public class Invoice extends PO {
 	private Double totalDiscount;
 	private Double totalPenalty;
 
-	@OneToMany(mappedBy = "invoice", cascade = { CascadeType.PERSIST,
-			CascadeType.REMOVE })
+	@OneToMany(mappedBy = "invoice", cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
 	private Set<InvoiceLine> lines = new LinkedHashSet<InvoiceLine>();
 
 	public Invoice() {

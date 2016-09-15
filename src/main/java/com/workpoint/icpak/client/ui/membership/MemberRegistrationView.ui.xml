@@ -20,29 +20,28 @@
 				<div class="container">
 					<div class="navbar-header" style="width: 100%; text-align: center;">
 						<a class="brand">
-							<img src="img/icpak_logo.png" width="150px" />
+							<img src="img/icpak_logo.png" width="100px" />
 						</a>
 					</div>
 				</div>
 			</nav>
 		</g:HTMLPanel>
 
-		<g:HTMLPanel styleName="image-container set-full-height"
-			ui:field="divContent">
+		<g:HTMLPanel styleName="image-container set-full-height">
 			<div class="container">
 				<div class="row">
-					<div class="col-md-11 col-md-offset-1">
+					<div class="col-sm-12">
 						<!-- Wizard container -->
 						<div class="wizard-container" ui:field="divContainer">
 							<div class="card wizard-card ct-wizard-gold">
-								<div class="wizard-header">
+								<div class="wizard-header" ui:field="divHeader">
 									<h3>
 										Member Registration Center
 										<br />
 									</h3>
 								</div>
 
-								<ul class="nav nav-pills visible-lg">
+								<ul class="nav nav-pills visible-lg" ui:field="divHeaderTopics">
 									<li class="active" style="width: 25%;" ui:field="liTab1">
 										<a>
 											<span class="fa fa-check-circle hide"></span>
@@ -80,7 +79,7 @@
 								</div>
 
 
-								<div class="tab-content">
+								<g:HTMLPanel styleName="tab-content" ui:field="divContent">
 									<div class="tab-pane active" ui:field="divPackage">
 										<div class="row">
 											<form:MemberRegistrationForm
@@ -356,7 +355,7 @@
 										</div>
 										<div class="clearfix"></div>
 									</div>
-								</div>
+								</g:HTMLPanel>
 							</div>
 						</div>
 					</div>

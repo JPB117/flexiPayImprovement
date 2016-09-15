@@ -15,10 +15,12 @@ import com.icpak.rest.dao.UsersDao;
 import com.icpak.rest.dao.helper.AccountancyDaoHelper;
 import com.icpak.rest.dao.helper.ApplicationFormDaoHelper;
 import com.icpak.rest.dao.helper.EducationDaoHelper;
+import com.icpak.rest.dao.helper.InvoiceDaoHelper;
 import com.icpak.rest.dao.helper.SpecializationDaoHelper;
 import com.icpak.rest.dao.helper.TrainingDaoHelper;
 import com.icpak.rest.dao.helper.UsersDaoHelper;
 import com.icpak.rest.models.auth.User;
+import com.icpak.rest.models.base.PO;
 import com.icpak.rest.models.membership.ApplicationFormHeader;
 import com.icpak.rest.models.membership.MemberImport;
 import com.workpoint.icpak.shared.model.ApplicationERPDto;
@@ -29,8 +31,8 @@ import com.workpoint.icpak.shared.model.ApplicationFormHeaderDto;
 import com.workpoint.icpak.shared.model.ApplicationFormSpecializationDto;
 import com.workpoint.icpak.shared.model.ApplicationFormTrainingDto;
 import com.workpoint.icpak.shared.model.ApplicationType;
+import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.UserDto;
-import com.workpoint.icpak.shared.model.auth.ApplicationStatus;
 import com.workpoint.icpak.tests.base.AbstractDaoTest;
 
 public class TestApplicationForm extends AbstractDaoTest {
@@ -39,6 +41,9 @@ public class TestApplicationForm extends AbstractDaoTest {
 
 	@Inject
 	ApplicationFormDaoHelper helper;
+
+	@Inject
+	InvoiceDaoHelper invoiceHelper;
 	@Inject
 	EducationDaoHelper eduHelper;
 	@Inject
@@ -140,14 +145,30 @@ public class TestApplicationForm extends AbstractDaoTest {
 
 	}
 
-	// @Test
+	@Test
 	public void testUpdatingOfCPDDto() {
-		ApplicationFormHeaderDto dto = applicationDao.findByApplicationId("nAvpeTnX9OmHxRPV", true).toDto();
-		dto.setApplicationStatus(ApplicationStatus.APPROVED);
+		ApplicationFormHeaderDto dto = applicationDao.findByApplicationId("mdoRIMjr6HUDFFku", true).toDto();
+		dto.setApplicationType(ApplicationType.NON_PRACTISING);
+		// dto.setApplicationStatus(ApplicationStatus.APPROVED);
 		// dto.setManagementComment("Please attach your profile photo");
 		// System.err.println("Submission Date::" + dto.getDateSubmitted());
 
-		helper.updateApplication("nAvpeTnX9OmHxRPV", dto);
+		helper.updateApplication("mdoRIMjr6HUDFFku", dto);
+	}
+
+	// @Test
+	public void testGenerationInvoice() {
+		ApplicationFormHeader application = applicationDao.findByApplicationId("mdoRIMjr6HUDFFku", true);
+		// Generate Invoice
+		InvoiceDto invoiceSaved = helper.generateInvoice(application);
+		application.setInvoiceRef(invoiceSaved.getRefId());
+		ApplicationFormHeader saved = (ApplicationFormHeader) applicationDao.save(application);
+
+		// Invoice PDF
+		if (saved != null) {
+			InvoiceDto invoice = invoiceHelper.getInvoice(application.getInvoiceRef());
+			System.err.println(">>>>>DocumentNo:::" + invoice.getDocumentNo());
+		}
 	}
 
 	// @Test
@@ -166,7 +187,7 @@ public class TestApplicationForm extends AbstractDaoTest {
 		}
 	}
 
-	@Test
+	// @Test
 	public void testGetSingleApp() {
 		ApplicationFormHeader app = helper.getApplicationById("bpvVV8vaSK7d1QUR");
 		System.err.println("Found:::" + app.getSurname());

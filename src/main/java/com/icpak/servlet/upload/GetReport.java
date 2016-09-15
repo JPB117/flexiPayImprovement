@@ -34,6 +34,7 @@ import org.xml.sax.SAXException;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.persist.Transactional;
+import com.icpak.rest.dao.ApplicationFormDao;
 import com.icpak.rest.dao.AttachmentsDao;
 import com.icpak.rest.dao.CPDDao;
 import com.icpak.rest.dao.EventsDao;
@@ -53,7 +54,6 @@ import com.icpak.rest.models.event.Event;
 import com.icpak.rest.models.membership.ApplicationFormHeader;
 import com.icpak.rest.models.membership.GoodStandingCertificate;
 import com.icpak.rest.models.membership.Member;
-import com.icpak.rest.models.sms.FailureReason;
 import com.icpak.rest.models.util.Attachment;
 import com.icpak.rest.util.ApplicationSettings;
 import com.icpak.rest.utils.Doc;
@@ -103,6 +103,8 @@ public class GetReport extends HttpServlet {
 	BookingsDaoHelper bookingsDaoHelper;
 	@Inject
 	ApplicationFormDaoHelper applicationDaoHelper;
+	@Inject
+	ApplicationFormDao applicationDao;
 	@Inject
 	InvoiceDaoHelper invoiceDaoHelper;
 	@Inject
@@ -251,11 +253,12 @@ public class GetReport extends HttpServlet {
 		String bookingRefId = null;
 		String applicationRefId = null;
 		String invoiceRefId = null;
+		byte[] invoicePdf = null;
 		if (req.getParameter("bookingRefId") != null) {
 
 			bookingRefId = req.getParameter("bookingRefId");
 			BookingDto booking = bookingsDaoHelper.getBookingById(null, bookingRefId);
-			byte[] invoicePdf = bookingsDaoHelper.generateInvoicePdf(bookingRefId);
+			invoicePdf = bookingsDaoHelper.generateInvoicePdf(bookingRefId);
 
 			processAttachmentRequest(resp, invoicePdf, booking.getContact().getContactName() + ".pdf");
 		}
@@ -264,8 +267,20 @@ public class GetReport extends HttpServlet {
 			applicationRefId = req.getParameter("applicationRefId");
 			ApplicationFormHeader application = applicationDaoHelper.getApplicationById(applicationRefId);
 
-			InvoiceDto invoice = invoiceDaoHelper.getInvoice(application.getInvoiceRef());
-			byte[] invoicePdf = applicationDaoHelper.generateInvoicePDF(application, invoice);
+			InvoiceDto invoice = null;
+
+			invoice = invoiceDaoHelper.getInvoice(application.getInvoiceRef());
+			if (invoice != null) {
+				invoicePdf = applicationDaoHelper.generateInvoicePDF(application, invoice);
+			} else {
+				// Generate Invoice
+				invoice = applicationDaoHelper.generateInvoice(application);
+				application.setInvoiceRef(invoice.getRefId());
+				applicationDao.save(application);
+
+				// Invoice PDF
+				invoicePdf = applicationDaoHelper.generateInvoicePDF(application, invoice);
+			}
 
 			processAttachmentRequest(resp, invoicePdf,
 					application.getSurname() + " " + application.getOtherNames() + ".pdf");
@@ -274,7 +289,7 @@ public class GetReport extends HttpServlet {
 		if (req.getParameter("invoiceRefId") != null) {
 			invoiceRefId = req.getParameter("invoiceRefId");
 			InvoiceDto invoice = invoiceDaoHelper.getInvoice(invoiceRefId);
-			byte[] invoicePdf = invoiceDaoHelper.generatePDFDocument(invoice);
+			invoicePdf = invoiceDaoHelper.generatePDFDocument(invoice);
 			processAttachmentRequest(resp, invoicePdf, invoice.getContactName() + ".pdf");
 		}
 
