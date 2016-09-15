@@ -384,6 +384,7 @@ public class ApplicationFormDaoHelper {
 		ApplicationCategory category = applicationDao.findApplicationCategory(type);
 
 		List<InvoiceLine> lines = new ArrayList<>();
+		Double sum = 0.0;
 		if (invoice != null && category != null) {
 			InvoiceLine invLinePO = new InvoiceLine();
 			InvoiceLineDto invLine = new InvoiceLineDto(
@@ -395,6 +396,7 @@ public class ApplicationFormDaoHelper {
 			invLinePO.copyFrom(invLine);
 			invLinePO.setInvoice(invoicePO);
 			lines.add(invLinePO);
+			sum = sum + invLine.getTotalAmount();
 		}
 
 		if (!lines.isEmpty()) {
@@ -402,6 +404,7 @@ public class ApplicationFormDaoHelper {
 			invoiceDao.deleteInvoiceLine(invoicePO);
 			Set<InvoiceLine> invoiceLinesSet = new HashSet<>(lines);
 			invoicePO.setLines(invoiceLinesSet);
+			invoicePO.setAmount(sum);
 
 			invoiceDao.save(invoicePO);
 		}

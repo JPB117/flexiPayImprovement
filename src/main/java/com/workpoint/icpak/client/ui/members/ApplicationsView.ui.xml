@@ -22,9 +22,54 @@
 			</div>
 			<div class="panel">
 				<div class="panel-body">
-					<div class="col-sm-12">
-						<table:MembersTable ui:field="tblView">
-						</table:MembersTable>
+					<ul class="nav nav-tabs">
+						<li class="active" ui:field="liAllApplications">
+							<g:Anchor href="#members;p=allApplications" ui:field="aAllApplications">
+								All
+								Applications
+							</g:Anchor>
+
+						</li>
+						<li ui:field="liApplicationCategories">
+							<g:Anchor href="#members;p=applicationCategories"
+								ui:field="aApplicationCategories">Application
+								Categories</g:Anchor>
+						</li>
+					</ul>
+
+					<div class="tab-content">
+						<!-- All Applications -->
+						<div class="tab-pane active" ui:field="divAll">
+							<br />
+							<div class="col-sm-12">
+								<table:MembersTable ui:field="tblView">
+								</table:MembersTable>
+							</div>
+						</div>
+
+						<!--Application Categories -->
+						<div class="tab-pane" ui:field="divApplicationCategories">
+							<div class="row">
+								<!--Action Buttons -->
+								<div class="col-md-12">
+									<g:Anchor ui:field="aEditCategory" styleName="btn btn-success btn-fill hide"
+										title="Edit Category">
+										<i class="glyphicon glyphicon-pencil"></i>
+										Edit Category
+									</g:Anchor>
+
+									<g:Anchor ui:field="aDeleteCategory" styleName="btn btn-danger btn-fill hide"
+										title="Delete Category">
+										<i class="glyphicon glyphicon-trash"></i>
+										Delete Category
+									</g:Anchor>
+								</div>
+							</div>
+							<br />
+							<g:FlexTable ui:field="tblApplicationCategory"
+								styleName="table ">
+							</g:FlexTable>
+						</div>
 					</div>
 				</div>
 			</div>
