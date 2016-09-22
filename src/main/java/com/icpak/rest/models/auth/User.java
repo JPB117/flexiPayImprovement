@@ -85,16 +85,15 @@ public class User extends PO {
 	private String password;
 	@JsonIgnore
 	@XmlTransient
-	@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH,
-			CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST })
+	@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH,
+			CascadeType.PERSIST })
 	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = @JoinColumn(name = "roleid"))
 	@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 	private Set<Role> roles = new HashSet<Role>();
 
 	@Embedded
 	private BioData userData;
-	@OneToOne(fetch = FetchType.LAZY, mappedBy = "user", cascade = {
-			CascadeType.PERSIST, CascadeType.REMOVE })
+	@OneToOne(fetch = FetchType.LAZY, mappedBy = "user", cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
 	private Member member;
 	private String memberNo;
 	private String phoneNumber;
@@ -108,6 +107,7 @@ public class User extends PO {
 	private String postalCode;
 	private String lmsStatus;
 	private String lmsResponse;
+	private String applicationRefId;
 	@Column(columnDefinition = "TEXT")
 	private String lmsPayLoad;
 	@Enumerated(EnumType.STRING)
@@ -396,6 +396,14 @@ public class User extends PO {
 
 	public void setFullName(String fullName) {
 		this.fullName = fullName;
+	}
+
+	public String getApplicationRefId() {
+		return applicationRefId;
+	}
+
+	public void setApplicationRefId(String applicationRefId) {
+		this.applicationRefId = applicationRefId;
 	}
 
 }

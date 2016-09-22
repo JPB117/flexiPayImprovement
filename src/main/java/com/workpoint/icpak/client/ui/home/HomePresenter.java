@@ -38,10 +38,8 @@ import com.workpoint.icpak.client.ui.events.ToggleSideBarEvent.ToggleSideBarHand
 import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.api.SessionResource;
 
-public class HomePresenter extends
-		TabContainerPresenter<HomePresenter.IHomeView, HomePresenter.MyProxy>
-		implements ProcessingHandler, ProcessingCompletedHandler,
-		LogoutHandler, FullScreenHandler, ToggleSideBarHandler {
+public class HomePresenter extends TabContainerPresenter<HomePresenter.IHomeView, HomePresenter.MyProxy> implements
+		ProcessingHandler, ProcessingCompletedHandler, LogoutHandler, FullScreenHandler, ToggleSideBarHandler {
 
 	public interface IHomeView extends TabView {
 		void refreshTabs();
@@ -94,12 +92,11 @@ public class HomePresenter extends
 	private ResourceDelegate<SessionResource> sessionResource;
 
 	@Inject
-	public HomePresenter(final EventBus eventBus, final IHomeView view,
-			final MyProxy proxy,
+	public HomePresenter(final EventBus eventBus, final IHomeView view, final MyProxy proxy,
 			ResourceDelegate<SessionResource> sessionResource) {
 
-		super(eventBus, view, proxy, SLOT_SetTabContent, SLOT_RequestTabs,
-				SLOT_ChangeTab, MainPagePresenter.CONTENT_SLOT);
+		super(eventBus, view, proxy, SLOT_SetTabContent, SLOT_RequestTabs, SLOT_ChangeTab,
+				MainPagePresenter.CONTENT_SLOT);
 		this.sessionResource = sessionResource;
 	}
 
@@ -136,20 +133,16 @@ public class HomePresenter extends
 
 	@Override
 	public void onLogout(LogoutEvent event) {
-
 		fireEvent(new ProcessingEvent());
 		sessionResource.withCallback(new AbstractAsyncCallback<Void>() {
 			@Override
 			public void onSuccess(Void result) {
 				AppContext.clear();
-				PlaceRequest placeRequest = new Builder().nameToken(
-						NameTokens.login).build();
+				PlaceRequest placeRequest = new Builder().nameToken(NameTokens.login).build();
 				placeManager.revealPlace(placeRequest);
 				fireEvent(new ProcessingCompletedEvent());
 			}
-
 		}).logout();
-
 	}
 
 	@Override

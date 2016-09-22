@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasKeyDownHandlers;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
@@ -43,11 +44,14 @@ import com.workpoint.icpak.client.ui.events.CheckboxSelectionEvent.CheckboxSelec
 import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
 import com.workpoint.icpak.client.ui.events.ProcessingEvent;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
+import com.workpoint.icpak.client.ui.members.appcategory.ApplicationCategoryForm;
+import com.workpoint.icpak.client.ui.members.applicationSettings.ApplicationSettingsForm;
 import com.workpoint.icpak.client.ui.members.management.ApplicationsActions;
 import com.workpoint.icpak.client.ui.profile.widget.ProfileWidget;
 import com.workpoint.icpak.client.ui.security.ApplicationsGateKeeper;
 import com.workpoint.icpak.shared.api.ApplicationFormResource;
 import com.workpoint.icpak.shared.api.CategoriesResource;
+import com.workpoint.icpak.shared.api.SettingResource;
 import com.workpoint.icpak.shared.api.UsersResource;
 import com.workpoint.icpak.shared.model.ApplicationCategoryDto;
 import com.workpoint.icpak.shared.model.ApplicationFormAccountancyDto;
@@ -58,6 +62,7 @@ import com.workpoint.icpak.shared.model.ApplicationFormTrainingDto;
 import com.workpoint.icpak.shared.model.ApplicationSummaryDto;
 import com.workpoint.icpak.shared.model.PaymentStatus;
 import com.workpoint.icpak.shared.model.auth.ApplicationStatus;
+import com.workpoint.icpak.shared.model.settings.SettingDto;
 
 public class ApplicationsPresenter
 		extends Presenter<ApplicationsPresenter.IApplicationsView, ApplicationsPresenter.IApplicationsProxy>
@@ -93,6 +98,16 @@ public class ApplicationsPresenter
 		void setActiveTab(String page);
 
 		void setApplicationCategoryEdit(boolean value);
+
+		HasClickHandlers getCategoryAddButton();
+
+		HasClickHandlers getCategoryEditButton();
+
+		HasClickHandlers getCategoryDeleteButton();
+
+		HasClickHandlers getSyncApprovedButton();
+
+		HasClickHandlers getRQAButton();
 	}
 
 	@ProxyCodeSplit
@@ -112,6 +127,7 @@ public class ApplicationsPresenter
 	private static String applicationStatus = "";
 	private static String paymentStatus = "";
 	private Object selectedModel;
+	private ApplicationSettingsForm settingForm = new ApplicationSettingsForm();
 
 	KeyDownHandler keyHandler = new KeyDownHandler() {
 		@Override
@@ -179,6 +195,7 @@ public class ApplicationsPresenter
 	private final CurrentUser currentUser;
 	private ResourceDelegate<ApplicationFormResource> applicationDelegate;
 	private ResourceDelegate<CategoriesResource> categoriesDelegate;
+	private ResourceDelegate<SettingResource> settingDelegate;
 	private String applicationRefId = "";
 
 	protected ApplicationFormHeaderDto selectedApplication;
@@ -190,11 +207,12 @@ public class ApplicationsPresenter
 	public ApplicationsPresenter(final EventBus eventBus, final IApplicationsView view, final IApplicationsProxy proxy,
 			ResourceDelegate<ApplicationFormResource> applicationDelegate, final CurrentUser currentUser,
 			ResourceDelegate<UsersResource> usersDelegate, ResourceDelegate<CategoriesResource> categoriesDelegate,
-			final PlaceManager placeManager) {
+			ResourceDelegate<SettingResource> settingDelegate, final PlaceManager placeManager) {
 		super(eventBus, view, proxy, HomePresenter.SLOT_SetTabContent);
 		this.applicationDelegate = applicationDelegate;
 		this.categoriesDelegate = categoriesDelegate;
 		this.currentUser = currentUser;
+		this.settingDelegate = settingDelegate;
 		this.placeManager = placeManager;
 	}
 
@@ -246,6 +264,102 @@ public class ApplicationsPresenter
 			}
 		});
 
+		final ApplicationCategoryForm appCategoryForm = new ApplicationCategoryForm();
+		getView().getCategoryAddButton().addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				appCategoryForm.setApplicationCategory(null);
+				AppManager.showPopUp("Create a New Category", appCategoryForm, new OnOptionSelected() {
+					@Override
+					public void onSelect(String name) {
+						if (name.equals("Save")) {
+							saveCategory(appCategoryForm.getApplicationCategory());
+							appCategoryForm.clear();
+						}
+					}
+				}, "Save", "Cancel");
+			}
+		});
+
+		getView().getCategoryEditButton().addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				if (selectedModel != null) {
+					appCategoryForm.setApplicationCategory((ApplicationCategoryDto) selectedModel);
+				}
+				AppManager.showPopUp("Edit Category", appCategoryForm, new OnOptionSelected() {
+					@Override
+					public void onSelect(String name) {
+						if (name.equals("Save")) {
+							saveCategory(appCategoryForm.getApplicationCategory());
+							appCategoryForm.clear();
+						}
+					}
+				}, "Save", "Cancel");
+			}
+		});
+
+		getView().getCategoryDeleteButton().addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				AppManager.showPopUp("Confirm", "Are you sure you want to delete Category?", new OnOptionSelected() {
+					@Override
+					public void onSelect(String name) {
+						if (name.equals("Yes")) {
+							categoriesDelegate.withCallback(new AbstractAsyncCallback<List<ApplicationCategoryDto>>() {
+								@Override
+								public void onSuccess(List<ApplicationCategoryDto> categories) {
+									fireEvent(new ProcessingCompletedEvent());
+									fireEvent(new AfterSaveEvent("Category Record successfully updated."));
+								}
+							}).delete(appCategoryForm.getApplicationCategory().getRefId());
+						}
+					}
+				}, "Yes", "No");
+			}
+		});
+
+		getView().getRQAButton().addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+
+			}
+		});
+
+		getView().getSyncApprovedButton().addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+
+			}
+		});
+	}
+
+	public void saveCategory(ApplicationCategoryDto appCategory) {
+		fireEvent(new ProcessingEvent());
+		if (appCategory.getRefId() != null) {
+			// Edit
+			categoriesDelegate.withCallback(new AbstractAsyncCallback<ApplicationCategoryDto>() {
+				@Override
+				public void onSuccess(ApplicationCategoryDto categories) {
+					fireEvent(new ProcessingCompletedEvent());
+					fireEvent(new AfterSaveEvent("Category Record successfully updated."));
+					loadData();
+				}
+			}).update(appCategory.getRefId(), appCategory);
+		} else {
+			// Create
+			categoriesDelegate.withCallback(new AbstractAsyncCallback<ApplicationCategoryDto>() {
+				@Override
+				public void onSuccess(ApplicationCategoryDto categories) {
+					fireEvent(new ProcessingCompletedEvent());
+					fireEvent(new AfterSaveEvent("Category Record successfully created."));
+					loadData();
+				}
+			}).create(appCategory);
+		}
+		getView().setApplicationCategoryEdit(false); // Hide action buttons
 	}
 
 	protected void updateApplication(ApplicationFormHeaderDto selectedApplication) {
@@ -339,7 +453,6 @@ public class ApplicationsPresenter
 
 	private void loadData() {
 		fireEvent(new ProcessingEvent());
-
 		if (page.equals("allApplications")) {
 			getView().showSingleApplication(false);
 
@@ -352,12 +465,20 @@ public class ApplicationsPresenter
 				}
 			}).getSearchCount(searchTerm, paymentStatus, applicationStatus);
 		} else if (page.equals("applicationCategories")) {
-
 			// Get All Categories
 			categoriesDelegate.withCallback(new AbstractAsyncCallback<List<ApplicationCategoryDto>>() {
 				@Override
 				public void onSuccess(List<ApplicationCategoryDto> categories) {
 					getView().bindApplicationCategories(new ArrayList<>(categories));
+					fireEvent(new ProcessingCompletedEvent());
+				}
+			}).getAll();
+
+			// Get NextRQA Setting
+			settingDelegate.withCallback(new AbstractAsyncCallback<SettingDto>() {
+				@Override
+				public void onSuccess(SettingDto settingDto) {
+					settingForm.setSetting(settingDto);
 					fireEvent(new ProcessingCompletedEvent());
 				}
 			}).getAll();

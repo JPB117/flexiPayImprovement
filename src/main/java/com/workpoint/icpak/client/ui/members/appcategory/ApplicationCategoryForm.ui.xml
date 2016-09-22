@@ -8,6 +8,13 @@
 		<div class="form-group">
 			<div class="row">
 				<div class="col-xs-12">
+					<d:IssuesPanel ui:field="issuesPanel" styleName="hide alert alert-danger"></d:IssuesPanel>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="row">
+				<div class="col-xs-12">
 					<d:DropDownList ui:field="lstApplicationCategories"
 						styleName="form-control"></d:DropDownList>
 				</div>

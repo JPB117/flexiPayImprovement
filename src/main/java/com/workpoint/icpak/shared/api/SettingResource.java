@@ -13,36 +13,36 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import com.workpoint.icpak.shared.model.ApplicationCategoryDto;
+import com.workpoint.icpak.shared.model.settings.SettingDto;
 
-@Path("categories")
-public interface CategoriesResource {
+@Path("settings")
+public interface SettingResource {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<ApplicationCategoryDto> getAll();
+	public List<SettingDto> getAll();
+
+	@GET
+	@Path("/{settingId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public SettingDto getById(@PathParam("settingId") String categoryId);
 	
-	@GET
-	@Path("/{categoryId}")
-	@Produces(MediaType.APPLICATION_JSON)
-	public ApplicationCategoryDto getById(@PathParam("categoryId") String categoryId);
 	
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public ApplicationCategoryDto create(ApplicationCategoryDto category);
+	public SettingDto create(SettingDto category);
 
 	@PUT
-	@Path("/{categoryId}")
+	@Path("/{settingId}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public ApplicationCategoryDto update(
-			@PathParam("categoryId") String categoryId, 
-			ApplicationCategoryDto category);
-	
+	public SettingDto update(@PathParam("settingId") String categoryId, SettingDto category);
+
 	@DELETE
-	@Path("/{categoryId}")
+	@Path("/{settingId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public void delete(@PathParam("categoryId") String categoryId);
+	public void delete(@PathParam("settingId") String categoryId);
 
 }

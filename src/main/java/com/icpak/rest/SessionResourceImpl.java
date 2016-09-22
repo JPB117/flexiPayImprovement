@@ -49,4 +49,5 @@ public class SessionResourceImpl implements SessionResource {
     public void rememberMe(@CookieParam("LoggedInCookie") Cookie cookie) {
         logger.info("Remember me: " + String.valueOf(cookie));
     }
+    
 }

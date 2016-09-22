@@ -33,7 +33,7 @@
 						<li ui:field="liApplicationCategories">
 							<g:Anchor href="#members;p=applicationCategories"
 								ui:field="aApplicationCategories">Application
-								Categories</g:Anchor>
+								Settings</g:Anchor>
 						</li>
 					</ul>
 
@@ -49,10 +49,16 @@
 
 						<!--Application Categories -->
 						<div class="tab-pane" ui:field="divApplicationCategories">
+							<br />
 							<div class="row">
 								<!--Action Buttons -->
 								<div class="col-md-12">
-									<g:Anchor ui:field="aEditCategory" styleName="btn btn-success btn-fill hide"
+									<g:Anchor ui:field="aAddCategory" styleName="btn btn-success btn-fill"
+										title="Add Category">
+										<i class="glyphicon glyphicon-plus"></i>
+										Add Category
+									</g:Anchor>
+									<g:Anchor ui:field="aEditCategory" styleName="btn btn-default btn-fill hide"
 										title="Edit Category">
 										<i class="glyphicon glyphicon-pencil"></i>
 										Edit Category
@@ -63,6 +69,29 @@
 										<i class="glyphicon glyphicon-trash"></i>
 										Delete Category
 									</g:Anchor>
+									<div class="dropdown">
+										<a class="btn btn-default dropdown-toggle" id="dropdownMenu1"
+											data-toggle="dropdown" aria-expanded="true">
+											Select
+											<span class="caret"></span>
+										</a>
+
+										<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+											<li class="dropdown-header">Application Settings</li>
+											<li>
+												<d:ActionLink ui:field="aRQASettings">
+													<i class="fa fa-arrow-down" aria-hidden="true"></i>
+													RQA Settings
+												</d:ActionLink>
+											</li>
+											<li>
+												<d:ActionLink ui:field="aSyncApprovedMembers">
+													<i class="fa fa-paper-plane" aria-hidden="true"></i>
+													Sync Approved Members
+												</d:ActionLink>
+											</li>
+										</ul>
+									</div>
 								</div>
 							</div>
 							<br />

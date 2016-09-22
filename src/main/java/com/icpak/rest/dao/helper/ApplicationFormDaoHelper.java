@@ -1069,6 +1069,7 @@ public class ApplicationFormDaoHelper {
 		// Get all Processed applications
 		List<String> allErpCodes = applicationDao.getAllProcessedApplicationFileNos();
 		List<ApplicationSyncPayLoad> syncedApplicants = new ArrayList<>();
+		ApplicationSyncPayLoad syncPayLoad = new ApplicationSyncPayLoad();
 		if (!allErpCodes.isEmpty()) {
 			JSONArray mJSONArray = new JSONArray(allErpCodes);
 
@@ -1082,7 +1083,6 @@ public class ApplicationFormDaoHelper {
 					JSONObject jo = new JSONObject(results);
 					for (int i = 0; i < jo.names().length(); i++) {
 						JSONObject jObject = (JSONObject) jo.getJSONObject(jo.names().getString(i));
-						ApplicationSyncPayLoad syncPayLoad = new ApplicationSyncPayLoad();
 						syncPayLoad.setApplicationNo_(jObject.getString("ApplicationNo_"));
 						syncPayLoad.setEmail(jObject.getString("email"));
 						syncPayLoad.setReg_no(jo.getString("reg_no"));
@@ -1091,17 +1091,30 @@ public class ApplicationFormDaoHelper {
 
 					for (ApplicationSyncPayLoad appSync : syncedApplicants) {
 						// Update this Applications
-						// ApplicationFormHeader application =
-						// applicationDao.findByErpCode(appSync.getApplicationNo_());
+						ApplicationFormHeader application = applicationDao.findByErpCode(appSync.getApplicationNo_());
 
-						// if (application != null) {
-						// application.setApplicationStatus(ApplicationStatus.APPROVED);
-						//
-						// // Find the User and Member Object
-						// // user
-						// } else {
-						//
-						// }
+						if (application != null) {
+							application.setApplicationStatus(ApplicationStatus.APPROVED);
+
+							// Find the User and Member Object and User
+							if (application.getUserRefId() != null) {
+								User user = userDao.findByUserId(application.getUserRefId());
+								if (user != null) {
+									user.setMemberNo(syncPayLoad.getReg_no());
+									if (user.getMember() != null) {
+										Member m = user.getMember();
+										m.setMemberNo(syncPayLoad.getReg_no());
+										m.setRegistrationDate(application.getCreated());
+									}
+								}
+								
+								
+								//Save all this parameters
+								//Applicant, Member, User
+							}
+						} else {
+
+						}
 					}
 
 				}

@@ -62,7 +62,6 @@ public class ApplicationFormDao extends BaseDao {
 	}
 
 	public List<String> getAllProcessedApplicationFileNos() {
-
 		StringBuffer sql = new StringBuffer(
 				" select erpCode from `application form header` where applicationStatus=\"PROCESSING\" "
 						+ " and erpCode IS NOT NULL");
@@ -410,6 +409,10 @@ public class ApplicationFormDao extends BaseDao {
 			memberImports.add(memberImport);
 		}
 		return memberImports;
+	}
+
+	public ApplicationFormHeader findByErpCode(String applicationNo_) {
+		return null;
 	}
 
 }

@@ -606,7 +606,7 @@ public class GetReport extends HttpServlet {
 
 		Attachment attachment = new Attachment();
 		attachment.setGoodStandingCert(cert);
-		attachment.setAttachment(data);
+		//attachment.setAttachment(data);
 		attachment.setContentType("application/pdf");
 		attachment.setSize(data.length);
 		userDao.save(attachment);

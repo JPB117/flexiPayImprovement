@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasKeyDownHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -67,6 +68,13 @@ public class ApplicationsView extends ViewImpl implements ApplicationsPresenter.
 	Anchor aEditCategory;
 	@UiField
 	Anchor aDeleteCategory;
+	@UiField
+	Anchor aAddCategory;
+
+	@UiField
+	Anchor aRQASettings;
+	@UiField
+	Anchor aSyncApprovedMembers;
 
 	public interface Binder extends UiBinder<Widget, ApplicationsView> {
 	}
@@ -171,8 +179,10 @@ public class ApplicationsView extends ViewImpl implements ApplicationsPresenter.
 			});
 
 			tblApplicationCategory.setWidget(i, j++, box);
-			tblApplicationCategory.setWidget(i, j++, new HTMLPanel(category.getType().getDisplayName()));
-			tblApplicationCategory.setWidget(i, j++, new HTMLPanel(category.getDescription()));
+			tblApplicationCategory.setWidget(i, j++,
+					new HTMLPanel(category.getType() == null ? "" : category.getType().getDisplayName()));
+			tblApplicationCategory.setWidget(i, j++,
+					new HTMLPanel(category.getDescription() == null ? "" : category.getDescription()));
 			tblApplicationCategory.setWidget(i, j++, new HTMLPanel(Double.toString(category.getApplicationAmount())));
 			tblApplicationCategory.setWidget(i, j++, new HTMLPanel(Double.toString(category.getRenewalAmount())));
 			tblApplicationCategory.setWidget(i, j++, new HTMLPanel(""));
@@ -225,6 +235,26 @@ public class ApplicationsView extends ViewImpl implements ApplicationsPresenter.
 			aEditCategory.addStyleName("hide");
 			aDeleteCategory.addStyleName("hide");
 		}
+	}
+
+	public HasClickHandlers getCategoryAddButton() {
+		return aAddCategory;
+	}
+
+	public HasClickHandlers getCategoryEditButton() {
+		return aEditCategory;
+	}
+
+	public HasClickHandlers getCategoryDeleteButton() {
+		return aDeleteCategory;
+	}
+
+	public HasClickHandlers getRQAButton() {
+		return aRQASettings;
+	}
+
+	public HasClickHandlers getSyncApprovedButton() {
+		return aSyncApprovedMembers;
 	}
 
 }

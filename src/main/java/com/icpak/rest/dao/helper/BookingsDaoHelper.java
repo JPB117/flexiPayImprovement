@@ -194,13 +194,20 @@ public class BookingsDaoHelper {
 		// If No Result is found - Search for this Member and book him for this
 		// event;
 		if (delegateDtos.isEmpty()) {
+			logger.info("Found no delegate with that qr code. Now searching the member table.");
 			Member member = memberDao.findByMemberQrCode(searchTerm);
 			if (member != null) {
 				DelegateDto delegate = new DelegateDto();
 				delegate.setMemberNo(member.getMemberNo());
+				delegate.setMemberQrCode(member.getMemberQrCode());
 
 				BookingDto b = createBooking(eventId, delegate);
 				delegateDtos = b.getDelegates();
+
+				for (DelegateDto d : delegateDtos) {
+					d.setAttendance(AttendanceStatus.NOTATTENDED);
+					d.setBookingPaymentStatus(PaymentStatus.NOTPAID);
+				}
 
 				if (b.getRefId() != null) {
 					sendProInvoice(b.getRefId());
@@ -676,10 +683,10 @@ public class BookingsDaoHelper {
 					associateDiscountLine.setTotalAmount(qty * eventIndb.getDiscountAssociatePrice());
 					associateDiscountLine.setType(InvoiceLineType.Discount);
 
-					totalDiscountAmount += eventIndb.getDiscountMemberPrice();
+					totalDiscountAmount += eventIndb.getDiscountAssociatePrice();
 
 					logger.error(discountDescription + "|" + associateDiscountLine.getQuantity() + " | "
-							+ qty * eventIndb.getDiscountMemberPrice() + " | " + totalDiscountAmount);
+							+ qty * eventIndb.getDiscountAssociatePrice() + " | " + totalDiscountAmount);
 				}
 
 				// Penalty Calculation
@@ -1042,7 +1049,10 @@ public class BookingsDaoHelper {
 	}
 
 	public DelegateDto updateDelegate(String delegateId, DelegateDto delegateDto) {
-		logger.error("+++++ <><>>>>>>>>>>>>> UPDATE DELEGATW +++++++++++++++++");
+
+		logger.error("+++++ <><>>>>>>>>>>>>> UPDATE DELEGATE +++++++++++++++++");
+		JSONObject json = new JSONObject(delegateDto);
+		logger.error("Payload>>>" + json);
 		Delegate delegate = dao.findByRefId(delegateId, Delegate.class);
 		Event event = dao.findByRefId(delegate.getBooking().getEvent().getRefId(), Event.class);
 		Booking booking = delegate.getBooking();
@@ -1051,17 +1061,21 @@ public class BookingsDaoHelper {
 		/* 1. Payment Update - Is this a payment update? */
 		if (booking != null) {
 			// Update Payment Status
-			if ((delegateDto.getBookingPaymentStatus() == PaymentStatus.PAID)
-					|| (delegateDto.getBookingPaymentStatus() == PaymentStatus.NOTPAID)
-					|| (delegateDto.getBookingPaymentStatus() == PaymentStatus.Credit)) {
-				logger.debug("Updating delegate payment info");
-				updatePaymentInfo(delegate, delegateDto, booking);
+			if (delegateDto.getBookingPaymentStatus() != null) {
+				if ((delegateDto.getBookingPaymentStatus() == PaymentStatus.PAID)
+						|| (delegateDto.getBookingPaymentStatus() == PaymentStatus.NOTPAID)
+						|| (delegateDto.getBookingPaymentStatus() == PaymentStatus.Credit)) {
+					logger.debug("Updating delegate payment info");
+					updatePaymentInfo(delegate, delegateDto, booking);
+				}
 			}
 			// Undo Cancellation
-			if ((delegateDto.getIsBookingActive() == 1)
-					&& ((booking.getIsActive() == 0) || delegate.getIsActive() == 0)) {
-				logger.debug("Updating delegate/booking cancellation info");
-				undoCancellation(booking, delegateDto, delegate);
+			if (delegateDto.getIsBookingActive() != null) {
+				if ((delegateDto.getIsBookingActive() == 1)
+						&& ((booking.getIsActive() == 0) || delegate.getIsActive() == 0)) {
+					logger.debug("Updating delegate/booking cancellation info");
+					undoCancellation(booking, delegateDto, delegate);
+				}
 			}
 		} else {
 			logger.debug("Booking is Null - Cannot update payment or booking status");

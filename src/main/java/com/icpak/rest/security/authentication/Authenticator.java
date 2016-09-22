@@ -49,8 +49,8 @@ public class Authenticator {
 
 	@Inject
 	Authenticator(UsersDao userDao, Provider<HttpSession> sessionProvider,
-			CurrentUserDtoProvider currentUserDtoProvider,
-			UserSessionDao userSessionDao, ICPAKAuthenticatingRealm realm) {
+			CurrentUserDtoProvider currentUserDtoProvider, UserSessionDao userSessionDao,
+			ICPAKAuthenticatingRealm realm) {
 		this.userDao = userDao;
 		this.sessionProvider = sessionProvider;
 		this.currentUserDtoProvider = currentUserDtoProvider;
@@ -60,7 +60,6 @@ public class Authenticator {
 
 	public UserDto authenticateCredentials(String username, String password) {
 		UserDto userDto = null;
-
 		if ((userDto = authenticate(username, password)) != null) {
 			persistHttpSessionCookie(userDto);
 			return userDto;
@@ -80,16 +79,12 @@ public class Authenticator {
 			throw new ServiceException(ErrorCodes.UNAUTHORIZEDACCESS);
 		}
 
-		AuthenticationToken token = new UsernamePasswordToken(
-				usernameOrMemberNo, password);
-		UsernamePasswordToken authcToken = new UsernamePasswordToken(
-				usernameOrMemberNo, password);
+		AuthenticationToken token = new UsernamePasswordToken(usernameOrMemberNo, password);
+		UsernamePasswordToken authcToken = new UsernamePasswordToken(usernameOrMemberNo, password);
 		boolean isMatch = false;
 		try {
-			System.out.println("credentials to use: " + usernameOrMemberNo
-					+ " : " + password);
-			isMatch = matcher.doCredentialsMatch(token,
-					realm.getAuthenticationInfo(authcToken));
+			System.out.println("credentials to use: " + usernameOrMemberNo + " : " + password);
+			isMatch = matcher.doCredentialsMatch(token, realm.getAuthenticationInfo(authcToken));
 		} catch (IncorrectCredentialsException e) {
 			e.printStackTrace();
 			throw new ServiceException(ErrorCodes.UNAUTHORIZEDACCESS);
@@ -109,8 +104,7 @@ public class Authenticator {
 		return user.toDto();
 	}
 
-	public UserDto authenticatCookie(String loggedInCookie)
-			throws AuthenticationException {
+	public UserDto authenticatCookie(String loggedInCookie) throws AuthenticationException {
 		UserDto userDto = userSessionDao.getUserFromCookie(loggedInCookie);
 
 		if (userDto == null) {
@@ -124,7 +118,6 @@ public class Authenticator {
 
 	public void logout() {
 		removeCurrentUserLoginCookie();
-
 		HttpSession httpSession = sessionProvider.get();
 		httpSession.invalidate();
 	}
@@ -135,14 +128,12 @@ public class Authenticator {
 	private void persistHttpSessionCookie(UserDto user) {
 		HttpSession session = sessionProvider.get();
 		session.setAttribute(ServerConstants.USER, user);
-		session.setAttribute(SecurityParameters.getUserSessionKey(),
-				user.getRefId());
+		session.setAttribute(SecurityParameters.getUserSessionKey(), user.getRefId());
 	}
 
 	public Boolean isUserLoggedIn() {
 		HttpSession session = sessionProvider.get();
-		String userRefId = (String) session.getAttribute(SecurityParameters
-				.getUserSessionKey());
+		String userRefId = (String) session.getAttribute(SecurityParameters.getUserSessionKey());
 
 		return userRefId != null;
 	}

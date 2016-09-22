@@ -1,7 +1,5 @@
 package com.icpak.rest.models.auth;
 
-import java.util.Date;
-
 import javax.persistence.Entity;
 
 import com.icpak.rest.models.base.PO;
@@ -9,33 +7,31 @@ import com.icpak.rest.models.base.PO;
 //@Index
 @Entity
 public class UserSession extends PO {
-   
-    private String userRefId;
-    private String cookie;
-    private Date dateCreated;
 
-    public UserSession() {
-    }
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	private String userRefId;
+	private String cookie;
 
-    public UserSession(
-            String userRefId,
-            String cookie) {
-        super();
+	public UserSession() {
+	}
 
-        this.userRefId = userRefId;
-        this.cookie = cookie;
-        this.dateCreated = new Date();
-    }
+	public UserSession(String userRefId, String cookie) {
+		super();
 
-    public String getCookie() {
-        return cookie;
-    }
+		this.userRefId = userRefId;
+		this.cookie = cookie;
+	}
 
-    public String getUserRefId() {
-        return userRefId;
-    }
-    
-    public void setDateCreated(Date date){
-    	this.dateCreated=date;
-    }
+	public String getCookie() {
+		return cookie;
+	}
+
+	public String getUserRefId() {
+		return userRefId;
+	}
+
 }

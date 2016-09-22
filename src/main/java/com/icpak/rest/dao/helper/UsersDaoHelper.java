@@ -724,10 +724,9 @@ public class UsersDaoHelper {
 	}
 
 	public LogInResult execLogin(LogInAction action) {
-		UserDto userDto;
+		UserDto userDto = null;
 		boolean isLoggedIn = true;
-
-		logger.debug("++++++ Log In Api Call ++++++++");
+		logger.info("++++++ LogIn Api Call ++++++++");
 		ObjectMapper mapper = new ObjectMapper();
 		try {
 			logger.debug(mapper.writeValueAsString(action));
@@ -743,13 +742,15 @@ public class UsersDaoHelper {
 		isLoggedIn = userDto != null;
 
 		String loggedInCookie = "";
-		if (isLoggedIn) {
+		if (isLoggedIn && action.getActionType() == ActionType.VIA_CREDENTIALS) {
+			logger.info("Creating a Cookie in the database since no cookie was found in the database");
+			loginCookieDao.removeLoggedInCookie(userDto);
 			loggedInCookie = loginCookieDao.createSessionCookie(action.getLoggedInCookie(), userDto);
-			userDto.setApplicationRefId(getApplicationRefId(userDto.getRefId()));
-			userDto.setMemberRefId(dao.getMemberRefId(userDto.getUserLongId()));
+		}
 
-			if (userDto.getMemberNo() != null) {
-				userDto.setGender(dao.getGender(userDto.getApplicationRefId()));
+		if (userDto != null) {
+			if (userDto.getApplicationRefId() == null) {
+				updateMissingUserData(userDto);
 			}
 		}
 
@@ -759,16 +760,25 @@ public class UsersDaoHelper {
 			logger.info("LogInHandlerexecut(): currentUserDto=" + currentUserDto);
 		}
 		logger.info("LogInHandlerexecut(): loggedInCookie=" + loggedInCookie);
-		// applicationFormDaoHelper.importMissingMembers(applicationFormDao.importMissingMembers());
 		assert action.getActionType() == null;
 		return new LogInResult(action.getActionType(), currentUserDto, loggedInCookie);
+	}
+
+	private UserDto updateMissingUserData(UserDto userDto) {
+		User user = dao.findByUserId(userDto.getRefId());
+		if (userDto.getApplicationRefId() == null) {
+			String applicationRefId = getApplicationRefId(userDto.getRefId());
+			userDto.setApplicationRefId(applicationRefId);
+			user.setApplicationRefId(applicationRefId);
+		}
+		dao.updateUser(user);
+		return userDto;
 	}
 
 	private UserDto getUserFromCookie(String loggedInCookie) {
 		UserDto userDto = null;
 		try {
 			userDto = authenticator.authenticatCookie(loggedInCookie);
-			userDto.setApplicationRefId(getApplicationRefId(userDto.getRefId()));
 		} catch (AuthenticationException e) {
 			// isLoggedIn = false;
 		}
@@ -780,7 +790,6 @@ public class UsersDaoHelper {
 		UserDto userDto = null;
 		try {
 			userDto = authenticator.authenticateCredentials(username, password);
-			userDto.setApplicationRefId(getApplicationRefId(userDto.getRefId()));
 		} catch (AuthenticationException e) {
 			// isLoggedIn = false;
 		}

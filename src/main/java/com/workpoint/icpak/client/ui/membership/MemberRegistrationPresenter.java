@@ -357,7 +357,7 @@ public class MemberRegistrationPresenter
 			getView().setCounter(pageToNavigate);
 			loadApplication(applicationRefId);
 		} else {
-			getView().getANext().addStyleName("hide");
+			//getView().getANext().addStyleName("hide");
 		}
 
 		categoriesDelegate.withCallback(new AbstractAsyncCallback<List<ApplicationCategoryDto>>() {

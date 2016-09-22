@@ -35,7 +35,6 @@ public class UserSessionDao extends BaseDao {
 	}
 
 	public void removeLoggedInCookie(UserDto userDto) {
-		// List<UserSession> userSession = findUserSession(userDto.getRefId());
 		if (userDto == null) {
 			return;
 		}
@@ -66,7 +65,7 @@ public class UserSessionDao extends BaseDao {
 		Date twoWeeksAgo = getTwoWeeksAgo();
 
 		Query query = getEntityManager()
-				.createQuery("FROM UserSession where cookie=:cookie and " + "dateCreated>:twoWeeksAgo")
+				.createQuery("FROM UserSession where cookie=:cookie and " + "created>:twoWeeksAgo")
 				.setParameter("cookie", loggedInCookie).setParameter("twoWeeksAgo", twoWeeksAgo);
 
 		UserSession userSession = getSingleResultOrNull(query);
@@ -89,7 +88,7 @@ public class UserSessionDao extends BaseDao {
 
 	public void updateLogedInCookie(String loggedInCookie) {
 		int query = getEntityManager()
-				.createNativeQuery("UPDATE usersession u SET u.dateCreated=:date where u.cookie=:cookie")
+				.createNativeQuery("UPDATE usersession u SET u.created=:date where u.cookie=:cookie")
 				.setParameter("cookie", loggedInCookie).setParameter("date", new Date()).executeUpdate();
 	}
 }

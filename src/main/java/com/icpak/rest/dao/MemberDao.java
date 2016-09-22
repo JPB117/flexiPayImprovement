@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.Query;
 
 import org.apache.log4j.Logger;
@@ -428,7 +430,24 @@ public class MemberDao extends BaseDao {
 	public Member findByUserId(Long userId) {
 		String sql = "FROM Member where userId=:userId";
 		Query query = getEntityManager().createQuery(sql).setParameter("userId", userId);
+
 		return getSingleResultOrNull(query);
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public <T> T getSingleResultOrNull(Query query) throws RuntimeException {
+		T value = null;
+		try {
+			value = (T) query.getSingleResult();
+		} catch (NoResultException e) {
+			if (!(e instanceof NoResultException)) {
+				e.printStackTrace();
+			}
+		} catch (NonUniqueResultException e) {
+			throw new ServiceException(ErrorCodes.DUPLICATEVALUE, "What you are searching is not unique");
+		}
+		return value;
 	}
 
 }

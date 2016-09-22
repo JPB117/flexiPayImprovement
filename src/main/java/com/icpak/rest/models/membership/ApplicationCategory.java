@@ -81,6 +81,7 @@ public class ApplicationCategory extends PO {
 	}
 
 	public void copyFrom(ApplicationCategoryDto dto) {
+		setType(dto.getType());
 		setDescription(dto.getDescription());
 		setApplicationAmount(dto.getApplicationAmount());
 		setRenewalAmount(dto.getRenewalAmount());
