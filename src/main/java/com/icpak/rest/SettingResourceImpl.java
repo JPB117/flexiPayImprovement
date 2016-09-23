@@ -14,6 +14,7 @@ import javax.ws.rs.core.MediaType;
 
 import com.google.inject.Inject;
 import com.icpak.rest.dao.helper.SettingDaoHelper;
+import com.icpak.rest.models.settings.Setting;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
@@ -52,15 +53,17 @@ public class SettingResourceImpl implements SettingResource {
 	}
 
 	@GET
-	@Path("/getBySettingName/{settingId}")
+	@Path("/getBySettingName/{settingName}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Get a setting by settingName", response = SettingDto.class, consumes = MediaType.APPLICATION_JSON)
 	public SettingDto getBySettingName(
 			@ApiParam(value = "settingDto Id of the setting to fetch", required = true) @PathParam("settingName") String settingName) {
-		String uri = getUri();
-		SettingDto dto = helper.getSettingByName(settingName).toDto();
-		dto.setUri(uri);
-		return dto;
+		Setting setting = helper.getSettingByName(settingName);
+		if (setting != null) {
+			return setting.toDto();
+		} else {
+			return new SettingDto();
+		}
 	}
 
 	@POST

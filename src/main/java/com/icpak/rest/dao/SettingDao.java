@@ -13,7 +13,7 @@ public class SettingDao extends BaseDao {
 
 	public Setting getBySettingName(String settingName) {
 		return getSingleResultOrNull(getEntityManager()
-				.createQuery("select u from Setting u" + " where u.isActive=1 and u.settingName=:name")
+				.createQuery("select u from Setting u" + " where u.isActive=1 and u.settingName=:settingName")
 				.setParameter("settingName", settingName));
 	}
 

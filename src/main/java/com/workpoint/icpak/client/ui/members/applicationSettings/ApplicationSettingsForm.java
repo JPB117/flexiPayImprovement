@@ -1,15 +1,19 @@
 package com.workpoint.icpak.client.ui.members.applicationSettings;
 
+import static com.workpoint.icpak.client.ui.util.StringUtils.isNullOrEmpty;
+
+import java.util.Date;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.datepicker.client.CalendarUtil;
 import com.workpoint.icpak.client.ui.component.DateField;
 import com.workpoint.icpak.client.ui.component.IssuesPanel;
 import com.workpoint.icpak.client.ui.util.DateUtils;
 import com.workpoint.icpak.shared.model.settings.SettingDto;
-import static com.workpoint.icpak.client.ui.util.StringUtils.isNullOrEmpty;
 
 public class ApplicationSettingsForm extends Composite {
 
@@ -26,6 +30,7 @@ public class ApplicationSettingsForm extends Composite {
 
 	public ApplicationSettingsForm() {
 		initWidget(uiBinder.createAndBindUi(this));
+		dtNextRQA.addStyleName("rqa-date");
 	}
 
 	public boolean isValid() {
@@ -50,7 +55,17 @@ public class ApplicationSettingsForm extends Composite {
 
 	public void setSetting(SettingDto setting) {
 		this.setting = setting;
-		dtNextRQA.setValue(DateUtils.DATEFORMAT.parse(setting.getSettingValue()));
+		if (!isNullOrEmpty(setting.getSettingValue())) {
+			dtNextRQA.setValue(DateUtils.DATEFORMAT.parse(setting.getSettingValue()));
+		}
+	}
+
+	@Override
+	protected void onAttach() {
+		super.onAttach();
+		Date today = new Date();
+		CalendarUtil.addMonthsToDate(today, 10);
+		dtNextRQA.setMaxDate(today);
 	}
 
 }

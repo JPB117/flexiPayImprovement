@@ -14,11 +14,15 @@
 		</div>
 		<div class="form-group">
 			<div class="row">
-				<div class="col-xs-12">
-					<label for="startdate">Next RQA Date:</label>
-					<d:DateField ui:field="dtNextRQA" placeholder=""
-						required="true">
-					</d:DateField>
+				<div class="col-md-6">
+					<div class="col-md-6">
+						<label for="startdate" class="pull-right" style="margin-bottom:0px;">Next RQA
+							Date:</label>
+					</div>
+					<div class="col-md-6">
+						<d:DateField ui:field="dtNextRQA" required="true">
+						</d:DateField>
+					</div>
 				</div>
 			</div>
 		</div>

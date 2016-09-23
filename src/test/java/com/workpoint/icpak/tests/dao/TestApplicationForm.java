@@ -222,7 +222,7 @@ public class TestApplicationForm extends AbstractDaoTest {
 		System.err.println(mJSONArray);
 	}
 
-	// @Test
+	@Test
 	public void testSyncToErp() {
 		helper.syncApprovedApplicantsFromErp();
 	}

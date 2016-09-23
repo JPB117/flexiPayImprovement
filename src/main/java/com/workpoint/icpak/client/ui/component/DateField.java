@@ -23,8 +23,7 @@ public class DateField extends Composite {
 	@UiField
 	HTMLPanel panelContainer;
 
-	private static DateFieldUiBinder uiBinder = GWT
-			.create(DateFieldUiBinder.class);
+	private static DateFieldUiBinder uiBinder = GWT.create(DateFieldUiBinder.class);
 
 	interface DateFieldUiBinder extends UiBinder<Widget, DateField> {
 	}
@@ -110,6 +109,14 @@ public class DateField extends Composite {
 
 		initCollapsable(DateUtils.DATEFORMAT_SYS.format(today));
 	}
+
+	public void setMaxDate(Date maxDate) {
+		setMaxDate(DateUtils.DATEFORMAT_SYS.format(maxDate));
+	}
+
+	private static native void setMaxDate(String maxDate)/*-{
+															$wnd.jQuery('.datepicker.rqa-date').data('DateTimePicker').maxDate(maxDate);
+															}-*/;
 
 	public static native void initCollapsable(String maxDate)/*-{
 																var ToEndDate = new Date();

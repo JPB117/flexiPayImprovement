@@ -63,8 +63,7 @@ public abstract class AbstractAsyncCallback<T> implements RestCallback<T> {
 
 		AppContext.getEventBus().fireEvent(new ProcessingCompletedEvent());
 		AppContext.getEventBus().fireEvent(
-				new AfterSaveEvent("A technical error occured.", false));
-		// AppContext.getEventBus().fireEvent(new ErrorEvent(message, 0L));
+				new AfterSaveEvent("The was a problem submitting your request.Contact Administrator.", false));
 	}
 
 	@Override
@@ -72,13 +71,11 @@ public abstract class AbstractAsyncCallback<T> implements RestCallback<T> {
 		int code = aResponse.getStatusCode();
 		// AppContext.getEventBus().fireEvent(new ProcessingCompletedEvent());
 
-		if (code == 200 || code == 202 || code == 203 || code == 204
-				|| code == 304) {
+		if (code == 200 || code == 202 || code == 203 || code == 204 || code == 304) {
 			return;
 		}
 
-		AppContext.getEventBus().fireEvent(
-				new ErrorEvent(code, aResponse.getStatusText()));
+		AppContext.getEventBus().fireEvent(new ErrorEvent(code, aResponse.getStatusText()));
 
 		boolean isContinue = handleCustomError(aResponse);
 
@@ -107,17 +104,11 @@ public abstract class AbstractAsyncCallback<T> implements RestCallback<T> {
 		if (code == 408 || code == 0) {
 			// HTTP Request Timeout
 			AppContext.getEventBus().fireEvent(new ProcessingCompletedEvent());
-			AppContext.getEventBus()
-					.fireEvent(
-							new ClientDisconnectionEvent(
-									"Cannot connect to server..."));
+			AppContext.getEventBus().fireEvent(new ClientDisconnectionEvent("Cannot connect to server..."));
 			return;
 		}
 
-		AppContext.getEventBus()
-				.fireEvent(
-						new ErrorEvent("Code=" + code + "; "
-								+ aResponse.getText(), 0L));
+		AppContext.getEventBus().fireEvent(new ErrorEvent("Code=" + code + "; " + aResponse.getText(), 0L));
 	}
 
 	/**

@@ -606,7 +606,7 @@ public class GetReport extends HttpServlet {
 
 		Attachment attachment = new Attachment();
 		attachment.setGoodStandingCert(cert);
-		//attachment.setAttachment(data);
+		// attachment.setAttachment(data);
 		attachment.setContentType("application/pdf");
 		attachment.setSize(data.length);
 		userDao.save(attachment);
@@ -766,10 +766,6 @@ public class GetReport extends HttpServlet {
 		if (a == null) {
 			writeError(resp, "Attachment with id '" + refId + "' could not be found");
 		}
-
-		// LocalAttachment attachment = DB.getAttachmentDao().getAttachmentById(
-		// Long.parseLong(id));
-
 		processAttachmentRequest(resp, a);
 	}
 
@@ -794,7 +790,11 @@ public class GetReport extends HttpServlet {
 		if (name.endsWith("png") || name.endsWith("jpg") || name.endsWith("html") || name.endsWith("htm")
 				|| name.endsWith("svg") || name.endsWith("pdf")) {
 			// displayed automatically
-			resp.setHeader("Content-disposition", "inline;filename=\"" + name);
+			if (name.endsWith("pdf")) {
+				resp.setHeader("Content-type", "application/pdf");
+			}
+			
+			resp.setHeader("Content-disposition", "inline;filename=\"" + name + "\"");
 		} else {
 			resp.setHeader("Content-disposition", "attachment;filename=\"" + name);
 		}
@@ -810,7 +810,6 @@ public class GetReport extends HttpServlet {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
-
 		try {
 			out.close();
 		} catch (Exception e) {

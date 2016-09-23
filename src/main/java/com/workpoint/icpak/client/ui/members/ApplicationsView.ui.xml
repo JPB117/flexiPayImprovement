@@ -69,7 +69,7 @@
 										<i class="glyphicon glyphicon-trash"></i>
 										Delete Category
 									</g:Anchor>
-									<div class="dropdown">
+									<div class="dropdown pull-right">
 										<a class="btn btn-default dropdown-toggle" id="dropdownMenu1"
 											data-toggle="dropdown" aria-expanded="true">
 											Select

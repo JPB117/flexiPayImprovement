@@ -1094,23 +1094,26 @@ public class ApplicationFormDaoHelper {
 						ApplicationFormHeader application = applicationDao.findByErpCode(appSync.getApplicationNo_());
 
 						if (application != null) {
-							application.setApplicationStatus(ApplicationStatus.APPROVED);
-
 							// Find the User and Member Object and User
 							if (application.getUserRefId() != null) {
+								application.setApplicationStatus(ApplicationStatus.APPROVED);
 								User user = userDao.findByUserId(application.getUserRefId());
+								Member m = null;
 								if (user != null) {
 									user.setMemberNo(syncPayLoad.getReg_no());
 									if (user.getMember() != null) {
-										Member m = user.getMember();
+										m = user.getMember();
 										m.setMemberNo(syncPayLoad.getReg_no());
 										m.setRegistrationDate(application.getCreated());
+										userDao.save(m);
+
+										// Save all this parameters
+										// Applicant, Member, User
+										applicationDao.save(application);
+										userDao.save(user);
 									}
 								}
-								
-								
-								//Save all this parameters
-								//Applicant, Member, User
+
 							}
 						} else {
 

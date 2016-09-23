@@ -7,28 +7,22 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.icpak.rest.dao.helper.StatementDaoHelper;
-import com.icpak.rest.util.ScheduleInjector;
 import com.icpak.servlet.modules.BootstrapServletModule;
 
 public class GuiceServletConfig extends GuiceServletContextListener {
-
 	@Override
 	protected Injector getInjector() {
-		Injector injector = Guice.createInjector(new BootstrapServletModule(),
-				new ServerModule(), new DispatchServletModule(), new AbstractModule() {
+		Injector injector = Guice.createInjector(new BootstrapServletModule(), new ServerModule(),
+				new DispatchServletModule(), new AbstractModule() {
 					@Override
 					protected void configure() {
 						requestInjection(StatementDaoHelper.class);
-						requestStaticInjection(ScheduleInjector.class);
 					}
 				});
-		org.apache.shiro.mgt.SecurityManager securityManager = 
-				injector.getInstance(org.apache.shiro.mgt.SecurityManager.class);
+		org.apache.shiro.mgt.SecurityManager securityManager = injector
+				.getInstance(org.apache.shiro.mgt.SecurityManager.class);
 		SecurityUtils.setSecurityManager(securityManager);
-		
 		return injector;
-//		return Guice
-//				.createInjector(new ServerModule(), new DispatchServletModule());
 	}
 
 }

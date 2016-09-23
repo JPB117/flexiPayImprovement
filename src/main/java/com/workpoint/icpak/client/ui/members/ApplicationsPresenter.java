@@ -312,7 +312,7 @@ public class ApplicationsPresenter
 								@Override
 								public void onSuccess(List<ApplicationCategoryDto> categories) {
 									fireEvent(new ProcessingCompletedEvent());
-									fireEvent(new AfterSaveEvent("Category Record successfully updated."));
+									fireEvent(new AfterSaveEvent("Category Record successfully deleted."));
 								}
 							}).delete(appCategoryForm.getApplicationCategory().getRefId());
 						}
@@ -324,6 +324,15 @@ public class ApplicationsPresenter
 		getView().getRQAButton().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
+				fireEvent(new ProcessingEvent());
+				settingDelegate.withCallback(new AbstractAsyncCallback<SettingDto>() {
+					@Override
+					public void onSuccess(SettingDto setting) {
+						fireEvent(new ProcessingCompletedEvent());
+						settingForm.setSetting(setting);
+						showAppSetting();
+					}
+				}).getBySettingName("next_rqa_meeting");
 
 			}
 		});
@@ -334,6 +343,37 @@ public class ApplicationsPresenter
 
 			}
 		});
+	}
+
+	public void showAppSetting() {
+		AppManager.showPopUp("Application Form Settings", settingForm, new OnOptionSelected() {
+			@Override
+			public void onSelect(String name) {
+				if (name.equals("Save")) {
+					fireEvent(new ProcessingEvent());
+					SettingDto setting = settingForm.getConfiguredSetting();
+					if (setting.getRefId() != null) {
+						settingDelegate.withCallback(new AbstractAsyncCallback<SettingDto>() {
+							@Override
+							public void onSuccess(SettingDto setting) {
+								fireEvent(new ProcessingCompletedEvent());
+								fireEvent(new AfterSaveEvent("RQA Setting successfully updated."));
+							}
+
+						}).update(setting.getRefId(), setting);
+					} else {
+						settingDelegate.withCallback(new AbstractAsyncCallback<SettingDto>() {
+							@Override
+							public void onSuccess(SettingDto setting) {
+								fireEvent(new ProcessingCompletedEvent());
+								fireEvent(new AfterSaveEvent("RQA Setting successfully created."));
+							}
+
+						}).create(setting);
+					}
+				}
+			}
+		}, "Save", "Cancel");
 	}
 
 	public void saveCategory(ApplicationCategoryDto appCategory) {

@@ -15,7 +15,6 @@ public class AttachmentsDao extends BaseDao {
 		return getSingleResultOrNull(getEntityManager().createQuery(
 				"FROM Attachment a where " + "a.profilePicUserId=:userRefId")
 				.setParameter("userRefId", userRefId));
-
 	}
 
 }

@@ -24,6 +24,7 @@ public class Setting extends PO {
 
 	public SettingDto toDto() {
 		SettingDto setting = new SettingDto();
+		setting.setRefId(refId);
 		setting.setSettingName(settingName);
 		setting.setSettingValue(settingValue);
 		return setting;
