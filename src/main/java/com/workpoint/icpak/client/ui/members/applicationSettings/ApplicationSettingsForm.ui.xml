@@ -15,7 +15,7 @@
 		<div class="form-group">
 			<div class="row">
 				<div class="col-md-6">
-					<div class="col-md-6">
+					<div class="col-md-6" style="margin-top:10px;">
 						<label for="startdate" class="pull-right" style="margin-bottom:0px;">Next RQA
 							Date:</label>
 					</div>

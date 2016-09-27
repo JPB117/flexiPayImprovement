@@ -132,7 +132,7 @@
 														styleName="hide alert alert-danger"></d:IssuesPanel>
 												</div>
 
-												<div class="pricing-table col-xs-4" ui:field="divNonPracticing">
+												<div class="pricing-table pricing-table col-xs-12 col-md-12 col-sm-12 col-lg-4" ui:field="divNonPracticing">
 													<div class="panel panel-primary" style="border:none;">
 														<div class="controle-header panel-heading panel-heading-landing">
 															<h1 class="panel-title panel-title-landing">Non-Practicing</h1>
@@ -220,7 +220,7 @@
 													</div>
 												</div>
 
-												<div class="pricing-table col-xs-4" ui:field="divOverseas">
+												<div class="pricing-table  col-xs-12 col-md-12 col-sm-12 col-lg-4" ui:field="divOverseas">
 													<div class="panel panel-primary" style="border:none;">
 														<div class="controle-header panel-heading panel-heading-landing">
 															<h1 class="panel-title panel-title-landing">OverSeas Member</h1>
@@ -263,7 +263,7 @@
 													</div>
 												</div>
 
-												<div class="pricing-table col-xs-4" ui:field="divAssociate">
+												<div class="pricing-table col-xs-12 col-md-12 col-sm-12 col-lg-4" ui:field="divAssociate">
 													<div class="panel panel-primary" style="border:none;">
 														<div class="controle-header panel-heading panel-heading-landing">
 															<h1 class="panel-title panel-title-landing">Associate Member</h1>

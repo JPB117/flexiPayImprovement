@@ -20,7 +20,6 @@ import com.icpak.rest.dao.helper.SpecializationDaoHelper;
 import com.icpak.rest.dao.helper.TrainingDaoHelper;
 import com.icpak.rest.dao.helper.UsersDaoHelper;
 import com.icpak.rest.models.auth.User;
-import com.icpak.rest.models.base.PO;
 import com.icpak.rest.models.membership.ApplicationFormHeader;
 import com.icpak.rest.models.membership.MemberImport;
 import com.workpoint.icpak.shared.model.ApplicationERPDto;
@@ -33,6 +32,7 @@ import com.workpoint.icpak.shared.model.ApplicationFormTrainingDto;
 import com.workpoint.icpak.shared.model.ApplicationType;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.UserDto;
+import com.workpoint.icpak.shared.model.auth.ApplicationStatus;
 import com.workpoint.icpak.tests.base.AbstractDaoTest;
 
 public class TestApplicationForm extends AbstractDaoTest {
@@ -145,15 +145,16 @@ public class TestApplicationForm extends AbstractDaoTest {
 
 	}
 
-	@Test
-	public void testUpdatingOfCPDDto() {
-		ApplicationFormHeaderDto dto = applicationDao.findByApplicationId("mdoRIMjr6HUDFFku", true).toDto();
-		dto.setApplicationType(ApplicationType.NON_PRACTISING);
-		// dto.setApplicationStatus(ApplicationStatus.APPROVED);
+	// @Test
+	public void testUpdatingOfApplicationDto() {
+		ApplicationFormHeaderDto dto = applicationDao.findByApplicationId("2zMh6tX6udVLIGim", true).toDto();
+		// dto.setApplicationType(ApplicationType.NON_PRACTISING);
+		dto.setApplicationStatus(ApplicationStatus.PROCESSING);
+		dto.setErpCode("C/001");
 		// dto.setManagementComment("Please attach your profile photo");
 		// System.err.println("Submission Date::" + dto.getDateSubmitted());
 
-		helper.updateApplication("mdoRIMjr6HUDFFku", dto);
+		helper.updateApplication("2zMh6tX6udVLIGim", dto);
 	}
 
 	// @Test

@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.Query;
 
 import org.apache.log4j.Logger;
@@ -412,7 +414,23 @@ public class ApplicationFormDao extends BaseDao {
 	}
 
 	public ApplicationFormHeader findByErpCode(String applicationNo_) {
-		return null;
+		String query = "from ApplicationFormHeader u where u.erpCode = :applicationNo";
+		return getSingleResultOrNull(getEntityManager().createQuery(query).setParameter("applicationNo", applicationNo_));
+	}
+	
+	@Override
+	public <T> T getSingleResultOrNull(Query query) throws RuntimeException {
+		T value = null;
+		try {
+			value = (T) query.getSingleResult();
+		} catch (NoResultException e) {
+			if (!(e instanceof NoResultException)) {
+				e.printStackTrace();
+			}
+		} catch (NonUniqueResultException e) {
+			throw new ServiceException(ErrorCodes.DUPLICATEVALUE, "What you are searching is not unique");
+		}
+		return value;
 	}
 
 }

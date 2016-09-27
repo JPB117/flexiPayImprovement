@@ -9,7 +9,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
@@ -18,18 +17,13 @@ import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Ignore;
-import org.junit.Test;
 import org.xml.sax.SAXException;
 
 import com.amazonaws.util.json.JSONException;
 import com.google.inject.Inject;
 import com.icpak.rest.dao.CPDDao;
-import com.icpak.rest.dao.StatementDao;
 import com.icpak.rest.dao.helper.InvoiceDaoHelper;
 import com.icpak.rest.dao.helper.StatementDaoHelper;
-import com.icpak.rest.models.cpd.CPD;
-import com.icpak.rest.util.ScheduleInjector;
-import com.icpak.rest.util.StatementSchedular;
 import com.icpak.servlet.upload.GetReport;
 import com.itextpdf.text.DocumentException;
 import com.workpoint.icpak.shared.model.statement.StatementSummaryDto;
@@ -46,8 +40,6 @@ public class TestStatementsDao extends AbstractDaoTest {
 	GetReport reportServlet;
 	@Inject
 	CPDDao cpdDao;
-	@Inject
-	StatementSchedular schedular;
 
 	@Ignore
 	public void generateReport() throws FileNotFoundException, IOException,
@@ -132,13 +124,4 @@ public class TestStatementsDao extends AbstractDaoTest {
 
 	}
 	
-	@Test
-	public void testSchedular() throws InterruptedException{
-		logger.info(" TRIGGER SCHEDULAR -"+ ScheduleInjector.getStatementDaoHelper());
-		Date today = new Date();
-		long date = today.getTime();
-		schedular.invockTrigger(date);
-		
-		Thread.sleep(10000L);
-	}
 }

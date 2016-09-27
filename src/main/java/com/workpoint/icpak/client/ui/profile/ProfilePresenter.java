@@ -506,6 +506,7 @@ public class ProfilePresenter extends Presenter<ProfilePresenter.IProfileView, P
 			public void onSuccess(List<ApplicationFormTrainingDto> result) {
 				// bind Training details
 				getView().bindTrainingDetails(result);
+				fireEvent(new ProcessingCompletedEvent());
 			}
 		}).training(applicationId).getAll(0, 50);
 

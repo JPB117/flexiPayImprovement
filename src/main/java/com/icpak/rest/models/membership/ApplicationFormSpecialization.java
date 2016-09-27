@@ -23,7 +23,7 @@ public class ApplicationFormSpecialization extends PO {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@Column(name = "`timestamp`", columnDefinition = "timestamp NOT NULL default current_timestamp")
+	@Column(name = "`timestamp`")
 	private Timestamp timestamp;
 
 	@Column(nullable = true, name = "`Line No_`")

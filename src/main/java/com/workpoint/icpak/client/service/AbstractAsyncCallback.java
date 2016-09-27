@@ -67,6 +67,11 @@ public abstract class AbstractAsyncCallback<T> implements RestCallback<T> {
 	}
 
 	@Override
+	public void onSuccess(T result) {
+		AppContext.getEventBus().fireEvent(new ProcessingCompletedEvent());
+	}
+
+	@Override
 	public void setResponse(Response aResponse) {
 		int code = aResponse.getStatusCode();
 		// AppContext.getEventBus().fireEvent(new ProcessingCompletedEvent());

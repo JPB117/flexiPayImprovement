@@ -3,16 +3,6 @@ package com.workpoint.icpak.tests.dao;
 import java.io.IOException;
 
 import org.junit.Test;
-import org.quartz.Job;
-import org.quartz.JobBuilder;
-import org.quartz.JobDetail;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
-import org.quartz.Trigger;
-import org.quartz.TriggerBuilder;
-import org.quartz.impl.StdSchedulerFactory;
 
 import com.google.inject.Inject;
 import com.icpak.rest.dao.helper.RemindersDaoHelper;
@@ -84,33 +74,5 @@ public class TestReminders extends AbstractDaoTest {
 	// @Test
 	public void testWindowsSchedulor() throws IOException, InterruptedException {
 		// reminderHelper.createReminderInSchedulor();
-
 	}
-
-	// @Test
-	public void testQuartzImplementation() throws SchedulerException {
-
-		JobDetail j1 = JobBuilder.newJob(QuartzJob.class).build();
-
-		Trigger t1 = TriggerBuilder.newTrigger().withIdentity("SimpleTrigger").startNow().build();
-
-		Scheduler sc = new StdSchedulerFactory().getScheduler();
-
-		sc.start();
-
-		sc.scheduleJob(j1, t1);
-
-		// System.err.println("Hallo world!!");
-	}
-
-	public class QuartzJob implements Job {
-		@Override
-		public void execute(JobExecutionContext arg0) throws JobExecutionException {
-			// System.err.println("First Quartz Job::" +
-			// ServerDateUtils.FULLHOURMINUTESTAMP.format(new Date()));
-			System.out.println("Hallo ,,,,,Hallo!!");
-		}
-
-	}
-
 }

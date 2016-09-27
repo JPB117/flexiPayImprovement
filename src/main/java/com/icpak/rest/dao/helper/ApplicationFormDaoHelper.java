@@ -35,9 +35,9 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.log4j.Logger;
-import org.json.JSONArray;
 import org.xml.sax.SAXException;
 
+import com.amazonaws.util.json.JSONArray;
 import com.amazonaws.util.json.JSONException;
 import com.amazonaws.util.json.JSONObject;
 import com.google.inject.Inject;
@@ -58,6 +58,7 @@ import com.icpak.rest.models.membership.ApplicationFormHeader;
 import com.icpak.rest.models.membership.Member;
 import com.icpak.rest.models.membership.MemberImport;
 import com.icpak.rest.models.payloads.ApplicationSyncPayLoad;
+import com.icpak.rest.models.settings.Setting;
 import com.icpak.rest.models.trx.Invoice;
 import com.icpak.rest.models.trx.InvoiceLine;
 import com.icpak.rest.models.util.Attachment;
@@ -118,6 +119,8 @@ public class ApplicationFormDaoHelper {
 	SpecializationDaoHelper specializationHelper;
 	@Inject
 	MemberDaoHelper memberDaoHelper;
+	@Inject
+	SettingDaoHelper settingDaoHelper;
 
 	SimpleDateFormat formatter = new SimpleDateFormat("MMM d Y");
 
@@ -444,17 +447,12 @@ public class ApplicationFormDaoHelper {
 			subject = subject + " has Been Cancelled!";
 			action = "  has been cancelled because of the following reason:<br/>";
 		} else if (isBeingProcessed) {
-			try {
-				props.load(ApplicationFormDaoHelper.class.getClassLoader().getResourceAsStream("bootstrap.properties"));
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			Object nextRQAString = props.get("next_rqa_meeting");
+			Object nextRQASetting = settingDaoHelper.getSettingByName("next_rqa_meeting");
+
 			Date nextRQA = null;
 			try {
-				if (nextRQAString != null) {
-					nextRQA = formatter2.parse(nextRQAString.toString());
+				if (nextRQASetting != null && (((Setting) nextRQASetting).getSettingValue()) != null) {
+					nextRQA = formatter2.parse(((Setting) nextRQASetting).getSettingValue());
 					subject = subject + " is Being Processed!";
 					action = " is now being processed. Please note that the next Registration and Quality Assuarance"
 							+ " meeting is on " + ServerDateUtils.format(nextRQA, formatter)
@@ -1069,27 +1067,33 @@ public class ApplicationFormDaoHelper {
 		// Get all Processed applications
 		List<String> allErpCodes = applicationDao.getAllProcessedApplicationFileNos();
 		List<ApplicationSyncPayLoad> syncedApplicants = new ArrayList<>();
-		ApplicationSyncPayLoad syncPayLoad = new ApplicationSyncPayLoad();
+		int successCounter = 0;
+		int totalToBeSynced = 0;
 		if (!allErpCodes.isEmpty()) {
+			totalToBeSynced = allErpCodes.size();
 			JSONArray mJSONArray = new JSONArray(allErpCodes);
 
 			// Send this to ERP
 			try {
 				String results = postErpCodesToERP(mJSONArray);
-
 				if (results.equals("null")) {
 					logger.error(" ===>>><<<< === NO REPLY FROM ERP ===>><<<>>== ");
 				} else {
-					JSONObject jo = new JSONObject(results);
-					for (int i = 0; i < jo.names().length(); i++) {
-						JSONObject jObject = (JSONObject) jo.getJSONObject(jo.names().getString(i));
-						syncPayLoad.setApplicationNo_(jObject.getString("ApplicationNo_"));
+					JSONArray jo = null;
+					jo = new JSONArray(results);
+					for (int i = 0; i < jo.length(); i++) {
+						JSONObject jObject = null;
+						jObject = jo.getJSONObject(i);
+						ApplicationSyncPayLoad syncPayLoad = new ApplicationSyncPayLoad();
+						syncPayLoad.setApplicationNo_(jObject.getString("Application No_"));
 						syncPayLoad.setEmail(jObject.getString("email"));
-						syncPayLoad.setReg_no(jo.getString("reg_no"));
+						syncPayLoad.setReg_no(jObject.getString("reg_no"));
 						syncedApplicants.add(syncPayLoad);
+						logger.info("Added >>" + syncPayLoad.getReg_no());
 					}
 
 					for (ApplicationSyncPayLoad appSync : syncedApplicants) {
+						logger.info("Syncing>>" + appSync.getReg_no());
 						// Update this Applications
 						ApplicationFormHeader application = applicationDao.findByErpCode(appSync.getApplicationNo_());
 
@@ -1097,13 +1101,15 @@ public class ApplicationFormDaoHelper {
 							// Find the User and Member Object and User
 							if (application.getUserRefId() != null) {
 								application.setApplicationStatus(ApplicationStatus.APPROVED);
-								User user = userDao.findByUserId(application.getUserRefId());
+								logger.info("marking this application as approved:" + application.getSurname());
+								User user = userDao.findByUserId(application.getUserRefId(), false);
 								Member m = null;
 								if (user != null) {
-									user.setMemberNo(syncPayLoad.getReg_no());
+									user.setMemberNo(appSync.getReg_no());
 									if (user.getMember() != null) {
+
 										m = user.getMember();
-										m.setMemberNo(syncPayLoad.getReg_no());
+										m.setMemberNo(appSync.getReg_no());
 										m.setRegistrationDate(application.getCreated());
 										userDao.save(m);
 
@@ -1111,14 +1117,15 @@ public class ApplicationFormDaoHelper {
 										// Applicant, Member, User
 										applicationDao.save(application);
 										userDao.save(user);
+										successCounter = successCounter + 1;
 									}
 								}
-
 							}
-						} else {
-
 						}
 					}
+
+					System.err.println("Total To Be Synced:" + totalToBeSynced + "\n");
+					System.err.println("Total Success:" + successCounter + "\n");
 
 				}
 
