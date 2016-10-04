@@ -71,6 +71,8 @@ public class EventBookingView extends ViewImpl implements EventBookingPresenter.
 	@UiField
 	HTMLPanel panelCancel;
 	@UiField
+	HTMLPanel panelPastEvent;
+	@UiField
 	HTMLPanel panelConfirmCancel;
 	@UiField
 	Element divHeaderTopics;
@@ -166,6 +168,8 @@ public class EventBookingView extends ViewImpl implements EventBookingPresenter.
 	DivElement divCancellation;
 	@UiField
 	DivElement divWizardFooter;
+	@UiField
+	SpanElement spnClosedIssues;
 
 	int counter = 0;
 	boolean isValid = true;
@@ -410,7 +414,6 @@ public class EventBookingView extends ViewImpl implements EventBookingPresenter.
 				pageElement.getLiElement().removeClassName("active");
 			}
 		}
-
 		divPackage.removeClassName("active");
 		divPayment.removeClassName("active");
 		divCategories.removeClassName("active");
@@ -598,22 +601,23 @@ public class EventBookingView extends ViewImpl implements EventBookingPresenter.
 
 	@Override
 	public void setEvent(EventDto event) {
-
-		spnEventName.setInnerText(event.getName());
-
-		if (event.getStartDate() != null) {
-
-			Date startDate = DateUtils.parse(event.getStartDate(), DateUtils.FULLTIMESTAMP);
-			spnStartDate.setInnerText(DateUtils.DATEFORMAT.format(startDate));
-			if (event.getEndDate() != null) {
-				Date endDate = DateUtils.parse(event.getEndDate(), DateUtils.FULLTIMESTAMP);
-				spnDuration.setInnerText(DateUtils.getTimeDifference(startDate, endDate));
+		if (event.getIsEventActive() == 0) {
+			spnClosedIssues.setInnerText("The booking period for " + event.getName() + " has ended.");
+			showClosedEvent(true);
+		} else {
+			showClosedEvent(false);
+			spnEventName.setInnerText(event.getName());
+			if (event.getStartDate() != null) {
+				Date startDate = DateUtils.parse(event.getStartDate(), DateUtils.FULLTIMESTAMP);
+				spnStartDate.setInnerText(DateUtils.DATEFORMAT.format(startDate));
+				if (event.getEndDate() != null) {
+					Date endDate = DateUtils.parse(event.getEndDate(), DateUtils.FULLTIMESTAMP);
+					spnDuration.setInnerText(DateUtils.getTimeDifference(startDate, endDate));
+				}
+				spnDays2Go.setInnerText(DateUtils.getTimeDifference(new Date(), startDate));
 			}
 
-			spnDays2Go.setInnerText(DateUtils.getTimeDifference(new Date(), startDate));
 		}
-
-		// bindAccommodations(event.getAccommodation());
 	}
 
 	public void bindAccommodations(List<AccommodationDto> accommodation) {
@@ -804,6 +808,23 @@ public class EventBookingView extends ViewImpl implements EventBookingPresenter.
 
 	public HasClickHandlers getConfirmCancelButton() {
 		return aConfirmCancel;
+	}
+
+	public void showClosedEvent(boolean show) {
+		if (show) {
+			clearAll();
+			panelPastEvent.removeStyleName("hide");
+			divHeaderTopics.addClassName("hide");
+			divHeaderTopics.removeClassName("visible-lg");
+			divCancellation.addClassName("active");
+			divWizardFooter.addClassName("hide");
+		} else {
+			panelPastEvent.addStyleName("hide");
+			divHeaderTopics.removeClassName("hide");
+			divHeaderTopics.addClassName("visible-lg");
+			divCategories.addClassName("active");
+			divWizardFooter.removeClassName("hide");
+		}
 	}
 
 	public void showCancellation(boolean show) {

@@ -1,15 +1,18 @@
 package com.icpak.rest.dao.helper;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import org.apache.log4j.Logger;
 
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import com.icpak.rest.IDUtils;
 import com.icpak.rest.dao.EventsDao;
 import com.icpak.rest.models.event.Event;
+import com.workpoint.icpak.shared.model.EventStatus;
 import com.workpoint.icpak.shared.model.EventType;
-import com.workpoint.icpak.shared.model.PaymentStatus;
 import com.workpoint.icpak.shared.model.events.DelegateDto;
 import com.workpoint.icpak.shared.model.events.EventDto;
 
@@ -19,17 +22,17 @@ public class EventsDaoHelper {
 	@Inject
 	EventsDao dao;
 
+	Logger logger = Logger.getLogger(EventsDaoHelper.class);
+
 	public List<EventDto> getAllEvents(String uri, Integer offset, Integer limit) {
 		return getAllEvents(uri, offset, limit, null);
 	}
 
-	public List<EventDto> getAllEvents(String uri, Integer offset,
-			Integer limit, String eventType) {
+	public List<EventDto> getAllEvents(String uri, Integer offset, Integer limit, String eventType) {
 		return getAllEvents(uri, offset, limit, eventType, "");
 	}
 
-	public List<EventDto> getAllEvents(String uri, Integer offset,
-			Integer limit, String eventType, String searchTerm) {
+	public List<EventDto> getAllEvents(String uri, Integer offset, Integer limit, String eventType, String searchTerm) {
 		EventType type = null;
 		List<EventDto> eventsList = new ArrayList<>();
 
@@ -37,8 +40,7 @@ public class EventsDaoHelper {
 			if (eventType != null) {
 				type = EventType.valueOf(eventType.toUpperCase());
 			}
-			List<Event> list = dao
-					.getAllEvents(offset, limit, type, searchTerm);
+			List<Event> list = dao.getAllEvents(offset, limit, type, searchTerm);
 
 			for (Event e : list) {
 				EventDto event = e.toDto();
@@ -66,7 +68,14 @@ public class EventsDaoHelper {
 
 	public EventDto getEventById(String eventId) {
 		Event event = dao.getByEventId(eventId);
-		return event.toDto();
+		EventDto eventDto = event.toDto();
+
+		Date today = new Date();
+		if (today.after(event.getStartDate()) || event.getStatus() == EventStatus.CLOSED) {
+			logger.info(event.getName() + " is a past event. Booking closed.");
+			eventDto.setIsEventActive(0);
+		}
+		return eventDto;
 	}
 
 	public EventDto createEvent(EventDto dto) {

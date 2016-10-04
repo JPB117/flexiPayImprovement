@@ -104,6 +104,25 @@
 									<!-- Tab Content 1 -->
 									<g:HTMLPanel styleName="tab-content" ui:field="divContent">
 										<div class="tab-pane" ui:field="divCancellation">
+											<g:HTMLPanel ui:field="panelPastEvent" styleName="hide">
+												<div class="col-lg-12" style="margin-top:55px;">
+													<div class="alert alert-danger">
+														<g:HTMLPanel styleName="alert text-center"
+															ui:field="panelMessage2">
+															<span class="fa fa fa-exclamation-triangle fa-5x"></span>
+															<br />
+															<span ui:field="spnClosedIssues" style="font-size: 20px;">
+															</span>
+															<br />
+															<a class='btn btn-next btn-fill btn-gold btn-wd btn-sm'
+																href="https://www.icpak.com/registration" style="margin-top: 25px;">Browse
+																other
+																events
+															</a>
+														</g:HTMLPanel>
+													</div>
+												</div>
+											</g:HTMLPanel>
 
 											<g:HTMLPanel ui:field="panelCancel" styleName="hide">
 												<div class="row">

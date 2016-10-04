@@ -1,12 +1,9 @@
 package com.workpoint.icpak.shared.model.events;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.workpoint.icpak.shared.model.EventStatus;
-import com.workpoint.icpak.shared.model.EventType;
 import com.workpoint.icpak.shared.model.Listable;
 import com.workpoint.icpak.shared.model.SerializableObj;
 
@@ -53,6 +50,7 @@ public class EventDto extends SerializableObj implements Listable {
 	private Integer paidCount;
 	private Integer unPaidCount;
 	private Integer courseId;
+	private Integer isEventActive;
 
 	public EventDto() {
 		accommodation = new ArrayList<AccommodationDto>();
@@ -291,6 +289,14 @@ public class EventDto extends SerializableObj implements Listable {
 
 	public void setPaidCount(Integer paidCount) {
 		this.paidCount = paidCount;
+	}
+
+	public Integer getIsEventActive() {
+		return isEventActive;
+	}
+
+	public void setIsEventActive(Integer isEventActive) {
+		this.isEventActive = isEventActive;
 	}
 
 }

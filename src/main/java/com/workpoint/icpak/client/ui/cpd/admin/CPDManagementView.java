@@ -36,6 +36,7 @@ import com.workpoint.icpak.client.ui.cpd.member.table.footer.CPDMemberFooterRow;
 import com.workpoint.icpak.client.ui.cpd.member.table.row.CPDMemberTableRow;
 import com.workpoint.icpak.client.ui.util.DateRange;
 import com.workpoint.icpak.client.ui.util.DateUtils;
+import com.workpoint.icpak.client.ui.util.NumberUtils;
 import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.shared.model.CPDFooterDto;
 import com.workpoint.icpak.shared.model.CPDSummaryDto;
@@ -175,8 +176,8 @@ public class CPDManagementView extends ViewImpl implements CPDManagementPresente
 
 	@Override
 	public void bindSummary(CPDSummaryDto summary) {
-		spnReturnCount.setInnerText(summary.getTotalReturns() + "");
-		spnArchiveCount.setInnerText(summary.getTotalArchive() + "");
+		spnReturnCount.setInnerText(NumberUtils.NUMBERFORMAT.format(summary.getTotalReturns()) + "");
+		spnArchiveCount.setInnerText(NumberUtils.NUMBERFORMAT.format(summary.getTotalArchive()) + "");
 	}
 
 	@Override

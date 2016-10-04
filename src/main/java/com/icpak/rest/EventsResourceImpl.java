@@ -100,9 +100,7 @@ public class EventsResourceImpl implements EventsResource {
 	@ApiOperation(value = "Get a event by eventId", response = Event.class, consumes = MediaType.APPLICATION_JSON)
 	public EventDto getById(
 			@ApiParam(value = "Event Id of the event to fetch", required = true) @PathParam("eventId") String eventId) {
-
 		EventDto dto = helper.getEventById(eventId);
-
 		return dto;
 	}
 
