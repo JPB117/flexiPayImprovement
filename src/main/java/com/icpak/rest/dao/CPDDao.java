@@ -227,6 +227,7 @@ public class CPDDao extends BaseDao {
 
 		if (passedMemberRefId != null
 				&& (passedMemberRefId.equals("ALLARCHIVE") || passedMemberRefId.equals("returnArchive"))) {
+			boolean isReturnArchive = passedMemberRefId.equals("returnArchive");
 			if (isFirstParam) {
 				isFirstParam = false;
 				sql.append(" where");
@@ -239,7 +240,8 @@ public class CPDDao extends BaseDao {
 			if (searchTerm != null) {
 				if (!searchTerm.equals("")) {
 					sql.append(" and (u.fullName like :searchTerm or" + " c.title like :searchTerm or "
-							+ " c.memberRegistrationNo like :searchTerm or " + " c.id like :searchTerm)");
+							+ " c.memberRegistrationNo like :searchTerm " + 
+							(isReturnArchive==true?"":" or c.id like :searchTerm)"));
 
 					params.put("searchTerm", "%" + searchTerm + "%");
 				}
@@ -254,7 +256,6 @@ public class CPDDao extends BaseDao {
 				}
 			}
 		}
-
 		return params;
 	}
 
@@ -443,7 +444,6 @@ public class CPDDao extends BaseDao {
 						+ "concat(u.firstName,' ',u.lastName) like :searchTerm or " + "c.title like :searchTerm or "
 						+ "c.memberRegistrationNo=:memberNoSearch ");
 
-		boolean isFirstParam = false;
 		Map<String, Object> params = appendParameters(sql, memberId, passedStartDate, passedEndDate, searchTerm);
 		Query query = getEntityManager().createNativeQuery(sql.toString())
 				.setParameter("searchTerm", "%" + searchTerm + "%").setParameter("memberNoSearch", searchTerm);

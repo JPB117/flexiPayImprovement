@@ -1,8 +1,6 @@
 package com.icpak.rest.dao;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Query;
@@ -15,9 +13,9 @@ import com.icpak.rest.exceptions.ServiceException;
 import com.icpak.rest.models.ErrorCodes;
 import com.icpak.rest.models.auth.Role;
 import com.icpak.rest.models.auth.User;
+import com.icpak.rest.models.membership.Member;
 import com.icpak.rest.models.membership.MemberImport;
 import com.icpak.rest.models.util.Attachment;
-import com.workpoint.icpak.shared.model.CPDDto;
 import com.workpoint.icpak.shared.model.UserDto;
 
 public class UsersDao extends BaseDao {
@@ -70,6 +68,14 @@ public class UsersDao extends BaseDao {
 	public User createUser(User user) {
 		if (user.getHashedPassword() != null && user.getId() == null) {
 			user.setPassword(encrypt(user.getHashedPassword()));
+		}
+
+		// Update QrCode String to MemberRefId when QRString is null
+		if (user.getMember() != null) {
+			if (user.getMember().getMemberQrCode() == null || user.getMember().getMemberQrCode().isEmpty()) {
+				Member m = user.getMember();
+				m.setMemberQrCode(user.getRefId());
+			}
 		}
 		return (User) save(user);
 	}
