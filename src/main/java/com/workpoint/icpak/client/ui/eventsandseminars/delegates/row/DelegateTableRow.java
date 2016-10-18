@@ -326,17 +326,18 @@ public class DelegateTableRow extends RowWidget {
 				&& delegate.getAttendance() == AttendanceStatus.NOTATTENDED && delegate.getIsBookingActive() == 0 ? true
 						: false);
 
-		boolean isAttendedVisible = (eventType != EventType.EVENT && AppContext.isCurrentUserEventEdit()
+		boolean isAttendedVisible = (eventType != EventType.COURSE && AppContext.isCurrentUserEventEdit()
 				&& delegate.getAttendance() == AttendanceStatus.NOTATTENDED && delegate.getIsBookingActive() == 1 ? true
 						: false);
 
-		boolean isNotAttendedVisible = (eventType != EventType.EVENT && AppContext.isCurrentUserEventEdit()
+		boolean isNotAttendedVisible = (eventType != EventType.COURSE && AppContext.isCurrentUserEventEdit()
 				&& delegate.getAttendance() == AttendanceStatus.ATTENDED && delegate.getIsBookingActive() == 1 ? true
 						: false);
 
 		boolean isEnrolVisible = (eventType == EventType.COURSE && AppContext.isCurrentUserEventEdit()
-				&& delegate.getAttendance() == AttendanceStatus.NOTENROLLED && delegate.getIsBookingActive() == 1 ? true
-						: false);
+				&& (delegate.getAttendance() == AttendanceStatus.NOTENROLLED
+						|| delegate.getAttendance() == AttendanceStatus.NOTATTENDED)
+				&& delegate.getIsBookingActive() == 1 ? true : false);
 
 		// boolean isMemberCPDVisible = (delegate.getMemberRefId() != null ?
 		// true : false);

@@ -16,6 +16,7 @@ import org.junit.Test;
 import com.amazonaws.util.json.JSONException;
 import com.google.inject.Inject;
 import com.icpak.rest.dao.MemberDao;
+import com.icpak.rest.dao.UsersDao;
 import com.icpak.rest.dao.helper.CPDDaoHelper;
 import com.icpak.rest.dao.helper.MemberDaoHelper;
 import com.icpak.rest.dao.helper.UsersDaoHelper;
@@ -123,7 +124,7 @@ public class TestMemberDao extends AbstractDaoTest {
 		helper.findDuplicateMemberNo();
 	}
 
-	@Test
+	//@Test
 	public void getAllMemberStandingStatus() {
 		List<MemberDto> allMembers = helper.getAllMembers(0, 30000, "", "");
 
@@ -136,5 +137,13 @@ public class TestMemberDao extends AbstractDaoTest {
 			System.out.println("Completed for memberNo>>" + m.getMemberNo());
 		}
 
+	}
+	
+	
+	@Inject
+	UsersDao userDao;
+	@Test
+	public void testFindMemberByMemberNo(){
+		System.err.println(userDao.findUserByMemberNo("ASSOC/351").getFullName());
 	}
 }

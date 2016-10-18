@@ -381,6 +381,11 @@ public class ApplicationFormDaoHelper {
 	 */
 	public void updateInvoice(ApplicationFormHeaderDto dto, ApplicationFormHeader po) {
 		logger.info("===Updating invoice====" + dto.getRefId());
+
+		if (po.getApplicationStatus() == ApplicationStatus.APPROVED) {
+			logger.info("Application status approved - we don't update invoice");
+			return;
+		}
 		InvoiceDto invoice = invoiceHelper.getInvoice(po.getInvoiceRef());
 		Invoice invoicePO = applicationDao.findByRefId(po.getInvoiceRef(), Invoice.class);
 		ApplicationType type = po.getApplicationType();
