@@ -1070,7 +1070,9 @@ public class ApplicationFormDaoHelper {
 
 	public void syncApprovedApplicantsFromErp() {
 		// Get all Processed applications
-		List<String> allErpCodes = applicationDao.getAllProcessedApplicationFileNos();
+		// List<String> allErpCodes =
+		// applicationDao.getAllProcessedApplicationFileNos();
+		List<String> allErpCodes = Arrays.asList("C/20293", "C/20292", "C/20390");
 		List<ApplicationSyncPayLoad> syncedApplicants = new ArrayList<>();
 		int successCounter = 0;
 		int totalToBeSynced = 0;
@@ -1112,7 +1114,6 @@ public class ApplicationFormDaoHelper {
 								if (user != null) {
 									user.setMemberNo(appSync.getReg_no());
 									if (user.getMember() != null) {
-
 										m = user.getMember();
 										m.setMemberNo(appSync.getReg_no());
 										m.setRegistrationDate(application.getCreated());

@@ -66,7 +66,7 @@ public class ApplicationFormDao extends BaseDao {
 	public List<String> getAllProcessedApplicationFileNos() {
 		StringBuffer sql = new StringBuffer(
 				" select erpCode from `application form header` where applicationStatus=\"PROCESSING\" "
-						+ " and erpCode IS NOT NULL");
+						+ " and erpCode IS NOT NULL and erpCode<>''");
 		Query query = getEntityManager().createNativeQuery(sql.toString());
 		List<String> allErpCodes = getResultList(query);
 
@@ -415,9 +415,10 @@ public class ApplicationFormDao extends BaseDao {
 
 	public ApplicationFormHeader findByErpCode(String applicationNo_) {
 		String query = "from ApplicationFormHeader u where u.erpCode = :applicationNo";
-		return getSingleResultOrNull(getEntityManager().createQuery(query).setParameter("applicationNo", applicationNo_));
+		return getSingleResultOrNull(
+				getEntityManager().createQuery(query).setParameter("applicationNo", applicationNo_));
 	}
-	
+
 	@Override
 	public <T> T getSingleResultOrNull(Query query) throws RuntimeException {
 		T value = null;
