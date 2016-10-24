@@ -1070,9 +1070,9 @@ public class ApplicationFormDaoHelper {
 
 	public void syncApprovedApplicantsFromErp() {
 		// Get all Processed applications
-		// List<String> allErpCodes =
-		// applicationDao.getAllProcessedApplicationFileNos();
-		List<String> allErpCodes = Arrays.asList("C/20293", "C/20292", "C/20390");
+		List<String> allErpCodes = applicationDao.getAllProcessedApplicationFileNos();
+		// List<String> allErpCodes = Arrays.asList("C/20293", "C/20292",
+		// "C/20390");
 		List<ApplicationSyncPayLoad> syncedApplicants = new ArrayList<>();
 		int successCounter = 0;
 		int totalToBeSynced = 0;
@@ -1096,34 +1096,76 @@ public class ApplicationFormDaoHelper {
 						syncPayLoad.setEmail(jObject.getString("email"));
 						syncPayLoad.setReg_no(jObject.getString("reg_no"));
 						syncedApplicants.add(syncPayLoad);
-						logger.info("Added >>" + syncPayLoad.getReg_no());
 					}
 
 					for (ApplicationSyncPayLoad appSync : syncedApplicants) {
-						logger.info("Syncing>>" + appSync.getReg_no());
 						// Update this Applications
-						ApplicationFormHeader application = applicationDao.findByErpCode(appSync.getApplicationNo_());
+						logger.info("Finding application:" + appSync.getApplicationNo_());
+						List<ApplicationFormHeader> applications = applicationDao
+								.findByErpCode(appSync.getApplicationNo_());
 
-						if (application != null) {
-							// Find the User and Member Object and User
-							if (application.getUserRefId() != null) {
-								application.setApplicationStatus(ApplicationStatus.APPROVED);
-								logger.info("marking this application as approved:" + application.getSurname());
-								User user = userDao.findByUserId(application.getUserRefId(), false);
-								Member m = null;
-								if (user != null) {
-									user.setMemberNo(appSync.getReg_no());
-									if (user.getMember() != null) {
-										m = user.getMember();
-										m.setMemberNo(appSync.getReg_no());
-										m.setRegistrationDate(application.getCreated());
-										userDao.save(m);
-
-										// Save all this parameters
-										// Applicant, Member, User
-										applicationDao.save(application);
-										userDao.save(user);
-										successCounter = successCounter + 1;
+						ApplicationFormHeader application = null;
+						if (applications.size() > 0) {
+							application = applications.get(0);
+							if (application != null) {
+								// Find the User and Member Object and User
+								if (application.getUserRefId() != null) {
+									logger.info("marking this application as approved:" + application.getRefId());
+									application.setApplicationStatus(ApplicationStatus.APPROVED);
+									User user = userDao.findByUserId(application.getUserRefId(), false);
+									Member m = null;
+									if (user != null) {
+										user.setMemberNo(appSync.getReg_no());
+										userDao.deleteAllRolesForCurrentUser(user.getId());
+										Role role = roleDao.getByName("MEMBER");
+										if (role != null) {
+											user.addRole(role);
+											logger.info("Changing the user role from basic_member to member.");
+										}
+										if (user.getMember() != null) {
+											m = user.getMember();
+											m.setMemberNo(appSync.getReg_no());
+											m.setRegistrationDate(application.getCreated());
+											m.setUserRefId(user.getRefId());
+											m.setMemberShipStatus(MembershipStatus.ACTIVE);
+											m.setMemberQrCode(m.getRefId());
+											userDao.save(m);
+											logger.info("Updating member record.");
+											// Save all this parameters
+											// Applicant, Member, User
+											applicationDao.save(application);
+											userDao.save(user);
+											logger.info("Updating user record.");
+											successCounter = successCounter + 1;
+										} else {
+											logger.info("Member Record is Null for user with memberNo:"
+													+ user.getMemberNo()
+													+ ". Checking if the member record exist or create a new record.");
+											// Check if there was a previous
+											// member
+											// Record created
+											Member member = null;
+											member = memberDao.findByMemberNo(appSync.getReg_no());
+											if (member == null) {
+												member = new Member();
+												logger.info("Member doesn't exist. Creating new MemberRecord");
+											} else {
+												logger.info("Member already exist. Just ammending it.");
+											}
+											member.setMemberNo(appSync.getReg_no());
+											member.setRegistrationDate(application.getCreated());
+											member.setUserRefId(user.getRefId());
+											member.setMemberShipStatus(MembershipStatus.ACTIVE);
+											member.setMemberQrCode(member.getRefId());
+											userDao.save(member);
+											user.setMember(member);
+											// Save all this parameters
+											// Applicant, Member, User
+											applicationDao.save(application);
+											userDao.save(user);
+											logger.info("Updating user record.");
+											successCounter = successCounter + 1;
+										}
 									}
 								}
 							}

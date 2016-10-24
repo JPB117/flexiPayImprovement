@@ -413,10 +413,9 @@ public class ApplicationFormDao extends BaseDao {
 		return memberImports;
 	}
 
-	public ApplicationFormHeader findByErpCode(String applicationNo_) {
+	public List<ApplicationFormHeader> findByErpCode(String applicationNo_) {
 		String query = "from ApplicationFormHeader u where u.erpCode = :applicationNo";
-		return getSingleResultOrNull(
-				getEntityManager().createQuery(query).setParameter("applicationNo", applicationNo_));
+		return getResultList(getEntityManager().createQuery(query).setParameter("applicationNo", applicationNo_));
 	}
 
 	@Override
