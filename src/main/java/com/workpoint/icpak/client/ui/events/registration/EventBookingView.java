@@ -616,7 +616,6 @@ public class EventBookingView extends ViewImpl implements EventBookingPresenter.
 				}
 				spnDays2Go.setInnerText(DateUtils.getTimeDifference(new Date(), startDate));
 			}
-
 		}
 	}
 

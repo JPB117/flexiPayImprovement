@@ -69,11 +69,13 @@ public class EventsDaoHelper {
 	public EventDto getEventById(String eventId) {
 		Event event = dao.getByEventId(eventId);
 		EventDto eventDto = event.toDto();
-
 		Date today = new Date();
 		if (today.after(event.getStartDate()) || event.getStatus() == EventStatus.CLOSED) {
-			logger.info(event.getName() + " is a past event. Booking closed.");
+			logger.info(event.getName() + " is a past event. Booking period has ended!");
 			eventDto.setIsEventActive(0);
+		} else {
+			logger.info(event.getName() + " is within timeline. Booking still ongoing!");
+			eventDto.setIsEventActive(1);
 		}
 		return eventDto;
 	}
