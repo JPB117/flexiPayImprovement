@@ -600,8 +600,8 @@ public class EventBookingView extends ViewImpl implements EventBookingPresenter.
 	}
 
 	@Override
-	public void setEvent(EventDto event) {
-		if (event.getIsEventActive() == 0) {
+	public void setEvent(EventDto event, boolean byPassChecks) {
+		if (event.getIsEventActive() == 0 && byPassChecks == false) {
 			spnClosedIssues.setInnerText("The booking period for " + event.getName() + " has ended.");
 			showClosedEvent(true);
 		} else {
@@ -822,7 +822,7 @@ public class EventBookingView extends ViewImpl implements EventBookingPresenter.
 			panelPastEvent.addStyleName("hide");
 			divHeaderTopics.removeClassName("hide");
 			divHeaderTopics.addClassName("visible-lg");
-			divCategories.addClassName("active");
+			divPackage.addClassName("active");
 			divWizardFooter.removeClassName("hide");
 		}
 	}

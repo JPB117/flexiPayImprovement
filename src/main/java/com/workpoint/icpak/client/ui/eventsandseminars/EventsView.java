@@ -226,7 +226,7 @@ public class EventsView extends ViewImpl implements EventsPresenter.IEventsView 
 		csvImport.setUploadContext(EventsView.this.event.getRefId());
 		spnEventTitle.setInnerText(event.getName());
 		if (AppContext.isCurrentUserEventEdit()) {
-			aCreateBooking.setHref("#eventBooking;eventId=" + event.getRefId());
+			aCreateBooking.setHref("#eventBooking;eventId=" + event.getRefId() + ";byPass=true;");
 		}
 		aBookingstab.setHref("#events;eventId=" + event.getRefId() + ";page=booking");
 		aSummarytab.setHref("#events;eventId=" + event.getRefId() + ";page=summary");

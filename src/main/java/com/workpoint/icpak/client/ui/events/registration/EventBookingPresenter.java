@@ -77,7 +77,7 @@ public class EventBookingPresenter extends Presenter<EventBookingPresenter.MyVie
 
 		void addError(String error);
 
-		void setEvent(EventDto event);
+		void setEvent(EventDto event, boolean byPassChecks);
 
 		BookingDto getBooking();
 
@@ -185,6 +185,7 @@ public class EventBookingPresenter extends Presenter<EventBookingPresenter.MyVie
 
 	private int requestCounter = 0;
 	private int responseCounter = 0;
+	private String isAdmin = "";
 
 	@Inject
 	public EventBookingPresenter(final EventBus eventBus, final MyView view, final MyProxy proxy,
@@ -401,6 +402,7 @@ public class EventBookingPresenter extends Presenter<EventBookingPresenter.MyVie
 		super.prepareFromRequest(request);
 		eventId = request.getParameter("eventId", "");
 		bookingId = request.getParameter("bookingId", null);
+		isAdmin = request.getParameter("byPass", "false");
 		String cancel = request.getParameter("cancel", null);
 
 		countriesResource.withCallback(new AbstractAsyncCallback<List<Country>>() {
@@ -411,7 +413,6 @@ public class EventBookingPresenter extends Presenter<EventBookingPresenter.MyVie
 						return o1.getDisplayName().compareTo(o2.getDisplayName());
 					}
 				});
-
 				getView().setCountries(countries);
 			};
 
@@ -425,7 +426,8 @@ public class EventBookingPresenter extends Presenter<EventBookingPresenter.MyVie
 			@Override
 			public void onSuccess(EventDto event) {
 				EventBookingPresenter.this.event = event;
-				getView().setEvent(event);
+				boolean byPassChecks = isAdmin.equals("true") ? true : false;
+				getView().setEvent(event, byPassChecks);
 			}
 
 			@Override
