@@ -153,7 +153,7 @@ public class DelegateTableRow extends RowWidget {
 
 		if (delegate != null) {
 			final String editUrl = "#eventBooking;eventId=" + event.getRefId() + ";bookingId="
-					+ delegate.getBookingRefId();
+					+ delegate.getBookingRefId() + ";byPass=true";
 			// aEditBooking.setHref(editUrl);
 			aEditBooking.addClickHandler(new ClickHandler() {
 				@Override

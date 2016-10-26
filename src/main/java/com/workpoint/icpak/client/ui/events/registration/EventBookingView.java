@@ -600,22 +600,19 @@ public class EventBookingView extends ViewImpl implements EventBookingPresenter.
 	}
 
 	@Override
-	public void setEvent(EventDto event, boolean byPassChecks) {
-		if (event.getIsEventActive() == 0 && byPassChecks == false) {
+	public void setEvent(EventDto event) {
+		if (event.getIsEventActive() == 0) {
 			spnClosedIssues.setInnerText("The booking period for " + event.getName() + " has ended.");
-			showClosedEvent(true);
-		} else {
-			showClosedEvent(false);
-			spnEventName.setInnerText(event.getName());
-			if (event.getStartDate() != null) {
-				Date startDate = DateUtils.parse(event.getStartDate(), DateUtils.FULLTIMESTAMP);
-				spnStartDate.setInnerText(DateUtils.DATEFORMAT.format(startDate));
-				if (event.getEndDate() != null) {
-					Date endDate = DateUtils.parse(event.getEndDate(), DateUtils.FULLTIMESTAMP);
-					spnDuration.setInnerText(DateUtils.getTimeDifference(startDate, endDate));
-				}
-				spnDays2Go.setInnerText(DateUtils.getTimeDifference(new Date(), startDate));
+		}
+		spnEventName.setInnerText(event.getName());
+		if (event.getStartDate() != null) {
+			Date startDate = DateUtils.parse(event.getStartDate(), DateUtils.FULLTIMESTAMP);
+			spnStartDate.setInnerText(DateUtils.DATEFORMAT.format(startDate));
+			if (event.getEndDate() != null) {
+				Date endDate = DateUtils.parse(event.getEndDate(), DateUtils.FULLTIMESTAMP);
+				spnDuration.setInnerText(DateUtils.getTimeDifference(startDate, endDate));
 			}
+			spnDays2Go.setInnerText(DateUtils.getTimeDifference(new Date(), startDate));
 		}
 	}
 
@@ -810,18 +807,18 @@ public class EventBookingView extends ViewImpl implements EventBookingPresenter.
 	}
 
 	public void showClosedEvent(boolean show) {
+		clearAll();
 		if (show) {
-			clearAll();
+			divCancellation.addClassName("active");
 			panelPastEvent.removeStyleName("hide");
 			divHeaderTopics.addClassName("hide");
 			divHeaderTopics.removeClassName("visible-lg");
-			divCancellation.addClassName("active");
 			divWizardFooter.addClassName("hide");
 		} else {
+			setActivePage(0);
 			panelPastEvent.addStyleName("hide");
 			divHeaderTopics.removeClassName("hide");
 			divHeaderTopics.addClassName("visible-lg");
-			divPackage.addClassName("active");
 			divWizardFooter.removeClassName("hide");
 		}
 	}

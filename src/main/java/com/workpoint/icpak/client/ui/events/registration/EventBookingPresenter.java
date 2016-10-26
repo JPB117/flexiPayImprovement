@@ -77,7 +77,7 @@ public class EventBookingPresenter extends Presenter<EventBookingPresenter.MyVie
 
 		void addError(String error);
 
-		void setEvent(EventDto event, boolean byPassChecks);
+		void setEvent(EventDto event);
 
 		BookingDto getBooking();
 
@@ -124,6 +124,8 @@ public class EventBookingPresenter extends Presenter<EventBookingPresenter.MyVie
 		void showBookingCancelled(boolean show);
 
 		HasClickHandlers getUndoCancellationButton();
+
+		void showClosedEvent(boolean show);
 
 	}
 
@@ -404,6 +406,7 @@ public class EventBookingPresenter extends Presenter<EventBookingPresenter.MyVie
 		bookingId = request.getParameter("bookingId", null);
 		isAdmin = request.getParameter("byPass", "false");
 		String cancel = request.getParameter("cancel", null);
+		final boolean byPassChecks = isAdmin.equals("true") ? true : false;
 
 		countriesResource.withCallback(new AbstractAsyncCallback<List<Country>>() {
 			public void onSuccess(List<Country> countries) {
@@ -426,19 +429,21 @@ public class EventBookingPresenter extends Presenter<EventBookingPresenter.MyVie
 			@Override
 			public void onSuccess(EventDto event) {
 				EventBookingPresenter.this.event = event;
-				boolean byPassChecks = isAdmin.equals("true") ? true : false;
-				getView().setEvent(event, byPassChecks);
+				getView().setEvent(event);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				StringBuffer buffer = new StringBuffer();
-				for (StackTraceElement elem : caught.getStackTrace()) {
-					buffer.append(elem.getLineNumber() + ">>" + elem.getClassName() + ">>" + elem.getMethodName());
-				}
 				super.onFailure(caught);
+				Window.alert("The was a problem loading the event Info");
 			}
 		}).getById(eventId);
+
+		// Check if this is an Admin; If NOT stop the execution
+		getView().showClosedEvent(!byPassChecks);
+		if (!byPassChecks) {
+			return;
+		}
 
 		// Editing a Booking - We are editing a booking
 		if (bookingId != null) {
