@@ -440,10 +440,10 @@ public class EventBookingPresenter extends Presenter<EventBookingPresenter.MyVie
 		}).getById(eventId);
 
 		// Check if this is an Admin; If NOT stop the execution
-		getView().showClosedEvent(!byPassChecks);
-		if (!byPassChecks) {
-			return;
-		}
+		// if (!byPassChecks) {
+		// getView().showClosedEvent(!byPassChecks);
+		// return;
+		// }
 
 		// Editing a Booking - We are editing a booking
 		if (bookingId != null) {
