@@ -18,7 +18,6 @@ import com.workpoint.icpak.client.ui.admin.TabDataExt;
 import com.workpoint.icpak.client.ui.events.ToggleSideBarEvent;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
 import com.workpoint.icpak.client.ui.security.MemberGateKeeper;
-import com.workpoint.icpak.client.ui.security.TestingGateKeeper;
 import com.workpoint.icpak.shared.api.MemberResource;
 
 public class CPDOnlinePresenter extends Presenter<CPDOnlinePresenter.ICPDView, CPDOnlinePresenter.ICPDProxy> {
@@ -28,12 +27,12 @@ public class CPDOnlinePresenter extends Presenter<CPDOnlinePresenter.ICPDView, C
 
 	@ProxyCodeSplit
 	@NameToken(NameTokens.cpdOnline)
-	@UseGatekeeper(TestingGateKeeper.class)
+	@UseGatekeeper(MemberGateKeeper.class)
 	public interface ICPDProxy extends TabContentProxyPlace<CPDOnlinePresenter> {
 	}
 
 	@TabInfo(container = HomePresenter.class)
-	static TabData getTabLabel(TestingGateKeeper adminGatekeeper) {
+	static TabData getTabLabel(MemberGateKeeper adminGatekeeper) {
 		TabDataExt data = new TabDataExt("CPD Online", "fa fa-book", 6, adminGatekeeper, true);
 		return data;
 	}
