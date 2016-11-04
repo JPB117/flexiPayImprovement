@@ -14,12 +14,15 @@ import javax.xml.bind.annotation.XmlType;
 public class CreditCardResponse implements Serializable {
 
 	// {
-	// "content":{"invalid_parameters":"'Card Number must be exactly 16 characters in length.',"
+	// "content":{"invalid_parameters":"'Card Number must be exactly 16
+	// characters in length.',"
 	// +
-	// "'Address1 is required.','Expiry Date must be exactly 6 characters in length.',"
+	// "'Address1 is required.','Expiry Date must be exactly 6 characters in
+	// length.',"
 	// +
 	// "'Country is required.','State is required.','Zip Code is required.'," +
-	// "'Security Code can not exceed 4 characters in length.','Currency is required.'"},
+	// "'Security Code can not exceed 4 characters in length.','Currency is
+	// required.'"},
 	//
 	// "status":{"status_code":2000,
 	// "status_description":"Invalid Parameters",
@@ -78,9 +81,8 @@ public class CreditCardResponse implements Serializable {
 
 	@Override
 	public String toString() {
-		return "CreditCardResponse{" + "invalidParams='" + invalidParams + '\''
-				+ ", statusCode='" + statusCode + '\'' + ", statusDesc='"
-				+ statusDesc + '\'' + ", status='" + status + '\'' + '}';
+		return "CreditCardResponse{" + "invalidParams='" + invalidParams + '\'' + ", statusCode='" + statusCode + '\''
+				+ ", statusDesc='" + statusDesc + '\'' + ", status='" + status + '\'' + '}';
 	}
 
 	public void setTransactionIndex(String transactionIndex) {

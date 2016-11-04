@@ -13,6 +13,7 @@ import com.google.inject.Inject;
 import com.icpak.rest.dao.helper.TransactionDaoHelper;
 import com.workpoint.icpak.server.payment.CreditCardServiceImpl;
 import com.workpoint.icpak.shared.model.CreditCardDto;
+import com.workpoint.icpak.shared.model.CreditCardResponse;
 import com.workpoint.icpak.tests.base.AbstractDaoTest;
 
 /**
@@ -25,23 +26,23 @@ public class TestCreditCard extends AbstractDaoTest {
 	@Inject
 	TransactionDaoHelper trxDaoHelper;
 
-	// @Test
+	@Test
 	public void testCreditCard() throws Exception {
 		CreditCardDto creditCardDetails = new CreditCardDto();
 		creditCardDetails.setAddress1("Nairobi");
-		creditCardDetails.setCard_holder_name("Tom Muriranja");
+		creditCardDetails.setCard_holder_name("Tom K Muriranja");
 		creditCardDetails.setAmount("10");
 		creditCardDetails.setCurrency("KES");
 		creditCardDetails.setCountry("KE");
-		creditCardDetails.setCard_number("4574670000197093");
-		creditCardDetails.setExpiry("062017");
-		creditCardDetails.setSecurity_code("238");
+		creditCardDetails.setCard_number("");
+		creditCardDetails.setExpiry("012018");
+		creditCardDetails.setSecurity_code("773");
 		creditCardDetails.setZip("0100");
 		creditCardDetails.setAddress2("");
 		creditCardDetails.setState("Nairobi");
 
-		// CreditCardResponse response = creditCardService
-		// .authorizeCardTransaction(creditCardDetails);
+		CreditCardResponse response = creditCardService.authorizeCardTransaction(creditCardDetails);
+		System.err.println("Status Code:" + response.getStatusCode() + ">>Status Desc:" + response.getStatusDesc());
 
 		// if (response.getStatusCode().equals("0000")) {
 		// trxDaoHelper.receivePaymentUsingInvoiceNo("INV-0033", "N/A", "N/A",
@@ -54,7 +55,7 @@ public class TestCreditCard extends AbstractDaoTest {
 
 	// var HashData = SECURE_SECRET;
 
-	@Test
+	// @Test
 	public void createOpenAPIConnection() {
 		HttpsURLConnection con = null;
 		String MerchantId = "00000147";
@@ -92,7 +93,7 @@ public class TestCreditCard extends AbstractDaoTest {
 				con.addRequestProperty("content-type", "application/xml; charset=UTF-8");
 				con.addRequestProperty("content-length", Integer.toString(urlAppenddata.length()));
 			}
-			//con.connect();
+			// con.connect();
 		} catch (Exception e) {
 			System.out.println("Exception found in :" + e.getMessage());
 		}

@@ -17,11 +17,11 @@ import com.workpoint.icpak.client.security.CurrentUser;
 import com.workpoint.icpak.client.ui.admin.TabDataExt;
 import com.workpoint.icpak.client.ui.events.ToggleSideBarEvent;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
+import com.workpoint.icpak.client.ui.security.MemberGateKeeper;
 import com.workpoint.icpak.client.ui.security.TestingGateKeeper;
 import com.workpoint.icpak.shared.api.MemberResource;
 
-public class CPDOnlinePresenter extends
-		Presenter<CPDOnlinePresenter.ICPDView, CPDOnlinePresenter.ICPDProxy> {
+public class CPDOnlinePresenter extends Presenter<CPDOnlinePresenter.ICPDView, CPDOnlinePresenter.ICPDProxy> {
 
 	public interface ICPDView extends View {
 	}
@@ -34,8 +34,7 @@ public class CPDOnlinePresenter extends
 
 	@TabInfo(container = HomePresenter.class)
 	static TabData getTabLabel(TestingGateKeeper adminGatekeeper) {
-		TabDataExt data = new TabDataExt("CPD Online", "fa fa-book", 6,
-				adminGatekeeper, true);
+		TabDataExt data = new TabDataExt("CPD Online", "fa fa-book", 6, adminGatekeeper, true);
 		return data;
 	}
 
@@ -43,10 +42,8 @@ public class CPDOnlinePresenter extends
 	protected final CurrentUser currentUser;
 
 	@Inject
-	public CPDOnlinePresenter(final EventBus eventBus, final ICPDView view,
-			final ICPDProxy proxy,
-			final ResourceDelegate<MemberResource> memberDelegate,
-			final CurrentUser currentUser) {
+	public CPDOnlinePresenter(final EventBus eventBus, final ICPDView view, final ICPDProxy proxy,
+			final ResourceDelegate<MemberResource> memberDelegate, final CurrentUser currentUser) {
 		super(eventBus, view, proxy, HomePresenter.SLOT_SetTabContent);
 		this.memberDelegate = memberDelegate;
 		this.currentUser = currentUser;
@@ -56,7 +53,7 @@ public class CPDOnlinePresenter extends
 	protected void onBind() {
 		super.onBind();
 	}
-	
+
 	@Override
 	public void prepareFromRequest(PlaceRequest request) {
 		super.prepareFromRequest(request);

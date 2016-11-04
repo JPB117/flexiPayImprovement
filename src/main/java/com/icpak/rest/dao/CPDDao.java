@@ -240,8 +240,8 @@ public class CPDDao extends BaseDao {
 			if (searchTerm != null) {
 				if (!searchTerm.equals("")) {
 					sql.append(" and (u.fullName like :searchTerm or" + " c.title like :searchTerm or "
-							+ " c.memberRegistrationNo like :searchTerm " + 
-							(isReturnArchive==true?"":" or c.id like :searchTerm)"));
+							+ " c.memberRegistrationNo like :searchTerm "
+							+ (isReturnArchive == true ? "" : " or c.id like :searchTerm") + ")");
 
 					params.put("searchTerm", "%" + searchTerm + "%");
 				}
