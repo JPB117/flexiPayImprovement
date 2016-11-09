@@ -28,11 +28,9 @@ import com.workpoint.icpak.shared.model.events.DelegateDto;
 public class GetDelegatesReport {
 	Logger logger = Logger.getLogger(GetDelegatesReport.class);
 
-	private static final String[] titles = { "ICPAK MEMBER", "MEMBER NO",
-			"ERN NO", "DELEGATE NAMES", "DELEGATE PHONENUMBER", "EMAIL",
-			"BOOKING DATE", "SPONSOR", "CONTACT PERSON", "CONTACT EMAIL",
-			"SPONSOR TEL", "ACCOMODATION", "PAID", "RECEIPT", "LPO NO",
-			"CREDIT", "CLEARANCE NO", "ATTEND" };
+	private static final String[] titles = { "ICPAK MEMBER", "MEMBER NO", "ERN NO", "DELEGATE NAMES",
+			"DELEGATE PHONENUMBER", "EMAIL", "BOOKING DATE", "SPONSOR", "CONTACT PERSON", "CONTACT EMAIL",
+			"SPONSOR TEL", "ACCOMODATION", "PAID", "RECEIPT", "LPO NO", "CREDIT", "CLEARANCE NO", "ATTEND" };
 
 	static Map<String, CellStyle> styles = null;
 	static Map<String, Font> fonts = null;
@@ -50,14 +48,13 @@ public class GetDelegatesReport {
 		return name;
 	}
 
-	public GetDelegatesReport(List<DelegateDto> delegateDtos, String docType,
-			String eventName) {
+	public GetDelegatesReport(List<DelegateDto> delegateDtos, String docType, String eventName) {
 		logger.error(" === dto size === " + delegateDtos.size());
 
 		name = eventName + "_Report" + "." + docType;
 		name = name.trim();
-		name = name.replaceAll("[/\\:*?<>|\"]", "");
-
+		name = name.replaceAll("[/\\:\\\\*?<>|\"]", "");
+		logger.info("Stripped Name:" + name);
 		fonts = createFonts(wb);
 		styles = createStyles(wb);
 
@@ -85,16 +82,14 @@ public class GetDelegatesReport {
 		headerFont.setFontHeightInPoints((short) 14);
 		style = createBorderedStyle(wb);
 		style.setAlignment(CellStyle.ALIGN_CENTER);
-		style.setFillForegroundColor(IndexedColors.LIGHT_CORNFLOWER_BLUE
-				.getIndex());
+		style.setFillForegroundColor(IndexedColors.LIGHT_CORNFLOWER_BLUE.getIndex());
 		style.setFillPattern(CellStyle.SOLID_FOREGROUND);
 		style.setFont(headerFont);
 		styles.put("header", style);
 
 		style = createBorderedStyle(wb);
 		style.setAlignment(CellStyle.ALIGN_CENTER);
-		style.setFillForegroundColor(IndexedColors.LIGHT_CORNFLOWER_BLUE
-				.getIndex());
+		style.setFillForegroundColor(IndexedColors.LIGHT_CORNFLOWER_BLUE.getIndex());
 		style.setFillPattern(CellStyle.SOLID_FOREGROUND);
 		style.setFont(headerFont);
 		style.setDataFormat(df.getFormat("d-mmm"));
@@ -231,8 +226,7 @@ public class GetDelegatesReport {
 		return fonts;
 	}
 
-	private void generate(Workbook workbook, String sheetName,
-			List<DelegateDto> delegateDtos) {
+	private void generate(Workbook workbook, String sheetName, List<DelegateDto> delegateDtos) {
 		Sheet sheet = workbook.createSheet(sheetName);
 
 		// sheet.setDisplayGridlines(false);
@@ -281,8 +275,7 @@ public class GetDelegatesReport {
 		sheet.setZoom(3, 4);
 	}
 
-	private static int paintRows(List<DelegateDto> data, int rownum,
-			CreationHelper helper, Sheet sheet) {
+	private static int paintRows(List<DelegateDto> data, int rownum, CreationHelper helper, Sheet sheet) {
 		if (data == null || data.isEmpty()) {
 			return rownum - 1;
 		}
@@ -298,8 +291,7 @@ public class GetDelegatesReport {
 		return --rownum;
 	}
 
-	private static void bindData(DelegateDto detail, CreationHelper helper,
-			Sheet sheet, Row row, Integer i) {
+	private static void bindData(DelegateDto detail, CreationHelper helper, Sheet sheet, Row row, Integer i) {
 		SimpleDateFormat formater = new SimpleDateFormat("dd/MM/yyyy");
 
 		// {"ICPAK MEMBER", "MEMBER NO", "ERN NO",
@@ -327,8 +319,7 @@ public class GetDelegatesReport {
 				if (detail.getFullName() != null) {
 					cell.setCellValue(detail.getFullName());
 				} else {
-					cell.setCellValue(detail.getSurname() + " "
-							+ detail.getOtherNames());
+					cell.setCellValue(detail.getSurname() + " " + detail.getOtherNames());
 				}
 			}
 			if (j == 4) {
@@ -362,14 +353,12 @@ public class GetDelegatesReport {
 			}
 
 			if (j == 11) {
-				cell.setCellValue((detail.getHotel() == null ? "None" : detail
-						.getHotel()));
+				cell.setCellValue((detail.getHotel() == null ? "None" : detail.getHotel()));
 			}
 
 			// ,"PAID","RECEIPT" ,"LPO NO", "CREDIT","CLEARANCE NO","ATTEND"}
 			if (j == 12) {
-				determinePaymentStatus(detail.getBookingPaymentStatus(),
-						detail.getDelegatePaymentStatus(), cell);
+				determinePaymentStatus(detail.getBookingPaymentStatus(), detail.getDelegatePaymentStatus(), cell);
 
 			}
 
@@ -398,12 +387,10 @@ public class GetDelegatesReport {
 
 	}
 
-	private static void determinePaymentStatus(
-			PaymentStatus bookingPaymentStatus,
-			PaymentStatus delegatePaymentStatus, Cell cell) {
+	private static void determinePaymentStatus(PaymentStatus bookingPaymentStatus, PaymentStatus delegatePaymentStatus,
+			Cell cell) {
 		if (bookingPaymentStatus != null) {
-			if (bookingPaymentStatus == PaymentStatus.PAID
-					|| bookingPaymentStatus == PaymentStatus.Credit) {
+			if (bookingPaymentStatus == PaymentStatus.PAID || bookingPaymentStatus == PaymentStatus.Credit) {
 				cell.setCellValue(bookingPaymentStatus.getDisplayName());
 			} else {
 				if (delegatePaymentStatus == null) {
@@ -415,13 +402,10 @@ public class GetDelegatesReport {
 		}
 	}
 
-	public void generateDelegateReport(List<DelegateDto> delegateDtos,
-			String docType) throws Exception {
-		byte[] bites = new GetDelegatesReport(delegateDtos, docType, "My Event")
-				.getBytes();
+	public void generateDelegateReport(List<DelegateDto> delegateDtos, String docType) throws Exception {
+		byte[] bites = new GetDelegatesReport(delegateDtos, docType, "My Event").getBytes();
 
-		FileOutputStream os = new FileOutputStream(new File(
-				"delegatesReport.xlsx"));
+		FileOutputStream os = new FileOutputStream(new File("delegatesReport.xlsx"));
 		os.write(bites);
 		os.close();
 	}

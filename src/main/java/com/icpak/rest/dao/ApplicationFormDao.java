@@ -349,6 +349,12 @@ public class ApplicationFormDao extends BaseDao {
 		Query query = getEntityManager().createNativeQuery(sql);
 
 		List<Object[]> rows = getResultList(query, 1, 100);
+		
+		/*
+		String message = "Karagita Welfare Says: Dear " + name + ", Your total payments is Ksh " + paid
+				+ ". Your current balance is Ksh " + balance + ". Please pay before 6th August 2016. Thank You.";
+		
+		*/
 
 		for (Object[] row : rows) {
 			int i = 0;

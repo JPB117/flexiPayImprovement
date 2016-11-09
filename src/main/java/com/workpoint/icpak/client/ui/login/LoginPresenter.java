@@ -43,8 +43,7 @@ import com.workpoint.icpak.shared.model.auth.CurrentUserDto;
 import com.workpoint.icpak.shared.model.auth.LogInAction;
 import com.workpoint.icpak.shared.model.auth.LogInResult;
 
-public class LoginPresenter extends
-		Presenter<LoginPresenter.ILoginView, LoginPresenter.ILoginProxy> {
+public class LoginPresenter extends Presenter<LoginPresenter.ILoginView, LoginPresenter.ILoginProxy> {
 
 	public interface ILoginView extends View {
 		String getUsername();
@@ -91,8 +90,7 @@ public class LoginPresenter extends
 	@Inject
 	PlaceManager placeManager;
 
-	private static final Logger LOGGER = Logger.getLogger(LoginPresenter.class
-			.getName());
+	private static final Logger LOGGER = Logger.getLogger(LoginPresenter.class.getName());
 	private ResourceDelegate<UsersResource> usersDelegate;
 
 	private ResourceDelegate<SessionResource> sessionResource;
@@ -100,9 +98,8 @@ public class LoginPresenter extends
 	private String redirect = "";
 
 	@Inject
-	public LoginPresenter(final EventBus eventBus, final ILoginView view,
-			final ILoginProxy proxy, final CurrentUser currentUser,
-			ResourceDelegate<UsersResource> usersDelegate,
+	public LoginPresenter(final EventBus eventBus, final ILoginView view, final ILoginProxy proxy,
+			final CurrentUser currentUser, ResourceDelegate<UsersResource> usersDelegate,
 			ResourceDelegate<SessionResource> sessionResource) {
 		super(eventBus, view, proxy);
 		this.usersDelegate = usersDelegate;
@@ -132,8 +129,7 @@ public class LoginPresenter extends
 			@Override
 			public void onClick(ClickEvent event) {
 				if (getView().isValid()) {
-					callServerLoginAction(new LogInAction(getView()
-							.getUsername(), getView().getPassword()));
+					callServerLoginAction(new LogInAction(getView().getUsername(), getView().getPassword()));
 				}
 			}
 		});
@@ -143,8 +139,7 @@ public class LoginPresenter extends
 			public void onKeyDown(KeyDownEvent event) {
 				if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
 					if (getView().isValid()) {
-						callServerLoginAction(new LogInAction(getView()
-								.getUsername(), getView().getPassword()));
+						callServerLoginAction(new LogInAction(getView().getUsername(), getView().getPassword()));
 					}
 				}
 			}
@@ -222,34 +217,27 @@ public class LoginPresenter extends
 		if (redirect.equals("")) {
 			if (AppContext.isCurrentUserAdmin()) {
 				redirect = NameTokens.getAdminDefaultPage();
-			} else if (AppContext.isCurrentUserEventEdit()
-					|| AppContext.isCurrentUserEventRead()) {
+			} else if (AppContext.isCurrentUserEventEdit() || AppContext.isCurrentUserEventRead()) {
 				redirect = NameTokens.events;
-			} else if (AppContext.isCurrentUserUsersEdit()
-					|| AppContext.isCurrentUserUsersRead()) {
+			} else if (AppContext.isCurrentUserUsersEdit() || AppContext.isCurrentUserUsersRead()) {
 				redirect = NameTokens.usermgt;
-			} else if (AppContext.isCurrentUserApplicationsEdit()
-					|| AppContext.isCurrentUserApplicationsRead()) {
+			} else if (AppContext.isCurrentUserApplicationsEdit() || AppContext.isCurrentUserApplicationsRead()) {
 				redirect = NameTokens.members;
-			} else if (AppContext.isCurrentUserCPDEdit()
-					|| AppContext.isCurrentUserCPDRead()) {
+			} else if (AppContext.isCurrentUserCPDEdit() || AppContext.isCurrentUserCPDRead()) {
 				redirect = NameTokens.cpd;
-			} else if (AppContext.isCurrentUserFinanceEdit()
-					|| AppContext.isCurrentUserFinanceRead()) {
+			} else if (AppContext.isCurrentUserFinanceEdit() || AppContext.isCurrentUserFinanceRead()) {
 				redirect = NameTokens.invoices;
 			} else {
 				redirect = NameTokens.getOnLoginDefaultPage();
 			}
 		}
-		String token = placeManager.getCurrentPlaceRequest().getParameter(
-				ParameterTokens.REDIRECT, redirect);
-		String type = placeManager.getCurrentPlaceRequest().getParameter(
-				ParameterTokens.REDIRECTTYPE, redirectType);
-		String resourceValue = placeManager.getCurrentPlaceRequest()
-				.getParameter(ParameterTokens.RESOURCE, resource);
+		String token = placeManager.getCurrentPlaceRequest().getParameter(ParameterTokens.REDIRECT, redirect);
+		String type = placeManager.getCurrentPlaceRequest().getParameter(ParameterTokens.REDIRECTTYPE, redirectType);
+		String resourceValue = placeManager.getCurrentPlaceRequest().getParameter(ParameterTokens.RESOURCE, resource);
 		if (type.equals("website")) {
-			Window.Location.replace("https://icpak.com/resource/"
-					+ resourceValue);
+			Window.Location.replace("https://www.icpak.com/resource/" + resourceValue);
+		} else if (type.equals("root")) {
+			Window.Location.replace("https://www.icpak.com/" + token);
 		} else {
 			PlaceRequest placeRequest = new Builder().nameToken(token).build();
 			placeManager.revealPlace(placeRequest);
@@ -264,8 +252,7 @@ public class LoginPresenter extends
 		Date expires = DateUtils.addDays(new Date(), REMEMBER_ME_DAYS);
 		boolean secure = true;
 
-		Cookies.setCookie(ApiParameters.LOGIN_COOKIE, value, expires, domain,
-				path, secure);
+		Cookies.setCookie(ApiParameters.LOGIN_COOKIE, value, expires, domain, path, secure);
 
 		setCookie(ApiParameters.LOGIN_COOKIE, value);
 
@@ -279,8 +266,7 @@ public class LoginPresenter extends
 	}
 
 	public static String getDomain() {
-		String domain = GWT.getHostPageBaseURL().replaceAll(".*//", "")
-				.replaceAll("/", "").replaceAll(":.*", "");
+		String domain = GWT.getHostPageBaseURL().replaceAll(".*//", "").replaceAll("/", "").replaceAll(":.*", "");
 
 		return "localhost".equalsIgnoreCase(domain) ? null : domain;
 	}

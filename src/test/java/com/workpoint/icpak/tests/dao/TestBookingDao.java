@@ -11,6 +11,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.inject.Inject;
+import com.gwtplatform.dispatch.rest.rebind.utils.Arrays;
 import com.icpak.rest.dao.BookingsDao;
 import com.icpak.rest.dao.EventsDao;
 import com.icpak.rest.dao.helper.BookingsDaoHelper;
@@ -18,6 +19,7 @@ import com.icpak.rest.dao.helper.CPDDaoHelper;
 import com.icpak.rest.dao.helper.EventsDaoHelper;
 import com.icpak.rest.models.event.Delegate;
 import com.icpak.rest.util.SMSIntegration;
+import com.icpak.servlet.upload.GetDelegatesReport;
 import com.workpoint.icpak.shared.model.PaymentStatus;
 import com.workpoint.icpak.shared.model.events.AccommodationDto;
 import com.workpoint.icpak.shared.model.events.AttendanceStatus;
@@ -88,7 +90,16 @@ public class TestBookingDao extends AbstractDaoTest {
 		}
 	}
 
+	@Inject
+	GetDelegatesReport getReport;
+
 	@Test
+	public void testNameStripping() {
+		// getReport.GetDelegatesReport(Arrays.asList(new DelegateDto()), "xls",
+		// "The 2nd Chairman\\'s Ball");
+	}
+
+	// @Test
 	public void testUpdateBooking() {
 		BookingDto dto = new BookingDto();
 		// dto.setRefId("TdtJ9I4RtlGqoAKT"); //Ammending booking
@@ -122,7 +133,7 @@ public class TestBookingDao extends AbstractDaoTest {
 		delegate3.setEmail("tkm2020@wira.io");
 		delegate3.setFullName("CPA DANIEL MUTHAMA");
 		delegates.add(delegate3);
-		
+
 		dto.setDelegates(delegates);
 
 		BookingDto booking = bookingsHelper.createBooking("1JKH5e8rLJjnjjwv", dto);
