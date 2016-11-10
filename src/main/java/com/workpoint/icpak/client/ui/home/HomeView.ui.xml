@@ -111,6 +111,14 @@
 					<!-- START sidebar nav -->
 					<tab:HomeTabPanel ui:field="tabPanel"></tab:HomeTabPanel>
 					<!-- END sidebar nav -->
+					<ul class="nav ng-scope">
+						<li>
+							<a class="hand" href="https://www.icpak.com/fc/" target="_blank">
+								<em class="fa fa-external-link"></em>
+								<span>Fellowships</span>
+							</a>
+						</li>
+					</ul>
 				</nav>
 			</div>
 		</aside>

@@ -2397,37 +2397,37 @@ h3.header-events {
 	cursor: default
 }
 
-.sidebar>.nav {
+.sidebar .nav {
 	position: relative;
 	padding-right: 17px
 }
 
-.sidebar>.nav>.nav-heading:first-child {
+.sidebar .nav .nav-heading:first-child {
 	padding-top: 20px
 }
 
-.sidebar>.nav>li {
+.sidebar .nav li {
 	border-left: 3px solid transparent;
 	-webkit-transition: border-left-color .4s ease;
 	-o-transition: border-left-color .4s ease;
 	transition: border-left-color .4s ease
 }
 
-.sidebar>.nav>li>.nav-item, .sidebar>.nav>li>a {
+.sidebar .nav li .nav-item, .sidebar .nav li a {
 	padding: 12px 24px;
 	color: #515253;
 	letter-spacing: .025em;
 	font-weight: 400
 }
 
-.sidebar>.nav>li>.nav-item:focus, .sidebar>.nav>li>.nav-item:hover,
-	.sidebar>.nav>li>a:focus, .sidebar>.nav>li>a:hover {
+.sidebar .nav li .nav-item:focus, .sidebar .nav li .nav-item:hover,
+	.sidebar .nav li a:focus, .sidebar .nav li a:hover {
 	text-decoration: none;
 	outline: 0;
 	color: #deb509
 }
 
-.sidebar>.nav>li>.nav-item>em, .sidebar>.nav>li>a>em {
+.sidebar .nav li .nav-item em, .sidebar .nav li a em {
 	width: 2em;
 	display: inline-block;
 	font-style: normal;
@@ -2437,22 +2437,22 @@ h3.header-events {
 	color: inherits
 }
 
-.sidebar>.nav>li.active, .sidebar>.nav>li.active .nav, .sidebar>.nav>li.active>a,
-	.sidebar>.nav>li.open, .sidebar>.nav>li.open .nav, .sidebar>.nav>li.open>a
+.sidebar .nav li.active, .sidebar .nav li.active .nav, .sidebar .nav li.active a,
+	.sidebar .nav li.open, .sidebar .nav li.open .nav, .sidebar .nav li.open a
 	{
 	background-color: #fcfcfc;
 	color: #deb509
 }
 
-.sidebar>.nav>li.active>a>em, .sidebar>.nav>li.open>a>em {
+.sidebar .nav li.active a em, .sidebar .nav li.open a em {
 	color: #deb509
 }
 
-.sidebar>.nav>li.active {
+.sidebar .nav li.active {
 	border-left-color: #deb509
 }
 
-.sidebar>.nav .label {
+.sidebar .nav .label {
 	display: block;
 	margin-right: 20px
 }
@@ -2461,18 +2461,18 @@ h3.header-events {
 	background-color: #fff
 }
 
-.sidebar-subnav>.sidebar-subnav-header {
+.sidebar-subnav .sidebar-subnav-header {
 	color: #515253;
 	display: none;
 	padding: 10px 20px;
 	font-weight: 700
 }
 
-.sidebar-subnav>li {
+.sidebar-subnav li {
 	border-left: 0 !important
 }
 
-.sidebar-subnav>li>.nav-item, .sidebar-subnav>li>a {
+.sidebar-subnav li .nav-item, .sidebar-subnav li a {
 	display: block;
 	position: relative;
 	padding: 10px 20px 10px 53px;
@@ -2481,28 +2481,28 @@ h3.header-events {
 	color: #515253
 }
 
-.sidebar-subnav>li>.nav-item:focus, .sidebar-subnav>li>.nav-item:hover,
-	.sidebar-subnav>li>a:focus, .sidebar-subnav>li>a:hover {
+.sidebar-subnav li .nav-item:focus, .sidebar-subnav li .nav-item:hover,
+	.sidebar-subnav li a:focus, .sidebar-subnav li a:hover {
 	color: #deb509
 }
 
-.sidebar-subnav>li>.nav-item>em, .sidebar-subnav>li>a>em {
+.sidebar-subnav li .nav-item em, .sidebar-subnav li a em {
 	display: inline-block;
 	width: 2em;
 	margin: 0 0 0 -2em
 }
 
-.sidebar-subnav>li.active>.nav-item, .sidebar-subnav>li.active>a {
+.sidebar-subnav li.active .nav-item, .sidebar-subnav li.active a {
 	color: #deb509
 }
 
-.sidebar-subnav>li.active>.nav-item:after, .sidebar-subnav>li.active>a:after
+.sidebar-subnav li.active .nav-item:after, .sidebar-subnav li.active a:after
 	{
 	border-color: #deb509;
 	background-color: #deb509
 }
 
-.sidebar-subnav>li .nav>li {
+.sidebar-subnav li .nav li {
 	padding-left: 5px
 }
 
@@ -2517,15 +2517,15 @@ h3.header-events {
 	visibility: visible !important
 }
 
-.sidebar-subnav.nav-floating>.sidebar-subnav-header {
+.sidebar-subnav.nav-floating .sidebar-subnav-header {
 	display: block
 }
 
-.sidebar-subnav.nav-floating li>a {
+.sidebar-subnav.nav-floating li a {
 	padding-left: 20px
 }
 
-.sidebar-subnav.nav-floating li>a em {
+.sidebar-subnav.nav-floating li a em {
 	margin-left: 0
 }
 
