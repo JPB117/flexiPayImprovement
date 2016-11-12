@@ -558,7 +558,8 @@ public class BookingsDao extends BaseDao {
 				+ "d.title,d.otherNames,d.fullName,d.phoneNumber,a.hotel,b.paymentStatus,"
 				+ "d.attendance,d.surname,d.email,e.refid,d.booking_id,"
 				+ "d.receiptNo,d.lpoNo,d.isCredit,d.clearanceNo,b.isActive,d.isActive as delegateBookingStatus,"
-				+ "i.documentNo," + "d.paymentStatus as delegatePaymentStatus,d.updated,d.updatedBy "
+				+ "i.documentNo,"
+				+ "d.paymentStatus as delegatePaymentStatus,d.updated,d.updatedBy,d.isAccomodationPaid,d.accomodationPaidAmount "
 				+ "from delegate d inner join booking b on (d.booking_id=b.id) "
 				+ "inner join event e on (b.event_id=e.id) " + "inner join invoice i on(b.refId=i.bookingRefId)"
 				+ "left join accommodation a on (d.accommodationId=a.id) " + "where e.refId=:eventRefId";
@@ -643,6 +644,8 @@ public class BookingsDao extends BaseDao {
 			String delegatePaymentStatus = (value = o[i++]) == null ? null : value.toString();
 			Date lastUpdateDate = (value = o[i++]) == null ? null : (Date) value;
 			String updatedBy = (value = o[i++]) == null ? null : value.toString();
+			Integer isAccomodationPaid = (value = o[i++]) == null ? null : (Integer) value;
+			String accomodationPaidAmount = (value = o[i++]) == null ? null : value.toString();
 
 			DelegateDto delegateDto = new DelegateDto();
 			delegateDto.setCreatedDate(bookingDate);
@@ -701,6 +704,8 @@ public class BookingsDao extends BaseDao {
 			delegateDto.setLpoNo(lpoNo);
 			delegateDto.setIsCredit(isCredit);
 			delegateDto.setClearanceNo(clearanceNo);
+			delegateDto.setIsAccomodationPaid(isAccomodationPaid);
+			delegateDto.setAccomodationPaidAmount(accomodationPaidAmount);
 			delegateList.add(delegateDto);
 		}
 		return delegateList;

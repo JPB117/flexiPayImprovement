@@ -18,8 +18,7 @@ import com.workpoint.icpak.shared.model.events.DelegateDto;
 
 public class UpdatePaymentWidget extends Composite {
 
-	private static UpdatePaymentWidgetUiBinder uiBinder = GWT
-			.create(UpdatePaymentWidgetUiBinder.class);
+	private static UpdatePaymentWidgetUiBinder uiBinder = GWT.create(UpdatePaymentWidgetUiBinder.class);
 
 	@UiField
 	DropDownList<PaymentStatus> lstPaymentStatus;
@@ -33,26 +32,25 @@ public class UpdatePaymentWidget extends Composite {
 	TextField txtLPONo;
 	@UiField
 	SpanElement spnLastUpdated;
+	@UiField
+	CheckBox chckIsAccomodationPaid;
+	@UiField
+	TextField txtAccomodationAmount;
 
 	private DelegateDto delegate;
 
-	interface UpdatePaymentWidgetUiBinder extends
-			UiBinder<Widget, UpdatePaymentWidget> {
+	interface UpdatePaymentWidgetUiBinder extends UiBinder<Widget, UpdatePaymentWidget> {
 	}
 
 	public UpdatePaymentWidget(DelegateDto delegate) {
 		this.delegate = delegate;
 		initWidget(uiBinder.createAndBindUi(this));
-		lstPaymentStatus.setItems(Arrays.asList(PaymentStatus.values()),
-				"-Select Payment Status-");
+		lstPaymentStatus.setItems(Arrays.asList(PaymentStatus.values()), "-Select Payment Status-");
 		setDelegateValues(delegate);
 
 		if (delegate.getUpdatedBy() != null) {
-			spnLastUpdated.setInnerText(" by "
-					+ delegate.getUpdatedBy()
-					+ " on "
-					+ DateUtils.READABLETIMESTAMP.format(delegate
-							.getLastUpdateDate()));
+			spnLastUpdated.setInnerText(" by " + delegate.getUpdatedBy() + " on "
+					+ DateUtils.READABLETIMESTAMP.format(delegate.getLastUpdateDate()));
 		}
 	}
 
@@ -61,15 +59,23 @@ public class UpdatePaymentWidget extends Composite {
 		delegate.setClearanceNo(txtClearanceNo.getValue());
 		delegate.setLpoNo(txtLPONo.getValue());
 		delegate.setDelegatePaymentStatus(lstPaymentStatus.getValue());
+		delegate.setAccomodationPaidAmount(
+				(txtAccomodationAmount.getValue() == null ? "0" : txtAccomodationAmount.getValue()));
 
-		String userFullNames = AppContext.getCurrentUser().getUser()
-				.getSurname()
-				+ " " + AppContext.getCurrentUser().getUser().getName();
+		String userFullNames = AppContext.getCurrentUser().getUser().getSurname() + " "
+				+ AppContext.getCurrentUser().getUser().getName();
 		delegate.setUpdatedBy(userFullNames);
+
 		if (chckIsCredit.getValue()) {
 			delegate.setIsCredit(1);
 		} else {
 			delegate.setIsCredit(0);
+		}
+
+		if (chckIsAccomodationPaid.getValue()) {
+			delegate.setIsAccomodationPaid(1);
+		} else {
+			delegate.setIsAccomodationPaid(0);
 		}
 
 		return delegate;
@@ -79,15 +85,19 @@ public class UpdatePaymentWidget extends Composite {
 		txtReceiptNo.setValue(delegate.getReceiptNo());
 		txtClearanceNo.setValue(delegate.getClearanceNo());
 		txtLPONo.setValue(delegate.getLpoNo());
-		determinePaymentStatus(delegate.getBookingPaymentStatus(),
-				delegate.getDelegatePaymentStatus());
+
+		if (delegate.getIsAccomodationPaid() == 1) {
+			chckIsAccomodationPaid.setValue(true);
+		} else {
+			chckIsAccomodationPaid.setValue(false);
+		}
+		txtAccomodationAmount.setValue(delegate.getAccomodationPaidAmount());
+		determinePaymentStatus(delegate.getBookingPaymentStatus(), delegate.getDelegatePaymentStatus());
 	}
 
-	private void determinePaymentStatus(PaymentStatus bookingPaymentStatus,
-			PaymentStatus delegatePaymentStatus) {
+	private void determinePaymentStatus(PaymentStatus bookingPaymentStatus, PaymentStatus delegatePaymentStatus) {
 		if (bookingPaymentStatus != null) {
-			if (bookingPaymentStatus == PaymentStatus.PAID
-					|| bookingPaymentStatus == PaymentStatus.Credit) {
+			if (bookingPaymentStatus == PaymentStatus.PAID || bookingPaymentStatus == PaymentStatus.Credit) {
 				lstPaymentStatus.setValue(delegate.getBookingPaymentStatus());
 			} else {
 				lstPaymentStatus.setValue(delegate.getDelegatePaymentStatus());

@@ -6,7 +6,7 @@
 			<div class="form-group">
 				<div class="row">
 					<div class="col-xs-6">
-						<label for="firstname">last modified:</label>
+						<label for="firstname">last modified by:</label>
 						<span ui:field="spnLastUpdated"></span>
 					</div>
 				</div>
@@ -47,6 +47,23 @@
 						<label for="phone">LPO No:</label>
 						<d:TextField ui:field="txtLPONo" styleName="form-control"
 							placeholder="LPO No:" value="" required="true">
+						</d:TextField>
+					</div>
+				</div>
+			</div>
+
+			<h5>Accomodation Payment</h5>
+			<hr />
+			<div class="form-group">
+				<div class="row">
+					<div class="col-xs-6" style="padding-top: 20px;">
+						<g:CheckBox ui:field="chckIsAccomodationPaid">  Accomodation Paid?</g:CheckBox>
+					</div>
+					<div class="col-xs-6">
+						<label for="phone">Amount:</label>
+						<d:TextField ui:field="txtAccomodationAmount"
+							styleName="form-control" placeholder="Accomodation Amount:"
+							value="" required="true">
 						</d:TextField>
 					</div>
 				</div>

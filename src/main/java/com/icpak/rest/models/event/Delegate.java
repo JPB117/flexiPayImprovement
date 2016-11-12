@@ -63,6 +63,9 @@ public class Delegate extends PO {
 	@JoinColumn(name = "accommodationId")
 	private Accommodation accommodationId;
 
+	private int isAccomodationPaid;
+	private String accomodationPaidAmount;
+
 	public String getBookingId() {
 		return bookingId;
 	}
@@ -170,6 +173,8 @@ public class Delegate extends PO {
 		setReceiptNo(delegateDto.getLpoNo());
 		setClearanceNo(delegateDto.getClearanceNo());
 		setLmsResponse(delegateDto.getLmsResponse());
+		setIsAccomodationPaid(delegateDto.getIsAccomodationPaid());
+		setAccomodationPaidAmount(delegateDto.getAccomodationPaidAmount());
 	}
 
 	public DelegateDto toDto() {
@@ -194,6 +199,8 @@ public class Delegate extends PO {
 		dto.setLpoNo(lpoNo);
 		dto.setReceiptNo(receiptNo);
 		dto.setClearanceNo(clearanceNo);
+		dto.setIsAccomodationPaid(isAccomodationPaid);
+		dto.setAccomodationPaidAmount(accomodationPaidAmount);
 		return dto;
 	}
 
@@ -289,12 +296,29 @@ public class Delegate extends PO {
 	public void setLmsResponse(String lmsResponse) {
 		this.lmsResponse = lmsResponse;
 	}
+
 	public PaymentStatus getPaymentStatus() {
 		return paymentStatus;
 	}
-	
+
 	public void setPaymentStatus(PaymentStatus paymentStatus) {
 		this.paymentStatus = paymentStatus;
+	}
+
+	public int getIsAccomodationPaid() {
+		return isAccomodationPaid;
+	}
+
+	public void setIsAccomodationPaid(int isAccomodationPaid) {
+		this.isAccomodationPaid = isAccomodationPaid;
+	}
+
+	public String getAccomodationPaidAmount() {
+		return accomodationPaidAmount;
+	}
+
+	public void setAccomodationPaidAmount(String accomodationPaidAmount) {
+		this.accomodationPaidAmount = accomodationPaidAmount;
 	}
 
 }

@@ -46,6 +46,8 @@ public class DelegateDto extends SerializableObj {
 	private String receiptNo;
 	private String lpoNo;
 	private int isCredit;
+	private int isAccomodationPaid;
+	private String accomodationPaidAmount;
 	private String contact;
 	private Date bookingDate;
 	private Date lastUpdateDate;
@@ -372,6 +374,22 @@ public class DelegateDto extends SerializableObj {
 
 	public void setLastUpdateDate(Date lastUpdateDate) {
 		this.lastUpdateDate = lastUpdateDate;
+	}
+
+	public int getIsAccomodationPaid() {
+		return isAccomodationPaid;
+	}
+
+	public void setIsAccomodationPaid(int isAccomodationPaid) {
+		this.isAccomodationPaid = isAccomodationPaid;
+	}
+
+	public String getAccomodationPaidAmount() {
+		return accomodationPaidAmount;
+	}
+
+	public void setAccomodationPaidAmount(String accomodationPaidAmount) {
+		this.accomodationPaidAmount = accomodationPaidAmount;
 	}
 
 }

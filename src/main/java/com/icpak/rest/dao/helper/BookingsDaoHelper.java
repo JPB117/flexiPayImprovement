@@ -1049,17 +1049,23 @@ public class BookingsDaoHelper {
 	}
 
 	public DelegateDto updateDelegate(String delegateId, DelegateDto delegateDto) {
-
 		logger.error("+++++ <><>>>>>>>>>>>>> UPDATE DELEGATE +++++++++++++++++");
-		JSONObject json = new JSONObject(delegateDto);
-		logger.error("Payload>>>" + json);
+		// JSONObject json = new JSONObject(delegateDto);
+		// logger.error("Payload>>>" + json);
 		Delegate delegate = dao.findByRefId(delegateId, Delegate.class);
 		Event event = dao.findByRefId(delegate.getBooking().getEvent().getRefId(), Event.class);
 		Booking booking = delegate.getBooking();
-		String applicationContext = settings.getProperty("app_context");
+		String applicationContext = "online";
 
 		/* 1. Payment Update - Is this a payment update? */
 		if (booking != null) {
+			System.err.println(">>>>" + delegateDto.getIsAccomodationPaid());
+			// Update Accomodation PaymentStatus and Payment Info
+			if (delegateDto.getIsAccomodationPaid() == 0 || delegateDto.getIsAccomodationPaid() == 1) {
+				logger.debug("Updating accomodation payment info");
+				delegate.copyFrom(delegateDto);
+				dao.save(delegate);
+			}
 			// Update Payment Status
 			if (delegateDto.getBookingPaymentStatus() != null) {
 				if ((delegateDto.getBookingPaymentStatus() == PaymentStatus.PAID)
