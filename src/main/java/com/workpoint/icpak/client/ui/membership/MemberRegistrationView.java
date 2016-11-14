@@ -313,7 +313,8 @@ public class MemberRegistrationView extends ViewImpl implements MemberRegistrati
 		int topHeight = divHeaderContainer.getOffsetHeight();
 		int topicsHeight = divHeader.getOffsetHeight();
 		int headerTopics = divHeaderTopics.getOffsetHeight();
-		int middleHeight = totalHeight - topHeight - topicsHeight - headerTopics - 53;
+		int middleHeight = totalHeight - topHeight - topicsHeight - headerTopics - 103;   
+		
 
 		// Window.alert("\nTotalHeight:" + totalHeight + "MiddleHeight>>"
 		// + middleHeight + "TopHeight" + topHeight);
