@@ -38,6 +38,7 @@ import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.api.ApiParameters;
 import com.workpoint.icpak.shared.api.SessionResource;
 import com.workpoint.icpak.shared.api.UsersResource;
+import com.workpoint.icpak.shared.model.Version;
 import com.workpoint.icpak.shared.model.auth.ActionType;
 import com.workpoint.icpak.shared.model.auth.CurrentUserDto;
 import com.workpoint.icpak.shared.model.auth.LogInAction;
@@ -165,9 +166,9 @@ public class LoginPresenter extends Presenter<LoginPresenter.ILoginView, LoginPr
 					setLoggedInCookie(result.getLoggedInCookie());
 				}
 				if (result.getActionType() == ActionType.VIA_COOKIE) {
-					onLoginCallSucceededForCookie(result.getCurrentUserDto());
+					onLoginCallSucceededForCookie(result.getCurrentUserDto(), result.getVersion());
 				} else {
-					onLoginCallSucceeded(result.getCurrentUserDto());
+					onLoginCallSucceeded(result.getCurrentUserDto(), result.getVersion());
 				}
 			}
 
@@ -187,16 +188,16 @@ public class LoginPresenter extends Presenter<LoginPresenter.ILoginView, LoginPr
 		super.onReveal();
 	}
 
-	private void onLoginCallSucceededForCookie(CurrentUserDto currentUserDto) {
+	private void onLoginCallSucceededForCookie(CurrentUserDto currentUserDto, Version version) {
 		if (currentUserDto.isLoggedIn()) {
-			onLoginCallSucceeded(currentUserDto);
+			onLoginCallSucceeded(currentUserDto, version);
 		}
 	}
 
-	private void onLoginCallSucceeded(CurrentUserDto currentUserDto) {
+	private void onLoginCallSucceeded(CurrentUserDto currentUserDto, Version version) {
 		if (currentUserDto.isLoggedIn()) {
 			currentUser.fromCurrentUserDto(currentUserDto);
-			fireEvent(new ContextLoadedEvent(currentUser.getUser(), null));
+			fireEvent(new ContextLoadedEvent(currentUser.getUser(), version));
 			redirectToLoggedOnPage();
 		} else {
 			LOGGER.log(Level.SEVERE, "Wrong username or password......");

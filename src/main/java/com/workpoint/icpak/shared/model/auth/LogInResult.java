@@ -2,6 +2,8 @@ package com.workpoint.icpak.shared.model.auth;
 
 import java.io.Serializable;
 
+import com.workpoint.icpak.shared.model.Version;
+
 public class LogInResult implements Serializable{
 
 	/**
@@ -11,6 +13,7 @@ public class LogInResult implements Serializable{
 	private ActionType actionType;
     private CurrentUserDto currentUserDto;
     private String loggedInCookie;
+    private Version version;
 
     protected LogInResult() {
         // Needed for serialization
@@ -23,6 +26,17 @@ public class LogInResult implements Serializable{
         this.actionType = actionType;
         this.currentUserDto = currentUserDto;
         this.loggedInCookie = loggedInCookie;
+    }
+    
+    public LogInResult(
+            ActionType actionType,
+            CurrentUserDto currentUserDto,
+            String loggedInCookie,
+            Version version) {
+        this.actionType = actionType;
+        this.currentUserDto = currentUserDto;
+        this.loggedInCookie = loggedInCookie;
+		this.version = version;
     }
 
     public CurrentUserDto getCurrentUserDto() {
@@ -47,5 +61,13 @@ public class LogInResult implements Serializable{
 
 	public void setLoggedInCookie(String loggedInCookie) {
 		this.loggedInCookie = loggedInCookie;
+	}
+
+	public Version getVersion() {
+		return version;
+	}
+
+	public void setVersion(Version version) {
+		this.version = version;
 	}
 }

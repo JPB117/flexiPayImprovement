@@ -761,7 +761,7 @@ public class UsersDaoHelper {
 		}
 		logger.info("LogInHandlerexecut(): loggedInCookie=" + loggedInCookie);
 		assert action.getActionType() == null;
-		return new LogInResult(action.getActionType(), currentUserDto, loggedInCookie);
+		return new LogInResult(action.getActionType(), currentUserDto, loggedInCookie, VersionManager.getVersion());
 	}
 
 	private UserDto updateMissingUserData(UserDto userDto) {

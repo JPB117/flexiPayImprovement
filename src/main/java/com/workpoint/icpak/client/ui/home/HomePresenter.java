@@ -37,6 +37,7 @@ import com.workpoint.icpak.client.ui.events.ProcessingEvent.ProcessingHandler;
 import com.workpoint.icpak.client.ui.events.ToggleSideBarEvent.ToggleSideBarHandler;
 import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.api.SessionResource;
+import com.workpoint.icpak.shared.model.Version;
 
 public class HomePresenter extends TabContainerPresenter<HomePresenter.IHomeView, HomePresenter.MyProxy> implements
 		ProcessingHandler, ProcessingCompletedHandler, LogoutHandler, FullScreenHandler, ToggleSideBarHandler {
@@ -90,6 +91,8 @@ public class HomePresenter extends TabContainerPresenter<HomePresenter.IHomeView
 	PlaceManager placeManager;
 
 	private ResourceDelegate<SessionResource> sessionResource;
+	
+	public static final String VERSION = "v1.0.0-1-g6caf589";
 
 	@Inject
 	public HomePresenter(final EventBus eventBus, final IHomeView view, final MyProxy proxy,
@@ -129,6 +132,12 @@ public class HomePresenter extends TabContainerPresenter<HomePresenter.IHomeView
 	@ProxyEvent
 	public void onContextLoaded(ContextLoadedEvent event) {
 		getView().refreshTabs();
+		Version version = event.getVersion();
+		if(!version.getVersion().equals(VERSION)){
+			Window.alert("Versions do not match!!! - {Client="+VERSION+", Server:"+version.getVersion()+"}");
+		}else{
+			Window.alert("Versions match - {Client="+VERSION+", Server:"+version.getVersion()+"}");
+		}
 	}
 
 	@Override
