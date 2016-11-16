@@ -125,6 +125,14 @@
 								<span>Subs Invoices</span>
 							</a>
 						</li>
+
+						<li>
+							<a class="hand" href="https://www.icpak.com/subsinvoice/"
+								target="_blank">
+								<em class="fa fa-external-link"></em>
+								<span>UnCached</span>
+							</a>
+						</li>
 					</ul>
 				</nav>
 			</div>
@@ -132,7 +140,8 @@
 		<section class="ng-scope" ui:field="panelContent">
 			<div class="alert alert-warning hide" role="alert" ui:field="divAlert"
 				style="margin:5px;">
-				<strong>Please reload the page to get new changes uploaded.</strong>
+				<strong>New changes have been uploaded while you were accessing the
+					portal. Kindly click the reload button.</strong>
 				<d:ActionLink ui:field="aClearCache" styleName="btn btn-default btn-fill">Reload</d:ActionLink>
 			</div>
 			<g:HTMLPanel ui:field="tabContent" styleName="set-full-height"></g:HTMLPanel>
