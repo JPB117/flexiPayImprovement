@@ -324,7 +324,10 @@ public class CPDDao extends BaseDao {
 	}
 
 	public void deleteCPDByMemberAndEvent(String memberRefId, String eventId) {
-		delete(getCPDByMemberAndEvent(memberRefId, eventId));
+		CPD cpd = getCPDByMemberAndEvent(memberRefId, eventId);
+		if (cpd != null) {
+			delete(cpd);
+		}
 	}
 
 	public CPD getCPDByMemberAndEvent(String memberRefId, String eventId) {

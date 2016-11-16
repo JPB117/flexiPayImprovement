@@ -1059,11 +1059,11 @@ public class BookingsDaoHelper {
 
 		/* 1. Payment Update - Is this a payment update? */
 		if (booking != null) {
-			System.err.println(">>>>" + delegateDto.getIsAccomodationPaid());
 			// Update Accomodation PaymentStatus and Payment Info
-			if (delegateDto.getIsAccomodationPaid() == 0 || delegateDto.getIsAccomodationPaid() == 1) {
-				logger.debug("Updating accomodation payment info");
-				delegate.copyFrom(delegateDto);
+			if (delegate.getIsAccomodationPaid() != delegateDto.getIsAccomodationPaid()) {
+				logger.debug("Updating accomodation payment status");
+				delegate.setIsAccomodationPaid(delegateDto.getIsAccomodationPaid());
+				delegate.setAccomodationPaidAmount(delegateDto.getAccomodationPaidAmount());
 				dao.save(delegate);
 			}
 			// Update Payment Status
@@ -1083,47 +1083,57 @@ public class BookingsDaoHelper {
 					undoCancellation(booking, delegateDto, delegate);
 				}
 			}
+
+			/* CPD Updates - Is this a CPD Update? */
+			// Member - Has attendance changed and Is this an Event?
+			boolean isMemberCPDUpdate = delegate.getMemberRefId() != null
+					&& delegate.getAttendance() != delegateDto.getAttendance() && event.getType() != EventType.COURSE
+					&& applicationContext.equals("online");
+			boolean isNonMemberCPDUpdate = delegate.getMemberRefId() == null
+					&& delegate.getAttendance() != delegateDto.getAttendance() && event.getType() != EventType.COURSE
+					&& applicationContext.equals("online");
+
+			logger.debug("Is this a member CPD Update?" + isMemberCPDUpdate);
+			logger.debug("Is this a member?" + (delegate.getMemberRefId() != null));
+			logger.debug("Previous Attendance?" + (delegate.getAttendance()));
+			logger.debug("New Attendance?" + (delegateDto.getAttendance()));
+			logger.debug("Has the attendance changed?" + (delegate.getAttendance() != delegateDto.getAttendance()));
+			logger.debug("Is this not a course?" + (event.getType() != EventType.COURSE));
+			logger.debug("Is this a member CPD Update?" + isMemberCPDUpdate);
+
+			logger.debug("Is this a non-member CPD Update?" + isNonMemberCPDUpdate);
+			if (isMemberCPDUpdate) {
+				logger.info("Updating CPD records for a member.");
+				cpdDao.updateCPDFromAttendance(delegate, delegateDto.getAttendance());
+				Member member = dao.findByRefId(delegate.getMemberRefId(), Member.class);
+				String smsMessage = "Dear" + " " + delegateDto.getFullName() + ",Thank you for attending the "
+						+ event.getName() + "." + "Your ERN No. is " + delegate.getErn();
+				smsIntergration.send(member.getUser().getPhoneNumber(), smsMessage);
+				delegate.copyFrom(delegateDto);
+				dao.save(delegate);
+
+				// Non-Member
+			} else if (isNonMemberCPDUpdate) {
+				logger.info("Updating CPD records for Non-Member.");
+				String smsMessage = "Dear" + " " + delegateDto.getFullName() + ",Thank you for attending the "
+						+ event.getName() + "." + "Your ERN No. is " + delegate.getErn();
+				if (delegate.getBooking().getContact().getTelephoneNumbers() != null) {
+					smsIntergration.send(delegate.getBooking().getContact().getTelephoneNumbers(), smsMessage);
+				}
+				delegate.copyFrom(delegateDto);
+				dao.save(delegate);
+
+			} else if (event.getType() == EventType.COURSE) {
+				List<DelegateDto> delegates = new ArrayList<>();
+				delegates.add(delegate.toDto());
+				try {
+					enrolDelegateToLMS(delegates, event);
+				} catch (JSONException | IOException e) {
+					e.printStackTrace();
+				}
+			}
 		} else {
-			logger.debug("Booking is Null - Cannot update payment or booking status");
-		}
-
-		/* CPD Updates - Is this a CPD Update? */
-		// Member - Has attendance changed and Is this an Event?
-		boolean isMemberCPDUpdate = delegate.getMemberRefId() != null
-				&& delegate.getAttendance() != delegateDto.getAttendance() && event.getType() != EventType.COURSE
-				&& applicationContext.equals("online");
-		boolean isNonMemberCPDUpdate = delegate.getMemberRefId() == null
-				&& delegate.getAttendance() != delegateDto.getAttendance() && event.getType() != EventType.COURSE
-				&& applicationContext.equals("online");
-		if (isMemberCPDUpdate) {
-			logger.info("Updating CPD records for a member.");
-			cpdDao.updateCPDFromAttendance(delegate, delegateDto.getAttendance());
-			Member member = dao.findByRefId(delegate.getMemberRefId(), Member.class);
-			String smsMessage = "Dear" + " " + delegateDto.getFullName() + ",Thank you for attending the "
-					+ event.getName() + "." + "Your ERN No. is " + delegate.getErn();
-			smsIntergration.send(member.getUser().getPhoneNumber(), smsMessage);
-			delegate.copyFrom(delegateDto);
-			dao.save(delegate);
-
-			// Non-Member
-		} else if (isNonMemberCPDUpdate) {
-			logger.info("Updating CPD records for Non-Member.");
-			String smsMessage = "Dear" + " " + delegateDto.getFullName() + ",Thank you for attending the "
-					+ event.getName() + "." + "Your ERN No. is " + delegate.getErn();
-			if (delegate.getBooking().getContact().getTelephoneNumbers() != null) {
-				smsIntergration.send(delegate.getBooking().getContact().getTelephoneNumbers(), smsMessage);
-			}
-			delegate.copyFrom(delegateDto);
-			dao.save(delegate);
-
-		} else if (event.getType() == EventType.COURSE) {
-			List<DelegateDto> delegates = new ArrayList<>();
-			delegates.add(delegate.toDto());
-			try {
-				enrolDelegateToLMS(delegates, event);
-			} catch (JSONException | IOException e) {
-				e.printStackTrace();
-			}
+			logger.debug("Delegate Booking is Null - Cannot update anything about this booking!");
 		}
 
 		// Prepare Response
@@ -1171,8 +1181,6 @@ public class BookingsDaoHelper {
 			booking.setUpdatedBy(delegateDto.getUpdatedBy());
 			dao.save(booking);
 		}
-		// updateBookingStats(booking);
-		// updatePaymentStats(booking.getEvent().getRefId());
 	}
 
 	public void sendConfirmationMessages(Booking booking) {

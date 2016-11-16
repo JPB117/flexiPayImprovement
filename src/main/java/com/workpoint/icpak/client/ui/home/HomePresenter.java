@@ -91,7 +91,7 @@ public class HomePresenter extends TabContainerPresenter<HomePresenter.IHomeView
 	PlaceManager placeManager;
 
 	private ResourceDelegate<SessionResource> sessionResource;
-	
+
 	public static final String VERSION = "v1.0.0-1-g6caf589";
 
 	@Inject
@@ -133,10 +133,12 @@ public class HomePresenter extends TabContainerPresenter<HomePresenter.IHomeView
 	public void onContextLoaded(ContextLoadedEvent event) {
 		getView().refreshTabs();
 		Version version = event.getVersion();
-		if(!version.getVersion().equals(VERSION)){
-			Window.alert("Versions do not match!!! - {Client="+VERSION+", Server:"+version.getVersion()+"}");
-		}else{
-			Window.alert("Versions match - {Client="+VERSION+", Server:"+version.getVersion()+"}");
+		if (!version.getVersion().equals(VERSION)) {
+			// Window.alert("Versions do not match!!! - {Client="+VERSION+",
+			// Server:"+version.getVersion()+"}");
+		} else {
+			// Window.alert("Versions match - {Client="+VERSION+",
+			// Server:"+version.getVersion()+"}");
 		}
 	}
 
