@@ -94,7 +94,7 @@ public class HomePresenter extends TabContainerPresenter<HomePresenter.IHomeView
 
 	private ResourceDelegate<SessionResource> sessionResource;
 
-	public static final String VERSION = "v1.0.0-1-g6caf589";
+	public static final String VERSION = "v1.0.0-5-g6a189fd";
 
 	@Inject
 	public HomePresenter(final EventBus eventBus, final IHomeView view, final MyProxy proxy,
