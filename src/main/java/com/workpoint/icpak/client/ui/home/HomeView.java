@@ -1,5 +1,6 @@
 package com.workpoint.icpak.client.ui.home;
 
+import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -37,9 +38,12 @@ public class HomeView extends ViewImpl implements HomePresenter.IHomeView {
 	Element elSideBar;
 	@UiField
 	ActionLink aRemoveMenu;
-
 	@UiField
 	ActionLink aLogout;
+	@UiField
+	ActionLink aClearCache;
+	@UiField
+	DivElement divAlert;
 
 	@Inject
 	public HomeView(final Binder binder) {
@@ -57,6 +61,13 @@ public class HomeView extends ViewImpl implements HomePresenter.IHomeView {
 			public void onClick(ClickEvent event) {
 				AppContext.fireEvent(new LogoutEvent());
 				showSideBar(false);
+			}
+		});
+		
+		aClearCache.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				reloadAndClearCache();
 			}
 		});
 	}
@@ -150,5 +161,18 @@ public class HomeView extends ViewImpl implements HomePresenter.IHomeView {
 			panelHome.removeStyleName("enable-mobile-menu");
 		}
 	}
-
+	
+	@Override
+	public void showCacheMessage(boolean show){
+		if (show) {
+			divAlert.removeClassName("hide");
+		} else {
+			divAlert.addClassName("hide");
+		}
+	}
+	
+	
+	public static native void reloadAndClearCache() /*-{
+	  	$wnd.location.reload(true);
+	}-*/;
 }

@@ -26,7 +26,6 @@ import com.workpoint.icpak.client.service.AbstractAsyncCallback;
 import com.workpoint.icpak.client.ui.MainPagePresenter;
 import com.workpoint.icpak.client.ui.events.ContextLoadedEvent;
 import com.workpoint.icpak.client.ui.events.FullScreenEvent;
-import com.workpoint.icpak.client.ui.events.ToggleSideBarEvent;
 import com.workpoint.icpak.client.ui.events.FullScreenEvent.FullScreenHandler;
 import com.workpoint.icpak.client.ui.events.LogoutEvent;
 import com.workpoint.icpak.client.ui.events.LogoutEvent.LogoutHandler;
@@ -34,6 +33,7 @@ import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
 import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent.ProcessingCompletedHandler;
 import com.workpoint.icpak.client.ui.events.ProcessingEvent;
 import com.workpoint.icpak.client.ui.events.ProcessingEvent.ProcessingHandler;
+import com.workpoint.icpak.client.ui.events.ToggleSideBarEvent;
 import com.workpoint.icpak.client.ui.events.ToggleSideBarEvent.ToggleSideBarHandler;
 import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.api.SessionResource;
@@ -56,6 +56,8 @@ public class HomePresenter extends TabContainerPresenter<HomePresenter.IHomeView
 		void showFullScreen(String message);
 
 		void showSideBar(boolean b);
+
+		void showCacheMessage(boolean show);
 	}
 
 	@ProxyStandard
@@ -136,9 +138,12 @@ public class HomePresenter extends TabContainerPresenter<HomePresenter.IHomeView
 		if (!version.getVersion().equals(VERSION)) {
 			// Window.alert("Versions do not match!!! - {Client="+VERSION+",
 			// Server:"+version.getVersion()+"}");
+			// Cached files not same - Clear cache and alert user
+			getView().showCacheMessage(true);
 		} else {
-			// Window.alert("Versions match - {Client="+VERSION+",
-			// Server:"+version.getVersion()+"}");
+			// The cached files are up to date
+			// Window.alert("Versions match -
+			// {Client="+VERSION+",Server:"+version.getVersion()+"}");
 		}
 	}
 

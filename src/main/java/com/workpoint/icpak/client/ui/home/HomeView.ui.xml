@@ -130,6 +130,11 @@
 			</div>
 		</aside>
 		<section class="ng-scope" ui:field="panelContent">
+			<div class="alert alert-warning hide" role="alert" ui:field="divAlert"
+				style="margin:5px;">
+				<strong>Please reload the page to get new changes uploaded.</strong>
+				<d:ActionLink ui:field="aClearCache" styleName="btn btn-default btn-fill">Reload</d:ActionLink>
+			</div>
 			<g:HTMLPanel ui:field="tabContent" styleName="set-full-height"></g:HTMLPanel>
 		</section>
 	</g:HTMLPanel><!--End of Container -->
