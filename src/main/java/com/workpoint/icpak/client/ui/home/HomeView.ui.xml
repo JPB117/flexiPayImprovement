@@ -96,6 +96,12 @@
 					</a>
 				</li>
 				<li>
+					<a class="hand" href="https://www.icpak.com/subsinvoice/" target="_blank">
+						<em class="fa fa-external-link"></em>
+						<span>Subs Invoices</span>
+					</a>
+				</li>
+				<li>
 					<d:ActionLink ui:field="aLogout">
 						<em class="fa fa-power-off"></em>
 						LogOut
