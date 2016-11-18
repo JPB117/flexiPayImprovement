@@ -1,5 +1,7 @@
 package com.workpoint.icpak.client.ui.eventsandseminars.delegates.row;
 
+import java.util.Date;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.SpanElement;

@@ -2,6 +2,7 @@ package com.workpoint.icpak.client.model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,13 +22,14 @@ public class UploadContext {
 	private Map<String, String> context = new HashMap<String, String>();
 
 	public enum UPLOADACTION {
-		GETOFFLINESQL, GETPROFORMA, ATTACHDOCUMENT,UPLOADUSERIMAGE, UPLOADLOGO, UPLOADDOCFILE, UPLOADOUTPUTDOC, GENERATEOUTPUT, IMPORTGRIDDATA, UPLOADCPD, GETSTATEMENT, GETCPDSTATEMENT, DownloadCertGoodStanding, GETATTACHMENT, GETDELEGATESREPORT, UPLOADIDPHOTOCOPY, UPLOADEDUCATIONATTATCHMENTS, UPLOADTRAININGATTATCHMENTS, GENERICATTATCHMENTS, GETTRANSACTIONSREPORT, SYNCTOSERVER, UPLOADCSV
+		GETOFFLINESQL, GETPROFORMA, ATTACHDOCUMENT, UPLOADUSERIMAGE, UPLOADLOGO, UPLOADDOCFILE, UPLOADOUTPUTDOC, GENERATEOUTPUT, IMPORTGRIDDATA, UPLOADCPD, GETSTATEMENT, GETCPDSTATEMENT, DownloadCertGoodStanding, GETATTACHMENT, GETDELEGATESREPORT, UPLOADIDPHOTOCOPY, UPLOADEDUCATIONATTATCHMENTS, UPLOADTRAININGATTATCHMENTS, GENERICATTATCHMENTS, GETTRANSACTIONSREPORT, SYNCTOSERVER, UPLOADCSV
 	}
 
 	public UploadContext() {
 	}
 
 	public UploadContext(String url) {
+		context.put("timestamp", new Date().getTime() + "");
 		this.url = url;
 	}
 
@@ -56,8 +58,7 @@ public class UploadContext {
 	}
 
 	public UPLOADACTION getAction() {
-		return context.get(ACTION) == null ? null : UPLOADACTION
-				.valueOf(context.get(ACTION));
+		return context.get(ACTION) == null ? null : UPLOADACTION.valueOf(context.get(ACTION));
 	}
 
 	public String toUrl() {
