@@ -136,9 +136,6 @@ public class HomePresenter extends TabContainerPresenter<HomePresenter.IHomeView
 		getView().refreshTabs();
 		Version version = event.getVersion();
 		if (!version.getVersion().equals(VERSION)) {
-			// Window.alert("Versions do not match!!! - {Client="+VERSION+",
-			// Server:"+version.getVersion()+"}");
-			// Cached files not same - Clear cache and alert user
 			getView().showCacheMessage(true);
 		} else {
 			// The cached files are up to date
