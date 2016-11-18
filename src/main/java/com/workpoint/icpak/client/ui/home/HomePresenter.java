@@ -134,14 +134,6 @@ public class HomePresenter extends TabContainerPresenter<HomePresenter.IHomeView
 	@ProxyEvent
 	public void onContextLoaded(ContextLoadedEvent event) {
 		getView().refreshTabs();
-		Version version = event.getVersion();
-		if (!version.getVersion().equals(VERSION)) {
-			getView().showCacheMessage(true);
-		} else {
-			// The cached files are up to date
-			// Window.alert("Versions match -
-			// {Client="+VERSION+",Server:"+version.getVersion()+"}");
-		}
 	}
 
 	@Override
