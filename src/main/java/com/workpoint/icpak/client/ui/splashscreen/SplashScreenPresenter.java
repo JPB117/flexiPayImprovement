@@ -104,12 +104,6 @@ public class SplashScreenPresenter
 		super.prepareFromRequest(request);
 		redirect = request.getParameter("redirect", "");
 		tryLoggingInWithCookieFirst();
-		/*
-		 * Removed log In with Cookie - was taking too long.
-		 */
-		// PlaceRequest placeRequest = new Builder().nameToken(NameTokens.login)
-		// .build();
-		// placeManager.revealPlace(placeRequest);
 	}
 
 	private void onLoginCallSucceeded(CurrentUserDto currentUserDto) {

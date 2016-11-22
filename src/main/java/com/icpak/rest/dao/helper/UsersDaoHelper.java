@@ -746,6 +746,8 @@ public class UsersDaoHelper {
 			logger.info("Creating a Cookie in the database since no cookie was found in the database");
 			loginCookieDao.removeLoggedInCookie(userDto);
 			loggedInCookie = loginCookieDao.createSessionCookie(action.getLoggedInCookie(), userDto);
+		} else {
+			loggedInCookie = action.getLoggedInCookie();
 		}
 
 		if (userDto != null) {

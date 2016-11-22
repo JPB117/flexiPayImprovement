@@ -102,6 +102,13 @@
 					</a>
 				</li>
 				<li>
+					<a class="hand" href="https://www.icpak.com/benevolent-scheme-form/"
+						target="_blank">
+						<em class="fa fa-external-link"></em>
+						<span>Benevolent Scheme</span>
+					</a>
+				</li>
+				<li>
 					<d:ActionLink ui:field="aLogout">
 						<em class="fa fa-power-off"></em>
 						LogOut
@@ -129,6 +136,13 @@
 								target="_blank">
 								<em class="fa fa-external-link"></em>
 								<span>Subs Invoices</span>
+							</a>
+						</li>
+						<li>
+							<a class="hand" href="https://www.icpak.com/benevolent-scheme-form/"
+								target="_blank">
+								<em class="fa fa-external-link"></em>
+								<span>Benevolent Scheme</span>
 							</a>
 						</li>
 					</ul>
