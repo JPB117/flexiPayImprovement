@@ -7,10 +7,16 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.math.BigDecimal;
+import java.text.ParseException;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Random;
 
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -35,6 +41,9 @@ import com.icpak.rest.dao.helper.InvoiceDaoHelper;
 import com.icpak.rest.dao.helper.TransactionDaoHelper;
 import com.icpak.rest.models.event.Booking;
 import com.itextpdf.text.DocumentException;
+import com.workpoint.icpak.server.navintegration.OnlineMemberPayments;
+import com.workpoint.icpak.server.navintegration.PaymentMode;
+import com.workpoint.icpak.server.navintegration.StartPoint;
 import com.workpoint.icpak.server.payment.Utilities;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.InvoiceLineDto;
@@ -141,7 +150,7 @@ public class TestInvoiceDao extends AbstractDaoTest {
 
 	}
 
-	@Test
+	// @Test
 	public void testChargeableAmount() {
 		String invoiceRefid = "jjGL44t6rxum4Dx6";
 		InvoiceDto inv = invoiceHelper.getInvoice(invoiceRefid);
@@ -157,7 +166,6 @@ public class TestInvoiceDao extends AbstractDaoTest {
 
 	// @Test
 	public void testRedoTransactions() {
-
 		String fileLocation = "C:\\Users\\user\\Desktop\\august_trx_json.txt";
 		BufferedReader br = null;
 		String fileLine = "";
@@ -178,6 +186,36 @@ public class TestInvoiceDao extends AbstractDaoTest {
 			}
 		} catch (IOException e1) {
 			e1.printStackTrace();
+		}
+
+	}
+
+	@Test
+	public void testNavIntegration() throws DatatypeConfigurationException, ParseException {
+		// 1.Get all MPESA Subscription Payments
+		List<TransactionDto> trxs = invoiceHelper.getAllTransactions("ALL", null, null, null, "SUBSCRIPTION", "MPESA",
+				0, 50);
+		System.err.println("Size" + trxs.size());
+
+		// 2.Post to Nav
+		StartPoint start = new StartPoint();
+
+		for (TransactionDto trx : trxs) {
+			OnlineMemberPayments memberPayment = new OnlineMemberPayments();
+			memberPayment.setAccountNo(trx.getAccountNo());
+			memberPayment.setAmount(new BigDecimal(trx.getAmountPaid()));
+			memberPayment.setDescription(trx.getDescription());
+			memberPayment.setTransactionCode(trx.getTrxNumber());
+			memberPayment.setPaymentMode(PaymentMode.valueOf(trx.getPaymentMode().getName()));
+			memberPayment.setTransactionNo(trx.getId().intValue());
+
+			// Date Conversion
+			GregorianCalendar gregory = new GregorianCalendar();
+			gregory.setTime(trx.getCreatedDate());
+			XMLGregorianCalendar c = DatatypeFactory.newInstance().newXMLGregorianCalendar(gregory);
+			memberPayment.setTransactionDate(c);
+
+			start.create(memberPayment);
 		}
 
 	}

@@ -4,15 +4,20 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
 import javax.mail.MessagingException;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -39,6 +44,8 @@ import com.icpak.rest.models.trx.Invoice;
 import com.icpak.rest.models.trx.Transaction;
 import com.icpak.rest.util.SMSIntegration;
 import com.icpak.rest.utils.EmailServiceHelper;
+import com.workpoint.icpak.server.navintegration.OnlineMemberPayments;
+import com.workpoint.icpak.server.navintegration.StartPoint;
 import com.workpoint.icpak.server.util.ServerDateUtils;
 import com.workpoint.icpak.shared.model.EventType;
 import com.workpoint.icpak.shared.model.InvoiceDto;
@@ -46,7 +53,6 @@ import com.workpoint.icpak.shared.model.PaymentMode;
 import com.workpoint.icpak.shared.model.PaymentStatus;
 import com.workpoint.icpak.shared.model.PaymentType;
 import com.workpoint.icpak.shared.model.TransactionDto;
-import com.workpoint.icpak.shared.model.events.AttendanceStatus;
 import com.workpoint.icpak.shared.model.events.DelegateDto;
 import com.workpoint.icpak.shared.model.events.EventDto;
 import com.workpoint.icpak.shared.trx.OldTransactionDto;
@@ -74,6 +80,9 @@ public class TransactionDaoHelper {
 	Locale locale = new Locale("en", "KE");
 	NumberFormat numberFormat = NumberFormat.getCurrencyInstance(locale);
 	private InvoiceDto invoiceDto;
+
+	// 2.Post to Nav
+	StartPoint start = new StartPoint();
 
 	public String charge(String accountNo, Date chargeDate, String description, Date dueDate, Double amount,
 			String documentNo, String invoiceRef) {
@@ -196,7 +205,9 @@ public class TransactionDaoHelper {
 				trx.setDescription("Subscription payments for " + user.getFullName());
 				trx.setInvoiceRef(user.getRefId());
 				trx.setPaymentType(PaymentType.SUBSCRIPTION);
-				saveTransactionFirst(trx);
+				trx = saveTransactionFirst(trx);
+
+				syncWithErp(trx);
 
 				Double amt = Double.valueOf(amount);
 				String smsMessage = "Dear " + user.getFullName() + ", Thank-you for your " + trx.getPaymentMode()
@@ -211,11 +222,11 @@ public class TransactionDaoHelper {
 				return;
 			}
 		}
-		
-		//Booking or Registration Payment
+
+		// Booking or Registration Payment
 		invoiceDto = invoiceDao.getInvoiceByDocumentNo(accountNo);
-		
-		//If No Invoice is found
+
+		// If No Invoice is found
 		if (invoiceDto == null) {
 			logger.info("No Invoice found for this transaction..");
 			trx.setDescription("Unknown payment with invalid account no");
@@ -276,8 +287,41 @@ public class TransactionDaoHelper {
 	 * Returns what the person should be charged
 	 */
 
-	private void saveTransactionFirst(Transaction trx) {
-		dao.save(trx);
+	private void syncWithErp(Transaction trx) {
+		OnlineMemberPayments memberPayment = new OnlineMemberPayments();
+		memberPayment.setAccountNo(trx.getAccountNo());
+		memberPayment.setAmount(new BigDecimal(trx.getAmount()));
+		memberPayment.setDescription(trx.getDescription());
+		memberPayment.setTransactionCode(trx.getTrxNumber());
+		memberPayment.setPaymentMode(
+				com.workpoint.icpak.server.navintegration.PaymentMode.valueOf(trx.getPaymentMode().getName()));
+		memberPayment.setTransactionNo(trx.getId().intValue());
+
+		// Date Conversion
+		GregorianCalendar gregory = new GregorianCalendar();
+		gregory.setTime(trx.getCreated());
+		XMLGregorianCalendar c = null;
+		try {
+			c = DatatypeFactory.newInstance().newXMLGregorianCalendar(gregory);
+		} catch (DatatypeConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		memberPayment.setTransactionDate(c);
+
+		try {
+			start.create(memberPayment);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (DatatypeConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	private Transaction saveTransactionFirst(Transaction trx) {
+		return (Transaction) dao.save(trx);
 	}
 
 	private Double applyDiscountsAndPenalties(EventDto event, String trxDate) throws ParseException {
