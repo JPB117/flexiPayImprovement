@@ -194,7 +194,7 @@ public class TestInvoiceDao extends AbstractDaoTest {
 	public void testNavIntegration() throws DatatypeConfigurationException, ParseException {
 		// 1.Get all MPESA Subscription Payments
 		List<TransactionDto> trxs = invoiceHelper.getAllTransactions("ALL", null, null, null, "SUBSCRIPTION", "MPESA",
-				0, 50);
+				51, 100);
 		System.err.println("Size" + trxs.size());
 
 		// 2.Post to Nav
