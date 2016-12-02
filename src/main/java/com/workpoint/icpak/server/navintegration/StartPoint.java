@@ -34,7 +34,7 @@ public class StartPoint {
 		memberPayment.setAccountNo("5305");
 		memberPayment.setAmount(new BigDecimal(10000.0));
 		memberPayment.setDescription("Subscription payments for CPA Daniel Ngugi Mugo");
-		memberPayment.setTransactionCode("KL28EJXCEHO");
+		memberPayment.setTransactionCode("KL28EJXCEHN");
 		memberPayment.setPaymentMode(PaymentMode.MPESA);
 		memberPayment.setTransactionNo(1);
 		String dt = "2016-12-01 11:01";
@@ -70,7 +70,7 @@ public class StartPoint {
 		Holder<OnlineMemberPayments> holder = new Holder<OnlineMemberPayments>(memberPayment);
 		try {
 			port.create(holder);
-			System.err.println("Successfully Posted" + memberPayment.getTransactionCode());
+			System.err.println("Successfully Posted::" + memberPayment.getTransactionCode());
 		} catch (Exception e) {
 			System.err.println(
 					"Exception thrown while posting to Nav for transaction::" + memberPayment.getTransactionCode());

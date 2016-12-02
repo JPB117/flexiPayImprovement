@@ -117,13 +117,13 @@ public class TestUserDao extends AbstractDaoTest {
 		logger.warn(" GENDER === " + gender);
 	}
 
-	// @Test
+	@Test
 	public void findUserByMemberNo() {
-		User user = usersDao.findUserByMemberNo("ASSOC/898");
-		logger.warn(" USER " + new JSONObject(user));
+		User user = usersDao.findUserByMemberNo("ASS0C/982");
+		logger.warn(" USER " + user.getFullName());
 	}
 
-	@Test
+	// @Test
 	public void testImportUsers() {
 		List<MemberImport> allMembers = usersDao.importUsers();
 		int counter = 1;

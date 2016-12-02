@@ -147,7 +147,6 @@ public class TransactionDaoHelper {
 		// Account No Details
 		accountNo = accountNo.trim();
 		accountNo = accountNo.replaceAll("[-+.^:,]", "");
-		accountNo = accountNo.replaceAll("[oO]", "0");
 		logger.info("Trimmed Account No::::" + accountNo);
 
 		// Always store the transaction
@@ -220,6 +219,8 @@ public class TransactionDaoHelper {
 					logger.error("sending sms to :" + finalPhoneNumber);
 				}
 				return;
+			} else {
+				logger.info("No Member found with above memberNo:" + accountNo);
 			}
 		}
 
