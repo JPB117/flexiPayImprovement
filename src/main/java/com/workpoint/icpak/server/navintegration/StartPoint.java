@@ -14,9 +14,14 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.soap.SOAPException;
+import javax.xml.ws.BindingProvider;
 import javax.xml.ws.Holder;
 
 public class StartPoint {
+	OnlineMemberPaymentsService systemService = new OnlineMemberPaymentsService();
+	OnlineMemberPaymentsPort port = systemService.getOnlineMemberPaymentsPort();
+	BindingProvider bindingProvider = (BindingProvider) port;
+
 	public StartPoint() {
 		Authenticator authenticator = new Authenticator() {
 			@Override
@@ -26,6 +31,9 @@ public class StartPoint {
 			}
 		};
 		Authenticator.setDefault(authenticator);
+
+		bindingProvider.getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
+				"http://41.139.138.165:8055/NavOnlinePaymentsPilot/WS/ICPAK/Page/Online_Member_Payments");
 	}
 
 	public static void main(String[] args) throws ParseException, DatatypeConfigurationException {
@@ -39,20 +47,19 @@ public class StartPoint {
 		memberPayment.setTransactionNo(1);
 		String dt = "2016-12-01 11:01";
 
-		t.create(memberPayment);
-		// t.list();
+		// t.create(memberPayment);
+		t.list();
 	}
 
 	public void list() {
-		OnlineMemberPaymentsService systemService = new OnlineMemberPaymentsService();
-		OnlineMemberPaymentsPort port = systemService.getOnlineMemberPaymentsPort();
-
 		String bookmarkKey = null;
 		List<OnlineMemberPaymentsFilter> filters = new ArrayList<OnlineMemberPaymentsFilter>();
-		OnlineMemberPaymentsFilter f = new OnlineMemberPaymentsFilter();
-		f.setField(OnlineMemberPaymentsFields.STATUS);
-		f.setCriteria("<>'RECEIVED'");
-		filters.add(f);
+		
+		// OnlineMemberPaymentsFilter f = new OnlineMemberPaymentsFilter();
+		// f.setField(OnlineMemberPaymentsFields.STATUS);
+		// f.setCriteria("<>'RECEIVED'");
+		// filters.add(f);
+		
 		OnlineMemberPaymentsList list = port.readMultiple(filters, bookmarkKey, 50);
 		System.out.println("Size>>>" + list.getOnlineMemberPayments().size());
 
@@ -64,9 +71,6 @@ public class StartPoint {
 	}
 
 	public void create(OnlineMemberPayments memberPayment) throws ParseException, DatatypeConfigurationException {
-		OnlineMemberPaymentsService systemService = new OnlineMemberPaymentsService();
-		OnlineMemberPaymentsPort port = systemService.getOnlineMemberPaymentsPort();
-
 		Holder<OnlineMemberPayments> holder = new Holder<OnlineMemberPayments>(memberPayment);
 		try {
 			port.create(holder);
