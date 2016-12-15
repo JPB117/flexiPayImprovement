@@ -43,7 +43,7 @@ public class StartPoint {
 		memberPayment.setAmount(new BigDecimal(10000.0));
 		memberPayment.setDescription("Subscription payments for CPA Daniel Ngugi Mugo");
 		memberPayment.setTransactionCode("KL28EJXCEHN");
-		memberPayment.setPaymentMode(PaymentMode.MPESA);
+		memberPayment.setPaymentMode(NavPaymentMode.MPESA);
 		memberPayment.setTransactionNo(1);
 		String dt = "2016-12-01 11:01";
 
@@ -54,18 +54,20 @@ public class StartPoint {
 	public void list() {
 		String bookmarkKey = null;
 		List<OnlineMemberPaymentsFilter> filters = new ArrayList<OnlineMemberPaymentsFilter>();
-		
-		// OnlineMemberPaymentsFilter f = new OnlineMemberPaymentsFilter();
-		// f.setField(OnlineMemberPaymentsFields.STATUS);
-		// f.setCriteria("<>'RECEIVED'");
-		// filters.add(f);
-		
-		OnlineMemberPaymentsList list = port.readMultiple(filters, bookmarkKey, 50);
+
+		OnlineMemberPaymentsFilter f = new OnlineMemberPaymentsFilter();
+		// f.setField(OnlineMemberPaymentsFields.TRANSACTION_DATE);
+		// f.setCriteria("01122016..");
+		filters.add(f);
+
+		OnlineMemberPaymentsList list = port.readMultiple(filters, bookmarkKey, 1000);
 		System.out.println("Size>>>" + list.getOnlineMemberPayments().size());
 
 		for (OnlineMemberPayments c : list.getOnlineMemberPayments()) {
-			System.err.println("Payment = " + c.getAccountNo() + " - " + c.getDescription() + " - " + c.getAmount()
-					+ " - " + c.getStatus());
+			System.err.println("Payment = " + c.getTransactionDate() + "-" + c.getAccountNo() + " - "
+					+ c.getDescription() + " - " + c.getAmount() + " - " + c.getStatus() + " - " + c.getKey());
+
+			delete(c.getKey());
 		}
 
 	}
@@ -81,5 +83,9 @@ public class StartPoint {
 			e.printStackTrace();
 		}
 
+	}
+
+	public void delete(String key) {
+		port.delete(key);
 	}
 }

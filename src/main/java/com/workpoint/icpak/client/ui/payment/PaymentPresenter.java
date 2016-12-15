@@ -111,6 +111,13 @@ public class PaymentPresenter extends PresenterWidget<PaymentPresenter.MyView> {
 							getView().setCardResponse(response);
 							fireEvent(new ProcessingCompletedEvent());
 						}
+
+						@Override
+						public void onFailure(Throwable caught) {
+							super.onFailure(caught);
+							Window.alert(
+									"A technical problem was encoutered while charging your card. Please contact ICPAK Member Support.");
+						}
 					}).postPayment(getView().getCreditCardDetails());
 				}
 			}

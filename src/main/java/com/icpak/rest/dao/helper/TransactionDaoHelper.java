@@ -44,6 +44,7 @@ import com.icpak.rest.models.trx.Invoice;
 import com.icpak.rest.models.trx.Transaction;
 import com.icpak.rest.util.SMSIntegration;
 import com.icpak.rest.utils.EmailServiceHelper;
+import com.workpoint.icpak.server.navintegration.NavPaymentMode;
 import com.workpoint.icpak.server.navintegration.OnlineMemberPayments;
 import com.workpoint.icpak.server.navintegration.StartPoint;
 import com.workpoint.icpak.server.util.ServerDateUtils;
@@ -294,8 +295,12 @@ public class TransactionDaoHelper {
 		memberPayment.setAmount(new BigDecimal(trx.getAmount()));
 		memberPayment.setDescription(trx.getDescription());
 		memberPayment.setTransactionCode(trx.getTrxNumber());
-		memberPayment.setPaymentMode(
-				com.workpoint.icpak.server.navintegration.PaymentMode.valueOf(trx.getPaymentMode().getName()));
+		if (trx.getPaymentMode() == PaymentMode.CARDS) {
+			memberPayment.setPaymentMode(NavPaymentMode.CREDIT_CARD);
+		} else {
+			memberPayment.setPaymentMode(NavPaymentMode.valueOf(trx.getPaymentMode().getName()));
+		}
+
 		memberPayment.setTransactionNo(trx.getId().intValue());
 
 		// Date Conversion

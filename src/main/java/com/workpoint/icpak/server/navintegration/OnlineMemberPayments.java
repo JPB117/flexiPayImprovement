@@ -61,7 +61,7 @@ public class OnlineMemberPayments {
     protected String transactionCode;
     @XmlElement(name = "Payment_Mode")
     @XmlSchemaType(name = "string")
-    protected PaymentMode paymentMode;
+    protected NavPaymentMode paymentMode;
     @XmlElement(name = "Transaction_Date")
     @XmlSchemaType(name = "dateTime")
     protected XMLGregorianCalendar transactionDate;
@@ -154,10 +154,10 @@ public class OnlineMemberPayments {
      * 
      * @return
      *     possible object is
-     *     {@link PaymentMode }
+     *     {@link NavPaymentMode }
      *     
      */
-    public PaymentMode getPaymentMode() {
+    public NavPaymentMode getPaymentMode() {
         return paymentMode;
     }
 
@@ -166,10 +166,10 @@ public class OnlineMemberPayments {
      * 
      * @param value
      *     allowed object is
-     *     {@link PaymentMode }
+     *     {@link NavPaymentMode }
      *     
      */
-    public void setPaymentMode(PaymentMode value) {
+    public void setPaymentMode(NavPaymentMode value) {
         this.paymentMode = value;
     }
 

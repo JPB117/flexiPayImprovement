@@ -32,7 +32,7 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlType(name = "Payment_Mode")
 @XmlEnum
-public enum PaymentMode {
+public enum NavPaymentMode {
 
     @XmlEnumValue("_blank_")
     BLANK("_blank_"),
@@ -55,7 +55,7 @@ public enum PaymentMode {
     CUSTOM_3("Custom3");
     private final String value;
 
-    PaymentMode(String v) {
+    NavPaymentMode(String v) {
         value = v;
     }
 
@@ -63,8 +63,8 @@ public enum PaymentMode {
         return value;
     }
 
-    public static PaymentMode fromValue(String v) {
-        for (PaymentMode c: PaymentMode.values()) {
+    public static NavPaymentMode fromValue(String v) {
+        for (NavPaymentMode c: NavPaymentMode.values()) {
             if (c.value.equals(v)) {
                 return c;
             }

@@ -42,7 +42,7 @@ import com.icpak.rest.dao.helper.TransactionDaoHelper;
 import com.icpak.rest.models.event.Booking;
 import com.itextpdf.text.DocumentException;
 import com.workpoint.icpak.server.navintegration.OnlineMemberPayments;
-import com.workpoint.icpak.server.navintegration.PaymentMode;
+import com.workpoint.icpak.server.navintegration.NavPaymentMode;
 import com.workpoint.icpak.server.navintegration.StartPoint;
 import com.workpoint.icpak.server.payment.Utilities;
 import com.workpoint.icpak.shared.model.InvoiceDto;
@@ -193,8 +193,8 @@ public class TestInvoiceDao extends AbstractDaoTest {
 	@Test
 	public void testNavIntegration() throws DatatypeConfigurationException, ParseException {
 		// 1.Get all MPESA Subscription Payments
-		List<TransactionDto> trxs = invoiceHelper.getAllTransactions("ALL", null, null, null, "SUBSCRIPTION", "MPESA",
-				51, 100);
+		List<TransactionDto> trxs = invoiceHelper.getAllTransactions("ALL", null, "2016-12-08 06:12",
+				"2016-12-08 23:12", "SUBSCRIPTION", "MPESA", 0, 100);
 		System.err.println("Size" + trxs.size());
 
 		// 2.Post to Nav
@@ -206,7 +206,7 @@ public class TestInvoiceDao extends AbstractDaoTest {
 			memberPayment.setAmount(new BigDecimal(trx.getAmountPaid()));
 			memberPayment.setDescription(trx.getDescription());
 			memberPayment.setTransactionCode(trx.getTrxNumber());
-			memberPayment.setPaymentMode(PaymentMode.valueOf(trx.getPaymentMode().getName()));
+			memberPayment.setPaymentMode(NavPaymentMode.valueOf(trx.getPaymentMode().getName()));
 			memberPayment.setTransactionNo(trx.getId().intValue());
 
 			// Date Conversion
