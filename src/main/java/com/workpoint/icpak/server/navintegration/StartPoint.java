@@ -4,16 +4,10 @@ import java.math.BigDecimal;
 import java.net.Authenticator;
 import java.net.PasswordAuthentication;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
-import javax.xml.soap.SOAPException;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.Holder;
 
@@ -56,8 +50,8 @@ public class StartPoint {
 		List<OnlineMemberPaymentsFilter> filters = new ArrayList<OnlineMemberPaymentsFilter>();
 
 		OnlineMemberPaymentsFilter f = new OnlineMemberPaymentsFilter();
-		// f.setField(OnlineMemberPaymentsFields.TRANSACTION_DATE);
-		// f.setCriteria("01122016..");
+		f.setField(OnlineMemberPaymentsFields.TRANSACTION_NO);
+		f.setCriteria("'13726'");
 		filters.add(f);
 
 		OnlineMemberPaymentsList list = port.readMultiple(filters, bookmarkKey, 1000);
@@ -66,10 +60,16 @@ public class StartPoint {
 		for (OnlineMemberPayments c : list.getOnlineMemberPayments()) {
 			System.err.println("Payment = " + c.getTransactionDate() + "-" + c.getAccountNo() + " - "
 					+ c.getDescription() + " - " + c.getAmount() + " - " + c.getStatus() + " - " + c.getKey());
-
-			delete(c.getKey());
+			c.setTransactionCode("AT4P0LIRNR");
+			update(c);
 		}
 
+	}
+
+	public void update(OnlineMemberPayments onlineC) {
+		Holder<OnlineMemberPayments> onlineHolder = new Holder<OnlineMemberPayments>(onlineC);
+		port.update(onlineHolder);
+		System.err.println("Successfully Updated");
 	}
 
 	public void create(OnlineMemberPayments memberPayment) throws ParseException, DatatypeConfigurationException {

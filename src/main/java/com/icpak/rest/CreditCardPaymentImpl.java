@@ -37,8 +37,7 @@ public class CreditCardPaymentImpl implements CreditCardResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	@ApiOperation(value = "Post Payment", response = String.class, consumes = MediaType.APPLICATION_JSON)
 	public CreditCardResponse postPayment(CreditCardDto dto) {
-		CreditCardResponse response = creditCardService
-				.authorizeCardTransaction(dto);
+		CreditCardResponse response = creditCardService.authorizeCardTransaction(dto);
 		// If Payment is successful..
 		if (response.getStatusCode().equals("0000")) {
 			// Complete the transaction
@@ -46,12 +45,11 @@ public class CreditCardPaymentImpl implements CreditCardResource {
 			// response.getTransactionReference(),
 			// response.getTransactionIndex());
 
-			trxDaoHelper.receivePaymentUsingInvoiceNo(response.getTransactionIndex(),
-					"N/A", dto.getPaymentRefId(), "CARDS",
-					response.getTransactionIndex(), dto.getMobile_number(),
-					dto.getAmount(),
-					ServerDateUtils.FULLTIMESTAMP.format(new Date()),
-					dto.getCard_holder_name());
+			trxDaoHelper.receivePaymentUsingInvoiceNo(response.getTransactionReference(), "N/A", dto.getPaymentRefId(),
+					"CARDS", response.getTransactionReference(), dto.getMobile_number(), dto.getAmount(),
+					ServerDateUtils.MPESATIMESTAMP.format(new Date()), dto.getCard_holder_name());
+		} else {
+			// Failed transaction
 		}
 		return response;
 	}

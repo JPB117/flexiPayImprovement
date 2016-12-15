@@ -45,6 +45,7 @@ import com.workpoint.icpak.server.navintegration.OnlineMemberPayments;
 import com.workpoint.icpak.server.navintegration.NavPaymentMode;
 import com.workpoint.icpak.server.navintegration.StartPoint;
 import com.workpoint.icpak.server.payment.Utilities;
+import com.workpoint.icpak.server.util.ServerDateUtils;
 import com.workpoint.icpak.shared.model.InvoiceDto;
 import com.workpoint.icpak.shared.model.InvoiceLineDto;
 import com.workpoint.icpak.shared.model.TransactionDto;
@@ -191,6 +192,33 @@ public class TestInvoiceDao extends AbstractDaoTest {
 	}
 
 	@Test
+	public void testRedoCardTransactions() {
+		String fileLocation = "C:\\Users\\user\\Desktop\\lipisha_dec_trx(unposted).csv";
+		BufferedReader br = null;
+		String fileLine = "";
+
+		try {
+			br = new BufferedReader(new FileReader(fileLocation));
+		} catch (FileNotFoundException fileNotFound) {
+			System.err.println("File Not found..");
+			return;
+		}
+
+		try {
+			while ((fileLine = br.readLine()) != null) {
+				// trxHelper.performServerIPN(fileLine);
+				String[] column = fileLine.split(",");
+				System.err.println("Executed>>>" + fileLine);
+				trxHelper.receivePaymentUsingInvoiceNo(column[2], "N/A", column[4], "CARDS", column[2], "N/A",
+						column[5], ServerDateUtils.MPESATIMESTAMP.format(new Date()), column[3]);
+			}
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+
+	}
+
+	// @Test
 	public void testNavIntegration() throws DatatypeConfigurationException, ParseException {
 		// 1.Get all MPESA Subscription Payments
 		List<TransactionDto> trxs = invoiceHelper.getAllTransactions("ALL", null, "2016-12-08 06:12",
