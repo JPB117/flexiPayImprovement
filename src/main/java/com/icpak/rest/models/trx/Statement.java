@@ -96,7 +96,6 @@ public class Statement extends PO {
 	}
 
 	public void copyFrom(StatementDto statementDto) {
-
 		setDueDate(statementDto.getDueDate());
 		setCustomerNo(statementDto.getCustomerNo());
 		setDescription(statementDto.getDescription());
@@ -112,16 +111,13 @@ public class Statement extends PO {
 
 	public StatementDto toStatementDto() {
 		StatementDto statementDto = new StatementDto();
-
 		statementDto.setDueDate(getDueDate());
 		statementDto.setCustomerNo(getCustomerNo());
 		statementDto.setDescription(getDescription());
 		statementDto.setAmount(getAmount());
 		statementDto.setDocumentNo(getDocumentNo());
-		statementDto
-				.setDocumentType(((getDocumentType() == null)
-						|| (getDocumentType().equals("null")) ? ""
-						: getDocumentType()));
+		statementDto.setDocumentType(
+				((getDocumentType() == null) || (getDocumentType().equals("null")) ? "" : getDocumentType()));
 		statementDto.setPostingDate(getPostingDate());
 		statementDto.setEntryType(getEntryType());
 		statementDto.setCustLedgerEntryNo(getCustLedgerEntryNo());

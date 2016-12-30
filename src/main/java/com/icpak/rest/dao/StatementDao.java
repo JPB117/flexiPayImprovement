@@ -22,13 +22,11 @@ public class StatementDao extends BaseDao {
 	}
 
 	public Statement getByStatementId(String refId, boolean throwExceptionIfNull) {
-		Statement statement = getSingleResultOrNull(getEntityManager()
-				.createQuery("from Statement u where u.refId=:refId")
-				.setParameter("refId", refId));
+		Statement statement = getSingleResultOrNull(
+				getEntityManager().createQuery("from Statement u where u.refId=:refId").setParameter("refId", refId));
 
 		if (throwExceptionIfNull && statement == null) {
-			throw new ServiceException(ErrorCodes.NOTFOUND, "Statement", "'"
-					+ refId + "'");
+			throw new ServiceException(ErrorCodes.NOTFOUND, "Statement", "'" + refId + "'");
 		}
 		return statement;
 	}
@@ -36,11 +34,9 @@ public class StatementDao extends BaseDao {
 	public Statement getByEntryNo(String entryNo, boolean throwExceptionIfNull) {
 		logger.info(">>>>>>>>>><<<<<<<<<< entryNo = " + entryNo);
 		Statement statement = null;
-		Query query = getEntityManager().createQuery(
-				"from Statement u where u.entryNo=:entryNo");
+		Query query = getEntityManager().createQuery("from Statement u where u.entryNo=:entryNo");
 
-		List<Statement> statements = getResultList(query.setParameter(
-				"entryNo", entryNo));
+		List<Statement> statements = getResultList(query.setParameter("entryNo", entryNo));
 
 		if (!statements.isEmpty()) {
 			statement = statements.get(0);
@@ -68,8 +64,7 @@ public class StatementDao extends BaseDao {
 	}
 
 	public int getStatementCount() {
-		Number number = getSingleResultOrNull(getEntityManager()
-				.createNativeQuery("select count(*) from statement"));
+		Number number = getSingleResultOrNull(getEntityManager().createNativeQuery("select count(*) from statement"));
 
 		return number.intValue();
 	}
@@ -81,14 +76,18 @@ public class StatementDao extends BaseDao {
 	 * @param limit
 	 * @return
 	 */
-	public List<Statement> getAllStatements(Date startDate, Date endDate,
-			Integer offset, Integer limit) {
+	public List<Statement> getAllStatements(Date startDate, Date endDate, Integer offset, Integer limit) {
 		return getAllStatements(null, startDate, endDate, offset, limit);
 
 	}
 
-	public List<Statement> getAllStatements(String memberRegistrationNo,
-			Date startDate, Date endDate, Integer offset, Integer limit) {
+	public List<Statement> getAllStatements(String memberRegistrationNo, Date startDate, Date endDate, Integer offset,
+			Integer limit) {
+		return getAllStatements(memberRegistrationNo, startDate, endDate, offset, limit, false);
+	}
+
+	public List<Statement> getAllStatements(String memberRegistrationNo, Date startDate, Date endDate, Integer offset,
+			Integer limit, boolean isLessThanZero) {
 
 		StringBuffer sql = new StringBuffer("FROM Statement");
 
@@ -126,6 +125,20 @@ public class StatementDao extends BaseDao {
 			sql.append(" customerNo=:regNo");
 		}
 
+		if (isLessThanZero) {
+			if (isFirstParam) {
+				isFirstParam = false;
+				sql.append(" where");
+			} else {
+				sql.append(" and ");
+			}
+			// params.put("amount", 0.0);
+			// sql.append(" amount<=:amount");
+
+			// sql.append(" and ");
+			sql.append(" (entryNo IS NULL OR entryNo='PARTIAL')");
+		}
+
 		sql.append(" order by postingdate asc");
 
 		Query query = getEntityManager().createQuery(sql.toString());
@@ -141,8 +154,7 @@ public class StatementDao extends BaseDao {
 		// .setParameter("regNo", memberRegistrationNo), offset, limit);
 	}
 
-	public Integer getStatementCount(String memberNo, Date startDate,
-			Date endDate) {
+	public Integer getStatementCount(String memberNo, Date startDate, Date endDate) {
 		Number count = null;
 
 		StringBuffer sql = new StringBuffer("select count(*) from statement");
@@ -191,8 +203,7 @@ public class StatementDao extends BaseDao {
 	}
 
 	public Double getTotalDebit(String memberNo, Date startDate) {
-		StringBuffer sql = new StringBuffer(
-				"select sum(amount) from statement where amount < 0 ");
+		StringBuffer sql = new StringBuffer("select sum(amount) from statement where amount < 0 ");
 		System.err.println("Getting total debit for " + memberNo);
 		boolean isFirstParam = false;
 		Map<String, Object> params = new HashMap<>();
@@ -229,8 +240,7 @@ public class StatementDao extends BaseDao {
 
 	public Double getTotalCredit(String memberNo, Date startDate) {
 		System.err.println("Getting total credit for " + memberNo);
-		StringBuffer sql = new StringBuffer(
-				"select sum(amount) from statement where amount > 0 ");
+		StringBuffer sql = new StringBuffer("select sum(amount) from statement where amount > 0 ");
 		boolean isFirstParam = false;
 		Map<String, Object> params = new HashMap<>();
 
@@ -269,8 +279,7 @@ public class StatementDao extends BaseDao {
 			sql = sql + "and postingDate<:startDate";
 		}
 
-		Query query = getEntityManager().createNativeQuery(sql).setParameter(
-				"memberNo", memberNo);
+		Query query = getEntityManager().createNativeQuery(sql).setParameter("memberNo", memberNo);
 
 		if (startDate != null) {
 			query.setParameter("startDate", startDate);

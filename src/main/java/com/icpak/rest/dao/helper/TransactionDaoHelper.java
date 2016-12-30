@@ -7,6 +7,7 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -33,6 +34,7 @@ import com.icpak.rest.dao.ApplicationFormDao;
 import com.icpak.rest.dao.BookingsDao;
 import com.icpak.rest.dao.InvoiceDao;
 import com.icpak.rest.dao.MemberDao;
+import com.icpak.rest.dao.StatementDao;
 import com.icpak.rest.dao.TransactionsDao;
 import com.icpak.rest.dao.UsersDao;
 import com.icpak.rest.models.auth.User;
@@ -41,6 +43,7 @@ import com.icpak.rest.models.event.Delegate;
 import com.icpak.rest.models.membership.ApplicationFormHeader;
 import com.icpak.rest.models.membership.Member;
 import com.icpak.rest.models.trx.Invoice;
+import com.icpak.rest.models.trx.Statement;
 import com.icpak.rest.models.trx.Transaction;
 import com.icpak.rest.util.SMSIntegration;
 import com.icpak.rest.utils.EmailServiceHelper;
@@ -56,6 +59,7 @@ import com.workpoint.icpak.shared.model.PaymentType;
 import com.workpoint.icpak.shared.model.TransactionDto;
 import com.workpoint.icpak.shared.model.events.DelegateDto;
 import com.workpoint.icpak.shared.model.events.EventDto;
+import com.workpoint.icpak.shared.model.statement.StatementDto;
 import com.workpoint.icpak.shared.trx.OldTransactionDto;
 
 @Transactional
@@ -73,15 +77,17 @@ public class TransactionDaoHelper {
 	@Inject
 	SMSIntegration smsIntergration;
 	@Inject
+	StatementDaoHelper statementDaoHelper;
+	@Inject
+	StatementDao statementDao;
+	@Inject
 	MemberDao memberDao;
-
 	@Inject
 	UsersDao usersDao;
 	Logger logger = Logger.getLogger(TransactionDaoHelper.class.getName());
 	Locale locale = new Locale("en", "KE");
 	NumberFormat numberFormat = NumberFormat.getCurrencyInstance(locale);
 	private InvoiceDto invoiceDto;
-
 	// 2.Post to Nav
 	StartPoint start = new StartPoint();
 
@@ -150,7 +156,7 @@ public class TransactionDaoHelper {
 		accountNo = accountNo.replaceAll("[-+.^:,]", "");
 		logger.info("Trimmed Account No::::" + accountNo);
 
-		// Always store the transaction
+		// Always store the transaction first
 		Date parsedDate = null;
 		try {
 			parsedDate = ServerDateUtils.MPESATIMESTAMP.parse(trxDate);
@@ -286,8 +292,183 @@ public class TransactionDaoHelper {
 	}
 
 	/*
-	 * Returns what the person should be charged
+	 * Date:29/12/206 Method: This method applies payment to your statements
+	 * Author:Tom Kimani
 	 */
+	Double paymentBalance = 0.0;
+	Double chargedAmount = 0.0; // The individual Amount
+
+	public void receivePaymentAndApplyToStatement(String paymentRef, String businessNo, String accountNo,
+			String paymentMode, String trxNumber, String phoneNumber, String amount, String trxDate,
+			String payerNames) {
+
+		partialChargedAmount = 0.0;
+		partialPaymentBalance = 0.0;
+		partialPaymentTotalAmount = 0.0;
+		previousPartialPayments = new ArrayList<>();
+		previousChargedPayment = null;
+		counter = 0;
+		paymentBalance = 0.0;
+		chargedAmount = 0.0; // The individual Amount
+
+		// Prepare the transaction for saving
+		Date parsedDate = null;
+		try {
+			parsedDate = ServerDateUtils.MPESATIMESTAMP.parse(trxDate);
+		} catch (ParseException e1) {
+			e1.printStackTrace();
+		}
+
+		Transaction trx = new Transaction();
+		trx.setAccountNo(accountNo);
+		trx.setDate(parsedDate);
+		if (paymentMode != null) {
+			if (paymentMode.equals("MPESA")) {
+				trx.setPaymentMode(PaymentMode.MPESA);
+			} else if (paymentMode.equals("CARDS")) {
+				trx.setPaymentMode(PaymentMode.CARDS);
+			}
+		}
+		trx.setTrxNumber(paymentRef);
+		trx.setPayerNames(payerNames);
+		trx.setBusinessNo(businessNo);
+		trx.setAmount(Double.parseDouble(amount));
+		trx.setStatus(PaymentStatus.PAID);
+		trx.setDescription(paymentMode + " payments");
+		trx.setInvoiceRef(accountNo);
+		trx.setPaymentType(PaymentType.UNKNOWN);
+		saveTransactionFirst(trx); // For Future Reference
+
+		// Pull Users Statements by checking the payee's PhoneNumber
+		User user = usersDao.getByUserPhoneNo(phoneNumber, false);
+
+		if (user != null && user.getMember() != null && user.getMemberNo() != null && !user.getMemberNo().isEmpty()) {
+
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+			Date postingDateConverted = null;
+			try {
+				postingDateConverted = formatter.parse("2016-01-01");
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+
+			// Get all partial paysments and debits which have not been paid
+			// for.
+			List<StatementDto> statements = statementDaoHelper.getAllStatements(user.getMember().getRefId(),
+					postingDateConverted, null, 0, 10000, true);
+
+			paymentBalance = Double.parseDouble(amount);
+
+			int partialPaymentsCounter = 0;
+			for (StatementDto statement : statements) {
+				if (statement.getEntryNo() != null && statement.getEntryNo().equals("PARTIAL")) {
+					partialPaymentsCounter = partialPaymentsCounter + 1;
+				}
+			}
+			logger.info("Total size of unpaid & partial payments::" + statements.size());
+			logger.info("Total size of partial payments::" + partialPaymentsCounter);
+
+			for (StatementDto statement : statements) {
+				if (statement.getEntryNo() != null && statement.getEntryNo().equals("PARTIAL")) {
+					clearPartialPayments(statement, user, paymentMode, trxNumber, partialPaymentsCounter);
+				} else if (paymentBalance > 0) {
+					chargedAmount = (-statement.getAmount());
+					if (statement.getAmount() != 0 && paymentBalance >= 0) {
+						StatementDto newRecord = new StatementDto();
+						newRecord.setPostingDate(statement.getPostingDate());
+						newRecord.setCustomerNo(user.getMemberNo());
+						newRecord.setDocumentType(paymentMode + " PAYMENT");
+						newRecord.setDocumentNo(trxNumber);
+
+						// Update the statement that it has been recorded.
+						Statement existingRecord = dao.findByRefId(statement.getRefId(), Statement.class);
+						if (paymentBalance >= chargedAmount) {
+							newRecord.setDescription("Full Payment for " + statement.getDescription());
+							newRecord.setAmount(chargedAmount);
+							newRecord.setEntryNo("CLEARED");
+							existingRecord.setEntryNo("CLEARED");
+						} else {
+							newRecord.setDescription("Partial Payment for " + statement.getDescription());
+							newRecord.setAmount(paymentBalance);
+							newRecord.setEntryNo("PARTIAL");
+							existingRecord.setEntryNo("PARTIAL");
+						}
+						statementDao.updateStatement(existingRecord);
+						statementDaoHelper.createStatement(newRecord);
+
+						paymentBalance = paymentBalance - chargedAmount;
+						logger.info("After Charging>>>>");
+						logger.info("New statement:: " + statement.getAmount() + " Balance::" + paymentBalance + "\n");
+					}
+				}
+			}
+		} else {
+			logger.debug("No user found OR User has No memberNo with phoneNumber::" + phoneNumber);
+		}
+
+	}
+
+	Double partialChargedAmount = 0.0;
+	Double partialPaymentBalance = 0.0;
+	Double partialPaymentTotalAmount = 0.0;
+	List<StatementDto> previousPartialPayments = new ArrayList<>();
+	StatementDto previousChargedPayment;
+	int counter = 0;
+
+	/*
+	 * Clears Any Partial Balance By awaiting for Credit, Debit Assumption:There
+	 * will be a chargedAmount and a Partial Payment
+	 */
+	private void clearPartialPayments(StatementDto statement, User user, String paymentMode, String trxNumber,
+			int partialPaymentSize) {
+		counter = counter + 1;
+		logger.info(">>>> Clearing Partial Payments First.We first find the charged amount>>>>");
+		if (statement.getAmount() < 0.0) {
+			partialChargedAmount = (-statement.getAmount());
+			previousChargedPayment = statement;
+		} else if (statement.getAmount() > 0.0) {
+			partialPaymentTotalAmount = partialPaymentTotalAmount + (statement.getAmount());
+			previousPartialPayments.add(statement);
+		}
+
+		logger.info("Are we ready to clear?" + ">>Counter:" + counter + "Partial Payment Size:" + (partialPaymentSize));
+		if (counter == partialPaymentSize) {
+			// Proceed to get the balance and get write it into the statements
+			partialPaymentBalance = partialChargedAmount - partialPaymentTotalAmount;
+
+			StatementDto newRecord = new StatementDto();
+			newRecord.setPostingDate(previousChargedPayment.getPostingDate());
+			newRecord.setCustomerNo(user.getMemberNo());
+			newRecord.setDocumentType(paymentMode + " PAYMENT");
+			newRecord.setDocumentNo(trxNumber);
+
+			if (paymentBalance >= partialPaymentBalance) {
+				newRecord.setDescription("Full Payment for " + previousChargedPayment.getDescription());
+				newRecord.setAmount(partialPaymentBalance);
+				newRecord.setEntryNo("CLEARED");
+				// Update the statement that it has been recorded.
+				Statement existingRecord = dao.findByRefId(previousChargedPayment.getRefId(), Statement.class);
+				existingRecord.setEntryNo("CLEARED");
+
+				// Get the Previous Charged Statement and clear it.
+				for (StatementDto s : previousPartialPayments) {
+					Statement existingRecord2 = dao.findByRefId(s.getRefId(), Statement.class);
+					existingRecord2.setEntryNo("CLEARED");
+					statementDao.updateStatement(existingRecord2);
+				}
+				statementDao.updateStatement(existingRecord); // Clears the
+			} else if (paymentBalance > 0) {
+				newRecord.setDescription("Partial Payment for " + previousChargedPayment.getDescription());
+				newRecord.setAmount(paymentBalance);
+				newRecord.setEntryNo("PARTIAL");
+			}
+			statementDaoHelper.createStatement(newRecord);
+			paymentBalance = paymentBalance - partialPaymentBalance;
+			logger.info("<<<After Clearing Partial Balances>>>>");
+			logger.info("New statement:: " + statement.getAmount() + " Balance::" + paymentBalance + "\n");
+			counter = 0;// Clear the counter to Zero
+		}
+	}
 
 	private void syncWithErp(Transaction trx) {
 		OnlineMemberPayments memberPayment = new OnlineMemberPayments();

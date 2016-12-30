@@ -17,6 +17,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Ignore;
+import org.junit.Test;
 import org.xml.sax.SAXException;
 
 import com.amazonaws.util.json.JSONException;
@@ -42,8 +43,7 @@ public class TestStatementsDao extends AbstractDaoTest {
 	CPDDao cpdDao;
 
 	@Ignore
-	public void generateReport() throws FileNotFoundException, IOException,
-			SAXException, ParserConfigurationException,
+	public void generateReport() throws FileNotFoundException, IOException, SAXException, ParserConfigurationException,
 			FactoryConfigurationError, DocumentException {
 		String memberRefId = "cb4ZWESs9um1k8BN";
 		Calendar c = Calendar.getInstance();
@@ -55,18 +55,15 @@ public class TestStatementsDao extends AbstractDaoTest {
 		c.set(Calendar.SECOND, 0);
 		c.set(Calendar.MILLISECOND, 0);
 
-		byte[] bites = reportServlet.processStatementsRequest(memberRefId,
-				c.getTime(), null);
+		byte[] bites = reportServlet.processStatementsRequest(memberRefId, c.getTime(), null);
 
-		IOUtils.write(bites, new FileOutputStream(new File(
-				"/home/wladek/Documents/statements.pdf")));
+		IOUtils.write(bites, new FileOutputStream(new File("/home/wladek/Documents/statements.pdf")));
 
 	}
 
 	@Ignore
-	public void generateMemebrCPDReport() throws FileNotFoundException,
-			IOException, SAXException, ParserConfigurationException,
-			FactoryConfigurationError, DocumentException {
+	public void generateMemebrCPDReport() throws FileNotFoundException, IOException, SAXException,
+			ParserConfigurationException, FactoryConfigurationError, DocumentException {
 		String memberRefId = "pySASAeyC482FVKZ";
 		Long startDate = 1356987600000L;
 
@@ -74,8 +71,7 @@ public class TestStatementsDao extends AbstractDaoTest {
 		// Assert.assertEquals(12, cpds.size());
 		// System.err.println("No of entries = " + cpds.size());
 
-		statementHelper.getAllStatements(memberRefId, new Date(startDate),
-				null, 0, 1000);
+		statementHelper.getAllStatements(memberRefId, new Date(startDate), null, 0, 1000);
 
 		// byte[] bites = reportServlet.processMemberCPDStatementRequest(
 		// memberRefId, null, null);
@@ -101,8 +97,7 @@ public class TestStatementsDao extends AbstractDaoTest {
 	}
 
 	@Ignore
-	public void testFromErp() throws URISyntaxException, ParseException,
-			JSONException {
+	public void testFromErp() throws URISyntaxException, ParseException, JSONException {
 		statementHelper.updateStatementsRecord("cb4ZWESs9um1k8BN");
 	}
 
@@ -116,12 +111,23 @@ public class TestStatementsDao extends AbstractDaoTest {
 	@Ignore
 	public void testTotals() {
 		Long startDate = 1420059600000L;
-		StatementSummaryDto summary = statementHelper.getSummary(
-				"m17193dBJZTEeNZj", new Date(startDate), null);
+		StatementSummaryDto summary = statementHelper.getSummary("m17193dBJZTEeNZj", new Date(startDate), null);
 		System.err.println("Total Debit>>" + summary.getTotalDebit());
 		System.err.println("Total Credit>>" + summary.getTotalCredit());
 		System.err.println("Total Balance>>" + summary.getTotalBalance());
 
 	}
-	
+
+	// @Test
+	public void testMonthlyStatementGeneration() {
+		statementHelper.createMonthlyStatementForAllMembers("2016-09-01", "2016-12-31", -2000.0);
+
+		statementHelper.createOneTimeStatementForAllMembers("2016-05-10", -1000.0, "Contribution for Wangari's Burial");
+	}
+
+	// @Test
+	public void testApplyPenaltiesOnLatePayments() {
+		statementHelper.applyPenaltiesBetweenDateRange("2016-09-01", "2016-12-31");
+	}
+
 }

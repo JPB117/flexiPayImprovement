@@ -1,7 +1,6 @@
 package com.icpak.rest.dao.helper;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -11,6 +10,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.mail.MessagingException;
-import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -38,9 +37,7 @@ import org.xml.sax.SAXException;
 import com.amazonaws.util.json.JSONException;
 import com.amazonaws.util.json.JSONObject;
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import com.google.inject.persist.Transactional;
-import com.icpak.rest.IDUtils;
 import com.icpak.rest.dao.CPDDao;
 import com.icpak.rest.dao.MemberDao;
 import com.icpak.rest.dao.StatementDao;
@@ -55,6 +52,7 @@ import com.icpak.rest.utils.EmailServiceHelper;
 import com.icpak.rest.utils.HTMLToPDFConvertor;
 import com.icpak.servlet.upload.GetReport;
 import com.itextpdf.text.DocumentException;
+import com.workpoint.icpak.server.util.ServerDateUtils;
 import com.workpoint.icpak.shared.model.CPDStatus;
 import com.workpoint.icpak.shared.model.MemberDto;
 import com.workpoint.icpak.shared.model.UserDto;
@@ -77,6 +75,11 @@ public class StatementDaoHelper {
 
 	public List<StatementDto> getAllStatements(String memberId, Date startDate, Date endDate, Integer offset,
 			Integer limit) {
+		return getAllStatements(memberId, startDate, endDate, offset, limit, false);
+	}
+
+	public List<StatementDto> getAllStatements(String memberId, Date startDate, Date endDate, Integer offset,
+			Integer limit, boolean isLessThanZero) {
 
 		List<Statement> statementList = new ArrayList<>();
 		Member member = null;
@@ -88,7 +91,8 @@ public class StatementDaoHelper {
 			if (member.getMemberNo() == null) {
 				return new ArrayList<>();
 			}
-			statementList = statementDao.getAllStatements(member.getMemberNo(), startDate, endDate, offset, limit);
+			statementList = statementDao.getAllStatements(member.getMemberNo(), startDate, endDate, offset, limit,
+					isLessThanZero);
 		}
 
 		List<StatementDto> statementDtos = new ArrayList<>();
@@ -117,15 +121,6 @@ public class StatementDaoHelper {
 			statementDtos.add(statementDto);
 		}
 
-		// if (member != null) {
-		// StatementDto balanceCF =
-		// statementDao.getBalanceCD(member.getMemberNo(),
-		// endDate == null ? new Date() : endDate);
-		// balanceCF.setDescription("Balance C/F");
-		// balanceCF.setDocumentType("Balance C/F");
-		// statementDtos.add(balanceCF);
-		// }
-
 		return statementDtos;
 	}
 
@@ -144,15 +139,10 @@ public class StatementDaoHelper {
 	}
 
 	public StatementDto createStatement(StatementDto statementDto) {
-
-		assert statementDto.getRefId() == null;
 		Statement statement = new Statement();
-		statement.setRefId(IDUtils.generateId());
-		// statementDto.setRefId(statement.getRefId());
 		statement.copyFrom(statementDto);
 		statementDao.save(statement);
 		assert statement.getId() != null;
-
 		return statement.toStatementDto();
 	}
 
@@ -357,8 +347,8 @@ public class StatementDaoHelper {
 				attachment.setAttachment(cpdStatementPDF);
 				attachment.setName("Quaterly_Statement_as_at_ " + endDate + " for_" + member.getMemberNo() + ".pdf");
 
-				String html = "This is your annual quaterly Statement from " + formatter.format(lastThreeMonths.toDate())
-						+ " to " + endDate;
+				String html = "This is your annual quaterly Statement from "
+						+ formatter.format(lastThreeMonths.toDate()) + " to " + endDate;
 				String subject = "ANNUAL QUATERLY STATEMENT";
 
 				EmailServiceHelper.sendEmail(html, "RE: ICPAK '" + subject, Arrays.asList("wladek.airo@gmail.com"),
@@ -517,6 +507,124 @@ public class StatementDaoHelper {
 		String name = userDto.getFullName() + " " + formatter_.format(new Date()) + ".pdf";
 
 		return data;
+	}
+
+	// Get Months between two dates
+	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+	SimpleDateFormat monthlyStatementFormat = new SimpleDateFormat("MMM-yyyy");
+
+	public void createMonthlyStatementForAllMembers(String startDate, String endDate, Double contributionAmount) {
+		// Get All Chama Members
+		List<MemberDto> allMembers = memberDao.getAllMembers(0, 1000, "");
+
+		Date startDateConverted = null;
+		Date endDateConverted = null;
+		try {
+			startDateConverted = formatter.parse(startDate);
+			endDateConverted = formatter.parse(endDate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
+		Calendar start = Calendar.getInstance();
+		start.setTime(startDateConverted);
+		Calendar end = Calendar.getInstance();
+		end.setTime(endDateConverted);
+
+		int noticeCounter = 1;
+
+		for (Date date = start.getTime(); start.before(end); start.add(Calendar.MONTH, 1), date = start.getTime()) {
+			System.err.println(">>>>" + date);
+
+			for (MemberDto member : allMembers) {
+				StatementDto statementDto = new StatementDto();
+				statementDto.setPostingDate(date);
+				statementDto.setAmount(contributionAmount);
+				statementDto.setDocumentType("MONTHLY NOTICE");
+				statementDto.setDocumentNo("NOTICE-" + noticeCounter);
+				statementDto.setDescription(monthlyStatementFormat.format(date) + " Monthly Contribution");
+				statementDto.setCustomerNo(member.getMemberNo());
+				createStatement(statementDto);
+				noticeCounter = noticeCounter + 1;
+				System.err.println("Posted statement for " + member.getFullName());
+			}
+		}
+	}
+
+	public void applyPenaltiesBetweenDateRange(String startDate, String endDate) {
+		// Get All Chama Members
+		List<MemberDto> allMembers = memberDao.getAllMembers(0, 1000, "");
+
+		Date startDateConverted = null;
+		Date endDateConverted = null;
+		try {
+			startDateConverted = formatter.parse(startDate);
+			endDateConverted = formatter.parse(endDate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
+		Calendar start = Calendar.getInstance();
+		start.setTime(startDateConverted);
+		Calendar end = Calendar.getInstance();
+		end.setTime(endDateConverted);
+
+		int penaltyCounter = 1;
+		for (Date date = start.getTime(); start.before(end); start.add(Calendar.MONTH, 1), date = start.getTime()) {
+			System.err.println(">>>>" + date);
+
+			Calendar firstDayOfMonth = Calendar.getInstance();
+			firstDayOfMonth.setTime(date);
+			firstDayOfMonth.add(Calendar.DATE, 15);
+			for (MemberDto member : allMembers) {
+				Double balance = statementDao.getOpeningBalance(member.getMemberNo(), firstDayOfMonth.getTime())
+						.getAmount();
+				System.err.println(
+						">>>>" + ServerDateUtils.MONTHDAYFORMAT.format(firstDayOfMonth.getTime()) + ">>>>" + balance);
+				if (balance < 0) {
+					StatementDto statementDto = new StatementDto();
+					statementDto.setPostingDate(date);
+					statementDto.setAmount(-100.0);
+					statementDto.setDocumentType("PENALTY");
+					statementDto.setDocumentNo("PENALTY-" + penaltyCounter);
+					statementDto.setDescription(monthlyStatementFormat.format(date) + " Late Contribution Penalty");
+					statementDto.setCustomerNo(member.getMemberNo());
+					createStatement(statementDto);
+					penaltyCounter = penaltyCounter + 1;
+					System.err.println("Created Penalty for " + member.getFullName());
+				}
+			}
+
+		}
+	}
+
+	public void createOneTimeStatementForAllMembers(String postingDate, Double contributionAmount,
+			String postingDescription) {
+
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		Date postingDateConverted = null;
+		try {
+			postingDateConverted = formatter.parse(postingDate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
+		// Get All Chama Members
+		List<MemberDto> allMembers = memberDao.getAllMembers(0, 1000, "");
+
+		int noticeCounter = 1;
+		for (MemberDto member : allMembers) {
+			StatementDto statementDto = new StatementDto();
+			statementDto.setPostingDate(postingDateConverted);
+			statementDto.setAmount(contributionAmount);
+			statementDto.setDocumentType("ONETIME NOTICE");
+			statementDto.setDocumentNo("NOTICE-" + noticeCounter);
+			statementDto.setDescription(postingDescription);
+			statementDto.setCustomerNo(member.getMemberNo());
+			createStatement(statementDto);
+			noticeCounter = noticeCounter + 1;
+			System.err.println("Posted statement for " + member.getFullName());
+		}
 	}
 
 }

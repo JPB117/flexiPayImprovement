@@ -102,10 +102,37 @@ public class TestInvoiceDao extends AbstractDaoTest {
 		System.err.println(">>>>" + invoice.get(0).getStatus());
 	}
 
-	// @Test
+	//@Test
 	public void testPayment() {
-		trxHelper.receivePaymentUsingInvoiceNo("DFAFDAF64G", "722722", "INV5496", "MPESA", "DFAFDAF61G", "254729472421",
-				"227000", "2016-01-31 18:42:08", "N/A");
+		trxHelper.receivePaymentAndApplyToStatement("DFAFDAF64G", "722722", "INV5496", "MPESA", "DFAFDAHTI",
+				"254729472421", "4000", "2016-05-31 18:42:08", "N/A");
+	}
+
+	@Test
+	public void testImportTransactions() {
+		String fileLocation = "C:\\Users\\user\\Documents\\Karagita\\karagita_all_transactions.csv";
+		BufferedReader br = null;
+		String fileLine = "";
+
+		try {
+			br = new BufferedReader(new FileReader(fileLocation));
+		} catch (FileNotFoundException fileNotFound) {
+			System.err.println("File Not found..");
+			return;
+		}
+
+		try {
+			while ((fileLine = br.readLine()) != null) {
+				// trxHelper.performServerIPN(fileLine);
+				String[] column = fileLine.split(",");
+				System.err.println("Executed>>>" + fileLine);
+				trxHelper.receivePaymentAndApplyToStatement(column[1], "510511", "2141", "MPESA", column[1], column[3],
+						column[4], column[0], "N/A");
+			}
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+
 	}
 
 	@Ignore
@@ -191,7 +218,7 @@ public class TestInvoiceDao extends AbstractDaoTest {
 
 	}
 
-	@Test
+	// @Test
 	public void testRedoCardTransactions() {
 		String fileLocation = "C:\\Users\\user\\Desktop\\lipisha_dec_trx(unposted).csv";
 		BufferedReader br = null;
@@ -215,7 +242,6 @@ public class TestInvoiceDao extends AbstractDaoTest {
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
-
 	}
 
 	// @Test

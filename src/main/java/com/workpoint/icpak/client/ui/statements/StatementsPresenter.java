@@ -38,7 +38,7 @@ import com.workpoint.icpak.client.ui.events.ProcessingCompletedEvent;
 import com.workpoint.icpak.client.ui.events.ProcessingEvent;
 import com.workpoint.icpak.client.ui.events.ToggleSideBarEvent;
 import com.workpoint.icpak.client.ui.home.HomePresenter;
-import com.workpoint.icpak.client.ui.security.MemberGateKeeper;
+import com.workpoint.icpak.client.ui.security.LoginGateKeeper;
 import com.workpoint.icpak.client.ui.util.DateRange;
 import com.workpoint.icpak.client.util.AppContext;
 import com.workpoint.icpak.shared.api.MemberResource;
@@ -47,8 +47,7 @@ import com.workpoint.icpak.shared.model.statement.StatementDto;
 import com.workpoint.icpak.shared.model.statement.StatementSummaryDto;
 
 public class StatementsPresenter
-		extends
-		Presenter<StatementsPresenter.IStatementsView, StatementsPresenter.IStatementsProxy> {
+		extends Presenter<StatementsPresenter.IStatementsView, StatementsPresenter.IStatementsProxy> {
 
 	public interface IStatementsView extends View {
 		void setData(List<StatementDto> result, int totalCount);
@@ -74,15 +73,13 @@ public class StatementsPresenter
 
 	@ProxyCodeSplit
 	@NameToken(NameTokens.statements)
-	@UseGatekeeper(MemberGateKeeper.class)
-	public interface IStatementsProxy extends
-			TabContentProxyPlace<StatementsPresenter> {
+	@UseGatekeeper(LoginGateKeeper.class)
+	public interface IStatementsProxy extends TabContentProxyPlace<StatementsPresenter> {
 	}
 
 	@TabInfo(container = HomePresenter.class)
-	static TabData getTabLabel(MemberGateKeeper gateKeeper) {
-		TabDataExt data = new TabDataExt("Statements", "fa fa-briefcase", 8,
-				gateKeeper, true);
+	static TabData getTabLabel(LoginGateKeeper gateKeeper) {
+		TabDataExt data = new TabDataExt("Statements", "fa fa-briefcase", 8, gateKeeper, true);
 		return data;
 	}
 
@@ -94,8 +91,7 @@ public class StatementsPresenter
 	private ResourceDelegate<MemberResource> memberDelegate;
 
 	@Inject
-	public StatementsPresenter(final EventBus eventBus,
-			final IStatementsView view, final IStatementsProxy proxy,
+	public StatementsPresenter(final EventBus eventBus, final IStatementsView view, final IStatementsProxy proxy,
 			final ResourceDelegate<MemberResource> memberResource) {
 		super(eventBus, view, proxy, HomePresenter.SLOT_SetTabContent);
 		this.memberDelegate = memberResource;
@@ -115,9 +111,7 @@ public class StatementsPresenter
 	}
 
 	protected String getMemberId() {
-
-		String memberId = (AppContext.isCurrentUserAdmin() ? "ALL" : AppContext
-				.getContextUser().getMemberRefId());
+		String memberId = (AppContext.isCurrentUserAdmin() ? "ALL" : AppContext.getContextUser().getMemberRefId());
 		return memberId;
 	}
 
@@ -127,47 +121,33 @@ public class StatementsPresenter
 		fireEvent(new ProcessingEvent());
 		loadStatementSummary(startDate, endDate);
 
-		memberDelegate
-				.withCallback(new AbstractAsyncCallback<Integer>() {
+		memberDelegate.withCallback(new AbstractAsyncCallback<Integer>() {
+			@Override
+			public void onSuccess(Integer aCount) {
+				totalCount = aCount;
+				// Load Actual Statements
+				memberDelegate.withCallback(new AbstractAsyncCallback<List<StatementDto>>() {
 					@Override
-					public void onSuccess(Integer aCount) {
-						totalCount = aCount;
-						// Load Actual Statements
-						memberDelegate
-								.withCallback(
-										new AbstractAsyncCallback<List<StatementDto>>() {
-											@Override
-											public void onSuccess(
-													List<StatementDto> result) {
-												getView().setData(result,
-														totalCount);
-												fireEvent(new ProcessingCompletedEvent());
-											}
-										})
-								.statements(getMemberId())
-								.getAll(startDate == null ? null : startDate
-										.getTime(),
-										endDate == null ? null : endDate
-												.getTime(), offset, limit);
+					public void onSuccess(List<StatementDto> result) {
+						getView().setData(result, totalCount);
+						fireEvent(new ProcessingCompletedEvent());
 					}
-				})
-				.statements(getMemberId())
-				.getCount(startDate == null ? null : startDate.getTime(),
-						endDate == null ? null : endDate.getTime());
+				}).statements(getMemberId()).getAll(startDate == null ? null : startDate.getTime(),
+						endDate == null ? null : endDate.getTime(), offset, limit);
+			}
+		}).statements(getMemberId()).getCount(startDate == null ? null : startDate.getTime(),
+				endDate == null ? null : endDate.getTime());
 	}
 
 	protected void loadStatementSummary(Date startDate, Date endDate) {
-		memberDelegate
-				.withCallback(new AbstractAsyncCallback<StatementSummaryDto>() {
-					@Override
-					public void onSuccess(StatementSummaryDto result) {
-						getView().setSummary(result);
-						fireEvent(new ProcessingCompletedEvent());
-					}
-				})
-				.statements(getMemberId())
-				.getSummary(startDate == null ? null : startDate.getTime(),
-						endDate == null ? null : endDate.getTime());
+		memberDelegate.withCallback(new AbstractAsyncCallback<StatementSummaryDto>() {
+			@Override
+			public void onSuccess(StatementSummaryDto result) {
+				getView().setSummary(result);
+				fireEvent(new ProcessingCompletedEvent());
+			}
+		}).statements(getMemberId()).getSummary(startDate == null ? null : startDate.getTime(),
+				endDate == null ? null : endDate.getTime());
 	}
 
 	@Override
@@ -175,16 +155,13 @@ public class StatementsPresenter
 		super.onReveal();
 		fireEvent(new ToggleSideBarEvent(false));
 		getView().setInitialDates(DateRange.THISYEAR, null);
-		getView().getGrid().setDataProvider(
-				new AsyncDataProvider<StatementDto>() {
-					@Override
-					protected void onRangeChanged(
-							final HasData<StatementDto> display) {
-						final Range range = getView().getGrid()
-								.getVisibleRange();
-						loadStatements(range.getStart(), range.getLength());
-					}
-				});
+		getView().getGrid().setDataProvider(new AsyncDataProvider<StatementDto>() {
+			@Override
+			protected void onRangeChanged(final HasData<StatementDto> display) {
+				final Range range = getView().getGrid().getVisibleRange();
+				loadStatements(range.getStart(), 100);
+			}
+		});
 	}
 
 }

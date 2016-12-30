@@ -61,6 +61,17 @@ public class UsersDao extends BaseDao {
 				}
 			}
 		}
+		return user;
+	}
+
+	public User getByUserPhoneNo(String userPhoneNo, boolean throwExceptionIfNull) {
+		User user = getSingleResultOrNull(
+				getEntityManager().createQuery("from User u where u.phoneNumber like :userPhoneNo")
+						.setParameter("userPhoneNo", "%" + userPhoneNo + "%"));
+
+		if (throwExceptionIfNull && user == null) {
+			throw new ServiceException(ErrorCodes.NOTFOUND, "PhoneNo.", "'" + userPhoneNo + "'");
+		}
 
 		return user;
 	}

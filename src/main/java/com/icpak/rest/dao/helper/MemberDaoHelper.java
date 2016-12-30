@@ -77,8 +77,7 @@ public class MemberDaoHelper {
 		memberDao.delete(member);
 	}
 
-	public List<MemberDto> getAllMembers(Integer offset, Integer limit,
-			String uriInfo, String searchTerm) {
+	public List<MemberDto> getAllMembers(Integer offset, Integer limit, String uriInfo, String searchTerm) {
 		if (searchTerm != null) {
 			return memberDao.getAllMembers(offset, limit, searchTerm);
 		}
@@ -112,8 +111,7 @@ public class MemberDaoHelper {
 		Member member = memberDao.findByRefId(memberId, Member.class);
 
 		if (member == null) {
-			throw new ServiceException(ErrorCodes.NOTFOUND, "'" + memberId
-					+ "'");
+			throw new ServiceException(ErrorCodes.NOTFOUND, "'" + memberId + "'");
 		}
 
 		return member.toDto();
@@ -123,6 +121,7 @@ public class MemberDaoHelper {
 		Member member = memberDao.getByMemberNo(memberNo);
 		return member.toDto();
 	}
+
 
 	/**
 	 * 
@@ -154,16 +153,14 @@ public class MemberDaoHelper {
 				}
 			} else {
 				logger.fatal(" ==== Date difference === "
-						+ ((today.getTime() - memberInDb.getLastUpdate()
-								.getTime()) - (48 * 60 * 1000)));
+						+ ((today.getTime() - memberInDb.getLastUpdate().getTime()) - (48 * 60 * 1000)));
 
 				if (forceRefresh) {
 
 					logger.fatal(" ==== Force refresh == " + forceRefresh);
 
 					makeErpRequest(memberInDb);
-				} else if (today.getTime()
-						- memberInDb.getLastUpdate().getTime() > 48 * 60 * 1000) {
+				} else if (today.getTime() - memberInDb.getLastUpdate().getTime() > 48 * 60 * 1000) {
 
 					logger.fatal(" ==== Force refresh == " + forceRefresh);
 
@@ -180,8 +177,7 @@ public class MemberDaoHelper {
 
 	}
 
-	public void makeErpRequest(Member memberInDb) throws ParseException,
-			IllegalStateException, IOException {
+	public void makeErpRequest(Member memberInDb) throws ParseException, IllegalStateException, IOException {
 		logger.fatal(" ==== SUCCESS === Updated from ERP == ");
 
 		try {
@@ -197,16 +193,15 @@ public class MemberDaoHelper {
 		}
 	}
 
-	public Member getErpRequest(Member memberInDb) throws URISyntaxException,
-			IllegalStateException, IOException, ParseException {
+	public Member getErpRequest(Member memberInDb)
+			throws URISyntaxException, IllegalStateException, IOException, ParseException {
 		final HttpClient httpClient = new DefaultHttpClient();
 		final List<NameValuePair> qparams = new ArrayList<NameValuePair>();
 
 		qparams.add(new BasicNameValuePair("type", "member"));
 		qparams.add(new BasicNameValuePair("reg_no", memberInDb.getMemberNo()));
 
-		final URI uri = URIUtils.createURI("http", "41.139.138.165/", -1,
-				"members/memberdata.php",
+		final URI uri = URIUtils.createURI("http", "41.139.138.165/", -1, "members/memberdata.php",
 				URLEncodedUtils.format(qparams, "UTF-8"), null);
 		final HttpGet request = new HttpGet();
 		request.setURI(uri);
@@ -220,8 +215,7 @@ public class MemberDaoHelper {
 			request.setHeader("accept", "text/html");
 			response = httpClient.execute(request);
 
-			BufferedReader rd = new BufferedReader(new InputStreamReader(
-					response.getEntity().getContent()));
+			BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 
 			result = new StringBuffer();
 
@@ -245,19 +239,17 @@ public class MemberDaoHelper {
 
 			/**
 			 * {"reg_no":"10078","Practising No_"
-			 * :"","E-Mail":"gakinyasam@yahoo.com", "Name":
-			 * "CPA Samuel Gakinya Muthoni","Address":"P.O. Box 12725",
-			 * "Address 2":"","Post Code":"00400","Phone No_":"0720 792236",
-			 * "Mobile No_":"", "Customer Type":"MEMBER","Date Registered"
+			 * :"","E-Mail":"gakinyasam@yahoo.com", "Name": "CPA Samuel Gakinya
+			 * Muthoni","Address":"P.O. Box 12725", "Address 2":"","Post
+			 * Code":"00400","Phone No_":"0720 792236", "Mobile No_":"",
+			 * "Customer Type":"MEMBER","Date Registered"
 			 * :"2012-08-22","Practicing Cert Date":"1753-01-01"}"
 			 */
 			jObject = new JSONObject(res);
 
 			memberInDb.setLastUpdate(new Date());
-			memberInDb.setRegistrationDate(formatter.parse((jObject
-					.getString("Date Registered"))));
-			memberInDb.setPractisingCertDate(formatter.parse((jObject
-					.getString("Practicing Cert Date"))));
+			memberInDb.setRegistrationDate(formatter.parse((jObject.getString("Date Registered"))));
+			memberInDb.setPractisingCertDate(formatter.parse((jObject.getString("Practicing Cert Date"))));
 			memberInDb.setPractisingNo(jObject.getString("Practising No_"));
 			memberInDb.setCustomerType(jObject.getString("Customer Type"));
 
@@ -286,8 +278,7 @@ public class MemberDaoHelper {
 			 */
 			userDao.updateUser(memberUser);
 
-			System.out.println("======<<<<<>>>>>>>==== + Response ===="
-					+ jObject.getString("Post Code"));
+			System.out.println("======<<<<<>>>>>>>==== + Response ====" + jObject.getString("Post Code"));
 
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -318,10 +309,8 @@ public class MemberDaoHelper {
 	 * Methods to be used by members presenter for website iframe
 	 */
 
-	public int getMembersCount(String searchTerm, String citySearchTerm,
-			String categoryName) {
-		return memberDao.getMembersCount(searchTerm, citySearchTerm,
-				categoryName);
+	public int getMembersCount(String searchTerm, String citySearchTerm, String categoryName) {
+		return memberDao.getMembersCount(searchTerm, citySearchTerm, categoryName);
 	}
 
 	public List<MemberDto> getMembers(Integer offSet, Integer limit) {
@@ -332,15 +321,13 @@ public class MemberDaoHelper {
 		return memberDao.getMembersSearchCount(searchTerm);
 	}
 
-	public List<MemberDto> searchMembers(String searchTerm, Integer offSet,
-			Integer limit) {
+	public List<MemberDto> searchMembers(String searchTerm, Integer offSet, Integer limit) {
 		return memberDao.searchMembers(searchTerm, offSet, limit);
 	}
 
-	public List<MemberDto> getMembersFromOldTable(String searchTerm,
-			String citySearchTerm, String categoryName, int offset, int limit) {
-		return memberDao.searchMembersFromOldTable(searchTerm, citySearchTerm,
-				categoryName, offset, limit);
+	public List<MemberDto> getMembersFromOldTable(String searchTerm, String citySearchTerm, String categoryName,
+			int offset, int limit) {
+		return memberDao.searchMembersFromOldTable(searchTerm, citySearchTerm, categoryName, offset, limit);
 	}
 
 	public boolean autoUPdateMembers() {
@@ -412,20 +399,17 @@ public class MemberDaoHelper {
 
 		}
 
-		logger.error(" DUPLICATE HASHMAP SIZE LIST SIZE ======= "
-				+ duplicates2.size());
+		logger.error(" DUPLICATE HASHMAP SIZE LIST SIZE ======= " + duplicates2.size());
 
 		for (Map.Entry<String, List<Member>> entry : duplicates2.entrySet()) {
 			String key = entry.getKey();
 			List<Member> memberList = entry.getValue();
 
-			logger.info(" MEMBER NO  ======= " + key + " SIZE === "
-					+ memberList.size());
+			logger.info(" MEMBER NO  ======= " + key + " SIZE === " + memberList.size());
 			int a = 0;
 			for (int i = 0; i < memberList.size(); i++) {
 
-				logger.info(" INDEX  ======= " + a + " REFID === "
-						+ memberList.get(a).getUser().getRefId());
+				logger.info(" INDEX  ======= " + a + " REFID === " + memberList.get(a).getUser().getRefId());
 
 				if (a > 0) {
 					memberDao.delete(memberList.get(a).getUser());

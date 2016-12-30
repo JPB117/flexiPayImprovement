@@ -124,28 +124,6 @@
 					<!-- START sidebar nav -->
 					<tab:HomeTabPanel ui:field="tabPanel"></tab:HomeTabPanel>
 					<!-- END sidebar nav -->
-					<ul class="nav ng-scope">
-						<li class="hide">
-							<a class="hand" href="https://www.icpak.com/fc/" target="_blank">
-								<em class="fa fa-external-link"></em>
-								<span>Fellowships</span>
-							</a>
-						</li>
-						<li>
-							<a class="hand" href="https://www.icpak.com/subsinvoice/"
-								target="_blank">
-								<em class="fa fa-external-link"></em>
-								<span>Subs Invoices</span>
-							</a>
-						</li>
-						<li>
-							<a class="hand" href="https://www.icpak.com/benevolent-scheme-form/"
-								target="_blank">
-								<em class="fa fa-external-link"></em>
-								<span>Benevolent Scheme</span>
-							</a>
-						</li>
-					</ul>
 				</nav>
 			</div>
 		</aside>

@@ -361,6 +361,11 @@ public class UsersDaoHelper {
 		return user.clone();
 	}
 
+	public UserDto getUserByMemberNo(String userPhoneNo) {
+		User user = dao.getByUserPhoneNo(userPhoneNo, false);
+		return user.toDto();
+	}
+
 	public User getUserByActivationEmail(String userEmail) {
 		boolean isFullMembershipDetected = false;
 		boolean isAssociateDetected = false;
