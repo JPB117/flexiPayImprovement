@@ -9,16 +9,17 @@
 		</layout>
 	</appender>
 	<logger name="com.icpak">
-		<level value="INFO" />
+
+		<level value="ALL" />
 	</logger>
 	<logger name="com.icpak.servlet">
-		<level value="FATAL" />
+		<level value="DEBUG" />
 	</logger>
 	<logger name="com.mchange">
 		<level value="FATAL" />
 	</logger>
 	<logger name="com.google.inject">
-		<level value="FATAL" />
+		<level value="ALL" />
 	</logger>
 	<logger name="org.hibernate">
 		<level value="FATAL" />
@@ -27,10 +28,11 @@
 	<!--logger name="org.hibernate.type"> <level value="TRACE" /> </logger -->
 
 	<logger name="org.apache.shiro">
-		<level value="FATAL" />
+
+		<level value="DEBUG" />
 	</logger>
 	<root>
-		<level value="INFO" />
+		<level value="ALL" />
 		<appender-ref ref="console" />
 	</root>
 </log4j:configuration>
