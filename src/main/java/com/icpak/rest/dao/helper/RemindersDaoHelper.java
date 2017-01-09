@@ -1,6 +1,7 @@
 package com.icpak.rest.dao.helper;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
@@ -13,6 +14,7 @@ import com.google.inject.persist.Transactional;
 import com.icpak.rest.dao.ApplicationFormDao;
 import com.icpak.rest.dao.MemberDao;
 import com.icpak.rest.dao.RemindersDao;
+import com.icpak.rest.dao.StatementDao;
 import com.icpak.rest.models.auth.User;
 import com.icpak.rest.models.membership.Member;
 import com.icpak.rest.models.sms.Reminder;
@@ -31,6 +33,8 @@ public class RemindersDaoHelper {
 	SMSIntegration smsIntegration;
 	@Inject
 	MemberDao memberDao;
+	@Inject
+	StatementDao statementDao;
 	@Inject
 	ApplicationFormDao applicationDao;
 
@@ -163,6 +167,31 @@ public class RemindersDaoHelper {
 		}
 	}
 
+	public void sendBulkSMS() {
+		List<Member> allMembers = memberDao.getAllMembers(0, 1000000);
+		for (Member m : allMembers) {
+			User user = m.getUser();
+			if (user != null && user.getMember() != null) {
+				String statementUrl = "https://www.icpak.com/flexipay/getreport?action=GETSTATEMENT&timestamp="
+						+ new Date().getTime() + "&startdate=1451595600000&memberRefId=" + user.getMember().getRefId()
+						+ "";
+				String message = "Karagita Welfare says: Happy new year %s. "
+						+ "We have now gone digital! Every month you will receive "
+						+ "you balance on SMS on the 1st day of the month. "
+						+ "Failure to pay by 16th of the month will automatically "
+						+ "apply a penalty to your account.You can"
+						+ " now also download your statements clicking the link below. " + statementUrl;
+
+				message = String.format(message, user.getFullName());
+				String phoneNumbers = user.getPhoneNumber();
+				phoneNumbers = phoneNumbers.trim();
+				phoneNumbers = phoneNumbers.replaceAll(";", ",");
+				System.err.println(phoneNumbers + ">>>>" + message);
+				smsIntegration.send(phoneNumbers, message);
+			}
+		}
+	}
+
 	public void executeReminder(String refId) {
 		Reminder reminder = reminderDao.findByRefId(refId, Reminder.class);
 		if (reminder != null) {
@@ -172,10 +201,19 @@ public class RemindersDaoHelper {
 					List<Member> allMembers = memberDao.getAllMembers(0, 1000000);
 					for (Member m : allMembers) {
 						User user = m.getUser();
-						if (user != null) {
-							String message = applyPlaceHolders(user, reminder.getMessage());
-							// System.err.println(message);
-							smsIntegration.send(user.getPhoneNumber(), message);
+						if (user != null && user.getMember() != null) {
+							Double balance = (statementDao.getOpeningBalance(user.getMember().getMemberNo(), new Date())
+									.getAmount());
+							if (balance < 0.0) {
+								balance = -balance;
+							}
+							DecimalFormat df2 = new DecimalFormat("###,###");
+							String message = applyPlaceHolders(user, reminder.getMessage(), df2.format(balance));
+							String phoneNumbers = user.getPhoneNumber();
+							phoneNumbers = phoneNumbers.trim();
+							phoneNumbers = phoneNumbers.replaceAll(";", ",");
+							smsIntegration.send(phoneNumbers, message);
+							System.err.println(phoneNumbers + ">>>>" + message);
 						}
 					}
 				} else {
@@ -190,10 +228,11 @@ public class RemindersDaoHelper {
 
 	}
 
-	private String applyPlaceHolders(User user, String message) {
+	private String applyPlaceHolders(User user, String message, String balance) {
+		System.err.println(balance);
 		String ammendedMessage = "";
-		ammendedMessage = String.format(message, user.getFullName());
-
+		ammendedMessage = String.format(message, user.getFullName(), balance);
+		System.err.println("Ammended>>>" + ammendedMessage);
 		return ammendedMessage;
 	}
 }

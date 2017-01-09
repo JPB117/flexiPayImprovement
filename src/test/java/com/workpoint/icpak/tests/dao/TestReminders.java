@@ -15,7 +15,7 @@ public class TestReminders extends AbstractDaoTest {
 	@Inject
 	RemindersDaoHelper reminderHelper;
 
-	@Test
+	// @Test
 	public void testReminderCreation() {
 		// Late Reminder
 		String message = "::From Karagita Welfare:: Dear %s, Please note that our chama payment of Kes 2,000 will be due on 16/9/2016. "
@@ -71,8 +71,12 @@ public class TestReminders extends AbstractDaoTest {
 
 	}
 
-	// @Test
+	@Test
 	public void testWindowsSchedulor() throws IOException, InterruptedException {
 		// reminderHelper.createReminderInSchedulor();
+
+		// reminderHelper.executeReminder("OOAkyw1KVymDyNuU");
+
+		reminderHelper.sendBulkSMS();
 	}
 }

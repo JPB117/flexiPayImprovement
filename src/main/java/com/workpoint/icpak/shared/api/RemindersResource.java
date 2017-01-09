@@ -23,4 +23,10 @@ public interface RemindersResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void executeReminder(@PathParam("reminderRefId") String reminderRefId);
 
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	public void executeMonthlyContribution(@PathParam("startDate") String reminderRefId);
+
+	public void executeMonthlyPenalty(@PathParam("startDate") String reminderRefId);
+
 }

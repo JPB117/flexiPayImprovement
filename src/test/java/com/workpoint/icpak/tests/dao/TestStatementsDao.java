@@ -54,11 +54,8 @@ public class TestStatementsDao extends AbstractDaoTest {
 		c.set(Calendar.MINUTE, 0);
 		c.set(Calendar.SECOND, 0);
 		c.set(Calendar.MILLISECOND, 0);
-
 		byte[] bites = reportServlet.processStatementsRequest(memberRefId, c.getTime(), null);
-
 		IOUtils.write(bites, new FileOutputStream(new File("/home/wladek/Documents/statements.pdf")));
-
 	}
 
 	@Ignore
@@ -121,7 +118,6 @@ public class TestStatementsDao extends AbstractDaoTest {
 	// @Test
 	public void testMonthlyStatementGeneration() {
 		statementHelper.createMonthlyStatementForAllMembers("2016-09-01", "2016-12-31", -2000.0);
-
 		statementHelper.createOneTimeStatementForAllMembers("2016-05-10", -1000.0, "Contribution for Wangari's Burial");
 	}
 
