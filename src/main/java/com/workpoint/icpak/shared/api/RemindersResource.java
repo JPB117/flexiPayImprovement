@@ -9,7 +9,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
-
 import com.workpoint.icpak.shared.model.reminders.ReminderDto;
 
 @Produces(MediaType.APPLICATION_JSON)
@@ -27,6 +26,8 @@ public interface RemindersResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void executeMonthlyContribution(@PathParam("startDate") String reminderRefId);
 
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
 	public void executeMonthlyPenalty(@PathParam("startDate") String reminderRefId);
 
 }
