@@ -334,7 +334,7 @@ public class TransactionDaoHelper {
 		trx.setBusinessNo(businessNo);
 		trx.setAmount(Double.parseDouble(amount));
 		trx.setStatus(PaymentStatus.PAID);
-		trx.setDescription(paymentMode + " payments");
+		trx.setDescription("Member Contribution payments:" + payerNames + "  - " + phoneNumber);
 		trx.setInvoiceRef(accountNo);
 		trx.setPaymentType(PaymentType.UNKNOWN);
 		saveTransactionFirst(trx); // For Future Reference

@@ -5,9 +5,7 @@ insert into ApplicationCategory(refid,type,applicationamount,renewalamount,descr
 					('AssQn27RNrb1e2te','FOREIGN',26000,7750,'This admits members who are non-residents of Kenya.');
 
 INSERT INTO `user` (`id`, `created`, `createdBy`, `isActive`, `refId`, `updated`, `updatedBy`, `address`, `city`, `email`, `memberId`, `nationality`, `password`, `phoneNumber`, `residence`, `ageGroup`, `Birth Cert`, `Blood Group`, `delegateId`, `Date Of Birth`, `firstName`, `Name`, `Gender`, `Height`, `ID No`, `isOverseas`, `lastName`, `Marital Status`, `Citizenship`, `Name 2`, `Payments By`, `Picture`, `Religion`, `Search Name`, `title`, `Student Type`, `Weight`, `username`, `status`) VALUES
-(33, '2015-07-12 12:10:45', NULL, 1, 'gNtLJ03iEfS3LCac', '2015-07-12 12:11:56', NULL, 'P.o Box 34556', 'Nrb', 'kimani@wira.io', NULL, NULL, 'e6c3da5b206634d7f3f3586d747ffdb36b5c675757b380c6a5fe5c570c714349', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Kimani', NULL, NULL, '0.00000000000000000000', NULL, b'0', 'Muritu', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0.00000000000000000000', 'kimani@wira.io', 'NEWACC'),
-(34, '2015-07-12 13:38:11', NULL, 1, 'OYfPsqwsz4g8KPTB', '2015-07-12 13:38:34', NULL, '34300', 'Nrb', 'kimani@at.co.ke', NULL, NULL, '1ba3d16e9881959f8c9a9762854f72c6e6321cdd44358a10a4e939033117eab9', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Shikwekwe', NULL, NULL, '0.00000000000000000000', NULL, b'0', 'Martin', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0.00000000000000000000', 'kimani@at.co.ke', 'NEWACC'),
-(35, '2015-07-13 23:38:45', NULL, 1, 'omy4w7bRRKEUFP9Z', NULL, NULL, NULL, NULL, 'mdkimani@gmail.com', NULL, NULL, 'e6c3da5b206634d7f3f3586d747ffdb36b5c675757b380c6a5fe5c570c714349', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Admin', NULL, NULL, '0.00000000000000000000', NULL, b'0', 'Admin', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0.00000000000000000000', 'mdkimani@gmail.com', 'NEWACC');
+(35, '2015-07-13 23:38:45', NULL, 1, 'omy4w7bRRKEUFP9Z', NULL, NULL, NULL, NULL, 'Administrator', NULL, NULL, 'e6c3da5b206634d7f3f3586d747ffdb36b5c675757b380c6a5fe5c570c714349', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Admin', NULL, NULL, '0.00000000000000000000', NULL, b'0', 'Admin', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0.00000000000000000000', 'Administrator', 'NEWACC');
 
 
 INSERT INTO `role` (`id`, `created`, `createdBy`, `isActive`, `refId`, `updated`, `updatedBy`, `description`, `name`) VALUES
@@ -16,7 +14,4 @@ INSERT INTO `role` (`id`, `created`, `createdBy`, `isActive`, `refId`, `updated`
 
 
 INSERT INTO `user_role` (`userid`, `roleid`) VALUES
-(34, 1),
-(35, 1),
-(33, 2),
-(34, 2);
+(35, 1);

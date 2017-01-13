@@ -102,13 +102,13 @@ public class TestInvoiceDao extends AbstractDaoTest {
 		System.err.println(">>>>" + invoice.get(0).getStatus());
 	}
 
-	//@Test
+	// @Test
 	public void testPayment() {
 		trxHelper.receivePaymentAndApplyToStatement("DFAFDAF64G", "722722", "INV5496", "MPESA", "DFAFDAHTI",
 				"254729472421", "4000", "2016-05-31 18:42:08", "N/A");
 	}
 
-	@Test
+	// @Test
 	public void testImportTransactions() {
 		String fileLocation = "C:\\Users\\user\\Documents\\Karagita\\karagita_all_transactions.csv";
 		BufferedReader br = null;
@@ -123,7 +123,6 @@ public class TestInvoiceDao extends AbstractDaoTest {
 
 		try {
 			while ((fileLine = br.readLine()) != null) {
-				// trxHelper.performServerIPN(fileLine);
 				String[] column = fileLine.split(",");
 				System.err.println("Executed>>>" + fileLine);
 				trxHelper.receivePaymentAndApplyToStatement(column[1], "510511", "2141", "MPESA", column[1], column[3],
