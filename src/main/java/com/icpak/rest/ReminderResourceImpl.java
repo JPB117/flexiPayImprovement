@@ -54,14 +54,15 @@ public class ReminderResourceImpl implements RemindersResource {
 		c.setTime(new Date());
 		c.add(Calendar.DAY_OF_WEEK, 7);
 		statementHelper.createMonthlyStatementForAllMembers(ServerDateUtils.SHORTTIMESTAMP.format(new Date()),
-				ServerDateUtils.SHORTTIMESTAMP.format(c.getTime()), 2000.0);
+				ServerDateUtils.SHORTTIMESTAMP.format(c.getTime()), -2000.0);
+		System.err.println("Execution succesful");
 
 	}
 
 	@POST
 	@Override
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Path("executeMonthlyContribution/{startDate}")
+	@Path("executePenalty/{startDate}")
 	public void executeMonthlyPenalty(@PathParam("startDate") String reminderRefId) {
 		System.err.println("--------Executing Reminder called.---------");
 		Calendar c = Calendar.getInstance();
@@ -69,5 +70,6 @@ public class ReminderResourceImpl implements RemindersResource {
 		c.add(Calendar.DAY_OF_WEEK, 7);
 		statementHelper.applyPenaltiesBetweenDateRange(ServerDateUtils.SHORTTIMESTAMP.format(new Date()),
 				ServerDateUtils.SHORTTIMESTAMP.format(c.getTime()));
+		System.err.println("Execution succesful");
 	}
 }

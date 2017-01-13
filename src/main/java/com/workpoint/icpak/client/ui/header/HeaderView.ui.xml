@@ -32,7 +32,7 @@
 
 					<a href="#/" class="navbar-brand">
 						<div class="brand-logo">
-							<img class="img-responsive" src="img/LogoWhitebg.png" ui:field="imgLogo"/>
+							<img class="img-responsive" src="img/flexiPay_Logo.png" ui:field="imgLogo"/>
 						</div>
 					</a>
 				</div>

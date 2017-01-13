@@ -535,7 +535,6 @@ public class StatementDaoHelper {
 
 		for (Date date = start.getTime(); start.before(end); start.add(Calendar.MONTH, 1), date = start.getTime()) {
 			System.err.println(">>>>" + date);
-
 			for (MemberDto member : allMembers) {
 				StatementDto statementDto = new StatementDto();
 				statementDto.setPostingDate(date);
@@ -547,6 +546,7 @@ public class StatementDaoHelper {
 				createStatement(statementDto);
 				noticeCounter = noticeCounter + 1;
 				System.err.println("Posted statement for " + member.getFullName());
+				
 			}
 		}
 	}
