@@ -77,6 +77,6 @@ public class TestReminders extends AbstractDaoTest {
 
 		// reminderHelper.executeReminder("OOAkyw1KVymDyNuU");
 
-		reminderHelper.sendBulkSMS();
+		// reminderHelper.sendBulkSMS();
 	}
 }

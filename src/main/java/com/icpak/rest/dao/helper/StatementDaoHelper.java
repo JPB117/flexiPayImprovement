@@ -46,6 +46,7 @@ import com.icpak.rest.models.cpd.CPD;
 import com.icpak.rest.models.membership.Member;
 import com.icpak.rest.models.trx.Statement;
 import com.icpak.rest.models.util.Attachment;
+import com.icpak.rest.util.SMSIntegration;
 import com.icpak.rest.utils.Doc;
 import com.icpak.rest.utils.DocumentLine;
 import com.icpak.rest.utils.EmailServiceHelper;
@@ -72,6 +73,8 @@ public class StatementDaoHelper {
 	MemberDao memberDao;
 	@Inject
 	CPDDao CPDDao;
+	@Inject
+	SMSIntegration smsIntegration;
 
 	public List<StatementDto> getAllStatements(String memberId, Date startDate, Date endDate, Integer offset,
 			Integer limit) {
@@ -546,14 +549,14 @@ public class StatementDaoHelper {
 				createStatement(statementDto);
 				noticeCounter = noticeCounter + 1;
 				System.err.println("Posted statement for " + member.getFullName());
-				
+
 			}
 		}
 	}
 
 	public void applyPenaltiesBetweenDateRange(String startDate, String endDate) {
 		// Get All Chama Members
-		List<MemberDto> allMembers = memberDao.getAllMembers(0, 1000, "");
+		List<Member> allMembers = memberDao.getAllMembers(0, 1000000);
 
 		Date startDateConverted = null;
 		Date endDateConverted = null;
@@ -576,7 +579,7 @@ public class StatementDaoHelper {
 			Calendar firstDayOfMonth = Calendar.getInstance();
 			firstDayOfMonth.setTime(date);
 			firstDayOfMonth.add(Calendar.DATE, 15);
-			for (MemberDto member : allMembers) {
+			for (Member member : allMembers) {
 				Double balance = statementDao.getOpeningBalance(member.getMemberNo(), firstDayOfMonth.getTime())
 						.getAmount();
 				System.err.println(
@@ -591,7 +594,22 @@ public class StatementDaoHelper {
 					statementDto.setCustomerNo(member.getMemberNo());
 					createStatement(statementDto);
 					penaltyCounter = penaltyCounter + 1;
-					System.err.println("Created Penalty for " + member.getFullName());
+					System.err.println("Created Penalty for " + member.getUser().getFullName());
+
+					// Send an sms message
+					String message = "Karagita Welfare says:  Dear " + member.getUser().getFullName()
+							+ ",A late payment penalty of Kes 100 has been applied to your account."
+							+ "Your balance is now Kes " + Math.abs(balance - 100)
+							+ ".MPESA Paybill 510511, Account No 2141.";
+
+					User user = member.getUser();
+					if (user != null && user.getMember() != null) {
+						String phoneNumbers = user.getPhoneNumber();
+						phoneNumbers = phoneNumbers.trim();
+						phoneNumbers = phoneNumbers.replaceAll(";", ",");
+						smsIntegration.send(phoneNumbers, message);
+						System.err.println(phoneNumbers + ">>>>" + message);
+					}
 				}
 			}
 
@@ -610,10 +628,11 @@ public class StatementDaoHelper {
 		}
 
 		// Get All Chama Members
-		List<MemberDto> allMembers = memberDao.getAllMembers(0, 1000, "");
+		List<Member> allMembers = memberDao.getAllMembers(0, 1000);
 
 		int noticeCounter = 1;
-		for (MemberDto member : allMembers) {
+		for (Member member : allMembers) {
+			Double balance = statementDao.getOpeningBalance(member.getMemberNo(), new Date()).getAmount();
 			StatementDto statementDto = new StatementDto();
 			statementDto.setPostingDate(postingDateConverted);
 			statementDto.setAmount(contributionAmount);
@@ -623,7 +642,21 @@ public class StatementDaoHelper {
 			statementDto.setCustomerNo(member.getMemberNo());
 			createStatement(statementDto);
 			noticeCounter = noticeCounter + 1;
-			System.err.println("Posted statement for " + member.getFullName());
+			System.err.println("Posted statement for " + member.getUser().getFullName());
+
+			// Send an sms message
+			String message = "Karagita Welfare says:  Dear " + member.getUser().getFullName() + "Please note that Kes."
+					+ contributionAmount + " has been posted to your account for " + postingDescription
+					+ ". Your new balance is Kes." + (balance - contributionAmount);
+
+			User user = member.getUser();
+			if (user != null && user.getMember() != null) {
+				String phoneNumbers = user.getPhoneNumber();
+				phoneNumbers = phoneNumbers.trim();
+				phoneNumbers = phoneNumbers.replaceAll(";", ",");
+				smsIntegration.send(phoneNumbers, message);
+				System.err.println(phoneNumbers + ">>>>" + message);
+			}
 		}
 	}
 

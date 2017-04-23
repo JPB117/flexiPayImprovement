@@ -115,10 +115,9 @@ public class TestStatementsDao extends AbstractDaoTest {
 
 	}
 
-	// @Test
+	@Test
 	public void testMonthlyStatementGeneration() {
-		statementHelper.createMonthlyStatementForAllMembers("2016-09-01", "2016-12-31", -2000.0);
-		statementHelper.createOneTimeStatementForAllMembers("2016-05-10", -1000.0, "Contribution for Wangari's Burial");
+		statementHelper.createOneTimeStatementForAllMembers("2017-04-21", -1000.0, "Contribution for Guka Kako");
 	}
 
 	// @Test
