@@ -148,10 +148,6 @@ public class StatementDao extends BaseDao {
 
 		return getResultList(query, offset, limit);
 
-		// return getResultList(getEntityManager()
-		// .createQuery("FROM Statement where customerNo=:regNo order by
-		// postingdate desc")
-		// .setParameter("regNo", memberRegistrationNo), offset, limit);
 	}
 
 	public Integer getStatementCount(String memberNo, Date startDate, Date endDate) {

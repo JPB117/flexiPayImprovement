@@ -46,6 +46,8 @@ public class Transaction extends PO {
 	private Double chargableAmount;
 	private Double totalPreviousPayments;
 	private Double balance;
+	
+	private String payerPhoneNumber;
 
 	@Enumerated(EnumType.STRING)
 	private PaymentMode paymentMode;
@@ -60,6 +62,7 @@ public class Transaction extends PO {
 	private String documentNo;
 	private String invoiceRef;
 	private String payerNames;
+	private String statementRef;
 
 	public Transaction() {
 	}
@@ -225,6 +228,14 @@ public class Transaction extends PO {
 		return balance;
 	}
 
+	public String getStatementRef() {
+		return statementRef;
+	}
+
+	public void setStatementRef(String statementRef) {
+		this.statementRef = statementRef;
+	}
+
 	public void setBalance(Double balance) {
 		this.balance = balance;
 	}
@@ -235,6 +246,14 @@ public class Transaction extends PO {
 
 	public void setTotalPreviousPayments(Double totalPreviousPayments) {
 		this.totalPreviousPayments = totalPreviousPayments;
+	}
+
+	public String getPayerPhoneNumber() {
+		return payerPhoneNumber;
+	}
+
+	public void setPayerPhoneNumber(String payerPhoneNumber) {
+		this.payerPhoneNumber = payerPhoneNumber;
 	}
 
 }
