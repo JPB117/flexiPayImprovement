@@ -191,9 +191,9 @@ public class TestInvoiceDao extends AbstractDaoTest {
 		trxHelper.performServerIPN(sample);
 	}
 
-	// @Test
+	@Test
 	public void testRedoTransactions() {
-		String fileLocation = "C:\\Users\\user\\Desktop\\august_trx_json.txt";
+		String fileLocation = "/home/tomkim/Downloads/karagita_deposits_2016_2017.csv";
 		BufferedReader br = null;
 		String fileLine = "";
 
@@ -207,8 +207,10 @@ public class TestInvoiceDao extends AbstractDaoTest {
 		try {
 			while ((fileLine = br.readLine()) != null) {
 				if (!fileLine.equals("=============================")) {
-					trxHelper.performServerIPN(fileLine);
 					System.err.println("Executed>>>" + fileLine);
+					String[] lineItem = fileLine.split(",");
+					trxHelper.receivePaymentAndApplyToStatement(lineItem[3], "510511", "2141", "MPESA", lineItem[3],
+							"254" + lineItem[7], lineItem[4], lineItem[1], lineItem[6]);
 				}
 			}
 		} catch (IOException e1) {
@@ -232,11 +234,8 @@ public class TestInvoiceDao extends AbstractDaoTest {
 
 		try {
 			while ((fileLine = br.readLine()) != null) {
-				// trxHelper.performServerIPN(fileLine);
 				String[] column = fileLine.split(",");
 				System.err.println("Executed>>>" + fileLine);
-				trxHelper.receivePaymentUsingInvoiceNo(column[2], "N/A", column[4], "CARDS", column[2], "N/A",
-						column[5], ServerDateUtils.MPESATIMESTAMP.format(new Date()), column[3]);
 			}
 		} catch (IOException e1) {
 			e1.printStackTrace();

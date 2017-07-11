@@ -28,8 +28,9 @@ public class Statement extends PO {
 	private Double amount;
 	private String description;
 	private String customerNo;
-	private Date dueDate;
+	private Date dueDate; 
 	private Date lastUpdated;
+	private String transactionNumber;
 
 	public String getEntryNo() {
 		return entryNo;
@@ -149,6 +150,14 @@ public class Statement extends PO {
 
 	public void setLastUpdated(Date lastUpdated) {
 		this.lastUpdated = lastUpdated;
+	}
+
+	public String getTransactionNumber() {
+		return transactionNumber;
+	}
+
+	public void setTransactionNumber(String transactionNumber) {
+		this.transactionNumber = transactionNumber;
 	}
 
 }
